@@ -648,7 +648,8 @@ const PlayEngine = {
     this.current = renderQuestion(question);
     const view = document.getElementById('view-play');
     const ctx = opts.contextHTML || '';
-    const code = this.current.code_block ? `<pre class="question-code">${this.current.code_block}</pre>` : '';
+    const code = this.current.code_block ? `<pre class="code-syntax">${highlightCodeSimple(this.current.code_block)}</pre>` : '';
+    const visualData = renderVisualData(this.current); // ← 修復:渲染 table_data / chart_data
     view.innerHTML = `
       ${ctx}
       <div class="question-card">
@@ -660,6 +661,7 @@ const PlayEngine = {
         </div>
         <div class="question-stem">${this.current.stem}</div>
         ${code}
+        ${visualData}
         <div class="options" id="play-options">
           ${this.current.options.map(o => `
             <button class="option-btn" data-key="${o.key}" onclick="PlayEngine.answer('${o.key}')">
@@ -928,6 +930,17 @@ const GameFX = {
     this.bigConfetti();
   }
 };
+
+// === 程式碼語法高亮(共用)===
+function highlightCodeSimple(code) {
+  if (!code) return '';
+  let s = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  s = s.replace(/(#[^\n]*)/g, '<span class="com">$1</span>');
+  s = s.replace(/(["'])((?:(?!\1).)*)\1/g, '<span class="str">$1$2$1</span>');
+  s = s.replace(/\b(import|from|def|class|return|if|else|elif|for|while|in|as|with|try|except|None|True|False|lambda|pass|self|print|len|range|np|pd|sklearn|torch|nn|tf)\b/g, '<span class="kw">$1</span>');
+  s = s.replace(/\b(\d+\.?\d*)\b/g, '<span class="num">$1</span>');
+  return s;
+}
 
 // === 渲染視覺資料(表格 / 程式碼語法高亮)===
 function renderVisualData(q) {

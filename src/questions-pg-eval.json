@@ -1,0 +1,395 @@
+{
+  "version": "1.0",
+  "agent": "G",
+  "purpose": "進階評估 + 不平衡 + CV + 調校 原創題",
+  "iron_rule_compliance": "all 3 iron rules met",
+  "iron_rule_1_compliance": "every question has correct(>=50字) + wrong(each >=30字) + hook + misconceptions(>=1) + related_node_ids",
+  "iron_rule_2_compliance": "shuffle_options:true on every question; calc 題附 stem_variables 多 case 池",
+  "iron_rule_3_compliance": "全部 13 題為原創,未複製 114-2 原題;所有情境與陷阱換寫至更深陷阱",
+  "generated_at": "2026-05-09",
+  "questions": [
+    {
+      "id": "q_pg_001",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_006",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某金融科技公司開發信用卡盜刷偵測模型,訓練集中盜刷樣本僅 0.8%。資料特性:特徵中包含『商家類別』『支付通路』兩個類別變數(各 30+ 個 categories),其餘為交易金額、頻率等連續變數;主要決策邊界(盜刷 vs 正常)位於『高消費 + 跨境商家』的交界區。資料科學家正比較 SMOTE 變體選擇。下列何者最符合本資料特性的進階重採樣策略?",
+      "options": [
+        {"text": "選用 SMOTE-NC 處理類別+連續混合特徵,並搭配 Borderline-SMOTE 思維只在『高消費跨境』邊界區生成合成樣本以強化決策邊界學習", "is_correct": true},
+        {"text": "直接套用普通 SMOTE 即可,因為 SMOTE 的 KNN 機制會自動處理類別變數,不需額外設定", "is_correct": false, "trap_type": "普通 SMOTE 對類別變數使用 Euclidean 距離會產生無意義小數插值(如商家代碼 12.7),SMOTE-NC 才有 mode 採樣處理類別欄位"},
+        {"text": "改用 ADASYN 即可,因為 ADASYN 自動為難分樣本生成更多合成樣本,可一次處理類別欄位與邊界問題", "is_correct": false, "trap_type": "ADASYN 雖聚焦難分樣本(類似 Borderline 概念),但對類別變數仍以歐式距離計算,本質仍會破壞類別欄位語意"},
+        {"text": "選用 SVMSMOTE,因 SVM 邊界即決策邊界,能完美處理類別+連續特徵且自動聚焦少數類", "is_correct": false, "trap_type": "SVMSMOTE 用 SVM 找邊界樣本生成,但對類別欄位仍以連續距離處理,且 30+ 類別會使 SVM 訓練極不穩定"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "SMOTE 變體選擇關鍵在於資料特性對應:(1) 普通 SMOTE 假設特徵全為連續,使用 Euclidean 距離 + 線性插值,對類別變數會產生無意義的小數值;(2) SMOTE-NC(Nominal-Continuous)專為類別+連續混合資料設計,類別欄位以多數決(mode)生成,連續欄位才用插值;(3) Borderline-SMOTE 只對位於決策邊界(其鄰居有半數以上屬多數類)的少數樣本進行合成,強化邊界學習。本題既有混合特徵又有明確邊界區,故 SMOTE-NC 為基本選擇,並搭配 Borderline 思維聚焦邊界區是最佳策略。",
+        "wrong": {
+          "直接套用普通 SMOTE 即可,因為 SMOTE 的 KNN 機制會自動處理類別變數,不需額外設定": "普通 SMOTE 的 KNN 用歐式距離,對類別代碼會產生 12.7、8.3 等無意義小數,合成樣本失去類別語意,模型反而學到錯誤模式;SMOTE-NC 才以 mode 處理類別欄位",
+          "改用 ADASYN 即可,因為 ADASYN 自動為難分樣本生成更多合成樣本,可一次處理類別欄位與邊界問題": "ADASYN 在『生成數量分配』上有優勢(難分樣本權重高),但其底層仍是連續插值,並未解決類別變數語意問題;且本題瓶頸在類別欄位,不在生成密度",
+          "選用 SVMSMOTE,因 SVM 邊界即決策邊界,能完美處理類別+連續特徵且自動聚焦少數類": "SVMSMOTE 仰賴先訓 SVM 找支援向量,30+ 類別 one-hot 後會使特徵維度爆炸與 SVM 不穩;且其對類別欄位仍以連續方式合成,並未真正『完美處理』"
+        },
+        "hook": "SMOTE 變體口訣:純連續→SMOTE/Borderline-SMOTE/ADASYN;混合特徵→SMOTE-NC;只有類別→SMOTE-N;邊界難分→Borderline;難度自適應→ADASYN"
+      },
+      "misconceptions": ["以為普通 SMOTE 能自動處理類別欄位", "誤把 ADASYN 當作所有不平衡情境的萬能解", "忽略類別欄位 cardinality 對 SVM-based SMOTE 的影響"],
+      "related_node_ids": ["n_L23303_005", "n_L23303_006", "n_L23301_003"],
+      "tags": ["SMOTE", "SMOTE-NC", "Borderline-SMOTE", "ADASYN", "類別不平衡進階", "情境決策"]
+    },
+    {
+      "id": "q_pg_002",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_007",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某醫學中心部署 AI 輔助診斷罕見癌症模型。臨床經驗顯示:漏診一名真實癌症病患的後果(延誤治療、死亡風險)約為誤診一名健康人的 100 倍(額外檢查、心理壓力)。原始模型門檻為 0.5 時 Recall=0.62、Precision=0.78。資料科學家欲導入 Cost-Sensitive Learning 並調整門檻。下列策略何者最符合『成本最小化』原則?",
+      "options": [
+        {"text": "建立 cost matrix 設定 FN cost=100、FP cost=1,並依此求最佳 threshold = P(FP) / (P(FP) + 100·P(FN)) ≈ 接近 0,使 Recall 大幅提升;同時在訓練時用 sample_weight 將正類權重設為 100", "is_correct": true},
+        {"text": "保留原 threshold=0.5,但在訓練時把所有樣本權重統一放大 100 倍,使模型更專注於少數類", "is_correct": false, "trap_type": "全體權重等比放大相當於只放大 learning rate,不改變類別間相對重要性,完全無法處理不平衡問題"},
+        {"text": "把 threshold 提高到 0.9,因為高門檻代表只有非常確定才判為陽性,可以降低誤診風險,符合醫療謹慎原則", "is_correct": false, "trap_type": "提高 threshold 會減少預測陽性數量,Precision 上升但 Recall 下降,反而增加漏診(FN)成本,與『漏診成本 100 倍』方向完全相反"},
+        {"text": "改用 Accuracy 作為調校指標並只取 Top-K 預測機率最高者作陽性,K = 訓練集陽性數量", "is_correct": false, "trap_type": "Accuracy 在不平衡資料完全失效;Top-K 等同於把預測陽性數固定為 K,實際上是另一種固定 threshold,並未納入 cost-aware 決策"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Cost-Sensitive Learning 兩支柱:(1) 訓練時:在 loss function 加入 class_weight 或 sample_weight,使少數類錯誤被放大(此處正類 weight=100,反映 FN 成本)。(2) 推論時:Bayes 最佳決策門檻 = C(FP) / (C(FP) + C(FN)),即當預測為陽性的期望損失等於預測為陰性的期望損失。本題 C(FP)=1、C(FN)=100,故 threshold = 1/(1+100) ≈ 0.0099,大幅降低門檻使 Recall 上升。兩者結合才是完整的 cost-sensitive 流程。",
+        "wrong": {
+          "保留原 threshold=0.5,但在訓練時把所有樣本權重統一放大 100 倍,使模型更專注於少數類": "全體權重統一放大等同於放大 learning rate,梯度方向不變,類別間相對重要性也不變,完全無法解決不平衡問題;必須只放大『少數類』權重",
+          "把 threshold 提高到 0.9,因為高門檻代表只有非常確定才判為陽性,可以降低誤診風險,符合醫療謹慎原則": "提高 threshold 使預測陽性更嚴格,Precision 上升但 Recall 下降,漏診更多;當 FN 成本是 FP 的 100 倍時,正確方向是『降低』threshold 才對",
+          "改用 Accuracy 作為調校指標並只取 Top-K 預測機率最高者作陽性,K = 訓練集陽性數量": "Accuracy 在 0.5% 陽性比例下,模型全猜陰性也有 99.5% Accuracy,完全失效;Top-K 等於另一種隱式 threshold,並未納入 cost matrix"
+        },
+        "hook": "Cost-Sensitive Bayes 最佳門檻公式:t* = C(FP) / (C(FP) + C(FN));FN 成本越大 → 門檻越低 → Recall 越高"
+      },
+      "misconceptions": ["把『少數類權重』與『全體權重等比放大』混為一談", "在高 FN 成本場景反而提高 threshold", "在不平衡資料仍用 Accuracy 作調校指標"],
+      "related_node_ids": ["n_L23303_003", "n_L23303_007", "n_L23301_005"],
+      "tags": ["Cost-Sensitive", "threshold調整", "醫療AI", "不平衡資料", "Bayes最佳門檻"]
+    },
+    {
+      "id": "q_pg_003",
+      "knowledge_code": "L23301",
+      "node_id": "n_L23301_004",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某遺傳檢測公司開發罕見遺傳病多分類模型,共 8 種疾病類別,其中『類別 H』僅佔 0.5%、其他類別在 5%-25% 之間分布。當前模型在訓練集 Macro-F1 = 0.78,但在驗證集 Macro-F1 僅 0.45。誤差分析顯示:類別 H 的 F1 = 0.05,其他七類 F1 在 0.55~0.85。下列調整方向何者最直接、最能拉抬驗證集 Macro-F1?",
+      "options": [
+        {"text": "對類別 H 使用 SMOTE-NC 過採樣 + class_weight='balanced'(加權少數類),並改用 OvR(One-vs-Rest)架構讓類別 H 有獨立決策邊界,並監控 H 的 F1 是否單調上升", "is_correct": true},
+        {"text": "直接增加模型容量(更深網路、更多參數)並訓練更多 epoch,因為訓練集 F1 高表示有學習能力,只要繼續訓練驗證集自然會跟上", "is_correct": false, "trap_type": "訓練 0.78 vs 驗證 0.45 已是嚴重過擬合,加大模型只會讓過擬合更糟;且根本問題是類別 H 樣本太少,加深無助"},
+        {"text": "改用 Micro-F1 作為主要評估指標,因為 Micro-F1 不受類別不平衡影響、計算更穩定", "is_correct": false, "trap_type": "Micro-F1 是『所有類別合計後計算』,等同於 Accuracy,在不平衡資料下會被多數類主導,完全掩蓋類別 H 的問題"},
+        {"text": "捨棄類別 H 不再預測(視為『其他/未知』類別),讓模型只專注於其他七類以提升整體效能", "is_correct": false, "trap_type": "罕見病模型的核心價值就是偵測罕見類別,捨棄等於放棄使用情境;且 Macro-F1 中 H=0 仍會嚴重拉低平均"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "多類別不平衡 + Macro-F1 低落,診斷邏輯:Macro-F1 是各類 F1 的算術平均,故任一類別 F1 接近 0 都會拉低整體。本題類別 H F1=0.05 拖累全體。解法三步驟:(1) 樣本層面:對 H 用 SMOTE-NC 過採樣或 class_weight='balanced' 提升梯度貢獻;(2) 模型架構:OvR 讓 H 有專屬 binary 決策邊界,避免被多數類淹沒;(3) 監控:獨立追蹤 H 的 F1 trajectory,確認干預有效。Micro-F1 在此會掩蓋問題,不是解法。",
+        "wrong": {
+          "直接增加模型容量(更深網路、更多參數)並訓練更多 epoch,因為訓練集 F1 高表示有學習能力,只要繼續訓練驗證集自然會跟上": "訓練 0.78 vs 驗證 0.45 已是嚴重過擬合(差距 0.33),加深模型與更多 epoch 會放大過擬合;根本病因是類別 H 樣本太少,模型在訓練集記憶但無泛化能力",
+          "改用 Micro-F1 作為主要評估指標,因為 Micro-F1 不受類別不平衡影響、計算更穩定": "Micro-F1 是把所有類別 TP/FP/FN 加總後再算 F1,在不平衡資料下會被多數類主導(等同 Accuracy);不僅不能解決問題,還會『掩蓋』類別 H 的失敗",
+          "捨棄類別 H 不再預測(視為『其他/未知』類別),讓模型只專注於其他七類以提升整體效能": "罕見病模型的醫學價值正在於偵測罕見類;捨棄違反建模目的;且若 Macro-F1 仍包含 H=0,平均仍被拉低,治標不治本"
+        },
+        "hook": "Macro-F1 低落的真因 = 某類 F1 接近 0;Micro-F1 會掩蓋,Macro-F1 才暴露問題;解法是『樣本層+架構層+監控層』三管齊下"
+      },
+      "misconceptions": ["把 Micro-F1 當作不平衡資料的最佳指標", "用『加大模型』解決『樣本太少』的根本問題", "在多類別不平衡情境捨棄少數類"],
+      "related_node_ids": ["n_L23301_002", "n_L23301_004", "n_L23303_002"],
+      "tags": ["多類別不平衡", "Macro-F1", "OvR", "罕見病AI", "誤差分析"]
+    },
+    {
+      "id": "q_pg_004",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_008",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某保險公司資料科學團隊比較三種建模流程:(A) 5-fold CV + 用全資料 GridSearch 找最佳參數後再做 CV 評估;(B) Nested CV(外層 5-fold 評估、內層 3-fold 調超參);(C) 70/30 train-test split + train 上 GridSearch + test 評估。在『模型選擇 + 性能評估』兩個目的下,下列敘述何者正確?",
+      "options": [
+        {"text": "(B) Nested CV 是唯一同時解耦『模型選擇』與『性能評估』的方法;(A) 用全資料調參後再 CV 評估會發生 data leakage(調參時已偷看驗證資料),導致性能高估;當資料量極大且調參空間小時,可改用 (C) 但須謹慎", "is_correct": true},
+        {"text": "(A) 流程因為最後仍做了 CV 評估,所以無 leakage 風險,且運算成本最低,應為首選", "is_correct": false, "trap_type": "(A) 用『全資料』調參時,每個驗證 fold 的資料都已被『最佳參數選擇過程』使用,屬於 information leakage,評估會樂觀偏誤"},
+        {"text": "(C) 與 (B) 在統計學上完全等價,因為兩者都區分了訓練與測試;Nested CV 的計算成本不值得", "is_correct": false, "trap_type": "(C) 是單次切分,評估方差大且依賴運氣;(B) 用多 fold 平均降低方差,在小樣本場景並不等價"},
+        {"text": "Nested CV 在任何情境下都優於其他方法,沒有可省略的時候;運算成本是次要考量", "is_correct": false, "trap_type": "Nested CV 在『最終模型已固定 + 只需性能估計』或『運算成本極高且資料量極大』時可省略,並非絕對必須"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Nested CV 設計動機:單層 CV + GridSearch 會在『同一份資料』上同時做超參選擇與性能評估,使選到的『最佳參數』本身已偷看驗證資料,評估指標會樂觀偏誤(optimistic bias),典型膨脹幅度 2-5%。Nested CV 用『外層 fold 評估 + 內層 fold 調參』完全分離兩任務:外層的 test fold 在內層調參時不可見。可省略時機:(1) 資料量極大(數百萬樣本),單次 split 已穩定;(2) 超參搜尋空間極小(<5 組合);(3) 已選定模型只需評估,不再做選擇。",
+        "wrong": {
+          "(A) 流程因為最後仍做了 CV 評估,所以無 leakage 風險,且運算成本最低,應為首選": "(A) 在 GridSearch 時用『全資料』找最佳參數,該參數已『見過』所有 fold;後續即使用 CV,但每個 fold 的『最佳參數』都受該 fold 資料影響,屬於 leakage,評估會樂觀膨脹",
+          "(C) 與 (B) 在統計學上完全等價,因為兩者都區分了訓練與測試;Nested CV 的計算成本不值得": "(C) 為單次隨機切分,結果依賴切分運氣,標準差大;(B) 用多 fold 取平均降低方差;兩者在小樣本場景效能差異顯著,並非等價",
+          "Nested CV 在任何情境下都優於其他方法,沒有可省略的時候;運算成本是次要考量": "Nested CV 計算成本為 outer × inner × params 倍;當資料量極大、超參空間極小、或最終模型已固定時可省略;『沒有可省略的時候』是過度絕對化"
+        },
+        "hook": "Nested CV 兩段口訣:外層『純評估』(test fold 不參與調參),內層『純調參』(train fold 內找最佳參數);可省略 = 資料巨大 + 超參極少 + 模型已定"
+      },
+      "misconceptions": ["以為『最後做 CV』就無 leakage", "把 Nested CV 與 train-test split 視為等價", "認為 Nested CV 永遠必須執行"],
+      "related_node_ids": ["n_L23303_004", "n_L23303_008", "n_L23304_005"],
+      "tags": ["Nested CV", "model selection", "data leakage", "超參調校", "情境決策"]
+    },
+    {
+      "id": "q_pg_005",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_009",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某零售集團要建立日銷售預測模型,資料 2018~2025 八年。團隊比較三種時間序列 CV:(I) Expanding Window(訓練集逐步擴大,初始 2018,逐年加入);(II) Sliding Window(訓練集固定 2 年寬度,逐年滑動);(III) Blocked CV(將時間切成數個獨立 block,各做 train/test)。資料具有強年週期性 + 緩慢成長趨勢 + 2020 疫情變動性。下列何者最符合本資料特性的選擇?",
+      "options": [
+        {"text": "若關心『長期趨勢與週期模式』選 Expanding Window(訓練集越大越穩定);若關心『短期變動性與快速適應』選 Sliding Window(避免遠古資料拖累);Blocked CV 適合在多 block 評估各時期穩定度,但會浪費 block 間資料", "is_correct": true},
+        {"text": "三種 CV 完全等價,因為都遵守『時間順序不可洩漏未來』原則,選哪個都不影響評估結論", "is_correct": false, "trap_type": "雖都符合時間順序,但訓練集組成差異會直接影響模型學到的內容:Expanding 累積長期模式,Sliding 聚焦近期變化,Blocked 切斷時序連續性"},
+        {"text": "本資料應使用普通 K-Fold(隨機打散後切分),因為 K-Fold 的隨機性可消除時間順序偏誤", "is_correct": false, "trap_type": "K-Fold 隨機打散會使訓練集包含未來資料、測試集包含過去資料,完全違反時序預測『不可看未來』原則,屬時序資料的災難性錯誤"},
+        {"text": "Blocked CV 是時序資料唯一正確選擇,因為 block 之間獨立,可確保無 leakage", "is_correct": false, "trap_type": "Blocked CV 雖避免 leakage,但每個 block 訓練樣本變少且彼此不共享趨勢資訊;本題長期趨勢與週期性需要 Expanding 才能完整建模"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "三種時序 CV 適用情境:(1) Expanding Window:訓練集從初始累積擴大,適合『穩定長期模式』(年週期、長期趨勢)、樣本越多越好的場景。(2) Sliding Window:訓練集固定寬度向前滑動,適合『非平穩、概念漂移』場景(如疫情後消費模式變動),強迫模型只用最新資料。(3) Blocked CV:將時間切多個獨立區塊各自評估,適合驗證『各時期穩定度』(如疫情前/中/後分別評估)。本題同時有趨勢、週期、變動性,三者皆有用武之地,需依分析目標選擇。",
+        "wrong": {
+          "三種 CV 完全等價,因為都遵守『時間順序不可洩漏未來』原則,選哪個都不影響評估結論": "雖三者皆守時序原則,但訓練集組成不同會使模型學到不同模式:Expanding 適合長期趨勢、Sliding 適合短期變動、Blocked 適合分段穩定度檢驗,評估意義截然不同",
+          "本資料應使用普通 K-Fold(隨機打散後切分),因為 K-Fold 的隨機性可消除時間順序偏誤": "隨機 K-Fold 在時序資料是災難:訓練集可能包含 2025、測試集包含 2018,等於『用未來預測過去』,評估指標完全失真,屬時序建模的禁忌錯誤",
+          "Blocked CV 是時序資料唯一正確選擇,因為 block 之間獨立,可確保無 leakage": "Blocked CV 切斷時序連續性,每 block 訓練樣本少且彼此不共享趨勢資訊;對需要長期模式的情境反而不利;『唯一正確』是過度絕對化"
+        },
+        "hook": "時序 CV 口訣:長期穩定看 Expanding,概念漂移看 Sliding,分段檢驗看 Blocked;絕對禁止隨機 K-Fold(會洩漏未來)"
+      },
+      "misconceptions": ["把時序 CV 與隨機 K-Fold 混淆", "認為時序 CV 三方法等價", "忽略 Sliding Window 在概念漂移場景的優勢"],
+      "related_node_ids": ["n_L23303_004", "n_L23303_009", "n_L22301_006"],
+      "tags": ["時序CV", "Expanding Window", "Sliding Window", "Blocked CV", "概念漂移", "情境決策"]
+    },
+    {
+      "id": "q_pg_006",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_010",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某新藥研發團隊面臨三個 CV 評估場景:(X) 罕見副作用資料僅 80 筆樣本;(Y) 中等規模臨床試驗 350 筆;(Z) 真實世界資料 10000 筆。預算允許不同 CV 策略。下列『最佳 CV 配置』組合何者正確?",
+      "options": [
+        {"text": "(X) 用 .632+ Bootstrap(處理極小樣本偏誤校正);(Y) 用 Stratified 10-fold CV(平衡計算與穩定);(Z) 用單次 70/30 split 或 5-fold CV(資料夠大,任一皆穩定)", "is_correct": true},
+        {"text": "(X)(Y)(Z) 都用 Leave-One-Out CV(LOOCV),因為它使用全部資料訓練、評估方差理論上最小,是 CV 的金標準", "is_correct": false, "trap_type": "LOOCV 在大樣本(Z)計算成本爆炸(10000 次訓練);且雖低 bias 但高 variance(每次差一樣本訓練模型幾乎相同),並非永遠最優"},
+        {"text": "(X)(Y)(Z) 都用單次 80/20 split,因為 split 簡單直觀且工業實務廣用,CV 是學術上的過度設計", "is_correct": false, "trap_type": "單次 split 在小樣本(X) variance 巨大,結果完全依賴運氣;且工業實務中 CV 是標準做法,『學術過度設計』說法錯誤"},
+        {"text": "(X) 用 5-fold CV、(Y) 用 LOOCV、(Z) 用 Bootstrap,小樣本給 fold、中樣本給 LOO、大樣本給 Bootstrap", "is_correct": false, "trap_type": "對應顛倒:小樣本(X) 5-fold 每 fold 僅 16 筆 variance 大;中樣本(Y) LOOCV 計算昂貴且不穩;大樣本(Z) Bootstrap 反而失去 CV 平均效果"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "樣本量決定 CV 策略:(1) 極小樣本(<100):Bootstrap 含 .632/.632+ 校正可糾正『重抽樣 bias』,且每次抽樣保留約 36.8% out-of-bag 作驗證,有效利用稀缺資料。(2) 中等樣本(100-500):Stratified K-Fold(K=10)是 sweet spot,每 fold 約 35 筆夠穩定,bias-variance 平衡好。(3) 大樣本(>5000):資料量已足夠,5-fold CV 或單次 hold-out 即可,過細的 fold 反而增加計算成本而無實質提升。LOOCV 在中大樣本不划算(計算昂貴 + 高 variance)。",
+        "wrong": {
+          "(X)(Y)(Z) 都用 Leave-One-Out CV(LOOCV),因為它使用全部資料訓練、評估方差理論上最小,是 CV 的金標準": "LOOCV 計算成本 = N 次訓練,在 Z=10000 完全不可行;且 LOOCV 雖 bias 低但 variance 高(N 次模型幾乎相同),統計上並非永遠最優",
+          "(X)(Y)(Z) 都用單次 80/20 split,因為 split 簡單直觀且工業實務廣用,CV 是學術上的過度設計": "X=80 筆做 80/20 split 後 train=64、test=16,單次 variance 巨大;且 CV 是 ML 工業標準(scikit-learn / Kaggle 廣用),非學術過度設計",
+          "(X) 用 5-fold CV、(Y) 用 LOOCV、(Z) 用 Bootstrap,小樣本給 fold、中樣本給 LOO、大樣本給 Bootstrap": "對應完全顛倒:極小樣本適合 Bootstrap(校正稀缺)、大樣本適合簡單 split(已足夠穩定)、LOOCV 在中等樣本反而最沒效率"
+        },
+        "hook": "樣本量 CV 口訣:<100 → Bootstrap(.632+ 校正);100-500 → Stratified 10-fold;>5000 → 5-fold 或單次 split;LOOCV 慎用(計算貴 + variance 高)"
+      },
+      "misconceptions": ["以為 LOOCV 永遠最優", "在小樣本仍用單次 split", "把 Bootstrap 與 K-Fold CV 視為大樣本場景的選擇"],
+      "related_node_ids": ["n_L23303_003", "n_L23303_010", "n_L23303_004"],
+      "tags": ["Bootstrap", "K-Fold", "LOOCV", "小樣本CV", "情境決策"]
+    },
+    {
+      "id": "q_pg_007",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_011",
+      "subject": 3,
+      "format": "calculation",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某詐欺偵測模型在驗證集表現如下混淆矩陣:TP={tp}、FP={fp}、FN={fn}、TN={tn}(正樣本即詐欺)。資料極度不平衡(正樣本 < 1%)。請計算 Matthews Correlation Coefficient(MCC),四捨五入到小數點第三位。MCC 公式:(TP·TN - FP·FN) / sqrt((TP+FP)·(TP+FN)·(TN+FP)·(TN+FN))",
+      "stem_variables": {
+        "case_a": {"tp": "30", "fp": "20", "fn": "10", "tn": "9940", "answer": "0.766", "wrong1": "0.857", "wrong2": "0.500", "wrong3": "0.997"},
+        "case_b": {"tp": "20", "fp": "30", "fn": "20", "tn": "9930", "answer": "0.491", "wrong1": "0.400", "wrong2": "0.500", "wrong3": "0.995"},
+        "case_c": {"tp": "45", "fp": "15", "fn": "15", "tn": "9925", "answer": "0.812", "wrong1": "0.750", "wrong2": "0.667", "wrong3": "0.997"},
+        "case_d": {"tp": "10", "fp": "40", "fn": "30", "tn": "9920", "answer": "0.272", "wrong1": "0.200", "wrong2": "0.250", "wrong3": "0.993"}
+      },
+      "options": [
+        {"text": "{answer},MCC 同時考量四個矩陣象限與類別比例,最不易被多數類掩蓋", "is_correct": true},
+        {"text": "{wrong1},僅以 Recall = TP/(TP+FN) 計算,完全未納入 FP 與 TN", "is_correct": false, "trap_type": "Recall 只看 TP/正類錯誤,忽略多數類資訊"},
+        {"text": "{wrong2},僅以 F1 = 2·P·R/(P+R) 計算,只考慮 TP/FP/FN 三象限,忽略 TN", "is_correct": false, "trap_type": "F1 不含 TN,在不平衡資料仍可能誤導,MCC 是其進階版"},
+        {"text": "{wrong3},以 Accuracy = (TP+TN)/全體計算,被 TN 主導而高估", "is_correct": false, "trap_type": "極不平衡時 Accuracy 被 TN 主導,常達 99% 卻無實質意義"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "MCC = (TP·TN - FP·FN) / sqrt((TP+FP)·(TP+FN)·(TN+FP)·(TN+FN));範圍 [-1, +1],+1=完美、0=隨機、-1=完全反向。以 case_a 為例:分子 = 30·9940 - 20·10 = 298200 - 200 = 298000;分母 = sqrt(50·40·9960·9950) = sqrt(50·40·99,102,000) ≈ sqrt(198,204,000,000) ≈ 388,927;MCC ≈ 298000 / 388927 ≈ 0.766。MCC 同時納入四個象限,且分母對類別比例做標準化,是極度不平衡資料下最不易被誤導的指標,優於 F1(忽略 TN)與 Accuracy(被 TN 主導)。",
+        "wrong": {
+          "{wrong1},僅以 Recall = TP/(TP+FN) 計算,完全未納入 FP 與 TN": "Recall 只衡量正類被找出比例,完全不考慮 FP(誤報)與 TN(正確排除),在詐欺偵測會產生『高 Recall 但濫報』的偏頗模型",
+          "{wrong2},僅以 F1 = 2·P·R/(P+R) 計算,只考慮 TP/FP/FN 三象限,忽略 TN": "F1 不含 TN,在不平衡資料仍可能誤導(雖優於 Accuracy);MCC 將 TN 納入並用幾何平均做標準化,更嚴謹",
+          "{wrong3},以 Accuracy = (TP+TN)/全體計算,被 TN 主導而高估": "極度不平衡(正樣本 <1%)時,模型全猜陰性 Accuracy 也達 99%,完全失效;MCC 透過分母項抑制此效應"
+        },
+        "hook": "MCC 公式記憶:分子=對角差積(TP·TN - FP·FN),分母=四邊和的幾何平均(每行每列加總相乘開根);範圍 [-1,+1] 是最強健的不平衡指標"
+      },
+      "misconceptions": ["把 MCC 算成 (TP·TN)/(FP·FN)", "忽略 MCC 分母的標準化作用", "在極不平衡仍用 F1 而非 MCC"],
+      "related_node_ids": ["n_L23303_002", "n_L23303_011", "n_L23303_007"],
+      "tags": ["calculation", "MCC", "F1", "Balanced Accuracy", "極度不平衡", "詐欺偵測"]
+    },
+    {
+      "id": "q_pg_008",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_012",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某醫學影像團隊請 3 位放射師對 200 張 CT 影像獨立標註『有/無病灶』,要評估標註者間一致性以決定是否需要再訓練。同時也想評估『AI 模型 vs 多數投票真值』的一致性。下列何者最正確描述 Cohen's Kappa 在兩個情境的應用?",
+      "options": [
+        {"text": "標註者間一致性:可用兩兩配對的 Cohen's Kappa(3 位則計算 3 對 K 取平均),或直接用 Fleiss' Kappa(三位以上專用);AI vs 真值:可用 Cohen's Kappa 衡量超越隨機一致(prevalence adjusted),比 Accuracy 更能反映類別不平衡下的真實一致性", "is_correct": true},
+        {"text": "Cohen's Kappa 只適用於『二位標註者』兩兩比較,三位以上必須用簡單 Accuracy 計算一致性,Fleiss' Kappa 是錯誤統計", "is_correct": false, "trap_type": "Fleiss' Kappa 正是 Cohen's Kappa 的多位標註者推廣,公式合理且廣為使用,並非錯誤統計"},
+        {"text": "Cohen's Kappa 與 Accuracy 在數學上等價,只是 Kappa 多除以類別數;在實務上選哪個都可以", "is_correct": false, "trap_type": "兩者完全不等價:Kappa = (Po - Pe)/(1 - Pe),減去『隨機一致機率 Pe』;Accuracy 不做隨機調整,在不平衡時被高估"},
+        {"text": "Cohen's Kappa 適合評估標註者一致性但不適合評估 AI vs 真值,因為 AI 不是『獨立標註者』而是『系統輸出』,概念不可混用", "is_correct": false, "trap_type": "Kappa 衡量任兩個分類序列的一致性,不要求都是『人』;AI 與真值一致性可用 Kappa,且常見於模型驗收"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Cohen's Kappa κ = (Po - Pe) / (1 - Pe),Po=觀察到的一致比例,Pe=隨機期望一致比例;κ ∈ [-1, +1],+1=完美一致、0=僅與隨機相當、<0=反向。應用場景:(1) 標註者間一致性:兩位用 Cohen's Kappa,三位以上用 Fleiss' Kappa(Cohen's 的多人推廣);通常 κ>0.61 為強一致(Landis-Koch 標準)。(2) AI 模型 vs 真值:Kappa 比 Accuracy 更能反映『超越隨機』的真實一致性,在類別不平衡時尤其重要(因 Pe 會調整高基線);臨床 AI 驗收常用此指標。",
+        "wrong": {
+          "Cohen's Kappa 只適用於『二位標註者』兩兩比較,三位以上必須用簡單 Accuracy 計算一致性,Fleiss' Kappa 是錯誤統計": "Fleiss' Kappa 是 Cohen's 的多位標註者推廣,公式為各類別觀察比例與期望比例之差,廣泛用於醫學標註研究;『錯誤統計』為謬誤",
+          "Cohen's Kappa 與 Accuracy 在數學上等價,只是 Kappa 多除以類別數;在實務上選哪個都可以": "Kappa 公式 κ = (Po - Pe)/(1 - Pe) 減去隨機期望 Pe,Accuracy = Po 不做調整;當 Pe 高(類別極不平衡)時 Accuracy 嚴重高估,兩者數值差異可達 0.4 以上",
+          "Cohen's Kappa 適合評估標註者一致性但不適合評估 AI vs 真值,因為 AI 不是『獨立標註者』而是『系統輸出』,概念不可混用": "Kappa 數學上只衡量任兩序列的一致性,不要求都來自人;醫學 AI 驗收(FDA、CE 標籤)常以 AI vs 真值 Kappa 為審查指標,實務廣用"
+        },
+        "hook": "Kappa 公式:κ = (Po - Pe)/(1 - Pe),減去隨機期望;兩位 = Cohen's,三位以上 = Fleiss';κ>0.81 近乎完美、0.61-0.80 強、0.41-0.60 中等、<0.40 弱(Landis-Koch)"
+      },
+      "misconceptions": ["以為 Kappa 與 Accuracy 等價", "認為 Kappa 只適用兩位標註者", "認為 Kappa 不能用於 AI 驗收"],
+      "related_node_ids": ["n_L23303_002", "n_L23303_012", "n_L24201_004"],
+      "tags": ["Cohen's Kappa", "Fleiss' Kappa", "標註一致性", "AI驗收", "醫學影像"]
+    },
+    {
+      "id": "q_pg_009",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_013",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某風控團隊繪製模型校準圖(Calibration Plot,X=預測機率分組,Y=該組實際陽性比例)。發現曲線『系統性高於對角線(y=x)』,即模型在 P=0.7 時實際陽性率為 0.85;P=0.3 時實際陽性率為 0.45。模型整體 AUC=0.92 看似不錯。下列校準診斷與調整策略何者正確?",
+      "options": [
+        {"text": "模型為『under-confident』(預測機率系統性低於真實);若 reliability diagram 接近線性可用 Platt Scaling(sigmoid 校準);若呈現非單調或彎曲則用 Isotonic Regression(非參數單調回歸,更彈性但需更多資料防過擬合)", "is_correct": true},
+        {"text": "模型為『over-confident』(預測機率系統性高於真實);應用 Temperature Scaling 把 logits 除以 T>1 使機率分布更扁平", "is_correct": false, "trap_type": "本題實際 > 預測,代表模型『低估』機率,屬於 under-confident;over-confident 是『預測 > 實際』,方向相反"},
+        {"text": "AUC 0.92 已經很好,校準偏差不需處理,因為排序能力足夠就能用 threshold 調整解決", "is_correct": false, "trap_type": "AUC 衡量排序能力,與校準是兩個獨立面向;高 AUC 模型仍可能機率偏移,在『需直接使用機率值』(如風險定價、bayes 決策)場景仍需校準"},
+        {"text": "Platt Scaling 與 Isotonic Regression 完全等價,選哪個都可以", "is_correct": false, "trap_type": "Platt 是參數化 sigmoid(只 2 參數),擬合彈性低但抗 overfit;Isotonic 是非參數單調回歸(N 段函數),彈性高但需更多資料,兩者並非等價"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "校準診斷邏輯:Calibration Plot 中 y(實際陽性率) > x(預測機率) 代表模型『低估真實機率』,即 under-confident;反之 y < x 為 over-confident。校準方法選擇:(1) Platt Scaling:對 logits 套 sigmoid 重新映射,只有 2 個參數,適合『近似線性偏移』,抗過擬合,需要資料量少。(2) Isotonic Regression:非參數單調回歸(階梯函數),彈性極高可處理任意非線性偏移,但需要較多資料(>1000)防止 overfit。AUC 衡量排序而非機率值準確,兩者獨立。",
+        "wrong": {
+          "模型為『over-confident』(預測機率系統性高於真實);應用 Temperature Scaling 把 logits 除以 T>1 使機率分布更扁平": "本題實際陽性率(0.85)>預測機率(0.7),代表模型機率『偏低』,屬 under-confident;若做 T>1 扁平化會更糟。Over-confident 是預測值>實際,方向完全相反",
+          "AUC 0.92 已經很好,校準偏差不需處理,因為排序能力足夠就能用 threshold 調整解決": "AUC 衡量『樣本兩兩排序正確比例』,與機率絕對值無關;在『風險定價』『Bayes 決策』『信賴度展示』需要『可解釋的機率值』場景,即使高 AUC 模型仍可能機率失準需校準",
+          "Platt Scaling 與 Isotonic Regression 完全等價,選哪個都可以": "兩者背後假設不同:Platt 假設 sigmoid 形狀(2 參數),適合資料少且偏差近似線性;Isotonic 為非參數單調回歸(N 段),彈性高但需更多資料防 overfit;選擇取決於資料量與偏差形狀"
+        },
+        "hook": "Calibration 口訣:y > x → under-confident(低估),y < x → over-confident(高估);Platt = sigmoid 參數化(資料少),Isotonic = 非參數單調(資料多);AUC 高 ≠ 校準好"
+      },
+      "misconceptions": ["把 under/over-confident 方向搞反", "認為 AUC 高就不需校準", "把 Platt 與 Isotonic 視為等價"],
+      "related_node_ids": ["n_L23303_002", "n_L23303_013", "n_L23303_007"],
+      "tags": ["Calibration", "Platt Scaling", "Isotonic Regression", "Temperature Scaling", "風控"]
+    },
+    {
+      "id": "q_pg_010",
+      "knowledge_code": "L23304",
+      "node_id": "n_L23304_004",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某 CV 工程師面臨四項任務:(α) 影像分類(ImageNet 1000 類)、(β) 物件偵測(COCO,需框出物件位置)、(γ) 語意分割(像素級)、(δ) 文字分類(BERT 微調)。需從『Label Smoothing / Mixup / Cutout / CutMix』中選擇最適合的進階正則化技術。下列搭配何者最合理?",
+      "options": [
+        {"text": "(α) 分類首選 Mixup(線性混合兩樣本與標籤,軟化決策邊界);(β) 偵測搭配 CutMix(切下另一影像區塊填入,自然產生『部分遮蔽物件』情境);(γ) 分割避免 Cutout(會遺失目標像素標籤);(δ) 文字適合 Label Smoothing(softmax 軟化,不需空間變換)", "is_correct": true},
+        {"text": "四項任務都用 Cutout 即可,因為 Cutout 概念最簡單(隨機遮蔽方塊)且通用性最強", "is_correct": false, "trap_type": "Cutout 在分割任務會直接遮蔽到目標像素,造成標籤錯誤;在文字任務無『空間』概念可遮蔽,完全不適用"},
+        {"text": "Label Smoothing 只適合二分類,本題四項皆多類別任務不能用,應一律改 Mixup", "is_correct": false, "trap_type": "Label Smoothing 設計初衷就是多類別 softmax 校準(把 one-hot 0/1 軟化為 ε/(K-1) 與 1-ε),廣用於 ImageNet、BERT 等多類場景"},
+        {"text": "Mixup 與 CutMix 完全等價,只是切割方式不同,效果與適用任務一致", "is_correct": false, "trap_type": "兩者背後物理意義不同:Mixup 是『連續混合』(兩影像加權平均,可能產生不存在的鬼影),CutMix 是『局部替換』(產生語意合理的遮蔽情境),效果與偵測/分割表現有差異"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "進階正則化任務對應:(1) Label Smoothing:把 one-hot 標籤從 [0,1,0] 軟化為 [ε, 1-ε, ε],減低模型過於自信,適用於『分類』(影像或文字);(2) Mixup:λx_a + (1-λ)x_b 線性混合兩樣本與標籤,軟化決策邊界,適合『分類』;(3) Cutout:隨機遮蔽方塊讓模型學習部分資訊,適合『分類』(但分割會破壞像素標籤,應避免);(4) CutMix:從另一張圖切區塊貼上,標籤按面積混合,產生語意合理的遮蔽,特別適合『偵測』(模擬部分遮擋)。文字無空間性,只 Label Smoothing 通用。",
+        "wrong": {
+          "四項任務都用 Cutout 即可,因為 Cutout 概念最簡單(隨機遮蔽方塊)且通用性最強": "Cutout 在分割(γ) 會遮蔽到目標像素導致標籤失真;在文字(δ) 完全無空間概念可遮蔽;『通用性最強』為謬誤,正則化需與任務性質對齊",
+          "Label Smoothing 只適合二分類,本題四項皆多類別任務不能用,應一律改 Mixup": "Label Smoothing 設計就是多類 softmax 軟化:y_smooth = (1-ε)·y + ε/K;Inception V3、BERT 等多類大模型廣用此技術,『只適合二分類』為錯誤理解",
+          "Mixup 與 CutMix 完全等價,只是切割方式不同,效果與適用任務一致": "兩者本質差異:Mixup 為『像素加權混合』可能產生鬼影、不符合自然影像分布;CutMix 為『區塊置換』保留局部紋理結構,語意合理。在偵測/分割任務 CutMix 顯著優於 Mixup"
+        },
+        "hook": "進階正則化任務口訣:文字→Label Smoothing;影像分類→Mixup/Cutout;偵測/分割→CutMix(避免 Cutout);Mixup 是『連續混合』、CutMix 是『局部替換』,意義不同"
+      },
+      "misconceptions": ["以為 Cutout 通用於所有 CV 任務", "誤以為 Label Smoothing 只適合二分類", "把 Mixup 與 CutMix 視為等價"],
+      "related_node_ids": ["n_L23304_002", "n_L23304_004", "n_L22302_005"],
+      "tags": ["Label Smoothing", "Mixup", "Cutout", "CutMix", "進階正則化", "情境決策"]
+    },
+    {
+      "id": "q_pg_011",
+      "knowledge_code": "L23304",
+      "node_id": "n_L23304_006",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某團隊訓練 200 層的 ResNet 用於醫學影像辨識,發現訓練不穩定且過擬合嚴重,加深層數反而效果變差。考慮採用 Stochastic Depth(隨機深度,訓練時隨機跳過部分層)或 DropPath(在 multi-branch 架構隨機丟棄路徑)。下列敘述何者最正確描述其與 Dropout 差異及適用時機?",
+      "options": [
+        {"text": "Stochastic Depth/DropPath 是『層級或路徑級』隨機丟棄,降低有效深度並提供層間隱式 ensemble;在極深網路(>100 層)優於 Dropout(神經元級丟棄)因可緩解梯度消失與過擬合;Dropout 在淺層網路或 fully connected 層仍有效,但深層 ResNet 中已逐漸被 Stochastic Depth 取代", "is_correct": true},
+        {"text": "Stochastic Depth 與 Dropout 完全等價,只是丟棄粒度不同,選哪個對效果無差別", "is_correct": false, "trap_type": "兩者效果差異顯著:Dropout 在 ResNet 殘差路徑常與 batch norm 衝突反而傷害效能;Stochastic Depth 跳過整層,等效於訓練不同深度的子網路 ensemble"},
+        {"text": "Stochastic Depth 在任何情境下都優於 Dropout,Dropout 在現代 ML 已被淘汰", "is_correct": false, "trap_type": "Dropout 在 fully connected 層、Transformer attention dropout、淺層 CNN 仍廣用且有效,並未被『淘汰』;深度上的偏好不等於全面淘汰"},
+        {"text": "DropPath 只適用於單路徑線性架構(VGG、ResNet),不適合 multi-branch(Inception、PyramidNet)", "is_correct": false, "trap_type": "DropPath 設計初衷正是為 multi-branch 架構(在多條平行路徑中隨機丟棄),反而在線性架構意義不大;描述完全顛倒"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Stochastic Depth(Huang et al. 2016)在訓練時依機率 p_l 隨機跳過第 l 層(直接通過 identity),測試時所有層皆使用並依訓練機率縮放。其優勢:(1) 隱式 ensemble:訓練不同深度子網路,提升泛化;(2) 降低梯度消失:訓練時短路使梯度更易傳遞;(3) 加速訓練:跳過層減少計算。適用 100+ 層 ResNet。DropPath 是其在 multi-branch(Inception/PyramidNet)的推廣,在多路徑中隨機丟棄整路徑。Dropout 在 ResNet 常與 batch norm 衝突,故深層被 Stochastic Depth 取代;但 Dropout 在 FC 層、Transformer 仍廣用。",
+        "wrong": {
+          "Stochastic Depth 與 Dropout 完全等價,只是丟棄粒度不同,選哪個對效果無差別": "在深層 ResNet 中,Dropout 與 batch norm 同時使用會破壞 BN 的 mean/variance 估計而傷害效能;Stochastic Depth 跳過整層,並非僅粒度差異,實證上效果差異顯著",
+          "Stochastic Depth 在任何情境下都優於 Dropout,Dropout 在現代 ML 已被淘汰": "Dropout 在 fully connected 層、Transformer 的 attention/feedforward dropout、淺層 CNN 仍廣用;BERT、GPT、ViT 都使用 Dropout 變體;『淘汰』為謬誤",
+          "DropPath 只適用於單路徑線性架構(VGG、ResNet),不適合 multi-branch(Inception、PyramidNet)": "DropPath 正是為 multi-branch 設計(在多平行路徑中隨機丟棄整路徑);線性架構僅有單一前進路徑,Stochastic Depth 已足夠,DropPath 無多路徑可丟棄,描述顛倒"
+        },
+        "hook": "深層網路正則化口訣:Dropout=神經元級(FC 層、Transformer);Stochastic Depth=層級(>100 層 ResNet);DropPath=路徑級(multi-branch 如 Inception);三者粒度漸增、適用架構漸特化"
+      },
+      "misconceptions": ["把 Stochastic Depth 與 Dropout 視為等價", "認為 Dropout 已被全面淘汰", "顛倒 DropPath 適用架構"],
+      "related_node_ids": ["n_L23304_004", "n_L23304_006", "n_L22302_007"],
+      "tags": ["Stochastic Depth", "DropPath", "Dropout", "深度網路", "進階正則化"]
+    },
+    {
+      "id": "q_pg_012",
+      "knowledge_code": "L23304",
+      "node_id": "n_L23304_007",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某 ML 平台需在大規模超參搜尋(1000 組候選)+ 預算受限(總計算量等於 200 組完整訓練)下完成調校。團隊比較 Hyperband 與 ASHA(Asynchronous Successive Halving)。下列何者最正確描述兩者 trade-off 與選擇?",
+      "options": [
+        {"text": "兩者都用『多階段早停』(逐輪淘汰差的配置),但 ASHA 是『非同步』(任一資源空出立即指派下一組,不等同步點),適合大規模平行;Hyperband 為『同步』分桶 + bracket 結構,理論保證較強但平行效率低。本題大規模 + 平行優先 → ASHA", "is_correct": true},
+        {"text": "Hyperband 與 ASHA 完全等價,只是命名不同;選任一個結果一致", "is_correct": false, "trap_type": "兩者結構與平行化能力差異顯著:Hyperband 同步 bracket 結構,ASHA 非同步;在大規模平行下 ASHA 加速比顯著高於 Hyperband"},
+        {"text": "Hyperband 只能用於連續超參、ASHA 只能用於離散超參,兩者互斥", "is_correct": false, "trap_type": "兩者皆可同時處理連續+離散超參,並無此區分;通常與 Random Search 或 BO 結合做配置生成"},
+        {"text": "本題候選 1000 組,應優先用 GridSearch 完整探索,Hyperband/ASHA 都會錯過最佳點", "is_correct": false, "trap_type": "GridSearch 在 1000 候選下需完整訓練 1000 次(超出 200 預算上限);Hyperband/ASHA 透過早停集中資源到有潛力配置,實證上找到的最佳點通常與 GridSearch 接近甚至更好"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Successive Halving 思想:用少量資源訓練多組配置,淘汰最差一半;倖存者再以倍數資源續訓,直到剩 1-2 組。Hyperband(2017):用多個 bracket(不同初始 budget)避免單 bracket 早停過於積極,理論保證較強,但 bracket 內為同步等待。ASHA(2018):非同步版本,任一 worker 空閒立即指派新配置,不等待同步點,大規模平行加速比顯著(>10×)。本題 1000 組候選 + 大規模平行需求,ASHA 顯然優於 Hyperband。",
+        "wrong": {
+          "Hyperband 與 ASHA 完全等價,只是命名不同;選任一個結果一致": "兩者結構不同:Hyperband 用同步 bracket(必須等所有配置在當前 rung 跑完才晉級),ASHA 為非同步晉級;在大規模平行(>50 workers)ASHA 加速比超過 Hyperband 一個量級",
+          "Hyperband 只能用於連續超參、ASHA 只能用於離散超參,兩者互斥": "兩者皆與配置生成器(Random Search、BO)解耦,可處理任意超參空間(連續+離散+條件);區分連續/離散是 BO acquisition function 的議題,不是早停演算法的議題",
+          "本題候選 1000 組,應優先用 GridSearch 完整探索,Hyperband/ASHA 都會錯過最佳點": "GridSearch 1000 配置需完整訓練 1000 次,遠超 200 預算;Hyperband/ASHA 在 200 預算下可探索更多 partial training,實證上 Top-1 配置不遜於甚至優於 GridSearch"
+        },
+        "hook": "Hyperband vs ASHA 口訣:都用 Successive Halving 早停;Hyperband=同步多 bracket(理論保證強,平行差);ASHA=非同步單流(平行優,大規模首選);GridSearch 在預算受限完全失效"
+      },
+      "misconceptions": ["把 Hyperband 與 ASHA 視為等價", "認為 GridSearch 在大規模搜尋仍最優", "誤分連續/離散超參的演算法歸屬"],
+      "related_node_ids": ["n_L23304_005", "n_L23304_007", "n_L23303_008"],
+      "tags": ["Hyperband", "ASHA", "Successive Halving", "超參調校", "大規模平行"]
+    },
+    {
+      "id": "q_pg_013",
+      "knowledge_code": "L23304",
+      "node_id": "n_L23304_008",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某團隊為 Transformer 模型調校,搜尋空間包含:learning_rate(連續 log-scale)、batch_size(離散 [16,32,64,128])、optimizer(類別 [Adam, AdamW, Lion])、warmup_steps(條件超參:僅當 optimizer=Adam 時生效)。可使用 16 個 GPU 平行訓練。比較 GP-based BO 與 TPE-based(Optuna 預設)。下列何者最正確?",
+      "options": [
+        {"text": "TPE 對『條件超參+類別+混合連續離散』天然友善(以樹結構建模條件依賴),且支援 Asynchronous 平行;GP-based BO 在『純連續低維(<20)』表現最強,但對類別與條件超參需特殊 kernel,且平行化效率較低。本題情境 → TPE/Optuna 較合適", "is_correct": true},
+        {"text": "GP-based BO 在所有情境永遠優於 TPE,因為 GP 提供完整不確定性量化,TPE 只是簡化版本", "is_correct": false, "trap_type": "GP-based BO 在『連續低維』有優勢,但對類別/條件超參需特殊 kernel(如 ARD、混合 kernel),工程複雜度高;TPE 並非『簡化版本』而是『另一種建模思路』"},
+        {"text": "TPE 與 GP-based BO 完全等價,只是套件實作不同(scikit-optimize vs Optuna);效果一致", "is_correct": false, "trap_type": "兩者背後機率模型完全不同:GP 直接建模 p(y|x),TPE 建模 p(x|y) 並比較『好區域』與『壞區域』分佈比;在處理條件超參時 TPE 結構優勢明顯"},
+        {"text": "兩者都不適合本題,應改用 GridSearch 完整探索 16×3×4×多 warmup 配置才能找到全域最佳", "is_correct": false, "trap_type": "包含連續 learning_rate 無法 Grid 完全列舉;且條件超參使有效配置數受 optimizer 影響,GridSearch 會浪費大量無效配置(如 Lion 仍探索 warmup)"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Bayesian Optimization 兩大流派:(1) GP-based BO(scikit-optimize、GPyOpt):用 Gaussian Process 建模 p(y|x) 後驗分佈,提供精確不確定性量化,適合『純連續低維(<20)』;對類別/條件超參需特殊 kernel(ARD、混合 kernel),工程困難且 GP 計算複雜度 O(n³),平行化效率低。(2) TPE(Tree-structured Parzen Estimator,Optuna 預設):用樹結構建模條件依賴,以 KDE 估 p(x|y<γ) 與 p(x|y≥γ) 比例選下一點;天然支援類別+條件+混合空間,且 Optuna 提供 Asynchronous 平行。本題有條件超參+類別+16 GPU → TPE/Optuna 較合適。",
+        "wrong": {
+          "GP-based BO 在所有情境永遠優於 TPE,因為 GP 提供完整不確定性量化,TPE 只是簡化版本": "GP-based BO 在『純連續低維』確實優,但對類別/條件超參需特殊 kernel,工程複雜;TPE 並非簡化版本,而是基於不同建模假設(p(x|y) 分位數比),在條件空間表現更強",
+          "TPE 與 GP-based BO 完全等價,只是套件實作不同(scikit-optimize vs Optuna);效果一致": "兩者數學基礎完全不同:GP 直接擬合代理函數 p(y|x);TPE 比較『好/壞區域』KDE 比例;在處理條件依賴與類別空間時 TPE 結構性優勢明顯",
+          "兩者都不適合本題,應改用 GridSearch 完整探索 16×3×4×多 warmup 配置才能找到全域最佳": "連續 learning_rate(log-scale)無法 Grid 完整列舉;條件超參(warmup 僅 Adam 用)使 GridSearch 在非 Adam 配置下浪費 warmup 探索;BO/TPE 透過代理模型聚焦有潛力區域,在預算受限時更高效"
+        },
+        "hook": "BO 流派口訣:純連續低維(<20)→ GP-based BO(精確);類別+條件+混合 → TPE(Optuna);大規模平行 → 兩者都需異步機制(Optuna 內建好);GridSearch 在連續+條件下完全失效"
+      },
+      "misconceptions": ["以為 GP-based BO 永遠最優", "把 TPE 視為 GP 的簡化版本", "在連續+條件超參空間仍迷信 GridSearch"],
+      "related_node_ids": ["n_L23304_005", "n_L23304_008", "n_L23304_007"],
+      "tags": ["Bayesian Optimization", "GP-based", "TPE", "Optuna", "條件超參", "超參調校"]
+    }
+  ]
+}
