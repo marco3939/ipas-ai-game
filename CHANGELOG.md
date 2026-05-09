@@ -21,6 +21,14 @@
 - 採用模式 B(輕量 bypass):階段內動作直接執行,僅在決策節點強制停
 - 修正官方 PDF 排版錯字:科三 L233 之 L22303/L22304 → 正確 L23303/L23304
 
+### Added — 2026-05-09(階段 3)
+- `kb/nodes-subject-1.json`:28 nodes(科一 7/8 編碼覆蓋,L21201 留階段 6 生成)
+- `kb/nodes-subject-3.json`:25 nodes(批 1)
+- `kb/nodes-subject-3-extended.json`:32 nodes(批 2 擴充,科三 12 編碼全覆蓋)
+- `kb/extraction-log.md`:6 批處理紀錄與決策
+- 累計 85 nodes,全合規鐵律 #1(misconceptions / explanation_hooks / variation_seeds)
+- 5 個 errata_critical 已嵌入
+
 ### Added — 2026-05-09(階段 2)
 - `kb/exam-patterns.json`:114-2 考古題 100 題完整解析(科一+科三,科二邊界跳過)
 - `docs/exam-pattern-summary.md`:Top 15 高頻主題、14 組易混淆配對、Python 程式碼考點、題型分布、權重建議

@@ -11,10 +11,11 @@
 |:-:|:--|:-:|:-:|:--|
 | 1 | 機器學習分類總表 + 避免過擬合彙整 + 降維方法總表 | ✅ | +25 (S3) | 2026-05-09 |
 | 2 | IPAS_AI中級_5月23日_衝刺複習主檔.md(讀 1-800 行,核心已涵蓋) | ✅ | +28 (S1) | 2026-05-09 |
-| 3 | 機器學習複習.pptx + 機器學習理論前沿.pptx | ⏳ | — | — |
-| 4 | 用漫畫學AI 科目一.pdf | ⏳ | — | — |
-| 5 | 用漫畫學AI 科目三.pdf | ⏳ | — | — |
-| 6 | iPAS 初級講義.pdf(含 [L4] 中級驗證標註) | ⏳ | — | — |
+| 3 | 機器學習複習.pptx(視覺簡報) + 理論前沿.pptx(前沿議題) | ✅(空批) | 0 | 2026-05-09 |
+| 4 | 用漫畫學AI 科目一.pdf | ✅(跳過) | 0(掃描型,無文字層) | 2026-05-09 |
+| 5 | 用漫畫學AI 科目三.pdf | ✅(跳過) | 0(掃描型,無文字層) | 2026-05-09 |
+| 6 | iPAS 初級講義.pdf | ✅(跳過) | 0(衝刺主檔 v3 已涵蓋此講義延伸概念) | 2026-05-09 |
+| 2-擴充 | 衝刺主檔回頭補抽科三 8 個未覆蓋編碼 | ✅ | +32 (S3 ext) | 2026-05-09 |
 
 科二漫畫(31.7 MB)跳過,僅作邊界參考。
 
@@ -70,10 +71,55 @@
 - L21201 評估 0(衝刺主檔提及但 nodes 數低,後續批次補)
 - 科三:L23101 機率統計、L23103 數值優化、L23202 演算法(只 1 node)、L23203 深度學習、L23301-L23303、L23401-L23402
 
-### 批 2 nodes 增量明細
-- nodes-subject-1.json:0 → 28(全新建)
-- nodes-subject-3.json:25(無變動)
-- 累計總 nodes:53
+### 階段 3 最終 nodes 統計(2026-05-09)
+- nodes-subject-1.json:**28 nodes**(科一 8 編碼覆蓋 7,L21201 評估規劃留白 — 階段 6 由權重生成)
+- nodes-subject-3.json:**25 nodes**(批 1 原檔)
+- nodes-subject-3-extended.json:**32 nodes**(批 2 擴充補強科三未覆蓋編碼)
+- **累計總 nodes:85**
+
+### 編碼覆蓋率
+| 編碼 | nodes 數 | 覆蓋狀態 |
+|:--|:-:|:-:|
+| L21101–L21302(科一 8 編碼除 L21201) | 28 | ✅ |
+| L21201 AI 導入評估 | 0 | ⚠️ 階段 6 權重生成 |
+| L23101–L23402(科三 12 編碼) | 57 | ✅ 全覆蓋 |
+| **總計** | **85** | **20/21 編碼有 nodes** |
+
+### 鐵律合規 ✅
+- 85 nodes 全部具備 `common_misconceptions`、`explanation_hooks`、`variation_seeds`
+- 5 個 errata_critical 點已嵌入(PDPA 六項、NMF non-negative、Recall 公式、Log-Odds 譯名、加權求和索引)
+
+### 批 4-6 處理決策(空批,2026-05-09)
+- **批 4 漫畫科一(33 MB / 20 頁)**:read_pdf_content 回報「No text could be extracted (likely scanned)」+ Canvas dependency 載入失敗 → 跳過
+- **批 5 漫畫科三(20 MB / 15 頁)**:同樣掃描型 → 跳過
+- **批 6 初級講義(42 MB / 543 頁)**:有文字層 ✅,但內容為「初級」資料且衝刺主檔 v3 補強段已從此講義萃取 7 個關鍵中級延伸概念(Bias-Variance、AI 自治四階層、生成模型四家族、RAG 比喻、CoT、AI Agent 三要素、Hard-coding vs ML)→ 跳過避免 [L4] 風險
+
+### 批 2 擴充(2026-05-09)
+基於已讀衝刺主檔內容(1-800 行),回頭補抽科三 8 個未覆蓋編碼之 nodes:
+- L23101 機率統計:3 nodes(貝氏定理、Monte Carlo、CLT)
+- L23103 數值優化:4 nodes(Adam、凸非凸、學習率、O(n²))
+- L23202 演算法:8 nodes(DBSCAN、邏輯迴歸、SVM、決策樹、XGBoost、信用評分卡、K-means vs DBSCAN、Apriori 三指標)
+- L23203 深度學習:3 nodes(ReLU、LSTM、加權求和勘誤)
+- L23301 數據準備:3 nodes(特徵縮放、互動特徵、SMOTE)
+- L23302 模型選擇:1 node
+- L23303 評估驗證:8 nodes(F1 計算、Precision/Recall 勘誤、R²、不平衡禁 Accuracy、CV 種類、macro F1、殘差圖、ARIMA)
+- L23401 隱私:3 nodes(同態加密、技術組合、PETs 對比)
+- L23402 公平性:3 nodes(Bias 三類、公平性指標、Embedding 偏見)
+合計 +32 nodes 寫入 `nodes-subject-3-extended.json`
+
+### 批 3 處理決策(空批,2026-05-09)
+**1150316-機械學習複習.pptx (16.2 MB)**:
+- 結構檢查:Google Slides 匯出,4 張投影片,每張為單一全頁圖片(Type 13 Picture),Placeholder TextLen=0
+- 結論:純視覺化簡報,無文字可程式抽取;OCR 工具未安裝;邊際價值低於衝刺主檔
+- 處置:**跳過**,不抽 nodes
+
+**機器學習理論前沿:核心思維與爭議.pptx (1.9 MB)**:
+- 結構檢查:15 張投影片,文字內容已成功抽取(透過 PowerPoint COM)
+- 內容主題:GFlowNets、NTK 理論、柏拉圖表徵假說、Scaling Laws 爭議、Double Descent、Implicit Regularization
+- 結論:深度高但**屬前沿研究素養補充**,與 IPAS 中級核心考點(基礎概念 + 應用情境)偏離
+- 處置:**閱覽過,不抽 nodes**,避免拉高題庫難度與考試方向不一致;若使用者後續希望加入,可單獨補抽
+
+**累計 nodes 維持 53**(批 3 增量為 0)
 
 ---
 

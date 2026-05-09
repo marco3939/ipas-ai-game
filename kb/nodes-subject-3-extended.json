@@ -1,0 +1,508 @@
+{
+  "version": "1.0",
+  "subject": 3,
+  "schema_version": "1.0-iron-rule",
+  "iron_rule_compliance": "every node has misconceptions, explanation_hooks, variation_seeds",
+  "last_updated": "2026-05-09",
+  "merge_with": "nodes-subject-3.json (combine nodes arrays)",
+  "batches_processed": [
+    {"batch": "2-extended", "files": ["衝刺主檔回頭補抽 — 科三 8 個未覆蓋編碼"], "date": "2026-05-09"}
+  ],
+  "primary_source_note": "本檔節點皆來自衝刺主檔(已讀 1-800 行),L1 級;補完科三未涵蓋編碼",
+  "nodes": [
+    {
+      "node_id": "n_L23101_001", "knowledge_code": "L23101", "title": "貝氏定理(Bayes' Theorem)應用",
+      "category": "formula", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.4-23"}, {"exam": "114-2 科三 Q22"}],
+      "summary": "P(A|B) = P(B|A)·P(A)/P(B);用於『觀察 X 行為下,Y 機率』之條件機率推論",
+      "key_points": ["條件機率倒推", "Naive Bayes 即基於此", "MAP = 結合先驗的最大後驗估計"],
+      "common_misconceptions": ["把 P(A|B) 與 P(B|A) 混淆", "忘記乘以先驗 P(A)"],
+      "explanation_hooks": ["『觀察到 B 後 A 的機率』→ 條件機率 = 貝氏推論", "Naive Bayes 假設特徵條件獨立"],
+      "variation_seeds": [{"context": "顧客行為觀察 → 購買機率推論", "answer": "貝氏定理"}, {"context": "Naive Bayes 屬什麼學派?", "answer": "生成式 + 機率式"}],
+      "related_node_ids": ["n_L23101_002"], "exam_appearance": [{"exam": "114-2", "question_no": 22, "subject": 3}]
+    },
+    {
+      "node_id": "n_L23101_002", "knowledge_code": "L23101", "title": "Monte Carlo 蒙地卡羅模擬",
+      "category": "concept", "source_level": "L1",
+      "source_refs": [{"exam": "114-2 科三 Q23,Q41"}],
+      "summary": "**隨機抽樣**模擬不確定情境,估算分佈與風險區間;條件機率程式化:A_and_B.sum() / B.sum()",
+      "key_points": ["大量隨機樣本逼近期望值", "適用高隨機性問題(再生能源、氣候)", "條件機率 P(A|B) 程式: 在 B 成立樣本中 A 也成立的比例"],
+      "common_misconceptions": ["把 Monte Carlo 當聚類方法", "P(A|B) 程式誤寫為 / (A.sum() * B.sum())"],
+      "explanation_hooks": ["MC 核心:用樣本平均逼近期望", "條件機率程式公式:A_and_B.sum() / B.sum()"],
+      "variation_seeds": [{"context": "太陽能發電量隨機區間估算", "answer": "Monte Carlo"}, {"context": "P(A|B) 程式正確式?", "answer": "A_and_B.sum() / B.sum()"}],
+      "related_node_ids": [], "exam_appearance": [{"exam": "114-2", "question_no": 23, "subject": 3}, {"exam": "114-2", "question_no": 41, "subject": 3}]
+    },
+    {
+      "node_id": "n_L23101_003", "knowledge_code": "L23101", "title": "中央極限定理(CLT)與常態分佈",
+      "category": "concept", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.3-4"}],
+      "summary": "獨立同分佈樣本均值在 n 大時趨近常態;**注意**:不是『任何資料』都呈現常態",
+      "key_points": ["CLT 適用『樣本均值』分佈,非原始資料", "n ≥ 30 通常視為足夠", "二項分佈常態近似條件:np > 5 且 n(1-p) > 5"],
+      "common_misconceptions": ["誤以為資料量大就是常態(實際是均值才是)", "誤套二項常態近似條件"],
+      "explanation_hooks": ["原始資料分佈不重要,均值才趨近常態", "CLT 是統計推論的數學基礎"],
+      "variation_seeds": [{"context": "n=100 二項 p=0.02 能用常態近似嗎?", "answer": "否,np=2 < 5"}],
+      "related_node_ids": []
+    },
+    {
+      "node_id": "n_L23103_001", "knowledge_code": "L23103", "title": "Adam 優化器(內建動量機制)",
+      "category": "concept", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.4-4"}, {"exam": "114-2 科三 Q17"}],
+      "summary": "Adam = SGD+Momentum + RMSProp,**內建動量機制**;為現代深度學習預設優化器",
+      "key_points": ["結合一階(動量)+ 二階(自適應)", "AdamW = Adam + 權重衰減正確化", "其他優化器:SGD、Momentum、Adagrad、RMSProp、Nesterov"],
+      "common_misconceptions": ["以為 SGD 內建動量(實為 SGD+Momentum 才有)", "把 Adam 與 RMSProp 混淆"],
+      "explanation_hooks": ["Adam 兼顧動量(歷史方向)+ 自適應(各參數獨立學習率)", "Adagrad 適合稀疏特徵但學習率單調遞減"],
+      "variation_seeds": [{"context": "下列何者『內建』動量?", "answer": "SGD+Momentum、Adam(都有)"}],
+      "related_node_ids": [], "exam_appearance": [{"exam": "114-2", "question_no": 17, "subject": 3}]
+    },
+    {
+      "node_id": "n_L23103_002", "knowledge_code": "L23103", "title": "凸函數 vs 非凸函數 / 局部最優 / 鞍點",
+      "category": "concept", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.4-2"}, {"exam": "114-2 科三 Q3"}],
+      "summary": "非凸函數 → 多個極值點 → 最佳化結果不穩定(局部最優);凸函數有唯一全域最優",
+      "key_points": ["凸:有唯一全域最優,如 Linear Regression、Convex SVM", "非凸:多局部最優 + 鞍點(神經網路常見)", "解法:好的初始化、多次重啟、使用動量"],
+      "common_misconceptions": ["把『非凸』後果誤判為梯度消失或過擬合", "誤以為深度學習是凸優化"],
+      "explanation_hooks": ["NTK 視角:無限寬網路 → 凸;真實寬度 → 非凸", "鞍點 ≠ 局部最優,但一樣會卡住"],
+      "variation_seeds": [{"context": "非凸目標函數最佳化最可能問題?", "answer": "局部最優解"}],
+      "related_node_ids": [], "exam_appearance": [{"exam": "114-2", "question_no": 3, "subject": 3}]
+    },
+    {
+      "node_id": "n_L23103_003", "knowledge_code": "L23103", "title": "學習率(Learning Rate)控制",
+      "category": "concept", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.4-16"}, {"exam": "114-2 科三 Q12"}],
+      "summary": "控制權重更新速度;**過大發散、過小停滯、不穩定可調 LR**",
+      "key_points": ["LR Schedule:Step Decay、Cosine Annealing、Warm-up", "收斂不穩可調 LR(科三 Q12)", "Adam 自適應一定程度緩解 LR 敏感性"],
+      "common_misconceptions": ["把 LR 視為固定不變", "誤以為提高 LR 能解決過擬合(實際是收斂問題)"],
+      "explanation_hooks": ["LR 是收斂速度旋鈕", "LR Warm-up 用於 Transformer 訓練"],
+      "variation_seeds": [{"context": "DNN 收斂不穩,可調哪個超參?", "answer": "學習率"}],
+      "related_node_ids": [], "exam_appearance": [{"exam": "114-2", "question_no": 12, "subject": 3}]
+    },
+    {
+      "node_id": "n_L23103_004", "knowledge_code": "L23103", "title": "時間複雜度 O(n²) — 兩兩比對",
+      "category": "concept", "source_level": "L1",
+      "source_refs": [{"exam": "114-2 科三 Q33"}],
+      "summary": "n 個元素逐一比對其他所有元素 → O(n²);代表執行時間與資料量平方成正比",
+      "key_points": ["O(1) 常數 / O(log n) 對數 / O(n) 線性 / O(n log n) / O(n²) 平方 / O(2ⁿ) 指數", "兩兩比對(顧客相似度)為 O(n²)"],
+      "common_misconceptions": ["把 O(n²) 與 O(n log n) 混淆"],
+      "explanation_hooks": ["兩層巢狀迴圈 = O(n²)"],
+      "variation_seeds": [{"context": "全顧客兩兩比對相似度", "answer": "O(n²)"}],
+      "related_node_ids": [], "exam_appearance": [{"exam": "114-2", "question_no": 33, "subject": 3}]
+    },
+    {
+      "node_id": "n_L23202_002", "knowledge_code": "L23202", "title": "DBSCAN 三類點(Core / Border / Noise)",
+      "category": "concept", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.4-10"}, {"exam": "114-2 科三 Q4", "exam2": "114-2 科一 Q11,Q48"}],
+      "summary": "兩超參:**ε(鄰域半徑)+ MinPts(最小點數)**;Core/Border/Noise 三類",
+      "key_points": [
+        "Core Point:ε 內 ≥ MinPts 個點",
+        "Border Point:ε 內 < MinPts,但被某 Core Point 覆蓋",
+        "**Noise Point:非核心 + 不被任何核心覆蓋 + 無密度可達關係**",
+        "高維 DBSCAN 失效:距離趨同(維度詛咒)→ 用 KD-Tree / Ball Tree 加速"
+      ],
+      "common_misconceptions": ["把 DBSCAN 兩超參誤為『K 值與距離閾值』(那是 K-means)", "誤以為 ε 越小越好"],
+      "explanation_hooks": ["ε + MinPts 定義『密度』", "Noise = 三條件全違反"],
+      "variation_seeds": [
+        {"context": "DBSCAN 兩超參?", "answer": "ε 與 MinPts"},
+        {"context": "高維 DBSCAN 加速?", "answer": "KD-Tree / Ball Tree"}
+      ],
+      "related_node_ids": [], "exam_appearance": [{"exam": "114-2", "question_no": 4, "subject": 3}, {"exam": "114-2", "question_no": 11, "subject": 1}, {"exam": "114-2", "question_no": 48, "subject": 1}]
+    },
+    {
+      "node_id": "n_L23202_003", "knowledge_code": "L23202", "title": "邏輯迴歸(Logistic Regression)",
+      "category": "formula", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "5.3"}, {"exam": "114-2 科三 Q25"}, {"errata": "4-27 對數勝算的線性關係"}],
+      "summary": "Sigmoid σ(x)=1/(1+e⁻ˣ);二元分類;**對數勝算(Log-Odds)的線性關係**(原 PDF 譯名修正)",
+      "key_points": ["log(p/(1-p)) = β₀ + β₁x₁ + ...", "多類別擴展:Softmax", "Logistic Regression 屬判別式"],
+      "common_misconceptions": ["把 Logistic Regression 當迴歸(實為分類)", "誤譯 Linearity in Log-Odds 為『線性可分性』"],
+      "explanation_hooks": ["線性 in Log-Odds = log 勝算與特徵呈線性關係", "Sigmoid 將線性輸出壓到 (0,1)"],
+      "variation_seeds": [{"context": "Logistic Regression 模型假設?", "answer": "對數勝算的線性關係"}],
+      "related_node_ids": [], "errata_critical": true
+    },
+    {
+      "node_id": "n_L23202_004", "knowledge_code": "L23202", "title": "SVM 超平面 + 核函數",
+      "category": "concept", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "5.3"}],
+      "summary": "找最大邊界(margin)超平面;軟邊界 C 控制錯分容忍;Kernel(線性、多項式、RBF、Sigmoid)處理非線性",
+      "key_points": ["支持向量(Support Vectors)定義 margin", "C ↑:嚴格、C ↓:寬鬆", "Kernel Trick:不必顯式映射高維", "SVR(ε-不敏感區)為迴歸版"],
+      "common_misconceptions": ["把 SVM 當深度學習", "誤以為 RBF 核必定優於線性核"],
+      "explanation_hooks": ["SVM 是『最大邊界分類器』", "Kernel 處理非線性可分"],
+      "variation_seeds": [{"context": "想處理非線性資料用什麼 SVM?", "answer": "RBF Kernel SVM"}],
+      "related_node_ids": ["n_L23102_009"]
+    },
+    {
+      "node_id": "n_L23202_005", "knowledge_code": "L23202", "title": "決策樹 + 資訊增益(Information Gain)",
+      "category": "concept", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "5.3"}, {"exam": "114-2 科三 Q8"}],
+      "summary": "Decision Tree 基於 Gini / Entropy / Information Gain 分裂;**資訊增益用於決策樹特徵選擇**",
+      "key_points": ["Gini = 1 - Σp²", "Entropy = -Σp·log p", "Information Gain = 父節點 Entropy - 子節點加權 Entropy", "演算法:CART(Gini)、ID3/C4.5(IG / IG Ratio)", "**資訊增益主要用於決策樹**(非神經網路、非 SVM、非 L1 模型)"],
+      "common_misconceptions": ["把資訊增益用於 L1 線性模型(實為決策樹專用)"],
+      "explanation_hooks": ["IG = 分裂後不確定性下降量", "決策樹過擬合對策:剪枝(前/後)、限制深度"],
+      "variation_seeds": [{"context": "資訊增益用於哪類模型?", "answer": "決策樹"}],
+      "related_node_ids": [], "exam_appearance": [{"exam": "114-2", "question_no": 8, "subject": 3}]
+    },
+    {
+      "node_id": "n_L23202_006", "knowledge_code": "L23202", "title": "XGBoost vs GBDT 改進",
+      "category": "concept", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.4-19"}, {"exam": "114-2 科三 Q18"}],
+      "summary": "XGBoost = GBDT + 正則化抑制過擬合 + 缺失值自動處理 + 並行化訓練",
+      "key_points": ["正則化:L1/L2 加入損失", "缺失值:自動學最佳分支", "並行化:Block 結構、特徵排序", "LightGBM:Histogram-based、Leaf-wise(進一步改進)"],
+      "common_misconceptions": ["以為 XGBoost 用神經網路替代弱分類器", "誤以為 XGBoost 是 Bagging"],
+      "explanation_hooks": ["XGBoost 三大改進記憶口訣:『正缺平』(正則化、缺失值、平行)"],
+      "variation_seeds": [{"context": "XGBoost 比 GBDT 改進?", "answer": "正則化 + 缺失值 + 並行化"}],
+      "related_node_ids": ["n_L23202_001"], "exam_appearance": [{"exam": "114-2", "question_no": 18, "subject": 3}]
+    },
+    {
+      "node_id": "n_L23202_007", "knowledge_code": "L23202", "title": "信用評分卡標準流程",
+      "category": "flow", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.4-26"}, {"exam": "114-2 科三 Q25"}],
+      "summary": "邏輯迴歸 + 特徵選擇 + 多重共線性分析 + **分箱 Binning + IV 資訊值** + PSI 樣本穩定性;**不**使用生成式模型",
+      "key_points": ["分箱(Binning):連續變數轉箱", "IV(Information Value):特徵預測力", "PSI:樣本穩定性監控", "**生成式模型不在標準流程**"],
+      "common_misconceptions": ["以為傳統信用評分卡會用生成式模型"],
+      "explanation_hooks": ["評分卡 = 邏輯迴歸 + 標準化資料前處理流程"],
+      "variation_seeds": [{"context": "信用評分卡標準步驟非?", "answer": "使用生成式模型進行特徵學習"}],
+      "related_node_ids": ["n_L23202_003"], "exam_appearance": [{"exam": "114-2", "question_no": 25, "subject": 3}]
+    },
+    {
+      "node_id": "n_L23202_008", "knowledge_code": "L23202", "title": "K-means vs DBSCAN",
+      "category": "concept", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "3.3 對照"}],
+      "summary": "K-means:球狀群、需指定 K、不能偵測雜訊;DBSCAN:密度群、可偵測雜訊、不需指定 K",
+      "key_points": ["K-means:K + Centroid 迭代", "DBSCAN:ε + MinPts、自動決定群數", "Hierarchical:凝聚 / 分裂、Dendrogram"],
+      "common_misconceptions": ["K-means 與 DBSCAN 超參數混用"],
+      "explanation_hooks": ["K-means 假設球狀;DBSCAN 不假設形狀但需密度"],
+      "variation_seeds": [{"context": "想偵測雜訊點", "answer": "DBSCAN"}, {"context": "需要指定群數", "answer": "K-means"}],
+      "related_node_ids": ["n_L23202_002"]
+    },
+    {
+      "node_id": "n_L23202_009", "knowledge_code": "L23202", "title": "Apriori 三指標(Support / Confidence / Lift)",
+      "category": "formula", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "1.2 v2 + 公式"}],
+      "summary": "Support = P(A∩B) 共現比例;Confidence = P(B|A) 條件機率;**Lift > 1 為正向關聯**",
+      "key_points": ["Lift = Confidence / Support(B)", "Lift > 1:A→B 正向", "Lift = 1:無關", "Lift < 1:負向"],
+      "common_misconceptions": ["把 Lift > 1 誤判為『無關』", "Confidence 與 Support 公式混淆"],
+      "explanation_hooks": ["三指標各看一面:覆蓋率、可靠度、優於隨機程度"],
+      "variation_seeds": [{"context": "Lift > 1 代表?", "answer": "正向關聯"}],
+      "related_node_ids": []
+    },
+    {
+      "node_id": "n_L23203_001", "knowledge_code": "L23203", "title": "ReLU 激活函數(解決梯度消失與訓練停滯)",
+      "category": "concept", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.4-6"}, {"exam": "114-2 科三 Q27"}],
+      "summary": "ReLU(x) = max(0, x);**引入非線性、避免梯度消失**;線性激活多層仍是線性",
+      "key_points": ["線性激活 → 訓練停滯(因多層線性=單層線性)", "ReLU 簡單高效、不飽和", "變體:Leaky ReLU、GELU、Swish", "Sigmoid 易飽和(舊用法)"],
+      "common_misconceptions": ["以為加深層數可解決線性激活問題", "誤以為 Sigmoid 適合多類別(實為 Softmax)"],
+      "explanation_hooks": ["線性 × 線性 = 線性,模型表達力不變", "ReLU 的『引入非線性 + 計算便宜』兩大優點"],
+      "variation_seeds": [{"context": "線性激活訓練停滯如何解?", "answer": "改用 ReLU"}],
+      "related_node_ids": [], "exam_appearance": [{"exam": "114-2", "question_no": 27, "subject": 3}]
+    },
+    {
+      "node_id": "n_L23203_002", "knowledge_code": "L23203", "title": "LSTM 與 GRU(處理長距離序列)",
+      "category": "concept", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "1.3 RNN/LSTM"}, {"exam": "114-2 科三 Q7"}],
+      "summary": "LSTM 三閘(Input/Forget/Output)+ Cell State 解決梯度消失;**適合時序預測 / 序列任務**",
+      "key_points": ["LSTM 閘控:Input/Forget/Output", "GRU:Update + Reset(LSTM 簡化版)", "BiLSTM:雙向"],
+      "common_misconceptions": ["把 LSTM 閘數誤記為 4(實為 3)", "誤以為 GRU 比 LSTM 多閘"],
+      "explanation_hooks": ["LSTM 適合『時間趨勢預測』(電力、銷售、股價)", "GRU = LSTM 簡化,參數較少"],
+      "variation_seeds": [{"context": "預測未來七天電力需求", "answer": "LSTM"}],
+      "related_node_ids": [], "exam_appearance": [{"exam": "114-2", "question_no": 7, "subject": 3}]
+    },
+    {
+      "node_id": "n_L23203_003", "knowledge_code": "L23203", "title": "加權求和公式(感知器/神經網路)— 勘誤",
+      "category": "formula", "source_level": "L1",
+      "source_refs": [{"errata": "科三 4-55, 4-56"}],
+      "summary": "Z = Σᵢ wᵢxᵢ + b(原 PDF 誤植 w₁x₁,正確為 wᵢxᵢ)",
+      "key_points": ["神經元基本計算:加權求和 → 激活函數", "勘誤要求:索引正確為 i 而非 1"],
+      "common_misconceptions": ["把求和索引固定為 1(原誤植)"],
+      "explanation_hooks": ["索引 i 表示『遍歷所有輸入』,而非僅第 1 個"],
+      "variation_seeds": [{"context": "加權求和正確公式?", "answer": "Σᵢ wᵢxᵢ + b"}],
+      "related_node_ids": [], "errata_critical": true
+    },
+    {
+      "node_id": "n_L23301_001", "knowledge_code": "L23301", "title": "特徵縮放(對距離 / 梯度模型必要)",
+      "category": "concept", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.3-17"}, {"exam": "114-2 科三 Q9"}],
+      "summary": "**KNN、SVM、線性迴歸、神經網路必須特徵縮放**;否則大尺度特徵主導",
+      "key_points": ["Z-score:均值 0、標準差 1(防梯度爆炸/消失)", "Min-Max:壓到 [0,1]", "Robust Scaling:中位數 + IQR(對極端值穩健)", "**Z-score 不會壓到 [0,1]**(常見陷阱)"],
+      "common_misconceptions": [
+        "把 Z-score 當作會壓到 [0,1](那是 Min-Max)",
+        "誤以為樹模型也需要縮放(樹不需要)"
+      ],
+      "explanation_hooks": ["距離型/梯度型模型對尺度敏感", "Robust 用 IQR,適合含極端值資料"],
+      "variation_seeds": [
+        {"context": "KNN 必要前處理?", "answer": "特徵縮放"},
+        {"context": "Z-score 結果範圍?", "answer": "均值 0、標準差 1(非 [0,1])"}
+      ],
+      "related_node_ids": [], "exam_appearance": [{"exam": "114-2", "question_no": 9, "subject": 3}]
+    },
+    {
+      "node_id": "n_L23301_002", "knowledge_code": "L23301", "title": "互動特徵(Interaction Features)",
+      "category": "concept", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.4-21"}, {"exam": "114-2 科三 Q20"}],
+      "summary": "兩個或多個特徵**乘積或交互組合**;捕捉特徵間關聯影響",
+      "key_points": ["如:商品價格 × 顧客滿意度", "與『單特徵取平方』、『對數轉換』、『標準化』不同"],
+      "common_misconceptions": ["把『特徵平方』當互動特徵(那是非線性,非互動)"],
+      "explanation_hooks": ["互動 = 多特徵相乘,捕捉協同效應"],
+      "variation_seeds": [{"context": "想捕捉價格與滿意度互動", "answer": "兩特徵相乘 / 交互組合"}],
+      "related_node_ids": [], "exam_appearance": [{"exam": "114-2", "question_no": 20, "subject": 3}]
+    },
+    {
+      "node_id": "n_L23301_003", "knowledge_code": "L23301", "title": "SMOTE 不平衡資料過採樣",
+      "category": "concept", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "1.3 平衡"}],
+      "summary": "Synthetic Minority Over-sampling Technique;**合成新樣本**,不單純複製,降低過擬合風險",
+      "key_points": ["在少數類樣本之間插值合成", "與 Tomek Links 欠採樣可組合(SMOTE+Tomek)", "Stratified K-Fold 為配套驗證法"],
+      "common_misconceptions": ["把 SMOTE 當隨機過採樣(實為合成)"],
+      "explanation_hooks": ["SMOTE 比隨機重複更不易過擬合"],
+      "variation_seeds": [{"context": "正樣本僅 3% 該如何處理?", "answer": "SMOTE 或欠採樣或加權"}],
+      "related_node_ids": ["n_L23303_002"]
+    },
+    {
+      "node_id": "n_L23302_001", "knowledge_code": "L23302", "title": "模型架構選擇與超參數初始化",
+      "category": "concept", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "5.3"}],
+      "summary": "依任務性質選模型;訓練前定義層級設定與初始配置",
+      "key_points": ["分類:邏輯迴歸 / SVM / RF / XGBoost / NN", "迴歸:OLS / Ridge / Lasso / 樹模型", "時序:ARIMA / LSTM / Transformer", "權重初始化:Xavier(tanh)、He(ReLU)"],
+      "common_misconceptions": ["把『模型選擇』與『超參調校』混淆"],
+      "explanation_hooks": ["模型選擇是『架構』決策;調校是『參數』決策"],
+      "variation_seeds": [{"context": "ReLU 推薦的權重初始化?", "answer": "He Initialization"}],
+      "related_node_ids": []
+    },
+    {
+      "node_id": "n_L23303_001", "knowledge_code": "L23303", "title": "F1 分數計算(必考公式)",
+      "category": "formula", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "3.4"}, {"exam": "114-2 科三 Q16"}],
+      "summary": "F1 = 2·P·R / (P+R);P=0.8 R=0.6 → F1≈0.686;**兼顧 Precision 與 Recall 之綜合指標**",
+      "key_points": ["F1 為 P 與 R 的調和平均", "F-beta:beta < 1 偏 P,beta > 1 偏 R", "Macro F1 / Micro F1 / Weighted F1 區分"],
+      "common_misconceptions": ["把 F1 當算術平均", "誤算 F1 = (P+R)/2"],
+      "explanation_hooks": ["調和平均對小值敏感:P 或 R 任一低 → F1 大幅下降", "P=0.8, R=0.6 → 2·0.8·0.6/(0.8+0.6) = 0.96/1.4 ≈ 0.686"],
+      "variation_seeds": [
+        {"context": "P=0.8, R=0.6 求 F1", "answer": "0.686"},
+        {"context": "兼顧精確率與召回率指標?", "answer": "F1"}
+      ],
+      "related_node_ids": ["n_L23303_002"], "exam_appearance": [{"exam": "114-2", "question_no": 16, "subject": 3}, {"exam": "114-2", "question_no": 10, "subject": 1}]
+    },
+    {
+      "node_id": "n_L23303_002", "knowledge_code": "L23303", "title": "Precision / Recall 公式(勘誤關鍵)",
+      "category": "formula", "source_level": "L1",
+      "source_refs": [{"errata": "科三 5-21 Recall 修正"}, {"file": "衝刺主檔", "section": "3.4"}],
+      "summary": "**Precision = TP/(TP+FP)**;**Recall = TP/(TP+FN)**(原 PDF 誤植為 TP+FP)",
+      "key_points": [
+        "Precision:預測為正中真為正(避免假警報)",
+        "Recall:真為正中被找出(避免漏判)",
+        "Confusion Matrix 四格:TP / FP / FN / TN",
+        "**Recall 分母為 TP+FN**(勘誤大幅修正)"
+      ],
+      "common_misconceptions": [
+        "**把 Recall 分母誤記為 TP+FP**(原 PDF 誤植,勘誤已改)",
+        "把 Precision 與 Recall 公式互調"
+      ],
+      "explanation_hooks": [
+        "Precision:預測正中對的比例(分母含 FP)",
+        "Recall:實際正中找到的比例(分母含 FN)",
+        "口訣:Precision 看『預測』、Recall 看『實際』"
+      ],
+      "variation_seeds": [
+        {"context": "Recall 公式?", "answer": "TP / (TP + FN)"},
+        {"context": "Recall 分母含哪兩格?", "answer": "TP + FN"}
+      ],
+      "related_node_ids": ["n_L23303_001"], "errata_critical": true
+    },
+    {
+      "node_id": "n_L23303_003", "knowledge_code": "L23303", "title": "R² 解讀(85% 變異被解釋)",
+      "category": "formula", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.4-8"}, {"exam": "114-2 科三 Q15"}],
+      "summary": "R² = 1 - RSS/TSS;**R²=0.85 表 85% 變異可被模型解釋**(不是準確率、不是信心水準、不是誤差)",
+      "key_points": ["R² 範圍 [0,1] 對線性迴歸", "Adjusted R² 補償特徵數", "R² ≠ Accuracy(後者用於分類)"],
+      "common_misconceptions": ["把 R²=0.85 誤判為『準確率 85%』或『預測誤差 15%』"],
+      "explanation_hooks": ["R² 是『變異解釋比例』指標"],
+      "variation_seeds": [{"context": "R²=0.85 意義?", "answer": "85% 變異被模型解釋"}],
+      "related_node_ids": [], "exam_appearance": [{"exam": "114-2", "question_no": 15, "subject": 3}]
+    },
+    {
+      "node_id": "n_L23303_004", "knowledge_code": "L23303", "title": "不平衡資料禁用 Accuracy",
+      "category": "scenario", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.4-20"}, {"exam": "114-2 科三 Q19"}],
+      "summary": "正樣本 < 5% 等不平衡情境,**Accuracy 嚴重誤導**;應用 F1 / Precision / Recall / Macro F1",
+      "key_points": [
+        "對策:SMOTE 過採樣、欠採樣、類別權重",
+        "**最不適合**評估指標:Accuracy",
+        "適合指標:Recall、F1、Macro F1、PR-AUC"
+      ],
+      "common_misconceptions": ["以為 Accuracy 適用所有分類"],
+      "explanation_hooks": ["97% 正常案例 → 全猜正常 Accuracy=97%,但 0 召回率"],
+      "variation_seeds": [{"context": "正樣本 3% 該避免哪指標?", "answer": "Accuracy"}],
+      "related_node_ids": [], "exam_appearance": [{"exam": "114-2", "question_no": 19, "subject": 3}]
+    },
+    {
+      "node_id": "n_L23303_005", "knowledge_code": "L23303", "title": "交叉驗證方法選擇(K-Fold/Stratified/LOOCV/Time Series)",
+      "category": "flow", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.4-27,32"}, {"exam": "114-2 科三 Q1,Q29,Q34"}],
+      "summary": "K-Fold(基本)/ Stratified(類別比例)/ LOOCV(極小樣本)/ Stratified LOOCV(小+不平衡)/ Time Series CV(時序避免未來洩漏)",
+      "key_points": [
+        "Stratified K-Fold:保留類別比例,適不平衡",
+        "Stratified LOOCV:小樣本(< 200) + 不平衡(科三 34)",
+        "Time Series CV / Rolling Window:時序資料專用,避免未來資訊洩漏(科三 29)",
+        "K-Fold + 同時調超參:資料洩漏(科一 41)"
+      ],
+      "common_misconceptions": [
+        "把 K-Fold 用在時序資料(會洩漏未來)",
+        "在 K-Fold 內同時調超參(造成樂觀偏差)"
+      ],
+      "explanation_hooks": [
+        "選 CV 三問:時序嗎?類別不平衡嗎?樣本超小嗎?",
+        "Nested CV 解決超參+評估雙重目的"
+      ],
+      "variation_seeds": [
+        {"context": "150 筆 + 8% 陽性 + 兼顧利用率與類別比例?", "answer": "Stratified LOOCV"},
+        {"context": "感測器資料隨時間變化", "answer": "Time Series CV / Rolling Window"}
+      ],
+      "related_node_ids": [], "exam_appearance": [{"exam": "114-2", "question_no": 1, "subject": 3}, {"exam": "114-2", "question_no": 29, "subject": 3}, {"exam": "114-2", "question_no": 34, "subject": 3}]
+    },
+    {
+      "node_id": "n_L23303_006", "knowledge_code": "L23303", "title": "macro F1 跨語言失準",
+      "category": "scenario", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.4-28"}, {"exam": "114-2 科三 Q30"}],
+      "summary": "英文 F1=0.91 → 西班牙文 F1=0.58:**語言遷移造成 Recall 下降**,模型無法辨識新語言關鍵情緒詞彙",
+      "key_points": ["macro F1:各類別 F1 平均(無視類別大小)", "micro F1:全樣本聚合計算"],
+      "common_misconceptions": ["把跨語言失準歸因於 macro F1 本身波動"],
+      "explanation_hooks": ["跨語言失準根因:訓練語料偏向、模型未涵蓋新語言詞彙 → Recall 下降"],
+      "variation_seeds": [{"context": "情感分析跨語言失準?", "answer": "Recall 下降"}],
+      "related_node_ids": [], "exam_appearance": [{"exam": "114-2", "question_no": 30, "subject": 3}]
+    },
+    {
+      "node_id": "n_L23303_007", "knowledge_code": "L23303", "title": "殘差圖診斷(系統性彎曲)",
+      "category": "scenario", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.4-25"}, {"exam": "114-2 科三 Q24"}],
+      "summary": "殘差圖系統性彎曲 = **異常值或非線性關係,違反迴歸假設**",
+      "key_points": ["殘差應為白噪音(隨機分佈)", "系統性 = 模型未捕捉到模式", "對策:轉換特徵(Box-Cox)、加入非線性項、改用樹模型"],
+      "common_misconceptions": ["把彎曲殘差誤判為過擬合"],
+      "explanation_hooks": ["線性迴歸假設:殘差為常態 + 同變異 + 獨立"],
+      "variation_seeds": [{"context": "殘差呈系統性彎曲", "answer": "異常值或非線性"}],
+      "related_node_ids": [], "exam_appearance": [{"exam": "114-2", "question_no": 24, "subject": 3}]
+    },
+    {
+      "node_id": "n_L23303_008", "knowledge_code": "L23303", "title": "ARIMA 殘差白噪音 + ACF",
+      "category": "concept", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "1.1 v2"}, {"exam": "114-2 科一 Q39"}],
+      "summary": "ARIMA 殘差應為白噪音(隨機);ACF 在多時滯顯著不為零 = **配適不足,需調整 p/q**",
+      "key_points": ["ARIMA(p,d,q):自迴歸 / 差分 / 移動平均階數", "ACF:自相關函數,衡量殘差時間相關性", "殘差非白噪音 = 模型未捕捉時序模式"],
+      "common_misconceptions": ["把週期性殘差忽略為『隨機誤差』"],
+      "explanation_hooks": ["白噪音定義:零均值 + 無自相關 + 同變異"],
+      "variation_seeds": [{"context": "ARIMA 殘差 ACF 多時滯顯著", "answer": "配適不足,調 p/q"}],
+      "related_node_ids": [], "exam_appearance": [{"exam": "114-2", "question_no": 39, "subject": 1}]
+    },
+    {
+      "node_id": "n_L23401_001", "knowledge_code": "L23401", "title": "同態加密 Homomorphic Encryption",
+      "category": "concept", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.4-33"}, {"exam": "114-2 科三 Q36"}],
+      "summary": "**資料在加密狀態下仍可進行數值運算,模型訓練可於未解密資料上完成**",
+      "key_points": ["FHE(全同態)/ PHE(部分同態)", "適用:銀行共訓信用模型,資料不解密", "代價:運算成本極高"],
+      "common_misconceptions": ["以為同態加密 = 加密通訊", "把同態加密與差分隱私混淆(後者是輸出加噪)"],
+      "explanation_hooks": ["同態 = 加密上計算保持結構", "與差分隱私區別:HE 加密資料 vs DP 加噪輸出"],
+      "variation_seeds": [{"context": "資料不解密下訓練模型", "answer": "同態加密"}],
+      "related_node_ids": ["n_L23401_002"], "exam_appearance": [{"exam": "114-2", "question_no": 36, "subject": 3}]
+    },
+    {
+      "node_id": "n_L23401_002", "knowledge_code": "L23401", "title": "隱私技術組合(同態加密 + MPC + 雜湊 + 對稱加密)",
+      "category": "scenario", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.4-34"}, {"exam": "114-2 科三 Q37"}],
+      "summary": "跨銀行協作:**同態加密(不解密計算)+ MPC(多方協作)+ Hash(完整性)+ 對稱加密(高效傳輸)**",
+      "key_points": [
+        "同態加密:加密上計算",
+        "MPC(Secure Multi-party Computation):多方共同運算不洩漏各自輸入",
+        "Hash:傳輸防篡改 + 重放偵測",
+        "對稱加密:大量資料傳輸效率"
+      ],
+      "common_misconceptions": ["把『差分隱私』納入此組合(差分隱私是統計輸出加噪,不是資料保密)"],
+      "explanation_hooks": ["複合需求題:看清題幹『不解密 + 多方 + 防篡改 + 高效』四項約束"],
+      "variation_seeds": [{"context": "跨銀行協作 + 不解密 + 防篡改", "answer": "同態 + MPC + Hash + 對稱"}],
+      "related_node_ids": ["n_L23401_001"], "exam_appearance": [{"exam": "114-2", "question_no": 37, "subject": 3}]
+    },
+    {
+      "node_id": "n_L23401_003", "knowledge_code": "L23401", "title": "差分隱私 vs 聯邦學習 vs MPC vs 同態加密",
+      "category": "concept", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "1.3 PETs"}],
+      "summary": "差分隱私=結果加噪;聯邦學習=參數聚合不傳資料;MPC=多方協作運算;同態加密=加密上計算",
+      "key_points": [
+        "差分隱私(DP):輸出加雜訊使單一個體不可識別",
+        "聯邦學習(FL):本地訓練 + 中央聚合參數",
+        "MPC:多方共同計算,各自輸入不洩漏",
+        "同態加密(HE):加密狀態運算"
+      ],
+      "common_misconceptions": ["把四者當同義技術", "誤以為聯邦學習等同分散式學習"],
+      "explanation_hooks": ["四者解決不同隱私問題,可組合使用"],
+      "variation_seeds": [{"context": "結果加雜訊保護單一個體", "answer": "差分隱私"}],
+      "related_node_ids": ["n_L23401_001"]
+    },
+    {
+      "node_id": "n_L23402_001", "knowledge_code": "L23402", "title": "AI 偏見三類:Sampling / Label / Feature Bias",
+      "category": "concept", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.4-17"}, {"exam": "114-2 科三 Q13,Q28"}],
+      "summary": "**Sampling Bias**(訓練樣本族群不代表整體)/ **Label Bias**(人工標註主觀)/ **Feature Bias**(特徵與標籤過度相關)",
+      "key_points": [
+        "Sampling Bias:只用活躍顧客 → 新顧客預測差(科三 28)",
+        "Label Bias:標籤者主觀偏見(科三 13)",
+        "Feature Bias:特徵與標籤近乎同義",
+        "確認偏差:歷史資料反映過去歧視"
+      ],
+      "common_misconceptions": ["把 Sampling Bias 與 Label Bias 混淆"],
+      "explanation_hooks": [
+        "Sampling = 取樣偏",
+        "Label = 標註偏",
+        "Feature = 特徵偏(資料洩漏的近親)"
+      ],
+      "variation_seeds": [
+        {"context": "標籤資料本身帶主觀偏見", "answer": "Label Bias"},
+        {"context": "只用活躍顧客訓練", "answer": "Sampling Bias"}
+      ],
+      "related_node_ids": [], "exam_appearance": [{"exam": "114-2", "question_no": 13, "subject": 3}, {"exam": "114-2", "question_no": 28, "subject": 3}]
+    },
+    {
+      "node_id": "n_L23402_002", "knowledge_code": "L23402", "title": "公平性指標:Demographic Parity / Equal Opportunity / Equalized Odds",
+      "category": "concept", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "1.3 治理"}],
+      "summary": "DP=各群預測正比例相等;EOpp=各群實際正例 TPR 相等;EO=TPR + FPR 都相等",
+      "key_points": [
+        "Demographic Parity:P(Ŷ=1|A=a) = P(Ŷ=1|A=b)",
+        "Equal Opportunity:P(Ŷ=1|Y=1, A=a) = P(Ŷ=1|Y=1, A=b)",
+        "Equalized Odds:加上 FPR 也相等",
+        "工具:IBM AIF360、Microsoft Fairlearn"
+      ],
+      "common_misconceptions": ["把 DP 與 EOpp 混淆"],
+      "explanation_hooks": ["DP 看『預測』;EOpp 看『真為正者的 TPR』"],
+      "variation_seeds": [{"context": "想確保各族群在『真為正』時 TPR 相等", "answer": "Equal Opportunity"}],
+      "related_node_ids": ["n_L23402_001"]
+    },
+    {
+      "node_id": "n_L23402_003", "knowledge_code": "L23402", "title": "Embedding 偏見與隱式偏誤",
+      "category": "scenario", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "1.1 v2"}, {"exam": "114-2 科一 Q49"}],
+      "summary": "情感分析模型在不同語言/族群表現不一 → **訓練語料偏向、隱式偏誤(Implicit Bias)、資料來源不平衡**",
+      "key_points": [
+        "詞嵌入正規化 Embedding Normalization 可緩解",
+        "Transformer 雖捕捉上下文,但偏差仍存",
+        "對策:資料前處理(重採樣)、In-processing(對抗式去偏)、後處理(門檻調整)"
+      ],
+      "common_misconceptions": ["以為 Transformer 自動避免偏見"],
+      "explanation_hooks": ["跨文化文本訓練 → 隱式偏誤"],
+      "variation_seeds": [{"context": "跨語言情感分析失準", "answer": "Implicit Bias / Sampling Bias"}],
+      "related_node_ids": ["n_L23402_001"], "exam_appearance": [{"exam": "114-2", "question_no": 49, "subject": 1}]
+    }
+  ],
+  "summary": {
+    "total_nodes": 32,
+    "by_code": {
+      "L23101_ProbStat": 3,
+      "L23103_NumOpt": 4,
+      "L23202_Algorithms": 8,
+      "L23203_DeepLearning": 3,
+      "L23301_DataPrep": 3,
+      "L23302_ModelSelect": 1,
+      "L23303_EvalValid": 8,
+      "L23401_Privacy": 3,
+      "L23402_Fairness": 3
+    },
+    "by_source_level": {"L1": 32, "L2": 0, "L3": 0, "L4": 0},
+    "iron_rule_compliance_check": "all 32 nodes have misconceptions, explanation_hooks, variation_seeds",
+    "errata_critical_count": 2
+  }
+}
