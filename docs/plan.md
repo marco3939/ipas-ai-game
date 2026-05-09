@@ -6,6 +6,22 @@
 
 ## 🔴 專案級設計鐵律(跨階段強制遵守)
 
+### 鐵律 #2:題庫動態化(2026-05-09 確認)
+
+**規範**:
+1. 題庫不應為「固定 N 題」,每場遊戲必須**可隨機變動**
+2. 每知識點有多個基礎模板 + 變數池(`{industry}`、`{context}`、`{descriptor}` 等)
+3. 選項洗牌(每場 ABCD 順序不同)
+4. 變化型在執行時動態生成,不依賴預存固定變化
+5. 每場遊戲使用新隨機種子,確保連續遊玩不重複
+
+**Why**:防止使用者「死記題目」而非「理解概念」,符合臨場考試之多樣性
+
+**How to apply**:
+- 階段 6 questions.json schema 升級為「模板 + 變數池」結構
+- 階段 7 script.js 內建 `randomizer.js`、`variation.js`、`shuffler.js`
+- 每場遊戲:`seed = Date.now()` → 從模板池抽樣 → 變數替換 → 選項洗牌 → 渲染
+
 ### 鐵律 #1:錯題驅動下鑽學習(2026-05-09 確認)
 
 **規範**:
@@ -66,6 +82,42 @@
 | R3 | 科二 / 科一∩科三 邊界 | 階段 1 三欄對照表強制人工審視 |
 | R4 | PPTX 巨檔(16 MB)圖文混排難解析 | 階段 3 進場前先試解析,失敗則降級為純文字摘錄 |
 | R5 | iPAS 初級講義(42 MB)為「初級」資料 | 階段 3 抽取時須加 [L4] 標註「初級資料,中級難度需另行驗證」 |
+
+### 階段 3 後續行動(Q2 OCR 補強,2026-05-09)
+
+使用者選擇 (b) 安裝 OCR 工具補抽漫畫科一/科三 + 初級講義。
+
+**建議安裝順序**(階段 4 後同步進行,不阻擋主流程):
+```powershell
+# 1. 安裝 Tesseract OCR
+winget install UB-Mannheim.TesseractOCR
+# 或下載安裝:https://github.com/UB-Mannheim/tesseract/wiki
+
+# 2. 安裝中文語言包(繁中)
+# Tesseract 安裝時勾選 chi_tra(繁體中文)+ chi_tra_vert(直書)
+
+# 3. 安裝 Python 套件
+py -3.13 -m pip install pytesseract pdf2image Pillow
+# pdf2image 需要 poppler:https://github.com/oschwartz10612/poppler-windows
+
+# 4. 測試
+py -c "import pytesseract; print(pytesseract.image_to_string(Image.open('test.png'), lang='chi_tra'))"
+```
+
+**處理時程預估**:
+- 漫畫科一(20 頁)+ 漫畫科三(15 頁):OCR 約 5–10 分鐘 / 檔
+- 初級講義(543 頁):OCR 約 30–60 分鐘
+- 抽 nodes:每檔 15–30 分鐘
+
+**評估標準**:
+- 中文 OCR 準確度通常 85–95%(漫畫排版可能更低)
+- 若漫畫 OCR 結果雜亂無章 → 放棄,維持現狀
+- 若可讀性 ≥ 90% → 抽 nodes 補 nodes-subject-1-ocr.json / nodes-subject-3-ocr.json
+
+**何時做**:
+- 階段 4 5 案提案完成後,使用者選定方案
+- 階段 5 詳細設計時或階段 6 題庫生成前空檔
+- 不阻擋階段 4-7 主流程
 
 ### 階段 0 產出
 - 目錄:`kb/`、`src/`、`docs/`(各帶 .gitkeep)

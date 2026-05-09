@@ -1,0 +1,72 @@
+{
+  "version": "1.0",
+  "subject": 1,
+  "schema_version": "1.0-iron-rule",
+  "iron_rule_compliance": "every node has misconceptions, explanation_hooks, variation_seeds",
+  "last_updated": "2026-05-09",
+  "merge_with": "nodes-subject-1.json (combine nodes arrays)",
+  "batches_processed": [
+    {"batch": "Q1-supplement", "purpose": "補 L21201 AI 導入評估之 nodes", "date": "2026-05-09"}
+  ],
+  "nodes": [
+    {
+      "node_id": "n_L21201_001", "knowledge_code": "L21201", "title": "AI 導入評估三層 + 三大財務指標",
+      "category": "flow", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "1.1 + 公式"}],
+      "summary": "三層評估:業務需求(As-Is/To-Be、KPI)→ 技術可行性(資料品質、IT 能力、適配性)→ 成本效益(ROI、NPV、Payback)",
+      "key_points": [
+        "ROI = (回報 - 成本) / 成本 × 100%",
+        "NPV = Σ(現金流ₜ / (1+r)ᵗ) - 初始投資",
+        "Payback Period = 初始投資 / 年淨現金流",
+        "POC 必備條件:範圍清晰、可控、具代表性、利害關係人支持"
+      ],
+      "common_misconceptions": [
+        "把 NPV 與 ROI 混為一談",
+        "誤以為 Payback Period 越短一定越好(忽略長期回報)",
+        "把 POC 當『直接小流量上線』(實為受控測試)"
+      ],
+      "explanation_hooks": [
+        "三層遞進記憶:有需求嗎 → 做得到嗎 → 划算嗎",
+        "NPV 考量時間價值,ROI 是百分比但不考慮時間",
+        "POC ≠ MVP ≠ Pilot:POC 驗證概念、MVP 最小可用、Pilot 小規模實際運行"
+      ],
+      "variation_seeds": [
+        {"context": "AI 導入第一步應評估?", "answer": "業務需求(As-Is/To-Be)"},
+        {"context": "兩專案 ROI 同但 NPV 不同?", "answer": "考量現金流時間分布"},
+        {"context": "POC 必備條件非?", "answer": "全公司全員參與(實為利害關係人代表即可)"}
+      ],
+      "related_node_ids": ["n_L21202_002"]
+    },
+    {
+      "node_id": "n_L21201_002", "knowledge_code": "L21201", "title": "AI 導入三種模式比較(委外 / 內部 / 商業服務)",
+      "category": "concept", "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.2-9"}],
+      "summary": "委外(顧問公司)/ 內部(自建團隊)/ 商業服務(Low-code、AutoML、SaaS API)三種導入模式",
+      "key_points": [
+        "委外:專業度高、成本中、知識難留存",
+        "內部:控制力高、知識留存、初期成本高、人才難尋",
+        "商業服務:啟動快、客製化弱、長期費用高",
+        "選擇關鍵:時程急迫性、預算規模、客製化需求、知識留存重要性"
+      ],
+      "common_misconceptions": [
+        "誤以為內部團隊一定比委外便宜",
+        "把『商業服務』等同 SaaS(實際包含 AutoML、Low-code 平台)"
+      ],
+      "explanation_hooks": [
+        "三種模式各有最佳適用情境",
+        "高客製需求 → 內部 / 委外;快速上線 → 商業服務;知識內化 → 內部"
+      ],
+      "variation_seeds": [
+        {"context": "需快速上線且預算有限", "answer": "商業服務(AutoML / Low-code)"},
+        {"context": "高度客製化的金融風控模型", "answer": "內部開發"}
+      ],
+      "related_node_ids": ["n_L21201_001"]
+    }
+  ],
+  "summary": {
+    "total_nodes": 2,
+    "by_code": {"L21201_AIEvaluation": 2},
+    "by_source_level": {"L1": 2},
+    "iron_rule_compliance_check": "all 2 nodes have misconceptions, explanation_hooks, variation_seeds"
+  }
+}
