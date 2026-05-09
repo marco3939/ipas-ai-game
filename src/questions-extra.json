@@ -1116,7 +1116,7 @@
         {"text": "穩定訓練 + 加速收斂 + 部分正則化效果", "is_correct": true},
         {"text": "完全防止過擬合", "is_correct": false},
         {"text": "減少參數量", "is_correct": false},
-        {"text": "替代 Dropout", "is_correct": false, "trap_type": "兩者可共存"},
+        {"text": "替代 Dropout", "is_correct": false, "trap_type": "兩者可共存"}
       ],
       "shuffle_options": true,
       "explanation": {"correct": "BN 標準化每層輸入 → 穩定 + 加速;副效果為部分正則化", "wrong": {}, "hook": "BN 解決 internal covariate shift"},
