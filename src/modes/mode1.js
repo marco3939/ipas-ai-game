@@ -394,20 +394,56 @@
     showExplanation(opt, isCorrect) {
       const q = this.state.currentQ;
       const e = q.explanation || {};
-      const wrongExp = (!isCorrect && e.wrong) ? (e.wrong[opt.text] || '此選項不正確') : '';
+      const correctOpt = q.options.find(o => o.is_correct);
+
+      // 寬容查找 wrong 解釋
+      let wrongExp = '';
+      if (!isCorrect && opt) {
+        if (e.wrong && typeof e.wrong === 'object') {
+          wrongExp = e.wrong[opt.text];
+          if (!wrongExp) {
+            for (const k of Object.keys(e.wrong)) {
+              if (k && (k.includes(opt.text.substring(0, 8)) || opt.text.includes(k.substring(0, 8)))) {
+                wrongExp = e.wrong[k]; break;
+              }
+            }
+          }
+        }
+        if (!wrongExp) wrongExp = opt.trap_type ? `陷阱類型:${opt.trap_type}` : '此選項不正確,請仔細對照下方正確觀念';
+      }
+
       const enemyTaunt = !isCorrect ? `<div class="dialogue-box" style="border-color:rgba(239,68,68,0.4)">
         <div class="dialogue-name" style="color:#f87171">${this.state.boss.name}</div>
         <div class="dialogue-text">「${RNG.pick(this.state.boss.attack)}」</div>
       </div>` : '';
+
       document.getElementById('m1-explanation').innerHTML = `
         ${enemyTaunt}
         <div class="explanation">
           <div class="verdict ${isCorrect ? 'correct' : 'wrong'}">${isCorrect ? '⚔️ 攻擊命中!' : '🩸 你受到攻擊!'}</div>
-          <div><strong>正解:</strong>${e.correct || '(無)'}</div>
-          ${!isCorrect && wrongExp ? `<div style="margin-top:8px"><strong>錯處:</strong>${wrongExp}</div>` : ''}
-          ${e.hook ? `<div class="hook">💡 ${e.hook}</div>` : ''}
-          ${q.misconceptions && q.misconceptions.length > 0 ? `<div class="miscon"><strong>易錯點:</strong>${q.misconceptions.join(' / ')}</div>` : ''}
-          <div class="actions">
+
+          <div style="background:rgba(74,222,128,0.12);border-left:4px solid #4ade80;padding:12px;border-radius:6px;margin:10px 0">
+            <div style="color:#4ade80;font-weight:700;font-size:0.95rem;margin-bottom:4px">📚 正確答案</div>
+            <div style="font-size:1rem;margin-bottom:6px"><strong>${correctOpt ? correctOpt.key + '. ' + correctOpt.text : '(無)'}</strong></div>
+            <div style="color:var(--fg);line-height:1.7">${e.correct || '(此題未提供詳細解釋,請參考正確選項文字)'}</div>
+          </div>
+
+          ${!isCorrect ? `<div style="background:rgba(248,113,113,0.12);border-left:4px solid #f87171;padding:12px;border-radius:6px;margin:10px 0">
+            <div style="color:#f87171;font-weight:700;font-size:0.95rem;margin-bottom:4px">❌ 你選了 ${opt.key}. ${opt.text}</div>
+            <div style="color:var(--fg);line-height:1.7">${wrongExp}</div>
+          </div>` : ''}
+
+          ${e.hook ? `<div style="background:rgba(250,204,21,0.12);border-left:4px solid #facc15;padding:10px 12px;border-radius:6px;margin:10px 0">
+            <div style="color:#facc15;font-weight:700;font-size:0.85rem">💡 記憶口訣</div>
+            <div style="color:var(--fg);font-style:italic;margin-top:2px">${e.hook}</div>
+          </div>` : ''}
+
+          ${q.misconceptions && q.misconceptions.length > 0 ? `<div style="background:rgba(168,85,247,0.10);border-left:4px solid #a855f7;padding:10px 12px;border-radius:6px;margin:10px 0">
+            <div style="color:#c084fc;font-weight:700;font-size:0.85rem">⚠️ 此題常見誤解</div>
+            <div style="color:var(--fg);margin-top:2px">${q.misconceptions.map(m => '• ' + m).join('<br>')}</div>
+          </div>` : ''}
+
+          <div class="actions" style="margin-top:14px">
             <button class="btn btn-primary" onclick="Mode1.next()">繼續戰鬥 →</button>
             ${!isCorrect ? `<button class="btn btn-warn" onclick="Mode1.drillThis()">🎯 立即下鑽變化型</button>` : ''}
           </div>
