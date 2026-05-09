@@ -1206,7 +1206,7 @@ const Player = {
   Progress.init();
   await loadQuestions();
   // 動態載入 mode 模組
-  for (const name of ['mode1', 'mode2', 'mode3', 'mode5']) {
+  for (const name of ['mode1', 'mode2', 'mode3', 'mode4', 'mode5']) {
     await new Promise((res) => {
       const s = document.createElement('script');
       s.src = `modes/${name}.js`;

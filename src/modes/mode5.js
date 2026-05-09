@@ -1,475 +1,844 @@
-/* ============================================================
- * Mode 5 「弱點獵人」(自適應 + Boss 戰)
- * 鐵律 #1:錯題立即下鑽變化型(本模式更激進 — 強制連戰 3~5 題)
- * 鐵律 #2:每場新 random seed → 變數池替換 + 洗牌
- * ============================================================ */
-const Mode5 = {
-  /* ---------- Boss 名單(5 errata + 7 high priority)---------- */
-  bossList: [
-    { qid: 'q_0001', name: 'Recall 公式 Boss',     icon: '⚙️', tag: 'errata' },
-    { qid: 'q_0002', name: 'PDPA 六項 Boss',       icon: '⚖️', tag: 'errata' },
-    { qid: 'q_0003', name: 'NMF 非負矩陣 Boss',     icon: '🔢', tag: 'errata' },
-    { qid: 'q_0004', name: 'Logistic 迴歸 Boss',   icon: '📈', tag: 'errata' },
-    { qid: 'q_0005', name: '加權求和集成 Boss',     icon: '➗', tag: 'errata' },
-    // 7 個高優先預測 Boss(must_cover=true 或 tags 含高優先/高頻 — 動態載入)
-  ],
+// ============================================================
+// Mode 5: 弱點獵人 — 自適應 RPG 戰鬥(完整重做 v3)
+// 主角:弱點獵人(自我修煉)
+// BOSS:從 Wrongbook + Mastery 動態決定的「玩家最弱知識點」
+// 鐵律 #1 + #5 全合規(只用 questions*.json + generateVariation)
+// ============================================================
+(function () {
 
-  state: {
-    progress: { passedBosses: [] },
-    queue: [],
-    currentBoss: null,
-    bossHp: 100,
-    drillStreak: 0,
-    pendingDrill: [],
-    sessionStats: { correct: 0, wrong: 0, answered: 0 },
-    mode: null
-  },
+  // === 工具:Mastery score 0-100 ↔ 任務語意的 0-1 ===
+  // 任務描述用 0-1 (e.g. <0.4, ≥0.8, +0.15);共用層 score 採 0-100。換算如下:
+  //   Mastery.get(nodeId).score / 100 = 「百分比進度」
+  //   任務的 +0.15 → score +15;任務的 +0.10 → +10;任務的 -0.05 → -5
+  const SCORE_DELTA_CORRECT = 15;   // 答對 mastery +0.15
+  const SCORE_DELTA_WRONG   = 5;    // 答錯 mastery -0.05
+  const SCORE_DELTA_REINFORCE = 10; // 強化記憶招式 +0.10
+  const MASTERY_DEFEAT_THRESHOLD = 80; // ≥ 0.8 才算擊敗 BOSS
+  const MASTERY_WEAK_THRESHOLD   = 40; // < 0.4 視為「弱點」
 
-  STORAGE_KEY: 'ipas_mode5_progress_v1',
+  // === 直接調整 score 的小工具(用 Mastery.load/save 確保格式一致)===
+  function adjustMasteryScore(nodeId, delta) {
+    if (!nodeId) return null;
+    const m = Mastery.load();
+    const node = m[nodeId] || { score: 0, attempts: 0, correct: 0, streak: 0 };
+    node.score = Math.max(0, Math.min(100, node.score + delta));
+    node.lastSeen = Date.now();
+    m[nodeId] = node;
+    Mastery.save(m);
+    return node;
+  }
 
-  /* ---------------- 入口 ---------------- */
-  start() {
-    RNG.set(Date.now());                              // 鐵律 #2
-    this.loadProgress();
-    this.fillHighPriorityBosses();
-    this.renderMenu();
-  },
+  // === 弱點 BOSS 候選選擇:嚴格三步驟 ===
+  // Step 1: Wrongbook 答錯次數最多的前 5 個 node_id
+  // Step 2: Mastery < 0.4 的節點補進 BOSS 名單,共最多 5 個
+  // Step 3: 若 Wrongbook 為空(新玩家),fallback 隨機 3 個節點
+  function selectWeakBosses() {
+    const sources = []; // { nodeId, weak, source }
 
-  loadProgress() {
-    try {
-      const raw = localStorage.getItem(this.STORAGE_KEY);
-      if (raw) this.state.progress = JSON.parse(raw);
-      if (!Array.isArray(this.state.progress.passedBosses)) {
-        this.state.progress.passedBosses = [];
-      }
-    } catch (e) {
-      this.state.progress = { passedBosses: [] };
-    }
-  },
-
-  saveProgress() {
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.state.progress));
-  },
-
-  /* 動態補齊 7 個高優先 Boss */
-  fillHighPriorityBosses() {
-    if (this.bossList.length >= 12) return;
-    const existing = new Set(this.bossList.map(b => b.qid));
-    const candidates = QUESTIONS.filter(q =>
-      !existing.has(q.id) && !q.errata_critical &&
-      (q.must_cover === true ||
-       (Array.isArray(q.tags) && q.tags.some(t => /高優先|高頻|must_cover/i.test(t))))
-    );
-    const icons = ['🔥','⭐','💎','🎯','🛡️','⚡','🌪️'];
-    const need = 12 - this.bossList.length;
-    const picks = candidates.slice(0, need);
-    picks.forEach((q, i) => {
-      const title = (q.title || q.question || q.stem || '').slice(0, 14) || ('Boss ' + (i + 6));
-      this.bossList.push({
-        qid: q.id,
-        name: title + ' Boss',
-        icon: icons[i % icons.length],
-        tag: 'high_priority'
-      });
+    // Step 1:Wrongbook 聚合
+    const wb = Wrongbook.load().filter(x => !x.mastered && x.nodeId);
+    const nodeWrongCount = {};
+    wb.forEach(x => {
+      if (!x.nodeId) return;
+      nodeWrongCount[x.nodeId] = (nodeWrongCount[x.nodeId] || 0) + (x.wrongCount || 1);
     });
-    while (this.bossList.length < 12) {
-      const fallback = QUESTIONS.find(q => !existing.has(q.id));
-      if (!fallback) break;
-      existing.add(fallback.id);
-      this.bossList.push({
-        qid: fallback.id,
-        name: 'Boss ' + (this.bossList.length + 1),
-        icon: '🎲',
-        tag: 'fallback'
-      });
+    const sortedWrong = Object.entries(nodeWrongCount)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([nodeId, count]) => ({ nodeId, weak: count, source: 'wrongbook' }));
+    sources.push(...sortedWrong);
+
+    // Step 2:Mastery < 0.4 補進(若名單尚未滿 5 個)
+    if (sources.length < 5) {
+      const m = Mastery.load();
+      const existing = new Set(sources.map(s => s.nodeId));
+      const lowMastery = Object.entries(m)
+        .filter(([nodeId, node]) =>
+          !existing.has(nodeId) &&
+          (node.attempts || 0) > 0 &&
+          (node.score || 0) < MASTERY_WEAK_THRESHOLD
+        )
+        .sort((a, b) => (a[1].score || 0) - (b[1].score || 0))
+        .slice(0, 5 - sources.length)
+        .map(([nodeId, node]) => ({ nodeId, weak: Math.round(MASTERY_WEAK_THRESHOLD - (node.score || 0)), source: 'mastery' }));
+      sources.push(...lowMastery);
     }
-  },
 
-  /* ---------------- 主選單 ---------------- */
-  renderMenu() {
-    const passed = this.state.progress.passedBosses.length;
-    const totalBosses = this.bossList.length;
-    const masteredCount = (typeof Mastery.countMastered === 'function') ? Mastery.countMastered() : 0;
-    const root = document.getElementById('view-mode5') || document.getElementById('view-result');
-    const html = `
-      <div class="card">
-        <h2>🎯 弱點獵人</h2>
-        <p style="color:#666;">自適應訓練 × 12 場 Boss 戰 — 把鐵律推到極限</p>
-        <div class="boss-bar" style="margin:12px 0;">
-          <span class="boss-name">當前進度</span>
-          <span class="boss-hp"><span class="boss-hp-fill" style="width:${(passed/totalBosses)*100}%"></span></span>
-          <span style="margin-left:8px;">${passed} / ${totalBosses}</span>
-        </div>
-        <p style="color:#888;font-size:13px;">已熟練節點:${masteredCount}</p>
-        <div class="modes-grid" style="margin-top:16px;">
-          <div class="mode-card" id="m5-quick">
-            <h3>🩺 快速診斷</h3>
-            <p>20 題冷啟動,建立熟練度起點</p>
-            <button class="btn btn-primary" onclick="Mode5.startQuickDiagnosis()">開始</button>
-          </div>
-          <div class="mode-card" id="m5-weak">
-            <h3>🎯 弱點訓練</h3>
-            <p>從最弱 5 個節點循環抽題,錯了立即連戰 3 變化型</p>
-            <button class="btn btn-warn" onclick="Mode5.startWeaknessMode()">開始</button>
-          </div>
-          <div class="mode-card" id="m5-boss">
-            <h3>👹 Boss 戰</h3>
-            <p>逐關打 12 個 Boss,熟練度需 ≥ 90% 才過關</p>
-            <button class="btn btn-danger" onclick="Mode5.startBossMode()">開始</button>
-          </div>
-        </div>
-        <div class="actions" style="margin-top:14px;">
-          <button class="btn" onclick="Mode5.renderBossList()">查看 Boss 列表</button>
-          <button class="btn" onclick="goHome()">返回主選單</button>
-        </div>
-      </div>`;
-    if (root) root.innerHTML = html;
-    if (typeof show === 'function') show('view-result');
-  },
+    // Step 3:新玩家 fallback —— Wrongbook 空、Mastery 也少 → 隨機 3 個 node
+    if (sources.length === 0) {
+      const allNodes = [...new Set(QUESTIONS.map(q => q.node_id).filter(Boolean))];
+      const picks = RNG.pickN(allNodes, Math.min(3, allNodes.length));
+      picks.forEach(nodeId => sources.push({ nodeId, weak: 1, source: 'fallback' }));
+    }
 
-  renderBossList() {
-    const passed = new Set(this.state.progress.passedBosses);
-    const items = this.bossList.map((b, idx) => {
-      const done = passed.has(b.qid);
-      const m = Mastery.get(b.node_id || (this.findQ(b.qid) || {}).node_id) || { score: 0 };
-      const score = Math.round(m.score || 0);
-      const cls = score >= 90 ? 'high' : (score >= 60 ? 'mid' : 'low');
-      return `<div class="weak-item">
-        <span>${b.icon} ${idx + 1}. ${b.name} ${done ? '✅' : ''}</span>
-        <span class="weak-score ${cls}">${score}%</span>
-      </div>`;
-    }).join('');
-    const root = document.getElementById('view-result');
-    if (root) {
-      root.innerHTML = `
+    // 過濾:必須題庫真的有題目可用
+    const validBosses = sources.filter(s => QUESTIONS.some(q => q.node_id === s.nodeId));
+    return validBosses.slice(0, 5);
+  }
+
+  // === 題庫挑題:該 node 的所有題目 + generateVariation 變化型 ===
+  function pickQuestionsForNode(nodeId, baseCount = 5) {
+    const direct = QUESTIONS.filter(q => q.node_id === nodeId);
+    if (direct.length === 0) return [];
+    // 先放 direct(順序洗牌),不夠再用 generateVariation 補(由 base[0] 衍生)
+    let pool = RNG.shuffle(direct);
+    if (pool.length < baseCount && direct[0]) {
+      const variations = generateVariation(direct[0], baseCount - pool.length) || [];
+      pool = pool.concat(variations.filter(v => !pool.find(p => p.id === v.id)));
+    }
+    return pool.slice(0, Math.max(baseCount, pool.length));
+  }
+
+  // === 招式語意 metadata(自家實作,不抄 mode1)===
+  const SKILLS = {
+    analyze:   { name: '弱點分析', cost: 12, icon: '🔍', desc: '消 12 MP,標記出 BOSS 弱點(消 2 個錯誤選項)' },
+    reinforce: { name: '強化記憶', cost: 18, icon: '🧠', desc: '消 18 MP,該節點熟練度 +0.10' },
+    drill:     { name: '下鑽訓練', cost: 0,  icon: '🎯', desc: '直接進入該題的下鑽變化型(不消 MP)' }
+  };
+
+  // === BOSS 名稱化(用 node_id 簡寫)===
+  function nodeDisplayName(nodeId) {
+    if (!nodeId) return '未知節點';
+    const sample = QUESTIONS.find(q => q.node_id === nodeId);
+    if (sample) {
+      // 取 knowledge_code 與 stem 前 12 字
+      const stem = (sample.stem || '').replace(/\{[^}]*\}/g, '').slice(0, 16);
+      return `${sample.knowledge_code} · ${stem || nodeId}`;
+    }
+    return nodeId;
+  }
+
+  function bossAvatar(idx) {
+    const icons = ['👹', '🦂', '🐉', '🦑', '👻'];
+    return icons[idx % icons.length];
+  }
+
+  // === highlight code(內建,避免依賴 mode1 的)===
+  function highlightCode(code) {
+    if (!code) return '';
+    let s = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    s = s.replace(/(#[^\n]*)/g, '<span class="com">$1</span>');
+    s = s.replace(/(["'])((?:(?!\1).)*)\1/g, '<span class="str">$1$2$1</span>');
+    s = s.replace(/\b(import|from|def|class|return|if|else|elif|for|while|in|as|with|try|except|None|True|False|lambda|pass|self|print|len|range|np|pd|sklearn|torch|nn|tf)\b/g, '<span class="kw">$1</span>');
+    s = s.replace(/\b(\d+\.?\d*)\b/g, '<span class="num">$1</span>');
+    return s;
+  }
+
+  // ============================================================
+  // 主物件
+  // ============================================================
+  const Mode5 = {
+    state: null,
+
+    start() {
+      RNG.set(Date.now());
+      this.renderMap();
+    },
+
+    // 進度 storage(用來記錄哪些 BOSS 已被擊敗 + 起始 mastery)
+    progressKey: 'ipas_mode5_v3_progress',
+    loadProg() { return Storage.get(this.progressKey, { defeated: [], runs: 0 }); },
+    saveProg(p) { Storage.set(this.progressKey, p); },
+
+    // ============================================================
+    // 地圖:列出 BOSS 名單(動態)
+    // ============================================================
+    renderMap() {
+      const player = Player.load();
+      const bosses = selectWeakBosses();
+      const prog = this.loadProg();
+      const defeatedSet = new Set(prog.defeated || []);
+      const playerHpPct = player.hp / player.hpMax * 100;
+
+      const bossListHTML = bosses.length === 0
+        ? `<div class="empty" style="padding:24px;color:var(--fg-mute)">⚠️ 尚未蒐集到任何弱點資料,且題庫節點全為空。請先用其他模式做題。</div>`
+        : bosses.map((b, idx) => {
+            const m = Mastery.get(b.nodeId);
+            const score = Math.round(m.score || 0);
+            const masteryCls = score >= 80 ? 'high' : (score >= 40 ? 'mid' : 'low');
+            const defeated = defeatedSet.has(b.nodeId);
+            const sourceLabel = b.source === 'wrongbook'
+              ? `❌ 錯 ${b.weak} 次`
+              : (b.source === 'mastery' ? `📉 熟練度低` : `🎲 新玩家初探`);
+            const dangerClass = defeated ? '' : 'pulse';
+            return `<button class="mode-card ${dangerClass}" onclick="Mode5.engageBoss(${idx})" style="${defeated ? 'opacity:0.65;border-color:var(--success)' : 'border-color:var(--danger)'}">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+                <span style="font-size:2rem">${bossAvatar(idx)}</span>
+                <div style="flex:1;text-align:left">
+                  <div class="mode-num" style="color:${defeated ? 'var(--success)' : 'var(--danger)'}">${defeated ? '✅ 已克服弱點' : `弱點等級 ${b.weak}`}</div>
+                  <div class="mode-title" style="font-size:0.95rem">${nodeDisplayName(b.nodeId)}</div>
+                </div>
+              </div>
+              <div class="mode-desc" style="font-size:0.82rem;text-align:left">${sourceLabel}</div>
+              <div style="margin-top:8px">
+                <div class="hp-track" style="height:10px"><div class="hp-fill" style="width:${score}%;background:linear-gradient(90deg,#facc15,#4ade80)"></div></div>
+                <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:0.75rem;color:var(--fg-mute)">
+                  <span>熟練度</span><span>${score}% / ${MASTERY_DEFEAT_THRESHOLD}%</span>
+                </div>
+              </div>
+            </button>`;
+          }).join('');
+
+      // 候選來源說明(教育性透明度)
+      const sourceCounts = bosses.reduce((acc, b) => { acc[b.source] = (acc[b.source] || 0) + 1; return acc; }, {});
+      const sourceText = [];
+      if (sourceCounts.wrongbook) sourceText.push(`錯題本 ${sourceCounts.wrongbook} 個`);
+      if (sourceCounts.mastery)   sourceText.push(`低熟練 ${sourceCounts.mastery} 個`);
+      if (sourceCounts.fallback)  sourceText.push(`新玩家初探 ${sourceCounts.fallback} 個`);
+
+      const view = document.getElementById('view-play');
+      view.innerHTML = `
         <div class="card">
-          <h2>👹 12 Boss 名單</h2>
-          <div class="weak-list">${items}</div>
-          <div class="actions" style="margin-top:14px;">
-            <button class="btn btn-primary" onclick="Mode5.renderMenu()">返回</button>
+          <h1>🎯 弱點獵人 — 自適應 BOSS 戰</h1>
+          <p style="color:var(--fg-dim)">系統依你的<strong>錯題本</strong>與<strong>熟練度</strong>動態鎖定 BOSS。每個 BOSS 是一個你最弱的知識節點,熟練度推到 80% 以上才算擊敗。</p>
+          ${sourceText.length ? `<p style="color:var(--fg-mute);font-size:0.85rem;margin-top:8px">📊 BOSS 來源:${sourceText.join(' · ')}</p>` : ''}
+        </div>
+
+        <div class="battle-arena" style="padding:16px">
+          <div class="player-bar">
+            <div class="avatar">🏹</div>
+            <div class="bar-info">
+              <div class="bar-name"><span class="level">Lv.${player.level}</span> 弱點獵人(你)</div>
+              <div class="hp-track"><div class="hp-fill ${playerHpPct < 30 ? 'critical' : playerHpPct < 60 ? 'low' : ''}" style="width:${playerHpPct}%"></div></div>
+              <div class="hp-text">HP ${player.hp} / ${player.hpMax} · MP ${player.mp} / ${player.mpMax} · EXP ${player.exp}/${player.expMax}</div>
+            </div>
           </div>
-        </div>`;
-    }
-    if (typeof show === 'function') show('view-result');
-  },
+          <div style="background:rgba(0,0,0,0.3);padding:8px;border-radius:6px;margin-top:8px;display:flex;gap:12px;flex-wrap:wrap;font-size:0.85rem;color:var(--fg-dim)">
+            <span>❌ 錯題本:${Wrongbook.count()} 題</span>
+            <span>🏆 已克服弱點:${(prog.defeated || []).length}</span>
+            <span>⚔️ 出征次數:${prog.runs || 0}</span>
+          </div>
+        </div>
 
-  findQ(qid) {
-    return QUESTIONS.find(q => q.id === qid);
-  },
+        <div class="card">
+          <h2>👹 你最弱的 ${bosses.length} 個知識節點</h2>
+          <div class="modes-grid">${bossListHTML}</div>
+        </div>
 
-  /* ---------------- 模式 1:快速診斷 ---------------- */
-  startQuickDiagnosis() {
-    this.state.mode = 'quick';
-    this.state.sessionStats = { correct: 0, wrong: 0, answered: 0 };
-    // 各 knowledge_code 平均抽題
-    const buckets = {};
-    QUESTIONS.forEach(q => {
-      const k = q.knowledge_code || q.code || 'X';
-      (buckets[k] = buckets[k] || []).push(q);
-    });
-    const codes = Object.keys(buckets);
-    const perCode = Math.max(1, Math.floor(20 / codes.length));
-    let pool = [];
-    codes.forEach(c => pool = pool.concat(RNG.pickN(buckets[c], perCode)));
-    if (pool.length < 20) {
-      const remaining = QUESTIONS.filter(q => !pool.includes(q));
-      pool = pool.concat(RNG.pickN(remaining, 20 - pool.length));
-    }
-    this.state.queue = RNG.shuffle(pool).slice(0, 20);
-    this.nextQuick();
-  },
+        <div class="actions">
+          <button class="btn btn-ghost" onclick="goHome()">🏠 回主頁</button>
+          <button class="btn btn-ghost" onclick="Mode5.refreshBosses()">🔄 重新偵測弱點</button>
+          ${(prog.defeated || []).length ? `<button class="btn btn-ghost" onclick="if(confirm('清除『已克服弱點』紀錄?'))Mode5.resetProgress()">♻️ 重置進度</button>` : ''}
+        </div>
+      `;
+      show('view-play');
+    },
 
-  nextQuick() {
-    if (this.state.queue.length === 0) return this.finish('quick');
-    const q = this.state.queue.shift();
-    PlayEngine.show(q, { showProgress: true, total: 20, current: this.state.sessionStats.answered + 1 });
-    PlayEngine.onNext = (isCorrect) => {
-      this.state.sessionStats.answered++;
-      if (isCorrect) this.state.sessionStats.correct++;
-      else this.state.sessionStats.wrong++;
-      // 快速診斷不下鑽,只更新 mastery(主檔已自動)
-      this.nextQuick();
-    };
-  },
+    refreshBosses() {
+      RNG.set(Date.now());
+      this.renderMap();
+      showToast('🔄 已重新偵測弱點');
+    },
 
-  /* ---------------- 模式 2:弱點訓練 ---------------- */
-  startWeaknessMode() {
-    this.state.mode = 'weakness';
-    this.state.sessionStats = { correct: 0, wrong: 0, answered: 0 };
-    // 取所有 attempts > 0 的 node
-    const allNodes = [...new Set(QUESTIONS.map(q => q.node_id).filter(Boolean))];
-    const trained = allNodes.filter(nid => {
-      const m = Mastery.get(nid);
-      return m && m.attempts > 0;
-    });
-    if (trained.length < 5) {
-      showToast('資料不足!請先跑快速診斷建立起點');
-      return this.renderMenu();
-    }
-    this.state.pendingDrill = [];
-    this.state.drillStreak = 0;
-    this.nextWeakness();
-  },
+    resetProgress() {
+      this.saveProg({ defeated: [], runs: 0 });
+      showToast('進度已重置');
+      this.renderMap();
+    },
 
-  pickWeaknessQuestion() {
-    const allNodes = [...new Set(QUESTIONS.map(q => q.node_id).filter(Boolean))];
-    const weakest = Mastery.getWeakest(allNodes, 5) || [];
-    if (!weakest.length) return RNG.pick(QUESTIONS);
-    const targetNode = RNG.pick(weakest);
-    const nodeId = (typeof targetNode === 'string') ? targetNode : (targetNode.node_id || targetNode.id);
-    const pool = QUESTIONS.filter(q => q.node_id === nodeId);
-    return pool.length ? RNG.pick(pool) : RNG.pick(QUESTIONS);
-  },
+    // ============================================================
+    // 接戰
+    // ============================================================
+    engageBoss(idx) {
+      const bosses = selectWeakBosses();
+      const target = bosses[idx];
+      if (!target) { showToast('BOSS 不存在'); return; }
+      const questions = pickQuestionsForNode(target.nodeId, 5);
+      if (questions.length === 0) {
+        showToast('該節點題庫不足,跳過');
+        return;
+      }
+      const startMastery = Mastery.get(target.nodeId).score || 0;
 
-  nextWeakness() {
-    // 結束條件:答對 ≥ 15 題或使用者主動結束
-    if (this.state.sessionStats.answered >= 30) return this.finish('weakness');
+      // 戰鬥狀態
+      this.state = {
+        boss: target,
+        bossIdx: idx,
+        questions,
+        idx: 0,
+        currentQ: null,
+        // BOSS HP 視覺化:從「目標 80% - 當前」對應
+        bossHpMax: 100,
+        bossHp: 100,
+        // 運算狀態
+        startMastery,
+        correct: 0,
+        wrong: 0,
+        combo: 0,
+        maxCombo: 0,
+        totalDamage: 0,
+        // 招式狀態
+        analyzeUsed: false,
+        // 進度標記
+        avatarIcon: bossAvatar(idx)
+      };
 
-    let q;
-    if (this.state.pendingDrill.length) {
-      q = this.state.pendingDrill.shift();
-    } else {
-      q = this.pickWeaknessQuestion();
-    }
+      // run 次數 +1
+      const prog = this.loadProg();
+      prog.runs = (prog.runs || 0) + 1;
+      this.saveProg(prog);
 
-    PlayEngine.show(q, {
-      showProgress: true,
-      total: 30,
-      current: this.state.sessionStats.answered + 1,
-      modeBadge: this.state.drillStreak > 0
-        ? `🔥 變化型連戰 ${this.state.drillStreak}/3`
-        : '🎯 弱點訓練'
-    });
+      this.renderIntro();
+    },
 
-    PlayEngine.onNext = (isCorrect) => {
-      this.state.sessionStats.answered++;
+    renderIntro() {
+      const s = this.state;
+      const m = Mastery.get(s.boss.nodeId);
+      const score = Math.round(m.score || 0);
+      const view = document.getElementById('view-play');
+      view.innerHTML = `
+        <div class="battle-arena">
+          <div class="enemy-bar">
+            <div class="avatar boss" style="font-size:2.5rem">${s.avatarIcon}</div>
+            <div class="bar-info">
+              <div class="bar-name">弱點 BOSS:${nodeDisplayName(s.boss.nodeId)}</div>
+              <div class="hp-text">當前熟練度 ${score}% · 目標 ≥ ${MASTERY_DEFEAT_THRESHOLD}%</div>
+            </div>
+          </div>
+          <div class="dialogue-box">
+            <div class="dialogue-name">🎯 弱點獵人系統</div>
+            <div class="dialogue-text" id="m5-intro-text"></div>
+          </div>
+          <div class="actions" style="margin-top:16px;justify-content:center">
+            <button class="btn btn-primary" onclick="Mode5.startBattle()" style="font-size:1.1rem;padding:14px 28px">⚔️ 出擊!</button>
+            <button class="btn btn-ghost" onclick="Mode5.renderMap()">退避</button>
+          </div>
+        </div>
+      `;
+      show('view-play');
+      this.typeText('m5-intro-text',
+        `偵測到此節點「${nodeDisplayName(s.boss.nodeId)}」是你的弱點。${s.boss.source === 'wrongbook' ? `你已在這裡錯了 ${s.boss.weak} 次。` : (s.boss.source === 'mastery' ? `你的熟練度只有 ${score}%。` : '這是新玩家初探,讓我們建立基準。')}打到熟練度 ≥ 80% 才算克服!`,
+        25);
+    },
+
+    typeText(id, text, speed = 30) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.textContent = '';
+      let i = 0;
+      const t = setInterval(() => {
+        if (i >= text.length) { clearInterval(t); return; }
+        el.textContent += text[i++];
+      }, speed);
+    },
+
+    startBattle() {
+      this.renderBattle();
+      this.showQuestion();
+    },
+
+    // ============================================================
+    // 戰鬥畫面骨架
+    // ============================================================
+    renderBattle() {
+      const p = Player.load();
+      const view = document.getElementById('view-play');
+      view.innerHTML = `
+        <div class="battle-arena" id="m5-arena">
+          <div class="enemy-bar">
+            <div class="avatar boss" id="m5-boss-avatar" style="font-size:2.5rem">${this.state.avatarIcon}</div>
+            <div class="bar-info">
+              <div class="bar-name">弱點 BOSS:${nodeDisplayName(this.state.boss.nodeId)}</div>
+              <div class="hp-track"><div class="hp-fill" id="m5-boss-hp-fill"></div></div>
+              <div class="hp-text" id="m5-boss-hp-text"></div>
+            </div>
+          </div>
+          <div class="player-bar">
+            <div class="avatar" id="m5-player-avatar">🏹</div>
+            <div class="bar-info">
+              <div class="bar-name"><span class="level">Lv.${p.level}</span> 弱點獵人</div>
+              <div class="hp-track"><div class="hp-fill" id="m5-player-hp-fill"></div></div>
+              <div class="hp-text" id="m5-player-hp-text"></div>
+            </div>
+          </div>
+          <div class="skill-tray" id="m5-skill-tray"></div>
+          <div id="m5-question"></div>
+        </div>
+      `;
+      this.updateBars();
+      this.updateSkillTray();
+      show('view-play');
+    },
+
+    updateBars() {
+      const p = Player.load();
+      // BOSS HP 對應到「離 80% 熟練度還差多少」
+      const m = Mastery.get(this.state.boss.nodeId);
+      const score = Math.min(100, Math.max(0, m.score || 0));
+      // BOSS HP = (target - score) / target * 100 (score 達 80 時 BOSS HP = 0)
+      const remainingPct = Math.max(0, (MASTERY_DEFEAT_THRESHOLD - score) / MASTERY_DEFEAT_THRESHOLD * 100);
+      this.state.bossHp = Math.round(remainingPct);
+      const playerPct = p.hp / p.hpMax * 100;
+
+      const bossEl = document.getElementById('m5-boss-hp-fill');
+      const playerEl = document.getElementById('m5-player-hp-fill');
+      if (bossEl) {
+        bossEl.style.width = remainingPct + '%';
+        bossEl.className = 'hp-fill' + (remainingPct < 30 ? ' critical' : remainingPct < 60 ? ' low' : '');
+      }
+      if (playerEl) {
+        playerEl.style.width = playerPct + '%';
+        playerEl.className = 'hp-fill' + (playerPct < 30 ? ' critical' : playerPct < 60 ? ' low' : '');
+      }
+      const bt = document.getElementById('m5-boss-hp-text');
+      const pt = document.getElementById('m5-player-hp-text');
+      if (bt) bt.textContent = `熟練度 ${score}% / ${MASTERY_DEFEAT_THRESHOLD}%(BOSS HP ${Math.round(remainingPct)}%)`;
+      if (pt) pt.textContent = `HP ${p.hp}/${p.hpMax} · MP ${p.mp}/${p.mpMax}`;
+    },
+
+    updateSkillTray() {
+      const tray = document.getElementById('m5-skill-tray');
+      if (!tray) return;
+      const p = Player.load();
+      const buttons = [
+        `<button class="skill-btn" onclick="Mode5.skillAnalyze()" ${p.mp < SKILLS.analyze.cost || this.state.analyzeUsed ? 'disabled' : ''}>${SKILLS.analyze.icon} ${SKILLS.analyze.name} <span class="skill-cost">${SKILLS.analyze.cost}MP</span></button>`,
+        `<button class="skill-btn" onclick="Mode5.skillReinforce()" ${p.mp < SKILLS.reinforce.cost ? 'disabled' : ''}>${SKILLS.reinforce.icon} ${SKILLS.reinforce.name} <span class="skill-cost">${SKILLS.reinforce.cost}MP</span></button>`,
+        `<button class="skill-btn" onclick="Mode5.skillDrill()">${SKILLS.drill.icon} ${SKILLS.drill.name}</button>`
+      ];
+      tray.innerHTML = buttons.join('');
+    },
+
+    // ============================================================
+    // 問題渲染
+    // ============================================================
+    showQuestion() {
+      const s = this.state;
+      // 勝利條件:熟練度 ≥ 80%
+      const m = Mastery.get(s.boss.nodeId);
+      if ((m.score || 0) >= MASTERY_DEFEAT_THRESHOLD) {
+        return this.victory();
+      }
+      // 題庫耗盡 → 用 generateVariation 補
+      if (s.idx >= s.questions.length) {
+        // 動態補變化型(嚴守鐵律 #5,只用 generateVariation)
+        const last = s.questions[s.questions.length - 1];
+        if (last) {
+          const more = generateVariation(last, 3) || [];
+          if (more.length) {
+            s.questions = s.questions.concat(more);
+          } else {
+            // 都生不出來 → 結束戰鬥(BOSS 還沒倒就視為敗退)
+            return this.questionPoolExhausted();
+          }
+        } else {
+          return this.questionPoolExhausted();
+        }
+      }
+      const q = renderQuestion(s.questions[s.idx]);
+      s.currentQ = q;
+
+      const codeBlock = q.code_block ? `<pre class="code-syntax">${highlightCode(q.code_block)}</pre>` : '';
+      // 引用共用 renderVisualData(若可用)
+      const visualData = (typeof renderVisualData === 'function') ? renderVisualData(q) : '';
+
+      document.getElementById('m5-question').innerHTML = `
+        <div class="question-card">
+          <div class="question-meta">
+            <span class="badge">第 ${s.idx + 1} 回合</span>
+            <span class="badge">${q.knowledge_code}</span>
+            <span class="badge">${q.difficulty}</span>
+            <span class="badge">${q.format}</span>
+            ${q.errata_critical ? '<span class="badge" style="background:var(--danger);color:white">⚠️ 必出</span>' : ''}
+          </div>
+          <div class="question-stem">${q.stem}</div>
+          ${codeBlock}
+          ${visualData}
+          <div class="options" id="m5-options">
+            ${q.options.map(o => `<button class="option-btn" data-key="${o.key}" onclick="Mode5.answer('${o.key}')">
+              <span class="option-key">${o.key}.</span>${o.text}</button>`).join('')}
+          </div>
+          <div id="m5-explanation"></div>
+        </div>
+      `;
+      this.updateBars();
+      this.updateSkillTray();
+    },
+
+    answer(key) {
+      const s = this.state;
+      const q = s.currentQ;
+      const opt = q.options.find(o => o.key === key);
+      const isCorrect = opt.is_correct;
+
+      // 鎖定按鈕、標示對錯
+      document.querySelectorAll('#m5-options .option-btn').forEach(b => {
+        b.disabled = true;
+        const k = b.dataset.key;
+        const od = q.options.find(o => o.key === k);
+        if (od && od.is_correct) b.classList.add('correct');
+        else if (k === key && !isCorrect) b.classList.add('wrong');
+      });
+
+      // 共用層:更新答題進度
+      Progress.addAnswer(isCorrect);
+
       if (isCorrect) {
-        this.state.sessionStats.correct++;
-        if (this.state.drillStreak > 0) {
-          this.state.drillStreak++;
-          if (this.state.drillStreak >= 3 && this.state.pendingDrill.length === 0) {
-            // 連戰結束 → 解除連戰
-            showToast('🎉 連戰過關!熟練度 +20');
-            Mastery.drillBonus(q.node_id);
-            this.state.drillStreak = 0;
-            Wrongbook.markMastered(q.id);
+        this.attack();
+      } else {
+        // 寫入 Wrongbook
+        const correctOpt = q.options.find(o => o.is_correct);
+        Wrongbook.add(q.id, q.node_id || s.boss.nodeId, key, correctOpt ? correctOpt.key : null);
+        this.takeDamage();
+      }
+
+      this.showExplanation(opt, isCorrect);
+    },
+
+    // ===== 攻擊(答對)=====
+    attack() {
+      const s = this.state;
+      s.combo++;
+      s.maxCombo = Math.max(s.maxCombo, s.combo);
+      s.correct++;
+
+      // 對 BOSS 造成熟練度傷害(+0.15 = score +15)
+      adjustMasteryScore(s.boss.nodeId, SCORE_DELTA_CORRECT);
+
+      // 玩家恢復 HP / MP
+      const p = Player.load();
+      const hpHeal = 6 + Math.min(s.combo, 4);   // 6~10
+      const mpHeal = 5 + Math.min(s.combo, 3);   // 5~8
+      const beforeHp = p.hp;
+      p.hp = Math.min(p.hpMax, p.hp + hpHeal);
+      p.mp = Math.min(p.mpMax, p.mp + mpHeal);
+      Player.save(p);
+
+      // 視覺特效
+      const playerAv = document.getElementById('m5-player-avatar');
+      const bossAv = document.getElementById('m5-boss-avatar');
+      GameFX.flash('correct');
+      GameFX.attackAnim(playerAv);
+      const dmgShow = SCORE_DELTA_CORRECT; // 對 BOSS 顯示「-15 弱化」
+      setTimeout(() => {
+        GameFX.shake(bossAv);
+        GameFX.damageNumber(bossAv, dmgShow, { kind: 'player' });
+      }, 200);
+      if (p.hp > beforeHp) {
+        setTimeout(() => GameFX.damageNumber(playerAv, '+' + (p.hp - beforeHp), { kind: 'player' }), 400);
+      }
+      if (s.combo >= 2) GameFX.combo(s.combo);
+      if (s.combo === 5) {
+        GameFX.confetti({ count: 100, colors: ['#fbbf24', '#f59e0b', '#ef4444'] });
+        showToast('🔥 5 連擊!弱點正在崩解!');
+      }
+
+      s.totalDamage += dmgShow;
+      this.updateBars();
+      this.updateSkillTray();
+    },
+
+    // ===== 受擊(答錯)=====
+    takeDamage() {
+      const s = this.state;
+      s.combo = 0;
+      s.wrong++;
+
+      // BOSS 反擊 = 玩家 HP 損失;同時該 node mastery -5
+      adjustMasteryScore(s.boss.nodeId, -SCORE_DELTA_WRONG);
+
+      const dmg = 8 + Math.floor(s.bossHpMax * 0.03);
+      Player.damage(dmg);
+
+      // 視覺特效
+      const playerAv = document.getElementById('m5-player-avatar');
+      const bossAv = document.getElementById('m5-boss-avatar');
+      GameFX.flash('wrong');
+      GameFX.hideCombo();
+      GameFX.attackAnim(bossAv);
+      setTimeout(() => {
+        GameFX.shake(playerAv);
+        GameFX.damageNumber(playerAv, dmg, { kind: 'enemy' });
+      }, 200);
+      this.updateBars();
+
+      const p = Player.load();
+      if (p.hp <= 0) {
+        setTimeout(() => this.gameOver(), 1500);
+      }
+    },
+
+    // ============================================================
+    // 解釋畫面
+    // ============================================================
+    showExplanation(opt, isCorrect) {
+      const s = this.state;
+      const q = s.currentQ;
+      const e = q.explanation || {};
+      const correctOpt = q.options.find(o => o.is_correct);
+
+      const findWrongExp = (option) => {
+        let exp = '';
+        if (e.wrong && typeof e.wrong === 'object') {
+          exp = e.wrong[option.text];
+          if (!exp) {
+            for (const k of Object.keys(e.wrong)) {
+              if (k && (k.includes(option.text.substring(0, 8)) || option.text.includes(k.substring(0, 8)))) {
+                exp = e.wrong[k]; break;
+              }
+            }
           }
         }
-      } else {
-        this.state.sessionStats.wrong++;
-        // 鐵律 #1 強制連戰 3 變化型
-        this.drillIfWrong(q, false);
+        if (!exp) exp = option.trap_type ? `陷阱類型:${option.trap_type}` : '此選項不正確';
+        return exp;
+      };
+
+      const otherWrongOptions = q.options.filter(o => !o.is_correct && (!opt || o.key !== opt.key));
+      const otherAnalysis = otherWrongOptions.map(o => `
+        <div style="padding:8px 10px;margin:6px 0;background:rgba(255,255,255,0.04);border-radius:4px;border-left:3px solid #94a3b8">
+          <div style="color:#cbd5e1;font-weight:600;margin-bottom:2px">${o.key}. ${o.text}</div>
+          <div style="color:var(--fg-dim);font-size:0.875rem;line-height:1.6">└ ${findWrongExp(o)}</div>
+        </div>
+      `).join('');
+
+      const userWrongExp = !isCorrect && opt ? findWrongExp(opt) : '';
+
+      document.getElementById('m5-explanation').innerHTML = `
+        <div class="explanation">
+          <div class="verdict ${isCorrect ? 'correct' : 'wrong'}">${isCorrect ? '🎯 正中弱點要害!熟練度 +15' : '🩸 BOSS 反噬!熟練度 -5'}</div>
+
+          <div style="background:rgba(74,222,128,0.12);border-left:4px solid #4ade80;padding:12px;border-radius:6px;margin:10px 0">
+            <div style="color:#4ade80;font-weight:700;font-size:0.95rem;margin-bottom:4px">📚 正確答案</div>
+            <div style="font-size:1rem;margin-bottom:6px"><strong>${correctOpt ? correctOpt.key + '. ' + correctOpt.text : '(無)'}</strong></div>
+            <div style="color:var(--fg);line-height:1.7">${e.correct || '(此題未提供詳細解釋)'}</div>
+          </div>
+
+          ${!isCorrect ? `<div style="background:rgba(248,113,113,0.12);border-left:4px solid #f87171;padding:12px;border-radius:6px;margin:10px 0">
+            <div style="color:#f87171;font-weight:700;font-size:0.95rem;margin-bottom:4px">❌ 你選了 ${opt.key}. ${opt.text}</div>
+            <div style="color:var(--fg);line-height:1.7">${userWrongExp}</div>
+          </div>` : ''}
+
+          ${otherAnalysis ? `<div style="background:rgba(148,163,184,0.08);border-left:4px solid #94a3b8;padding:12px;border-radius:6px;margin:10px 0">
+            <div style="color:#cbd5e1;font-weight:700;font-size:0.95rem;margin-bottom:6px">🔍 其他選項解析</div>
+            ${otherAnalysis}
+          </div>` : ''}
+
+          ${e.hook ? `<div style="background:rgba(250,204,21,0.12);border-left:4px solid #facc15;padding:10px 12px;border-radius:6px;margin:10px 0">
+            <div style="color:#facc15;font-weight:700;font-size:0.85rem">💡 記憶口訣</div>
+            <div style="color:var(--fg);font-style:italic;margin-top:2px">${e.hook}</div>
+          </div>` : ''}
+
+          ${q.misconceptions && q.misconceptions.length > 0 ? `<div style="background:rgba(168,85,247,0.10);border-left:4px solid #a855f7;padding:10px 12px;border-radius:6px;margin:10px 0">
+            <div style="color:#c084fc;font-weight:700;font-size:0.85rem">⚠️ 常見誤解</div>
+            <div style="color:var(--fg);margin-top:2px">${q.misconceptions.map(m => '• ' + m).join('<br>')}</div>
+          </div>` : ''}
+
+          <div class="actions" style="margin-top:14px">
+            <button class="btn btn-primary" onclick="Mode5.next()">繼續攻擊 →</button>
+            ${!isCorrect ? `<button class="btn btn-warn" onclick="Mode5.drillThis()">🎯 立即下鑽變化型</button>` : ''}
+          </div>
+        </div>
+      `;
+    },
+
+    // ============================================================
+    // 招式
+    // ============================================================
+    skillAnalyze() {
+      const p = Player.load();
+      if (p.mp < SKILLS.analyze.cost) return showToast('MP 不足');
+      const q = this.state.currentQ;
+      if (!q) return showToast('無當前題目');
+      p.mp -= SKILLS.analyze.cost;
+      Player.save(p);
+      this.state.analyzeUsed = true;
+      // 高亮 BOSS 弱點:消除 2 個錯誤選項
+      const wrongs = q.options.filter(o => !o.is_correct);
+      const elim = RNG.pickN(wrongs, Math.min(2, wrongs.length));
+      elim.forEach(e => {
+        const btn = document.querySelector(`#m5-options [data-key="${e.key}"]`);
+        if (btn) {
+          btn.disabled = true;
+          btn.style.opacity = '0.3';
+          btn.style.textDecoration = 'line-through';
+        }
+      });
+      showToast('🔍 弱點分析啟動 — 已消除 2 個錯誤選項');
+      this.updateBars();
+      this.updateSkillTray();
+    },
+
+    skillReinforce() {
+      const p = Player.load();
+      if (p.mp < SKILLS.reinforce.cost) return showToast('MP 不足');
+      p.mp -= SKILLS.reinforce.cost;
+      Player.save(p);
+      adjustMasteryScore(this.state.boss.nodeId, SCORE_DELTA_REINFORCE);
+      const bossAv = document.getElementById('m5-boss-avatar');
+      if (bossAv) GameFX.damageNumber(bossAv, SCORE_DELTA_REINFORCE, { kind: 'player' });
+      showToast(`🧠 強化記憶!該節點熟練度 +${SCORE_DELTA_REINFORCE}`);
+      this.updateBars();
+      this.updateSkillTray();
+
+      // 若直接打到 80%,進入勝利
+      const m = Mastery.get(this.state.boss.nodeId);
+      if ((m.score || 0) >= MASTERY_DEFEAT_THRESHOLD) {
+        setTimeout(() => this.victory(), 800);
       }
-      this.nextWeakness();
-    };
-  },
+    },
 
-  /* ---------------- 模式 3:Boss 戰 ---------------- */
-  startBossMode() {
-    this.state.mode = 'boss';
-    this.state.sessionStats = { correct: 0, wrong: 0, answered: 0 };
-    const passed = new Set(this.state.progress.passedBosses);
-    const next = this.bossList.find(b => !passed.has(b.qid));
-    if (!next) return this.graduate();
-    this.engageBoss(next);
-  },
-
-  engageBoss(boss) {
-    this.state.currentBoss = boss;
-    this.state.bossHp = 100;
-    this.state.drillStreak = 0;
-    this.state.pendingDrill = [];
-    const q = this.findQ(boss.qid);
-    if (!q) {
-      showToast('Boss 題目找不到,跳過');
-      this.state.progress.passedBosses.push(boss.qid);
-      this.saveProgress();
-      return this.startBossMode();
-    }
-    this.renderBossIntro(boss, q);
-  },
-
-  renderBossIntro(boss, q) {
-    const root = document.getElementById('view-result');
-    const idx = this.bossList.findIndex(b => b.qid === boss.qid) + 1;
-    const m = Mastery.get(q.node_id) || { score: 0 };
-    if (root) {
-      root.innerHTML = `
-        <div class="card">
-          <div class="boss-bar">
-            <span class="boss-name">${boss.icon} 第 ${idx} 關 — ${boss.name}</span>
-            <span class="boss-hp"><span class="boss-hp-fill" style="width:100%"></span></span>
-          </div>
-          <p style="margin-top:10px;color:#666;">節點:<code>${q.node_id || '—'}</code> 目前熟練度:${Math.round(m.score || 0)}%</p>
-          <p style="color:#a40;">⚠ 過關條件:該節點熟練度 ≥ 90%。答錯立即連戰 5 題變化型!</p>
-          <div class="actions">
-            <button class="btn btn-danger" onclick="Mode5.fightBoss()">開戰</button>
-            <button class="btn" onclick="Mode5.renderMenu()">退出</button>
-          </div>
-        </div>`;
-    }
-    if (typeof show === 'function') show('view-result');
-  },
-
-  fightBoss() {
-    const boss = this.state.currentBoss;
-    const q = this.findQ(boss.qid);
-    PlayEngine.show(q, {
-      showProgress: true,
-      modeBadge: `${boss.icon} ${boss.name}`,
-      bossMode: true,
-      bossHp: this.state.bossHp
-    });
-    PlayEngine.onNext = (isCorrect) => {
-      this.state.sessionStats.answered++;
-      if (isCorrect) {
-        this.state.sessionStats.correct++;
-        this.state.bossHp = 0;
-        this.afterBossHit(true);
-      } else {
-        this.state.sessionStats.wrong++;
-        // 答錯 → 注入 5 變化型強制連戰
-        const variations = generateVariation(q, 5) || [];
-        this.state.pendingDrill = variations.length
-          ? variations
-          : RNG.pickN(QUESTIONS.filter(x => x.node_id === q.node_id && x.id !== q.id), 5);
-        this.state.drillStreak = 0;
-        showToast('💥 答錯!Boss 反擊 — 強制連戰 5 變化型');
-        this.fightBossDrill();
+    skillDrill() {
+      // 直接以當前題進入下鑽
+      const q = this.state.currentQ || this.state.questions[this.state.idx];
+      if (!q) return showToast('無題可下鑽');
+      const variations = generateVariation(q, 3);
+      if (!variations || variations.length === 0) {
+        return showToast('⚠️ 此節點變化型不足');
       }
-    };
-  },
+      DrillSession.start(q.node_id || this.state.boss.nodeId, variations, q, () => {
+        // DrillSession 完成 → drillBonus 已自動 +20 → 重建戰鬥
+        this.renderBattle();
+        // 若已過門檻,直接勝利
+        const m = Mastery.get(this.state.boss.nodeId);
+        if ((m.score || 0) >= MASTERY_DEFEAT_THRESHOLD) {
+          this.victory();
+        } else {
+          this.showQuestion();
+        }
+      });
+    },
 
-  fightBossDrill() {
-    if (this.state.pendingDrill.length === 0) {
-      return this.afterBossHit(false);
-    }
-    const q = this.state.pendingDrill.shift();
-    this.state.drillStreak++;
-    PlayEngine.show(q, {
-      modeBadge: `🔥 Boss 連戰 ${this.state.drillStreak}/5`,
-      bossMode: true,
-      bossHp: this.state.bossHp
-    });
-    PlayEngine.onNext = (isCorrect) => {
-      this.state.sessionStats.answered++;
-      if (isCorrect) {
-        this.state.sessionStats.correct++;
-        Mastery.drillBonus(q.node_id);
-      } else {
-        this.state.sessionStats.wrong++;
+    drillThis() {
+      // 在「答錯後」按下:對該題下鑽變化型
+      const q = this.state.currentQ;
+      const variations = generateVariation(q, 3);
+      if (!variations || variations.length === 0) {
+        return showToast('⚠️ 此節點變化型不足,繼續戰鬥', 2500);
       }
-      this.fightBossDrill();
-    };
-  },
+      DrillSession.start(q.node_id || this.state.boss.nodeId, variations, q, () => {
+        this.renderBattle();
+        // 下鑽完跳下一回合
+        this.next();
+      });
+    },
 
-  afterBossHit(victoryFromMain) {
-    const boss = this.state.currentBoss;
-    const q = this.findQ(boss.qid);
-    const m = Mastery.get(q.node_id) || { score: 0 };
-    const score = Math.round(m.score || 0);
-    const passed = score >= 90;
-    const root = document.getElementById('view-result');
-
-    if (passed) {
-      if (!this.state.progress.passedBosses.includes(boss.qid)) {
-        this.state.progress.passedBosses.push(boss.qid);
-        this.saveProgress();
+    next() {
+      const s = this.state;
+      // 先檢查熟練度是否已達目標
+      const m = Mastery.get(s.boss.nodeId);
+      if ((m.score || 0) >= MASTERY_DEFEAT_THRESHOLD) {
+        return this.victory();
       }
-      Wrongbook.markMastered(boss.qid);
-    }
+      s.idx++;
+      this.showQuestion();
+    },
 
-    const totalDone = this.state.progress.passedBosses.length;
-    const allDone = totalDone >= this.bossList.length;
+    // ============================================================
+    // 結局
+    // ============================================================
+    victory() {
+      const s = this.state;
+      // 移除 / 標記該 node 已克服:把 Wrongbook 中所有屬於該 nodeId 的題目標記 mastered
+      const wb = Wrongbook.load();
+      wb.forEach(x => { if (x.nodeId === s.boss.nodeId) x.mastered = true; });
+      Wrongbook.save(wb);
 
-    if (root) {
-      root.innerHTML = `
-        <div class="card">
-          <div class="boss-bar">
-            <span class="boss-name">${boss.icon} ${boss.name}</span>
-            <span class="boss-hp"><span class="boss-hp-fill" style="width:${passed ? 0 : 100}%"></span></span>
+      // 紀錄已擊敗
+      const prog = this.loadProg();
+      if (!prog.defeated.includes(s.boss.nodeId)) prog.defeated.push(s.boss.nodeId);
+      this.saveProg(prog);
+
+      // EXP 獎勵
+      const baseExp = 50 + s.correct * 12;
+      const perfectBonus = s.wrong === 0 ? 40 : 0;
+      const comboBonus = s.maxCombo * 5;
+      const totalExp = baseExp + perfectBonus + comboBonus;
+      Player.gainExp(totalExp);
+
+      // 弱點克服報告
+      const endMastery = Mastery.get(s.boss.nodeId).score || 0;
+      const masteryDelta = Math.round(endMastery - s.startMastery);
+
+      const view = document.getElementById('view-play');
+      view.innerHTML = `
+        <div class="battle-arena" style="text-align:center">
+          <h1 style="color:#fbbf24;font-size:2rem">🏆 弱點已克服!</h1>
+          <div style="font-size:4rem;margin:16px 0">${s.avatarIcon} ➜ ✨</div>
+          <div class="dialogue-box">
+            <div class="dialogue-name">🎯 弱點獵人系統</div>
+            <div class="dialogue-text">「節點『${nodeDisplayName(s.boss.nodeId)}』已從你的弱點清單移除。下一個目標!」</div>
           </div>
-          <h2 style="margin-top:14px;">${passed ? '🏆 過關!' : '💢 未達 90% — 再戰!'}</h2>
-          <p>節點熟練度:<b style="color:${passed ? '#1a7' : '#c33'}">${score}%</b> / 90%</p>
-          <p style="color:#666;">本場答題:${this.state.sessionStats.answered} 題(對 ${this.state.sessionStats.correct} / 錯 ${this.state.sessionStats.wrong})</p>
-          <div class="actions" style="margin-top:14px;">
-            ${passed
-              ? (allDone
-                  ? `<button class="btn btn-primary" onclick="Mode5.graduate()">查看畢業典禮 🎓</button>`
-                  : `<button class="btn btn-primary" onclick="Mode5.startBossMode()">挑戰下一關</button>`)
-              : `<button class="btn btn-warn" onclick="Mode5.engageBoss(Mode5.state.currentBoss)">再戰一次</button>`}
-            <button class="btn" onclick="Mode5.renderMenu()">回主選單</button>
+
+          <div style="background:rgba(0,0,0,0.5);padding:16px;border-radius:var(--radius);margin:16px 0;text-align:left">
+            <h3 style="color:#fbbf24;margin-top:0">📋 弱點克服報告</h3>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+              <div>✅ 答對 <strong style="color:#4ade80">${s.correct}</strong></div>
+              <div>❌ 答錯 <strong style="color:#f87171">${s.wrong}</strong></div>
+              <div>🔥 最高連擊 <strong>${s.maxCombo}</strong></div>
+              <div>⚔️ 累計傷害 <strong>${s.totalDamage}</strong></div>
+            </div>
+            <hr style="margin:12px 0;border-color:var(--border)">
+            <div style="font-size:1rem;color:var(--fg)">節點熟練度提升:
+              <span style="color:#facc15">${Math.round(s.startMastery)}%</span>
+              ➜
+              <span style="color:#4ade80;font-weight:800">${Math.round(endMastery)}%</span>
+              <span style="color:#fbbf24;margin-left:6px">(+${masteryDelta})</span>
+            </div>
+            <div style="font-size:1.3rem;color:#fbbf24;font-weight:800;text-align:center;margin-top:8px">+${totalExp} EXP</div>
+            <div style="font-size:0.85rem;color:var(--fg-dim);text-align:center;margin-top:4px">
+              基礎 ${baseExp} ${perfectBonus ? '+ 完美 ' + perfectBonus : ''} ${comboBonus ? '+ 連擊 ' + comboBonus : ''}
+            </div>
+            ${s.wrong === 0 ? '<div style="text-align:center;margin-top:8px;color:#4ade80;font-weight:700">⭐ 完美克服</div>' : ''}
           </div>
-        </div>`;
-    }
-    if (typeof show === 'function') show('view-result');
-  },
 
-  /* ---------------- 鐵律 #1 強制連戰 ---------------- */
-  drillIfWrong(q, isCorrect) {
-    if (isCorrect) return;
-    const variations = generateVariation(q, 3) || [];
-    const drills = variations.length
-      ? variations
-      : RNG.pickN(QUESTIONS.filter(x => x.node_id === q.node_id && x.id !== q.id), 3);
-    this.state.pendingDrill.push(...drills);
-    this.state.drillStreak = 1;
-    showToast('💥 鐵律啟動!連戰 3 變化型');
-  },
-
-  /* ---------------- 結算 ---------------- */
-  finish(mode) {
-    const s = this.state.sessionStats;
-    const acc = s.answered ? Math.round(s.correct / s.answered * 100) : 0;
-    const root = document.getElementById('view-result');
-    const titleMap = {
-      quick: '🩺 快速診斷完成',
-      weakness: '🎯 弱點訓練結束',
-      boss: '👹 Boss 戰結算'
-    };
-    if (root) {
-      root.innerHTML = `
-        <div class="card">
-          <h2>${titleMap[mode] || '本場結束'}</h2>
-          <p>答對:<b>${s.correct}</b> / 答錯:<b>${s.wrong}</b> / 總題數:${s.answered}</p>
-          <p>正確率:<b style="color:${acc>=80?'#1a7':acc>=60?'#a70':'#c33'}">${acc}%</b></p>
-          <p style="color:#888;">熟練節點數:${Mastery.countMastered ? Mastery.countMastered() : '—'}</p>
-          <div class="actions" style="margin-top:14px;">
-            <button class="btn btn-primary" onclick="Mode5.renderMenu()">回 Mode 5 選單</button>
-            <button class="btn" onclick="goHome()">回主畫面</button>
+          <div class="actions" style="justify-content:center">
+            <button class="btn btn-primary" onclick="Mode5.renderMap()">🗺️ 回弱點地圖</button>
+            <button class="btn btn-warn" onclick="Mode5.reDrill()">🎯 再下鑽該節點</button>
+            <button class="btn btn-ghost" onclick="goHome()">🏠 主頁</button>
           </div>
-        </div>`;
-    }
-    if (typeof show === 'function') show('view-result');
-  },
+        </div>
+      `;
+      GameFX.bigConfetti();
+      refreshHome();
+    },
 
-  /* ---------------- 畢業特效 ---------------- */
-  graduate() {
-    const root = document.getElementById('view-result');
-    if (root) {
-      root.innerHTML = `
-        <div class="card" style="text-align:center;background:linear-gradient(135deg,#fff7e6,#ffeccd);border:2px solid #f7b500;">
-          <h1 style="font-size:42px;margin:18px 0;">🎓 弱點獵人 — 畢業 🎓</h1>
-          <p style="font-size:18px;color:#a40;">所有 ${this.bossList.length} 場 Boss 戰全數攻克!</p>
-          <div style="font-size:64px;margin:20px 0;letter-spacing:8px;">🏆🎯💎🔥⚡</div>
-          <p style="color:#666;">你已將 IPAS AI 核心節點熟練度推至 90% 以上。</p>
-          <p style="color:#888;font-size:13px;">建議:回到主畫面跑「混合模擬考」驗證實戰。</p>
-          <div class="actions" style="justify-content:center;margin-top:20px;">
-            <button class="btn btn-primary" onclick="Mode5.resetProgress()">🔄 重置畢業進度</button>
-            <button class="btn" onclick="goHome()">回主畫面</button>
+    // 鐵律 #1 延伸:擊敗 BOSS 後仍可「再下鑽」
+    reDrill() {
+      const s = this.state;
+      const sample = QUESTIONS.find(q => q.node_id === s.boss.nodeId);
+      if (!sample) return showToast('該節點題庫不足');
+      const variations = generateVariation(sample, 3);
+      if (!variations || variations.length === 0) return showToast('變化型不足');
+      DrillSession.start(s.boss.nodeId, variations, sample, () => {
+        this.renderMap();
+      });
+    },
+
+    gameOver() {
+      Player.heal(50);
+      const s = this.state;
+      const view = document.getElementById('view-play');
+      view.innerHTML = `
+        <div class="battle-arena" style="text-align:center">
+          <h1 style="color:#f87171;font-size:2rem">💀 你倒下了</h1>
+          <div style="font-size:4rem;margin:16px 0">😵</div>
+          <div class="dialogue-box">
+            <div class="dialogue-name">🎯 弱點獵人系統</div>
+            <div class="dialogue-text">「弱點還沒被克服,但你撐不下去了。休息一下,你恢復了一半 HP。」</div>
           </div>
-        </div>`;
+          <div class="actions" style="justify-content:center">
+            <button class="btn btn-primary" onclick="Mode5.engageBoss(${s.bossIdx})">⚔️ 再戰</button>
+            <button class="btn btn-ghost" onclick="Mode5.renderMap()">🗺️ 回地圖</button>
+          </div>
+        </div>
+      `;
+    },
+
+    questionPoolExhausted() {
+      const s = this.state;
+      const view = document.getElementById('view-play');
+      const m = Mastery.get(s.boss.nodeId);
+      view.innerHTML = `
+        <div class="battle-arena" style="text-align:center">
+          <h1 style="color:var(--warn)">⚠️ 題庫耗盡</h1>
+          <p>該節點題庫題目已全部出完,且無法再生成有效變化型。</p>
+          <p>當前熟練度:<strong>${Math.round(m.score || 0)}%</strong> / ${MASTERY_DEFEAT_THRESHOLD}%</p>
+          <div class="actions" style="justify-content:center">
+            <button class="btn btn-primary" onclick="Mode5.renderMap()">🗺️ 回地圖</button>
+          </div>
+        </div>
+      `;
     }
-    if (typeof show === 'function') show('view-result');
-  },
+  };
 
-  resetProgress() {
-    if (!confirm('確定要清空 12 Boss 過關紀錄?')) return;
-    this.state.progress = { passedBosses: [] };
-    this.saveProgress();
-    showToast('進度已重置');
-    this.renderMenu();
-  }
-};
-
-window.Mode5 = Mode5;
+  window.Mode5 = Mode5;
+})();
