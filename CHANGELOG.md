@@ -20,3 +20,9 @@
 - `docs/scope-review.md`:三欄對照表、邊界判定邏輯、勘誤要點、審視檢查清單(供使用者人工審視)
 - 採用模式 B(輕量 bypass):階段內動作直接執行,僅在決策節點強制停
 - 修正官方 PDF 排版錯字:科三 L233 之 L22303/L22304 → 正確 L23303/L23304
+
+### Added — 2026-05-09(階段 2)
+- `kb/exam-patterns.json`:114-2 考古題 100 題完整解析(科一+科三,科二邊界跳過)
+- `docs/exam-pattern-summary.md`:Top 15 高頻主題、14 組易混淆配對、Python 程式碼考點、題型分布、權重建議
+- 7 個高優先預測(Recall 公式、PDPA 六項、VGG16、DBSCAN、CV 方法、Drift、VAE/GAN/Diffusion)
+- 題庫設計權重:科一 50% / 科三 50%,題型 70% 概念 + 20% 程式碼 + 5% 圖表 + 5% 計算

@@ -1,0 +1,314 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-05-09",
+  "phase": 2,
+  "source": [
+    "02歷年考題/114年第二梯次中級AI應用規劃師第一科人工智慧技術應用與規劃.pdf",
+    "02歷年考題/114年第二梯次中級AI應用規劃師第三科機器學習技術與應用.pdf"
+  ],
+  "sample_limit": {
+    "exam_count": 1,
+    "exam_id": "114-2 (2025-11-08)",
+    "warning": "僅 1 份樣本,題型權重信賴區間寬;以下統計為單次觀察,非長期趨勢"
+  },
+  "subject_scope": {
+    "subject_1_questions": 50,
+    "subject_3_questions": 50,
+    "total_in_scope": 100,
+    "subject_2_skipped": "邊界參考用,本階段不深入分析"
+  },
+  "format_distribution": {
+    "single_choice_pure_text": 87,
+    "calculation_inline": 1,
+    "code_reading_python": 13,
+    "table_or_chart_reading": 4,
+    "multi_select_grouped_as_single": 5,
+    "notes": "科三 38-50 為附圖程式碼/表格題;科三 47/48/50 為多項組合答案,但仍以單選形式呈現"
+  },
+  "subject_1_distribution": {
+    "L21101_NLP": {
+      "count": 7,
+      "questions": [1, 2, 3, 4, 5, 6, 16, 33],
+      "topics": ["情感分析", "Transformer Self-Attention", "BERT MLM", "GloVe vs Word2Vec", "TF-IDF", "N-gram 限制", "Seq2Seq", "Skip-gram vs CBOW"]
+    },
+    "L21102_CV": {
+      "count": 3,
+      "questions": [7, 8, 34],
+      "topics": ["mAP/IoU", "Softmax vs Max-Pooling", "Panoptic Segmentation"]
+    },
+    "L21103_GenerativeAI": {
+      "count": 9,
+      "questions": [9, 17, 20, 25, 38, 40, 43, 44, 47],
+      "topics": ["資料增強", "RAG 檢索挑戰", "GAN Mode Collapse", "AI 著作權", "Stable Diffusion CFG", "VAE/GAN/Diffusion 比較", "生成式 vs 鑑別式", "Multi-task Learning"]
+    },
+    "L21104_Multimodal": {
+      "count": 3,
+      "questions": [21, 35, 50],
+      "topics": ["模態缺失策略", "CLIP Zero-shot", "CLIP 文字-影像對齊"]
+    },
+    "L21201_Evaluation": {
+      "count": 0,
+      "questions": []
+    },
+    "L21202_Planning": {
+      "count": 1,
+      "questions": [23],
+      "topics": ["漸進式部署 Phased Rollout"]
+    },
+    "L21203_Risk": {
+      "count": 3,
+      "questions": [24, 25, 49],
+      "topics": ["對抗攻擊防禦", "著作權侵權", "Embedding Bias"],
+      "note": "科三第 14 題(可解釋性)亦屬此類別概念"
+    },
+    "L21301_DataPrep": {
+      "count": 2,
+      "questions": [27, 28],
+      "topics": ["JSON 半結構化", "連續+類別特徵工程"]
+    },
+    "L21302_MLOps_Deploy": {
+      "count": 11,
+      "questions": [13, 15, 22, 29, 30, 31, 32, 37, 42, 46],
+      "topics": ["Kubernetes", "Model Registry", "Data Drift KL Divergence", "CI", "Hash 簽章不可否認", "Auto Scaling", "PSI", "Batch Size/Sharding", "Concept Drift"]
+    },
+    "L21_calculation_questions": [],
+    "L21_code_questions": [],
+    "L21_total_mapped": 39,
+    "note": "11 題涉及多重編碼或邊界,計入主編碼;F1 評估(Q10)、PCA(Q12, Q45)、DBSCAN(Q11, Q48)、超參數(Q14, Q36)、ARIMA(Q39)、LASSO(Q26)、特徵縮放等屬科三 L23 範圍但於科一出現"
+  },
+  "subject_3_distribution": {
+    "L23101_ProbStat": {
+      "count": 3,
+      "questions": [22, 23, 41],
+      "topics": ["貝氏定理推論", "Monte Carlo 估計", "Monte Carlo 條件機率程式"]
+    },
+    "L23102_LinearAlgebra": {
+      "count": 3,
+      "questions": [35, 40, 46],
+      "topics": ["PCA 特徵值解釋變異", "NumPy 線性代數函式", "PCA 降噪"]
+    },
+    "L23103_NumericalOptimization": {
+      "count": 3,
+      "questions": [3, 17, 33],
+      "topics": ["局部最優解", "SGD+Momentum", "時間複雜度 O(n²)"]
+    },
+    "L23201_MLPrinciples": {
+      "count": 0,
+      "questions": []
+    },
+    "L23202_CommonAlgorithms": {
+      "count": 9,
+      "questions": [2, 4, 8, 18, 24, 25, 32],
+      "extra_from_subject_1_overlap": [11, 26, 39, 45, 48],
+      "topics": ["L1 Lasso", "DBSCAN Noise/Border/Core", "Information Gain/Decision Tree", "XGBoost vs GBDT", "Residual Plot", "信用評分卡", "L1 特徵選擇"]
+    },
+    "L23203_DeepLearning": {
+      "count": 11,
+      "questions": [5, 6, 7, 21, 27, 38, 39, 42, 43, 44, 45, 48, 49, 50],
+      "topics": ["CNN Conv 局部特徵", "CNN vs FCNN 參數共享", "LSTM 時序", "Multi-head Attention", "ReLU 非線性", "MSE 程式碼", "Dropout 程式碼", "VGG16 參數量分析", "VGG16 FLOPs", "VGG16 結構", "VGG16 遷移學習", "MLP 標準化", "MLP 神經元計算", "MLP 訓練曲線"]
+    },
+    "L23301_DataPrep_FeatureEng": {
+      "count": 2,
+      "questions": [9, 20],
+      "topics": ["特徵縮放(KNN/SVM)", "互動特徵組合"]
+    },
+    "L23302_ModelSelection": {
+      "count": 0,
+      "questions": []
+    },
+    "L23303_TrainingEvalValidation": {
+      "count": 9,
+      "questions": [1, 15, 16, 19, 29, 30, 31, 34, 47],
+      "topics": ["交叉驗證泛化評估", "R² 解釋", "F1 計算(0.8 P + 0.6 R = 0.686)", "不平衡資料(Accuracy 不適合)", "Time Series CV", "macro F1", "Early Stopping Patience", "Stratified LOOCV", "KNN+cross_val_score 程式碼"]
+    },
+    "L23304_TuningOptimization": {
+      "count": 6,
+      "questions": [10, 11, 12, 26, 32],
+      "topics": ["AutoML 適用情境", "Random Search vs Grid", "Learning Rate 收斂控制", "過擬合策略", "L1 Lasso 特徵選擇"]
+    },
+    "L23401_PrivacySecurity": {
+      "count": 2,
+      "questions": [36, 37],
+      "topics": ["同態加密 Homomorphic", "加密組合 + MPC + 雜湊"]
+    },
+    "L23402_BiasFairness": {
+      "count": 2,
+      "questions": [13, 28],
+      "topics": ["Label Bias", "Sampling Bias"]
+    },
+    "L23_calculation_questions": [16],
+    "L23_code_questions": [38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50],
+    "L23_total_mapped": 50
+  },
+  "high_frequency_topics_top_15": [
+    {"rank": 1, "topic": "MLOps 部署與監控", "code": "L21302", "count": 11, "subject": 1, "examples": ["K8s", "PSI", "Drift", "CI", "Hash"]},
+    {"rank": 2, "topic": "深度學習架構", "code": "L23203", "count": 11, "subject": 3, "examples": ["CNN", "LSTM", "Attention", "VGG16"]},
+    {"rank": 3, "topic": "模型訓練與評估", "code": "L23303", "count": 9, "subject": 3, "examples": ["F1", "CV", "ROC", "PSI"]},
+    {"rank": 4, "topic": "生成式 AI", "code": "L21103", "count": 9, "subject": 1, "examples": ["GAN", "VAE", "Diffusion", "RAG"]},
+    {"rank": 5, "topic": "ML 演算法", "code": "L23202", "count": 9, "subject": 3, "examples": ["DBSCAN", "L1/Lasso", "XGBoost", "決策樹"]},
+    {"rank": 6, "topic": "NLP", "code": "L21101", "count": 7, "subject": 1, "examples": ["BERT", "Transformer", "TF-IDF"]},
+    {"rank": 7, "topic": "超參數調整與優化", "code": "L23304", "count": 6, "subject": 3, "examples": ["Grid", "Random", "Bayesian", "AutoML"]},
+    {"rank": 8, "topic": "CV 視覺", "code": "L21102", "count": 3, "subject": 1, "examples": ["mAP/IoU", "Segmentation"]},
+    {"rank": 9, "topic": "多模態 AI", "code": "L21104", "count": 3, "subject": 1, "examples": ["CLIP", "模態缺失"]},
+    {"rank": 10, "topic": "AI 風險管理", "code": "L21203", "count": 3, "subject": 1, "examples": ["對抗攻擊", "著作權"]},
+    {"rank": 11, "topic": "機率統計", "code": "L23101", "count": 3, "subject": 3, "examples": ["貝氏", "Monte Carlo"]},
+    {"rank": 12, "topic": "線性代數", "code": "L23102", "count": 3, "subject": 3, "examples": ["PCA", "特徵值"]},
+    {"rank": 13, "topic": "數值優化", "code": "L23103", "count": 3, "subject": 3, "examples": ["局部最優", "SGD+Momentum", "O(n²)"]},
+    {"rank": 14, "topic": "資料前處理", "code": "L21301/L23301", "count": 4, "subject": "1+3", "examples": ["特徵縮放", "JSON", "互動特徵"]},
+    {"rank": 15, "topic": "AI 隱私加密", "code": "L23401", "count": 2, "subject": 3, "examples": ["同態加密", "MPC"]}
+  ],
+  "confusion_pairs": [
+    {"pair": ["DBSCAN: ε + MinPts", "K-means: K + 距離閾值"], "exam_q": ["科一 11"], "code": "L23202"},
+    {"pair": ["Precision = TP/(TP+FP)", "Recall = TP/(TP+FN)"], "exam_q": ["科三 16"], "code": "L23303", "errata_critical": true},
+    {"pair": ["L1 Lasso (稀疏)", "L2 Ridge (權重縮減)"], "exam_q": ["科三 2", "科三 32", "科三 39"], "code": "L23202"},
+    {"pair": ["Grid Search", "Random Search", "Bayesian Optimization"], "exam_q": ["科一 36", "科三 11"], "code": "L23304"},
+    {"pair": ["VAE (顯式潛在)", "GAN (對抗損失)", "Diffusion (條件去噪)"], "exam_q": ["科一 40", "科一 44"], "code": "L21103"},
+    {"pair": ["Skip-gram (中心預測周圍)", "CBOW (周圍預測中心)"], "exam_q": ["科一 33"], "code": "L21101"},
+    {"pair": ["Semantic Seg", "Instance Seg", "Panoptic Seg"], "exam_q": ["科一 34"], "code": "L21102"},
+    {"pair": ["Data Drift", "Concept Drift", "PSI 偵測"], "exam_q": ["科一 22", "科一 32", "科一 42", "科一 46"], "code": "L21302"},
+    {"pair": ["對稱加密", "非對稱加密", "同態加密", "差分隱私"], "exam_q": ["科三 36", "科三 37"], "code": "L23401"},
+    {"pair": ["LOOCV", "Stratified LOOCV", "K-Fold", "Time Series CV", "Random CV"], "exam_q": ["科三 29", "科三 34"], "code": "L23303"},
+    {"pair": ["Softmax (機率)", "Max-Pooling (取最大值)"], "exam_q": ["科一 8"], "code": "L23203"},
+    {"pair": ["F1 Score", "Accuracy", "MSE", "RMSE"], "exam_q": ["科一 10", "科三 16", "科三 19"], "code": "L23303"},
+    {"pair": ["Sampling Bias", "Label Bias", "Feature Bias"], "exam_q": ["科三 13", "科三 28"], "code": "L23402"},
+    {"pair": ["過擬合策略: 正則化 / Dropout / Early Stopping"], "exam_q": ["科三 26", "科一 14"], "code": "L23304"}
+  ],
+  "python_code_topics": [
+    {"library": "numpy", "functions": ["np.linalg.inv", "np.linalg.det", "np.dot", "np.linalg.eig", "element-wise *"], "exam_q": ["科三 40"]},
+    {"library": "numpy.random", "topic": "Monte Carlo simulation", "exam_q": ["科三 41"]},
+    {"library": "sklearn.decomposition", "class": "PCA", "topic": "降維 / 降噪", "exam_q": ["科三 46"]},
+    {"library": "sklearn.neighbors", "class": "KNeighborsClassifier", "exam_q": ["科三 47"]},
+    {"library": "sklearn.model_selection", "function": "cross_val_score", "exam_q": ["科三 47"]},
+    {"library": "sklearn.preprocessing", "topic": "標準化 mean=0, std=1", "exam_q": ["科三 48"]},
+    {"library": "PyTorch torchsummary", "topic": "VGG16 模型結構/參數量分析", "exam_q": ["科三 42-45"]},
+    {"library": "PyTorch nn.Module", "topic": "MLP / Dense layer / activation", "exam_q": ["科三 49"]},
+    {"library": "matplotlib.pyplot", "topic": "loss curve 'r-' / 'b--'", "exam_q": ["科三 50"]},
+    {"library": "evaluation metrics", "topic": "MAE/MSE/RMSE/R² 程式表達", "exam_q": ["科三 38"]},
+    {"library": "regularization", "topic": "Dropout / L1 / L2 程式表達", "exam_q": ["科三 39"]}
+  ],
+  "scenario_industries_subject_1": [
+    {"industry": "電商", "count": 8, "questions": [1, 5, 6, 9, 22, 25, 27, 28, 33, 35, 47, 49]},
+    {"industry": "金融", "count": 7, "questions": [2, 12, 24, 26, 30, 42, 47]},
+    {"industry": "醫療", "count": 1, "questions": [23]},
+    {"industry": "自駕/智慧城市", "count": 2, "questions": [34, 7]},
+    {"industry": "媒體/設計", "count": 2, "questions": [35, 38]},
+    {"industry": "製造", "count": 0},
+    {"industry": "電信", "count": 1, "questions": [44]},
+    {"industry": "能源", "count": 0},
+    {"industry": "通用", "count": 多}
+  ],
+  "scenario_industries_subject_3": [
+    {"industry": "智慧製造", "count": 4, "questions": [5, 12, 27]},
+    {"industry": "醫療", "count": 3, "questions": [14, 19, 34]},
+    {"industry": "金融科技", "count": 5, "questions": [25, 36, 37]},
+    {"industry": "電信/電商", "count": 4, "questions": [10, 28, 30, 32]},
+    {"industry": "再生能源", "count": 1, "questions": [23]},
+    {"industry": "智慧城市/自駕", "count": 1, "questions": [6]},
+    {"industry": "通用", "count": 多}
+  ],
+  "calculation_questions_detail": [
+    {
+      "question": "科三 16",
+      "topic": "F1 計算",
+      "given": {"Precision": 0.8, "Recall": 0.6},
+      "formula": "F1 = 2 * P * R / (P + R)",
+      "answer": 0.686,
+      "options_present": ["0.686", "0.700", "0.720", "0.750"],
+      "exam_pattern": "給定 P 和 R 數值,要求計算 F1"
+    }
+  ],
+  "high_priority_predictions_2026_05": [
+    {
+      "topic": "Recall 公式 = TP/(TP+FN)",
+      "code": "L23303",
+      "reason": "勘誤表修正之高頻必考公式;若再出題機率極高",
+      "must_cover": true
+    },
+    {
+      "topic": "PDPA 事前告知義務六項",
+      "code": "L21203",
+      "reason": "勘誤表大幅補完;法規條文題型常見",
+      "must_cover": true
+    },
+    {
+      "topic": "VGG16 / CNN 參數量計算",
+      "code": "L23203",
+      "reason": "本次科三 4 題程式碼判讀,為高權重區",
+      "must_cover": true
+    },
+    {
+      "topic": "DBSCAN ε 與 MinPts",
+      "code": "L23202",
+      "reason": "科一+科三共 3 題,易混淆熱區",
+      "must_cover": true
+    },
+    {
+      "topic": "K-Fold / Stratified / Time Series CV 區分",
+      "code": "L23303",
+      "reason": "科三 29、34 都考此",
+      "must_cover": true
+    },
+    {
+      "topic": "Drift 偵測:Data Drift / Concept Drift / PSI / KL Divergence",
+      "code": "L21302",
+      "reason": "科一 4 題,為 MLOps 核心",
+      "must_cover": true
+    },
+    {
+      "topic": "VAE / GAN / Diffusion 三者比較",
+      "code": "L21103",
+      "reason": "科一 2 題,生成式 AI 必考",
+      "must_cover": true
+    }
+  ],
+  "weighting_recommendation_for_question_bank": {
+    "subject_1_target_pct": 50,
+    "subject_3_target_pct": 50,
+    "subject_1_internal_weights": {
+      "L21101_NLP": 14,
+      "L21102_CV": 6,
+      "L21103_GenerativeAI": 18,
+      "L21104_Multimodal": 6,
+      "L21201_Evaluation": 4,
+      "L21202_Planning": 4,
+      "L21203_Risk": 8,
+      "L21301_DataPrep": 4,
+      "L21302_MLOps_Deploy": 22,
+      "L22_overlap_padding": 14,
+      "note": "L22 overlap 14% 用於補強跨科目重疊概念(風險、隱私、生成式應用)"
+    },
+    "subject_3_internal_weights": {
+      "L23101_ProbStat": 6,
+      "L23102_LinearAlgebra": 6,
+      "L23103_NumericalOpt": 6,
+      "L23201_MLPrinciples": 4,
+      "L23202_CommonAlgorithms": 16,
+      "L23203_DeepLearning": 16,
+      "L23301_DataPrep": 4,
+      "L23302_ModelSelection": 4,
+      "L23303_TrainingEval": 18,
+      "L23304_TuningOpt": 12,
+      "L23401_Privacy": 4,
+      "L23402_BiasFairness": 4,
+      "note": "L23303 + L23304 + L23202 + L23203 合計 62%,為科三主軸"
+    },
+    "format_distribution_target": {
+      "single_choice_text": 70,
+      "calculation_inline": 5,
+      "code_reading_python": 20,
+      "table_chart_reading": 5,
+      "note": "code reading 比例對齊科三實際 26%,折衷至 20% 因情境決策題仍佔主流"
+    }
+  },
+  "summary": {
+    "total_questions_analyzed": 100,
+    "subject_1_count": 50,
+    "subject_3_count": 50,
+    "code_questions_count": 13,
+    "calculation_questions_count": 1,
+    "scenario_questions_estimate": 60,
+    "concept_questions_estimate": 39,
+    "high_priority_predictions_count": 7,
+    "confusion_pairs_count": 14
+  }
+}
