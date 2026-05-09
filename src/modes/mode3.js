@@ -149,12 +149,17 @@
     if (t.length <= max) return t;
     return t.slice(0, max - 1) + '…';
   }
-  function splitForSVG(text, maxPerLine = 12) {
-    // 中文按字數切兩行
-    const t = text.replace(/\s+/g, '').replace(/[()()\[\]【】]/g, '');
+  // 切割文字為最多 2 行,每行不超過 maxPerLine 字
+  function splitForSVG(text, maxPerLine = 11) {
+    const t = String(text || '').replace(/\s+/g, '').replace(/[()()\[\]【】]/g, '');
     if (t.length <= maxPerLine) return [t];
-    const half = Math.ceil(t.length / 2);
-    return [t.slice(0, half), t.slice(half, half + maxPerLine + 4)];
+    // 兩行各取最多 maxPerLine,超過第二行尾就用「…」
+    const line1 = t.slice(0, maxPerLine);
+    let line2 = t.slice(maxPerLine, maxPerLine * 2);
+    if (t.length > maxPerLine * 2) {
+      line2 = line2.slice(0, maxPerLine - 1) + '…';
+    }
+    return [line1, line2];
   }
 
   const Mode3 = {
@@ -174,6 +179,11 @@
     },
 
     renderStageMenu() {
+      // 進入 menu 一定要清掉 timer / ghost / cooldown
+      this.stopTimer();
+      this._placeCooldown = false;
+      this._dragCardId = null;
+      this._cleanupGhosts && this._cleanupGhosts();
       const view = document.getElementById('view-play');
       if (!view) return;
       const player = Player.load();
@@ -265,10 +275,18 @@
       const correct = q.options.find(o => o.is_correct);
       const steps = parseSteps(correct ? correct.text : '');
       if (steps.length === 0) { showToast('此題無法解析步驟'); return; }
+      if (steps.length === 1) { showToast('此題步驟不足無法形成排序挑戰'); return; }
+
+      // 進入新關卡前先清理上一關狀態
+      this.stopTimer();
+      this._placeCooldown = false;
+      this._dragCardId = null;
+      this._cleanupGhosts && this._cleanupGhosts();
 
       const meta = STAGE_META[q.id] || { name: q.stem.slice(0, 20), avatar: '🔧', timeLimit: 90, hint: '依正確順序排列' };
 
-      // 鐵律 #2:洗牌候選池
+      // 鐵律 #2:洗牌候選池(seed 重設確保每場不同)
+      RNG.set(Date.now() + Math.floor(Math.random() * 100000));
       const shuffled = RNG.shuffle(steps.slice());
 
       this.state = {
@@ -291,10 +309,11 @@
     },
 
     startTimer() {
-      if (this.timer) clearInterval(this.timer);
+      if (this.timer) { clearInterval(this.timer); this.timer = null; }
       this.timer = setInterval(() => {
-        if (!this.state || this.state.finished) { clearInterval(this.timer); return; }
+        if (!this.state || this.state.finished) { clearInterval(this.timer); this.timer = null; return; }
         this.state.timeLeft--;
+        if (this.state.timeLeft < 0) this.state.timeLeft = 0;
         const el = document.getElementById('m3-timer');
         if (el) {
           el.textContent = `⏱ ${this.state.timeLeft}s`;
@@ -302,7 +321,7 @@
             : this.state.timeLeft <= 25 ? ' warn' : '');
         }
         if (this.state.timeLeft <= 0) {
-          clearInterval(this.timer);
+          clearInterval(this.timer); this.timer = null;
           this.timeUp();
         }
       }, 1000);
@@ -431,6 +450,9 @@
       `;
       show('view-play');
 
+      // 清理可能殘留的 ghost / X mark
+      this._cleanupGhosts();
+
       // 為每個 slot rect 加上 drop handler
       requestAnimationFrame(() => {
         document.querySelectorAll('#view-play .m3-slot').forEach(rect => {
@@ -443,29 +465,50 @@
             e.preventDefault();
             rect.classList.remove('hover');
             const slotIdx = parseInt(rect.dataset.slotIndex, 10);
-            const cardId = e.dataTransfer.getData('text/plain') || this._dragCardId;
-            this.tryPlace(cardId, slotIdx);
+            let cardId = '';
+            try { cardId = e.dataTransfer.getData('text/plain'); } catch (err) {}
+            cardId = cardId || this._dragCardId;
+            if (cardId) this.tryPlace(cardId, slotIdx);
           });
         });
+        // 為每張卡片加上 touch 監聽(mobile 支援)
+        document.querySelectorAll('#view-play .m3-card').forEach(cardEl => {
+          const cid = cardEl.getAttribute('data-card-id');
+          if (cid && !cardEl.classList.contains('placed')) this._touchInit(cardEl, cid);
+        });
       });
+    },
+
+    _cleanupGhosts() {
+      // 清掉拖拉殘留的 X mark / ghost
+      document.querySelectorAll('.m3-x-mark').forEach(n => n.remove());
+      // 清除遺留的 ghost(touch fallback 若異常結束)
+      document.querySelectorAll('.m3-card.dragging').forEach(n => n.classList.remove('dragging'));
     },
 
     // === Drag & Drop handlers ===
     _dragStart(ev, cardId) {
       this._dragCardId = cardId;
       try { ev.dataTransfer.setData('text/plain', cardId); } catch (e) {}
-      ev.dataTransfer.effectAllowed = 'move';
-      ev.target.classList.add('dragging');
+      try { ev.dataTransfer.effectAllowed = 'move'; } catch (e) {}
+      // 用 currentTarget 取外層 .m3-card,避免 ev.target 落在子元素
+      const cardEl = ev.currentTarget || ev.target.closest('.m3-card');
+      if (cardEl && cardEl.classList) cardEl.classList.add('dragging');
     },
     _dragEnd(ev) {
-      ev.target.classList.remove('dragging');
+      const cardEl = ev.currentTarget || ev.target.closest('.m3-card');
+      if (cardEl && cardEl.classList) cardEl.classList.remove('dragging');
       document.querySelectorAll('.m3-slot.hover').forEach(r => r.classList.remove('hover'));
+      // 清理拖拉狀態,避免下次 drop race
+      this._dragCardId = null;
     },
-    _dragOver(ev) { ev.preventDefault(); ev.dataTransfer.dropEffect = 'move'; },
+    _dragOver(ev) { ev.preventDefault(); try { ev.dataTransfer.dropEffect = 'move'; } catch(e){} },
     _dropToPool(ev) {
       // 拖回候選池 = 從 slot 取回
       ev.preventDefault();
-      const cardId = ev.dataTransfer.getData('text/plain') || this._dragCardId;
+      let cardId = '';
+      try { cardId = ev.dataTransfer.getData('text/plain'); } catch (e) {}
+      cardId = cardId || this._dragCardId;
       if (!cardId || !this.state) return;
       // 找這張卡是否已在某 slot
       const slotIdx = this.state.slots.findIndex(x => x === cardId);
@@ -483,34 +526,133 @@
       }
     },
 
+    // === Mobile / Touch fallback(HTML5 DnD 在多數行動裝置不會觸發)===
+    // 使用單指 touchstart/touchmove/touchend 模擬拖拉,長按啟動以避免誤觸滾動
+    _touchInit(cardEl, cardId) {
+      const self = this;
+      let dragging = false;
+      let ghost = null;
+      let longPressTimer = null;
+      let startX = 0, startY = 0;
+
+      const onTouchStart = (e) => {
+        if (e.touches.length !== 1) return;
+        const t = e.touches[0];
+        startX = t.clientX; startY = t.clientY;
+        // 200ms 長按啟動拖拉
+        longPressTimer = setTimeout(() => {
+          dragging = true;
+          self._dragCardId = cardId;
+          cardEl.classList.add('dragging');
+          ghost = cardEl.cloneNode(true);
+          ghost.style.position = 'fixed';
+          ghost.style.pointerEvents = 'none';
+          ghost.style.zIndex = '9999';
+          ghost.style.opacity = '0.85';
+          ghost.style.transform = 'scale(0.9)';
+          ghost.style.left = (t.clientX - 80) + 'px';
+          ghost.style.top = (t.clientY - 20) + 'px';
+          ghost.classList.remove('dragging');
+          document.body.appendChild(ghost);
+        }, 200);
+      };
+      const onTouchMove = (e) => {
+        if (!dragging) {
+          // 在啟動前若手指偏移過大,取消長按
+          if (longPressTimer) {
+            const t = e.touches[0];
+            if (Math.abs(t.clientX - startX) > 8 || Math.abs(t.clientY - startY) > 8) {
+              clearTimeout(longPressTimer); longPressTimer = null;
+            }
+          }
+          return;
+        }
+        e.preventDefault();
+        const t = e.touches[0];
+        if (ghost) {
+          ghost.style.left = (t.clientX - 80) + 'px';
+          ghost.style.top = (t.clientY - 20) + 'px';
+        }
+        // 高亮 slot
+        document.querySelectorAll('.m3-slot.hover').forEach(r => r.classList.remove('hover'));
+        const under = self._elementAt(t.clientX, t.clientY);
+        if (under && under.classList && under.classList.contains('m3-slot')) {
+          under.classList.add('hover');
+        }
+      };
+      const onTouchEnd = (e) => {
+        if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+        if (!dragging) return;
+        dragging = false;
+        cardEl.classList.remove('dragging');
+        if (ghost) { ghost.remove(); ghost = null; }
+        document.querySelectorAll('.m3-slot.hover').forEach(r => r.classList.remove('hover'));
+        const t = (e.changedTouches && e.changedTouches[0]) || null;
+        if (!t) { self._dragCardId = null; return; }
+        const under = self._elementAt(t.clientX, t.clientY);
+        if (under && under.classList && under.classList.contains('m3-slot')) {
+          const slotIdx = parseInt(under.dataset.slotIndex, 10);
+          if (!Number.isNaN(slotIdx)) self.tryPlace(cardId, slotIdx);
+        } else if (under && under.closest && under.closest('#m3-pool')) {
+          // 拖回候選池
+          const sIdx = self.state ? self.state.slots.findIndex(x => x === cardId) : -1;
+          if (sIdx >= 0) {
+            const card = self.state.pool.find(c => c.id === cardId);
+            const wasCorrect = card && card.text === self.state.steps[sIdx];
+            self.state.slots[sIdx] = null;
+            if (card) card.placed = false;
+            if (wasCorrect) {
+              self.state.correctPlacements = Math.max(0, self.state.correctPlacements - 1);
+              self.state.combo = 0;
+            }
+            self.renderStage();
+          }
+        }
+        self._dragCardId = null;
+      };
+      cardEl.addEventListener('touchstart', onTouchStart, { passive: true });
+      cardEl.addEventListener('touchmove', onTouchMove, { passive: false });
+      cardEl.addEventListener('touchend', onTouchEnd);
+      cardEl.addEventListener('touchcancel', onTouchEnd);
+    },
+
+    _elementAt(x, y) {
+      // 拖拉時 ghost 開了 pointer-events:none,所以 elementFromPoint 可拿到下方元素
+      return document.elementFromPoint(x, y);
+    },
+
     // 嘗試把卡片放到 slot
     tryPlace(cardId, slotIdx) {
       const s = this.state;
       if (!s || s.finished) return;
+      // 防止短時間內重複觸發(動畫尚未播完時)
+      if (this._placeCooldown) return;
+      if (typeof slotIdx !== 'number' || slotIdx < 0 || slotIdx >= s.slots.length) return;
       const card = s.pool.find(c => c.id === cardId);
       if (!card) return;
-      // 若該 slot 已有別張卡片,先移走那張(回到 pool)
-      if (s.slots[slotIdx]) {
-        const prevId = s.slots[slotIdx];
-        const prev = s.pool.find(c => c.id === prevId);
-        if (prev) prev.placed = false;
-        // 如果原本是對的,要扣回
-        if (prev && prev.text === s.steps[slotIdx]) {
-          s.correctPlacements = Math.max(0, s.correctPlacements - 1);
-        }
-      }
-      // 若這張卡片在另一個 slot,先清掉那邊
-      const oldIdx = s.slots.findIndex(x => x === cardId);
-      if (oldIdx >= 0 && oldIdx !== slotIdx) {
-        const oldCorrect = card.text === s.steps[oldIdx];
-        s.slots[oldIdx] = null;
-        if (oldCorrect) s.correctPlacements = Math.max(0, s.correctPlacements - 1);
-      }
 
       const expected = s.steps[slotIdx];
       const isRight = card.text === expected;
 
       if (isRight) {
+        // 對的才允許覆寫:先處理被替換掉的舊卡 + 卡片先前所在的 slot
+        if (s.slots[slotIdx] && s.slots[slotIdx] !== cardId) {
+          const prevId = s.slots[slotIdx];
+          const prev = s.pool.find(c => c.id === prevId);
+          if (prev) {
+            prev.placed = false;
+            if (prev.text === s.steps[slotIdx]) {
+              s.correctPlacements = Math.max(0, s.correctPlacements - 1);
+            }
+          }
+        }
+        const oldIdx = s.slots.findIndex(x => x === cardId);
+        if (oldIdx >= 0 && oldIdx !== slotIdx) {
+          const oldCorrect = card.text === s.steps[oldIdx];
+          s.slots[oldIdx] = null;
+          if (oldCorrect) s.correctPlacements = Math.max(0, s.correctPlacements - 1);
+        }
+
         s.slots[slotIdx] = cardId;
         card.placed = true;
         s.correctPlacements++;
@@ -538,21 +680,31 @@
         }
         this.renderStage();
       } else {
-        // 錯放:shake + 紅 X + takeDamage(輕量,避免太懲罰)
+        // 錯放:不改 state.slots / card.placed,只給視覺懲罰並彈回
         s.wrongDrops++;
         s.combo = 0;
         const dmg = 4 + Math.floor(s.steps.length * 0.5);
         Player.damage(dmg);
 
+        // 設置短暫冷卻,避免動畫期間誤觸
+        this._placeCooldown = true;
+        setTimeout(() => { this._placeCooldown = false; }, 600);
+
         const slotEl = document.getElementById('m3-slot-' + slotIdx);
         if (slotEl) {
           slotEl.classList.add('wrong-flash');
-          setTimeout(() => slotEl.classList.remove('wrong-flash'), 600);
+          setTimeout(() => {
+            const el = document.getElementById('m3-slot-' + slotIdx);
+            if (el) el.classList.remove('wrong-flash');
+          }, 600);
         }
-        const cardEl = document.querySelector(`[data-card-id="${cardId}"]`);
+        const cardEl = document.querySelector('[data-card-id="' + cardId + '"]');
         if (cardEl) {
           cardEl.classList.add('shake');
-          setTimeout(() => cardEl.classList.remove('shake'), 500);
+          setTimeout(() => {
+            const el = document.querySelector('[data-card-id="' + cardId + '"]');
+            if (el) el.classList.remove('shake');
+          }, 500);
         }
 
         // 飛紅 X
@@ -567,7 +719,7 @@
 
         const p = Player.load();
         if (p.hp <= 0) { this.gameOver(); return; }
-        // 不立即 re-render,讓動畫播完(但更新 HP 條由動畫處理)
+        // 不立即 re-render,讓動畫播完
         setTimeout(() => { if (this.state && !this.state.finished) this.renderStage(); }, 700);
       }
     },
@@ -599,6 +751,7 @@
     // === 招式 ===
     skillAutoPlace() {
       const s = this.state; if (!s || s.finished) return;
+      if (this._placeCooldown) { showToast('請稍候,動畫進行中'); return; }
       const p = Player.load();
       if (p.mp < 10) { showToast('MP 不足'); return; }
       // 找第一個未填正確的 slot
@@ -612,7 +765,7 @@
       // 找對應卡片(可能還在 pool 或在錯位 slot)
       const card = s.pool.find(c => c.text === expectedText);
       if (!card) { showToast('找不到對應卡片'); return; }
-      p.mp -= 10; Player.save(p);
+      p.mp = Math.max(0, p.mp - 10); Player.save(p);
       s.used.autoplace++;
       // 把該卡放對位置
       this.tryPlace(card.id, slotIdx);
@@ -620,23 +773,24 @@
     },
 
     skillHint() {
-      const s = this.state; if (!s) return;
+      const s = this.state; if (!s || s.finished) return;
       const p = Player.load();
       if (p.mp < 8) { showToast('MP 不足'); return; }
-      p.mp -= 8; Player.save(p);
+      p.mp = Math.max(0, p.mp - 8); Player.save(p);
       s.used.hint++;
       const hook = (s.q.explanation && s.q.explanation.hook) || s.meta.hint;
       showToast('💡 ' + hook, 5500);
-      this.renderStage();
+      // 不 re-render,避免打斷使用者拖拉節奏
+      // 但 MP/HP 條會在下次 render 時更新
     },
 
     skillSkip() {
-      const s = this.state; if (!s) return;
+      const s = this.state; if (!s || s.finished) return;
       if (!confirm('跳過此關?會扣 15 HP 且本次不算通關。')) return;
       Player.damage(15);
-      this.stopTimer();
-      this.state.finished = true;
-      // 算錯題下鑽機會
+      // afterFail 會處理 stopTimer / finished / cleanup
+      const p = Player.load();
+      if (p.hp <= 0) { this.gameOver(); return; }
       this.afterFail('skip');
     },
 
@@ -644,14 +798,17 @@
     victory() {
       const s = this.state;
       this.stopTimer();
+      this._placeCooldown = false;
+      this._dragCardId = null;
+      this._cleanupGhosts();
       s.finished = true;
 
-      const elapsed = s.meta.timeLimit - s.timeLeft;
+      const elapsed = Math.max(0, s.meta.timeLimit - s.timeLeft);
       const perfect = s.wrongDrops === 0;
       const timeBonus = Math.max(0, s.timeLeft);
       const comboMultiplier = 1 + Math.min(s.maxCombo, 8) * 0.1; // 1.0 ~ 1.8x
       const baseExp = 50 + s.steps.length * 8;
-      const totalExp = Math.floor((baseExp + timeBonus * 2 + (perfect ? 40 : 0)) * comboMultiplier);
+      const totalExp = Math.max(0, Math.floor((baseExp + timeBonus * 2 + (perfect ? 40 : 0)) * comboMultiplier));
 
       Player.gainExp(totalExp);
       Mastery.update(s.q.node_id || s.q.id, true);
@@ -713,7 +870,11 @@
 
     afterFail(reason) {
       const s = this.state;
+      if (!s) { this.renderStageMenu(); return; }
       this.stopTimer();
+      this._placeCooldown = false;
+      this._dragCardId = null;
+      this._cleanupGhosts();
       s.finished = true;
 
       // 加入錯題本(鐵律 #1)
@@ -727,7 +888,9 @@
       Mastery.update(s.q.node_id || s.q.id, false);
       Progress.addAnswer(false);
 
-      const reasonText = reason === 'timeup' ? '⏰ 時間到!Pipeline 部署超時' : '🚪 你選擇放棄此關';
+      const reasonText = reason === 'timeup' ? '⏰ 時間到!Pipeline 部署超時'
+        : reason === 'skip' ? '⏭ 跳關!此關不算通關'
+        : '🚪 你選擇放棄此關';
 
       const view = document.getElementById('view-play');
       view.innerHTML = `
@@ -786,6 +949,10 @@
 
     gameOver() {
       this.stopTimer();
+      this._placeCooldown = false;
+      this._dragCardId = null;
+      this._cleanupGhosts();
+      if (!this.state) { this.renderStageMenu(); return; }
       this.state.finished = true;
       Player.heal(50);
       const s = this.state;

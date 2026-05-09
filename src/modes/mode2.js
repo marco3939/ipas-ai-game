@@ -36,10 +36,10 @@
       key: 'pytorch',
       name: '🔥 PyTorch 訓練幽靈',
       avatar: '🔥',
-      desc: '梯度累加、Linear 形狀、CrossEntropy 與 softmax 的混淆師',
+      desc: 'Linear 形狀、Dropout 與訓練迴圈細節的混淆師',
       qids: ['q_pa_010', 'q_pa_011', 'q_pa_012', 'q_0029'],
       hp: 130,
-      intro: '「你忘記 zero_grad 了嗎?CE 居然餵 softmax?Linear 改的是哪個軸?訓練迴圈裡的細節,我是專家。」',
+      intro: '「Linear 改的是哪個軸?Dropout 在 train/eval 行為不同?訓練迴圈裡的細節,我是專家。」',
       attack: ['「梯度累加爆了!」','「loss 永遠下不去!」','「nan 出現了!」'],
       defeat: ['「我的訓練陷阱全被你破解...」','「PyTorch 的細節已是你的本能。」']
     },
@@ -89,6 +89,15 @@
     return RNG.shuffle(list);
   }
 
+  // 動態調整 BOSS HP 以匹配實際存活題數(避免題庫被刪後出現「打不完」的情況)
+  // 公式:每題預期約 35 HP(約 lvl 1 玩家 1~2 擊),HP 下限保留 50,最高不超過原 hp
+  function effectiveBossHp(boss, qcount) {
+    if (qcount <= 0) return 0;
+    const perQ = 35;
+    const calc = qcount * perQ;
+    return Math.min(boss.hp, Math.max(50, calc));
+  }
+
   // === 招式系統 ===
   // 1. 靜態分析(消耗 8 MP):顯示 hook(記憶口訣)
   // 2. 執行模擬(消耗 14 MP):去除一個錯選項
@@ -99,6 +108,7 @@
     state: null,
 
     start() {
+      this.stopTypeText();
       RNG.set(Date.now());
       this.renderMap();
     },
@@ -159,16 +169,22 @@
               const cleared = st && st.defeated;
               const perfect = st && st.perfectClear;
               const qcnt = b.qids.filter(id => QUESTIONS.find(x => x.id === id)).length;
-              return `<button class="mode-card" onclick="Mode2.selectBoss('${b.key}')" ${qcnt === 0 ? 'disabled style="opacity:0.5"' : ''} style="${cleared ? 'opacity:0.7;border-color:var(--success);' : ''}">
+              const dynHp = effectiveBossHp(b, qcnt);
+              const disabled = qcnt === 0;
+              const reducedNote = qcnt > 0 && qcnt < b.qids.length ? `<span style="color:var(--warn);font-size:0.7rem">(題庫減量,HP 已下調)</span>` : '';
+              const emptyNote = disabled ? `<div style="margin-top:6px;color:var(--danger);font-size:0.75rem">⚠️ 題庫補強中,暫時無法挑戰</div>` : '';
+              const titleAttr = disabled ? 'title="此 BOSS 對應題目已下架,等待新題補充"' : '';
+              return `<button class="mode-card" onclick="Mode2.selectBoss('${b.key}')" ${disabled ? 'disabled' : ''} ${titleAttr} style="${cleared ? 'opacity:0.7;border-color:var(--success);' : ''}${disabled ? 'opacity:0.45;cursor:not-allowed;' : ''}">
                 <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
                   <span style="font-size:2rem">${b.avatar}</span>
                   <div>
-                    <div class="mode-num">${cleared ? (perfect ? '⭐ 完美通關' : '✅ 已通關') : '未通關'}</div>
+                    <div class="mode-num">${disabled ? '🚧 題庫補強中' : (cleared ? (perfect ? '⭐ 完美通關' : '✅ 已通關') : '未通關')}</div>
                     <div class="mode-title" style="font-size:0.95rem">${b.name}</div>
                   </div>
                 </div>
                 <div class="mode-desc" style="font-size:0.85rem">${b.desc}</div>
-                <div class="mode-stats">HP ${b.hp} · ${qcnt} 題判讀</div>
+                <div class="mode-stats">HP ${dynHp} · ${qcnt} 題判讀 ${reducedNote}</div>
+                ${emptyNote}
               </button>`;
             }).join('')}
           </div>
@@ -188,18 +204,23 @@
     },
 
     selectBoss(key) {
+      // 切換 BOSS 前先停掉前一個打字機,避免殘留 timer 寫到已銷毀 DOM
+      this.stopTypeText();
+
       const boss = BOSSES.find(b => b.key === key);
       if (!boss) return;
       const questions = pickQuestionsForBoss(boss);
       if (questions.length === 0) {
-        showToast('題庫不足');
+        showToast('⚠️ 此 BOSS 對應題目已下架,題庫補強中');
         return;
       }
 
+      const dynHp = effectiveBossHp(boss, questions.length);
+
       this.state = {
         boss,
-        bossHp: boss.hp,
-        bossHpMax: boss.hp,
+        bossHp: dynHp,
+        bossHpMax: dynHp,
         questions,
         idx: 0,
         combo: 0,
@@ -208,6 +229,8 @@
         wrong: 0,
         totalDamage: 0,
         currentQ: null,
+        answered: false,        // 答題鎖,防快速連點同一題
+        gameOverPending: false, // hp=0 後的 game-over 等待中
         eliminated: new Set(),  // 已被「執行模擬」消除的選項 key
       };
 
@@ -218,7 +241,7 @@
             <div class="avatar boss" style="font-size:2.5rem">${boss.avatar}</div>
             <div class="bar-info">
               <div class="bar-name">${boss.name}</div>
-              <div class="hp-text">HP ${boss.hp} · ${questions.length} 題程式判讀</div>
+              <div class="hp-text">HP ${dynHp} · ${questions.length} 題程式判讀${questions.length < boss.qids.length ? ' (題庫減量)' : ''}</div>
             </div>
           </div>
           <div class="dialogue-box">
@@ -236,24 +259,38 @@
     },
 
     typeText(id, text, speedMs = 28) {
+      this.stopTypeText();
       const el = document.getElementById(id);
       if (!el) return;
       el.textContent = '';
       let i = 0;
-      const t = setInterval(() => {
-        if (i >= text.length) { clearInterval(t); return; }
-        el.textContent += text[i++];
+      this._typeTimer = setInterval(() => {
+        // DOM 可能被換掉(快速切 BOSS),保險再查一次
+        const cur = document.getElementById(id);
+        if (!cur) { this.stopTypeText(); return; }
+        if (i >= text.length) { this.stopTypeText(); return; }
+        cur.textContent += text[i++];
       }, speedMs);
     },
 
+    stopTypeText() {
+      if (this._typeTimer) {
+        clearInterval(this._typeTimer);
+        this._typeTimer = null;
+      }
+    },
+
     startBattle() {
+      this.stopTypeText();
       this.renderBattle();
       this.showQuestion();
     },
 
     renderBattle() {
+      if (!this.state) return;
       const p = Player.load();
       const view = document.getElementById('view-play');
+      if (!view) return;
       view.innerHTML = `
         <div class="battle-arena" id="m2-arena">
           <div class="enemy-bar">
@@ -282,6 +319,7 @@
     },
 
     updateBars() {
+      if (!this.state) return;
       const p = Player.load();
       const bossPct = this.state.bossHp / this.state.bossHpMax * 100;
       const playerPct = p.hp / p.hpMax * 100;
@@ -302,33 +340,40 @@
     },
 
     updateSkillTray() {
+      if (!this.state) return;
       const p = Player.load();
       const tray = document.getElementById('m2-skill-tray');
       if (!tray) return;
       // 三招系統(Mode2 專屬,不依賴 Player.skills,任何人都能用,只看 MP)
       const used = this.state.skillsUsedThisQ || {};
+      const answered = this.state.answered;
       const skills = [
-        `<button class="skill-btn" onclick="Mode2.useStaticAnalysis()" ${p.mp < 8 || used.hint ? 'disabled' : ''}>🔍 靜態分析 <span class="skill-cost">8MP</span></button>`,
-        `<button class="skill-btn" onclick="Mode2.useExecSimulate()" ${p.mp < 14 || used.eliminate ? 'disabled' : ''}>⚡ 執行模擬 <span class="skill-cost">14MP</span></button>`,
-        `<button class="skill-btn" onclick="Mode2.useCodeReview()" ${p.mp < 18 || used.review ? 'disabled' : ''}>📋 Code Review <span class="skill-cost">18MP</span></button>`,
+        `<button class="skill-btn" onclick="Mode2.useStaticAnalysis()" ${p.mp < 8 || used.hint || answered ? 'disabled' : ''}>🔍 靜態分析 <span class="skill-cost">8MP</span></button>`,
+        `<button class="skill-btn" onclick="Mode2.useExecSimulate()" ${p.mp < 14 || used.eliminate || answered ? 'disabled' : ''}>⚡ 執行模擬 <span class="skill-cost">14MP</span></button>`,
+        `<button class="skill-btn" onclick="Mode2.useCodeReview()" ${p.mp < 18 || used.review || answered ? 'disabled' : ''}>📋 Code Review <span class="skill-cost">18MP</span></button>`,
       ];
       tray.innerHTML = skills.join('');
     },
 
     showQuestion() {
+      if (!this.state) return;
+      if (this.state.gameOverPending) return; // gameOver 已 schedule,不再渲染新題
       if (this.state.idx >= this.state.questions.length || this.state.bossHp <= 0) {
         this.victory();
         return;
       }
       const q = renderQuestion(this.state.questions[this.state.idx]);
       this.state.currentQ = q;
+      this.state.answered = false; // 解鎖新題
       this.state.eliminated = new Set();
       this.state.skillsUsedThisQ = {};
 
-      const codeBlock = q.code_block ? `<pre class="code-syntax">${highlightCodeSimple(q.code_block)}</pre>` : '';
+      // 程式判讀題的程式碼區塊:加上 max-height + 雙向滾動,避免長 code 撐爆畫面
+      const codeBlock = q.code_block ? `<pre class="code-syntax" style="max-height:380px;overflow:auto">${highlightCodeSimple(q.code_block)}</pre>` : '';
       const visualData = renderVisualData(q);
-
-      document.getElementById('m2-battle-question').innerHTML = `
+      const battleQ = document.getElementById('m2-battle-question');
+      if (!battleQ) return;
+      battleQ.innerHTML = `
         <div class="question-card">
           <div class="question-meta">
             <span class="badge">第 ${this.state.idx + 1} / ${this.state.questions.length} 回合</span>
@@ -350,9 +395,12 @@
     },
 
     answer(key) {
+      if (!this.state || !this.state.currentQ) return;
+      if (this.state.answered) return; // 已答過,擋快速連點 race
       const q = this.state.currentQ;
       const opt = q.options.find(o => o.key === key);
       if (!opt) return;
+      this.state.answered = true;
       const isCorrect = opt.is_correct;
 
       // 鎖定按鈕並標記答對/答錯
@@ -441,10 +489,19 @@
 
       this.updateBars();
       const p = Player.load();
-      if (p.hp <= 0) setTimeout(() => this.gameOver(), 1500);
+      if (p.hp <= 0) {
+        this.state.gameOverPending = true;
+        setTimeout(() => {
+          // 防呆:玩家若已退回地圖或進別場戰鬥,state 可能變更,只在仍為同場時觸發
+          if (this.state && this.state.gameOverPending) this.gameOver();
+        }, 1500);
+      }
     },
 
     showExplanation(opt, isCorrect) {
+      if (!this.state || !this.state.currentQ) return;
+      const explainEl = document.getElementById('m2-explanation');
+      if (!explainEl) return;
       const q = this.state.currentQ;
       const e = q.explanation || {};
       const correctOpt = q.options.find(o => o.is_correct);
@@ -480,7 +537,7 @@
         <div class="dialogue-text">「${RNG.pick(this.state.boss.attack)}」</div>
       </div>` : '';
 
-      document.getElementById('m2-explanation').innerHTML = `
+      explainEl.innerHTML = `
         ${enemyTaunt}
         <div class="explanation">
           <div class="verdict ${isCorrect ? 'correct' : 'wrong'}">${isCorrect ? '🔍 推理命中!' : '🩸 程式陷阱反噬!'}</div>
@@ -520,6 +577,8 @@
     },
 
     drillThis() {
+      if (!this.state || !this.state.currentQ) return;
+      if (this.state.gameOverPending) return; // hp 已 0 等 GG,不下鑽
       const variations = generateVariation(this.state.currentQ, 3);
       if (!variations || variations.length === 0) {
         showToast('⚠️ 此知識點變化型不足,繼續戰鬥', 2500);
@@ -527,12 +586,16 @@
       }
       // 下鑽完成後返回戰鬥(不回首頁),走下一回合
       DrillSession.start(this.state.currentQ.node_id, variations, this.state.currentQ, () => {
+        // 等下鑽結束時 state 可能已被別處清掉,這時直接回地圖
+        if (!this.state) { this.start(); return; }
         this.renderBattle();
         this.next();
       });
     },
 
     next() {
+      if (!this.state) return;
+      if (this.state.gameOverPending) return; // hp 已 0,等 gameOver 接管
       this.state.idx++;
       if (this.state.bossHp <= 0) { this.victory(); return; }
       this.showQuestion();
@@ -540,6 +603,8 @@
 
     // === 三招實作 ===
     useStaticAnalysis() {
+      if (!this.state || !this.state.currentQ) return;
+      if (this.state.answered) return showToast('已答題,招式無效');
       const p = Player.load();
       if (p.mp < 8) return showToast('MP 不足');
       if (this.state.skillsUsedThisQ && this.state.skillsUsedThisQ.hint) return showToast('本題已用過此招');
@@ -556,6 +621,8 @@
     },
 
     useExecSimulate() {
+      if (!this.state || !this.state.currentQ) return;
+      if (this.state.answered) return showToast('已答題,招式無效');
       const p = Player.load();
       if (p.mp < 14) return showToast('MP 不足');
       if (this.state.skillsUsedThisQ && this.state.skillsUsedThisQ.eliminate) return showToast('本題已用過此招');
@@ -584,6 +651,8 @@
     },
 
     useCodeReview() {
+      if (!this.state || !this.state.currentQ) return;
+      if (this.state.answered) return showToast('已答題,招式無效');
       const p = Player.load();
       if (p.mp < 18) return showToast('MP 不足');
       if (this.state.skillsUsedThisQ && this.state.skillsUsedThisQ.review) return showToast('本題已用過此招');
@@ -605,6 +674,8 @@
     },
 
     victory() {
+      if (!this.state) return; // 防雙重呼叫
+      this.stopTypeText();
       // EXP 公式與 Mode1 同調(60 base + 12/題 + 完美 40 + combo*5)
       const baseExp = 60 + this.state.correct * 12;
       const perfectBonus = this.state.wrong === 0 ? 40 : 0;
@@ -651,24 +722,36 @@
           </div>
         </div>
       `;
+      // 結算後清 state(避免後續招式按鈕誤觸,以及 onload 殘留)
+      const bossKey = this.state.boss.key;
+      this.state = null;
+      this._lastBossKey = bossKey;
       GameFX.bigConfetti();
       refreshHome();
     },
 
     gameOver() {
+      if (!this.state) return; // 防雙重呼叫
+      this.stopTypeText();
+      const bossKeyForRetry = this.state.boss.key;
+      const bossNameForRetry = this.state.boss.name;
+      const lastAttack = RNG.pick(this.state.boss.attack);
       Player.heal(50);
+      // 清 state(避免 1.5s 內若使用者已退到地圖,殘留 race;且按鈕點 selectBoss 會新開戰)
+      this.state = null;
       const view = document.getElementById('view-play');
+      if (!view) return;
       view.innerHTML = `
         <div class="battle-arena" style="text-align:center">
           <h1 style="color:#f87171;font-size:2rem">💀 你被程式陷阱擊倒</h1>
           <div style="font-size:4rem;margin:16px 0">😵</div>
           <div class="dialogue-box">
-            <div class="dialogue-name">${this.state.boss.name}</div>
-            <div class="dialogue-text">「${RNG.pick(this.state.boss.attack)}」</div>
+            <div class="dialogue-name">${bossNameForRetry}</div>
+            <div class="dialogue-text">「${lastAttack}」</div>
           </div>
           <p style="margin:16px 0;color:var(--fg-dim)">休息片刻後,你恢復了一半 HP...</p>
           <div class="actions" style="justify-content:center">
-            <button class="btn btn-primary" onclick="Mode2.selectBoss('${this.state.boss.key}')">🔍 再戰</button>
+            <button class="btn btn-primary" onclick="Mode2.selectBoss('${bossKeyForRetry}')">🔍 再戰</button>
             <button class="btn btn-ghost" onclick="Mode2.start()">🗺️ 回地圖</button>
           </div>
         </div>

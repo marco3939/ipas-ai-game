@@ -43,12 +43,28 @@
     return s.length > n ? s.substring(0, n) + '…' : s;
   }
 
-  const Mode4 = {
+  // 工具:清理拖拉殘留 ghost / 提示 toast(離開戰鬥前必呼叫)
+  function cleanupBattleArtifacts() {
+    // 清掉所有 ghost dragging 元素(以 class 識別,避免 selector 太寬)
+    document.querySelectorAll('.m4-card.dragging').forEach(g => {
+      // body 直接 child 的才是我們塞進去的 ghost
+      if (g.parentNode === document.body) g.remove();
+    });
+    const toast = document.getElementById('m4-mismatch-toast');
+    if (toast) toast.remove();
+  }
+
+  const Mode4Impl = {
     state: null,
     timer: null,
     dragState: null,
 
     start() {
+      // 進入新一場前先清理上一場的殘留(若有)
+      cleanupBattleArtifacts();
+      this.stopTimer();
+      this.dragState = null;
+
       RNG.set(Date.now());
       const pairs = extractPairs();
       if (pairs.length < 4) {
@@ -83,6 +99,7 @@
         revealed: new Set(),       // 已用「揭露一對」記住的 pairId
         frozen: 0,                 // 剩餘凍結秒數
         finished: false,
+        outcomeRendered: false,    // 防止 victory/defeat 雙重觸發
         playerSnap: Player.load()  // 起點 HP/MP 快照(用於結算對比)
       };
 
@@ -93,7 +110,7 @@
     startTimer() {
       clearInterval(this.timer);
       this.timer = setInterval(() => {
-        if (this.state.finished) return;
+        if (!this.state || this.state.finished) return;
         if (this.state.frozen > 0) {
           this.state.frozen--;
         } else {
@@ -257,8 +274,10 @@
     },
 
     onPointerDown(e, card) {
-      if (this.state.finished) return;
+      if (!this.state || this.state.finished) return;
       if (card.classList.contains('matched')) return;
+      // 多指 / 已在拖拉中:忽略新 pointerdown,避免雙 ghost
+      if (this.dragState) return;
       e.preventDefault();
       const rect = card.getBoundingClientRect();
       // 建立 ghost(視覺跟隨,原 card 留在原位顯示半透明)
@@ -278,14 +297,19 @@
         sourceCard: card,
         sourceId: card.dataset.id,
         sourcePair: card.dataset.pair,
+        pointerId: e.pointerId,
         ghost,
         offsetX: e.clientX - rect.left,
         offsetY: e.clientY - rect.top,
         currentTarget: null
       };
 
-      const onMove = (ev) => this.onPointerMove(ev);
+      const onMove = (ev) => {
+        if (this.dragState && ev.pointerId !== this.dragState.pointerId) return;
+        this.onPointerMove(ev);
+      };
       const onUp = (ev) => {
+        if (this.dragState && ev.pointerId !== this.dragState.pointerId) return;
         document.removeEventListener('pointermove', onMove);
         document.removeEventListener('pointerup', onUp);
         document.removeEventListener('pointercancel', onUp);
@@ -298,11 +322,11 @@
 
     onPointerMove(e) {
       const ds = this.dragState;
-      if (!ds) return;
+      if (!ds || !ds.ghost) return;
       ds.ghost.style.left = (e.clientX - ds.offsetX) + 'px';
       ds.ghost.style.top = (e.clientY - ds.offsetY) + 'px';
 
-      // 偵測底下卡片(忽略 ghost 與自身)
+      // 偵測底下卡片(忽略 ghost 與自身);拖出視窗時 elementFromPoint 會回 null
       ds.ghost.style.display = 'none';
       const el = document.elementFromPoint(e.clientX, e.clientY);
       ds.ghost.style.display = '';
@@ -310,10 +334,11 @@
       const targetCard = el ? el.closest('.m4-card') : null;
       const validTarget = targetCard
         && targetCard !== ds.sourceCard
-        && !targetCard.classList.contains('matched');
+        && !targetCard.classList.contains('matched')
+        && document.body.contains(targetCard);
 
       if (ds.currentTarget && ds.currentTarget !== targetCard) {
-        ds.currentTarget.classList.remove('drop-target');
+        try { ds.currentTarget.classList.remove('drop-target'); } catch (_) {}
       }
       if (validTarget) {
         targetCard.classList.add('drop-target');
@@ -326,31 +351,56 @@
     onPointerUp(e) {
       const ds = this.dragState;
       if (!ds) return;
-      // 還原來源
-      ds.sourceCard.style.opacity = '';
-      // 拿到目前 target(用 elementFromPoint 再算一次,避免 currentTarget 殘留)
-      ds.ghost.style.display = 'none';
-      const el = document.elementFromPoint(e.clientX, e.clientY);
-      ds.ghost.style.display = '';
-      const targetCard = el ? el.closest('.m4-card') : null;
+      // 先把 dragState 置空,避免任何後續事件再讀到舊狀態
+      this.dragState = null;
 
-      if (ds.currentTarget) ds.currentTarget.classList.remove('drop-target');
-      ds.ghost.remove();
+      // 還原來源(來源節點可能已隨 render 被換掉,訪問 .style 時為 detached node;為安全 try/catch)
+      try { if (ds.sourceCard) ds.sourceCard.style.opacity = ''; } catch (_) {}
+
+      // 拿到目前 target(用 elementFromPoint 再算一次,避免 currentTarget 殘留)
+      let targetCard = null;
+      try {
+        if (ds.ghost && ds.ghost.style) ds.ghost.style.display = 'none';
+        const el = (e && typeof e.clientX === 'number')
+          ? document.elementFromPoint(e.clientX, e.clientY)
+          : null;
+        if (ds.ghost && ds.ghost.style) ds.ghost.style.display = '';
+        targetCard = el ? el.closest('.m4-card') : null;
+      } catch (_) {}
+
+      if (ds.currentTarget) {
+        try { ds.currentTarget.classList.remove('drop-target'); } catch (_) {}
+      }
+      // ghost 一律 remove(無論 cancel / up / 觸控離開視窗)
+      if (ds.ghost && ds.ghost.parentNode) ds.ghost.remove();
+
+      // 戰局已結束,不再判定
+      if (!this.state || this.state.finished) return;
 
       const valid = targetCard
         && targetCard !== ds.sourceCard
-        && !targetCard.classList.contains('matched');
-
-      this.dragState = null;
+        && !targetCard.classList.contains('matched')
+        // 來源 / 目標都需仍掛在當前棋盤上,避免拖到舊 DOM(shuffle / re-render 後)
+        && document.body.contains(targetCard);
 
       if (valid) {
-        this.tryMatch(ds.sourceCard, targetCard);
+        // 來源若已被換掉(re-render),改用 dataset 在當前 DOM 找回對應卡
+        let src = ds.sourceCard;
+        if (!document.body.contains(src)) {
+          src = document.querySelector(`.m4-card[data-id="${ds.sourceId}"]`);
+        }
+        if (src && !src.classList.contains('matched')) {
+          this.tryMatch(src, targetCard);
+        }
       }
     },
 
     // ===== 配對檢查 =====
     tryMatch(cardA, cardB) {
-      if (this.state.finished) return;
+      if (!this.state || this.state.finished) return;
+      if (!cardA || !cardB) return;
+      // 兩張同一張(資料層 id 相同)→ 視同無效拖拉,避免自己配自己
+      if (cardA.dataset.id === cardB.dataset.id) return;
       const samePair = cardA.dataset.pair === cardB.dataset.pair;
       const diffKind = cardA.dataset.kind !== cardB.dataset.kind;
 
@@ -406,15 +456,17 @@
       }
 
       // 鐵律 #1:依舊更新 mastery(答對 = 配對成功)
-      const pairData = this.state.cards.find(c => c.id === cardA.dataset.id).data;
+      const cardAState = this.state.cards.find(c => c.id === cardA.dataset.id);
+      const pairData = cardAState && cardAState.data;
       if (pairData && pairData.nodeId) Mastery.update(pairData.nodeId, true);
       Progress.addAnswer(true);
 
       this.updateHud();
       this.updateSkillTray();
 
-      // 全配完 → 勝利
-      if (this.state.matched >= this.state.pairCount) {
+      // 全配完 → 勝利(使用 outcomeRendered 避免和 timeUp 雙重觸發)
+      if (this.state.matched >= this.state.pairCount && !this.state.outcomeRendered) {
+        this.state.finished = true; // 立即標記 finished,封鎖後續輸入
         setTimeout(() => this.victory(), 600);
       }
     },
@@ -442,13 +494,17 @@
       }, 500);
 
       // 鐵律 #1:配對錯,記錄錯題 + 提供下鑽
-      const pairData = this.state.cards.find(c => c.id === cardA.dataset.id).data;
-      const otherData = this.state.cards.find(c => c.id === cardB.dataset.id).data;
+      const cardAState = this.state.cards.find(c => c.id === cardA.dataset.id);
+      const cardBState = this.state.cards.find(c => c.id === cardB.dataset.id);
+      const pairData = cardAState && cardAState.data;
+      const otherData = cardBState && cardBState.data;
       if (pairData && pairData.nodeId) Mastery.update(pairData.nodeId, false);
       Progress.addAnswer(false);
       if (pairData && pairData.sourceQ) {
-        const correctOpt = pairData.sourceQ.options.find(o => o.is_correct);
-        if (correctOpt) Wrongbook.add(pairData.sourceQ.id, pairData.nodeId, '?', correctOpt.text.substring(0, 4));
+        const correctOpt = (pairData.sourceQ.options || []).find(o => o.is_correct);
+        // userChoice / correctChoice 在配對戰中無 A/B/C/D 概念,故統一用 '?' 紀錄
+        // (避免 substring 截斷後造成錯題本顯示誤導)
+        if (correctOpt) Wrongbook.add(pairData.sourceQ.id, pairData.nodeId, '?', '?');
       }
 
       // 顯示提示框,允許玩家立即下鑽
@@ -477,29 +533,36 @@
         max-width: 90%; box-shadow: 0 4px 24px rgba(0,0,0,0.6);
         font-size: 0.85rem; line-height: 1.5;
       `;
-      const conceptA = pairA && pairA.concept ? pairA.concept : '?';
-      const conceptB = pairB && pairB.concept ? pairB.concept : '?';
+      // HTML escape:避免 concept 內若含特殊符號(< > & " ')注入或破壞 markup
+      const esc = (s) => String(s == null ? '?' : s)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+      const conceptA = esc(pairA && pairA.concept);
+      const conceptB = esc(pairB && pairB.concept);
+      const pairIdSafe = esc(pairA && pairA.pairId || '');
       t.innerHTML = `
         <div style="color:#f87171;font-weight:700;margin-bottom:4px">❌ 配對失敗</div>
         <div style="color:var(--fg-dim);margin-bottom:6px">「${conceptA}」 ✗ 「${conceptB}」 不是同一對</div>
         <div style="display:flex;gap:6px">
-          <button class="btn btn-warn" style="padding:4px 10px;font-size:0.8rem" onclick="Mode4.drillThis('${pairA && pairA.pairId || ''}')">🎯 立即下鑽變化型</button>
+          <button class="btn btn-warn" style="padding:4px 10px;font-size:0.8rem" onclick="Mode4.drillThis('${pairIdSafe}')">🎯 立即下鑽變化型</button>
           <button class="btn btn-ghost" style="padding:4px 10px;font-size:0.8rem" onclick="document.getElementById('m4-mismatch-toast')?.remove()">關閉</button>
         </div>
       `;
       document.body.appendChild(t);
-      setTimeout(() => t.remove(), 4500);
+      setTimeout(() => { const el = document.getElementById('m4-mismatch-toast'); if (el === t) t.remove(); }, 4500);
     },
 
     drillThis(pairId) {
+      if (!this.state || this.state.finished) return;
       // 鐵律 #1:對該配對的原題做結構化下鑽
       const card = this.state.cards.find(c => c.pairId === pairId);
       if (!card || !card.data || !card.data.sourceQ) {
         showToast('找不到下鑽來源題', 2000);
         return;
       }
-      const toast = document.getElementById('m4-mismatch-toast');
-      if (toast) toast.remove();
+      // 清掉殘留:錯題提示 toast + 任何進行中的拖拉 ghost
+      cleanupBattleArtifacts();
+      this.dragState = null;
 
       const sourceQ = card.data.sourceQ;
       const variations = generateVariation(sourceQ, 3);
@@ -512,7 +575,8 @@
       this.stopTimer();
       const savedTime = this.state.time;
       DrillSession.start(sourceQ.node_id, variations, sourceQ, () => {
-        // 恢復:重新渲染配對戰並接續計時
+        // 恢復:state 可能已被新一場 start() 覆蓋,做基本檢查
+        if (!this.state || this.state.finished) return;
         this.state.time = savedTime;
         this.render();
         this.startTimer();
@@ -559,6 +623,7 @@
     },
 
     useReveal() {
+      if (!this.state || this.state.finished) return;
       const p = Player.load();
       if (p.mp < HINT_COST) return showToast('MP 不足');
       // 找一對尚未配對成功的
@@ -567,12 +632,14 @@
       const pick = RNG.pick(candidates);
       this.state.revealed.add(pick.pairId);
       p.mp -= HINT_COST; Player.save(p);
-      showToast(`💡 已標示一對:「${pick.data.concept}」(黃框)`, 2500);
+      const concept = (pick.data && pick.data.concept) || '?';
+      showToast(`💡 已標示一對:「${concept}」(黃框)`, 2500);
       this.renderBoard();
       this.updateSkillTray();
     },
 
     useFreeze() {
+      if (!this.state || this.state.finished) return;
       const p = Player.load();
       if (p.mp < FREEZE_COST) return showToast('MP 不足');
       if (this.state.frozen > 0) return;
@@ -584,11 +651,16 @@
     },
 
     useShuffle() {
+      if (!this.state || this.state.finished) return;
       const p = Player.load();
       if (p.mp < SHUFFLE_COST) return showToast('MP 不足');
       p.mp -= SHUFFLE_COST; Player.save(p);
+      // 重排前先中斷使用者進行中的拖拉,避免 UX 混亂與 ghost 殘留
+      if (this.dragState) {
+        if (this.dragState.ghost && this.dragState.ghost.parentNode) this.dragState.ghost.remove();
+        this.dragState = null;
+      }
       // 只洗未配對的卡片(matched 保留位置)
-      const matched = this.state.cards.filter(c => c.matched);
       const unmatched = this.state.cards.filter(c => !c.matched);
       const shuffled = RNG.shuffle(unmatched);
       // 重組:依原始 cards 順序填入,matched 留原位,unmatched 填入打亂的
@@ -601,7 +673,7 @@
 
     // ===== 結算 =====
     timeUp() {
-      if (this.state.finished) return;
+      if (!this.state || this.state.outcomeRendered) return;
       this.state.finished = true;
       this.stopTimer();
       const allMatched = this.state.matched >= this.state.pairCount;
@@ -610,9 +682,12 @@
     },
 
     victory() {
-      if (this.state.finished && this.state.matched < this.state.pairCount) return;
+      if (!this.state || this.state.outcomeRendered) return;
       this.state.finished = true;
+      this.state.outcomeRendered = true;
       this.stopTimer();
+      cleanupBattleArtifacts();
+      this.dragState = null;
 
       // EXP 獎勵
       const baseExp = 50 + this.state.matched * 8;
@@ -653,8 +728,12 @@
     },
 
     defeat(reason) {
+      if (!this.state || this.state.outcomeRendered) return;
       this.state.finished = true;
+      this.state.outcomeRendered = true;
       this.stopTimer();
+      cleanupBattleArtifacts();
+      this.dragState = null;
       const view = document.getElementById('view-play');
       view.innerHTML = `
         <div class="battle-arena" style="text-align:center">
@@ -671,17 +750,43 @@
     },
 
     gameOver() {
+      if (!this.state || this.state.outcomeRendered) return;
       Player.heal(40);
       this.defeat('💀 你倒下了');
     },
 
     exit() {
       if (!confirm('放棄本場配對戰?(進度不會保留)')) return;
-      this.state.finished = true;
+      if (this.state) {
+        this.state.finished = true;
+        this.state.outcomeRendered = true;
+      }
       this.stopTimer();
+      cleanupBattleArtifacts();
+      this.dragState = null;
       goHome();
     }
   };
 
-  window.Mode4 = Mode4;
+  // ====================================================================
+  // 將實作裝載到 script 層級的 const Mode4(index.html 行 1032 的 placeholder)
+  // 原因:enterMode(4) 直接走 `Mode4.start()`(const lexical 綁定),不會看 window.Mode4。
+  // 故必須對「同一個 const-bound object」做 in-place 屬性替換。
+  // 這樣同時保證:
+  //   (a) 主頁點「易混淆配對戰」進入新 Match-3,而非舊內嵌 reference 版本
+  //   (b) window.Mode4 也會指向同一物件,onclick 內 inline handler 一致
+  // ====================================================================
+  try {
+    if (typeof Mode4 !== 'undefined' && Mode4 && typeof Mode4 === 'object') {
+      // 清掉舊 placeholder 屬性,避免殘留(如 idx / queue / correct)
+      Object.keys(Mode4).forEach(k => { try { delete Mode4[k]; } catch (_) {} });
+      Object.assign(Mode4, Mode4Impl);
+      window.Mode4 = Mode4;
+    } else {
+      // 罕見情況(例如載入時序異常):至少把 window.Mode4 設好
+      window.Mode4 = Mode4Impl;
+    }
+  } catch (_) {
+    window.Mode4 = Mode4Impl;
+  }
 })();

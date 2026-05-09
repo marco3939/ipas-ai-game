@@ -105,8 +105,28 @@
 
   const Mode1 = {
     state: null,
+    _timers: [], // QA 修補:集中管理 setTimeout/setInterval,避免切換 view 後殘留 callback
+    _intro: null, // QA 修補:typeText setInterval ref
+
+    // QA 修補:統一排程,離開戰鬥時可一次清除
+    _scheduleTimeout(fn, ms) {
+      const id = setTimeout(() => {
+        // 清掉自己的 ref
+        const i = this._timers.indexOf(id);
+        if (i >= 0) this._timers.splice(i, 1);
+        fn();
+      }, ms);
+      this._timers.push(id);
+      return id;
+    },
+    _clearAllTimers() {
+      this._timers.forEach(id => clearTimeout(id));
+      this._timers = [];
+      if (this._intro) { clearInterval(this._intro); this._intro = null; }
+    },
 
     start() {
+      this._clearAllTimers();    // QA 修補 A35:回任務地圖前先清掉戰鬥殘留 timer
       RNG.set(Date.now());
       this.renderMap();
     },
@@ -200,15 +220,18 @@
     },
 
     selectBoss(key) {
+      this._clearAllTimers();   // QA 修補 A35:選新 BOSS 前清掉舊計時(避免上一場 gameOver/victory 飄出)
       const boss = BOSSES.find(b => b.key === key);
       if (!boss) return;
       const questions = pickQuestionsForBoss(boss, 7);
       if (questions.length === 0) { showToast('題庫不足'); return; }
+      if (questions.length < 3) showToast(`⚠️ 此 BOSS 相關題目僅 ${questions.length} 題,挑戰較短`, 2500);
 
       this.state = { boss, bossHp: boss.hp, bossHpMax: boss.hp,
         questions, idx: 0, combo: 0, maxCombo: 0,
         correct: 0, wrong: 0, totalDamage: 0,
-        doubleNext: false, currentQ: null };
+        doubleNext: false, currentQ: null,
+        answering: false }; // QA 修補 A1:防止快速雙擊重入
 
       const view = document.getElementById('view-play');
       view.innerHTML = `
@@ -235,14 +258,24 @@
     },
 
     typeText(id, text, speedMs = 30) {
+      // QA 修補 A4/A24:存 interval ref,避免重入造成多個 typer 同時寫
+      if (this._intro) { clearInterval(this._intro); this._intro = null; }
       const el = document.getElementById(id);
       if (!el) return;
       el.textContent = '';
       let i = 0;
-      const t = setInterval(() => { if (i >= text.length) { clearInterval(t); return; } el.textContent += text[i++]; }, speedMs);
+      this._intro = setInterval(() => {
+        // 防呆:節點被移除就停
+        if (!document.body.contains(el)) { clearInterval(this._intro); this._intro = null; return; }
+        if (i >= text.length) { clearInterval(this._intro); this._intro = null; return; }
+        el.textContent += text[i++];
+      }, speedMs);
     },
 
     startBattle() {
+      // QA 修補 A4:離開 intro 前清掉 typer
+      if (this._intro) { clearInterval(this._intro); this._intro = null; }
+      if (!this.state) { showToast('狀態遺失,回主地圖'); this.start(); return; } // QA 修補:防呆
       this.renderBattle();
       this.showQuestion();
     },
@@ -301,7 +334,9 @@
     },
 
     showQuestion() {
+      if (!this.state) return; // QA 修補:防呆
       if (this.state.idx >= this.state.questions.length || this.state.bossHp <= 0) { this.victory(); return; }
+      this.state.answering = false; // QA 修補 A1:新題開始解鎖(避免上一題殘留)
       const q = renderQuestion(this.state.questions[this.state.idx]);
       this.state.currentQ = q;
       const codeBlock = q.code_block ? `<pre class="code-syntax">${highlightCode(q.code_block)}</pre>` : '';
@@ -328,9 +363,14 @@
     },
 
     answer(key) {
+      // QA 修補 A1:重入鎖,防止快速雙擊 / Enter 連按造成 HP 雙扣
+      if (!this.state || this.state.answering) return;
       const q = this.state.currentQ;
+      if (!q || !q.options) return; // QA 修補:防呆
       const opt = q.options.find(o => o.key === key);
-      const isCorrect = opt.is_correct;
+      if (!opt) return; // QA 修補:防呆
+      this.state.answering = true;
+      const isCorrect = !!opt.is_correct;
 
       document.querySelectorAll('#m1-options .option-btn').forEach(b => {
         b.disabled = true;
@@ -368,7 +408,11 @@
       const playerAv = document.getElementById('player-avatar');
       const bossAv = document.getElementById('boss-avatar');
       GameFX.attackAnim(playerAv);
-      setTimeout(() => { GameFX.shake(bossAv); GameFX.damageNumber(bossAv, dmg, { kind: 'player', crit: isCrit }); }, 200);
+      // QA 修補 A35/A14:用集中 timer + 防呆,離開戰鬥時不殘留
+      this._scheduleTimeout(() => {
+        if (!this.state) return;
+        GameFX.shake(bossAv); GameFX.damageNumber(bossAv, dmg, { kind: 'player', crit: isCrit });
+      }, 200);
       if (this.state.combo >= 2) GameFX.combo(this.state.combo);
       if (this.state.combo === 5) { GameFX.confetti({ count: 100, colors: ['#fbbf24','#f59e0b','#ef4444'] }); showToast('🔥 5 連擊!氣勢正盛!'); }
       if (isCrit) GameFX.confetti({ count: 60, colors: ['#fb923c','#fbbf24'] });
@@ -377,13 +421,15 @@
       const hpHeal = 5 + Math.min(this.state.combo, 5);    // 6~10 (combo 1~5+)
       const mpHeal = 4 + Math.min(this.state.combo, 4);    // 5~8
       const beforeHp = p.hp;
-      const beforeMp = p.mp;
       p.hp = Math.min(p.hpMax, p.hp + hpHeal);
       p.mp = Math.min(p.mpMax, p.mp + mpHeal);
       Player.save(p);
       // 顯示綠色治療數字
       if (p.hp > beforeHp) {
-        setTimeout(() => GameFX.damageNumber(playerAv, '+' + (p.hp - beforeHp), { kind: 'player' }), 400);
+        this._scheduleTimeout(() => {
+          if (!this.state) return;
+          GameFX.damageNumber(playerAv, '+' + (p.hp - beforeHp), { kind: 'player' });
+        }, 400);
       }
       this.updateBars(); this.updateSkillTray();
     },
@@ -397,10 +443,14 @@
       const playerAv = document.getElementById('player-avatar');
       const bossAv = document.getElementById('boss-avatar');
       GameFX.attackAnim(bossAv);
-      setTimeout(() => { GameFX.shake(playerAv); GameFX.damageNumber(playerAv, dmg, { kind: 'enemy' }); }, 200);
+      // QA 修補 A35/A14:集中 timer 管理 + 防呆
+      this._scheduleTimeout(() => {
+        if (!this.state) return;
+        GameFX.shake(playerAv); GameFX.damageNumber(playerAv, dmg, { kind: 'enemy' });
+      }, 200);
       this.updateBars();
       const p = Player.load();
-      if (p.hp <= 0) setTimeout(() => this.gameOver(), 1500);
+      if (p.hp <= 0) this._scheduleTimeout(() => { if (this.state) this.gameOver(); }, 1500);
     },
 
     showExplanation(opt, isCorrect) {
@@ -481,6 +531,8 @@
     },
 
     drillThis() {
+      // QA 修補:防呆
+      if (!this.state || !this.state.currentQ) return;
       const variations = generateVariation(this.state.currentQ, 3);
       if (!variations || variations.length === 0) {
         showToast('⚠️ 此知識點變化型不足,繼續戰鬥', 2500);
@@ -488,18 +540,24 @@
       }
       // 下鑽完成後返回戰鬥(不回首頁),繼續下一回合
       DrillSession.start(this.state.currentQ.node_id, variations, this.state.currentQ, () => {
+        // QA 修補:若中途使用者已切回主地圖,state 可能被清,直接放棄
+        if (!this.state) return;
         this.renderBattle();   // 重建戰鬥介面(因為 view-play 已被 DrillSession 覆蓋)
         this.next();           // 進到下一回合
       });
     },
 
     next() {
+      if (!this.state) return; // QA 修補:防呆
+      this.state.answering = false; // QA 修補 A1:解鎖
       this.state.idx++;
       if (this.state.bossHp <= 0) { this.victory(); return; }
       this.showQuestion();
     },
 
     useHint() {
+      // QA 修補:無題目或已答完(answering=true)不可用
+      if (!this.state || !this.state.currentQ || this.state.answering) return;
       const p = Player.load();
       if (p.mp < 10) return showToast('MP 不足');
       p.mp -= 10; Player.save(p);
@@ -510,6 +568,8 @@
     },
 
     useEliminate() {
+      // QA 修補:無題目或已答完不可用
+      if (!this.state || !this.state.currentQ || this.state.answering) return;
       const p = Player.load();
       if (p.mp < 15) return showToast('MP 不足');
       p.mp -= 15; Player.save(p);
@@ -524,6 +584,9 @@
     },
 
     useDouble() {
+      // QA 修補:無題目不可用,且已蓄能不可重複
+      if (!this.state || !this.state.currentQ) return;
+      if (this.state.doubleNext) return showToast('已蓄能,先擊出再蓄');
       const p = Player.load();
       if (p.mp < 20) return showToast('MP 不足');
       p.mp -= 20; Player.save(p);

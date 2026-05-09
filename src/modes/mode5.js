@@ -17,14 +17,27 @@
   const MASTERY_WEAK_THRESHOLD   = 40; // < 0.4 視為「弱點」
 
   // === 直接調整 score 的小工具(用 Mastery.load/save 確保格式一致)===
-  function adjustMasteryScore(nodeId, delta) {
+  // 注意:同時 bump attempts/correct/streak,讓首頁「弱點分析」能感知 Mode5 戰鬥紀錄
+  // opts.attempts: 是否計入一次 attempt(預設 true);opts.correct: 是否答對(預設依 delta 正負)
+  function adjustMasteryScore(nodeId, delta, opts = {}) {
     if (!nodeId) return null;
-    const m = Mastery.load();
+    let m;
+    try { m = Mastery.load(); } catch { m = {}; }
     const node = m[nodeId] || { score: 0, attempts: 0, correct: 0, streak: 0 };
-    node.score = Math.max(0, Math.min(100, node.score + delta));
+    node.score = Math.max(0, Math.min(100, (node.score || 0) + delta));
+    if (opts.attempts !== false) {
+      const isCorrect = opts.correct != null ? !!opts.correct : (delta > 0);
+      node.attempts = (node.attempts || 0) + 1;
+      if (isCorrect) {
+        node.correct = (node.correct || 0) + 1;
+        node.streak = (node.streak || 0) + 1;
+      } else {
+        node.streak = 0;
+      }
+    }
     node.lastSeen = Date.now();
     m[nodeId] = node;
-    Mastery.save(m);
+    try { Mastery.save(m); } catch (e) { console.warn('mastery save failed:', e); }
     return node;
   }
 
@@ -86,7 +99,8 @@
       const variations = generateVariation(direct[0], baseCount - pool.length) || [];
       pool = pool.concat(variations.filter(v => !pool.find(p => p.id === v.id)));
     }
-    return pool.slice(0, Math.max(baseCount, pool.length));
+    // 直接整池回傳(別 slice 掉題目),baseCount 只是初始期望數量
+    return pool;
   }
 
   // === 招式語意 metadata(自家實作,不抄 mode1)===
@@ -129,23 +143,33 @@
   // ============================================================
   const Mode5 = {
     state: null,
+    cachedBosses: null, // 快取本回合的 BOSS 名單,避免 engageBoss(idx) 因 RNG / Wrongbook 變化抓錯目標
 
     start() {
       RNG.set(Date.now());
+      this.cachedBosses = null; // 進案時重新偵測
       this.renderMap();
     },
 
     // 進度 storage(用來記錄哪些 BOSS 已被擊敗 + 起始 mastery)
     progressKey: 'ipas_mode5_v3_progress',
-    loadProg() { return Storage.get(this.progressKey, { defeated: [], runs: 0 }); },
-    saveProg(p) { Storage.set(this.progressKey, p); },
+    loadProg() {
+      try { return Storage.get(this.progressKey, { defeated: [], runs: 0 }); }
+      catch { return { defeated: [], runs: 0 }; }
+    },
+    saveProg(p) {
+      try { Storage.set(this.progressKey, p); }
+      catch (e) { console.warn('mode5 progress save failed:', e); }
+    },
 
     // ============================================================
     // 地圖:列出 BOSS 名單(動態)
     // ============================================================
     renderMap() {
       const player = Player.load();
-      const bosses = selectWeakBosses();
+      // 使用快取避免 engageBoss(idx) 對應錯亂(尤其 fallback 隨機路徑、Wrongbook 已被新增)
+      if (!this.cachedBosses) this.cachedBosses = selectWeakBosses();
+      const bosses = this.cachedBosses;
       const prog = this.loadProg();
       const defeatedSet = new Set(prog.defeated || []);
       const playerHpPct = player.hp / player.hpMax * 100;
@@ -226,12 +250,14 @@
 
     refreshBosses() {
       RNG.set(Date.now());
+      this.cachedBosses = null; // 主動重新偵測
       this.renderMap();
       showToast('🔄 已重新偵測弱點');
     },
 
     resetProgress() {
       this.saveProg({ defeated: [], runs: 0 });
+      this.cachedBosses = null;
       showToast('進度已重置');
       this.renderMap();
     },
@@ -240,7 +266,8 @@
     // 接戰
     // ============================================================
     engageBoss(idx) {
-      const bosses = selectWeakBosses();
+      // 用快取的名單,確保與 renderMap 顯示完全一致
+      const bosses = this.cachedBosses || selectWeakBosses();
       const target = bosses[idx];
       if (!target) { showToast('BOSS 不存在'); return; }
       const questions = pickQuestionsForNode(target.nodeId, 5);
@@ -314,10 +341,16 @@
     typeText(id, text, speed = 30) {
       const el = document.getElementById(id);
       if (!el) return;
+      // 若先前還有 typewriter 在跑,先清掉(避免 view 切換時殘留 setInterval)
+      if (this._typeTimer) { clearInterval(this._typeTimer); this._typeTimer = null; }
       el.textContent = '';
       let i = 0;
-      const t = setInterval(() => {
-        if (i >= text.length) { clearInterval(t); return; }
+      this._typeTimer = setInterval(() => {
+        // 若 element 已從 DOM 移除(view 切換),停止
+        if (!document.body.contains(el)) {
+          clearInterval(this._typeTimer); this._typeTimer = null; return;
+        }
+        if (i >= text.length) { clearInterval(this._typeTimer); this._typeTimer = null; return; }
         el.textContent += text[i++];
       }, speed);
     },
@@ -413,7 +446,8 @@
         // 動態補變化型(嚴守鐵律 #5,只用 generateVariation)
         const last = s.questions[s.questions.length - 1];
         if (last) {
-          const more = generateVariation(last, 3) || [];
+          const seenIds = new Set(s.questions.map(q => q.id));
+          const more = (generateVariation(last, 3) || []).filter(q => !seenIds.has(q.id));
           if (more.length) {
             s.questions = s.questions.concat(more);
           } else {
@@ -491,8 +525,8 @@
       s.maxCombo = Math.max(s.maxCombo, s.combo);
       s.correct++;
 
-      // 對 BOSS 造成熟練度傷害(+0.15 = score +15)
-      adjustMasteryScore(s.boss.nodeId, SCORE_DELTA_CORRECT);
+      // 對 BOSS 造成熟練度傷害(+0.15 = score +15);同時 bump attempts/correct/streak
+      adjustMasteryScore(s.boss.nodeId, SCORE_DELTA_CORRECT, { correct: true });
 
       // 玩家恢復 HP / MP
       const p = Player.load();
@@ -533,8 +567,8 @@
       s.combo = 0;
       s.wrong++;
 
-      // BOSS 反擊 = 玩家 HP 損失;同時該 node mastery -5
-      adjustMasteryScore(s.boss.nodeId, -SCORE_DELTA_WRONG);
+      // BOSS 反擊 = 玩家 HP 損失;同時該 node mastery -5(計入 attempts、不算 correct、清 streak)
+      adjustMasteryScore(s.boss.nodeId, -SCORE_DELTA_WRONG, { correct: false });
 
       const dmg = 8 + Math.floor(s.bossHpMax * 0.03);
       Player.damage(dmg);
@@ -662,7 +696,8 @@
       if (p.mp < SKILLS.reinforce.cost) return showToast('MP 不足');
       p.mp -= SKILLS.reinforce.cost;
       Player.save(p);
-      adjustMasteryScore(this.state.boss.nodeId, SCORE_DELTA_REINFORCE);
+      // 強化記憶不算入 attempts(避免被視為練習一次),只 +score 不影響 streak/correct 比率
+      adjustMasteryScore(this.state.boss.nodeId, SCORE_DELTA_REINFORCE, { attempts: false });
       const bossAv = document.getElementById('m5-boss-avatar');
       if (bossAv) GameFX.damageNumber(bossAv, SCORE_DELTA_REINFORCE, { kind: 'player' });
       showToast(`🧠 強化記憶!該節點熟練度 +${SCORE_DELTA_REINFORCE}`);
@@ -736,6 +771,9 @@
       const prog = this.loadProg();
       if (!prog.defeated.includes(s.boss.nodeId)) prog.defeated.push(s.boss.nodeId);
       this.saveProg(prog);
+
+      // 擊敗後讓下次回到地圖時重新偵測弱點(BOSS 名單應更新)
+      this.cachedBosses = null;
 
       // EXP 獎勵
       const baseExp = 50 + s.correct * 12;
