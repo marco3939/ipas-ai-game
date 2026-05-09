@@ -1,297 +1,532 @@
 // ============================================================
-// Mode 1: AI 顧問實驗室 (RPG 情境決策模式)
-// 玩家扮演企業 AI 顧問,接收 12 個產業任務,以 RPG 對話方式答題
+// Mode 1: AI 顧問救援 — 真 RPG 戰鬥系統(v2 完整重做)
+// 鐵律 #1+#2 全合規 + 完整遊戲化(GSAP + canvas-confetti + GameFX)
 // ============================================================
 (function () {
-  'use strict';
 
-  const PROGRESS_KEY = 'ipas_mode1_progress_v1';
+  // === 12 產業 BOSS 配置 ===
+  const BOSSES = [
+    { key: 'ecommerce', name: '王董(電商集團 CEO)', avatar: '🛒', hp: 120,
+      desc: '客戶流失率上升,推薦系統失準',
+      keywords: ['電商','顧客','評論','行銷','推薦','流失','RFM','個人化'],
+      intro: '「我們上個月損失了 23% 活躍會員!模型卻沒抓到任何徵兆。你能不能查清楚問題?」',
+      attack: ['「這也不會?」','「我顧問費白付了!」','「快點!股東等不及!」'],
+      defeat: ['「太厲害了,你救了集團!」','「下季度起,你是首席 AI 顧問。」'] },
+    { key: 'finance', name: '李行長(銀行風控長)', avatar: '💰', hp: 130,
+      desc: 'AI 風控被駭客對抗性攻擊',
+      keywords: ['金融','銀行','信用','風控','詐欺','評分卡','監管','PSI'],
+      intro: '「駭客在交易輸入動了手腳,模型被欺騙了。我們需要從根本解決,不是加防火牆而已。」',
+      attack: ['「監理會發函了!」','「你還在猶豫?」','「合規截止日剩 3 天!」'],
+      defeat: ['「這就是真功夫。」','「金融業需要你這種人才。」'] },
+    { key: 'medical', name: '陳主任(醫院 AI 中心)', avatar: '🏥', hp: 140,
+      desc: '輔助診斷模型 + 不平衡資料',
+      keywords: ['醫療','醫院','診斷','病人','臨床','陽性','偵測','SMOTE'],
+      intro: '「正樣本只有 3%,Accuracy 看起來 97% 但漏診重症。再不解決,要出人命。」',
+      attack: ['「人命關天!」','「你不懂病人的痛苦。」','「FDA 在看著!」'],
+      defeat: ['「這次,我們真的能救人了。」','「醫療 AI 終於有救星。」'] },
+    { key: 'autonomous', name: '林博士(自駕車 AI)', avatar: '🚗', hp: 150,
+      desc: '即時影像辨識 + 全景分割',
+      keywords: ['自駕','自動駕駛','車輛','影像','物件','分割','CNN','即時'],
+      intro: '「行人偵測模型混淆了多位行人實體,差點釀成車禍。我們需要可靠的分割架構。」',
+      attack: ['「秒殺人命的責任,你扛得起?」','「邊緣運算延遲超標!」'],
+      defeat: ['「這就是自駕的下一步。」'] },
+    { key: 'manufacturing', name: '張廠長(智慧製造)', avatar: '🏭', hp: 130,
+      desc: '瑕疵檢測 CNN + 邊緣運算',
+      keywords: ['製造','智慧製造','生產線','瑕疵','感測器','故障','設備','預測'],
+      intro: '「產線每分鐘 200 片 PCB,瑕疵檢測 CNN 在線上飄移了。我需要穩定方案。」',
+      attack: ['「停線一分鐘損失 5 萬!」','「客戶要驗廠了!」'],
+      defeat: ['「智慧工廠終於名實相符。」'] },
+    { key: 'energy', name: '吳總(再生能源)', avatar: '⚡', hp: 130,
+      desc: '電力預測 + 蒙地卡羅模擬',
+      keywords: ['電力','太陽能','能源','風險','機率','分布','預測','時序'],
+      intro: '「氣候越來越極端,傳統時序模型失準。我需要能評估極端風險的方法。」',
+      attack: ['「電網崩潰你負責?」','「綠電承諾跳票!」'],
+      defeat: ['「這才是 AI 該有的格局。」'] },
+    { key: 'telecom', name: '黃副總(電信流失)', avatar: '📞', hp: 110,
+      desc: '客戶流失預測 + 多重共線性',
+      keywords: ['電信','客戶流失','通話','頻率','LASSO','特徵','多重共線'],
+      intro: '「100 個特徵高度相關,模型不穩。我要能自動篩選代表性的方法。」',
+      attack: ['「KPI 每季都掉!」','「對手挖角我的客戶!」'],
+      defeat: ['「終於找到救兵。」'] },
+    { key: 'media', name: '蘇導演(媒體生成)', avatar: '🎬', hp: 140,
+      desc: '生成式 AI + 著作權風險',
+      keywords: ['媒體','行銷','廣告','生成','Stable Diffusion','GAN','侵權','著作權'],
+      intro: '「行銷團隊用 Stable Diffusion 生成的素材被告侵權。我需要從源頭預防。」',
+      attack: ['「律師函滿天飛!」','「品牌信譽崩盤!」'],
+      defeat: ['「創作與合規,你做到了。」'] },
+    { key: 'smartcity', name: '周局長(智慧城市)', avatar: '🏙️', hp: 150,
+      desc: 'CV 監控 + 隱式偏誤治理',
+      keywords: ['智慧城市','監控','交通','人臉','族群','偏誤','公平性'],
+      intro: '「監控 AI 在不同族群辨識率差異 30%。媒體要爆出來了,你能修正嗎?」',
+      attack: ['「市長要我引咎下台!」','「人權團體在門口示威!」'],
+      defeat: ['「公平的 AI,真的存在。」'] },
+    { key: 'education', name: '高教授(智慧教育)', avatar: '🎓', hp: 120,
+      desc: '個人化學習 + 多模態',
+      keywords: ['教育','學生','個人化','學習','多模態','CLIP','資料缺失'],
+      intro: '「學生只有影像沒文字描述,模態缺失嚴重。模型表現掉了一半。」',
+      attack: ['「論文發不出去!」','「科技部審查不過!」'],
+      defeat: ['「教育的未來,在這裡誕生。」'] },
+    { key: 'logistics', name: '羅董(物流大亨)', avatar: '🚚', hp: 130,
+      desc: '路徑優化 + 即時推論',
+      keywords: ['物流','配送','即時','推論','部署','API','延遲','水平擴展'],
+      intro: '「黑五訂單暴增 10 倍,推論服務崩了。我要能撐住峰值的架構。」',
+      attack: ['「客訴塞爆!」','「商家要違約金!」'],
+      defeat: ['「物流大數據,終於聽我使喚。」'] },
+    { key: 'legal', name: '簡律師(法律 AI)', avatar: '⚖️', hp: 140,
+      desc: 'NLP 法條檢索 + RAG',
+      keywords: ['法律','律師','NLP','RAG','檢索','幻覺','BERT','契約'],
+      intro: '「LLM 在法條問答中產生幻覺,引用不存在的判例。我們要 RAG 但檢索品質太差。」',
+      attack: ['「律師失格我就完了!」','「客戶要告我!」'],
+      defeat: ['「正義的 AI,謝謝你。」'] }
+  ];
+
+  function highlightCode(code) {
+    if (!code) return '';
+    let s = code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    s = s.replace(/(#[^\n]*)/g, '<span class="com">$1</span>');
+    s = s.replace(/(["'])((?:(?!\1).)*)\1/g, '<span class="str">$1$2$1</span>');
+    s = s.replace(/\b(import|from|def|class|return|if|else|elif|for|while|in|as|with|try|except|None|True|False|lambda|pass|self|print|len|range|np|pd|sklearn|torch|nn|tf)\b/g, '<span class="kw">$1</span>');
+    s = s.replace(/\b(\d+\.?\d*)\b/g, '<span class="num">$1</span>');
+    return s;
+  }
+
+  function pickQuestionsForBoss(boss, n = 7) {
+    const matched = QUESTIONS.filter(q => {
+      const text = (q.stem || '') + ' ' + (q.tags || []).join(' ');
+      return boss.keywords.some(k => text.includes(k));
+    });
+    let pool = [...new Set(matched)];
+    if (pool.length < n) {
+      const general = QUESTIONS.filter(q => q.subject === 1 && !pool.includes(q));
+      pool = [...pool, ...RNG.pickN(general, n - pool.length)];
+    }
+    return RNG.pickN(pool, Math.min(n, pool.length));
+  }
 
   const Mode1 = {
-    // ---------- 12 個產業任務設定 ----------
-    industries: [
-      { key: 'ecommerce',  name: '電商零售',   icon: '🛒', role: '電商營運長',
-        keywords: ['電商', '電子商務', '顧客', '評論', '行銷', '購物', '消費者', '商品推薦'],
-        scene: '線上購物平台會議室,儀表板顯示即時訂單與顧客行為熱圖。' },
-      { key: 'finance',    name: '金融科技',   icon: '💰', role: '銀行風控長',
-        keywords: ['金融', '銀行', '信用', '風控', '詐欺', '保險', '貸款', '理財'],
-        scene: '金融機構交易監控中心,大螢幕顯示即時風險評分。' },
-      { key: 'healthcare', name: '智慧醫療',   icon: '🏥', role: '醫院資訊主任',
-        keywords: ['醫療', '醫院', '診斷', '病人', '臨床', '藥', '影像', '健康'],
-        scene: '醫院資訊室,牆上掛著放射影像與電子病歷介面。' },
-      { key: 'autonomous', name: '自駕車輛',   icon: '🚗', role: '車聯網總工程師',
-        keywords: ['自駕', '自動駕駛', '車輛', '感測器', '行車', '交通'],
-        scene: '車廠測試場,自駕原型車正進行道路情境模擬。' },
-      { key: 'manufacturing', name: '智慧製造', icon: '🏭', role: '工廠廠長',
-        keywords: ['製造', '智慧製造', '生產線', '瑕疵', '工廠', '設備', '品質', '預測維護'],
-        scene: '智慧工廠中控室,生產線數據與良率即時更新。' },
-      { key: 'energy',     name: '能源電力',   icon: '⚡', role: '電網調度主管',
-        keywords: ['電力', '太陽能', '能源', '電網', '發電', '用電', '再生能源'],
-        scene: '電網控制中心,牆面投影著各區用電負載圖。' },
-      { key: 'telecom',    name: '電信通訊',   icon: '📡', role: '電信營運主管',
-        keywords: ['電信', '客戶流失', '通話', '基地台', '5G', '網路', '訊號'],
-        scene: '電信營運中心,監控全國基地台與客戶留存率。' },
-      { key: 'media',      name: '媒體行銷',   icon: '📰', role: '媒體總編輯',
-        keywords: ['媒體', '新聞', '廣告', '行銷素材', '內容', '社群', '影音'],
-        scene: '媒體編輯台,多螢幕同步顯示熱門話題與廣告投放成效。' },
-      { key: 'smartcity',  name: '智慧城市',   icon: '🏙️', role: '市政科技長',
-        keywords: ['智慧城市', '監控', '交通', '城市', '路口', '行人', '公共'],
-        scene: '市政指揮中心,大螢幕呈現城市攝影機與感測器網絡。' },
-      { key: 'education',  name: '智慧教育',   icon: '🎓', role: '教育科技長',
-        keywords: ['教育', '學生', '學習', '教學', '課程', '考試'],
-        scene: '線上學習平台後台,顯示學生互動與學習軌跡。' },
-      { key: 'logistics',  name: '物流供應鏈', icon: '🚚', role: '供應鏈總監',
-        keywords: ['物流', '配送', '倉儲', '供應鏈', '貨運', '路徑'],
-        scene: '物流調度中心,即時追蹤車隊與倉庫吞吐量。' },
-      { key: 'legal',      name: '法律科技',   icon: '⚖️', role: '法務長',
-        keywords: ['法律', '法務', '契約', '合規', '隱私', '個資', 'GDPR'],
-        scene: '律師事務所合議室,牆上掛滿契約審查流程圖。' }
-    ],
+    state: null,
 
-    // ---------- 執行階段狀態 ----------
-    state: {
-      current: null,     // 目前產業 key
-      queue: [],         // 該產業待答題目
-      total: 0,
-      correct: 0,
-      idx: 0
-    },
-
-    // ---------- 進入點 ----------
     start() {
+      RNG.set(Date.now());
       this.renderMap();
     },
 
-    // ---------- 進度存取 ----------
-    loadProgress() {
-      try { return JSON.parse(localStorage.getItem(PROGRESS_KEY) || '{}'); }
-      catch (e) { return {}; }
-    },
-    saveProgress(p) {
-      try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(p)); } catch (e) {}
-    },
+    industriesState() { return Storage.get('ipas_mode1_industries_v1', {}); },
 
-    // ---------- 從 QUESTIONS 篩出符合該產業的題目 ----------
-    pickIndustryQuestions(ind, n) {
-      const all = (typeof QUESTIONS !== 'undefined' && Array.isArray(QUESTIONS)) ? QUESTIONS : [];
-      const matched = all.filter(q => {
-        const stem = (q.stem || '') + ' ' + ((q.tags || []).join(' '));
-        return ind.keywords.some(k => stem.indexOf(k) !== -1);
-      });
-      let pool = matched;
-      // 若該產業關鍵字命中題目不足,從 subject=1 的題庫補上
-      if (pool.length < n) {
-        const fallback = all.filter(q => q.subject === 1 && pool.indexOf(q) === -1);
-        pool = pool.concat(RNG.shuffle(fallback).slice(0, n - pool.length));
-      }
-      return RNG.pickN(pool, Math.min(n, pool.length));
-    },
-
-    // ---------- 任務地圖 ----------
     renderMap() {
-      const progress = this.loadProgress();
-      const cards = this.industries.map(ind => {
-        const p = progress[ind.key];
-        const done = p ? `${p.correct}/${p.total}` : '尚未挑戰';
-        const rate = p && p.total ? Math.round(p.correct / p.total * 100) : 0;
-        const badge = p && p.total ? (rate >= 80 ? '🏆' : rate >= 60 ? '🥈' : '🥉') : '';
-        const tip = p ? `完成度 ${rate}% ${badge}` : '點擊開始任務';
-        return `
-          <button class="mode-card" onclick="Mode1.selectIndustry('${ind.key}')">
-            <div style="font-size:34px;line-height:1">${ind.icon}</div>
-            <div style="font-weight:700;margin-top:6px">${ind.name}</div>
-            <div style="font-size:12px;opacity:.75;margin-top:4px">${ind.role}</div>
-            <div style="font-size:11px;margin-top:8px;color:#9ad">${done} ${badge}</div>
-            <div style="font-size:10px;opacity:.55;margin-top:2px">${tip}</div>
-          </button>`;
-      }).join('');
+      const player = Player.load();
+      const industries = this.industriesState();
+      const defeatedCount = Object.values(industries).filter(x => x.defeated).length;
+      const view = document.getElementById('view-play');
+      const playerHpPct = player.hp / player.hpMax * 100;
 
-      const html = `
-        <div class="card rpg-scene">
-          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
-            <div>
-              <div style="font-size:20px;font-weight:800">🧑‍💼 AI 顧問實驗室</div>
-              <div style="font-size:13px;opacity:.8;margin-top:4px">選擇一個產業任務,以企業 AI 顧問身分進行情境決策</div>
+      view.innerHTML = `
+        <div class="card">
+          <h1>🗺️ AI 顧問救援 — 任務地圖</h1>
+          <p style="color:var(--fg-dim)">12 個產業客戶等待協助。挑選一場 BOSS 戰鬥開始。答對攻擊敵人、答錯被反擊。</p>
+        </div>
+
+        <div class="battle-arena" style="padding:16px">
+          <div class="player-bar">
+            <div class="avatar">🧑‍💼</div>
+            <div class="bar-info">
+              <div class="bar-name"><span class="level">Lv.${player.level}</span> AI 顧問(你)</div>
+              <div class="hp-track"><div class="hp-fill ${playerHpPct < 30 ? 'critical' : playerHpPct < 60 ? 'low' : ''}" style="width:${playerHpPct}%"></div></div>
+              <div class="hp-text">HP ${player.hp} / ${player.hpMax} · MP ${player.mp} / ${player.mpMax} · EXP ${player.exp}/${player.expMax}</div>
             </div>
-            <button class="btn btn-ghost" onclick="goHome()">← 返回首頁</button>
+          </div>
+          <div style="background:rgba(0,0,0,0.3);padding:8px;border-radius:6px;margin-top:8px;display:flex;gap:12px;flex-wrap:wrap;font-size:0.85rem;color:var(--fg-dim)">
+            <span>💪 分析 ${player.stats.analysis}</span>
+            <span>📋 規劃 ${player.stats.planning}</span>
+            <span>🧠 決策 ${player.stats.decision}</span>
+            <span>⚙️ 技術 ${player.stats.technical}</span>
+            <span>🛠 技能點 <strong style="color:var(--warn)">${player.skillPoints}</strong></span>
+            <span>🏆 已破關 ${defeatedCount}/12</span>
           </div>
         </div>
-        <div class="card">
-          <div style="font-size:14px;font-weight:600;margin-bottom:10px">📋 任務地圖 (12 個產業)</div>
-          <div class="modes-grid">${cards}</div>
-        </div>`;
 
-      const playEl = document.getElementById('view-play');
-      if (playEl) playEl.innerHTML = html;
+        ${player.skillPoints > 0 ? `<div class="card" style="border-color:var(--warn)">
+          <h3>⭐ 你有 ${player.skillPoints} 個技能點可分配</h3>
+          <div class="actions">
+            ${!player.skills.hint ? `<button class="btn btn-warn" onclick="Mode1.unlockSkill('hint')">💡 解鎖『提示』(看記憶口訣)</button>` : ''}
+            ${!player.skills.eliminate ? `<button class="btn btn-warn" onclick="Mode1.unlockSkill('eliminate')">❌ 解鎖『消除』(消 2 錯誤選項)</button>` : ''}
+            ${!player.skills.double ? `<button class="btn btn-warn" onclick="Mode1.unlockSkill('double')">⚡ 解鎖『雙倍傷害』(下一擊 ×2)</button>` : ''}
+          </div>
+        </div>` : ''}
+
+        <div class="card">
+          <h2>⚔️ 選擇任務(BOSS)</h2>
+          <div class="modes-grid">
+            ${BOSSES.map(b => {
+              const st = industries[b.key];
+              const cleared = st && st.defeated;
+              const perfect = st && st.perfectClear;
+              return `<button class="mode-card" onclick="Mode1.selectBoss('${b.key}')" style="${cleared ? 'opacity:0.7;border-color:var(--success)' : ''}">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+                  <span style="font-size:2rem">${b.avatar}</span>
+                  <div>
+                    <div class="mode-num">${cleared ? (perfect ? '⭐ 完美通關' : '✅ 已通關') : '未通關'}</div>
+                    <div class="mode-title" style="font-size:0.95rem">${b.name}</div>
+                  </div>
+                </div>
+                <div class="mode-desc" style="font-size:0.85rem">${b.desc}</div>
+                <div class="mode-stats">HP ${b.hp}</div>
+              </button>`;
+            }).join('')}
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-ghost" onclick="goHome()">🏠 回主頁</button>
+          <button class="btn btn-ghost" onclick="if(confirm('重置玩家進度?'))Mode1.resetPlayer()">🔄 重置角色</button>
+        </div>
+      `;
       show('view-play');
     },
 
-    // ---------- 選擇產業並開始 ----------
-    selectIndustry(key) {
-      const ind = this.industries.find(i => i.key === key);
-      if (!ind) return;
-      const N = 5 + Math.floor(Math.random() * 4); // 5-8 題
-      const qs = this.pickIndustryQuestions(ind, N);
-      if (!qs.length) {
-        showToast('題庫不足,請稍後再試');
-        return;
-      }
-      this.state = {
-        current: key,
-        queue: qs,
-        total: qs.length,
-        correct: 0,
-        idx: 0
-      };
-
-      // 接管 PlayEngine 的下一題回調
-      if (typeof PlayEngine !== 'undefined') {
-        PlayEngine.onNext = () => Mode1.nextQuestion();
-      }
-      this.nextQuestion();
+    resetPlayer() {
+      Player.reset();
+      Storage.del('ipas_mode1_industries_v1');
+      this.start();
     },
 
-    // ---------- 取下一題 ----------
-    nextQuestion() {
-      const s = this.state;
-      const ind = this.industries.find(i => i.key === s.current);
-      if (!ind) return;
-
-      // 結束:已答完所有題
-      if (s.idx >= s.queue.length) {
-        this.finishIndustry(ind);
-        return;
-      }
-
-      const q = s.queue[s.idx];
-      s.idx++;
-
-      // 由前一題的對錯記錄(PlayEngine 已寫入 Wrongbook,我們從 Mastery 推斷)
-      // 這裡採直接統計:答題後,回到我們的 onNext 時,就把 idx-1 的對錯回填
-      // 為了精確統計,改用攔截 PlayEngine.show 後的選項點擊事件
-      const ctxHTML = this._buildContextHTML(ind, s.idx, s.queue.length);
-
-      if (typeof PlayEngine !== 'undefined' && typeof PlayEngine.show === 'function') {
-        // 包一層攔截:捕獲本題答對與否
-        const origOnNext = PlayEngine.onNext;
-        PlayEngine.onNext = () => {
-          // 從 DOM 結果區判斷對錯
-          const res = document.querySelector('#play-result');
-          if (res) {
-            const txt = res.textContent || '';
-            if (txt.indexOf('答對') !== -1 || txt.indexOf('正確') !== -1) {
-              s.correct++;
-            }
-          }
-          if (typeof origOnNext === 'function') origOnNext();
-          else Mode1.nextQuestion();
-        };
-        PlayEngine.show(q, { contextHTML: ctxHTML });
-      }
+    unlockSkill(name) {
+      const p = Player.load();
+      if (p.skillPoints <= 0) return;
+      p.skillPoints--; p.skills[name] = true;
+      Player.save(p);
+      showToast(`✨ 解鎖技能:${name}`);
+      this.renderMap();
     },
 
-    // ---------- 上方 RPG 對話標頭 ----------
-    _buildContextHTML(ind, cur, total) {
-      const npc = this._npcLine(ind);
-      return `
-        <div class="rpg-scene" style="margin-bottom:12px">
-          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
-            <div class="rpg-industry-tag">${ind.icon} ${ind.name} 任務</div>
-            <div style="font-size:12px;opacity:.8">第 ${cur} / ${total} 題</div>
-          </div>
-          <div class="rpg-character" style="margin-top:10px">
-            <div class="rpg-avatar">${ind.icon}</div>
-            <div class="rpg-dialogue">
-              <div style="font-weight:700;font-size:13px;margin-bottom:4px">${ind.role}</div>
-              <div style="font-size:13px;opacity:.9">「${npc}」</div>
-              <div style="font-size:11px;opacity:.6;margin-top:6px">📍 ${ind.scene}</div>
+    selectBoss(key) {
+      const boss = BOSSES.find(b => b.key === key);
+      if (!boss) return;
+      const questions = pickQuestionsForBoss(boss, 7);
+      if (questions.length === 0) { showToast('題庫不足'); return; }
+
+      this.state = { boss, bossHp: boss.hp, bossHpMax: boss.hp,
+        questions, idx: 0, combo: 0, maxCombo: 0,
+        correct: 0, wrong: 0, totalDamage: 0,
+        doubleNext: false, currentQ: null };
+
+      const view = document.getElementById('view-play');
+      view.innerHTML = `
+        <div class="battle-arena">
+          <div class="enemy-bar">
+            <div class="avatar boss" style="font-size:2.5rem">${boss.avatar}</div>
+            <div class="bar-info">
+              <div class="bar-name">${boss.name}</div>
+              <div class="hp-text">HP ${boss.hp}</div>
             </div>
           </div>
-          <div style="margin-top:10px;font-size:12px;opacity:.7">🧑‍💼 你是受邀的 AI 顧問,請依下方情境選擇最佳行動方案:</div>
-        </div>`;
-    },
-
-    // ---------- 隨機 NPC 開場白(讓對話有變化) ----------
-    _npcLine(ind) {
-      const lines = {
-        ecommerce:    ['顧問,推薦系統最近怪怪的,我們需要您的判斷。', '雙11 流量飆升,演算法該怎麼調?', '客訴模型誤判好多,該怎麼辦?'],
-        finance:      ['這筆交易看起來怪怪的,請給我建議。', '監理機關要求模型可解釋,怎麼做?', '反詐欺模型誤殺率太高,怎麼處理?'],
-        healthcare:   ['影像 AI 給的建議,我們該完全相信嗎?', '病人資料不能出院,模型要怎麼訓練?', '臨床準確率與公平性怎麼平衡?'],
-        autonomous:   ['這個感測器資料是不是被汙染了?', '路測情境太極端,模型總是犯錯。', '系統出錯了,責任該怎麼界定?'],
-        manufacturing:['瑕疵檢測模型誤報率上升了,怎麼辦?', '設備預測維護的訊號太雜,如何處理?', '產線資料外洩風險,該怎麼防?'],
-        energy:       ['用電預測誤差太大,該怎麼修正?', '再生能源波動,模型跟不上。', '智慧電網的隱私問題該怎麼解?'],
-        telecom:      ['客戶流失模型,我們該採取行動了嗎?', '5G 訊號優化的 AI 該怎麼部署?', '基地台異常偵測誤報太多。'],
-        media:        ['這則新聞是不是 AI 生成的?', '推薦演算法製造了同溫層,怎麼解?', 'AI 生成廣告素材有版權問題嗎?'],
-        smartcity:    ['人臉辨識的隱私爭議,我們該如何因應?', '交通號誌 AI 控制有公平問題嗎?', '城市監控資料治理該怎麼做?'],
-        education:    ['AI 出題評量的公平性怎麼保證?', '學生使用生成式 AI 寫作業,該擋嗎?', '個性化學習如何不貼標籤?'],
-        logistics:    ['路徑優化模型常常推薦違規路線,怎麼辦?', '倉儲機器人撞貨了,該找誰負責?', '預測補貨資料外洩,如何處理?'],
-        legal:        ['這份合約 AI 審完,我們敢直接送出嗎?', '個資法新規的 AI 合規,怎麼做?', 'AI 生成的法律意見書有效力嗎?']
-      };
-      return RNG.pick(lines[ind.key] || ['顧問,請就此情境給我們建議。']);
-    },
-
-    // ---------- 完成該產業的結算頁 ----------
-    finishIndustry(ind) {
-      const s = this.state;
-      const rate = s.total ? Math.round(s.correct / s.total * 100) : 0;
-      const tier = rate >= 80 ? { e: '🏆', n: '黃金顧問', c: '#fbbf24' }
-                 : rate >= 60 ? { e: '🥈', n: '資深顧問', c: '#cbd5e1' }
-                 : { e: '🥉', n: '見習顧問', c: '#d97706' };
-
-      // 寫入進度
-      const prog = this.loadProgress();
-      const prev = prog[ind.key];
-      if (!prev || (s.correct / s.total) > (prev.correct / prev.total)) {
-        prog[ind.key] = { correct: s.correct, total: s.total, ts: Date.now() };
-      }
-      this.saveProgress(prog);
-
-      // 解鎖下個任務的提示
-      const idx = this.industries.findIndex(i => i.key === ind.key);
-      const next = this.industries[(idx + 1) % this.industries.length];
-
-      const html = `
-        <div class="card rpg-scene">
-          <div style="text-align:center">
-            <div style="font-size:64px">${tier.e}</div>
-            <div style="font-size:22px;font-weight:800;color:${tier.c};margin-top:6px">${tier.n}徽章</div>
-            <div style="font-size:14px;opacity:.85;margin-top:8px">${ind.icon} ${ind.name} 任務完成</div>
+          <div class="dialogue-box">
+            <div class="dialogue-name">${boss.name}</div>
+            <div class="dialogue-text" id="intro-text"></div>
+          </div>
+          <div class="actions" style="margin-top:16px;justify-content:center">
+            <button class="btn btn-primary" onclick="Mode1.startBattle()" style="font-size:1.1rem;padding:14px 28px">⚔️ 開戰!</button>
+            <button class="btn btn-ghost" onclick="Mode1.start()">退避</button>
           </div>
         </div>
-        <div class="card">
-          <div style="display:flex;justify-content:space-around;text-align:center;flex-wrap:wrap;gap:12px">
-            <div>
-              <div style="font-size:12px;opacity:.7">答對</div>
-              <div style="font-size:24px;font-weight:800;color:#34d399">${s.correct}</div>
-            </div>
-            <div>
-              <div style="font-size:12px;opacity:.7">總題數</div>
-              <div style="font-size:24px;font-weight:800">${s.total}</div>
-            </div>
-            <div>
-              <div style="font-size:12px;opacity:.7">完成率</div>
-              <div style="font-size:24px;font-weight:800;color:${tier.c}">${rate}%</div>
-            </div>
-          </div>
-          <div style="margin-top:14px;padding:10px;background:rgba(52,211,153,.08);border-radius:8px;font-size:13px">
-            ${rate >= 80 ? '太精彩了!您的決策展現專業 AI 顧問的洞見。' :
-              rate >= 60 ? '不錯的表現,持續累積各產業的決策經驗。' :
-              '別氣餒,錯題已自動進入錯題本,記得下鑽複習!'}
-          </div>
-          <div style="margin-top:12px;padding:10px;background:rgba(96,165,250,.08);border-radius:8px;font-size:12px">
-            🔓 下個任務推薦: ${next.icon} ${next.name} (${next.role})
-          </div>
-          <div class="actions" style="margin-top:14px">
-            <button class="btn btn-primary" onclick="Mode1.start()">🗺️ 回任務地圖</button>
-            <button class="btn btn-ghost" onclick="Mode1.selectIndustry('${ind.key}')">🔁 重新挑戰</button>
-            <button class="btn btn-ghost" onclick="Mode1.selectIndustry('${next.key}')">▶️ 下一個任務</button>
-            <button class="btn btn-warn" onclick="goHome()">🏠 結束回首頁</button>
-          </div>
-        </div>`;
+      `;
+      show('view-play');
+      this.typeText('intro-text', boss.intro, 30);
+    },
 
-      const resEl = document.getElementById('view-result');
-      if (resEl) resEl.innerHTML = html;
-      show('view-result');
+    typeText(id, text, speedMs = 30) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.textContent = '';
+      let i = 0;
+      const t = setInterval(() => { if (i >= text.length) { clearInterval(t); return; } el.textContent += text[i++]; }, speedMs);
+    },
+
+    startBattle() {
+      this.renderBattle();
+      this.showQuestion();
+    },
+
+    renderBattle() {
+      const p = Player.load();
+      const view = document.getElementById('view-play');
+      view.innerHTML = `
+        <div class="battle-arena" id="arena">
+          <div class="enemy-bar">
+            <div class="avatar boss" id="boss-avatar" style="font-size:2.5rem">${this.state.boss.avatar}</div>
+            <div class="bar-info">
+              <div class="bar-name">${this.state.boss.name}</div>
+              <div class="hp-track"><div class="hp-fill" id="boss-hp-fill" style="width:100%"></div></div>
+              <div class="hp-text" id="boss-hp-text">${this.state.bossHp} / ${this.state.bossHpMax}</div>
+            </div>
+          </div>
+          <div class="player-bar">
+            <div class="avatar" id="player-avatar">🧑‍💼</div>
+            <div class="bar-info">
+              <div class="bar-name"><span class="level">Lv.${p.level}</span> AI 顧問</div>
+              <div class="hp-track"><div class="hp-fill" id="player-hp-fill"></div></div>
+              <div class="hp-text" id="player-hp-text"></div>
+            </div>
+          </div>
+          <div class="skill-tray" id="skill-tray"></div>
+          <div id="battle-question"></div>
+        </div>
+      `;
+      this.updateBars(); this.updateSkillTray(); show('view-play');
+    },
+
+    updateBars() {
+      const p = Player.load();
+      const bossPct = this.state.bossHp / this.state.bossHpMax * 100;
+      const playerPct = p.hp / p.hpMax * 100;
+      const bossEl = document.getElementById('boss-hp-fill');
+      const playerEl = document.getElementById('player-hp-fill');
+      if (bossEl) { bossEl.style.width = bossPct + '%'; bossEl.className = 'hp-fill' + (bossPct < 30 ? ' critical' : bossPct < 60 ? ' low' : ''); }
+      if (playerEl) { playerEl.style.width = playerPct + '%'; playerEl.className = 'hp-fill' + (playerPct < 30 ? ' critical' : playerPct < 60 ? ' low' : ''); }
+      const bt = document.getElementById('boss-hp-text');
+      const pt = document.getElementById('player-hp-text');
+      if (bt) bt.textContent = `${this.state.bossHp} / ${this.state.bossHpMax}`;
+      if (pt) pt.textContent = `HP ${p.hp}/${p.hpMax} · MP ${p.mp}/${p.mpMax}`;
+    },
+
+    updateSkillTray() {
+      const p = Player.load();
+      const tray = document.getElementById('skill-tray');
+      if (!tray) return;
+      const skills = [];
+      if (p.skills.hint) skills.push(`<button class="skill-btn" onclick="Mode1.useHint()" ${p.mp<10?'disabled':''}>💡 提示 <span class="skill-cost">10MP</span></button>`);
+      if (p.skills.eliminate) skills.push(`<button class="skill-btn" onclick="Mode1.useEliminate()" ${p.mp<15?'disabled':''}>❌ 消除2項 <span class="skill-cost">15MP</span></button>`);
+      if (p.skills.double) skills.push(`<button class="skill-btn" onclick="Mode1.useDouble()" ${p.mp<20||this.state.doubleNext?'disabled':''}>⚡ 雙倍 <span class="skill-cost">20MP</span></button>`);
+      tray.innerHTML = skills.length ? skills.join('') : '<span style="color:var(--fg-mute);font-size:0.85rem">通關 BOSS 升級後可解鎖技能</span>';
+    },
+
+    showQuestion() {
+      if (this.state.idx >= this.state.questions.length || this.state.bossHp <= 0) { this.victory(); return; }
+      const q = renderQuestion(this.state.questions[this.state.idx]);
+      this.state.currentQ = q;
+      const codeBlock = q.code_block ? `<pre class="code-syntax">${highlightCode(q.code_block)}</pre>` : '';
+      const visualData = renderVisualData(q);
+      document.getElementById('battle-question').innerHTML = `
+        <div class="question-card">
+          <div class="question-meta">
+            <span class="badge">第 ${this.state.idx + 1} / ${this.state.questions.length} 回合</span>
+            <span class="badge">${q.knowledge_code}</span>
+            <span class="badge">${q.difficulty}</span>
+            ${q.errata_critical ? '<span class="badge" style="background:var(--danger);color:white">⚠️ 必出</span>' : ''}
+          </div>
+          <div class="question-stem">${q.stem}</div>
+          ${codeBlock}
+          ${visualData}
+          <div class="options" id="m1-options">
+            ${q.options.map(o => `<button class="option-btn" data-key="${o.key}" onclick="Mode1.answer('${o.key}')">
+              <span class="option-key">${o.key}.</span>${o.text}</button>`).join('')}
+          </div>
+          <div id="m1-explanation"></div>
+        </div>
+      `;
+      this.updateSkillTray();
+    },
+
+    answer(key) {
+      const q = this.state.currentQ;
+      const opt = q.options.find(o => o.key === key);
+      const isCorrect = opt.is_correct;
+
+      document.querySelectorAll('#m1-options .option-btn').forEach(b => {
+        b.disabled = true;
+        const k = b.dataset.key;
+        const od = q.options.find(o => o.key === k);
+        if (od && od.is_correct) b.classList.add('correct');
+        else if (k === key && !isCorrect) b.classList.add('wrong');
+      });
+
+      if (q.node_id) Mastery.update(q.node_id, isCorrect);
+      Progress.addAnswer(isCorrect);
+      if (!isCorrect) {
+        const c = q.options.find(o => o.is_correct);
+        if (c) Wrongbook.add(q.id, q.node_id, key, c.key);
+      }
+
+      if (isCorrect) this.attack();
+      else this.takeDamage();
+      this.showExplanation(opt, isCorrect);
+    },
+
+    attack() {
+      this.state.combo++;
+      this.state.maxCombo = Math.max(this.state.maxCombo, this.state.combo);
+      this.state.correct++;
+      const p = Player.load();
+      const baseDmg = 18 + p.level * 2 + p.stats.analysis;
+      const isCrit = this.state.combo >= 3 && Math.random() < 0.4;
+      let dmg = isCrit ? Math.floor(baseDmg * 2) : baseDmg;
+      if (this.state.doubleNext) { dmg *= 2; this.state.doubleNext = false; }
+      this.state.bossHp = Math.max(0, this.state.bossHp - dmg);
+      this.state.totalDamage += dmg;
+
+      GameFX.flash('correct');
+      const playerAv = document.getElementById('player-avatar');
+      const bossAv = document.getElementById('boss-avatar');
+      GameFX.attackAnim(playerAv);
+      setTimeout(() => { GameFX.shake(bossAv); GameFX.damageNumber(bossAv, dmg, { kind: 'player', crit: isCrit }); }, 200);
+      if (this.state.combo >= 2) GameFX.combo(this.state.combo);
+      if (this.state.combo === 5) { GameFX.confetti({ count: 100, colors: ['#fbbf24','#f59e0b','#ef4444'] }); showToast('🔥 5 連擊!氣勢正盛!'); }
+      if (isCrit) GameFX.confetti({ count: 60, colors: ['#fb923c','#fbbf24'] });
+
+      p.mp = Math.min(p.mpMax, p.mp + 3); Player.save(p);
+      this.updateBars(); this.updateSkillTray();
+    },
+
+    takeDamage() {
+      this.state.combo = 0; this.state.wrong++;
+      const dmg = 12 + Math.floor(this.state.bossHpMax * 0.05);
+      Player.damage(dmg);
+      GameFX.flash('wrong'); GameFX.hideCombo();
+      const playerAv = document.getElementById('player-avatar');
+      const bossAv = document.getElementById('boss-avatar');
+      GameFX.attackAnim(bossAv);
+      setTimeout(() => { GameFX.shake(playerAv); GameFX.damageNumber(playerAv, dmg, { kind: 'enemy' }); }, 200);
+      this.updateBars();
+      const p = Player.load();
+      if (p.hp <= 0) setTimeout(() => this.gameOver(), 1500);
+    },
+
+    showExplanation(opt, isCorrect) {
+      const q = this.state.currentQ;
+      const e = q.explanation || {};
+      const wrongExp = (!isCorrect && e.wrong) ? (e.wrong[opt.text] || '此選項不正確') : '';
+      const enemyTaunt = !isCorrect ? `<div class="dialogue-box" style="border-color:rgba(239,68,68,0.4)">
+        <div class="dialogue-name" style="color:#f87171">${this.state.boss.name}</div>
+        <div class="dialogue-text">「${RNG.pick(this.state.boss.attack)}」</div>
+      </div>` : '';
+      document.getElementById('m1-explanation').innerHTML = `
+        ${enemyTaunt}
+        <div class="explanation">
+          <div class="verdict ${isCorrect ? 'correct' : 'wrong'}">${isCorrect ? '⚔️ 攻擊命中!' : '🩸 你受到攻擊!'}</div>
+          <div><strong>正解:</strong>${e.correct || '(無)'}</div>
+          ${!isCorrect && wrongExp ? `<div style="margin-top:8px"><strong>錯處:</strong>${wrongExp}</div>` : ''}
+          ${e.hook ? `<div class="hook">💡 ${e.hook}</div>` : ''}
+          ${q.misconceptions && q.misconceptions.length > 0 ? `<div class="miscon"><strong>易錯點:</strong>${q.misconceptions.join(' / ')}</div>` : ''}
+          <div class="actions">
+            <button class="btn btn-primary" onclick="Mode1.next()">繼續戰鬥 →</button>
+            ${!isCorrect ? `<button class="btn btn-warn" onclick="Mode1.drillThis()">🎯 立即下鑽變化型</button>` : ''}
+          </div>
+        </div>
+      `;
+    },
+
+    drillThis() {
+      const variations = generateVariation(this.state.currentQ, 3);
+      DrillSession.start(this.state.currentQ.node_id, variations);
+    },
+
+    next() {
+      this.state.idx++;
+      if (this.state.bossHp <= 0) { this.victory(); return; }
+      this.showQuestion();
+    },
+
+    useHint() {
+      const p = Player.load();
+      if (p.mp < 10) return showToast('MP 不足');
+      p.mp -= 10; Player.save(p);
+      const q = this.state.currentQ;
+      const tip = q.explanation && q.explanation.hook ? q.explanation.hook : '依題意找最直接相符的選項';
+      showToast('💡 ' + tip, 4000);
+      this.updateBars(); this.updateSkillTray();
+    },
+
+    useEliminate() {
+      const p = Player.load();
+      if (p.mp < 15) return showToast('MP 不足');
+      p.mp -= 15; Player.save(p);
+      const wrongs = this.state.currentQ.options.filter(o => !o.is_correct);
+      const elim = RNG.pickN(wrongs, Math.min(2, wrongs.length));
+      elim.forEach(e => {
+        const btn = document.querySelector(`#m1-options [data-key="${e.key}"]`);
+        if (btn) { btn.disabled = true; btn.style.opacity = '0.3'; btn.style.textDecoration = 'line-through'; }
+      });
+      showToast('❌ 已消除 2 個錯誤選項');
+      this.updateBars(); this.updateSkillTray();
+    },
+
+    useDouble() {
+      const p = Player.load();
+      if (p.mp < 20) return showToast('MP 不足');
+      p.mp -= 20; Player.save(p);
+      this.state.doubleNext = true;
+      showToast('⚡ 下一擊雙倍傷害已蓄能!');
+      this.updateBars(); this.updateSkillTray();
+    },
+
+    victory() {
+      const baseExp = 60 + this.state.correct * 12;
+      const perfectBonus = this.state.wrong === 0 ? 40 : 0;
+      const comboBonus = this.state.maxCombo * 5;
+      const totalExp = baseExp + perfectBonus + comboBonus;
+      Player.gainExp(totalExp);
+
+      const industries = this.industriesState();
+      const prev = industries[this.state.boss.key] || {};
+      industries[this.state.boss.key] = {
+        defeated: true,
+        perfectClear: prev.perfectClear || (this.state.wrong === 0),
+        defeatedAt: Date.now(),
+        bestCombo: Math.max(prev.bestCombo || 0, this.state.maxCombo)
+      };
+      Storage.set('ipas_mode1_industries_v1', industries);
+
+      const view = document.getElementById('view-play');
+      view.innerHTML = `
+        <div class="battle-arena" style="text-align:center">
+          <h1 style="color:#fbbf24;font-size:2rem">🏆 戰鬥勝利!</h1>
+          <div style="font-size:4rem;margin:16px 0">${this.state.boss.avatar}</div>
+          <div class="dialogue-box">
+            <div class="dialogue-name">${this.state.boss.name}</div>
+            <div class="dialogue-text">「${RNG.pick(this.state.boss.defeat)}」</div>
+          </div>
+          <div style="background:rgba(0,0,0,0.5);padding:16px;border-radius:var(--radius);margin:16px 0;text-align:left">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <div>✅ 答對 <strong style="color:#4ade80">${this.state.correct}</strong></div>
+              <div>❌ 答錯 <strong style="color:#f87171">${this.state.wrong}</strong></div>
+              <div>🔥 最高連擊 <strong>${this.state.maxCombo}</strong></div>
+              <div>⚔️ 總傷害 <strong>${this.state.totalDamage}</strong></div>
+            </div>
+            <hr style="margin:12px 0;border-color:var(--border)">
+            <div style="font-size:1.3rem;color:#fbbf24;font-weight:800;text-align:center">+${totalExp} EXP</div>
+            <div style="font-size:0.85rem;color:var(--fg-dim);text-align:center;margin-top:4px">
+              基礎 ${baseExp} ${perfectBonus ? '+ 完美 ' + perfectBonus : ''} ${comboBonus ? '+ 連擊 ' + comboBonus : ''}
+            </div>
+            ${this.state.wrong === 0 ? '<div style="text-align:center;margin-top:8px;color:#4ade80;font-weight:700">⭐ 完美通關</div>' : ''}
+          </div>
+          <div class="actions" style="justify-content:center">
+            <button class="btn btn-primary" onclick="Mode1.start()">🗺️ 回任務地圖</button>
+            <button class="btn btn-ghost" onclick="goHome()">🏠 主頁</button>
+          </div>
+        </div>
+      `;
+      GameFX.bigConfetti();
+      refreshHome();
+    },
+
+    gameOver() {
+      Player.heal(50);
+      const view = document.getElementById('view-play');
+      view.innerHTML = `
+        <div class="battle-arena" style="text-align:center">
+          <h1 style="color:#f87171;font-size:2rem">💀 你倒下了</h1>
+          <div style="font-size:4rem;margin:16px 0">😵</div>
+          <div class="dialogue-box">
+            <div class="dialogue-name">${this.state.boss.name}</div>
+            <div class="dialogue-text">「${RNG.pick(this.state.boss.attack)}」</div>
+          </div>
+          <p style="margin:16px 0;color:var(--fg-dim)">休息片刻後,你恢復了一半 HP...</p>
+          <div class="actions" style="justify-content:center">
+            <button class="btn btn-primary" onclick="Mode1.selectBoss('${this.state.boss.key}')">⚔️ 再戰</button>
+            <button class="btn btn-ghost" onclick="Mode1.start()">🗺️ 回地圖</button>
+          </div>
+        </div>
+      `;
     }
   };
 
