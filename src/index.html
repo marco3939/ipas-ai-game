@@ -537,11 +537,15 @@ const Wrongbook = {
 let QUESTIONS = [];
 async function loadQuestions() {
   const files = [
-    'questions.json',            // 50 題 baseline(批 1)
-    'questions-pa-code.json',    // 15 題 程式判讀(原創 + 完整 code_block)
-    'questions-pb-visual.json',  // 10 題 表格判讀(含 VGG16 完整 27 層)
-    'questions-pc-modes.json',   // 15 題 matching/sequence/calculation(遊戲模式專用)
-    'questions-pd-scenario.json' // 15 題 情境決策進化(errata + 高優先 + 跨產業)
+    'questions.json',                // 50 題 baseline(批 1)
+    'questions-pa-code.json',        // 15 題 程式判讀(原創 + 完整 code_block)
+    'questions-pb-visual.json',      // 10 題 表格判讀(VGG16 完整 39 行)
+    'questions-pc-modes.json',       // 15 題 matching/sequence/calculation
+    'questions-pd-scenario.json',    // 15 題 情境決策進化
+    'questions-pe-advanced-s1.json', // 12 題 進階 NLP/CV/GenAI/Multimodal
+    'questions-pf-advanced-s3.json', // 12 題 進階 ML 演算法選型
+    'questions-pg-eval.json',        // 13 題 進階評估/不平衡/CV/調校
+    'questions-ph-mlops.json'        // 13 題 進階 MLOps/治理/隱私
   ];
   try {
     const results = await Promise.all(
