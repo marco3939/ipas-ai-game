@@ -453,7 +453,11 @@
 
     drillThis() {
       const variations = generateVariation(this.state.currentQ, 3);
-      DrillSession.start(this.state.currentQ.node_id, variations);
+      if (!variations || variations.length === 0) {
+        showToast('⚠️ 此知識點變化型不足,繼續戰鬥', 2500);
+        return;
+      }
+      DrillSession.start(this.state.currentQ.node_id, variations, this.state.currentQ);
     },
 
     next() {
