@@ -396,21 +396,33 @@
       const e = q.explanation || {};
       const correctOpt = q.options.find(o => o.is_correct);
 
-      // 寬容查找 wrong 解釋
-      let wrongExp = '';
-      if (!isCorrect && opt) {
+      // 寬容查找任意選項的 wrong 解釋
+      const findWrongExp = (option) => {
+        let exp = '';
         if (e.wrong && typeof e.wrong === 'object') {
-          wrongExp = e.wrong[opt.text];
-          if (!wrongExp) {
+          exp = e.wrong[option.text];
+          if (!exp) {
             for (const k of Object.keys(e.wrong)) {
-              if (k && (k.includes(opt.text.substring(0, 8)) || opt.text.includes(k.substring(0, 8)))) {
-                wrongExp = e.wrong[k]; break;
+              if (k && (k.includes(option.text.substring(0, 8)) || option.text.includes(k.substring(0, 8)))) {
+                exp = e.wrong[k]; break;
               }
             }
           }
         }
-        if (!wrongExp) wrongExp = opt.trap_type ? `陷阱類型:${opt.trap_type}` : '此選項不正確,請仔細對照下方正確觀念';
-      }
+        if (!exp) exp = option.trap_type ? `陷阱類型:${option.trap_type}` : '此選項不正確';
+        return exp;
+      };
+
+      // 其他錯誤選項(不含使用者選的、不含正解)
+      const otherWrongOptions = q.options.filter(o => !o.is_correct && (!opt || o.key !== opt.key));
+      const otherAnalysis = otherWrongOptions.map(o => `
+        <div style="padding:8px 10px;margin:6px 0;background:rgba(255,255,255,0.04);border-radius:4px;border-left:3px solid #94a3b8">
+          <div style="color:#cbd5e1;font-weight:600;margin-bottom:2px">${o.key}. ${o.text}</div>
+          <div style="color:var(--fg-dim);font-size:0.875rem;line-height:1.6">└ ${findWrongExp(o)}</div>
+        </div>
+      `).join('');
+
+      const userWrongExp = !isCorrect && opt ? findWrongExp(opt) : '';
 
       const enemyTaunt = !isCorrect ? `<div class="dialogue-box" style="border-color:rgba(239,68,68,0.4)">
         <div class="dialogue-name" style="color:#f87171">${this.state.boss.name}</div>
@@ -430,7 +442,12 @@
 
           ${!isCorrect ? `<div style="background:rgba(248,113,113,0.12);border-left:4px solid #f87171;padding:12px;border-radius:6px;margin:10px 0">
             <div style="color:#f87171;font-weight:700;font-size:0.95rem;margin-bottom:4px">❌ 你選了 ${opt.key}. ${opt.text}</div>
-            <div style="color:var(--fg);line-height:1.7">${wrongExp}</div>
+            <div style="color:var(--fg);line-height:1.7">${userWrongExp}</div>
+          </div>` : ''}
+
+          ${otherAnalysis ? `<div style="background:rgba(148,163,184,0.08);border-left:4px solid #94a3b8;padding:12px;border-radius:6px;margin:10px 0">
+            <div style="color:#cbd5e1;font-weight:700;font-size:0.95rem;margin-bottom:6px">🔍 其他選項解析(為何也不是答案)</div>
+            ${otherAnalysis}
           </div>` : ''}
 
           ${e.hook ? `<div style="background:rgba(250,204,21,0.12);border-left:4px solid #facc15;padding:10px 12px;border-radius:6px;margin:10px 0">
