@@ -866,11 +866,13 @@ const DrillSession = {
   queue: [], targetNode: null, correct: 0, total: 0, originalQ: null,
   strategyEmoji: { '換角度': '🔄', '易混淆對手': '⚔️', '加深難度': '🔥', '勘誤強化': '⚠️',
     '同知識點': '📚', '同主題擴展': '🌐', '同主題綜合': '🎯', '同主題補強': '➕' },
-  start(nodeId, questions, originalQ) {
+  start(nodeId, questions, originalQ, onComplete) {
+    this.onComplete = onComplete || null; // 完成後 callback,沒則回首頁
     if (!questions || questions.length === 0) {
       showToast('⚠️ 找不到變化型題目,題庫該知識點不足。請繼續其他題目', 3500);
       setTimeout(() => {
-        if (PlayEngine.onNext) PlayEngine.onNext();
+        if (this.onComplete) this.onComplete();
+        else if (PlayEngine.onNext) PlayEngine.onNext();
       }, 1200);
       return;
     }
@@ -881,10 +883,9 @@ const DrillSession = {
   },
   next() {
     if (this.queue.length === 0) {
-      // 必須有實際做過題目才算完成,total = 0 不算
       if (this.total === 0) {
-        // 不應該發生(start 已防 0),但保險
-        if (PlayEngine.onNext) PlayEngine.onNext();
+        if (this.onComplete) this.onComplete();
+        else if (PlayEngine.onNext) PlayEngine.onNext();
         return;
       }
       Mastery.drillBonus(this.targetNode);
@@ -892,9 +893,17 @@ const DrillSession = {
       const ratio = Math.round(this.correct / this.total * 100);
       const allCorrect = this.correct === this.total;
       showToast(`${allCorrect ? '🎉' : '✓'} 下鑽完成!正答 ${this.correct}/${this.total} (${ratio}%) · 熟練度 +20%`, 3500);
-      // 只在「實際做題且全對」才放大煙火
       if (window.confetti && allCorrect && this.total > 0) GameFX.bigConfetti();
-      setTimeout(goHome, 2000);
+      // 完成後:若有 onComplete 就呼叫(回到原戰鬥),否則才回首頁
+      setTimeout(() => {
+        if (this.onComplete) {
+          const cb = this.onComplete;
+          this.onComplete = null; // 清除避免重複呼叫
+          cb();
+        } else {
+          goHome();
+        }
+      }, 2000);
       return;
     }
     const q = this.queue.shift();

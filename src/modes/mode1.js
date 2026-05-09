@@ -373,13 +373,25 @@
       if (this.state.combo === 5) { GameFX.confetti({ count: 100, colors: ['#fbbf24','#f59e0b','#ef4444'] }); showToast('🔥 5 連擊!氣勢正盛!'); }
       if (isCrit) GameFX.confetti({ count: 60, colors: ['#fb923c','#fbbf24'] });
 
-      p.mp = Math.min(p.mpMax, p.mp + 3); Player.save(p);
+      // 答對回血回藍(連擊加成)
+      const hpHeal = 5 + Math.min(this.state.combo, 5);    // 6~10 (combo 1~5+)
+      const mpHeal = 4 + Math.min(this.state.combo, 4);    // 5~8
+      const beforeHp = p.hp;
+      const beforeMp = p.mp;
+      p.hp = Math.min(p.hpMax, p.hp + hpHeal);
+      p.mp = Math.min(p.mpMax, p.mp + mpHeal);
+      Player.save(p);
+      // 顯示綠色治療數字
+      if (p.hp > beforeHp) {
+        setTimeout(() => GameFX.damageNumber(playerAv, '+' + (p.hp - beforeHp), { kind: 'player' }), 400);
+      }
       this.updateBars(); this.updateSkillTray();
     },
 
     takeDamage() {
       this.state.combo = 0; this.state.wrong++;
-      const dmg = 12 + Math.floor(this.state.bossHpMax * 0.05);
+      // 傷害下調(原 12 + 5% boss HP → 8 + 3%),避免 5 錯就 GG
+      const dmg = 8 + Math.floor(this.state.bossHpMax * 0.03);
       Player.damage(dmg);
       GameFX.flash('wrong'); GameFX.hideCombo();
       const playerAv = document.getElementById('player-avatar');
@@ -474,7 +486,11 @@
         showToast('⚠️ 此知識點變化型不足,繼續戰鬥', 2500);
         return;
       }
-      DrillSession.start(this.state.currentQ.node_id, variations, this.state.currentQ);
+      // 下鑽完成後返回戰鬥(不回首頁),繼續下一回合
+      DrillSession.start(this.state.currentQ.node_id, variations, this.state.currentQ, () => {
+        this.renderBattle();   // 重建戰鬥介面(因為 view-play 已被 DrillSession 覆蓋)
+        this.next();           // 進到下一回合
+      });
     },
 
     next() {
