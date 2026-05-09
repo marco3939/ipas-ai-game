@@ -1,0 +1,51 @@
+# Materials (copyrighted, learning use only — never commit)
+01指引/
+02歷年考題/
+03參考資料/
+
+# Defensive: catch straggler material file types anywhere in tree
+*.pdf
+*.pptx
+*.docx
+*.doc
+*.xls
+*.xlsx
+
+# Claude Code local config
+.claude/
+
+# Node / build
+node_modules/
+dist/
+build/
+.next/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs / temp
+*.log
+*.tmp
+*.bak
+
+# Secrets (defensive)
+.env
+.env.*
+*.key
+*.pem
+*-credentials.json
