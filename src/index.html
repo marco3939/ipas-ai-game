@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0f172a">
 <title>IPAS AI 中級 — 互動學習遊戲</title>
+<!-- 遊戲化 CDN(使用者已解禁) -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <style>
   :root {
     --bg: #0f172a; --bg-2: #1e293b; --bg-3: #334155;
@@ -183,6 +186,112 @@
 
   .loading { text-align: center; padding: 40px; color: var(--fg-dim); }
   .empty { text-align: center; padding: 40px; color: var(--fg-mute); }
+
+  /* === 遊戲化通用樣式(Phase C)=== */
+  .battle-arena { background: linear-gradient(135deg, #1e1b4b, #4c1d95, #831843);
+    border-radius: var(--radius); padding: 20px; margin-bottom: 16px; position: relative; overflow: hidden;
+    box-shadow: 0 0 40px rgba(168,85,247,0.3); }
+  .battle-arena::before { content: ''; position: absolute; inset: 0; background:
+    radial-gradient(ellipse at top, rgba(255,255,255,0.1), transparent 70%);
+    pointer-events: none; }
+  .player-bar, .enemy-bar { display: flex; gap: 12px; align-items: center; padding: 8px;
+    background: rgba(0,0,0,0.4); border-radius: var(--radius-sm); margin-bottom: 8px; position: relative; z-index: 1; }
+  .avatar { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg,#1e293b,#475569);
+    display: flex; align-items: center; justify-content: center; font-size: 2rem; flex-shrink: 0;
+    box-shadow: 0 0 20px rgba(56,189,248,0.4); }
+  .avatar.boss { background: linear-gradient(135deg, #7f1d1d, #991b1b); box-shadow: 0 0 20px rgba(239,68,68,0.4); }
+  .avatar.taking-damage { animation: shake 0.4s; }
+  .avatar.attacking { animation: attack 0.5s; }
+  @keyframes attack { 0%,100% { transform: translateX(0); } 50% { transform: translateX(20px) scale(1.1); } }
+  .bar-info { flex: 1; }
+  .bar-name { font-weight: 700; font-size: 0.95rem; }
+  .bar-name .level { background: var(--primary); color: var(--primary-fg); padding: 1px 6px;
+    border-radius: 4px; font-size: 0.75rem; margin-right: 6px; }
+  .hp-track { height: 14px; background: rgba(0,0,0,0.5); border-radius: 7px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1); }
+  .hp-fill { height: 100%; background: linear-gradient(90deg, #4ade80, #22c55e); transition: width 0.6s cubic-bezier(.4,0,.2,1); }
+  .hp-fill.low { background: linear-gradient(90deg, #facc15, #f59e0b); }
+  .hp-fill.critical { background: linear-gradient(90deg, #ef4444, #b91c1c); animation: pulseHP 1s infinite; }
+  @keyframes pulseHP { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+  .hp-text { font-size: 0.8rem; color: var(--fg-dim); margin-top: 2px; }
+
+  /* 傷害數字飛出 */
+  .damage-num { position: absolute; font-size: 2rem; font-weight: 900; pointer-events: none;
+    text-shadow: 0 0 12px currentColor; z-index: 100; }
+  .damage-num.player { color: #fbbf24; }
+  .damage-num.enemy { color: #f87171; }
+  .damage-num.crit { font-size: 3rem; color: #fb923c; }
+
+  /* Combo 連擊 */
+  .combo-display { position: fixed; top: 80px; right: 16px; padding: 8px 16px;
+    background: linear-gradient(135deg, #f59e0b, #ef4444); border-radius: var(--radius);
+    font-weight: 800; color: white; box-shadow: 0 0 20px rgba(251,146,60,0.6);
+    z-index: 200; opacity: 0; pointer-events: none; }
+  .combo-display.show { opacity: 1; }
+  .combo-display .combo-num { font-size: 1.5rem; }
+
+  /* 對話框 */
+  .dialogue-box { background: rgba(15,23,42,0.85); border: 2px solid rgba(56,189,248,0.4);
+    border-radius: var(--radius); padding: 16px; margin: 12px 0; backdrop-filter: blur(8px);
+    position: relative; }
+  .dialogue-box::before { content: ''; position: absolute; left: 24px; top: -10px;
+    width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent;
+    border-bottom: 10px solid rgba(56,189,248,0.4); }
+  .dialogue-name { color: var(--primary); font-weight: 700; margin-bottom: 6px; font-size: 0.95rem; }
+  .dialogue-text { line-height: 1.7; }
+
+  /* 視覺資料表格(VGG16 等) */
+  .data-table { width: 100%; border-collapse: collapse; margin: 12px 0;
+    background: var(--bg-3); border-radius: var(--radius-sm); overflow: hidden;
+    font-family: monospace; font-size: 0.8rem; }
+  .data-table th { background: var(--bg-2); padding: 8px; text-align: left;
+    border-bottom: 2px solid var(--primary); color: var(--primary); position: sticky; top: 0; }
+  .data-table td { padding: 6px 8px; border-bottom: 1px solid var(--border); }
+  .data-table tr:hover { background: rgba(56,189,248,0.05); }
+  .data-table .highlight { color: var(--warn); font-weight: 700; }
+
+  /* 程式碼語法高亮 */
+  .code-syntax { background: #0a0e1a; color: #cdd6f4; padding: 16px; border-radius: var(--radius-sm);
+    font-family: 'Cascadia Code', 'JetBrains Mono', Consolas, monospace; font-size: 0.85rem;
+    overflow-x: auto; line-height: 1.6; border-left: 4px solid var(--primary); }
+  .code-syntax .kw { color: #cba6f7; font-weight: 600; } /* keyword */
+  .code-syntax .str { color: #a6e3a1; } /* string */
+  .code-syntax .num { color: #fab387; } /* number */
+  .code-syntax .com { color: #6c7086; font-style: italic; } /* comment */
+  .code-syntax .fn { color: #89b4fa; } /* function */
+  .code-syntax .ty { color: #f9e2af; } /* type */
+
+  /* 技能 / 等級 */
+  .skill-tray { display: flex; gap: 8px; padding: 8px; background: var(--bg-2);
+    border-radius: var(--radius-sm); margin-bottom: 12px; flex-wrap: wrap; }
+  .skill-btn { padding: 8px 12px; background: var(--bg-3); border: 2px solid var(--border);
+    border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s; font-size: 0.875rem; }
+  .skill-btn:hover:not(:disabled) { border-color: var(--warn); transform: translateY(-2px); }
+  .skill-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .skill-cost { color: var(--warn); font-size: 0.75rem; }
+
+  /* 升級 + 過場 */
+  .level-up { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex;
+    align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(4px); }
+  .level-up-card { background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: #422006; padding: 32px; border-radius: var(--radius); text-align: center;
+    box-shadow: 0 0 80px rgba(251,191,36,0.6); transform: scale(0); }
+  .level-up-card h1 { font-size: 2rem; margin-bottom: 8px; }
+
+  /* 入場動畫 */
+  @keyframes slideInBattle { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .battle-arena { animation: slideInBattle 0.5s; }
+
+  /* 視覺資料區塊 */
+  .visual-data { margin: 12px 0; }
+  .visual-data-title { font-size: 0.85rem; color: var(--fg-dim); margin-bottom: 6px; }
+
+  /* 答對 / 答錯 全螢幕閃光 */
+  .flash-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 5000;
+    opacity: 0; transition: opacity 0.3s; }
+  .flash-overlay.correct { background: radial-gradient(ellipse at center, rgba(74,222,128,0.4), transparent 70%); }
+  .flash-overlay.wrong { background: radial-gradient(ellipse at center, rgba(248,113,113,0.4), transparent 70%); }
+  .flash-overlay.show { opacity: 1; }
 </style>
 </head>
 <body>
@@ -747,17 +856,147 @@ const Mode4 = {
 // 注意:Mode1/2/3/5 由 modes/*.js 動態載入後寫入 window.ModeN
 // enterMode() 動態查找 window.ModeN,避免 const 綁定 placeholder 的時序問題
 
+// === 遊戲化共用引擎(Phase C)===
+const GameFX = {
+  flash(kind = 'correct') {
+    const el = document.createElement('div');
+    el.className = `flash-overlay ${kind}`;
+    document.body.appendChild(el);
+    requestAnimationFrame(() => el.classList.add('show'));
+    setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 300); }, 300);
+  },
+  damageNumber(targetEl, amount, opts = {}) {
+    if (!targetEl) return;
+    const r = targetEl.getBoundingClientRect();
+    const num = document.createElement('div');
+    num.className = `damage-num ${opts.kind || 'enemy'}${opts.crit ? ' crit' : ''}`;
+    num.textContent = (opts.crit ? '💥 ' : '-') + amount;
+    num.style.left = (r.left + r.width/2) + 'px';
+    num.style.top = (r.top + 20) + 'px';
+    document.body.appendChild(num);
+    if (window.gsap) {
+      gsap.fromTo(num, { y: 0, opacity: 1, scale: 0.5 },
+        { y: -80, opacity: 0, scale: opts.crit ? 2 : 1.4, duration: 1.2, ease: 'power2.out',
+          onComplete: () => num.remove() });
+    } else { setTimeout(() => num.remove(), 1200); }
+  },
+  shake(el) { if (!el) return; el.classList.add('taking-damage'); setTimeout(() => el.classList.remove('taking-damage'), 400); },
+  attackAnim(el) { if (!el) return; el.classList.add('attacking'); setTimeout(() => el.classList.remove('attacking'), 500); },
+  confetti(opts = {}) {
+    if (!window.confetti) return;
+    confetti({ particleCount: opts.count || 60, spread: 70, origin: { y: 0.6 }, ...opts });
+  },
+  bigConfetti() {
+    if (!window.confetti) return;
+    confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
+    setTimeout(() => confetti({ particleCount: 100, angle: 60, spread: 55, origin: { x: 0 } }), 250);
+    setTimeout(() => confetti({ particleCount: 100, angle: 120, spread: 55, origin: { x: 1 } }), 500);
+  },
+  combo(n) {
+    let el = document.querySelector('.combo-display');
+    if (!el) { el = document.createElement('div'); el.className = 'combo-display'; document.body.appendChild(el); }
+    el.innerHTML = `🔥 <span class="combo-num">${n}</span> COMBO!`;
+    el.classList.add('show');
+    if (window.gsap) {
+      gsap.fromTo(el, { scale: 0.5, x: 50 }, { scale: 1, x: 0, duration: 0.4, ease: 'back.out(2)' });
+    }
+    clearTimeout(this._comboTimer);
+    this._comboTimer = setTimeout(() => el.classList.remove('show'), 1800);
+  },
+  hideCombo() { const el = document.querySelector('.combo-display'); if (el) el.classList.remove('show'); },
+  levelUp(newLevel) {
+    const overlay = document.createElement('div');
+    overlay.className = 'level-up';
+    overlay.innerHTML = `<div class="level-up-card">
+      <h1>⭐ LEVEL UP!</h1>
+      <div style="font-size:3rem;font-weight:900">Lv. ${newLevel}</div>
+      <div style="margin-top:8px">獲得 1 個技能點</div>
+      <button class="btn btn-primary" style="margin-top:16px;background:#422006;color:#fef3c7" onclick="this.closest('.level-up').remove()">繼續</button>
+    </div>`;
+    document.body.appendChild(overlay);
+    const card = overlay.querySelector('.level-up-card');
+    if (window.gsap) gsap.to(card, { scale: 1, duration: 0.6, ease: 'back.out(1.7)' });
+    else card.style.transform = 'scale(1)';
+    this.bigConfetti();
+  }
+};
+
+// === 渲染視覺資料(表格 / 程式碼語法高亮)===
+function renderVisualData(q) {
+  if (!q) return '';
+  let html = '';
+  // 表格資料
+  if (q.table_data && Array.isArray(q.table_data) && q.table_data.length > 0) {
+    const headers = q.table_columns || Object.keys(q.table_data[0]);
+    html += '<div class="visual-data"><div class="visual-data-title">📊 資料表格</div><table class="data-table"><thead><tr>';
+    headers.forEach(h => html += `<th>${h}</th>`);
+    html += '</tr></thead><tbody>';
+    q.table_data.forEach(row => {
+      html += '<tr>';
+      headers.forEach(h => {
+        const v = row[h];
+        const cls = (q.highlight_cells && q.highlight_cells.includes(`${row[headers[0]]}|${h}`)) ? 'highlight' : '';
+        html += `<td class="${cls}">${v != null ? v : ''}</td>`;
+      });
+      html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+  }
+  // 圖表資料(SVG bar chart)
+  if (q.chart_data && q.chart_data.type === 'bar') {
+    const max = Math.max(...q.chart_data.values);
+    html += '<div class="visual-data"><div class="visual-data-title">📈 圖表</div><svg viewBox="0 0 400 200" style="width:100%;background:var(--bg-3);border-radius:var(--radius-sm);padding:12px">';
+    q.chart_data.values.forEach((v, i) => {
+      const h = (v / max) * 140;
+      const x = 30 + i * 50;
+      html += `<rect x="${x}" y="${180 - h}" width="40" height="${h}" fill="var(--primary)" />`;
+      html += `<text x="${x + 20}" y="195" text-anchor="middle" fill="var(--fg-dim)" font-size="10">${q.chart_data.labels[i]}</text>`;
+      html += `<text x="${x + 20}" y="${175 - h}" text-anchor="middle" fill="var(--fg)" font-size="11">${v}</text>`;
+    });
+    html += '</svg></div>';
+  }
+  return html;
+}
+
+// === Player 系統 ===
+const Player = {
+  load() {
+    return Storage.get('ipas_player_v1', { hp: 100, hpMax: 100, mp: 50, mpMax: 50,
+      level: 1, exp: 0, expMax: 100, skillPoints: 0,
+      stats: { analysis: 5, planning: 5, decision: 5, technical: 5 },
+      skills: { hint: false, eliminate: false, double: false } });
+  },
+  save(p) { Storage.set('ipas_player_v1', p); },
+  damage(amt) { const p = this.load(); p.hp = Math.max(0, p.hp - amt); this.save(p); return p.hp; },
+  heal(amt) { const p = this.load(); p.hp = Math.min(p.hpMax, p.hp + amt); this.save(p); return p.hp; },
+  gainExp(amt) {
+    const p = this.load();
+    p.exp += amt;
+    while (p.exp >= p.expMax) {
+      p.exp -= p.expMax; p.level++; p.skillPoints++;
+      p.expMax = Math.floor(p.expMax * 1.5);
+      p.hpMax += 20; p.hp = p.hpMax; p.mpMax += 10; p.mp = p.mpMax;
+      GameFX.levelUp(p.level);
+    }
+    this.save(p);
+    return p;
+  },
+  reset() { Storage.del('ipas_player_v1'); }
+};
+
 // === 啟動 ===
 (async function() {
   Progress.init();
   await loadQuestions();
-  // 動態載入 mode 模組(若存在)
-  ['mode1', 'mode2', 'mode3', 'mode5'].forEach(name => {
-    const s = document.createElement('script');
-    s.src = `modes/${name}.js`;
-    s.onerror = () => console.log(`${name}.js 尚未實作`);
-    document.head.appendChild(s);
-  });
+  // 動態載入 mode 模組
+  for (const name of ['mode1', 'mode2', 'mode3', 'mode5']) {
+    await new Promise((res) => {
+      const s = document.createElement('script');
+      s.src = `modes/${name}.js`;
+      s.onload = res; s.onerror = () => { console.warn(`${name}.js 載入失敗`); res(); };
+      document.head.appendChild(s);
+    });
+  }
   refreshHome();
 })();
 </script>
