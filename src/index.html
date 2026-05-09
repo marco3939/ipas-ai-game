@@ -561,6 +561,7 @@ async function loadQuestions() {
                               .catch(() => ({ questions: [] })))
     );
     QUESTIONS = results.flatMap(r => r.questions || []);
+    window.QUESTIONS = QUESTIONS; // sync to window for dynamically-loaded mode scripts (mode3/mode4 read window.QUESTIONS)
     document.getElementById('stat-total').textContent = QUESTIONS.length;
     console.log(`已載入 ${QUESTIONS.length} 題,來自 ${files.length} 個題庫檔`);
     return QUESTIONS;

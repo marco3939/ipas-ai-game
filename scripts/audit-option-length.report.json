@@ -1,68 +1,11 @@
 {
   "summary": {
     "total": 264,
-    "longestPct": "43.6",
+    "longestPct": "43.2",
     "shortestPct": "8.3",
     "avgRatio": "1.06",
-    "acceptablePct": "97.3",
-    "flaggedCount": 4
+    "acceptablePct": "98.9",
+    "flaggedCount": 0
   },
-  "flagged": [
-    {
-      "file": "questions-batch-n7-dl.json",
-      "id": "q_n7_dl_013",
-      "stem": "資料科學家準備訓練 KNN 分類模型,輸入特徵包含『年齡(20~80)』與『年收入(萬元 30~3000)』兩個尺度差異",
-      "correctText": "KNN 使用距離度量,大尺度特徵會主導距離計算,必須做特徵縮放(StandardScaler 或 MinMaxScaler)讓各特徵尺度一致避免主導現象",
-      "correctLen": 76,
-      "avgWrongLen": "55.3",
-      "ratio": "1.37",
-      "wrongLens": [
-        55,
-        56,
-        55
-      ]
-    },
-    {
-      "file": "questions-batch-n7-dl.json",
-      "id": "q_n7_dl_021",
-      "stem": "某資料科學新人在學完模型流程後,提出『模型選擇』與『超參數調校』兩個概念區分。下列哪一項最符合中級教材對兩者的明確界定?",
-      "correctText": "模型選擇指決定『使用哪一種演算法架構』(如邏輯迴歸 vs 隨機森林);超參數調校指『同一模型內的參數設定值』(如 RF 樹數量與 max_depth 等)",
-      "correctLen": 77,
-      "avgWrongLen": "58.3",
-      "ratio": "1.32",
-      "wrongLens": [
-        57,
-        62,
-        56
-      ]
-    },
-    {
-      "file": "questions-batch-n7-dl.json",
-      "id": "q_n7_dl_023",
-      "stem": "某資料工程師訓練一個 5 層神經網路,訓練前需要設定『超參數』與了解『參數』的差異。下列哪一項對『超參數 vs 參數』的",
-      "correctText": "超參數是訓練前人為決定的設定(如 learning_rate、batch_size、layers);參數是訓練中由梯度下降自動學習取得(如各層權重 W 與偏置 ",
-      "correctLen": 82,
-      "avgWrongLen": "61.7",
-      "ratio": "1.33",
-      "wrongLens": [
-        68,
-        59,
-        58
-      ]
-    },
-    {
-      "file": "questions-batch-n7-dl.json",
-      "id": "q_n7_dl_025",
-      "stem": "某金融機構研究團隊收到三種不同性質的資料:(A)歷史貸款資料 1 萬筆 + 25 個結構化特徵 + 二元違約標籤(B)客",
-      "correctText": "(A)邏輯迴歸/隨機森林/XGBoost 調樹深;(B)K-means/DBSCAN 調 K 或 ε+MinPts;(C)LSTM/Transformer 調 ",
-      "correctLen": 97,
-      "avgWrongLen": "72.7",
-      "ratio": "1.33",
-      "wrongLens": [
-        72,
-        83,
-        63
-      ]
-    }
-  ]
+  "flagged": []
 }
