@@ -561,13 +561,30 @@ async function loadQuestions() {
   }
 }
 
-// === Variation 鐵律 #1 結構化下鑽(換角度 + 易混淆 + 加深難度)===
+// === Variation 鐵律 #1 嚴格結構化下鑽(寧少勿濫,保緊扣性)===
 function generateVariation(originalQ, count = 3) {
-  const candidates = QUESTIONS.filter(q => q.id !== originalQ.id); // **絕不包含原題**
+  const candidates = QUESTIONS.filter(q => q.id !== originalQ.id); // 排除原題
   const sameNode = candidates.filter(q => q.node_id === originalQ.node_id);
   const relatedIds = originalQ.related_node_ids || [];
   const relatedNode = candidates.filter(q => relatedIds.includes(q.node_id) && q.node_id !== originalQ.node_id);
-  const sameCode = candidates.filter(q => q.knowledge_code === originalQ.knowledge_code && !sameNode.includes(q) && !relatedNode.includes(q));
+
+  // 上層題的關鍵詞(從 hook + tags + misconceptions 提取),用來篩選同主題下「真有關聯」的題
+  const upperKeywords = new Set();
+  const addKw = (s) => { if (!s) return; (s + '').split(/[\s,、。()()「」/]/).forEach(w => { if (w.length >= 2) upperKeywords.add(w); }); };
+  addKw(originalQ.explanation?.hook);
+  (originalQ.tags || []).forEach(addKw);
+  (originalQ.misconceptions || []).forEach(addKw);
+
+  // sameCode 僅取「關鍵詞至少 2 個重疊」的題目(避免跨度過大)
+  const sameCodeFiltered = candidates.filter(q => {
+    if (q.knowledge_code !== originalQ.knowledge_code) return false;
+    if (sameNode.includes(q) || relatedNode.includes(q)) return false;
+    let hits = 0;
+    const text = ((q.explanation?.hook || '') + ' ' + (q.tags || []).join(' ') + ' ' + (q.misconceptions || []).join(' '));
+    upperKeywords.forEach(kw => { if (text.includes(kw)) hits++; });
+    return hits >= 2;
+  });
+
   const diffOrder = { easy: 0, medium: 1, hard: 2 };
   const harderThan = (level) => (q) => (diffOrder[q.difficulty] ?? 1) > (diffOrder[level] ?? 1);
 
@@ -581,36 +598,25 @@ function generateVariation(originalQ, count = 3) {
     return true;
   };
 
-  // 變化 1:換角度(同 node_id 不同 format)
+  // 變化 1:換角度(嚴格同 node_id,優先換 format)
   const diffFormat = sameNode.filter(q => q.format !== originalQ.format);
-  if (!addPick(RNG.pick(diffFormat), '換角度')) {
-    addPick(RNG.pick(sameNode), '同知識點');
-  }
+  if (!addPick(RNG.pick(diffFormat), '換角度')) addPick(RNG.pick(sameNode), '同知識點');
 
-  // 變化 2:易混淆對手(related_node_ids)
+  // 變化 2:易混淆(嚴格 related_node_ids)
   if (!addPick(RNG.pick(relatedNode.filter(q => !used.has(q.id))), '易混淆對手')) {
-    addPick(RNG.pick(sameCode.filter(q => !used.has(q.id))), '同主題擴展');
+    // 退而求次:同 node_id 還有題就再選
+    const moreSame = sameNode.filter(q => !used.has(q.id));
+    addPick(RNG.pick(moreSame), '同知識點再深入');
   }
 
-  // 變化 3:加深難度(同主題的 hard 題)
-  const harderPool = [...sameNode, ...relatedNode, ...sameCode]
-    .filter(q => !used.has(q.id) && harderThan(originalQ.difficulty || 'medium')(q));
-  if (!addPick(RNG.pick(harderPool), '加深難度')) {
-    // 若無更難,選 errata_critical 或 must_cover 的題
-    const critical = [...sameNode, ...relatedNode, ...sameCode]
-      .filter(q => !used.has(q.id) && (q.errata_critical || q.must_cover));
-    if (!addPick(RNG.pick(critical), '勘誤強化')) {
-      addPick(RNG.pick([...sameNode, ...relatedNode, ...sameCode].filter(q => !used.has(q.id))), '同主題綜合');
-    }
+  // 變化 3:加深難度(同 node_id 或 related 的 hard)
+  const harder = [...sameNode, ...relatedNode].filter(q => !used.has(q.id) && harderThan(originalQ.difficulty || 'medium')(q));
+  if (!addPick(RNG.pick(harder), '加深難度')) {
+    // 退而求次:sameCodeFiltered(必須關鍵詞重疊 ≥ 2)
+    addPick(RNG.pick(sameCodeFiltered.filter(q => !used.has(q.id))), '同主題延伸');
   }
 
-  // 補足
-  while (result.length < count) {
-    const remaining = [...sameNode, ...relatedNode, ...sameCode].filter(q => !used.has(q.id));
-    if (remaining.length === 0) break;
-    addPick(RNG.pick(remaining), '同主題補強');
-  }
-
+  // 不再硬補 sameCode 不相關題目!寧少勿濫
   return result.map(q => {
     const rendered = renderQuestion(q);
     rendered._drillStrategy = q._drillStrategy;
@@ -807,18 +813,29 @@ const DrillSession = {
     const strategy = q._drillStrategy || '同主題';
     const emoji = this.strategyEmoji[strategy] || '🎯';
     const stepNum = this.total - this.queue.length;
+    const strategyDesc = {
+      '換角度': '同一知識點換不同形式呈現,測試是否真懂概念',
+      '易混淆對手': '從相關易混淆知識點挑題,訓練辨別能力',
+      '加深難度': '更難的陷阱題,挑戰細節掌握',
+      '勘誤強化': '官方勘誤關鍵點,絕不能漏',
+      '同知識點': '同一知識點不同題目,鞏固記憶',
+      '同知識點再深入': '同一知識點再深入測試',
+      '同主題延伸': '同主題關鍵詞重疊的延伸題'
+    };
+    // 上層題核心摘要(讓使用者看到「下鑽是針對什麼概念」)
+    const upperHook = (this.originalQ && this.originalQ.explanation && this.originalQ.explanation.hook) || '';
+    const upperMiscon = (this.originalQ && this.originalQ.misconceptions || []).slice(0, 1).join(' / ');
+    const upperCode = (this.originalQ && this.originalQ.knowledge_code) || '';
     const ctx = `<div class="boss-bar" style="background:linear-gradient(90deg,#ef4444,#f59e0b)">
       <div class="boss-name">${emoji} 下鑽訓練 ${stepNum}/${this.total} — 策略:<strong style="color:#fef3c7">${strategy}</strong></div>
-      <div style="font-size:0.85rem;color:rgba(255,255,255,0.8);margin-top:4px">
-        ${strategy === '換角度' ? '同一知識點換不同形式呈現,測試你是否真懂概念' : ''}
-        ${strategy === '易混淆對手' ? '從相關易混淆知識點挑題,訓練辨別能力' : ''}
-        ${strategy === '加深難度' ? '更難的陷阱題,挑戰你對細節的掌握' : ''}
-        ${strategy === '勘誤強化' ? '官方勘誤關鍵點,絕不能漏' : ''}
-        ${strategy === '同知識點' ? '同一知識點不同題目,鞏固記憶' : ''}
-        ${strategy === '同主題擴展' ? '相同知識編碼下的其他角度' : ''}
-        ${strategy === '同主題綜合' ? '同主題下的綜合應用' : ''}
-        ${strategy === '同主題補強' ? '主題內補強訓練' : ''}
+      <div style="font-size:0.85rem;color:rgba(255,255,255,0.85);margin-top:6px">
+        ${strategyDesc[strategy] || ''}
       </div>
+      ${upperHook || upperMiscon ? `<div style="margin-top:8px;padding:8px;background:rgba(0,0,0,0.25);border-radius:6px;border-left:3px solid #fef3c7">
+        <div style="font-size:0.75rem;color:#fef3c7;font-weight:700">📌 上層題核心(${upperCode})</div>
+        ${upperHook ? `<div style="font-size:0.85rem;color:white;margin-top:2px">💡 ${upperHook}</div>` : ''}
+        ${upperMiscon ? `<div style="font-size:0.8rem;color:rgba(255,255,255,0.8);margin-top:2px">⚠️ 易錯:${upperMiscon}</div>` : ''}
+      </div>` : ''}
     </div>`;
     PlayEngine.show(q, { contextHTML: ctx });
     PlayEngine.onNext = () => {
