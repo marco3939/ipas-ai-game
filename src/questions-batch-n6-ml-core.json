@@ -1,0 +1,750 @@
+{
+  "version": "1.0",
+  "schema_version": "iron-rule-1+2",
+  "generated_at": "2026-05-10",
+  "batch": "N6 — ML 數學基礎 + 演算法核心(L23101/L23102/L23103/L23201/L23202)",
+  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "iron_rule_compliance": {
+    "rule_1": "every question has explanation.correct + explanation.wrong + explanation.hook + misconceptions",
+    "rule_2": "shuffle_options=true on every item; calculation items carry stem_variables / options_template multi-case",
+    "rule_3": "all stems and contexts are original cross-industry scenarios (not directly from official PDFs)",
+    "rule_4": "option length ratio between 0.85 and 1.20",
+    "rule_5": "knowledge_code only one of L23101/L23102/L23103/L23201/L23202; node_id must appear in scripts/kb-allowed-nodes.json"
+  },
+  "distribution": {
+    "L23101_count": 4,
+    "L23102_count": 4,
+    "L23103_count": 4,
+    "L23201_count": 4,
+    "L23202_count": 6,
+    "by_format": {"single_choice_text": 13, "single_choice_scenario": 5, "calculation": 4},
+    "by_difficulty": {"easy": 5, "medium": 12, "hard": 5}
+  },
+  "questions": [
+    {
+      "id": "q_n6_001",
+      "knowledge_code": "L23101",
+      "node_id": "n_L23101_001",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "在貝氏定理 P(A|B) = P(B|A)·P(A)/P(B) 中,將 P(A) 稱為下列何者最為精確?",
+      "options": [
+        {"text": "事件 A 在觀察到任何證據 B 之前所擁有的先驗機率(Prior Probability)", "is_correct": true},
+        {"text": "事件 A 在已知證據 B 條件下發生的後驗機率(Posterior Probability)", "is_correct": false, "trap_type": "與後驗 P(A|B) 混淆"},
+        {"text": "證據 B 在所有可能假設下出現的邊際全機率(Marginal Probability)", "is_correct": false, "trap_type": "為分母 P(B) 邊際機率"},
+        {"text": "在事件 A 已成立的條件下,證據 B 出現的條件概似機率(Likelihood)", "is_correct": false, "trap_type": "為 P(B|A) 概似"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "貝氏定理中 P(A) 為先驗機率(Prior),代表在觀察到任何證據 B 之前,我們對事件 A 發生機率的初始信念。觀察到證據後更新得到後驗 P(A|B)",
+        "wrong": {
+          "事件 A 在已知證據 B 條件下的後驗機率(Posterior Probability)": "這是 P(A|B),為更新後的後驗,非先驗",
+          "證據 B 出現在所有可能假設下的全機率邊際分佈值": "這是分母 P(B) 邊際機率,扮演正規化因子",
+          "在事件 A 已成立之下,證據 B 出現的概似機率": "這是 P(B|A),稱為概似(Likelihood)"
+        },
+        "hook": "口訣四角色:Prior P(A) / Likelihood P(B|A) / Marginal P(B) / Posterior P(A|B);後驗 = 先驗 × 概似 ÷ 邊際"
+      },
+      "misconceptions": ["把先驗 P(A) 與後驗 P(A|B) 互調", "把 P(B) 當作概似而非邊際機率"],
+      "related_node_ids": ["n_L23101_002"],
+      "tags": ["機率", "貝氏", "定義"]
+    },
+    {
+      "id": "q_n6_002",
+      "knowledge_code": "L23101",
+      "node_id": "n_L23101_001",
+      "subject": 3,
+      "format": "calculation",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某倉儲安防 AI 偵測『包裹遭撬』之事件:背景發生率 P(撬) = {prior};若真實遭撬,警報觸發機率 P(警|撬) = {tpr};若未遭撬,系統誤報率 P(警|未撬) = {fpr}。當警報響起時,實際遭撬的後驗機率約為多少?(取小數第 3 位)",
+      "stem_variables": {
+        "case_a": {"prior": "0.01", "tpr": "0.95", "fpr": "0.05", "answer": "0.161"},
+        "case_b": {"prior": "0.02", "tpr": "0.90", "fpr": "0.10", "answer": "0.155"},
+        "case_c": {"prior": "0.05", "tpr": "0.80", "fpr": "0.10", "answer": "0.296"}
+      },
+      "options_template": {
+        "case_a": [
+          {"text": "0.161", "is_correct": true},
+          {"text": "0.950", "is_correct": false, "trap_type": "誤把 P(警|撬) 當後驗"},
+          {"text": "0.475", "is_correct": false, "trap_type": "誤算分母用簡單平均"},
+          {"text": "0.050", "is_correct": false, "trap_type": "誤把 FPR 當後驗"}
+        ],
+        "case_b": [
+          {"text": "0.155", "is_correct": true},
+          {"text": "0.900", "is_correct": false, "trap_type": "誤把概似當後驗"},
+          {"text": "0.450", "is_correct": false, "trap_type": "分母誤算"},
+          {"text": "0.020", "is_correct": false, "trap_type": "誤把先驗當後驗"}
+        ],
+        "case_c": [
+          {"text": "0.296", "is_correct": true},
+          {"text": "0.800", "is_correct": false, "trap_type": "誤把 TPR 當後驗"},
+          {"text": "0.500", "is_correct": false, "trap_type": "未考慮先驗"},
+          {"text": "0.050", "is_correct": false, "trap_type": "與 FPR 混淆"}
+        ]
+      },
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "P(撬|警) = P(警|撬)·P(撬) / [P(警|撬)·P(撬) + P(警|未撬)·P(未撬)] = {tpr}·{prior} / [{tpr}·{prior} + {fpr}·(1-{prior})] = {answer}",
+        "wrong": {
+          "0.950": "此為條件概似 P(警|撬) 並非後驗 P(撬|警),兩者方向相反",
+          "0.475": "誤把分母當作 (TPR + FPR) / 2,未做先驗加權"
+        },
+        "hook": "Base Rate Fallacy:即使警報靈敏度 95%,因事件本身罕見(先驗低),警響後實際發生率仍偏低。先驗很重要"
+      },
+      "misconceptions": ["忽略先驗(Base Rate Fallacy)", "把概似 P(B|A) 當後驗 P(A|B)"],
+      "related_node_ids": ["n_L23101_002"],
+      "tags": ["機率", "貝氏", "計算"]
+    },
+    {
+      "id": "q_n6_003",
+      "knowledge_code": "L23101",
+      "node_id": "n_L23101_002",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某再保險公司估算颱風單一年度賠付額分佈,因損失模型存在多個非線性關卡與情境參數,難以解析積分。下列何者為最適合估算其分佈與風險區間的數值方法?",
+      "options": [
+        {"text": "Monte Carlo 蒙地卡羅模擬,以大量隨機抽樣逼近輸出分佈與尾端風險區間值", "is_correct": true},
+        {"text": "K-means 分群演算法,依歷史颱風損失自動分群並估算群心代表值與其變異區", "is_correct": false, "trap_type": "K-means 為分群非估分佈"},
+        {"text": "梯度下降演算法,逐步逼近損失函數最小值,藉此估出年度賠付期望總損失值", "is_correct": false, "trap_type": "GD 用於最佳化非機率估計"},
+        {"text": "PCA 降維演算法,把多維風險因子壓縮為一維特徵後,再估算對應分佈區間值", "is_correct": false, "trap_type": "降維非分佈估計"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Monte Carlo 對複雜非解析模型最有效:以大量隨機樣本模擬輸出分佈,可估期望值、信賴區間、VaR、CVaR 等尾端風險指標",
+        "wrong": {
+          "K-means 演算法,依據歷史颱風損失額自動分群並估算群心": "K-means 屬聚類,只能找質心位置,無法給出整體機率分佈",
+          "梯度下降演算法,逐步逼近損失函數最小值來估期望值": "梯度下降為最佳化方法,目標是找參數,並非估計輸出機率分佈",
+          "PCA 降維演算法,把多維風險因子壓縮成一維後再估算": "PCA 為降維,維度減少後仍需配合其他方法估分佈"
+        },
+        "hook": "Monte Carlo 三步:抽樣 → 套入模型 → 統計分佈;適用無解析解的高隨機性問題"
+      },
+      "misconceptions": ["把 Monte Carlo 當聚類方法", "誤以為一定要解析公式才能估期望值"],
+      "related_node_ids": ["n_L23101_001"],
+      "tags": ["機率", "Monte Carlo", "情境"]
+    },
+    {
+      "id": "q_n6_004",
+      "knowledge_code": "L23101",
+      "node_id": "n_L23101_003",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某連鎖餐飲業者每日訂單量極度右偏(少數巨額訂單拉長尾),欲對『日均訂單金額』之長期分佈進行統計推論。下列敘述何者最為正確?",
+      "options": [
+        {"text": "依中央極限定理,只要每日樣本數 n 夠大,日均值的抽樣分佈會趨近常態,即使母體偏態亦可推論", "is_correct": true},
+        {"text": "因母體本身為右偏分佈,中央極限定理完全失效,任何均值推論皆不能使用常態近似來建立區間", "is_correct": false, "trap_type": "誤判 CLT 適用條件"},
+        {"text": "中央極限定理描述的是母體分佈本身,當原始日訂單值蒐集量夠大,母體本身會自動收斂為常態", "is_correct": false, "trap_type": "CLT 描述均值非原始資料"},
+        {"text": "中央極限定理需要母體變異數無限大才能成立,因此重尾分佈下均值與母體一樣不趨近常態分佈", "is_correct": false, "trap_type": "杜撰條件"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "CLT 條件:獨立同分佈、母體變異數有限,則樣本均值的抽樣分佈在 n 大時趨近常態。重點是『樣本均值』分佈,不是原始資料分佈;母體偏態仍可成立",
+        "wrong": {
+          "因母體本身為右偏分佈,中央極限定理完全失效,任何均值推論皆不可使用常態近似": "母體偏態並不阻擋 CLT,只要 n 足夠大,均值仍趨近常態",
+          "中央極限定理只描述母體分佈本身,當原始日訂單值大量蒐集後,母體本身會直接收斂為常態": "母體分佈固定不變,趨近常態的是『樣本均值的抽樣分佈』",
+          "中央極限定理需要母體變異數無限大才成立,因此重尾分佈下均值與母體一樣不會趨近常態": "事實相反,CLT 需要『有限變異數』,且重尾若有限變異仍可成立"
+        },
+        "hook": "CLT 三件事:(1)講樣本均值不是原始資料(2)需 IID + 變異數有限(3)母體可偏態"
+      },
+      "misconceptions": ["以為 CLT 講的是原始資料分佈", "認為母體偏態 CLT 必失效"],
+      "related_node_ids": ["n_L23101_001"],
+      "tags": ["機率", "CLT", "統計推論"]
+    },
+    {
+      "id": "q_n6_005",
+      "knowledge_code": "L23102",
+      "node_id": "n_L23102_001",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某物流公司收集 60 維車隊感測訊號,欲先做降維再餵入後續分類器,並希望保留盡可能多的整體變異資訊。下列關於 PCA(主成分分析)的描述何者正確?",
+      "options": [
+        {"text": "PCA 透過協方差矩陣做特徵分解,以最大特徵值方向作為主成分,並依保留變異比例 λₖ/Σλ 決定取幾個", "is_correct": true},
+        {"text": "PCA 在計算前完全不需做任何特徵縮放,因為方差最大化的目標會自動修正各特徵間的原始尺度差異", "is_correct": false, "trap_type": "PCA 對尺度敏感,需先標準化"},
+        {"text": "PCA 的目標函數為最大化各類別中心間距與類別內距比值,因此屬於監督式線性降維方法,需要標籤", "is_correct": false, "trap_type": "與 LDA 混淆"},
+        {"text": "PCA 屬於非線性降維,主成分為原始特徵的非線性轉換組合,故能保留複雜流形與區域結構訊息", "is_correct": false, "trap_type": "PCA 是線性方法"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "PCA 是線性、非監督降維。流程:標準化 → 協方差矩陣 → 特徵分解 → 取最大特徵值對應特徵向量;保留變異比例 = λₖ / Σλ,常用閾值 80% 或 95%",
+        "wrong": {
+          "PCA 在計算前不需做任何特徵縮放,因方差最大化會自動修正特徵尺度差異": "PCA 直接受變異數影響,大尺度特徵會主導主成分,故必須先標準化",
+          "PCA 的目標函數是最大化各類別中心之間距離與類別內距比值,屬於監督式降維": "此為 LDA 目標;PCA 不需標籤、屬非監督",
+          "PCA 屬於非線性降維,主成分為原始特徵的非線性轉換組合,可保留複雜流形結構": "PCA 為線性投影;Kernel PCA / Autoencoder / t-SNE 才是非線性"
+        },
+        "hook": "PCA 五字訣:線、非監、變異、標準化、特徵分解;與 LDA 區別:LDA 唯一監督式線性降維"
+      },
+      "misconceptions": ["以為 PCA 不需標準化", "把 PCA 當作非線性方法"],
+      "related_node_ids": ["n_L23102_002", "n_L23102_011"],
+      "tags": ["線性代數", "PCA", "降維"]
+    },
+    {
+      "id": "q_n6_006",
+      "knowledge_code": "L23102",
+      "node_id": "n_L23102_004",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "影音串流平台希望對龐大的『使用者 × 影片觀看分數』稀疏矩陣進行壓縮並萃取潛在因子,以驅動後續推薦。下列何者最能體現 SVD(奇異值分解)的核心結構?",
+      "options": [
+        {"text": "將矩陣 A 分解為 A = UΣVᵀ,Σ 為對角奇異值矩陣,保留前 k 大奇異值即得最佳低秩近似", "is_correct": true},
+        {"text": "將矩陣 A 拆為兩個非負矩陣 W、H 使 A ≈ WH,且要求兩矩陣中每個元素皆 ≥ 0 元素值", "is_correct": false, "trap_type": "與 NMF 混淆"},
+        {"text": "對矩陣 A 計算協方差矩陣後做特徵分解,並從中直接萃取對應的主成分方向特徵向量結果", "is_correct": false, "trap_type": "與 PCA 描述混淆"},
+        {"text": "將矩陣 A 透過 RBF 核函數映射至高維特徵空間後,再對映射後結果做進一步線性矩陣分解操作", "is_correct": false, "trap_type": "與 Kernel PCA 混淆"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "SVD: A = UΣVᵀ,U 為左奇異向量、V 為右奇異向量、Σ 為奇異值對角矩陣;保留前 k 大奇異值即得 rank-k 最佳近似(Eckart-Young 定理),廣泛用於矩陣壓縮、潛在語義分析、推薦系統",
+        "wrong": {
+          "將矩陣 A 拆為兩個非負矩陣 W、H,使 A ≈ WH 並保證每個元素皆 ≥ 0": "此為 NMF(非負矩陣分解),適用於影像主題分解、文件主題模型",
+          "對矩陣 A 計算協方差矩陣後做特徵分解,直接得到主成分方向向量": "此為 PCA 流程;PCA 與 SVD 密切相關但不等同",
+          "將矩陣 A 透過 RBF 核函數映射到高維空間後再做線性分解": "此描述為 Kernel PCA"
+        },
+        "hook": "SVD 是 PCA 的更一般形式;PCA 通常透過 SVD 實現,但 SVD 不需要先計算協方差矩陣"
+      },
+      "misconceptions": ["把 SVD 與 NMF 混淆", "以為 SVD 必須先計算協方差矩陣"],
+      "related_node_ids": ["n_L23102_001", "n_L23102_008"],
+      "tags": ["線性代數", "SVD", "矩陣分解"]
+    },
+    {
+      "id": "q_n6_007",
+      "knowledge_code": "L23102",
+      "node_id": "n_L23102_008",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "新聞媒體聚合平台對 5 萬篇文章建立『文件 × 詞彙』矩陣,目標是把每篇文章拆解為若干『主題比例』,且因子值需易於解讀(如『體育』『政治』比重)。下列何種降維/分解技術最為合適?",
+      "options": [
+        {"text": "NMF 非負矩陣分解:因子皆為非負值,可直接解讀為主題權重,最適合詞頻矩陣主題分析", "is_correct": true},
+        {"text": "標準 PCA 主成分分析:能找最大變異方向,但主成分含負值,難對應『主題比例』直觀解讀", "is_correct": false, "trap_type": "PCA 主成分有正負"},
+        {"text": "t-SNE 非線性降維:可同時將文件壓到低維,並提供主題比例可直接解讀的因子矩陣輸出", "is_correct": false, "trap_type": "t-SNE 為視覺化非主題分解"},
+        {"text": "LDA 線性判別分析:為監督降維方法,可在訓練階段以主題類別標籤直接對齊因子方向", "is_correct": false, "trap_type": "LDA(線性判別)非主題模型"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "NMF 將 X ≈ WH 且 W、H 皆非負,因子值具加法可解讀性(主題比例),非常適合詞頻矩陣與影像區域分解。注意:此處的 LDA 指線性判別分析,非主題模型 Latent Dirichlet Allocation",
+        "wrong": {
+          "標準 PCA:雖能找最大變異方向,但主成分含負值,難以對應『主題比例』之直觀解讀": "雖然 PCA 也能做潛在語義分析,但主成分可正可負,無法直接解讀為比例",
+          "t-SNE:可同時將文件壓到低維並提供主題比例可解讀因子矩陣": "t-SNE 是視覺化方法,不可逆且不提供因子矩陣",
+          "LDA(線性判別分析):為監督降維,可在訓練階段以主題標籤直接對齊因子方向": "L23102 範圍的 LDA 指線性判別,需類別標籤,非主題分解"
+        },
+        "hook": "選 NMF 三條件:(1)資料非負(詞頻、像素)(2)需可解釋因子(3)需累加而非減去"
+      },
+      "misconceptions": ["把 NMF 與 PCA 混淆", "把 L23102 範圍的 LDA(線性判別)誤當主題模型 LDA"],
+      "related_node_ids": ["n_L23102_001", "n_L23102_004"],
+      "tags": ["線性代數", "NMF", "情境"]
+    },
+    {
+      "id": "q_n6_008",
+      "knowledge_code": "L23102",
+      "node_id": "n_L23102_011",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "下列關於 PCA(主成分分析)與 LDA(線性判別分析)的差異,何者**錯誤**?",
+      "options": [
+        {"text": "PCA 與 LDA 同屬非線性降維,皆會透過核函數將資料投影至高維空間後再切割", "is_correct": true, "trap_type": "兩者皆為線性"},
+        {"text": "PCA 為非監督式降維,不需類別標籤;LDA 為監督式降維,需類別標籤", "is_correct": false},
+        {"text": "PCA 目標為保留資料整體變異最大方向;LDA 目標為最大化類別間距與類別內距比", "is_correct": false},
+        {"text": "PCA 與 LDA 皆屬線性投影方法,主成分或判別軸均由原始特徵的線性組合構成", "is_correct": false}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**錯誤**敘述為『PCA 與 LDA 皆屬非線性降維』。兩者皆為**線性**降維;非線性降維代表為 Kernel PCA、t-SNE、UMAP、Autoencoder",
+        "wrong": {
+          "PCA 為非監督式降維,不需類別標籤;LDA 為監督式降維,需類別標籤": "正確敘述,LDA 為唯一監督式降維",
+          "PCA 目標為保留資料整體變異最大方向;LDA 目標為最大化類別間距與類別內距比": "正確敘述,兩者目標明確不同",
+          "PCA 與 LDA 皆屬線性投影方法,主成分或判別軸均由原始特徵的線性組合構成": "正確敘述,兩者均為線性投影"
+        },
+        "hook": "PCA vs LDA 三差:監督性、目標函數、是否需標籤;但兩者皆線性"
+      },
+      "misconceptions": ["以為 LDA 也是非監督", "把 PCA / LDA 誤判為非線性"],
+      "related_node_ids": ["n_L23102_001", "n_L23102_002"],
+      "tags": ["線性代數", "PCA", "LDA", "易混淆"]
+    },
+    {
+      "id": "q_n6_009",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_003",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某金融時序預測模型訓練時,損失曲線出現大幅震盪、無法收斂。下列哪一項超參數調整最直接針對該收斂問題?",
+      "options": [
+        {"text": "降低學習率(Learning Rate),使每次權重更新步長縮小,以穩定收斂並避免震盪發散", "is_correct": true},
+        {"text": "提高批次大小(Batch Size)直接拉至記憶體極限,讓每步梯度估計變得更精準也更穩定", "is_correct": false, "trap_type": "批次大小不直接解決發散"},
+        {"text": "提高 L2 正則化係數壓低整體權重幅度,以避免損失曲線在訓練中出現大幅震盪不收斂", "is_correct": false, "trap_type": "L2 對抗過擬合非震盪"},
+        {"text": "增加隱藏層數量與神經元寬度,以提升模型整體表達容量,讓訓練損失更快下降並提早收斂", "is_correct": false, "trap_type": "增加容量反而加劇不穩"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "學習率過大會使權重更新步長過大,導致跳過最佳點甚至發散;降低學習率(或加上 LR Schedule、Warm-up)是最直接的對策。Adam 等自適應優化器也可緩解",
+        "wrong": {
+          "增加批次大小(Batch Size)上限至記憶體極限,使梯度估計更精準": "Batch 變大確實降噪但也可能落入尖銳極小,並非震盪首要對策",
+          "提高 L2 正則化係數,壓低權重幅度以避免損失曲線震盪": "L2 主要對抗過擬合,不能修正學習率過大造成的發散",
+          "增加隱藏層數量與神經元寬度,以提升模型容量降低訓練誤差": "增大容量反而讓非凸最佳化更難收斂"
+        },
+        "hook": "LR 三段症狀:過大發散、剛好穩定、過小停滯;首要對策是調 LR 或用 Adam"
+      },
+      "misconceptions": ["以為提高 LR 就能加速收斂", "把震盪誤判為過擬合"],
+      "related_node_ids": ["n_L23103_001"],
+      "tags": ["優化", "學習率", "情境"]
+    },
+    {
+      "id": "q_n6_010",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_002",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "深度神經網路的損失函數通常為非凸函數,使用梯度下降進行最佳化時,下列何者**最可能**直接造成的問題?",
+      "options": [
+        {"text": "可能停留於局部最優或鞍點而非真正的全域最優解,且最終結果對初始化條件相當敏感", "is_correct": true},
+        {"text": "在每一步皆必然能得到當前的全域最優解,因為梯度下降方向會永遠指向最陡下降方向", "is_correct": false, "trap_type": "凸與非凸混淆"},
+        {"text": "必然完全無法達成任何收斂,因為非凸函數對所有梯度型的最佳化演算法都會失效", "is_correct": false, "trap_type": "陳述過度"},
+        {"text": "必然會直接造成過擬合,因為非凸函數會在訓練過程中學到全部資料中的所有雜訊", "is_correct": false, "trap_type": "與正則化問題混淆"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "非凸目標函數可能存在多個局部最優與鞍點;梯度下降一旦落入即無法靠梯度資訊脫離。對策:良好初始化、多次重啟、動量(Momentum)、Adam 自適應學習率",
+        "wrong": {
+          "可能在每一步必然得到全域最優解,因為梯度方向指向最陡下降": "此為凸函數性質;非凸不保證",
+          "必然無法達成任何收斂,因為非凸函數對所有梯度演算法皆失效": "事實上仍可收斂,只是不保證全域最優",
+          "造成過擬合(Overfitting),因為非凸函數會學到全部訓練雜訊": "過擬合屬泛化問題,非優化問題本身"
+        },
+        "hook": "凸 = 唯一全域最優(線性迴歸、SVM);非凸 = 多局部最優 + 鞍點(神經網路)"
+      },
+      "misconceptions": ["把非凸後果誤判為過擬合或梯度消失", "以為深度學習為凸最佳化"],
+      "related_node_ids": ["n_L23103_001", "n_L23103_003"],
+      "tags": ["優化", "凸函數", "鞍點"]
+    },
+    {
+      "id": "q_n6_011",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_001",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "下列關於 Adam 優化器(Adaptive Moment Estimation)的描述,何者**最為精確**?",
+      "options": [
+        {"text": "Adam 結合一階動量與二階動量自適應學習率,內建動量機制,適合多數深度學習任務", "is_correct": true},
+        {"text": "Adam 是純粹的標準 SGD 改名,僅將梯度平均化,本身並未引入動量或自適應機制", "is_correct": false, "trap_type": "SGD 對比錯誤"},
+        {"text": "Adam 與 Adagrad 完全相同,皆使用累積平方梯度,因此學習率亦會單調遞減", "is_correct": false, "trap_type": "Adam 用指數移動平均"},
+        {"text": "Adam 為二階方法,需要計算 Hessian 矩陣與其反矩陣才能完成每步權重更新", "is_correct": false, "trap_type": "Adam 仍為一階方法"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Adam = Momentum(一階動量,歷史方向)+ RMSProp(二階動量,自適應每參數學習率)+ Bias Correction;為現代深度學習預設選擇之一,改進版 AdamW 修正權重衰減",
+        "wrong": {
+          "Adam 是純粹的標準 SGD 改名,僅將梯度平均化,本身並未引入動量或自適應機制": "標準 SGD 既無動量也無自適應;Adam 兩者皆有",
+          "Adam 與 Adagrad 完全相同,皆使用累積平方梯度,因此學習率亦會單調遞減": "Adagrad 用累積總和,學習率會持續衰減;Adam 用指數移動平均,可保持自適應",
+          "Adam 為二階方法,需要計算 Hessian 矩陣與其反矩陣才能完成每步權重更新": "Adam 屬一階梯度方法,使用一階與二階動差但非真正 Hessian 二階"
+        },
+        "hook": "Adam = Momentum + RMSProp;『內建動量』的選項常考"
+      },
+      "misconceptions": ["把 Adam 與 Adagrad、RMSProp 混淆", "誤以為 Adam 是二階方法"],
+      "related_node_ids": ["n_L23103_003"],
+      "tags": ["優化", "Adam", "概念"]
+    },
+    {
+      "id": "q_n6_012",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_004",
+      "subject": 3,
+      "format": "calculation",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某 B2B 媒合平台需對 n 個客戶兩兩比對相似度建立潛在合作網路,演算法為 O(n²) 兩層巢狀比對。當客戶數從 n₁ = {n1} 倍增至 n₂ = {n2} 時,執行時間約成幾倍?(以 n₂² / n₁² 估算)",
+      "stem_variables": {
+        "case_a": {"n1": "1000", "n2": "10000", "answer": "100"},
+        "case_b": {"n1": "500", "n2": "5000", "answer": "100"},
+        "case_c": {"n1": "1000", "n2": "5000", "answer": "25"},
+        "case_d": {"n1": "200", "n2": "1000", "answer": "25"}
+      },
+      "options_template": {
+        "case_a": [
+          {"text": "100", "is_correct": true},
+          {"text": "10", "is_correct": false, "trap_type": "誤判為 O(n) 線性"},
+          {"text": "1024", "is_correct": false, "trap_type": "誤判為 O(2ⁿ) 指數"},
+          {"text": "33", "is_correct": false, "trap_type": "誤判為 O(n log n)"}
+        ],
+        "case_b": [
+          {"text": "100", "is_correct": true},
+          {"text": "10", "is_correct": false, "trap_type": "誤判為線性"},
+          {"text": "1000", "is_correct": false, "trap_type": "誤算為 n²/n"},
+          {"text": "50", "is_correct": false, "trap_type": "未平方"}
+        ],
+        "case_c": [
+          {"text": "25", "is_correct": true},
+          {"text": "5", "is_correct": false, "trap_type": "誤判為線性"},
+          {"text": "32", "is_correct": false, "trap_type": "誤判為 O(2ⁿ)"},
+          {"text": "12", "is_correct": false, "trap_type": "未平方"}
+        ],
+        "case_d": [
+          {"text": "25", "is_correct": true},
+          {"text": "5", "is_correct": false, "trap_type": "誤判為線性"},
+          {"text": "10", "is_correct": false, "trap_type": "未平方"},
+          {"text": "32", "is_correct": false, "trap_type": "誤判為指數"}
+        ]
+      },
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "O(n²) 兩兩比對:時間倍率 = (n₂/n₁)² = ({n2}/{n1})² = {answer} 倍。兩層巢狀迴圈為 O(n²) 平方複雜度",
+        "wrong": {
+          "10": "誤判為 O(n) 線性;線性僅在『單迴圈巡訪 n 個元素』成立",
+          "1024": "誤判為 O(2ⁿ) 指數;指數複雜度通常為窮舉所有子集",
+          "33": "誤判為 O(n log n);O(n log n) 為快速排序、合併排序、FFT"
+        },
+        "hook": "六大複雜度:O(1) < O(log n) < O(n) < O(n log n) < O(n²) < O(2ⁿ);兩兩比對 = O(n²)"
+      },
+      "misconceptions": ["把 O(n²) 與 O(n log n) 混淆", "以為兩兩比對為線性"],
+      "related_node_ids": ["n_L23103_002"],
+      "tags": ["優化", "複雜度", "計算"]
+    },
+    {
+      "id": "q_n6_013",
+      "knowledge_code": "L23201",
+      "node_id": "n_L23201_001",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某太陽能電廠收集了 18 個月每日發電量與當日氣象資料,欲建立『未來七日發電量預測模型』。此任務最直接屬於下列哪一類學習?",
+      "options": [
+        {"text": "監督學習(Supervised Learning)— 迴歸任務,以歷史氣象與發電量配對為標籤資料", "is_correct": true},
+        {"text": "非監督學習(Unsupervised Learning)— 自動找出發電量相似的群集而不需標籤", "is_correct": false, "trap_type": "未利用發電量標籤"},
+        {"text": "強化學習(Reinforcement Learning)— 透過獎懲訊號逐步學習最佳發電預測策略", "is_correct": false, "trap_type": "無互動環境設計"},
+        {"text": "自監督學習(Self-Supervised)— 由發電量資料自身產生監督訊號做預訓練", "is_correct": false, "trap_type": "與大模型預訓練混淆"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "已有歷史『氣象 → 發電量』配對標籤,目標為預測連續值(發電量),屬於監督學習中的『迴歸』任務。關鍵特徵是『標籤是否存在』,不是資料量",
+        "wrong": {
+          "非監督學習(Unsupervised Learning)— 自動找出發電量相似的群集而不需標籤": "非監督是發掘結構而非預測未知數值",
+          "強化學習(Reinforcement Learning)— 透過獎懲訊號逐步學習最佳發電預測策略": "RL 需 agent-environment 互動迴圈與獎勵設計,不適合單純監督訊號",
+          "自監督學習(Self-Supervised)— 由發電量資料自身產生監督訊號做預訓練": "自監督指『遮罩或對比』自動生成訓練訊號(如 BERT MLM),不是用配對標籤"
+        },
+        "hook": "三問定學習類型:有標籤?(監督)/ 無標籤找結構?(非監督)/ 互動學策略?(RL)"
+      },
+      "misconceptions": ["把『有大量資料』誤當監督學習依據", "把任何預測都當成 RL"],
+      "related_node_ids": ["n_L23201_002", "n_L23201_004"],
+      "tags": ["ML 原理", "監督學習", "情境"]
+    },
+    {
+      "id": "q_n6_014",
+      "knowledge_code": "L23201",
+      "node_id": "n_L23201_002",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "電商平台累積百萬筆無標註瀏覽歷程資料,欲探索消費族群結構與異常瀏覽行為。下列任務組合何者全部屬於非監督學習?",
+      "options": [
+        {"text": "K-means 顧客行為分群、PCA 高維特徵維度壓縮、Apriori 購物籃關聯法則挖掘三項組合", "is_correct": true},
+        {"text": "Logistic Regression 顧客流失預測、SVM 二元分類器與 XGBoost 信用評分模型", "is_correct": false, "trap_type": "皆為監督分類"},
+        {"text": "Linear Regression 月銷售迴歸、Decision Tree、Random Forest 投票", "is_correct": false, "trap_type": "皆為監督學習"},
+        {"text": "BERT 文本情感分析微調、GPT 商品行銷文案自動生成、CNN 商品影像下游監督學習辨識任務", "is_correct": false, "trap_type": "皆為下游監督任務"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "K-means(分群)、PCA(降維)、Apriori(關聯法則)三者皆無需標籤,均屬非監督學習。共通特性:從資料本身結構發現規律",
+        "wrong": {
+          "Logistic Regression 流失預測、Decision Tree 分類、Random Forest 投票": "皆需『流失/未流失』『類別』標籤,屬監督",
+          "Linear Regression 銷售迴歸、SVM 二元分類、XGBoost 信用評分": "皆有目標標籤(銷售額、類別、評分),屬監督",
+          "BERT 情感分析微調、GPT 文本生成、CNN 影像辨識": "微調與下游任務需標籤;雖預訓練是自監督,但題目情境是下游應用"
+        },
+        "hook": "非監督三大用途:分群(K-means/DBSCAN)/ 降維(PCA/t-SNE)/ 關聯(Apriori)"
+      },
+      "misconceptions": ["把預訓練與下游應用混淆", "以為任何發掘『規律』都是監督"],
+      "related_node_ids": ["n_L23201_001", "n_L23202_008"],
+      "tags": ["ML 原理", "非監督", "綜合"]
+    },
+    {
+      "id": "q_n6_015",
+      "knowledge_code": "L23201",
+      "node_id": "n_L23201_004",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "智能溫室控制系統欲依據作物即時生長狀態自動決定灌溉與光照排程,環境會隨日夜與天候改變,系統需透過長期實驗找出最佳作物產量策略。最適合採用何種學習典範?",
+      "options": [
+        {"text": "強化學習 RL:agent 與溫室環境互動,以產量回饋作為獎勵訊號學最佳灌溉光照策略", "is_correct": true},
+        {"text": "監督學習迴歸:直接以歷史灌溉設定為標籤,透過線性模型預測作物產量輸出數值", "is_correct": false, "trap_type": "缺乏互動策略"},
+        {"text": "非監督分群:對作物生長狀態進行 K-means 分群,各群套用同一組固定的灌溉設定", "is_correct": false, "trap_type": "靜態策略無法調整"},
+        {"text": "自監督預訓練:用對比學習生成生長狀態嵌入向量,後續直接套用既有人工作業 SOP", "is_correct": false, "trap_type": "自監督屬表示學習"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "RL 五要素:agent(控制系統)、environment(溫室環境)、state(生長狀態)、action(灌溉光照量)、reward(作物產量)。需動態最佳化策略,適合 RL",
+        "wrong": {
+          "監督學習迴歸:直接以歷史灌溉設定為標籤,透過線性模型預測作物產量": "監督只能模仿既有策略,無法探索未試過的最佳策略",
+          "非監督分群:對作物生長狀態進行 K-means 分群,各群套用固定灌溉量": "非監督找結構,不會學動作對獎勵的影響",
+          "自監督預訓練:使用對比學習生成生長狀態嵌入後直接套用既有作業 SOP": "自監督是表示學習,還需下游任務進行決策"
+        },
+        "hook": "RL 訊號:沒有對錯標籤,只有累積獎勵;trial-and-error 找最佳策略"
+      },
+      "misconceptions": ["把獎勵誤當作 ground truth 標籤", "以為 RL 一定優於監督學習"],
+      "related_node_ids": ["n_L23201_001"],
+      "tags": ["ML 原理", "強化學習", "情境"]
+    },
+    {
+      "id": "q_n6_016",
+      "knowledge_code": "L23201",
+      "node_id": "n_L23201_005",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "下列關於『判別式(Discriminative)』與『生成式(Generative)』學習的描述,何者最為正確?",
+      "options": [
+        {"text": "判別式建模 P(y|x) 條件機率學決策邊界;生成式建模 P(x,y) 或 P(x|y)P(y),具生成新樣本能力", "is_correct": true},
+        {"text": "判別式學派必為深度神經網路架構,生成式學派必為傳統機率圖模型,兩派所使用之技術路線完全不會有任何交集", "is_correct": false, "trap_type": "錯把派別當技術"},
+        {"text": "Naive Bayes 屬於判別式學派,因為它最終輸出僅是類別預測值,只能做分類預測完全無法生成新資料", "is_correct": false, "trap_type": "Naive Bayes 為生成式"},
+        {"text": "GAN 整體屬於判別式學派,因訓練過程包含 Discriminator 子網路用以區分真假樣本與識別資料來源", "is_correct": false, "trap_type": "整體 GAN 為生成式"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "判別式學 P(y|x)(Logistic Regression、SVM、CNN 分類器);生成式學 P(x,y) 或 P(x)(Naive Bayes、GAN、VAE)。差異在『建模對象』而非『使用何種網路結構』",
+        "wrong": {
+          "判別式必為深度模型;生成式必為傳統機率模型,兩者技術路線完全不交集": "兩者都可用深度或傳統模型;CNN 可判別、Diffusion 可生成,且兩派技術交叉互通",
+          "Naive Bayes 屬判別式,因為它最終輸出為類別預測,僅做分類無法生成新資料": "Naive Bayes 建模 P(x|y)P(y),屬生成式;只是常用於分類",
+          "GAN 屬於判別式,因為訓練過程包含 Discriminator 子網路用於區分真假樣本": "GAN 整體目標為學 P(x),屬生成式;Discriminator 只是訓練輔助"
+        },
+        "hook": "區分關鍵:建模 P(y|x)(判別)還是 P(x,y) / P(x|y)(生成);Naive Bayes 是生成式經典考點"
+      },
+      "misconceptions": ["把 Naive Bayes 當判別式", "把 GAN 當判別式"],
+      "related_node_ids": ["n_L23201_001", "n_L23201_002"],
+      "tags": ["ML 原理", "判別生成", "易混淆"]
+    },
+    {
+      "id": "q_n6_017",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_003",
+      "subject": 3,
+      "format": "calculation",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某共享單車違停預測二元邏輯迴歸模型,線性輸出 z = β₀ + β₁·x₁ + β₂·x₂ = {z}。經 Sigmoid σ(z) = 1/(1+e⁻ᶻ) 後,該樣本被預測為違停的機率約為多少?",
+      "stem_variables": {
+        "case_a": {"z": "0", "answer": "0.500"},
+        "case_b": {"z": "1", "answer": "0.731"},
+        "case_c": {"z": "-1", "answer": "0.269"},
+        "case_d": {"z": "2", "answer": "0.881"}
+      },
+      "options_template": {
+        "case_a": [
+          {"text": "0.500", "is_correct": true},
+          {"text": "0.000", "is_correct": false, "trap_type": "誤把線性輸出當機率"},
+          {"text": "1.000", "is_correct": false, "trap_type": "誤判最大值"},
+          {"text": "0.250", "is_correct": false, "trap_type": "計算錯誤"}
+        ],
+        "case_b": [
+          {"text": "0.731", "is_correct": true},
+          {"text": "1.000", "is_correct": false, "trap_type": "誤把線性輸出 z=1 直接當機率"},
+          {"text": "0.500", "is_correct": false, "trap_type": "未代入 Sigmoid"},
+          {"text": "0.269", "is_correct": false, "trap_type": "與 -1 的結果混淆"}
+        ],
+        "case_c": [
+          {"text": "0.269", "is_correct": true},
+          {"text": "0.731", "is_correct": false, "trap_type": "與 +1 的結果混淆"},
+          {"text": "-1.000", "is_correct": false, "trap_type": "誤把 z 當機率"},
+          {"text": "0.500", "is_correct": false, "trap_type": "未代入 Sigmoid"}
+        ],
+        "case_d": [
+          {"text": "0.881", "is_correct": true},
+          {"text": "2.000", "is_correct": false, "trap_type": "誤把 z 當機率"},
+          {"text": "0.500", "is_correct": false, "trap_type": "未代入"},
+          {"text": "0.731", "is_correct": false, "trap_type": "與 z=1 結果混淆"}
+        ]
+      },
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Sigmoid σ(z) = 1 / (1+e⁻ᶻ),代入 z = {z} → σ({z}) ≈ {answer}。Sigmoid 將線性輸出 z ∈ ℝ 壓縮到 (0,1) 機率區間",
+        "wrong": {
+          "0.000": "z = 0 時 σ(0) = 1/(1+1) = 0.5,並非 0",
+          "1.000": "Sigmoid 永遠不等於 1,只在 z → ∞ 時逼近"
+        },
+        "hook": "Sigmoid 三特性:σ(0) = 0.5、σ(z) + σ(-z) = 1、輸出範圍永遠 (0,1) 不含端點"
+      },
+      "misconceptions": ["把線性輸出 z 當作機率(忘記 Sigmoid)", "把 Logistic Regression 誤當成迴歸"],
+      "related_node_ids": ["n_L23202_004"],
+      "tags": ["ML 演算法", "Logistic", "計算"]
+    },
+    {
+      "id": "q_n6_018",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_004",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某基因晶片資料每筆樣本維度約 20,000、樣本數僅 200,且類別之間呈現明顯非線性界線。下列關於採用 SVM(Support Vector Machine)的描述何者最為正確?",
+      "options": [
+        {"text": "可採用 RBF Kernel SVM,以核技巧在高維特徵空間找最大邊界,並以 C 控制錯分容忍度", "is_correct": true},
+        {"text": "因樣本數量太少 SVM 必定無法穩定收斂,應改用深度學習從頭訓練 CNN 卷積網路分類器", "is_correct": false, "trap_type": "高維小樣本反為 SVM 優勢"},
+        {"text": "SVM 完全不需任何特徵縮放,軟邊界 C 自動處理大小尺度差異,故可直接跳過標準化步驟", "is_correct": false, "trap_type": "SVM 對尺度敏感"},
+        {"text": "RBF Kernel SVM 必優於線性核 SVM,因非線性核函數能完美擬合任意分佈的訓練資料", "is_correct": false, "trap_type": "高維線性核常更佳"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "SVM 適合高維小樣本,RBF Kernel 透過核技巧處理非線性可分;C 大則嚴格少容忍、C 小則容忍多。基因晶片是 SVM 經典應用之一",
+        "wrong": {
+          "因樣本太少,SVM 必定無法收斂,應改用深度學習從零開始訓練 CNN 分類器": "事實相反,小樣本反而是 SVM 優勢,深度模型才更需要大量資料",
+          "SVM 不需特徵縮放,軟邊界 C 自動處理大小尺度差異,故跳過標準化步驟": "SVM 用距離計算邊界,大尺度特徵會主導,必須做特徵縮放",
+          "RBF Kernel SVM 必定優於線性核,因為非線性核總能完美擬合任意資料": "高維資料常已線性可分,線性核反而表現更佳;RBF 並非萬靈"
+        },
+        "hook": "SVM 三大優勢:高維小樣本、最大邊界、Kernel Trick;但需要特徵縮放且要根據資料調 Kernel"
+      },
+      "misconceptions": ["以為 RBF 一定優於線性核", "以為 SVM 不需特徵縮放"],
+      "related_node_ids": ["n_L23202_003", "n_L23102_009"],
+      "tags": ["ML 演算法", "SVM", "情境"]
+    },
+    {
+      "id": "q_n6_019",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_005",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "決策樹分裂節點時計算『資訊增益(Information Gain)』。下列敘述何者正確?",
+      "options": [
+        {"text": "資訊增益 = 父節點 Entropy − 子節點加權 Entropy 總和;增益愈大代表分裂後類別不確定性下降愈多", "is_correct": true},
+        {"text": "資訊增益 = 父節點 Entropy + 子節點加權 Entropy 總和;增益愈大代表分裂後類別資訊量累積愈多", "is_correct": false, "trap_type": "公式方向錯誤"},
+        {"text": "資訊增益主要用於 L1 線性正則化模型挑選稀疏權重特徵,而非用於決策樹節點分裂時特徵選擇的判準依據", "is_correct": false, "trap_type": "與 Lasso 混淆"},
+        {"text": "資訊增益僅能在迴歸樹中使用,分類樹必須以 MSE 均方誤差取代 Entropy 才能完成節點分裂的判別過程", "is_correct": false, "trap_type": "迴歸/分類角色互換"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Information Gain = H(parent) − Σ (|childᵢ|/|parent|) × H(childᵢ);代表分裂後不確定性下降量。ID3 / C4.5 採用,CART 改用 Gini",
+        "wrong": {
+          "資訊增益 = 父節點 Entropy + 子節點加權 Entropy 總和;增益愈大表示分裂後資訊累積愈多": "公式應為相減而非相加;『增益』指 Entropy 下降量",
+          "資訊增益主要用於 L1 線性正則化模型挑選稀疏特徵,而非決策樹節點分裂": "L1 是正則化技術,與資訊增益無關;IG 為決策樹專用",
+          "資訊增益僅在迴歸樹中使用,分類樹必須以 MSE 取代 Entropy 才能分裂": "分類樹用 Entropy / Gini,迴歸樹才用 MSE,角色互換"
+        },
+        "hook": "決策樹分裂三準則:Entropy(ID3/C4.5)、Gini(CART)、MSE(迴歸樹);IG = 父 − 子加權"
+      },
+      "misconceptions": ["把資訊增益用於 L1 線性模型", "把分類樹與迴歸樹的分裂準則互換"],
+      "related_node_ids": ["n_L23202_001"],
+      "tags": ["ML 演算法", "決策樹", "資訊增益"]
+    },
+    {
+      "id": "q_n6_020",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_001",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "下列關於 Random Forest 與 GBDT/XGBoost 集成方式的差異,何者**最為正確**?",
+      "options": [
+        {"text": "RF 屬 Bagging,平行訓練多棵樹後投票或平均以降低變異;GBDT 屬 Boosting,序列訓練後一棵修正前一棵殘差以降偏差", "is_correct": true},
+        {"text": "RF 屬 Boosting,序列訓練後一棵修正前一棵錯誤;GBDT 屬 Bagging,平行訓練多棵獨立樹後做投票或平均輸出結果", "is_correct": false, "trap_type": "兩者派別互換"},
+        {"text": "RF 與 GBDT 同屬於 Stacking 派別,兩者皆須額外訓練一個 meta 模型,並將前段子模型輸出作為新特徵輸入給該模型", "is_correct": false, "trap_type": "與 Stacking 混淆"},
+        {"text": "RF 與 GBDT 都屬 Bagging 平行訓練派別,兩者主要差別僅在每棵子樹的訓練資料抽樣方式略有不同,並無本質差異", "is_correct": false, "trap_type": "Boosting 被誤分為 Bagging"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "RF = Bagging(Bootstrap 抽樣 + 隨機特徵子集 + 平行訓練 + 投票/平均);GBDT/XGBoost = Boosting(序列訓練 + 後一棵擬合前一棵殘差/梯度)。Bagging 降變異、Boosting 降偏差",
+        "wrong": {
+          "Random Forest 屬 Boosting,序列訓練;GBDT 屬 Bagging,平行訓練": "兩者派別完全互換",
+          "Random Forest 與 GBDT 同屬 Stacking,皆需要再訓一個 meta 模型輸出最終結果": "Stacking 是另一種集成派別,RF 與 GBDT 都不需要 meta 模型",
+          "Random Forest 與 GBDT 都屬於 Bagging,僅差在每棵子樹的訓練資料抽樣方式": "GBDT 屬 Boosting,序列訓練,不是 Bagging"
+        },
+        "hook": "三大集成派別口訣:Bagging 平行降變異、Boosting 序列降偏差、Stacking 多模型 + meta"
+      },
+      "misconceptions": ["把 RF 與 GBDT 派別互換", "認為所有集成方法都是 Bagging"],
+      "related_node_ids": ["n_L23202_006"],
+      "tags": ["ML 演算法", "集成", "Bagging", "Boosting"]
+    },
+    {
+      "id": "q_n6_021",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_008",
+      "subject": 3,
+      "format": "calculation",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某外送平台一維配送時間資料 [{points}] 進行 K-means(K=2)聚類,最終分群為 [群 A: {a}] / [群 B: {b}],兩群質心分別為 {ca} 與 {cb}。該分群結果之 Inertia(總群內平方距離和,SSE)為何?",
+      "stem_variables": {
+        "case_a": {"points": "1, 2, 8, 9", "a": "1, 2", "b": "8, 9", "ca": "1.5", "cb": "8.5", "answer": "1.0"},
+        "case_b": {"points": "2, 4, 10, 12", "a": "2, 4", "b": "10, 12", "ca": "3", "cb": "11", "answer": "4.0"},
+        "case_c": {"points": "0, 2, 4, 10, 12", "a": "0, 2, 4", "b": "10, 12", "ca": "2", "cb": "11", "answer": "10.0"}
+      },
+      "options_template": {
+        "case_a": [
+          {"text": "1.0", "is_correct": true},
+          {"text": "0.5", "is_correct": false, "trap_type": "只算單群"},
+          {"text": "2.0", "is_correct": false, "trap_type": "用絕對值而非平方"},
+          {"text": "49.0", "is_correct": false, "trap_type": "誤算群間距離"}
+        ],
+        "case_b": [
+          {"text": "4.0", "is_correct": true},
+          {"text": "2.0", "is_correct": false, "trap_type": "只算單群"},
+          {"text": "8.0", "is_correct": false, "trap_type": "未開平方完成"},
+          {"text": "64.0", "is_correct": false, "trap_type": "誤算群間距"}
+        ],
+        "case_c": [
+          {"text": "10.0", "is_correct": true},
+          {"text": "8.0", "is_correct": false, "trap_type": "漏算一個點"},
+          {"text": "5.0", "is_correct": false, "trap_type": "只算半邊"},
+          {"text": "81.0", "is_correct": false, "trap_type": "誤算群間距"}
+        ]
+      },
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Inertia = Σ Σ ||xᵢ − μⱼ||²,以 case_a 為例:群 A (1−1.5)²+(2−1.5)² = 0.25+0.25 = 0.5;群 B (8−8.5)²+(9−8.5)² = 0.5;總計 = {answer}",
+        "wrong": {
+          "0.5": "僅計算單一群內 SSE,未加總兩群",
+          "2.0": "誤把絕對距離 |xᵢ − μⱼ| 當作平方距離"
+        },
+        "hook": "Inertia = 群內平方距離和(SSE);K-means 目標函數即最小化此值。注意是平方距離,不是絕對值"
+      },
+      "misconceptions": ["把絕對距離當平方距離", "誤把群間距離當作 Inertia"],
+      "related_node_ids": ["n_L23202_002"],
+      "tags": ["ML 演算法", "K-means", "計算"]
+    },
+    {
+      "id": "q_n6_022",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_002",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某城市空品監測站收集 PM2.5 二維(經度、緯度)分佈資料,觀測到污染熱區形狀彎曲且資料含雜訊點。團隊希望偵測非球形熱區並標記離群污染源。下列關於 K-means 與 DBSCAN 的選擇何者最為正確?",
+      "options": [
+        {"text": "DBSCAN 較合適,因其依密度分群可偵測非球形熱區形狀,並能直接標出 Noise 雜訊離群污染源點", "is_correct": true},
+        {"text": "K-means 較合適,因其能依密度自動決定最終群數,並透過 ε 與 MinPts 標記出雜訊離群點", "is_correct": false, "trap_type": "兩演算法超參互換"},
+        {"text": "DBSCAN 必須事先指定群數 K,K-means 則完全不需指定群數,故 K-means 較適合本應用情境", "is_correct": false, "trap_type": "DBSCAN 不需 K"},
+        {"text": "兩者皆不適用此情境,應改用線性迴歸直接預測 PM2.5 連續濃度數值,雜訊本身亦無法單獨偵測", "is_correct": false, "trap_type": "迴歸非聚類任務"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "DBSCAN 兩超參:ε(鄰域半徑)+ MinPts(最小點數);三類點:Core / Border / Noise;適合偵測非球形群與雜訊。K-means 假設球狀且強制每點納入某群,無法獨立標雜訊",
+        "wrong": {
+          "K-means 較合適,因其能依密度自動決定群數,並透過 ε 與 MinPts 標記雜訊點": "ε 與 MinPts 是 DBSCAN 超參,K-means 是 K + Centroid",
+          "DBSCAN 必須事先指定群數 K,K-means 不需指定群數,故 K-means 較適合此情境": "事實相反:K-means 需 K、DBSCAN 不需(自動決定群數)",
+          "兩者皆不適用,應改用線性迴歸模型直接預測 PM2.5 數值,雜訊不可單獨偵測": "迴歸是預測連續值,聚類才能找熱區結構"
+        },
+        "hook": "選 DBSCAN 三條件:(1)群形非球狀(2)需偵測雜訊(3)群數未知;K-means = 球狀 + 需指定 K"
+      },
+      "misconceptions": ["把 K-means 與 DBSCAN 超參互換", "認為 DBSCAN 也需要指定 K"],
+      "related_node_ids": ["n_L23202_008"],
+      "tags": ["ML 演算法", "DBSCAN", "K-means", "情境"]
+    }
+  ]
+}

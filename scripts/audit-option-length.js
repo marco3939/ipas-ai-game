@@ -14,6 +14,14 @@ const FILES = [
   'questions-pf-advanced-s3.json',
   'questions-pg-eval.json',
   'questions-ph-mlops.json',
+  'questions-batch-n1-nlp.json',
+  'questions-batch-n2-cv.json',
+  'questions-batch-n3-genai.json',
+  'questions-batch-n4-planning.json',
+  'questions-batch-n5-deploy.json',
+  'questions-batch-n6-ml-core.json',
+  'questions-batch-n7-dl.json',
+  'questions-batch-n8-eval-gov.json',
 ];
 
 const stats = {

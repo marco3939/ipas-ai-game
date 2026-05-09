@@ -307,66 +307,6 @@
       "tags": ["pytorch", "nn.Linear", "shape"]
     },
     {
-      "id": "q_pa_011",
-      "knowledge_code": "L23302",
-      "node_id": "NEEDS_DELETION",
-      "subject": 3,
-      "format": "code_reading",
-      "difficulty": "medium",
-      "source_level": "L2",
-      "stem": "在自駕車感知模型訓練中,工程師忘記呼叫 optimizer.zero_grad()。請問此時連續兩次 loss.backward() 後,參數梯度的行為為何?",
-      "code_block": "import torch\nw = torch.tensor([1.0], requires_grad=True)\nopt = torch.optim.SGD([w], lr=0.1)\n# 假設 loss = w * 2,d(loss)/dw = 2\nfor _ in range(2):\n    loss = w * 2\n    loss.backward()\nprint(w.grad.item())",
-      "options": [
-        {"text": "4.0", "is_correct": true},
-        {"text": "2.0", "is_correct": false, "trap_type": "誤以為 backward 自動歸零"},
-        {"text": "0.0", "is_correct": false, "trap_type": "誤以為梯度被覆寫"},
-        {"text": "RuntimeError", "is_correct": false, "trap_type": "誤以為會丟出例外"}
-      ],
-      "shuffle_options": true,
-      "explanation": {
-        "correct": "PyTorch 預設累加(accumulate)梯度。沒呼叫 zero_grad 時,每次 backward 把新算的梯度加到 w.grad 上。第一次 +2,第二次 +2,共 4。這正是必須在 step 前 zero_grad 的原因。",
-        "wrong": {
-          "2.0": "若 backward 自動歸零才會是 2,但 PyTorch 並非如此設計,梯度會累加。",
-          "0.0": "梯度只在明確呼叫 zero_grad 或 detach 時才歸零,不會自動。",
-          "RuntimeError": "未呼叫 zero_grad 不會丟例外,只會默默累加,造成訓練錯誤但程式仍跑。"
-        },
-        "hook": "PyTorch 梯度預設累加 → 每個 step 前必 zero_grad"
-      },
-      "misconceptions": ["以為 backward 自動歸零", "忽略梯度累加是有意設計"],
-      "related_node_ids": ["n_L23302_003"],
-      "tags": ["pytorch", "梯度", "optimizer"]
-    },
-    {
-      "id": "q_pa_012",
-      "knowledge_code": "L23302",
-      "node_id": "NEEDS_DELETION",
-      "subject": 3,
-      "format": "code_reading",
-      "difficulty": "hard",
-      "source_level": "L2",
-      "stem": "在多類別新聞分類,工程師對模型最後一層 logits 直接接 nn.CrossEntropyLoss,但又額外手動套了 softmax。請問此寫法的問題?",
-      "code_block": "import torch\nimport torch.nn as nn\nlogits = torch.tensor([[2.0, 1.0, 0.1]])\nprob = torch.softmax(logits, dim=1)\ntarget = torch.tensor([0])\ncriterion = nn.CrossEntropyLoss()\nloss = criterion(prob, target)\nprint(round(loss.item(), 4))",
-      "options": [
-        {"text": "梯度與訓練都會錯,因為 CE 內含 log_softmax,等於對 softmax 再做一次,造成數值錯誤", "is_correct": true},
-        {"text": "完全正確,結果與直接傳 logits 相同", "is_correct": false, "trap_type": "忽略 CE 內含 softmax"},
-        {"text": "會丟出 ValueError 因為機率超過 1", "is_correct": false, "trap_type": "誤以為會有形狀錯誤"},
-        {"text": "loss 一定為 0,因為 prob 已是機率", "is_correct": false, "trap_type": "把交叉熵與 0 混用"}
-      ],
-      "shuffle_options": true,
-      "explanation": {
-        "correct": "nn.CrossEntropyLoss 內部已做 log_softmax + NLLLoss。直接餵 softmax 過的機率,等於對機率再 log_softmax,梯度與數值都會偏離正確結果。應該餵 raw logits。本例會跑出一個錯誤但合法的數字,訓練時會收斂變慢甚至錯方向。",
-        "wrong": {
-          "完全正確,結果與直接傳 logits 相同": "結果不同。CE 預期輸入是 logits 不是 probabilities。",
-          "會丟出 ValueError 因為機率超過 1": "PyTorch 不檢查輸入是否為 logit,程式不會丟錯,只是結果語義錯誤,更危險。",
-          "loss 一定為 0": "交叉熵在預測完美時才會接近 0,且本例輸入錯誤,不會剛好為 0。"
-        },
-        "hook": "CrossEntropyLoss 吃 logits;BCEWithLogitsLoss 也是吃 logits"
-      },
-      "misconceptions": ["以為 CE 吃機率", "誤以為會自動偵測輸入"],
-      "related_node_ids": ["n_L23302_005"],
-      "tags": ["pytorch", "CrossEntropyLoss", "softmax"]
-    },
-    {
       "id": "q_pa_013",
       "knowledge_code": "L23402",
       "node_id": "n_L23402_001",
@@ -425,36 +365,6 @@
       "misconceptions": ["以為 agg 自動帶上原欄名", "以為 groupby key 留在欄"],
       "related_node_ids": ["n_L23402_003"],
       "tags": ["pandas", "groupby", "agg"]
-    },
-    {
-      "id": "q_pa_015",
-      "knowledge_code": "NEEDS_DELETION",
-      "node_id": "NEEDS_DELETION",
-      "subject": 3,
-      "format": "code_reading",
-      "difficulty": "medium",
-      "source_level": "L2",
-      "stem": "在實驗結果視覺化中,工程師同時繪製訓練與驗證準確率。請問下列 matplotlib 程式中,'r--' 的意義為何?",
-      "code_block": "import matplotlib.pyplot as plt\nepochs = [1, 2, 3, 4]\ntrain_acc = [0.6, 0.7, 0.8, 0.9]\nval_acc = [0.55, 0.65, 0.7, 0.75]\nplt.plot(epochs, train_acc, 'r--', label='train')\nplt.plot(epochs, val_acc, 'b-', label='val')\nplt.legend()",
-      "options": [
-        {"text": "紅色虛線", "is_correct": true},
-        {"text": "紅色實線", "is_correct": false, "trap_type": "誤把 -- 當實線"},
-        {"text": "藍色虛線", "is_correct": false, "trap_type": "看錯顏色字母"},
-        {"text": "紅色點線(dotted)", "is_correct": false, "trap_type": "把 -- 當 :"}
-      ],
-      "shuffle_options": true,
-      "explanation": {
-        "correct": "matplotlib 的格式字串混合顏色與線型:'r' = red、'--' = dashed(虛線)。所以 'r--' = 紅色虛線;'b-' = 藍色實線。記憶:- 是 solid、-- 是 dashed、: 是 dotted、-. 是 dash-dot。",
-        "wrong": {
-          "紅色實線": "'-' 才是實線,'--' 是虛線。容易混淆。",
-          "藍色虛線": "顏色字母在前,'r' = red 不是 blue。'b--' 才是藍虛線。",
-          "紅色點線(dotted)": "':' 才是點線(dotted),'--' 是虛線(dashed)。"
-        },
-        "hook": "顏色在前線型在後;-=實 / --=虛 / :=點 / -.=點虛"
-      },
-      "misconceptions": ["把 -- 當實線", "把 -- 與 : 混用"],
-      "related_node_ids": ["NEEDS_DELETION"],
-      "tags": ["matplotlib", "plot", "格式字串", "NEEDS_DELETION"]
     }
   ]
 }

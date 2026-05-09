@@ -35,35 +35,6 @@
       "tags": ["XGBoost", "LightGBM", "CatBoost", "GBDT", "演算法選型", "高基數類別", "情境決策"]
     },
     {
-      "id": "q_pf_adv_s3_002",
-      "knowledge_code": "L23202",
-      "node_id": "NEEDS_DELETION",
-      "subject": 3,
-      "format": "single_choice",
-      "difficulty": "hard",
-      "source_level": "L2",
-      "stem": "某金融科技公司針對 LightGBM 信用評分模型,被監管機關要求提供『可解釋性報告』,需同時呈現:(A)全球(Global)層級各特徵對模型整體決策的貢獻、(B)局部(Local)層級為何此特定客戶被拒絕、(C)報告須在 4 小時內出具(模型有 200 棵樹、150 萬筆驗證集)。資深分析師思考應採用 SHAP、Permutation Importance、Gini-based Feature Importance 何者組合。下列分析何者最為正確?",
-      "options": [
-        {"text": "SHAP(TreeSHAP)同時提供 Global(全資料 SHAP 平均絕對值)與 Local(單筆 SHAP 值)解釋,且 TreeSHAP 對樹模型有 O(TLD²) 多項式複雜度,4 小時內可完成,是唯一同時滿足三項需求的方法", "is_correct": true},
-        {"text": "Permutation Importance 最佳,因為它具備『模型無關(Model-agnostic)』特性,既可同時提供 Global 與 Local 兩層解釋,且在大資料上的計算速度遠勝 SHAP,可在 1 小時內完成", "is_correct": false, "trap_type": "Permutation Importance 僅能提供 Global 解釋(全資料 shuffle 後性能下降),不提供單筆 Local 解釋;且每特徵需重跑整個驗證集評估,複雜度為 O(features × n) 並不快"},
-        {"text": "Gini-based Feature Importance 最佳,LightGBM 訓練後即可直接讀取 feature_importance_,不需額外計算且免費,在類別不平衡與高基數特徵下表現最穩定可信", "is_correct": false, "trap_type": "Gini Importance 僅 Global、且對高基數特徵有偏誤,完全不提供 Local 解釋,無法回答『此客戶為何被拒絕』"},
-        {"text": "三者並用是最嚴謹的監管報告方案,SHAP 負責 Global、Permutation 負責 Local 的逐筆推理、Gini 做雙重驗證,雖耗時但能完整覆蓋監管要求的所有解釋層面", "is_correct": false, "trap_type": "Permutation 不提供 Local 解釋,『跑 Local』本身錯誤;且三者並用浪費 4 小時時間預算,工程上不合理"}
-      ],
-      "shuffle_options": true,
-      "explanation": {
-        "correct": "SHAP(SHapley Additive exPlanations)基於賽局理論的 Shapley Value,提供唯一同時滿足『Local Accuracy(單筆解釋加總等於模型輸出)』、『Missingness(缺失特徵 SHAP 為 0)』、『Consistency(模型變動後重要特徵 SHAP 不會反向變動)』三公理的解釋方法。TreeSHAP 對樹模型的多項式複雜度為 O(TLD²)(T=樹數、L=葉子數、D=深度),遠優於原始 Shapley 的指數複雜度。在 200 棵樹 × 150 萬筆下,實務上 1-2 小時可完成。同時提供 Global(SHAP 平均絕對值排序)與 Local(單筆 SHAP 值瀑布圖)兩層解釋,完美匹配監管報告需求。",
-        "wrong": {
-          "Permutation Importance 最佳,因為它具備『模型無關(Model-agnostic)』特性,既可同時提供 Global 與 Local 兩層解釋,且在大資料上的計算速度遠勝 SHAP,可在 1 小時內完成": "Permutation Importance 透過『打亂某特徵後測量驗證集性能下降』來衡量重要性,本質上是 Global 指標,無法回答單筆樣本『為何被拒絕』。且每個特徵須重跑整個驗證集,在 150 萬筆 × 87 特徵下並不比 TreeSHAP 快",
-          "Gini-based Feature Importance 最佳,LightGBM 訓練後即可直接讀取 feature_importance_,不需額外計算且免費,在類別不平衡與高基數特徵下表現最穩定可信": "Gini Importance(分裂時不純度減少累計)只能提供 Global 解釋,且對高基數類別與連續特徵存在 selection bias(偏好可分裂點多的特徵),完全無法回答 Local 問題,不符合監管局部解釋要求",
-          "三者並用是最嚴謹的監管報告方案,SHAP 負責 Global、Permutation 負責 Local 的逐筆推理、Gini 做雙重驗證,雖耗時但能完整覆蓋監管要求的所有解釋層面": "Permutation Importance 本質不是 Local 方法,『跑 Local』是錯誤分工;且三者並用會超過 4 小時預算(Permutation 在大資料上特別耗時),浪費資源"
-        },
-        "hook": "解釋性方法選型:Global+Local 一站式 → SHAP;只要 Global 且 model-agnostic → Permutation;最快免費但有偏誤 → Gini"
-      },
-      "misconceptions": ["以為 Permutation Importance 能做 Local 解釋", "誤把 Gini Importance 當作可解釋性的完整方案", "忽略 TreeSHAP 多項式複雜度的工程價值"],
-      "related_node_ids": ["n_L23202_011", "n_L23202_013", "n_L23202_014"],
-      "tags": ["SHAP", "Permutation Importance", "Gini Importance", "可解釋性", "情境決策"]
-    },
-    {
       "id": "q_pf_adv_s3_003",
       "knowledge_code": "L23202",
       "node_id": "n_L23202_006",
@@ -151,122 +122,6 @@
       "tags": ["SVM", "C 值", "Gamma", "類別不平衡", "class_weight", "情境決策"]
     },
     {
-      "id": "q_pf_adv_s3_006",
-      "knowledge_code": "L23203",
-      "node_id": "NEEDS_DELETION",
-      "subject": 3,
-      "format": "single_choice",
-      "difficulty": "hard",
-      "source_level": "L2",
-      "stem": "某深度學習團隊同時開發四個模型,各使用不同的激活函數:(A)語音分類 MLP 全部用 tanh;(B)影像分類 ResNet-50 用 ReLU;(C)時序預測 LSTM(內部含 sigmoid+tanh);(D)Transformer 用 GELU 但結構特殊。團隊技術主管要求依各模型特性指定權重初始化策略。下列指派何者最匹配理論依據?",
-      "options": [
-        {"text": "(A)tanh→Xavier(Glorot);(B)ReLU→He(Kaiming);(C)LSTM→Orthogonal;(D)Transformer→Xavier 或 He 皆可,但極深 Transformer 可考慮 LSUV 校準", "is_correct": true},
-        {"text": "(A)tanh→He;(B)ReLU→Xavier;(C)LSTM→He;(D)Transformer→Orthogonal,理由是 He 經 ResNet 驗證適合所有深度模型,Xavier 在現代深度學習已被證明過時且效果普遍偏弱", "is_correct": false, "trap_type": "He 是針對 ReLU 修正的(計算 fan_in 時加 2 倍),用在 tanh 會讓激活前段過飽和;Xavier 適 tanh/sigmoid,並非過時"},
-        {"text": "全部使用 Xavier(Glorot),因為 Glorot 是最早最完整的理論初始化方法,涵蓋對稱激活函數的方差守恆推導,通用性最強且工業實務最穩定,不必為不同激活函數另外維護初始化策略", "is_correct": false, "trap_type": "Xavier 假設激活函數對稱於原點且導數約為 1(tanh 在 0 附近成立),但 ReLU 不對稱,使用 Xavier 會出現深層訊號逐漸萎縮(Vanishing Activation)"},
-        {"text": "全部使用 He,因為 ResNet 已證明 He 即使在非 ReLU 場景也表現良好,額外的 RNN orthogonal 屬於過時技巧,直接使用 He 即可同時涵蓋所有深度模型需求並減少超參搜尋空間", "is_correct": false, "trap_type": "He 對 ReLU 是最佳但對 tanh 變數方差過大會造成飽和;Orthogonal 對 RNN 並非過時,反而是業界標準預防梯度爆炸的方法"}
-      ],
-      "shuffle_options": true,
-      "explanation": {
-        "correct": "權重初始化的核心目標是『前向傳播時激活方差不爆炸不消失,反向傳播時梯度方差也保持』。各方法數學依據如下:Xavier(Glorot)→ Var(W) = 2/(fan_in + fan_out),假設激活對稱且導數約 1,適 tanh、sigmoid;He(Kaiming)→ Var(W) = 2/fan_in,因 ReLU 半邊歸零會丟失一半方差,故乘 2 補償;Orthogonal → 權重矩陣為正交矩陣,在 RNN 中遞迴乘法不放大不衰減,有效抑制 LSTM 梯度爆炸/消失;LSUV → Layer-Sequential Unit-Variance,以正交初始化 + 逐層校準輸出方差為 1,適合極深網路或自定義激活。Transformer 多採 Xavier 或 He,LSUV 是極深場景的進階校準。",
-        "wrong": {
-          "(A)tanh→He;(B)ReLU→Xavier;(C)LSTM→He;(D)Transformer→Orthogonal,理由是 He 經 ResNet 驗證適合所有深度模型,Xavier 在現代深度學習已被證明過時且效果普遍偏弱": "He 把 fan_in 變異數設為 2/fan_in,對 tanh 會讓輸入過大進入飽和區(|tanh(x)|→1),導數→0 出現梯度消失;Xavier 並未過時,在對稱激活仍是首選。LSTM 不適 He 而是 Orthogonal",
-          "全部使用 Xavier(Glorot),因為 Glorot 是最早最完整的理論初始化方法,涵蓋對稱激活函數的方差守恆推導,通用性最強且工業實務最穩定,不必為不同激活函數另外維護初始化策略": "Xavier 推導假設激活函數導數均值約 1 且對稱於原點。ReLU 半邊為 0,Var(ReLU(z)) = Var(z)/2,Xavier 不補償這個損失,深層 ReLU 網路會出現激活逐層衰減",
-          "全部使用 He,因為 ResNet 已證明 He 即使在非 ReLU 場景也表現良好,額外的 RNN orthogonal 屬於過時技巧,直接使用 He 即可同時涵蓋所有深度模型需求並減少超參搜尋空間": "ResNet 用 He 是因為 ReLU,但 ResNet 並非『證明 He 在非 ReLU 也最佳』。LSTM 中遞迴矩陣連乘會放大方差,Orthogonal 是 Saxe et al. 2014 證明的有效初始化,業界並未過時"
-        },
-        "hook": "初始化速查表:tanh/sigmoid → Xavier;ReLU/Leaky ReLU → He;RNN/LSTM → Orthogonal;極深或自定激活 → LSUV"
-      },
-      "misconceptions": ["以為 He 萬用,忽略激活函數對稱性差異", "把 Xavier 視為過時(實際是對稱激活的最佳選擇)", "忽略 RNN 遞迴矩陣需特殊初始化"],
-      "related_node_ids": ["n_L23203_010", "n_L23203_011", "n_L23203_012"],
-      "tags": ["權重初始化", "Xavier", "He", "Orthogonal", "LSUV", "激活函數", "情境決策"]
-    },
-    {
-      "id": "q_pf_adv_s3_007",
-      "knowledge_code": "L23203",
-      "node_id": "NEEDS_DELETION",
-      "subject": 3,
-      "format": "single_choice",
-      "difficulty": "hard",
-      "source_level": "L2",
-      "stem": "某 AI 平台公司同時部署四個模型在生產環境:(A)CNN 影像分類(ImageNet 資料,Batch=256);(B)Transformer 文本生成(序列長度可變,Batch=8);(C)風格遷移 GAN(每張圖獨立風格);(D)3D 醫學影像 U-Net(Batch=2,GPU 記憶體緊繃)。團隊主任要求為每個模型挑選最合適的 Normalization 層。下列分配何者最為理論正確?",
-      "options": [
-        {"text": "(A)CNN→BatchNorm;(B)Transformer→LayerNorm;(C)風格遷移→InstanceNorm;(D)小 batch 醫學 U-Net→GroupNorm", "is_correct": true},
-        {"text": "(A)CNN→LayerNorm;(B)Transformer→BatchNorm;(C)GAN→BatchNorm;(D)U-Net→BatchNorm,理由是 BatchNorm 最早最成熟,通用最佳", "is_correct": false, "trap_type": "Transformer 序列長度可變 + 小 batch,BatchNorm 統計不穩定;GAN 風格遷移用 BN 會把 batch 內不同風格混在一起;U-Net 在 Batch=2 下 BN 統計失準"},
-        {"text": "全部使用 BatchNorm,因為 BatchNorm 已被證明可加速收斂並降低內部協變量偏移,經典原始論文(Ioffe & Szegedy, 2015)已驗證在所有 CV/NLP 任務皆可達最佳訓練穩定度", "is_correct": false, "trap_type": "BatchNorm 在 batch_size 太小時統計嚴重失準,且不適合序列長度可變或單樣本獨立統計需求的任務"},
-        {"text": "全部使用 LayerNorm,因為 LayerNorm 跨樣本獨立計算每筆統計量,完全消除 batch_size 依賴,在序列、影像、生成等任務皆可一致應用,屬於理論最優且實作最簡潔", "is_correct": false, "trap_type": "LayerNorm 對 CNN 反而表現不如 BN(它跨 channel × H × W 算統計量,把不同空間位置混合,模糊空間特徵)"}
-      ],
-      "shuffle_options": true,
-      "explanation": {
-        "correct": "Normalization 選型核心是『沿哪些維度統計均值方差』:BatchNorm 沿 (N, H, W) 統計每個 channel,需大 batch 統計才穩,適 CNN 大 batch;LayerNorm 沿 (C, H, W) 統計每個樣本,batch 無關,適序列長度可變、batch 小的 Transformer/RNN;InstanceNorm 沿 (H, W) 統計每個 (N, C),完全保留樣本獨立風格資訊,是風格遷移與 CycleGAN 標配;GroupNorm 把 channels 分組沿 (group_C, H, W) 統計,batch=1-4 仍穩定,適 batch 緊繃的醫學 3D U-Net。原始 GroupNorm 論文(Wu & He, 2018)正以醫學影像為主要實驗場景。",
-        "wrong": {
-          "(A)CNN→LayerNorm;(B)Transformer→BatchNorm;(C)GAN→BatchNorm;(D)U-Net→BatchNorm,理由是 BatchNorm 最早最成熟,通用最佳": "Transformer 用 BN 會因為 padding 造成有效樣本不齊,且小 batch 統計失準;風格遷移用 BN 會混合不同風格的統計量;Batch=2 的 U-Net 用 BN 統計樣本不足。BN 並非通用最佳",
-          "全部使用 BatchNorm,因為 BatchNorm 已被證明可加速收斂並降低內部協變量偏移,經典原始論文(Ioffe & Szegedy, 2015)已驗證在所有 CV/NLP 任務皆可達最佳訓練穩定度": "BN 原論文(Ioffe & Szegedy, 2015)以 CNN ImageNet 為實驗場景,並未測試小 batch 或變長序列。後續論文已明確指出 BN 在 batch<8 時統計失準,在 NLP 與 GAN 上效果不如 LN/IN",
-          "全部使用 LayerNorm,因為 LayerNorm 跨樣本獨立計算每筆統計量,完全消除 batch_size 依賴,在序列、影像、生成等任務皆可一致應用,屬於理論最優且實作最簡潔": "LayerNorm 對 CNN 把所有 channel × 空間位置統計合一,會抹平 spatial 與 channel 的局部差異,影響卷積特徵表達,實證上 CNN 用 LN 通常輸給 BN 與 GN"
-        },
-        "hook": "Norm 速查:大 batch CNN→BN;序列/Transformer→LN;風格保留 GAN→IN;小 batch CNN/3D→GN"
-      },
-      "misconceptions": ["以為 BN 萬用而忽略 batch_size 依賴", "誤認 LayerNorm 在 CNN 必勝", "忽略風格遷移需保留樣本獨立風格"],
-      "related_node_ids": ["n_L23203_012", "n_L23203_013", "n_L23203_014"],
-      "tags": ["BatchNorm", "LayerNorm", "GroupNorm", "InstanceNorm", "Normalization", "情境決策"]
-    },
-    {
-      "id": "q_pf_adv_s3_008",
-      "knowledge_code": "L23203",
-      "node_id": "NEEDS_DELETION",
-      "subject": 3,
-      "format": "single_choice",
-      "difficulty": "hard",
-      "source_level": "L2",
-      "stem": "某資深面試官問新進工程師:『ResNet 殘差連接 H(x) = F(x) + x,為什麼能解決極深網路梯度消失問題?』新進工程師給出四種解釋,試問何者數學上最為正確?",
-      "options": [
-        {"text": "因為 ∂H/∂x = ∂F/∂x + I,『+ I』讓恆等映射梯度永遠存在;鏈式法則展開深層梯度時,每層至少有一個『1』的乘法因子,使整體梯度無論深度多大都不會被連乘的小數值壓到 0", "is_correct": true},
-        {"text": "因為 H(x) = F(x) + x 把激活前的訊號做加法增益,等於每層自動放大訊號約 2 倍,使前向傳播訊號逐層遞增,深層也不會出現梯度消失或訊號萎縮的問題", "is_correct": false, "trap_type": "+x 是恆等加,不是『放大 2 倍』;且若是放大反而會造成梯度爆炸而非消失"},
-        {"text": "因為 ResNet 採用 ReLU 取代 sigmoid 作為主要激活函數,ReLU 在正區間導數恆為 1,梯度天然不會消失;殘差連接只是次要的工程設計細節,並非解決深度問題的核心", "is_correct": false, "trap_type": "ReLU 確實減輕梯度消失但無法完全解決極深(>50 層)問題,殘差連接才是 ResNet 能訓練 152 層甚至 1000 層的關鍵"},
-        {"text": "因為殘差連接讓每一層只需學習『近似 0 的小幅擾動』,F(x) 數值極小所以梯度也跟著縮小,反向傳播時自動避免梯度爆炸並抑制深層訊號發散", "is_correct": false, "trap_type": "ResNet 解的是梯度消失而非爆炸;『梯度小』是錯的,是『梯度有保底』"}
-      ],
-      "shuffle_options": true,
-      "explanation": {
-        "correct": "ResNet 數學分析(He et al., 2016):設 H(x_l) = F(x_l, W_l) + x_l,則第 L 層輸出可遞迴展開為 x_L = x_l + Σ(i=l→L-1) F(x_i, W_i)。對 x_l 求偏微分得 ∂x_L/∂x_l = I + Σ ∂F/∂x_l。鏈式法則計算 ∂Loss/∂x_l = ∂Loss/∂x_L × (I + Σ ∂F/∂x_l)。關鍵:括號內含 I(恆等矩陣),即使所有 F 的偏微分都接近 0,整體梯度仍至少保留 ∂Loss/∂x_L × I 的成分,不會被連乘衰減到 0。這是『梯度近似恆等映射』的核心,讓 152 層甚至 1202 層的網路得以訓練。",
-        "wrong": {
-          "因為 H(x) = F(x) + x 把激活前的訊號做加法增益,等於每層自動放大訊號約 2 倍,使前向傳播訊號逐層遞增,深層也不會出現梯度消失或訊號萎縮的問題": "+x 是『恆等映射加上殘差』,不是放大 2 倍;若真的每層放大 2 倍,L 層後訊號會放大 2^L 倍造成梯度爆炸,反而是壞事。原論文要求 F 與 x 維度一致或用 1×1 卷積對齊,並非倍增",
-          "因為 ResNet 採用 ReLU 取代 sigmoid 作為主要激活函數,ReLU 在正區間導數恆為 1,梯度天然不會消失;殘差連接只是次要的工程設計細節,並非解決深度問題的核心": "ReLU 確實緩解梯度消失(因為其導數在正區間為 1),但 VGG 也用 ReLU 卻無法訓練超過 19 層;ResNet 能達 152 層的關鍵不是 ReLU 而是 skip connection。He et al. 原論文明確指出殘差是核心",
-          "因為殘差連接讓每一層只需學習『近似 0 的小幅擾動』,F(x) 數值極小所以梯度也跟著縮小,反向傳播時自動避免梯度爆炸並抑制深層訊號發散": "ResNet 主要解的是梯度消失而非爆炸;『梯度小』是錯的,是『梯度有保底』"
-        },
-        "hook": "ResNet 公式:∂H/∂x = I + ∂F/∂x → 連乘 L 層後仍含 I 成分 → 梯度有保底 → 可訓練極深網路"
-      },
-      "misconceptions": ["以為殘差連接是『放大訊號』而非恆等映射", "把 ReLU 視為 ResNet 解梯度消失的主因", "忽略 ∂H/∂x 中 I 的數學意義"],
-      "related_node_ids": ["n_L23203_013", "n_L23203_015", "n_L23203_017"],
-      "tags": ["ResNet", "殘差連接", "梯度消失", "深度學習", "恆等映射"]
-    },
-    {
-      "id": "q_pf_adv_s3_009",
-      "knowledge_code": "L23203",
-      "node_id": "NEEDS_DELETION",
-      "subject": 3,
-      "format": "single_choice",
-      "difficulty": "hard",
-      "source_level": "L2",
-      "stem": "某 AI 實驗室同時遭遇三組梯度問題:(A)LSTM 訓練第 8 個 epoch loss 突然變 NaN;(B)20 層普通 CNN(無 skip connection)前幾層幾乎無更新;(C)GAN 訓練判別器(Discriminator)loss 振盪劇烈不收斂。資深研究員為三組問題各開出最對症的處方。下列搭配何者最佳?",
-      "options": [
-        {"text": "(A)LSTM 梯度爆炸→Gradient Clipping;(B)深層 CNN 梯度消失→改用 ReLU+He 初始化或加入 ResNet skip connection;(C)GAN 不穩→Spectral Normalization 限制 Discriminator 的 Lipschitz 常數", "is_correct": true},
-        {"text": "(A)LSTM 梯度爆炸→把 cell state 內部的 tanh 全部換成 ReLU 以避免飽和;(B)CNN 梯度消失→套用 Gradient Clipping 限制梯度範數;(C)GAN 振盪→大幅提高 Dropout 比例;三者皆通用 dropout 即可", "is_correct": false, "trap_type": "LSTM 內部 tanh 不可亂改 ReLU(會破壞 cell state 數值穩定);CNN 梯度消失用 clipping 無效(clipping 是治爆炸);GAN 用 dropout 對 Lipschitz 約束無效"},
-        {"text": "三者皆採用 Batch Normalization 解決梯度問題,因為 BN 可同時抑制梯度爆炸與梯度消失、加速深層網路收斂,且在 GAN 的 Discriminator 上也能穩定收斂並提升生成品質,屬於跨模型萬用解決方案", "is_correct": false, "trap_type": "BN 在 GAN 的 Discriminator 上反而會加重 mode collapse;LSTM 上 BN 並不直接適用(序列維度問題);BN 是緩解,不是專治"},
-        {"text": "(A)LSTM→把 learning_rate 降為原本 1/100 抑制爆炸;(B)深層 CNN→改用 Adam 自適應優化器解決梯度消失;(C)GAN→改用 Wasserstein Loss 即可穩定收斂,不必額外引入 Spectral Norm 等複雜約束機制", "is_correct": false, "trap_type": "降 lr 是治標(會延緩爆炸但不修),CNN 換 Adam 不解梯度消失根本病灶,WGAN 確需 Lipschitz 但 SN 比 weight clipping 更精確"}
-      ],
-      "shuffle_options": true,
-      "explanation": {
-        "correct": "三組問題對症處方分別:(A)LSTM 梯度爆炸:遞迴矩陣連乘特徵值若>1 會指數放大,Gradient Clipping(如 clip_grad_norm_,閾值 1-5)是 Pascanu et al. 2013 提出的標準解,直接限制梯度範數防止 NaN;(B)深層 CNN 梯度消失:訊號逐層衰減的根因是激活函數導數<1 連乘,解法是 ReLU(導數為 1)+He 初始化(補償 ReLU 半邊歸零的方差)或 ResNet skip(讓梯度有保底);(C)GAN 訓練不穩:Discriminator 梯度過大會壓倒 Generator,Spectral Normalization(Miyato et al. 2018)透過約束權重矩陣的最大奇異值=1,限制 Lipschitz 常數=1,是 SN-GAN/BigGAN 的標配技巧。",
-        "wrong": {
-          "(A)LSTM 梯度爆炸→把 cell state 內部的 tanh 全部換成 ReLU 以避免飽和;(B)CNN 梯度消失→套用 Gradient Clipping 限制梯度範數;(C)GAN 振盪→大幅提高 Dropout 比例;三者皆通用 dropout 即可": "LSTM 內部 tanh+sigmoid 是經過數學設計的 gating 機制,改 ReLU 會破壞 cell state 邊界並引發爆炸;Gradient Clipping 是治『爆炸』不治『消失』,深層 CNN 更新太小是消失;Dropout 是正則化,對 Lipschitz 約束無效",
-          "三者皆採用 Batch Normalization 解決梯度問題,因為 BN 可同時抑制梯度爆炸與梯度消失、加速深層網路收斂,且在 GAN 的 Discriminator 上也能穩定收斂並提升生成品質,屬於跨模型萬用解決方案": "BN 在 GAN Discriminator 上會引入 batch 統計噪音導致 mode collapse(SN-GAN 論文明確指出);LSTM 上 BN 對序列維度不友善;BN 是緩解性技巧而非每場景的專治",
-          "(A)LSTM→把 learning_rate 降為原本 1/100 抑制爆炸;(B)深層 CNN→改用 Adam 自適應優化器解決梯度消失;(C)GAN→改用 Wasserstein Loss 即可穩定收斂,不必額外引入 Spectral Norm 等複雜約束機制": "降 lr 會延緩但無法根治梯度爆炸;Adam 雖自適應,但 20 層無 skip 的 CNN 梯度消失主因是初始化與激活,Adam 救不了;WGAN 仍需要 Lipschitz=1 約束,原版 WGAN 用 weight clipping 但有缺陷,SN 才是更好方案"
-        },
-        "hook": "梯度問題對症速查:爆炸(LSTM/RNN)→ Clipping;消失(深 CNN)→ ReLU+He 或 ResNet;GAN 不穩 → Spectral Norm 或 WGAN-GP"
-      },
-      "misconceptions": ["以為 BN 萬能解所有梯度問題", "把 Gradient Clipping 用在梯度消失場景", "忽略 GAN 需要的是 Lipschitz 約束而非一般正則化"],
-      "related_node_ids": ["n_L23203_015", "n_L23203_017", "n_L23203_018"],
-      "tags": ["梯度爆炸", "梯度消失", "Gradient Clipping", "Spectral Norm", "GAN", "情境決策"]
-    },
-    {
       "id": "q_pf_adv_s3_010",
       "knowledge_code": "L23202",
       "node_id": "n_L23202_008",
@@ -323,35 +178,6 @@
       "misconceptions": ["把 Single 與 Complete 的鏈式行為記反", "以為 Ward 在所有資料分布都最佳", "忽略 linkage 選擇對結果結構的決定性影響"],
       "related_node_ids": ["n_L23202_008", "n_L23202_002", "n_L23202_001"],
       "tags": ["層次聚類", "linkage", "Single", "Complete", "Ward", "鏈式效應"]
-    },
-    {
-      "id": "q_pf_adv_s3_012",
-      "knowledge_code": "L23202",
-      "node_id": "NEEDS_DELETION",
-      "subject": 3,
-      "format": "single_choice",
-      "difficulty": "hard",
-      "source_level": "L2",
-      "stem": "某金融科技集團同時部署三個異常偵測場景:(A)信用卡詐欺偵測:結構化交易特徵共 320 維、樣本 1000 萬筆、需毫秒級推論;(B)製造廠感測器:時序振動信號、有明顯週期性、訓練資料只含正常運轉數據;(C)安全監控影像:每分鐘 30 張高解析圖,正常場景變異大,需偵測未見過的異常事件。資深 ML 架構師為三場景指派最佳異常偵測演算法。下列何者最為合理?",
-      "options": [
-        {"text": "(A)信用卡詐欺→Isolation Forest(高維結構化、訓練快、推論毫秒);(B)感測器時序→One-Class SVM 或 Autoencoder(學習正常模式);(C)監控影像→Autoencoder/VAE(以重建誤差為異常分數)", "is_correct": true},
-        {"text": "(A)信用卡→Autoencoder(深度學習方法在大規模結構化資料表現最強);(B)感測器→LOF(局部密度比較最能捕捉異常時序);(C)影像→Isolation Forest,三者皆可改採 Isolation Forest 取得統一架構", "is_correct": false, "trap_type": "信用卡 1000 萬筆毫秒推論用 Autoencoder GPU 推論成本過高;LOF 對時序週期性資料效果不佳;Isolation Forest 對影像高維像素層級不適合"},
-        {"text": "三者皆採用 LOF(Local Outlier Factor),因為 LOF 透過比較樣本與其 k 個近鄰之間的局部可達密度比,可精確識別密度差異下的離群點,在結構化交易、時序振動、高維影像三種異常偵測場景下都屬於最強方法", "is_correct": false, "trap_type": "LOF 計算複雜度 O(n²),1000 萬筆信用卡資料完全無法跑;LOF 對時序與高維影像都不適合"},
-        {"text": "三者皆採用 One-Class SVM,因為 OC-SVM 是異常偵測領域的經典方法、可透過 ν 參數控制離群比例並支援 RBF 等多種核函數,能同時應用於結構化、時序、影像三類任務,屬於通用性最強的異常偵測解決方案", "is_correct": false, "trap_type": "OC-SVM 在 1000 萬筆規模下訓練成本過高(O(n²~n³));高維影像直接餵 OC-SVM 效果遠不如 Autoencoder 重建"}
-      ],
-      "shuffle_options": true,
-      "explanation": {
-        "correct": "異常偵測選型核心:(A)信用卡詐欺 1000 萬筆+320 維結構化+毫秒推論,Isolation Forest 訓練 O(n log n)、推論 O(log n)、不需特徵縮放、原生支援高維,且只需『隨機切分越快被孤立越異常』的直覺,是業界 fraud detection 標配;(B)感測器時序+只有正常數據,One-Class SVM 學一個包覆正常區域的超球面,Autoencoder 訓練重建正常訊號 → 重建誤差大即異常,兩者對『One-class learning』場景皆合適;(C)監控影像高維像素+正常變異大,Autoencoder/VAE 將圖片壓縮到 latent 再重建,異常事件因模型未見過會有大重建誤差,且能用 latent 空間做更深入分析,是影像異常偵測的主流。",
-        "wrong": {
-          "(A)信用卡→Autoencoder(深度學習方法在大規模結構化資料表現最強);(B)感測器→LOF(局部密度比較最能捕捉異常時序);(C)影像→Isolation Forest,三者皆可改採 Isolation Forest 取得統一架構": "信用卡 1000 萬筆毫秒推論的工程約束下,Autoencoder GPU 推論延遲與成本都不適合線上 fraud detection;LOF 對時序週期性效果差且 O(n²) 太慢;Isolation Forest 在像素級高維影像上會被無關特徵主導",
-          "三者皆採用 LOF(Local Outlier Factor),因為 LOF 透過比較樣本與其 k 個近鄰之間的局部可達密度比,可精確識別密度差異下的離群點,在結構化交易、時序振動、高維影像三種異常偵測場景下都屬於最強方法": "LOF 計算複雜度 O(n²),1000 萬筆資料即 10^14 次運算完全不可行;LOF 對高維資料受 curse of dimensionality 影響,在影像或感測器時序上效能不佳",
-          "三者皆採用 One-Class SVM,因為 OC-SVM 是異常偵測領域的經典方法、可透過 ν 參數控制離群比例並支援 RBF 等多種核函數,能同時應用於結構化、時序、影像三類任務,屬於通用性最強的異常偵測解決方案": "OC-SVM 訓練複雜度 O(n²~n³),1000 萬筆規模需數天甚至無法完成;影像若不先用 CNN 抽特徵,直接餵 OC-SVM 效果遠不如 Autoencoder;OC-SVM 經典但非萬用"
-        },
-        "hook": "異常偵測選型速查:超大量結構化→Isolation Forest;少量+只有正常→One-Class SVM/Autoencoder;高維影像→Autoencoder/VAE;小資料局部密度→LOF"
-      },
-      "misconceptions": ["以為 LOF 萬用而忽略 O(n²) 複雜度", "把 Autoencoder 用在毫秒級線上推論不考慮成本", "誤以為 OC-SVM 適合所有資料規模"],
-      "related_node_ids": ["n_L23202_040", "n_L23202_041", "n_L23202_042"],
-      "tags": ["異常偵測", "Isolation Forest", "One-Class SVM", "Autoencoder", "LOF", "情境決策"]
     }
   ]
 }

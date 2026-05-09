@@ -1,0 +1,420 @@
+{
+  "L21101": [
+    {
+      "id": "n_L21101_001",
+      "title": "NLP 四階段演進"
+    },
+    {
+      "id": "n_L21101_002",
+      "title": "Transformer Self-Attention 與多頭注意力"
+    },
+    {
+      "id": "n_L21101_003",
+      "title": "BERT vs GPT(雙向理解 vs 單向生成)"
+    },
+    {
+      "id": "n_L21101_004",
+      "title": "Word2Vec(Skip-gram vs CBOW)+ GloVe + FastText"
+    },
+    {
+      "id": "n_L21101_005",
+      "title": "TF-IDF 與 N-gram 限制"
+    },
+    {
+      "id": "n_L21101_006",
+      "title": "RAG 檢索增強生成"
+    }
+  ],
+  "L21102": [
+    {
+      "id": "n_L21102_001",
+      "title": "CNN vs FCNN(全連接神經網路)優勢"
+    },
+    {
+      "id": "n_L21102_002",
+      "title": "CV 任務四階層:分類 → 物件偵測 → 語意分割 → 實例分割 → 全景分割"
+    },
+    {
+      "id": "n_L21102_003",
+      "title": "mAP 與 IoU(物件偵測評估)"
+    },
+    {
+      "id": "n_L21102_004",
+      "title": "經典 CNN 譜系:LeNet → AlexNet → VGG → GoogLeNet → ResNet"
+    }
+  ],
+  "L21103": [
+    {
+      "id": "n_L21103_001",
+      "title": "VAE / GAN / Diffusion 三大生成模型對比"
+    },
+    {
+      "id": "n_L21103_002",
+      "title": "GAN Mode Collapse 與 WGAN 解法"
+    },
+    {
+      "id": "n_L21103_003",
+      "title": "Stable Diffusion 取樣參數(取樣步數 vs CFG)"
+    },
+    {
+      "id": "n_L21103_004",
+      "title": "RAG 開卷 vs LLM 閉卷"
+    }
+  ],
+  "L21104": [
+    {
+      "id": "n_L21104_001",
+      "title": "CLIP 對比學習圖文對齊(Zero-shot)"
+    },
+    {
+      "id": "n_L21104_002",
+      "title": "多模態資料缺失策略"
+    }
+  ],
+  "L21202": [
+    {
+      "id": "n_L21202_001",
+      "title": "AI 漸進式部署(Phased Rollout)"
+    },
+    {
+      "id": "n_L21202_002",
+      "title": "AI 導入評估三層 + POC 條件"
+    }
+  ],
+  "L21203": [
+    {
+      "id": "n_L21203_001",
+      "title": "PDPA 事前告知義務六項(勘誤補完)"
+    },
+    {
+      "id": "n_L21203_002",
+      "title": "GDPR 七大權利"
+    },
+    {
+      "id": "n_L21203_003",
+      "title": "對抗性攻擊(Adversarial Attack)三層防禦"
+    },
+    {
+      "id": "n_L21203_004",
+      "title": "生成式 AI 著作權侵權對策"
+    },
+    {
+      "id": "n_L21203_005",
+      "title": "不可否認性(Non-repudiation)= 數位簽章 + Hash"
+    }
+  ],
+  "L21302": [
+    {
+      "id": "n_L21302_001",
+      "title": "Kubernetes 在 AI 部署的核心功能"
+    },
+    {
+      "id": "n_L21302_002",
+      "title": "MLOps Model Registry"
+    },
+    {
+      "id": "n_L21302_003",
+      "title": "Drift 偵測:Data Drift / Concept Drift / PSI / KL Divergence"
+    },
+    {
+      "id": "n_L21302_004",
+      "title": "持續整合 CI(Continuous Integration)"
+    },
+    {
+      "id": "n_L21302_005",
+      "title": "高可用 AI 服務架構:水平擴展 + Auto Scaling"
+    },
+    {
+      "id": "n_L21302_006",
+      "title": "GPU 記憶體不足解法:Data Sharding + 較小 Batch Size"
+    },
+    {
+      "id": "n_L21302_007",
+      "title": "Canary Release / A-B Testing / 藍綠部署"
+    }
+  ],
+  "L21301": [
+    {
+      "id": "n_L21301_001",
+      "title": "JSON 半結構化資料時序特徵抽取"
+    },
+    {
+      "id": "n_L21301_002",
+      "title": "連續 + 類別混合特徵工程"
+    }
+  ],
+  "L21201": [
+    {
+      "id": "n_L21201_001",
+      "title": "AI 導入評估三層 + 三大財務指標"
+    },
+    {
+      "id": "n_L21201_002",
+      "title": "AI 導入三種模式比較(委外 / 內部 / 商業服務)"
+    }
+  ],
+  "L23201": [
+    {
+      "id": "n_L23201_001",
+      "title": "監督學習(Supervised Learning)"
+    },
+    {
+      "id": "n_L23201_002",
+      "title": "非監督學習(Unsupervised Learning)"
+    },
+    {
+      "id": "n_L23201_003",
+      "title": "半監督學習 vs 自監督學習"
+    },
+    {
+      "id": "n_L23201_004",
+      "title": "強化學習(Reinforcement Learning, RL)"
+    },
+    {
+      "id": "n_L23201_005",
+      "title": "判別式 vs 生成式學習"
+    },
+    {
+      "id": "n_L23201_006",
+      "title": "聯邦學習 vs 分散式學習"
+    }
+  ],
+  "L23202": [
+    {
+      "id": "n_L23202_001",
+      "title": "集成學習(Ensemble Learning):Bagging / Boosting / Stacking"
+    },
+    {
+      "id": "n_L23202_002",
+      "title": "DBSCAN 三類點(Core / Border / Noise)"
+    },
+    {
+      "id": "n_L23202_003",
+      "title": "邏輯迴歸(Logistic Regression)"
+    },
+    {
+      "id": "n_L23202_004",
+      "title": "SVM 超平面 + 核函數"
+    },
+    {
+      "id": "n_L23202_005",
+      "title": "決策樹 + 資訊增益(Information Gain)"
+    },
+    {
+      "id": "n_L23202_006",
+      "title": "XGBoost vs GBDT 改進"
+    },
+    {
+      "id": "n_L23202_007",
+      "title": "信用評分卡標準流程"
+    },
+    {
+      "id": "n_L23202_008",
+      "title": "K-means vs DBSCAN"
+    },
+    {
+      "id": "n_L23202_009",
+      "title": "Apriori 三指標(Support / Confidence / Lift)"
+    }
+  ],
+  "L23304": [
+    {
+      "id": "n_L23304_001",
+      "title": "過擬合(Overfitting)定義與徵兆"
+    },
+    {
+      "id": "n_L23304_002",
+      "title": "正則化:L1(Lasso) vs L2(Ridge)"
+    },
+    {
+      "id": "n_L23304_003",
+      "title": "Early Stopping(早停法)"
+    },
+    {
+      "id": "n_L23304_004",
+      "title": "Dropout 機制"
+    },
+    {
+      "id": "n_L23304_005",
+      "title": "防止過擬合策略總表(5 大面向)"
+    }
+  ],
+  "L23102": [
+    {
+      "id": "n_L23102_001",
+      "title": "PCA(主成分分析)— 最常考核心"
+    },
+    {
+      "id": "n_L23102_002",
+      "title": "LDA(線性判別分析)— 監督式降維"
+    },
+    {
+      "id": "n_L23102_003",
+      "title": "ICA(獨立成分分析)"
+    },
+    {
+      "id": "n_L23102_004",
+      "title": "SVD(奇異值分解)"
+    },
+    {
+      "id": "n_L23102_005",
+      "title": "t-SNE(視覺化降維)"
+    },
+    {
+      "id": "n_L23102_006",
+      "title": "UMAP(t-SNE 替代)"
+    },
+    {
+      "id": "n_L23102_007",
+      "title": "Autoencoder(深度學習式降維)"
+    },
+    {
+      "id": "n_L23102_008",
+      "title": "NMF(非負矩陣分解)"
+    },
+    {
+      "id": "n_L23102_009",
+      "title": "Kernel PCA(非線性 PCA)"
+    },
+    {
+      "id": "n_L23102_010",
+      "title": "降維方法選擇陷阱對照"
+    },
+    {
+      "id": "n_L23102_011",
+      "title": "PCA vs LDA(最常考對照)"
+    },
+    {
+      "id": "n_L23102_012",
+      "title": "PCA vs t-SNE"
+    }
+  ],
+  "L23101": [
+    {
+      "id": "n_L23101_001",
+      "title": "貝氏定理(Bayes' Theorem)應用"
+    },
+    {
+      "id": "n_L23101_002",
+      "title": "Monte Carlo 蒙地卡羅模擬"
+    },
+    {
+      "id": "n_L23101_003",
+      "title": "中央極限定理(CLT)與常態分佈"
+    }
+  ],
+  "L23103": [
+    {
+      "id": "n_L23103_001",
+      "title": "Adam 優化器(內建動量機制)"
+    },
+    {
+      "id": "n_L23103_002",
+      "title": "凸函數 vs 非凸函數 / 局部最優 / 鞍點"
+    },
+    {
+      "id": "n_L23103_003",
+      "title": "學習率(Learning Rate)控制"
+    },
+    {
+      "id": "n_L23103_004",
+      "title": "時間複雜度 O(n²) — 兩兩比對"
+    }
+  ],
+  "L23203": [
+    {
+      "id": "n_L23203_001",
+      "title": "ReLU 激活函數(解決梯度消失與訓練停滯)"
+    },
+    {
+      "id": "n_L23203_002",
+      "title": "LSTM 與 GRU(處理長距離序列)"
+    },
+    {
+      "id": "n_L23203_003",
+      "title": "加權求和公式(感知器/神經網路)— 勘誤"
+    }
+  ],
+  "L23301": [
+    {
+      "id": "n_L23301_001",
+      "title": "特徵縮放(對距離 / 梯度模型必要)"
+    },
+    {
+      "id": "n_L23301_002",
+      "title": "互動特徵(Interaction Features)"
+    },
+    {
+      "id": "n_L23301_003",
+      "title": "SMOTE 不平衡資料過採樣"
+    }
+  ],
+  "L23302": [
+    {
+      "id": "n_L23302_001",
+      "title": "模型架構選擇與超參數初始化"
+    }
+  ],
+  "L23303": [
+    {
+      "id": "n_L23303_001",
+      "title": "F1 分數計算(必考公式)"
+    },
+    {
+      "id": "n_L23303_002",
+      "title": "Precision / Recall 公式(勘誤關鍵)"
+    },
+    {
+      "id": "n_L23303_003",
+      "title": "R² 解讀(85% 變異被解釋)"
+    },
+    {
+      "id": "n_L23303_004",
+      "title": "不平衡資料禁用 Accuracy"
+    },
+    {
+      "id": "n_L23303_005",
+      "title": "交叉驗證方法選擇(K-Fold/Stratified/LOOCV/Time Series)"
+    },
+    {
+      "id": "n_L23303_006",
+      "title": "macro F1 跨語言失準"
+    },
+    {
+      "id": "n_L23303_007",
+      "title": "殘差圖診斷(系統性彎曲)"
+    },
+    {
+      "id": "n_L23303_008",
+      "title": "ARIMA 殘差白噪音 + ACF"
+    }
+  ],
+  "L23401": [
+    {
+      "id": "n_L23401_001",
+      "title": "同態加密 Homomorphic Encryption"
+    },
+    {
+      "id": "n_L23401_002",
+      "title": "隱私技術組合(同態加密 + MPC + 雜湊 + 對稱加密)"
+    },
+    {
+      "id": "n_L23401_003",
+      "title": "差分隱私 vs 聯邦學習 vs MPC vs 同態加密"
+    }
+  ],
+  "L23402": [
+    {
+      "id": "n_L23402_001",
+      "title": "AI 偏見三類:Sampling / Label / Feature Bias"
+    },
+    {
+      "id": "n_L23402_002",
+      "title": "公平性指標:Demographic Parity / Equal Opportunity / Equalized Odds"
+    },
+    {
+      "id": "n_L23402_003",
+      "title": "Embedding 偏見與隱式偏誤"
+    }
+  ]
+}

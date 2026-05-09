@@ -67,9 +67,9 @@
     },
     {
       "id": "q_pd_003",
-      "knowledge_code": "L22201",
-      "node_id": "n_L22201_005",
-      "subject": 2,
+      "knowledge_code": "L23102",
+      "node_id": "n_L23102_008",
+      "subject": 3,
       "format": "single_choice",
       "difficulty": "hard",
       "source_level": "L2",
@@ -92,7 +92,7 @@
         "hook": "NMF 的 Non-negative 是 element-wise(每個元素),不是 determinant(行列式),也不是 diagonal(對角線)"
       },
       "misconceptions": ["把 element-wise 與行列式概念混淆", "認為 NMF 只是『大致非負』即可", "忽略 TF-IDF 浮點誤差也會違反假設"],
-      "related_node_ids": ["n_L22201_003", "n_L22201_005", "n_L22201_007"],
+      "related_node_ids": ["n_L23102_008", "n_L23102_001", "n_L23102_010"],
       "tags": ["NMF", "矩陣分解", "errata進化版", "主題建模", "情境決策"]
     },
     {
@@ -157,9 +157,9 @@
     },
     {
       "id": "q_pd_006",
-      "knowledge_code": "L23402",
-      "node_id": "n_L23402_004",
-      "subject": 3,
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_006",
+      "subject": 1,
       "format": "single_choice",
       "difficulty": "hard",
       "source_level": "L2",
@@ -181,7 +181,7 @@
         "hook": "邊緣部署選型:看『參數量、FLOPs、記憶體峰值、延遲』四項;深度不等於大,FC 層才是參數爆炸主因"
       },
       "misconceptions": ["以為深度越深參數越多", "認為簡單結構就一定快", "在資源受限環境忽略模型大小"],
-      "related_node_ids": ["n_L23402_002", "n_L23402_004", "n_L23402_006"],
+      "related_node_ids": ["n_L21302_006", "n_L21102_004"],
       "tags": ["CNN架構", "EfficientNet", "邊緣部署", "進化版", "情境決策"]
     },
     {

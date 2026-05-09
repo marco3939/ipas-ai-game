@@ -244,7 +244,7 @@
     {
       "id": "q_pc_seq_001",
       "knowledge_code": "L21102",
-      "node_id": "NEEDS_DELETION",
+      "node_id": "n_L21102_001",
       "subject": 1,
       "format": "sequence",
       "difficulty": "medium",
@@ -267,13 +267,13 @@
         "hook": "口訣:『載增切定訓驗測署』 — 載入→增強→切分→定義→訓練→驗證→測試→部署"
       },
       "misconceptions": ["把資料增強放在訓練之後", "用測試集調超參(資料洩漏)", "未驗證即上線"],
-      "related_node_ids": ["n_L21102_004", "n_L21102_005"],
+      "related_node_ids": ["n_L21102_004", "n_L21102_002"],
       "tags": ["sequence", "CNN", "ML pipeline", "影像"]
     },
     {
       "id": "q_pc_seq_002",
       "knowledge_code": "L21101",
-      "node_id": "NEEDS_DELETION",
+      "node_id": "n_L21101_003",
       "subject": 1,
       "format": "sequence",
       "difficulty": "medium",
@@ -296,7 +296,7 @@
         "hook": "口訣:『載切頭凍調驗署監』 — 載權重→切 token→加分類頭→凍結→微調→驗證→部署→監控"
       },
       "misconceptions": ["未加分類頭就嘗試微調", "用錯 tokenizer(必須與預訓練一致)", "微調時 lr 過大造成災難遺忘"],
-      "related_node_ids": ["n_L21101_006", "n_L21101_007"],
+      "related_node_ids": ["n_L21101_002", "n_L21101_006"],
       "tags": ["sequence", "NLP", "BERT", "Fine-tuning"]
     },
     {
@@ -331,7 +331,7 @@
     {
       "id": "q_pc_seq_004",
       "knowledge_code": "L23304",
-      "node_id": "NEEDS_DELETION",
+      "node_id": "n_L23304_005",
       "subject": 3,
       "format": "sequence",
       "difficulty": "medium",
@@ -354,7 +354,7 @@
         "hook": "口訣:『定探特搜對調署續』 — 定問題→探資料→特徵→搜索→對比→微調→部署→持續"
       },
       "misconceptions": ["以為 AutoML 不需要特徵工程", "把模型部署放在對比/微調之前", "未做機率校準就用 AutoML 模型輸出機率做業務決策"],
-      "related_node_ids": ["n_L23304_007", "n_L23304_008"],
+      "related_node_ids": ["n_L23304_001", "n_L23304_003"],
       "tags": ["sequence", "AutoML", "ML pipeline", "模型選擇"]
     },
     {

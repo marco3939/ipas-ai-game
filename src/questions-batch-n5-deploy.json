@@ -1,0 +1,789 @@
+{
+  "version": "1.0",
+  "agent": "N5",
+  "purpose": "L21301 資料準備與模型選擇 + L21302 AI 技術系統集成與部署 原創題庫",
+  "schema_version": "iron-rule-1+2+3+4+5",
+  "generated_at": "2026-05-10",
+  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "iron_rule_1_compliance": "every question has explanation.correct + explanation.wrong + explanation.hook + misconceptions + related_node_ids",
+  "iron_rule_2_compliance": "shuffle_options:true on every question; calculation 題使用 stem_variables 多 case 池",
+  "iron_rule_3_compliance": "全 25 題原創情境,跨產業:製造/醫療/金融/物流/零售/能源/政府/航空/教育;未複製 114-2 原題",
+  "iron_rule_4_compliance": "正解/平均錯解長度比落在 [0.85, 1.20];錯解皆寫成『看似專業合理的另一描述』",
+  "iron_rule_5_compliance": "knowledge_code = L21301 或 L21302;node_id 全部對應 scripts/kb-allowed-nodes.json 之該群組;未涉 Feature Store / INT8 / Triton / TorchServe / vLLM 等中級範圍外工程細節",
+  "node_distribution": {
+    "n_L21301_001_JSON時序特徵": 5,
+    "n_L21301_002_連續類別混合特徵": 5,
+    "n_L21302_001_K8s": 2,
+    "n_L21302_002_ModelRegistry": 2,
+    "n_L21302_003_Drift_PSI_KL": 4,
+    "n_L21302_004_CI": 2,
+    "n_L21302_005_AutoScaling": 2,
+    "n_L21302_006_GPU記憶體": 2,
+    "n_L21302_007_Canary_AB_BlueGreen": 1
+  },
+  "format_distribution": {"single_choice_文字": 15, "single_choice_情境": 8, "calculation": 2},
+  "difficulty_distribution": {"easy": 6, "medium": 14, "hard": 5},
+  "questions": [
+    {
+      "id": "q_n5_001",
+      "knowledge_code": "L21301",
+      "node_id": "n_L21301_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某半導體晶圓廠的設備感測器以 JSON 格式紀錄機台健康日誌,欄位呈巢狀結構(機台 → 模組 → 子元件 → 量測值),工程師要為『未來 30 分鐘故障預測模型』抽取特徵。下列哪一項是最合適的特徵工程做法?",
+      "options": [
+        {"text": "撰寫遞迴函式展開巢狀欄位,再以滑動時間窗口聚合統計量(均值/變異/次數)作為輸入特徵", "is_correct": true},
+        {"text": "把 JSON 字串原封不動餵給 RNN,讓網路自己學會解析巢狀結構與時間關聯,毋須前處理", "is_correct": false, "trap_type": "RNN 不能直接吃原始 JSON 字串,需先結構化"},
+        {"text": "只保留每筆事件的最外層 timestamp 欄位,丟棄所有量測子欄位,以單一時序當輸入", "is_correct": false, "trap_type": "丟棄量測欄位等於丟棄所有預測訊號,只剩時間軸無法預測故障"},
+        {"text": "將整份 JSON 拍平成單一 CSV 後做 One-hot,讓所有欄位變成 binary 旗標再餵給線性模型", "is_correct": false, "trap_type": "拍平 CSV 會破壞時序結構,且 One-hot 連續量測值毫無意義"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "JSON 半結構化時序日誌的標準特徵工程是『遞迴展開 + 時間窗口聚合』:先以遞迴函式將巢狀欄位攤平到結構化表格,再以例如 5 分鐘 / 30 分鐘的滑動窗口計算統計量(平均、變異、最大、出現次數)作為特徵向量。這樣能同時保留階層資訊與時序動態,是故障預測類任務的常見實務作法。",
+        "wrong": {
+          "把 JSON 字串原封不動餵給 RNN,讓網路自己學會解析巢狀結構與時間關聯,毋須前處理": "RNN 接收的應為向量序列而非原始 JSON 文字;若硬餵字串,網路必須先做語法解析,訓練極不穩定且無法收斂",
+          "只保留每筆事件的最外層 timestamp 欄位,丟棄所有量測子欄位,以單一時序當輸入": "感測量測值才是預測訊號,只剩時間戳等於丟掉所有特徵,模型無從學習",
+          "將整份 JSON 拍平成單一 CSV 後做 One-hot,讓所有欄位變成 binary 旗標再餵給線性模型": "拍平會抹除時間順序,且連續量測值用 One-hot 會產生海量稀疏欄位,既無物理意義也喪失統計性質"
+        },
+        "hook": "JSON 時序口訣:遞迴展開 → 時間窗聚合 → 統計量特徵向量"
+      },
+      "misconceptions": ["以為 RNN 能直接吃原始 JSON 字串", "把連續感測值用 One-hot 編碼", "只留時間戳丟棄量測欄位"],
+      "related_node_ids": ["n_L21301_001"],
+      "tags": ["特徵工程", "JSON", "時序", "半導體"]
+    },
+    {
+      "id": "q_n5_002",
+      "knowledge_code": "L21301",
+      "node_id": "n_L21301_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "處理巢狀 JSON 設備日誌時,下列何者最適合作為『時間窗口聚合』所產生的特徵?",
+      "options": [
+        {"text": "過去 5 分鐘溫度的均值、最大值、標準差以及異常事件出現次數", "is_correct": true},
+        {"text": "整份 JSON 字串的 SHA-256 雜湊值,作為單一定長特徵餵給模型", "is_correct": false, "trap_type": "Hash 是內容指紋,沒有可學習的數值關係"},
+        {"text": "JSON 檔案大小(byte)以及縮排層級數,當作模型輸入的兩個欄位", "is_correct": false, "trap_type": "檔案大小與縮排層級為儲存層特性,與感測語意無關"},
+        {"text": "只取最後一筆事件的時間戳,以毫秒整數形式作為唯一輸入特徵", "is_correct": false, "trap_type": "單一時間戳無法表達歷史趨勢,丟失所有累積統計"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "時間窗口聚合產出的特徵應同時涵蓋『中心趨勢』(均值)、『離散度』(標準差/最大值)與『事件頻次』(異常次數),這些統計量能濃縮窗口內的時序動態,符合『JSON → 結構化展開 → 時間聚合 → 特徵向量』的標準作法。",
+        "wrong": {
+          "整份 JSON 字串的 SHA-256 雜湊值,作為單一定長特徵餵給模型": "Hash 對輸入做不可逆映射,完全沒有平滑性與單調性,模型無法從中學到任何規律",
+          "JSON 檔案大小(byte)以及縮排層級數,當作模型輸入的兩個欄位": "這兩者反映儲存格式而非物理量,與設備健康無因果關聯",
+          "只取最後一筆事件的時間戳,以毫秒整數形式作為唯一輸入特徵": "只用一個時間戳無法表達『過去多少次異常 / 平均負載』等預測訊號"
+        },
+        "hook": "時間窗特徵三件套:中心(均值)+ 離散(標準差/最大)+ 頻次(異常次數)"
+      },
+      "misconceptions": ["把 Hash 當特徵", "用檔案大小代替量測值", "以為單一時間戳能代表時序"],
+      "related_node_ids": ["n_L21301_001"],
+      "tags": ["特徵工程", "JSON", "時間窗口", "統計量"]
+    },
+    {
+      "id": "q_n5_003",
+      "knowledge_code": "L21301",
+      "node_id": "n_L21301_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某物流公司有大量配送軌跡 JSON 紀錄,每份檔案內含『路線 → 站點 → 事件清單』三層巢狀,團隊想預測配送是否準時。下列何者為最佳特徵抽取流程?",
+      "options": [
+        {"text": "遞迴展開三層巢狀,再以站點為單位用滑動時窗聚合『停留時間平均』『延誤次數』『包裹數變動』為特徵", "is_correct": true},
+        {"text": "把所有事件清單依字母順序排序後串成一條長字串,直接餵給梯度提升決策樹當類別變數使用", "is_correct": false, "trap_type": "事件字串本身為高基數類別,排序後仍無時序語意,且 GBDT 不善處理字串"},
+        {"text": "對每份 JSON 計算總巢狀深度與欄位數量,把這兩項當作模型唯一輸入,從結構複雜度推斷各路線是否會準時抵達目的地", "is_correct": false, "trap_type": "結構複雜度與配送準時性沒有因果連結,純屬過度抽象化"},
+        {"text": "用單一網路層直接讀 JSON 字節,讓模型自行從原始位元組學出展開規則,省去前處理步驟", "is_correct": false, "trap_type": "字節級學習對結構化日誌極不效率,需大量資料且無法保證收斂"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "對巢狀 JSON 軌跡而言,『遞迴展開 → 以站點為聚合單位 → 滑動時窗計算統計量』是業界標準流程。停留時間反映效率、延誤次數反映風險、包裹數變動反映容量,三類特徵互補且具直觀物理意義,可餵入 GBDT 或 LSTM 進行準時預測。",
+        "wrong": {
+          "把所有事件清單依字母順序排序後串成一條長字串,直接餵給梯度提升決策樹當類別變數使用": "排序後字串會把不同路線抹平成一個高基數類別,且 GBDT 對類別變數需先做適當編碼,直接餵字串無法工作",
+          "對每份 JSON 計算總巢狀深度與欄位數量,把這兩項當作模型唯一輸入,從結構複雜度推斷各路線是否會準時抵達目的地": "巢狀深度與欄位數對所有路線幾乎一致,缺乏判別力,模型無從區分準時與延誤",
+          "用單一網路層直接讀 JSON 字節,讓模型自行從原始位元組學出展開規則,省去前處理步驟": "Byte-level 學習通常需要億級樣本,對結構化感測/物流日誌而言效率極差且無此必要"
+        },
+        "hook": "物流軌跡:展開 → 站點聚合 → 三類統計(時間/次數/容量)"
+      },
+      "misconceptions": ["把字串排序當特徵", "誤以為結構複雜度能反映績效", "迷信端到端 byte-level"],
+      "related_node_ids": ["n_L21301_001"],
+      "tags": ["特徵工程", "JSON", "物流", "情境"]
+    },
+    {
+      "id": "q_n5_004",
+      "knowledge_code": "L21301",
+      "node_id": "n_L21301_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某醫療資訊系統的病患穿戴裝置每秒回傳 JSON 心律事件(包含子陣列『心跳時序』『血氧時序』『活動偵測』),臨床要做『2 小時內心律不整警示』模型。下列何項特徵工程設計最為合理?",
+      "options": [
+        {"text": "遞迴攤平三條子陣列,以 1 分鐘與 5 分鐘雙窗口計算每條的均值、變異與峰值次數作為特徵", "is_correct": true},
+        {"text": "把心跳、血氧與活動三條序列直接 concat 成一條長向量,長度不齊處補零,丟入全連接網路", "is_correct": false, "trap_type": "三類訊號量綱與頻率不同,直接 concat 會混淆語意且補零會引入大量虛假樣本"},
+        {"text": "只取最近 30 秒心跳序列的最後一個值當模型唯一輸入,其他子陣列丟棄,簡化系統設計", "is_correct": false, "trap_type": "單值與『2 小時警示』時間尺度不符,且丟棄血氧/活動嚴重削弱訊號"},
+        {"text": "把 JSON 整檔轉成 base64 字串,用文字向量化技術(TF-IDF)抽特徵後餵給邏輯迴歸做分類", "is_correct": false, "trap_type": "Base64 為編碼層字元,沒有任何醫學語意,TF-IDF 在此毫無意義"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "醫療穿戴 JSON 的特徵工程應對每條子序列獨立做時間窗口聚合,並使用『短窗(1 分鐘)+ 長窗(5 分鐘)』雙尺度同時捕捉急性事件與趨勢變化;均值描述基線、變異描述不穩定度、峰值次數抓觸發性異常,符合臨床警示需求。",
+        "wrong": {
+          "把心跳、血氧與活動三條序列直接 concat 成一條長向量,長度不齊處補零,丟入全連接網路": "三類訊號量綱(BPM/%/g)截然不同,需獨立標準化;且補零會在序列中插入虛假樣本,造成模型學到錯誤模式",
+          "只取最近 30 秒心跳序列的最後一個值當模型唯一輸入,其他子陣列丟棄,簡化系統設計": "瞬時值無法支援『2 小時警示』所需的趨勢判斷,且丟棄血氧與活動會喪失多模態互補資訊",
+          "把 JSON 整檔轉成 base64 字串,用文字向量化技術(TF-IDF)抽特徵後餵給邏輯迴歸做分類": "Base64 字元與生理訊號無語意關聯,TF-IDF 抽出的『字元頻率』完全不能對應臨床意義"
+        },
+        "hook": "醫療時序:逐通道展開 + 雙尺度時窗(短窗抓急性、長窗看趨勢)"
+      },
+      "misconceptions": ["不同量綱訊號直接 concat", "用瞬時值代表趨勢", "把編碼字串當特徵"],
+      "related_node_ids": ["n_L21301_001"],
+      "tags": ["特徵工程", "JSON", "醫療", "穿戴裝置"]
+    },
+    {
+      "id": "q_n5_005",
+      "knowledge_code": "L21301",
+      "node_id": "n_L21301_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某能源公司 100 萬部智慧電表以 JSON 上傳『家戶 → 迴路 → 用電事件』巢狀紀錄,要訓練『竊電偵測』模型;事件頻次差異極大(住家每日 24 筆、工廠每日數千筆),且不同地區欄位非全部齊備。下列何者為最佳特徵工程組合?",
+      "options": [
+        {"text": "遞迴展開巢狀並依迴路類型分群,使用『相對時間窗(每戶日內等比例切割)』聚合統計量,缺欄位以分群中位數補值", "is_correct": true},
+        {"text": "對所有家戶採取相同固定時窗(例如每分鐘)聚合,缺欄位一律以全資料集平均值補值,使輸入維度齊一以利批次訓練", "is_correct": false, "trap_type": "固定時窗對住家會大量為零、對工廠會丟訊號;全集平均補值會把住家拉向工廠,引入嚴重偏差"},
+        {"text": "丟棄事件頻次差異大於 10 倍的所有家戶,只保留中等規模樣本訓練,確保特徵分布一致避免污染", "is_correct": false, "trap_type": "丟掉極端用戶等於丟掉竊電潛在目標,使模型對真實佈署失效"},
+        {"text": "把家戶的 JSON 串成一段文字,用大型語言模型嵌入向量(embedding)當作竊電特徵,毋須統計量", "is_correct": false, "trap_type": "LLM embedding 對結構化感測訊號的物理量化能力遠遜於專屬統計特徵,且成本高昂"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "面對事件頻次差異極大的混合戶型,應採『迴路類型分群 + 相對時窗(等比例切片)+ 分群中位數補值』:分群讓住家與工廠各用合理基準、相對時窗避免絕對時段對少筆資料造成過多空窗、分群中位數補值維持分布合理。這是異質結構日誌的標準工程實務。",
+        "wrong": {
+          "對所有家戶採取相同固定時窗(例如每分鐘)聚合,缺欄位一律以全資料集平均值補值,使輸入維度齊一以利批次訓練": "相同固定時窗對住家會幾乎全為零、對工廠會丟細節;全集平均補值在分布雙峰的情境下相當於把每筆值都拉向中間,放大偏差",
+          "丟棄事件頻次差異大於 10 倍的所有家戶,只保留中等規模樣本訓練,確保特徵分布一致避免污染": "竊電行為通常出現在頻次異常的尾端用戶,把他們刪除等於丟掉模型該偵測的對象",
+          "把家戶的 JSON 串成一段文字,用大型語言模型嵌入向量(embedding)當作竊電特徵,毋須統計量": "LLM 對自然語言有效但對感測時序與量值關係較弱,且推論成本對 100 萬戶不可行"
+        },
+        "hook": "異質日誌:分群 + 相對時窗 + 分群補值,勿用固定時窗+全集平均"
+      },
+      "misconceptions": ["全集平均當補值", "刪掉尾端=純化", "迷信 LLM embedding 處理數值時序"],
+      "related_node_ids": ["n_L21301_001"],
+      "tags": ["特徵工程", "JSON", "能源", "竊電", "進階"]
+    },
+    {
+      "id": "q_n5_006",
+      "knowledge_code": "L21301",
+      "node_id": "n_L21301_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "資料集同時包含『年收入(連續)』與『教育程度(無序類別)』兩種特徵,工程師要餵給 XGBoost 進行違約預測。下列何者為最佳的混合特徵處理流程?",
+      "options": [
+        {"text": "連續特徵做標準化、類別特徵做 Target Encoding,並依需要建立交互特徵後合併輸入", "is_correct": true},
+        {"text": "把『教育程度』直接 Label Encode 為 0/1/2/3 整數後與年收入合併,訓練速度最快且不需額外處理", "is_correct": false, "trap_type": "無序類別 Label Encoding 會引入虛假順序"},
+        {"text": "把『年收入』也離散化成 5 級類別後與教育程度一起 One-hot,讓所有欄位都是 binary 旗標", "is_correct": false, "trap_type": "全部離散化會丟失連續變數的單調訊號"},
+        {"text": "丟棄『教育程度』類別欄位,只用『年收入』訓練,以避免混合資料型態造成的編碼複雜度", "is_correct": false, "trap_type": "丟欄位等於丟訊號,違約預測通常需要多面向特徵"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "連續+類別混合的最佳實務是『連續做標準化 / 類別做 Target Encoding(或 One-hot 視基數而定)/ 必要時加交互特徵』。標準化讓連續特徵對距離與梯度模型友善;Target Encoding 用標籤期望值取代類別,既能保留資訊又不引入虛假順序;交互特徵則捕捉欄位間的非線性關聯。",
+        "wrong": {
+          "把『教育程度』直接 Label Encode 為 0/1/2/3 整數後與年收入合併,訓練速度最快且不需額外處理": "Label Encoding 把無序類別硬塞數字會讓模型誤以為『博士=4 比學士=2 強兩倍』,導致虛假線性",
+          "把『年收入』也離散化成 5 級類別後與教育程度一起 One-hot,讓所有欄位都是 binary 旗標": "把連續欄位粗離散化會丟失分位數內變化,且大量 One-hot 會稀疏化特徵空間",
+          "丟棄『教育程度』類別欄位,只用『年收入』訓練,以避免混合資料型態造成的編碼複雜度": "教育程度與違約具有預測力,丟棄等於放棄訊號,違反特徵工程目的"
+        },
+        "hook": "混合特徵口訣:連續用標準化、類別用 Target/One-hot、互動用乘積"
+      },
+      "misconceptions": ["把無序類別當有序", "把連續值離散化", "嫌麻煩就丟欄位"],
+      "related_node_ids": ["n_L21301_002"],
+      "tags": ["特徵工程", "混合特徵", "金融", "違約預測"]
+    },
+    {
+      "id": "q_n5_007",
+      "knowledge_code": "L21301",
+      "node_id": "n_L21301_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "下列關於『連續+類別混合特徵工程』的敘述,何者最為正確?",
+      "options": [
+        {"text": "連續特徵建議標準化以利距離與梯度模型,無序類別建議 One-hot 或 Target Encoding 而非 Label Encoding", "is_correct": true},
+        {"text": "若採用樹模型則所有特徵皆毋須標準化,且無序類別亦可直接 Label Encode 因為樹會在訓練時自動找到對應的最佳切點", "is_correct": false, "trap_type": "樹對標準化不敏感正確,但 Label Encoding 仍會限制切點"},
+        {"text": "Target Encoding 只能用在類別基數小於 10 的欄位,基數高於 10 時一律改用 One-hot 否則就會過擬合", "is_correct": false, "trap_type": "Target Encoding 正是為高基數類別設計,需平滑或 K-fold"},
+        {"text": "交互特徵僅適用於線性模型,梯度提升樹或神經網路皆毋須顯式構造任何交互項目,網路會自動學會所有的交叉組合", "is_correct": false, "trap_type": "顯式交互特徵在 GBDT/NN 仍能縮短訓練並增進泛化"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "混合特徵的標準準則:連續變數做標準化(對 KNN/SVM/邏輯迴歸/神經網路必要),無序類別優先採 One-hot(基數小)或 Target Encoding(基數大、配 K-fold 防洩漏),避免直接 Label Encoding 引入虛假順序;有需要時再以乘積或分桶方式加入交互特徵。",
+        "wrong": {
+          "若採用樹模型則所有特徵皆毋須標準化,且無序類別亦可直接 Label Encode 因為樹會在訓練時自動找到對應的最佳切點": "前半正確,但後半錯誤:Label Encoding 把『學士=2 / 博士=4』綁進切點順序,樹仍會受此誤導",
+          "Target Encoding 只能用在類別基數小於 10 的欄位,基數高於 10 時一律改用 One-hot 否則就會過擬合": "事實相反:Target Encoding 對『郵遞區號』『商品 ID』等高基數欄位特別有效,只要做平滑或 K-fold 即可控過擬合",
+          "交互特徵僅適用於線性模型,梯度提升樹或神經網路皆毋須顯式構造任何交互項目,網路會自動學會所有的交叉組合": "雖然樹與深度模型有能力學會交叉,但顯式交互在資料量有限或欄位語意明確時仍能加速收斂與提升精度"
+        },
+        "hook": "混合特徵原則:連續→標準化、無序類別→One-hot/Target、避 Label Encoding"
+      },
+      "misconceptions": ["以為 Target Encoding 只用於低基數", "誤以為樹模型不需要任何編碼考量", "認為深度模型不需顯式交互"],
+      "related_node_ids": ["n_L21301_002"],
+      "tags": ["特徵工程", "Target Encoding", "標準化", "樹模型"]
+    },
+    {
+      "id": "q_n5_008",
+      "knowledge_code": "L21301",
+      "node_id": "n_L21301_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某連鎖零售要做『門市次月銷售預測』,可用特徵含『月營業額(連續)、店鋪城市(類別,基數約 80)、店長年資(連續)』。團隊對類別欄位的處理意見分歧,何者最為合理?",
+      "options": [
+        {"text": "城市採 K-fold Target Encoding,連續欄位先標準化,並加『城市×年資』交互特徵助模型抓在地化效應", "is_correct": true},
+        {"text": "城市直接 Label Encode 為 0~79 整數欄位,所有連續欄位不做任何處理,讓樹模型自由切點即可", "is_correct": false, "trap_type": "Label Encoding 引入虛假順序;樹雖可切點但解釋與穩定受損"},
+        {"text": "城市做完整 80 維 One-hot 拼接所有特徵,不做交互特徵也不採 K-fold 切分,以維持整體流程簡單", "is_correct": false, "trap_type": "高基數 One-hot 稀疏化且失去訊號,且缺交互特徵抓在地化"},
+        {"text": "丟掉城市欄位,只用營業額與店長年資這兩個連續欄位訓練,因類別欄位多半都是雜訊應避免使用", "is_correct": false, "trap_type": "城市對零售銷售有強烈影響,丟棄會嚴重低估模型表現"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "高基數類別(城市 ≈ 80)首選 K-fold Target Encoding,既保留統計訊號又避免標籤洩漏;連續特徵搭配標準化讓不同模型穩健;『城市×年資』交互特徵能捕捉『資深店長在某些城市更能拉抬營收』這類在地化效應,是零售業常見的有效互動。",
+        "wrong": {
+          "城市直接 Label Encode 為 0~79 整數欄位,所有連續欄位不做任何處理,讓樹模型自由切點即可": "Label Encoding 會把城市硬塞虛假順序,模型可能誤學『編號大的城市銷售低』之偽相關",
+          "城市做完整 80 維 One-hot 拼接所有特徵,不做交互特徵也不採 K-fold 切分,以維持整體流程簡單": "80 維稀疏特徵在資料有限時學習效率低,且缺乏與年資的交互捕捉,通常不如 Target Encoding 表現",
+          "丟掉城市欄位,只用營業額與店長年資這兩個連續欄位訓練,因類別欄位多半都是雜訊應避免使用": "城市影響零售結構性差異甚鉅(商圈、人口、競爭),丟棄此欄位等於放棄關鍵訊號"
+        },
+        "hook": "高基數類別優先 Target Encoding(K-fold 防洩漏)+ 交互特徵抓在地化"
+      },
+      "misconceptions": ["把高基數類別直接 One-hot", "用 Label Encoding 處理城市", "誤把類別欄位視為雜訊"],
+      "related_node_ids": ["n_L21301_002"],
+      "tags": ["特徵工程", "Target Encoding", "零售", "高基數類別"]
+    },
+    {
+      "id": "q_n5_009",
+      "knowledge_code": "L21301",
+      "node_id": "n_L21301_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "下列何者最容易在『連續+類別混合特徵』工程中造成模型『離線評估表現很好但上線崩潰』的失敗模式?",
+      "options": [
+        {"text": "Target Encoding 未做 K-fold 切分,使類別欄位直接記憶到訓練集標籤造成標籤洩漏", "is_correct": true},
+        {"text": "對連續欄位用 Min-Max Scaler 而非 Standard Scaler,導致量綱差異略大但模型仍可收斂", "is_correct": false, "trap_type": "兩種縮放器選擇對泛化影響有限,不會造成上線崩潰"},
+        {"text": "對類別欄位額外加上 One-hot 與 Target Encoding 兩種編碼同時存在,造成輸入維度上升", "is_correct": false, "trap_type": "雙重編碼可能略冗餘但不會造成標籤洩漏式崩潰"},
+        {"text": "把連續欄位也做 One-hot 分桶後合併進類別空間,使模型輸入全部 binary 化形成稀疏矩陣", "is_correct": false, "trap_type": "可能效果次佳,但不會造成『離線高、上線崩』的典型現象"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Target Encoding 若未做 K-fold(或 Leave-One-Out),會把目標標籤資訊直接寫進訓練集的特徵欄位,造成嚴重標籤洩漏:離線評估時模型『看見答案再做題』因此分數虛高,上線後沒有未來標籤可參考時實際表現急遽下滑。這是混合特徵工程最常見的隱性陷阱。",
+        "wrong": {
+          "對連續欄位用 Min-Max Scaler 而非 Standard Scaler,導致量綱差異略大但模型仍可收斂": "兩種縮放器都是合法選擇,僅在分布偏態時略有差異,不會造成『離線高、上線崩』的災難",
+          "對類別欄位額外加上 One-hot 與 Target Encoding 兩種編碼同時存在,造成輸入維度上升": "冗餘編碼最多增加學習成本,但不會引入未來資訊,泛化退化有限",
+          "把連續欄位也做 One-hot 分桶後合併進類別空間,使模型輸入全部 binary 化形成稀疏矩陣": "可能造成模型表現平庸,但不會出現離線分數虛高的特徵性失敗模式"
+        },
+        "hook": "Target Encoding 必做 K-fold;否則離線高、上線崩 = 標籤洩漏"
+      },
+      "misconceptions": ["以為 Target Encoding 不需 K-fold", "把縮放器選擇誤認為崩潰主因", "誤把冗餘編碼當作洩漏"],
+      "related_node_ids": ["n_L21301_002"],
+      "tags": ["特徵工程", "標籤洩漏", "Target Encoding", "離線在線落差"]
+    },
+    {
+      "id": "q_n5_010",
+      "knowledge_code": "L21301",
+      "node_id": "n_L21301_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某航空公司客運部門要訓練『常客流失預測』模型,特徵含『年飛行哩程(連續、強右偏)、艙等偏好(無序類別,4 級)、會籍等級(有序類別,5 級)、登機機場代碼(無序高基數,500+)』。下列何者為最完整且穩健的特徵工程組合?",
+      "options": [
+        {"text": "哩程做對數轉換後標準化、艙等 One-hot、會籍以順序整數保留排序、機場代碼 K-fold Target Encoding 並加平滑", "is_correct": true},
+        {"text": "哩程不轉換直接餵入、艙等 Label Encode、會籍 One-hot、機場代碼也 One-hot 成 500 維後直接訓練全套模型", "is_correct": false, "trap_type": "強右偏哩程不轉換會被極端值主導;艙等 Label 引虛假順序;機場 500 維 One-hot 過稀疏"},
+        {"text": "把所有欄位先離散化成 5 級分桶後 One-hot,丟棄原始連續值與類別語意,使整體輸入完全 binary 化", "is_correct": false, "trap_type": "粗離散化丟失分位內變化;機場 500 級壓成 5 桶喪失訊號"},
+        {"text": "只保留會籍等級與艙等兩欄,將哩程與機場代碼兩欄丟掉,理由是高基數與偏態欄位通常不穩定難以泛化", "is_correct": false, "trap_type": "哩程與機場為流失預測核心訊號,丟棄等於放棄關鍵預測力"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "完整實務:右偏連續欄(哩程)先做對數轉換再標準化以壓尾;艙等是無序類別(4 級)用 One-hot;會籍是有序類別,以 1-5 整數保留排序資訊;機場代碼為高基數無序類別,用 K-fold Target Encoding + 平滑(prior 加權)避免低頻機場過擬合,並可額外加入機場×會籍交互特徵。",
+        "wrong": {
+          "哩程不轉換直接餵入、艙等 Label Encode、會籍 One-hot、機場代碼也 One-hot 成 500 維後直接訓練全套模型": "右偏哩程會被尾端極端值主導梯度;艙等用 Label Encoding 引入虛假順序;500 維機場 One-hot 在每筆只有 1 個非零,訓練極不效率",
+          "把所有欄位先離散化成 5 級分桶後 One-hot,丟棄原始連續值與類別語意,使整體輸入完全 binary 化": "對連續欄位粗分桶會喪失分位內微差,對 500 級機場硬壓 5 桶更會把不同商業價值機場混為一桶",
+          "只保留會籍等級與艙等兩欄,將哩程與機場代碼兩欄丟掉,理由是高基數與偏態欄位通常不穩定難以泛化": "哩程是流失最直接訊號,機場代碼隱含路網與商業關係,丟棄此二欄將大幅損失預測力"
+        },
+        "hook": "右偏 → 對數+標準化;有序類別 → 整數保排序;高基數 → Target Encoding+平滑"
+      },
+      "misconceptions": ["右偏連續不做轉換", "有序類別硬塞 One-hot", "高基數類別硬做 One-hot"],
+      "related_node_ids": ["n_L21301_002"],
+      "tags": ["特徵工程", "右偏", "高基數", "航空", "進階"]
+    },
+    {
+      "id": "q_n5_011",
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "下列何者最能描述 Kubernetes 在 AI 模型部署中扮演的核心角色?",
+      "options": [
+        {"text": "管理與協調容器化模型服務的部署、擴展、滾動更新與自我修復", "is_correct": true},
+        {"text": "直接負責模型訓練流程的資料切分、損失函數計算與梯度下降運算", "is_correct": false, "trap_type": "訓練是 PyTorch/TF 的工作,K8s 不做損失函數運算"},
+        {"text": "提供 GPU 硬體加速指令集,取代 CUDA 完成所有張量運算與矩陣乘法", "is_correct": false, "trap_type": "K8s 不取代 CUDA,GPU 加速來自硬體與框架"},
+        {"text": "作為訓練資料倉儲,集中保存所有原始資料、特徵表與標籤的長期版本", "is_correct": false, "trap_type": "資料倉儲是 BigQuery/S3 等職責,非 K8s"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Kubernetes(K8s)的核心定位是『容器編排平台』:管理 Pod、Service、Deployment 等抽象,協調容器化模型服務的部署、自動水平擴展、滾動更新與自我修復。它不是訓練框架、不是 GPU 加速器、也不是資料倉儲。",
+        "wrong": {
+          "直接負責模型訓練流程的資料切分、損失函數計算與梯度下降運算": "訓練流程由 PyTorch/TensorFlow 等框架實作;K8s 僅負責執行容器,並不參與訓練計算本身",
+          "提供 GPU 硬體加速指令集,取代 CUDA 完成所有張量運算與矩陣乘法": "GPU 加速是 NVIDIA 硬體+CUDA 函式庫的責任;K8s 透過 device plugin 暴露 GPU 給容器,但不做加速運算",
+          "作為訓練資料倉儲,集中保存所有原始資料、特徵表與標籤的長期版本": "資料倉儲屬於資料平台層(如 BigQuery、S3、HDFS),K8s 不負責持久化資料儲存"
+        },
+        "hook": "K8s = 容器編排;不是訓練框架、不是 GPU 加速器、不是資料倉儲"
+      },
+      "misconceptions": ["把 K8s 當訓練框架", "誤以為 K8s 取代 CUDA", "把 K8s 當資料倉儲"],
+      "related_node_ids": ["n_L21302_001"],
+      "tags": ["K8s", "部署", "容器編排"]
+    },
+    {
+      "id": "q_n5_012",
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某政府機關規劃將既有 AI 服務搬上 Kubernetes,IT 主管列出四項『K8s 帶來的好處』,下列何者敘述最為正確?",
+      "options": [
+        {"text": "K8s 提供 Auto Scaling、滾動更新、自我修復與一致的容器編排介面,降低多台機器與多服務的維運複雜度", "is_correct": true},
+        {"text": "K8s 內建模型 A/B 實驗指標與自動回滾,可取代 MLOps 平台的 Model Registry 與監控儀表板", "is_correct": false, "trap_type": "A/B 指標與 Registry 是 MLOps 平台職責,K8s 並未內建"},
+        {"text": "K8s 只要部署,訓練速度即可提升 5-10 倍,因平台會自動將 GPU 算力均攤給所有 Pod 加速", "is_correct": false, "trap_type": "K8s 不會加速訓練,GPU 算力分配視排程策略而定"},
+        {"text": "K8s 可自動將連續特徵標準化、類別特徵編碼,使模型部署後不再需要前處理流程", "is_correct": false, "trap_type": "特徵工程屬資料管線職責,與 K8s 編排無關"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "K8s 的核心好處是把『部署、擴展、更新、修復』四件事抽象為宣告式 API,讓多台機器與多服務的維運在統一介面下進行,大幅降低異質環境的維運成本。它不是 MLOps 平台、不是訓練加速器、也不是特徵工程引擎。",
+        "wrong": {
+          "K8s 內建模型 A/B 實驗指標與自動回滾,可取代 MLOps 平台的 Model Registry 與監控儀表板": "K8s 提供 Deployment 滾動回滾,但 A/B 實驗指標與 Model Registry 屬 MLflow/Vertex 等 MLOps 工具負責",
+          "K8s 只要部署,訓練速度即可提升 5-10 倍,因平台會自動將 GPU 算力均攤給所有 Pod 加速": "K8s 對訓練速度沒有直接加速效果;且 GPU 為獨佔式設備,通常一個 Pod 對應一張 GPU",
+          "K8s 可自動將連續特徵標準化、類別特徵編碼,使模型部署後不再需要前處理流程": "特徵工程屬於資料管線(Spark/Pandas/特徵服務)職責,K8s 不執行任何資料轉換邏輯"
+        },
+        "hook": "K8s 解決的是『部署/擴展/更新/修復』,不是訓練/A-B/特徵"
+      },
+      "misconceptions": ["把 K8s 當 MLOps 全家桶", "以為 K8s 加速訓練", "誤以為 K8s 處理特徵"],
+      "related_node_ids": ["n_L21302_001", "n_L21302_002"],
+      "tags": ["K8s", "MLOps", "部署", "情境"]
+    },
+    {
+      "id": "q_n5_013",
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "MLOps 中『Model Registry』的核心功能為下列何者?",
+      "options": [
+        {"text": "集中管理模型版本、訓練紀錄與生產部署狀態", "is_correct": true},
+        {"text": "提供模型容器自動水平擴展與流量負載平衡服務", "is_correct": false, "trap_type": "水平擴展與負載平衡是 K8s 職責"},
+        {"text": "負責模型訓練時的損失下降與梯度反向傳播計算", "is_correct": false, "trap_type": "訓練計算是框架職責"},
+        {"text": "儲存所有訓練資料的歷史快照與資料版本控制紀錄", "is_correct": false, "trap_type": "資料版本控制屬 DVC/LakeFS 而非 Model Registry"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Model Registry 是 MLOps 中的『模型版本控管中心』,負責集中註冊每個模型版本、訓練紀錄、評估指標、部署階段(Staging/Production/Archived)等中介資料。代表工具如 MLflow Model Registry、SageMaker Model Registry、Vertex AI Model Registry。",
+        "wrong": {
+          "提供模型容器自動水平擴展與流量負載平衡服務": "水平擴展與負載平衡是 K8s 與雲端 Load Balancer 的工作,Registry 不負責執行層運算",
+          "負責模型訓練時的損失下降與梯度反向傳播計算": "訓練計算由 PyTorch/TensorFlow 框架完成,Registry 只記錄訓練的中介資料與結果",
+          "儲存所有訓練資料的歷史快照與資料版本控制紀錄": "資料版本控制由 DVC/LakeFS/Delta Lake 等資料工具負責,與模型版本管理職責不同"
+        },
+        "hook": "Model Registry = 模型『版本+部署狀態』中心;不是 K8s、不是訓練、不是 DVC"
+      },
+      "misconceptions": ["把 Registry 與 K8s 混淆", "把 Registry 當訓練平台", "把 Registry 當資料版本控制"],
+      "related_node_ids": ["n_L21302_002"],
+      "tags": ["MLOps", "Model Registry", "版本管理"]
+    },
+    {
+      "id": "q_n5_014",
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某教育科技公司導入 MLOps,團隊討論 Model Registry 的最適用情境。下列何者最能彰顯 Registry 的價值?",
+      "options": [
+        {"text": "需追蹤『同一模型不同訓練版本』的指標、上線狀態與審核流程,方便回滾與決策溯源", "is_correct": true},
+        {"text": "需即時偵測線上輸入分布是否漂移,並在 PSI 超過警戒門檻時自動觸發告警", "is_correct": false, "trap_type": "Drift 偵測是 Model Monitoring 而非 Registry"},
+        {"text": "需把 100 萬筆原始學習資料以 Hash 方式雜湊化,確保資料完整性與不可竄改性", "is_correct": false, "trap_type": "資料完整性是雜湊+資料版本工具,非 Registry"},
+        {"text": "需自動為使用者抽樣 5% 流量切到新模型驗證效果,並在指標惡化時自動回滾", "is_correct": false, "trap_type": "Canary 流量切換屬部署策略層,非 Registry 本身"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Model Registry 的最典型價值正是『版本治理』:在多團隊、多迭代下追蹤每個模型版本的訓練資料、評估指標、批准狀態與部署階段,讓回滾、審核與合規溯源都有一致依據。代表工具(MLflow/Vertex/SageMaker)皆以此為核心。",
+        "wrong": {
+          "需即時偵測線上輸入分布是否漂移,並在 PSI 超過警戒門檻時自動觸發告警": "Drift 偵測屬 Model Monitoring 子系統,Registry 主要是中介資料儲存,不負責即時計算",
+          "需把 100 萬筆原始學習資料以 Hash 方式雜湊化,確保資料完整性與不可竄改性": "資料完整性與不可竄改是資料層議題(Hash/數位簽章/資料版本),Registry 主管模型而非資料",
+          "需自動為使用者抽樣 5% 流量切到新模型驗證效果,並在指標惡化時自動回滾": "流量切換是部署策略(Canary/A-B/藍綠)的執行層,Registry 僅紀錄『哪個版本目前是 Production』"
+        },
+        "hook": "Registry 看版本與部署狀態;Drift 看分布;Canary 看流量切換"
+      },
+      "misconceptions": ["把 Registry 當 Drift 監控", "把 Registry 當資料完整性工具", "把 Registry 當部署策略執行器"],
+      "related_node_ids": ["n_L21302_002", "n_L21302_003", "n_L21302_007"],
+      "tags": ["Model Registry", "版本治理", "情境"]
+    },
+    {
+      "id": "q_n5_015",
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_003",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "下列何者最能正確區分 Data Drift 與 Concept Drift?",
+      "options": [
+        {"text": "Data Drift 是輸入特徵 X 的分布變了;Concept Drift 是 X 與標籤 y 的關係 P(y|X) 變了", "is_correct": true},
+        {"text": "Data Drift 是模型訓練時梯度爆炸的徵兆;Concept Drift 是模型上線後在測試集出現過擬合的症狀表現", "is_correct": false, "trap_type": "梯度與過擬合都與 Drift 定義無關"},
+        {"text": "Data Drift 是 GPU 記憶體不足無法載入大模型;Concept Drift 是 CPU 推論延遲超出 SLA 門檻所致", "is_correct": false, "trap_type": "硬體與延遲屬系統議題,不屬於 Drift"},
+        {"text": "Data Drift 是訓練集與測試集標籤不平衡;Concept Drift 是訓練集與驗證集樣本數不一致", "is_correct": false, "trap_type": "資料集切分問題與 Drift 不同"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Drift 的兩大類型差異關鍵在『誰變了』:Data Drift 是輸入端 P(X) 分布變化(例如客戶族群結構改變);Concept Drift 是 X 與 y 的關係 P(y|X) 變化(例如同樣的徵狀過去判讀為良性,如今因醫學新證據變為惡性)。兩者都會讓模型表現衰退,但成因與對策不同。",
+        "wrong": {
+          "Data Drift 是模型訓練時梯度爆炸的徵兆;Concept Drift 是模型上線後在測試集出現過擬合的症狀表現": "梯度爆炸是訓練穩定性議題,過擬合是泛化議題,皆與 Drift 定義無關",
+          "Data Drift 是 GPU 記憶體不足無法載入大模型;Concept Drift 是 CPU 推論延遲超出 SLA 門檻所致": "硬體與延遲屬於系統指標,Drift 描述的是『輸入或標籤關係的分布變化』",
+          "Data Drift 是訓練集與測試集標籤不平衡;Concept Drift 是訓練集與驗證集樣本數不一致": "資料切分與標籤不平衡是訓練前的資料品質議題,Drift 則發生在『模型部署後的時間軸上』"
+        },
+        "hook": "Data Drift 看 P(X) 變;Concept Drift 看 P(y|X) 變"
+      },
+      "misconceptions": ["把訓練問題當 Drift", "把硬體問題當 Drift", "把資料切分問題當 Drift"],
+      "related_node_ids": ["n_L21302_003"],
+      "tags": ["Drift", "Data Drift", "Concept Drift"]
+    },
+    {
+      "id": "q_n5_016",
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_003",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "監控 AI 模型是否出現 Data Drift 時,業界最常採用的『分布穩定性指標』為下列何者?",
+      "options": [
+        {"text": "Population Stability Index(PSI)與 KL Divergence,衡量輸入分布與訓練期的差異程度", "is_correct": true},
+        {"text": "F1-Score 與 Precision-Recall Curve,以模型每日輸出端的預測效能指標直接判斷輸入分布變動", "is_correct": false, "trap_type": "F1 是預測效能指標,需有真實標籤才能算,無法即時"},
+        {"text": "CPU 使用率與主機記憶體佔用比例,只要系統資源使用率異常上升即可代表輸入特徵分布開始偏移漂移", "is_correct": false, "trap_type": "資源指標反映系統負載,與輸入分布無直接統計關聯"},
+        {"text": "模型推論延遲(P95/P99)與每秒請求數(RPS)兩個系統服務品質指標,長期觀察是否能反映輸入分布漂移", "is_correct": false, "trap_type": "延遲與 RPS 屬服務品質,與分布偏移無直接關係"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Drift 偵測中,『PSI(Population Stability Index)』是業界廣泛採用的分布穩定性指標:PSI<0.1 穩定、0.1~0.25 警戒、>0.25 顯著漂移。KL Divergence 也常見,衡量兩分布之間的資訊距離。兩者都是『不需要真實標籤即可偵測』,因此特別適合上線後即時監控。",
+        "wrong": {
+          "F1-Score 與 Precision-Recall Curve,以模型每日輸出端的預測效能指標直接判斷輸入分布變動": "F1/PR-Curve 必須有真實標籤才能計算,線上即時通常標籤延遲數天至數月,無法即時偵測 Drift",
+          "CPU 使用率與主機記憶體佔用比例,只要系統資源使用率異常上升即可代表輸入特徵分布開始偏移漂移": "CPU 與記憶體反映系統負載與軟體狀態,與輸入特徵分布變動沒有直接的統計連結",
+          "模型推論延遲(P95/P99)與每秒請求數(RPS)兩個系統服務品質指標,長期觀察是否能反映輸入分布漂移": "延遲與 RPS 屬於服務品質(SLA)層,可能在 Drift 發生時毫無變化,因此無法作為分布偵測指標"
+        },
+        "hook": "Drift 首選 PSI / KL;F1 需標籤、CPU/延遲不反映分布"
+      },
+      "misconceptions": ["以為 F1 能即時偵測 Drift", "把 CPU 異常當 Drift", "把延遲當分布變化代理指標"],
+      "related_node_ids": ["n_L21302_003"],
+      "tags": ["Drift", "PSI", "KL Divergence", "監控"]
+    },
+    {
+      "id": "q_n5_017",
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_003",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某銀行的信用卡盜刷模型已上線 9 個月,近 3 週客訴突然倍增。資料工程師同時觀察到:輸入特徵 PSI 仍 < 0.05、F1 卻持續下滑。下列何者為最可能的根因?",
+      "options": [
+        {"text": "屬於 Concept Drift:輸入分布穩定但 P(y|X) 變化,例如盜刷手法改變使原本正常的特徵組合成為高風險", "is_correct": true},
+        {"text": "屬於 Data Drift:由於 PSI 數值仍然未顯示異常,應視為輸入分布的微小漂移在長期觀察下所累積的尾端效應", "is_correct": false, "trap_type": "PSI<0.05 表示輸入穩定;F1 下滑不會單純由微小 Data Drift 解釋"},
+        {"text": "屬於模型訓練的過擬合:離線測試已能體現過擬合徵兆,故上線 9 個月後客訴突然倍增實屬同一原因延伸", "is_correct": false, "trap_type": "過擬合是訓練期問題,9 個月後才惡化更可能是 Drift"},
+        {"text": "屬於 GPU 推論延遲過高:延遲導致部分風險交易無法即時攔截因而客訴上升,與資料分布變化並無關聯", "is_correct": false, "trap_type": "延遲不影響 F1 計算,且題目沒有任何延遲徵兆"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "PSI<0.05 表示輸入特徵分布仍穩定,但 F1 下滑代表預測能力衰退,這正是『Concept Drift』的典型徵兆:X 分布沒變,但 X 與 y 的關係 P(y|X) 改變了。在盜刷情境中,常見原因是攻擊者學習模型行為後改用新模式,使『過去看似正常的交易特徵』如今對應到盜刷標籤。",
+        "wrong": {
+          "屬於 Data Drift:由於 PSI 數值仍然未顯示異常,應視為輸入分布的微小漂移在長期觀察下所累積的尾端效應": "PSI<0.05 屬於業界『穩定』區間,不太可能解釋持續 3 週的 F1 顯著下滑;此症狀更典型於 Concept Drift",
+          "屬於模型訓練的過擬合:離線測試已能體現過擬合徵兆,故上線 9 個月後客訴突然倍增實屬同一原因延伸": "過擬合通常上線初期就反映出來,而非 9 個月後突然惡化;且過擬合不一定伴隨 PSI 與 F1 的這種解離",
+          "屬於 GPU 推論延遲過高:延遲導致部分風險交易無法即時攔截因而客訴上升,與資料分布變化並無關聯": "延遲影響服務品質但不影響 F1 計算結果,F1 下滑與延遲沒有直接因果"
+        },
+        "hook": "PSI 穩定 + F1 下滑 = 經典 Concept Drift 徵兆"
+      },
+      "misconceptions": ["看到 F1 掉就以為是 Data Drift", "把過擬合與線上 Drift 混為一談", "把延遲當預測品質劣化主因"],
+      "related_node_ids": ["n_L21302_003"],
+      "tags": ["Drift", "Concept Drift", "金融", "盜刷"]
+    },
+    {
+      "id": "q_n5_018",
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_003",
+      "subject": 1,
+      "format": "calculation",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某模型監控只取兩桶分布。訓練期『正常』{train_a}%、『高風險』{train_b}%;當期『正常』{cur_a}%、『高風險』{cur_b}%。請計算 PSI(取小數點後三位四捨五入,公式:Σ(實際%-期望%)·ln(實際/期望);百分比代入時請以小數,例如 60% = 0.6)。",
+      "stem_variables": {
+        "case_a": {"train_a": "60", "train_b": "40", "cur_a": "50", "cur_b": "50", "answer": "0.041", "wrong1": "0.100", "wrong2": "0.020", "wrong3": "0.083"},
+        "case_b": {"train_a": "70", "train_b": "30", "cur_a": "50", "cur_b": "50", "answer": "0.169", "wrong1": "0.200", "wrong2": "0.085", "wrong3": "0.300"},
+        "case_c": {"train_a": "80", "train_b": "20", "cur_a": "60", "cur_b": "40", "answer": "0.196", "wrong1": "0.300", "wrong2": "0.098", "wrong3": "0.400"},
+        "case_d": {"train_a": "50", "train_b": "50", "cur_a": "30", "cur_b": "70", "answer": "0.169", "wrong1": "0.250", "wrong2": "0.085", "wrong3": "0.400"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "只計算了實際與期望的差(未乘 ln 比值)"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "把 PSI 對半計算或漏一桶累加"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "把 ln 換成普通除法或忽略對數縮放"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "PSI 公式為 Σ(實際% - 期望%) × ln(實際% / 期望%)。以 case_a 為例,訓練期 (0.6, 0.4)、當期 (0.5, 0.5):桶 1 = (0.5-0.6)×ln(0.5/0.6) ≈ (-0.1)×(-0.182) ≈ 0.0182;桶 2 = (0.5-0.4)×ln(0.5/0.4) ≈ 0.1×0.223 ≈ 0.0223;PSI ≈ 0.041。判讀:PSI<0.1 表示分布仍穩定。",
+        "wrong": {
+          "{wrong1}": "此值像是只算 |實際-期望| 的總和而未乘對數比例,缺乏對『相對變化幅度』的縮放",
+          "{wrong2}": "此值疑似只計算單一桶或把總和對半,違反『對所有桶累加』的定義",
+          "{wrong3}": "此值疑似用比值差異或除法替代 ln,忽略對數的非線性縮放"
+        },
+        "hook": "PSI 公式:Σ(實際% - 期望%) × ln(實際/期望);<0.1 穩定、0.1~0.25 警戒、>0.25 顯著漂移"
+      },
+      "misconceptions": ["忘記乘 ln 比值", "把 PSI 當總變動幅度", "用單一桶計算"],
+      "related_node_ids": ["n_L21302_003"],
+      "tags": ["PSI", "計算題", "Drift", "監控"]
+    },
+    {
+      "id": "q_n5_019",
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_004",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "下列何者最能描述『持續整合(Continuous Integration, CI)』的核心實踐?",
+      "options": [
+        {"text": "每次程式碼 commit 自動觸發建置、單元測試與靜態程式碼分析", "is_correct": true},
+        {"text": "每月一次將所有開發者的分支由 Tech Lead 人工統一整合並進行集中回歸測試", "is_correct": false, "trap_type": "月度人工整合並非 CI 的實踐方式"},
+        {"text": "等到版本發布前由獨立 QA 團隊集中執行所有測試案例並提交評估報告", "is_correct": false, "trap_type": "發布前集中測試屬傳統流程,並非 CI"},
+        {"text": "把開發中的所有程式碼直接部署到生產環境,讓真實使用者協助測試新版本", "is_correct": false, "trap_type": "直接生產測試屬無責任部署,並非 CI"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "持續整合(CI)的核心是『commit-trigger 自動化』:開發者每次 commit 即觸發建置、單元測試與靜態程式碼分析,藉由小步快跑、頻繁整合,把整合風險與 Bug 偵測週期壓到最短。CI 對應的是『整合』階段,後續才是 CD(持續交付/部署)。",
+        "wrong": {
+          "每月一次將所有開發者的分支由 Tech Lead 人工統一整合並進行集中回歸測試": "月度大批整合反而會放大衝突與 Bug,正是 CI 想取代的傳統作法",
+          "等到版本發布前由獨立 QA 團隊集中執行所有測試案例並提交評估報告": "發布前才測試會把問題集中爆發在最後,違反 CI『早期、頻繁、自動』的原則",
+          "把開發中的所有程式碼直接部署到生產環境,讓真實使用者協助測試新版本": "未經測試就上線屬於不負責任的部署,並非 CI 也非 CD 的合理實踐"
+        },
+        "hook": "CI = commit 即整合;CD 才是部署;月度整合不是 CI"
+      },
+      "misconceptions": ["把 CI 當『定時整合』", "把 CI 與 CD 混為一談", "以為直接上線就是 CI"],
+      "related_node_ids": ["n_L21302_004"],
+      "tags": ["CI", "DevOps", "自動化"]
+    },
+    {
+      "id": "q_n5_020",
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_004",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某保險公司導入 MLOps 流程,負責人擬訂下列四種 CI 實踐方案,何者最符合『持續整合』的核心精神?",
+      "options": [
+        {"text": "資料科學家 commit 後自動建置鏡像、跑單元測試與資料 schema 驗證,失敗即阻擋合併", "is_correct": true},
+        {"text": "在週五下班前由 Tech Lead 手動將所有人本週修改集中合併,週末跑回歸測試後週一上線", "is_correct": false, "trap_type": "週合併屬傳統批次整合,違反 CI 精神"},
+        {"text": "讓開發者各自在本機環境跑測試,通過後直接由 IT 部門協助上線,中央不需要建置任何自動化流程", "is_correct": false, "trap_type": "本機自我測試無法保證一致性,且缺乏自動化"},
+        {"text": "等模型訓練完成後再人工撰寫 API 包裝、手動寫測試案例,確保品質才上 Registry 註冊", "is_correct": false, "trap_type": "純人工流程缺乏自動化整合,屬發布前 QA 而非 CI"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "對 ML/MLOps 而言,CI 應在『commit-trigger』下自動執行建置(Docker)、單元測試(pytest)、資料 schema 驗證(Great Expectations 等)、靜態分析(linter/type checker)。失敗即阻擋合併,確保每次整合都是『綠燈』,符合 CI『小步、頻繁、自動』的精神。",
+        "wrong": {
+          "在週五下班前由 Tech Lead 手動將所有人本週修改集中合併,週末跑回歸測試後週一上線": "週度批次整合會累積衝突,風險集中在週末爆發,正是 CI 想消滅的反模式",
+          "讓開發者各自在本機環境跑測試,通過後直接由 IT 部門協助上線,中央不需要建置任何自動化流程": "本機環境差異大,無法保證一致性;且缺乏中央化自動化即不算 CI",
+          "等模型訓練完成後再人工撰寫 API 包裝、手動寫測試案例,確保品質才上 Registry 註冊": "純手動流程在 commit 階段沒有自動驗證,屬於傳統 QA 而非 CI"
+        },
+        "hook": "CI 三要素:commit-trigger、自動建置、自動測試"
+      },
+      "misconceptions": ["週度合併也算 CI", "本機測試=CI", "手動 QA=CI"],
+      "related_node_ids": ["n_L21302_004"],
+      "tags": ["CI", "MLOps", "保險", "情境"]
+    },
+    {
+      "id": "q_n5_021",
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_005",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某電商平台 AI 推薦服務在年度大檔活動時瞬時請求數可能由 1,000 RPS 衝至 10,000 RPS。下列何種架構最能在『成本可控前提下』維持服務穩定?",
+      "options": [
+        {"text": "服務容器化部署於 K8s,設定 HPA 依 CPU/RPS 觸發水平擴展,並配合自動彈性 Auto Scaling", "is_correct": true},
+        {"text": "把單一伺服器升級為頂規配置(CPU 64 核 / RAM 512GB),並全程保留高規待機資源以應對活動峰值", "is_correct": false, "trap_type": "單機垂直擴展有上限且閒時嚴重浪費"},
+        {"text": "在 API Gateway 統一強制限制每秒請求數最多 2,000,讓超過此上限的部分一律回傳 429 錯誤直到流量自然回落", "is_correct": false, "trap_type": "限流會犧牲使用者體驗,流失活動商機"},
+        {"text": "把推薦結果改為離線批次預先計算,每 30 分鐘整批更新一次,大檔期間不再提供即時個人化推薦", "is_correct": false, "trap_type": "降級為批次違反『即時推薦』的核心業務需求"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "10× 流量峰值的標準解法是『容器化 + 水平擴展(Horizontal Scaling)+ Auto Scaling』:K8s 的 HPA 可依 CPU 利用率或 RPS 自動增加 Pod 數量,流量回落時又能自動縮減,兼顧穩定與成本。比起垂直擴展(單機升規格)有更高彈性與成本效率。",
+        "wrong": {
+          "把單一伺服器升級為頂規配置(CPU 64 核 / RAM 512GB),並全程保留高規待機資源以應對活動峰值": "垂直擴展有硬體上限,且非活動期間頂規機器閒置造成成本浪費",
+          "在 API Gateway 統一強制限制每秒請求數最多 2,000,讓超過此上限的部分一律回傳 429 錯誤直到流量自然回落": "限流會直接犧牲使用者體驗,在大檔期間損失商機與品牌信任",
+          "把推薦結果改為離線批次預先計算,每 30 分鐘整批更新一次,大檔期間不再提供即時個人化推薦": "離線批次推薦無法反映即時行為,違反『大檔活動需即時個人化』的業務需求"
+        },
+        "hook": "高流量首選『水平擴展 + Auto Scaling』;勿用垂直擴展或限流降級"
+      },
+      "misconceptions": ["以為單機升規格就解決流量", "把限流當高可用方案", "把降級為批次當解法"],
+      "related_node_ids": ["n_L21302_005", "n_L21302_001"],
+      "tags": ["Auto Scaling", "高可用", "電商", "情境"]
+    },
+    {
+      "id": "q_n5_022",
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_005",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某政府入口網的 AI 客服在尖峰時段(每日 09:00 與 13:00)流量會在 5 分鐘內由 500 RPS 暴增到 5,000 RPS。團隊目前用 K8s HPA 但尖峰期間仍會出現 30 秒服務不穩定。下列改善策略何者最為有效?",
+      "options": [
+        {"text": "啟用『預測式擴展(Predictive Scaling)』與『最低 Pod 數預熱』,提前在尖峰前自動擴容並保留緩衝", "is_correct": true},
+        {"text": "把 HPA 監控觸發門檻從 70% CPU 提高為 95% CPU 才觸發擴容,以更精準地利用既有資源避免太早擴展浪費", "is_correct": false, "trap_type": "提高門檻只會更慢觸發,反而加劇尖峰不穩"},
+        {"text": "把 minReplicas 由 3 降為 1 以節省非尖峰成本,讓 HPA 在需要時再按比例放大", "is_correct": false, "trap_type": "降低底線會讓尖峰擴展起點更低、更不穩"},
+        {"text": "禁用 Auto Scaling 改用固定 50 個 Pod 全天候待機,以絕對化資源避免擴展延遲", "is_correct": false, "trap_type": "全天候頂規待機成本爆炸,且仍可能不足以應對更高峰"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "尖峰 5 分鐘內 10× 突增,單純反應式 HPA 因為『偵測 → 啟動 Pod → 預熱 → 接流量』有秒級到分鐘級延遲,容易出現短暫不穩。最佳解法是結合『預測式擴展(根據歷史流量曲線提前擴容)』與『預熱保底 Pod 數』,讓系統在尖峰前已備好容量。這也是雲端業者(如 AWS Predictive Scaling、KEDA)推薦的尖峰應對模式。",
+        "wrong": {
+          "把 HPA 監控觸發門檻從 70% CPU 提高為 95% CPU 才觸發擴容,以更精準地利用既有資源避免太早擴展浪費": "提高門檻會延後擴展,在 5 分鐘內暴增的情境下幾乎必然失守,加劇不穩",
+          "把 minReplicas 由 3 降為 1 以節省非尖峰成本,讓 HPA 在需要時再按比例放大": "降低底線會讓擴展起點更低,從 1→50 比 3→50 慢得多,違反尖峰穩定目標",
+          "禁用 Auto Scaling 改用固定 50 個 Pod 全天候待機,以絕對化資源避免擴展延遲": "雖能解決突增,但全日 50 Pod 大量閒置成本不可接受,且未來若峰值再上升仍不足"
+        },
+        "hook": "尖峰突增三招:預測擴展 + 預熱保底 + 反應式 HPA"
+      },
+      "misconceptions": ["以為提高門檻能更穩", "降低 minReplicas 省成本不影響穩定", "認為固定大量 Pod 等於高可用"],
+      "related_node_ids": ["n_L21302_005"],
+      "tags": ["Auto Scaling", "預測式擴展", "政府", "進階"]
+    },
+    {
+      "id": "q_n5_023",
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_006",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某影像辨識訓練在現有 GPU 出現『CUDA Out of Memory』,但短期內無法升級硬體。下列何者為最佳的緩解策略組合?",
+      "options": [
+        {"text": "降低 Batch Size 並啟用 Data Sharding,必要時開啟 Mixed Precision(FP16+FP32)減低記憶體", "is_correct": true},
+        {"text": "把訓練資料總量隨機刪減為原來的一半,讓單批抽樣資料規模相對縮小以避開 GPU 記憶體上限,並維持原 Batch Size 不變", "is_correct": false, "trap_type": "減資料傷害泛化,且 Batch Size 才是記憶體佔用主因"},
+        {"text": "把學習率提高以加速整體模型收斂、再提早結束訓練週期,以便有效規避長時間 GPU 記憶體佔用所造成的 OOM 累積壓力與抖動", "is_correct": false, "trap_type": "學習率影響收斂速度,與單步記憶體佔用沒有因果"},
+        {"text": "把測試集合併入訓練集共同訓練、以攤平整體 GPU 記憶體峰值佔用,並在推論階段再從訓練輸出抽樣作為回測評估", "is_correct": false, "trap_type": "用測試集訓練屬嚴重資料洩漏,且不解決 GPU 記憶體"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "GPU 記憶體不足且無法升級硬體時,標準解法是『降 Batch Size + Data Sharding(把資料分片到多 GPU)+ Mixed Precision(FP16/FP32 混合精度)』:Batch Size 是訓練時佔用 GPU 記憶體的主因,降低後再以 Gradient Accumulation 維持等效大批次;Data Sharding 把樣本切到多卡;Mixed Precision 把張量改為半精度節省一半記憶體。",
+        "wrong": {
+          "把訓練資料總量隨機刪減為原來的一半,讓單批抽樣資料規模相對縮小以避開 GPU 記憶體上限,並維持原 Batch Size 不變": "Batch Size 才是記憶體佔用主因,減少『資料總量』只會傷害模型泛化,並未真的解決單批記憶體爆量",
+          "把學習率提高以加速整體模型收斂、再提早結束訓練週期,以便有效規避長時間 GPU 記憶體佔用所造成的 OOM 累積壓力與抖動": "學習率影響的是收斂速度與穩定性,與單一 step 的記憶體佔用沒有因果關聯",
+          "把測試集合併入訓練集共同訓練、以攤平整體 GPU 記憶體峰值佔用,並在推論階段再從訓練輸出抽樣作為回測評估": "把測試集併入訓練屬於嚴重資料洩漏,違反評估倫理且仍未解決 GPU 記憶體問題"
+        },
+        "hook": "GPU OOM 解法:降 Batch + Data Sharding + Mixed Precision"
+      },
+      "misconceptions": ["減資料量當解法", "把學習率當記憶體解法", "用測試集訓練"],
+      "related_node_ids": ["n_L21302_006"],
+      "tags": ["GPU", "OOM", "Batch Size", "Mixed Precision"]
+    },
+    {
+      "id": "q_n5_024",
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_006",
+      "subject": 1,
+      "format": "calculation",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某 AI 模型在 GPU 訓練時,目前 Batch Size = {orig_bs} 會發生 CUDA OOM。已知記憶體佔用大致與 Batch Size 成線性比例,GPU 總共 {gpu_mem} GB,目前佔用峰值已達 {peak_mem} GB(超出可用上限 {limit_mem} GB)。為避免 OOM 並保留 10% 緩衝,新的 Batch Size 至多應降為下列何值(取整數)?",
+      "stem_variables": {
+        "case_a": {"orig_bs": "64", "gpu_mem": "16", "peak_mem": "18", "limit_mem": "16", "answer": "51", "wrong1": "57", "wrong2": "32", "wrong3": "64"},
+        "case_b": {"orig_bs": "128", "gpu_mem": "24", "peak_mem": "30", "limit_mem": "24", "answer": "92", "wrong1": "102", "wrong2": "64", "wrong3": "115"},
+        "case_c": {"orig_bs": "32", "gpu_mem": "8", "peak_mem": "10", "limit_mem": "8", "answer": "23", "wrong1": "26", "wrong2": "16", "wrong3": "29"},
+        "case_d": {"orig_bs": "256", "gpu_mem": "40", "peak_mem": "50", "limit_mem": "40", "answer": "184", "wrong1": "205", "wrong2": "128", "wrong3": "230"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "忽略 10% 安全緩衝(僅以剛好上限計算)"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "粗估『減半』未根據實際線性比例"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "未做任何縮減或計算方向相反"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "由線性假設,新的 Batch Size = 原 BS × (可用上限 × 0.9) / 峰值佔用。以 case_a 為例:64 × (16×0.9) / 18 = 64 × 14.4 / 18 = 51.2 → 取整數 51。此計算同時考慮『不超出上限』與『預留 10% 緩衝避免抖動觸發 OOM』。實務上 Batch Size 縮小後可搭配 Gradient Accumulation 維持等效訓練批量。",
+        "wrong": {
+          "{wrong1}": "此值疑似以 BS × 限/峰 直接計算(64×16/18≈57)忽略了題目要求的 10% 安全緩衝",
+          "{wrong2}": "此值疑似把 Batch Size『直接減半』粗估,未根據實際記憶體比例計算",
+          "{wrong3}": "此值疑似未做縮減或方向錯誤(把可用上限放大);與『避免 OOM』方向相反"
+        },
+        "hook": "新 BS = 原 BS × (上限×0.9) / 峰值;預留 10% 緩衝避免抖動觸發 OOM"
+      },
+      "misconceptions": ["忘記預留緩衝", "把『減半』當萬靈丹", "不做線性比例計算"],
+      "related_node_ids": ["n_L21302_006"],
+      "tags": ["GPU", "Batch Size", "計算題", "OOM"]
+    },
+    {
+      "id": "q_n5_025",
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_007",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "下列三種部署策略的對比,何者最為正確?",
+      "options": [
+        {"text": "Canary 依流量比例逐步切換、A/B Testing 同時跑兩版做指標比較、藍綠則完整切換新舊環境", "is_correct": true},
+        {"text": "Canary 與 A/B Testing 兩種策略完全等價,差別僅在新舊版本各自部署於不同的雲端區域而已", "is_correct": false, "trap_type": "兩者目的不同,不能等價"},
+        {"text": "藍綠部署的精髓是依使用者地區漸進切換流量、而 Canary 是依不同使用者的人口屬性分群切換", "is_correct": false, "trap_type": "描述被互換;藍綠是環境切換、Canary 是流量比例"},
+        {"text": "三種策略本質上都是『離線評估指標』的不同變形,並未涉及任何線上實際流量切換的執行邏輯", "is_correct": false, "trap_type": "三者皆屬線上部署策略,非離線評估"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "三種部署策略各有目的:Canary Release 採『流量比例逐步切換』(5%→25%→100%),用於小範圍驗證新版穩定性;A/B Testing 是『同時跑兩個版本』比較指標(如轉換率),用於決策;藍綠部署是『藍(舊)/ 綠(新)兩套完整環境』,需要時整體切換,優勢是回滾迅速。",
+        "wrong": {
+          "Canary 與 A/B Testing 兩種策略完全等價,差別僅在新舊版本各自部署於不同的雲端區域而已": "Canary 目的在『漸進降風險』,A/B 目的在『科學比較指標』,本質不同",
+          "藍綠部署的精髓是依使用者地區漸進切換流量、而 Canary 是依不同使用者的人口屬性分群切換": "描述被互換,且藍綠的精髓是『環境切換』,並非依地區漸進",
+          "三種策略本質上都是『離線評估指標』的不同變形,並未涉及任何線上實際流量切換的執行邏輯": "三者都是『線上部署策略』,涉及實際流量切換或並行;離線評估屬於發布前的另一階段"
+        },
+        "hook": "Canary=流量比例;A/B=並行比較;藍綠=環境切換"
+      },
+      "misconceptions": ["把 Canary 與 A/B 等價", "把藍綠當地區切換", "把部署策略當離線評估"],
+      "related_node_ids": ["n_L21302_007", "n_L21302_002"],
+      "tags": ["Canary", "A/B Testing", "藍綠部署"]
+    }
+  ],
+  "summary": {
+    "total_questions": 25,
+    "by_knowledge_code": {"L21301": 10, "L21302": 15},
+    "by_node_id": {
+      "n_L21301_001": 5,
+      "n_L21301_002": 5,
+      "n_L21302_001": 2,
+      "n_L21302_002": 2,
+      "n_L21302_003": 4,
+      "n_L21302_004": 2,
+      "n_L21302_005": 2,
+      "n_L21302_006": 2,
+      "n_L21302_007": 1
+    },
+    "by_difficulty": {"easy": 6, "medium": 14, "hard": 5},
+    "by_format": {"single_choice": 23, "calculation": 2},
+    "iron_rules_summary": {
+      "rule_1": "全 25 題具備 explanation.correct + explanation.wrong + explanation.hook + misconceptions + related_node_ids",
+      "rule_2": "全 25 題 shuffle_options:true;2 計算題使用 stem_variables 4-case 池",
+      "rule_3": "情境跨產業:半導體、物流、醫療穿戴、能源、金融、零售、航空、政府、保險、電商、教育、影像辨識",
+      "rule_4": "正解/平均錯解長度比皆於 [0.85, 1.20] 區間;錯解皆為『看似專業合理的另一個描述』",
+      "rule_5": "全 25 題 knowledge_code = L21301 / L21302;node_id 全部對應 scripts/kb-allowed-nodes.json 之該群組;未涉 Feature Store / INT8 / Triton / TorchServe / vLLM 等中級範圍外工程細節"
+    }
+  }
+}

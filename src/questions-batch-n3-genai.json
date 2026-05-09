@@ -1,0 +1,751 @@
+{
+  "version": "1.0",
+  "schema_version": "iron-rule-1+2",
+  "generated_at": "2026-05-10",
+  "batch": "n3-genai",
+  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "scope": "L21103 生成式 AI(18) + L21104 多模態(7)",
+  "iron_rule_compliance": {
+    "rule_1": "每題具備 explanation.correct + wrong(每錯選項) + hook + misconceptions + related_node_ids",
+    "rule_2": "shuffle_options:true;部分題目使用 stem_variables",
+    "rule_3": "原創情境,不抄 114-2",
+    "rule_4": "正解 / 平均錯解長度比落在 [0.85, 1.20]",
+    "rule_5": "knowledge_code 限 L21103 / L21104;node_id 全部源自 kb-allowed-nodes.json"
+  },
+  "distribution": {
+    "by_code": {"L21103": 18, "L21104": 7},
+    "by_difficulty": {"easy": 6, "medium": 14, "hard": 5},
+    "by_format": {"single_choice": 24, "calculation": 1},
+    "by_scenario": 6
+  },
+  "questions": [
+    {
+      "id": "q_n3_genai_001",
+      "knowledge_code": "L21103",
+      "node_id": "n_L21103_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "下列何者最能正確描述變分自編碼器(VAE)的{descriptor}特性?",
+      "stem_variables": {"descriptor": ["核心", "本質", "代表性"]},
+      "options": [
+        {"text": "以變分推論機制建構顯式機率潛在空間並學習編碼器,訓練過程穩定但生成影像通常偏模糊", "is_correct": true},
+        {"text": "依靠生成器與判別器之對抗訓練機制,在影像細節上一向勝過 Diffusion 模型", "is_correct": false, "trap_type": "對抗訓練屬 GAN 而非 VAE"},
+        {"text": "採用前向加噪與反向去噪兩階段流程,以馬可夫鏈完成最後高品質影像生成", "is_correct": false, "trap_type": "去噪流程屬 Diffusion 而非 VAE"},
+        {"text": "透過離散 Codebook 量化潛在空間並逐步檢索離散符號以取代連續高斯分佈", "is_correct": false, "trap_type": "離散量化為 VQ-VAE 變體,非標準 VAE"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "VAE 以變分下界(ELBO)建構顯式機率潛在空間,訓練穩定但生成影像因平均化效應而偏模糊",
+        "wrong": {
+          "依靠生成器與判別器之對抗訓練機制,在影像細節上一向勝過 Diffusion 模型": "對抗訓練是 GAN 結構;且現代影像生成主流為 Diffusion 而非 GAN",
+          "採用前向加噪與反向去噪兩階段流程,以馬可夫鏈完成最後高品質影像生成": "加噪去噪馬可夫鏈為 Diffusion 概念,非 VAE 機制",
+          "透過離散 Codebook 量化潛在空間並逐步檢索離散符號以取代連續高斯分佈": "離散量化潛在空間屬於 VQ-VAE 變體,非原生 VAE 設計"
+        },
+        "hook": "VAE 三特徵:顯式潛在 + 訓練穩 + 影像糊;對抗 → GAN、馬可夫去噪 → Diffusion"
+      },
+      "misconceptions": ["把 VAE 與 GAN 訓練機制混為一談", "以為 VAE 是高解析度影像生成主流"],
+      "related_node_ids": ["n_L21103_001", "n_L21103_002"],
+      "tags": ["生成式", "VAE", "三大模型對比", "easy"]
+    },
+    {
+      "id": "q_n3_genai_002",
+      "knowledge_code": "L21103",
+      "node_id": "n_L21103_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "新創團隊欲生成「高解析度產品宣傳圖」,且希望同一提示能產出多種風格、整體品質穩定。在 VAE / GAN / Diffusion 三者中,哪一類最為合適?",
+      "options": [
+        {"text": "Diffusion 模型,因其逐步去噪機制可產生高多樣性與穩定品質之影像", "is_correct": true},
+        {"text": "VAE 模型,因其顯式潛在分佈可直接產生最高解析度與最銳利的成品圖", "is_correct": false, "trap_type": "VAE 影像偏模糊"},
+        {"text": "傳統 GAN(如 DCGAN)因其對抗訓練具備天然多樣性且不會發生模式崩潰", "is_correct": false, "trap_type": "GAN 易 Mode Collapse,多樣性不穩"},
+        {"text": "Word2Vec 模型,因其語意嵌入能直接由詞向量重建高品質影像細節", "is_correct": false, "trap_type": "Word2Vec 為詞嵌入,非影像生成"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Diffusion(SD、DALL-E、Sora)為現代影像生成主流,逐步去噪可在多樣性與品質上同時取得平衡",
+        "wrong": {
+          "VAE 模型,因其顯式潛在分佈可直接產生最高解析度與最銳利的成品圖": "VAE 受限於變分平均化效應,生成影像通常模糊,並非高解析度首選",
+          "傳統 GAN(如 DCGAN)因其對抗訓練具備天然多樣性且不會發生模式崩潰": "GAN 容易發生 Mode Collapse,多樣性反而是其最大弱點",
+          "Word2Vec 模型,因其語意嵌入能直接由詞向量重建高品質影像細節": "Word2Vec 為純詞向量模型,不具備影像生成能力"
+        },
+        "hook": "現代影像生成主流 = Diffusion;銳利但不穩 = GAN;穩定但糊 = VAE"
+      },
+      "misconceptions": ["以為 VAE 影像最銳利", "以為 GAN 不會 Mode Collapse"],
+      "related_node_ids": ["n_L21103_001", "n_L21103_002"],
+      "tags": ["生成式", "選型", "情境"]
+    },
+    {
+      "id": "q_n3_genai_003",
+      "knowledge_code": "L21103",
+      "node_id": "n_L21103_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某研究團隊比較 VAE、GAN、Diffusion 三大生成模型,下列敘述哪一項在「訓練穩定度」與「推論速度」兩個面向上**最正確**?",
+      "options": [
+        {"text": "VAE 訓練穩定且推論單步即可;Diffusion 品質高但因多步去噪推論較慢", "is_correct": true},
+        {"text": "GAN 因對抗訓練收斂快且推論最慢,在三者中通常需要最多取樣步驟", "is_correct": false, "trap_type": "GAN 推論單步,非多步"},
+        {"text": "Diffusion 因採單步去噪,故推論速度為三者中最快且訓練最不穩定", "is_correct": false, "trap_type": "Diffusion 多步去噪、訓練穩定"},
+        {"text": "VAE 因採對抗訓練導致訓練極度不穩,推論需數百步驟方能完成生成", "is_correct": false, "trap_type": "VAE 非對抗訓練、推論單步"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "VAE/GAN 推論皆為單次前向;Diffusion 因須多步去噪,推論時間明顯較長,但訓練穩定度高",
+        "wrong": {
+          "GAN 因對抗訓練收斂快且推論最慢,在三者中通常需要最多取樣步驟": "GAN 推論為單次前向,並非多步取樣;且其訓練因對抗博弈反而不易收斂",
+          "Diffusion 因採單步去噪,故推論速度為三者中最快且訓練最不穩定": "Diffusion 本質為多步去噪,推論慢但訓練穩定,描述完全相反",
+          "VAE 因採對抗訓練導致訓練極度不穩,推論需數百步驟方能完成生成": "VAE 採變分推論,非對抗訓練;推論單步,描述錯誤"
+        },
+        "hook": "推論步數:VAE/GAN 一步;Diffusion 多步。訓練穩定度:VAE/Diffusion 穩;GAN 不穩"
+      },
+      "misconceptions": ["把訓練機制與推論機制混淆", "以為 Diffusion 推論最快"],
+      "related_node_ids": ["n_L21103_001", "n_L21103_003"],
+      "tags": ["生成式", "三大模型對比", "推論速度"]
+    },
+    {
+      "id": "q_n3_genai_004",
+      "knowledge_code": "L21103",
+      "node_id": "n_L21103_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "下列關於 VAE 與 GAN 在「潛在空間語意對齊能力」上的比較,何者最為正確?",
+      "options": [
+        {"text": "VAE 因採顯式機率分佈,潛在空間對應較有語意連續性;GAN 隱式映射對齊較弱", "is_correct": true},
+        {"text": "GAN 因對抗訓練,潛在空間總能自動建立完整的語意連續對齊與保證可解釋性", "is_correct": false, "trap_type": "GAN 潛在空間語意性弱"},
+        {"text": "VAE 與 GAN 完全共用相同的條件變分下界(ELBO),因此語意對齊能力幾乎一致", "is_correct": false, "trap_type": "ELBO 為 VAE 專屬"},
+        {"text": "VAE 與 GAN 的潛在空間對齊能力均不存在,需仰賴 Diffusion 的多步噪聲過程補足", "is_correct": false, "trap_type": "VAE/GAN 仍具潛在空間"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "VAE 顯式建模 q(z|x) 與 p(z),潛在空間具語意連續性;GAN 為隱式映射,語意對齊較弱常需額外正則化(如 InfoGAN)",
+        "wrong": {
+          "GAN 因對抗訓練,潛在空間總能自動建立完整的語意連續對齊與保證可解釋性": "GAN 隱式潛在空間並無顯式機率約束,語意連續性弱",
+          "VAE 與 GAN 完全共用相同的條件變分下界(ELBO),因此語意對齊能力幾乎一致": "ELBO 為 VAE 變分推論之核心,GAN 採對抗損失,兩者數學基礎完全不同",
+          "VAE 與 GAN 的潛在空間對齊能力均不存在,需仰賴 Diffusion 的多步噪聲過程補足": "VAE 與 GAN 都具備可學習的潛在空間,只是性質不同"
+        },
+        "hook": "VAE = 顯式 + 連續語意;GAN = 隱式 + 語意需強化"
+      },
+      "misconceptions": ["以為 GAN 潛在空間天然具語意性", "以為 ELBO 是通用生成模型損失"],
+      "related_node_ids": ["n_L21103_001"],
+      "tags": ["生成式", "潛在空間", "語意對齊"]
+    },
+    {
+      "id": "q_n3_genai_005",
+      "knowledge_code": "L21103",
+      "node_id": "n_L21103_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "GAN 訓練時若生成器(Generator)反覆產出極為相似的影像,且樣本多樣性嚴重不足,此現象在學界稱為何?",
+      "options": [
+        {"text": "Mode Collapse(模式崩潰),為 GAN 訓練中生成器產出樣本多樣性塌陷的典型徵兆", "is_correct": true},
+        {"text": "Gradient Vanishing(梯度消失),指反向傳播時梯度趨近於零的現象", "is_correct": false, "trap_type": "梯度消失非多樣性問題"},
+        {"text": "Catastrophic Forgetting(災難性遺忘),指模型忘記先前任務的現象", "is_correct": false, "trap_type": "遺忘問題屬持續學習領域"},
+        {"text": "Cold Start Problem(冷啟動問題),指推薦系統初期資料不足之困境", "is_correct": false, "trap_type": "冷啟動屬推薦系統議題"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Mode Collapse 是 GAN 經典訓練問題,生成器找到能騙過判別器的少數樣本後就停留在該模式,導致樣本多樣性塌陷",
+        "wrong": {
+          "Gradient Vanishing(梯度消失),指反向傳播時梯度趨近於零的現象": "梯度消失是深層網路常見問題,不是樣本多樣性的議題",
+          "Catastrophic Forgetting(災難性遺忘),指模型忘記先前任務的現象": "災難性遺忘屬於持續學習(Continual Learning)範疇,不是 GAN 的多樣性問題",
+          "Cold Start Problem(冷啟動問題),指推薦系統初期資料不足之困境": "冷啟動問題出現於推薦系統,與 GAN 樣本多樣性無關"
+        },
+        "hook": "GAN 多樣性塌陷 → Mode Collapse(模式崩潰)"
+      },
+      "misconceptions": ["把 Mode Collapse 與 Gradient Vanishing 混淆"],
+      "related_node_ids": ["n_L21103_002", "n_L21103_001"],
+      "tags": ["生成式", "GAN", "Mode Collapse"]
+    },
+    {
+      "id": "q_n3_genai_006",
+      "knowledge_code": "L21103",
+      "node_id": "n_L21103_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某團隊在訓練 GAN 過程中持續觀察到 Mode Collapse,且原損失函數收斂十分不穩。下列哪一項是學界公認**主流**且**最直接**的解法?",
+      "options": [
+        {"text": "改採 WGAN(Wasserstein 距離)取代原 GAN 損失,從根本穩定訓練動態", "is_correct": true},
+        {"text": "把所有訓練樣本與標籤噪聲量加倍,讓判別器更難分辨真假樣本,即可自動消除崩潰問題", "is_correct": false, "trap_type": "加噪非主流解法"},
+        {"text": "改用更深層的卷積判別器並關閉所有正則化機制,讓判別器在訓練中完全主導生成器更新", "is_correct": false, "trap_type": "判別器壓制反而惡化"},
+        {"text": "將生成器與判別器訓練輪數比例調整為 1 比 50,讓判別器先學到接近完美的分類能力", "is_correct": false, "trap_type": "判別器過強加劇崩潰"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "WGAN 以 Wasserstein 距離取代 JS Divergence,提供穩定且具有意義的梯度,為 Mode Collapse 主流解法;進一步可加梯度懲罰(WGAN-GP)",
+        "wrong": {
+          "把所有訓練樣本與標籤噪聲量加倍,讓判別器更難分辨真假樣本,即可自動消除崩潰問題": "加噪僅為臨時干擾,並非從損失函數根本解決崩潰問題",
+          "改用更深層的卷積判別器並關閉所有正則化機制,讓判別器在訓練中完全主導生成器更新": "判別器過強會導致生成器梯度消失,反而加劇崩潰",
+          "將生成器與判別器訓練輪數比例調整為 1 比 50,讓判別器先學到接近完美的分類能力": "判別器訓練過度會壓制生成器,使 Mode Collapse 更為嚴重"
+        },
+        "hook": "Mode Collapse 主流解法 = 換損失函數(WGAN),非結構修改"
+      },
+      "misconceptions": ["以為加噪或加深判別器是主流解法", "以為判別器越強越好"],
+      "related_node_ids": ["n_L21103_002"],
+      "tags": ["生成式", "WGAN", "解法"]
+    },
+    {
+      "id": "q_n3_genai_007",
+      "knowledge_code": "L21103",
+      "node_id": "n_L21103_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "WGAN-GP(Wasserstein GAN with Gradient Penalty)在原 WGAN 基礎上引入「梯度懲罰」,其**主要作用**為何?",
+      "options": [
+        {"text": "強制 Critic 滿足 1-Lipschitz 條件,取代原 Weight Clipping 並提升 GAN 整體訓練穩定度", "is_correct": true},
+        {"text": "強制生成器於每次小批量梯度更新完成後一律將所有可訓練權重重設歸零,以防止整體網路落入任何區域最低點而導致失效", "is_correct": false, "trap_type": "權重歸零會破壞模型"},
+        {"text": "透過懲罰所有訓練樣本沿輸入方向的梯度方向,迫使生成器於每一次迭代中強制學會固定的單一模式以快速收斂於目標分佈", "is_correct": false, "trap_type": "單一模式即 Mode Collapse"},
+        {"text": "在判別器最後一層後額外接續一個 Softmax 機率分類層,將原本判別器轉為多類別分類器並大幅擴展輸出維度規模", "is_correct": false, "trap_type": "Softmax 分類非 WGAN 機制"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "原 WGAN 用 Weight Clipping 強制 1-Lipschitz,但易造成優化困難;WGAN-GP 改以梯度懲罰直接約束梯度範數,訓練更穩定",
+        "wrong": {
+          "強制生成器於每次小批量梯度更新完成後一律將所有可訓練權重重設歸零,以防止整體網路落入任何區域最低點而導致失效": "權重歸零等同於丟失整個模型參數,顯然不合理",
+          "透過懲罰所有訓練樣本沿輸入方向的梯度方向,迫使生成器於每一次迭代中強制學會固定的單一模式以快速收斂於目標分佈": "單一模式生成正是 Mode Collapse 想避免的問題",
+          "在判別器最後一層後額外接續一個 Softmax 機率分類層,將原本判別器轉為多類別分類器並大幅擴展輸出維度規模": "WGAN 的 Critic 輸出實值評分,並非透過 Softmax 分類"
+        },
+        "hook": "WGAN-GP = 取代 Weight Clipping;以梯度懲罰滿足 1-Lipschitz"
+      },
+      "misconceptions": ["以為 WGAN-GP 改架構而非改約束方式"],
+      "related_node_ids": ["n_L21103_002"],
+      "tags": ["生成式", "WGAN-GP", "Lipschitz", "hard"]
+    },
+    {
+      "id": "q_n3_genai_008",
+      "knowledge_code": "L21103",
+      "node_id": "n_L21103_003",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "Stable Diffusion 中的 CFG(Classifier-Free Guidance)數值,主要影響何種生成特性?",
+      "options": [
+        {"text": "提示符合度(prompt adherence)與創意多樣性之間的權衡", "is_correct": true},
+        {"text": "影像最終輸出解析度之像素總數,可直接決定生成影像的長寬尺寸", "is_correct": false, "trap_type": "解析度由 width/height 決定"},
+        {"text": "每張影像生成時 KV-Cache 容量上限,用以控制 GPU 顯示記憶體占用量", "is_correct": false, "trap_type": "KV-Cache 屬 LLM 推論"},
+        {"text": "整體訓練資料集前處理的清洗程度,可決定生成資料的版權合法性", "is_correct": false, "trap_type": "資料清洗非取樣參數"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "CFG 越大,生成越貼合提示語但創意性下降;CFG 越小,創意較豐富但可能偏離提示。為提示符合度與創意之間的權衡參數",
+        "wrong": {
+          "影像最終輸出解析度之像素總數,可直接決定生成影像的長寬尺寸": "解析度由 width/height 等參數決定,與 CFG 無關",
+          "每張影像生成時 KV-Cache 容量上限,用以控制 GPU 顯示記憶體占用量": "KV-Cache 屬於 LLM 推論加速概念,與 SD 取樣參數無關",
+          "整體訓練資料集前處理的清洗程度,可決定生成資料的版權合法性": "資料清洗為訓練階段議題,並非取樣時的 CFG 參數"
+        },
+        "hook": "CFG 高 = 貼提示;CFG 低 = 多創意。細節 → 取樣步數;符合度 → CFG"
+      },
+      "misconceptions": ["把 CFG 與取樣步數的功能混淆"],
+      "related_node_ids": ["n_L21103_003"],
+      "tags": ["生成式", "Stable Diffusion", "CFG"]
+    },
+    {
+      "id": "q_n3_genai_009",
+      "knowledge_code": "L21103",
+      "node_id": "n_L21103_003",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "設計團隊使用 Stable Diffusion 生成「室內裝潢效果圖」,目前細節銳利度不足。在不更換模型的前提下,以下哪項調整最能直接提升細節品質?",
+      "options": [
+        {"text": "提高取樣步數(sampling steps),並改用品質較佳的取樣器(如 DPM++ 系列)", "is_correct": true},
+        {"text": "將 CFG 數值設為極高(例如 30 以上),即可在所有業務場景大幅提升整體輸出影像細節銳利度", "is_correct": false, "trap_type": "CFG 過高會過擬合提示反而失真"},
+        {"text": "降低取樣步數至 1 步,讓模型於單一前向推論中一次完成所有去噪步驟以保留全部細節", "is_correct": false, "trap_type": "步數過低細節崩壞"},
+        {"text": "將輸入提示語完全清空並停用所有負向提示,讓模型在完全無條件下自由發揮以獲得最具創意細節層次", "is_correct": false, "trap_type": "空提示無法控制方向"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "細節銳利度主要由取樣步數與取樣器決定,適度增加步數並選用 DPM++ 等高品質取樣器是直接的改善方式",
+        "wrong": {
+          "將 CFG 數值設為極高(例如 30 以上),即可在所有業務場景大幅提升整體輸出影像細節銳利度": "CFG 過高會強迫貼合提示而導致顏色過飽、結構失真,並非細節提升",
+          "降低取樣步數至 1 步,讓模型於單一前向推論中一次完成所有去噪步驟以保留全部細節": "步數過低會導致去噪不完全、影像粗糙,細節反而崩壞",
+          "將輸入提示語完全清空並停用所有負向提示,讓模型在完全無條件下自由發揮以獲得最具創意細節層次": "缺少提示等同失去條件控制,生成內容會與目標脫節"
+        },
+        "hook": "細節 = 取樣步數 + 取樣器;符合度 = CFG"
+      },
+      "misconceptions": ["以為 CFG 越高細節越好"],
+      "related_node_ids": ["n_L21103_003"],
+      "tags": ["生成式", "Stable Diffusion", "情境"]
+    },
+    {
+      "id": "q_n3_genai_010",
+      "knowledge_code": "L21103",
+      "node_id": "n_L21103_003",
+      "subject": 1,
+      "format": "calculation",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某 Stable Diffusion 服務在 GPU 上,單一取樣步驟平均耗時 0.08 秒。若使用者將取樣步數從 25 步調整為 50 步,預期單張影像「總取樣時間」會從多少秒上升至多少秒?(忽略其他固定開銷)",
+      "options": [
+        {"text": "由 2 秒上升至 4 秒(線性關係,步數 ×2 → 時間 ×2)", "is_correct": true},
+        {"text": "由 2 秒上升至 8 秒(指數關係,步數加倍時間變四倍)", "is_correct": false, "trap_type": "取樣步數為線性非指數"},
+        {"text": "由 0.08 秒上升至 0.16 秒(忽略總步數,僅單步翻倍)", "is_correct": false, "trap_type": "未乘以總步數"},
+        {"text": "由 25 秒上升至 50 秒(誤把步數本身視為秒數)", "is_correct": false, "trap_type": "把步數當秒數"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "總時間 = 單步耗時 × 步數;25 × 0.08 = 2 秒,50 × 0.08 = 4 秒;呈線性關係",
+        "wrong": {
+          "由 2 秒上升至 8 秒(指數關係,步數加倍時間變四倍)": "取樣步數對時間是線性,而非平方或指數",
+          "由 0.08 秒上升至 0.16 秒(忽略總步數,僅單步翻倍)": "誤把單步耗時當作總耗時,沒有乘上步數",
+          "由 25 秒上升至 50 秒(誤把步數本身視為秒數)": "把步數的數值當作秒數,單位完全錯誤"
+        },
+        "hook": "取樣總耗時 = 步數 × 單步耗時(線性)"
+      },
+      "misconceptions": ["以為取樣步數對時間呈非線性關係"],
+      "related_node_ids": ["n_L21103_003"],
+      "tags": ["生成式", "計算題", "Stable Diffusion"]
+    },
+    {
+      "id": "q_n3_genai_011",
+      "knowledge_code": "L21103",
+      "node_id": "n_L21103_003",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "下列關於 Stable Diffusion 取樣步數(sampling steps)與 CFG 之搭配,何者最為**正確**?",
+      "options": [
+        {"text": "步數負責去噪細節,CFG 負責提示符合度;兩者調整目標不同,需個別優化", "is_correct": true},
+        {"text": "步數與 CFG 完全等價,任意調高其中一項即可同時提升提示符合度與細節", "is_correct": false, "trap_type": "兩者目標不同"},
+        {"text": "若 CFG 設為 0,則無論步數多寡,輸出影像都將完全符合輸入提示語意", "is_correct": false, "trap_type": "CFG=0 無條件導引"},
+        {"text": "步數設為 1 即可完成完整去噪,CFG 可同步補足細節並完全取代步數作用", "is_correct": false, "trap_type": "1 步無法去噪"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "取樣步數控制去噪迭代深度進而影響細節;CFG 控制條件引導強度進而影響提示符合度;兩者解耦並需個別調整",
+        "wrong": {
+          "步數與 CFG 完全等價,任意調高其中一項即可同時提升提示符合度與細節": "兩者目標不同;增加步數對提示符合度幾乎無影響",
+          "若 CFG 設為 0,則無論步數多寡,輸出影像都將完全符合輸入提示語意": "CFG=0 等同無條件導引,生成將忽略提示而非完全符合",
+          "步數設為 1 即可完成完整去噪,CFG 可同步補足細節並完全取代步數作用": "1 步無法完成多步去噪過程,CFG 與步數作用面向不同無法互相取代"
+        },
+        "hook": "兩條線分開記:步數→細節、CFG→提示符合度"
+      },
+      "misconceptions": ["把步數與 CFG 視為等價參數"],
+      "related_node_ids": ["n_L21103_003"],
+      "tags": ["生成式", "取樣參數"]
+    },
+    {
+      "id": "q_n3_genai_012",
+      "knowledge_code": "L21103",
+      "node_id": "n_L21103_004",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "下列關於 RAG(Retrieval-Augmented Generation)架構的{descriptor},何者最為正確?",
+      "stem_variables": {"descriptor": ["核心概念", "本質定位", "關鍵特性"]},
+      "options": [
+        {"text": "在 LLM 推論前先檢索外部知識,將相關文件作為上下文輔助生成,以緩解幻覺與知識過時", "is_correct": true},
+        {"text": "完全捨棄預訓練 LLM,改用一組獨立的關鍵字檢索引擎逐字輸出答案", "is_correct": false, "trap_type": "RAG 並非取代 LLM"},
+        {"text": "僅靠權重微調(fine-tuning)即可在 LLM 內植入新知識,無須任何外部檢索步驟", "is_correct": false, "trap_type": "微調非 RAG 機制"},
+        {"text": "依靠 GAN 生成器將外部資料壓縮為新權重,於下次推論時直接呼叫使用", "is_correct": false, "trap_type": "GAN 與 RAG 無關"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "RAG = LLM + 外部知識庫(向量索引);先檢索後生成,屬開卷模式,可緩解幻覺與知識過時",
+        "wrong": {
+          "完全捨棄預訓練 LLM,改用一組獨立的關鍵字檢索引擎逐字輸出答案": "RAG 仍以 LLM 為生成器,僅是補強知識來源,並非取代 LLM",
+          "僅靠權重微調(fine-tuning)即可在 LLM 內植入新知識,無須任何外部檢索步驟": "微調是把知識內化於權重,RAG 則是在推論時動態取用外部知識,兩者方法不同",
+          "依靠 GAN 生成器將外部資料壓縮為新權重,於下次推論時直接呼叫使用": "GAN 用於對抗式生成,與 RAG 之檢索-生成流程毫無關聯"
+        },
+        "hook": "RAG = LLM + 外部知識(開卷);LLM 純記憶 = 閉卷"
+      },
+      "misconceptions": ["以為 RAG 是 LLM 的替代品而非補強"],
+      "related_node_ids": ["n_L21103_004", "n_L21101_006"],
+      "tags": ["生成式", "RAG", "概念"]
+    },
+    {
+      "id": "q_n3_genai_013",
+      "knowledge_code": "L21103",
+      "node_id": "n_L21103_004",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某金融客服系統需頻繁回答「最新法規」與「內部 SOP」相關問題,且嚴禁產生幻覺。下列哪項做法最適合且最具成本效益?",
+      "options": [
+        {"text": "建立內部文件向量索引並導入 RAG,讓 LLM 在生成前檢索最新法規與 SOP 文件", "is_correct": true},
+        {"text": "每次法規更新都對 LLM 進行完整 fine-tuning,讓最新內容寫入權重中以維持時效", "is_correct": false, "trap_type": "成本與時效都不利"},
+        {"text": "完全依賴 LLM 預訓練語料,並用更高溫度(temperature)鼓勵模型自由創意回答", "is_correct": false, "trap_type": "高溫加劇幻覺"},
+        {"text": "在輸出端加裝拼字檢查器,以糾正模型可能輸出之錯字並完全消除幻覺問題", "is_correct": false, "trap_type": "拼字檢查無法解決幻覺"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "RAG 適合頻繁更新且需引用權威來源的場景,可大幅降低幻覺並維持知識時效,成本明顯低於頻繁微調",
+        "wrong": {
+          "每次法規更新都對 LLM 進行完整 fine-tuning,讓最新內容寫入權重中以維持時效": "頻繁微調成本高、迭代慢,不適合動態變化的法規與 SOP",
+          "完全依賴 LLM 預訓練語料,並用更高溫度(temperature)鼓勵模型自由創意回答": "預訓練語料有截止時間;高溫會放大幻覺,完全違反『嚴禁幻覺』需求",
+          "在輸出端加裝拼字檢查器,以糾正模型可能輸出之錯字並完全消除幻覺問題": "拼字檢查只能修錯字,無法判斷語意是否與真實法規一致"
+        },
+        "hook": "知識常變 + 反幻覺 → RAG;靜態能力提升 → fine-tuning"
+      },
+      "misconceptions": ["以為微調比 RAG 適合動態知識"],
+      "related_node_ids": ["n_L21103_004"],
+      "tags": ["生成式", "RAG", "情境"]
+    },
+    {
+      "id": "q_n3_genai_014",
+      "knowledge_code": "L21103",
+      "node_id": "n_L21103_004",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "RAG 架構中,「檢索品質不佳」往往是回答錯誤的主因。下列何者最能描述 RAG 在企業導入時應**優先**確保的事項?",
+      "options": [
+        {"text": "建立高品質且具版本控制的文件向量索引,並設計適當的檢索評估指標", "is_correct": true},
+        {"text": "將所有原始非結構化資料直接餵給 LLM,讓模型自行決定哪些段落可信", "is_correct": false, "trap_type": "原始非結構化資料無索引"},
+        {"text": "提高 LLM 推論溫度至最大,讓檢索結果所含資訊得以最大化發揮", "is_correct": false, "trap_type": "高溫不利可控生成"},
+        {"text": "完全停用檢索器,並依賴 LLM 預訓練記憶處理所有業務問題", "is_correct": false, "trap_type": "停用檢索即非 RAG"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "RAG 成敗主要看『檢索層』:文件清洗、版本控管、向量索引品質與檢索評估(如 Recall@k)是企業落地的關鍵",
+        "wrong": {
+          "將所有原始非結構化資料直接餵給 LLM,讓模型自行決定哪些段落可信": "未經清洗與索引的原始資料容易讓檢索結果雜訊過多,違反 RAG 設計初衷",
+          "提高 LLM 推論溫度至最大,讓檢索結果所含資訊得以最大化發揮": "高溫會增加隨機性與幻覺,無助於提升檢索品質",
+          "完全停用檢索器,並依賴 LLM 預訓練記憶處理所有業務問題": "停用檢索器即退化為純 LLM,失去 RAG 解決時效性與幻覺的優勢"
+        },
+        "hook": "RAG 成敗看檢索層 → 文件治理 + 向量索引 + 檢索評估"
+      },
+      "misconceptions": ["以為 RAG 只看 LLM 而忽略檢索層治理"],
+      "related_node_ids": ["n_L21103_004", "n_L21101_006"],
+      "tags": ["生成式", "RAG", "工程治理"]
+    },
+    {
+      "id": "q_n3_genai_015",
+      "knowledge_code": "L21103",
+      "node_id": "n_L21103_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "在 VAE / GAN / Diffusion 三大生成模型於「條件生成」(conditional generation)的設計差異上,下列敘述何者最為精準?",
+      "options": [
+        {"text": "VAE 直接條件化變分後驗;GAN 將條件併入 G/D 輸入;Diffusion 透過條件去噪與引導(如 CFG)實現", "is_correct": true},
+        {"text": "三者條件化機制其實完全相同,皆是在最後解碼層使用 Softmax 機率分佈直接挑選類別輸出生成結果", "is_correct": false, "trap_type": "三者機制差異大"},
+        {"text": "VAE 與 GAN 在現代框架中皆完全不支援條件生成,只有 Diffusion 模型可透過 RAG 結構實現精細的條件控制", "is_correct": false, "trap_type": "VAE/GAN 皆有條件版本"},
+        {"text": "Conditional GAN 與 Conditional VAE 在主流文獻中皆改採對抗式多步馬可夫鏈進行條件去噪以完成條件生成", "is_correct": false, "trap_type": "馬可夫鏈是 Diffusion 概念"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "CVAE 在編碼端條件化後驗;CGAN 把條件 y 拼接至 G 與 D 輸入;Conditional Diffusion 則靠分類器或 CFG 引導去噪過程",
+        "wrong": {
+          "三者條件化機制其實完全相同,皆是在最後解碼層使用 Softmax 機率分佈直接挑選類別輸出生成結果": "Softmax 取類別並非生成模型的條件化方式,且三者結構各異",
+          "VAE 與 GAN 在現代框架中皆完全不支援條件生成,只有 Diffusion 模型可透過 RAG 結構實現精細的條件控制": "CVAE、CGAN 均為成熟的條件生成模型,RAG 與條件生成本不相關",
+          "Conditional GAN 與 Conditional VAE 在主流文獻中皆改採對抗式多步馬可夫鏈進行條件去噪以完成條件生成": "馬可夫鏈式去噪為 Diffusion 概念,並非 CGAN/CVAE 的機制"
+        },
+        "hook": "條件化:VAE→變分後驗;GAN→拼接 G/D;Diffusion→引導去噪"
+      },
+      "misconceptions": ["以為三者條件化機制可互相替換"],
+      "related_node_ids": ["n_L21103_001", "n_L21103_003"],
+      "tags": ["生成式", "條件生成", "hard"]
+    },
+    {
+      "id": "q_n3_genai_016",
+      "knowledge_code": "L21103",
+      "node_id": "n_L21103_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "以下關於「為何當前主流影像生成模型逐漸由 GAN 轉向 Diffusion」的說明,何者最為正確?",
+      "options": [
+        {"text": "Diffusion 在生成多樣性與品質穩定度上明顯優於 GAN,且訓練更穩定", "is_correct": true},
+        {"text": "Diffusion 推論速度比 GAN 快數十倍,因此可在更低硬體成本下完成生成", "is_correct": false, "trap_type": "Diffusion 推論偏慢"},
+        {"text": "Diffusion 不需要任何訓練資料,可直接由隨機雜訊生成業務所需影像", "is_correct": false, "trap_type": "Diffusion 仍需訓練資料"},
+        {"text": "Diffusion 完全捨棄神經網路結構,僅以統計取樣流程即可完成影像生成", "is_correct": false, "trap_type": "Diffusion 仍以 NN 預測噪聲"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Diffusion 訓練穩定且生成多樣,品質穩定;雖推論慢但可透過取樣器最佳化,使其取代 GAN 成為主流",
+        "wrong": {
+          "Diffusion 推論速度比 GAN 快數十倍,因此可在更低硬體成本下完成生成": "Diffusion 多步去噪導致推論較慢,並非比 GAN 快",
+          "Diffusion 不需要任何訓練資料,可直接由隨機雜訊生成業務所需影像": "Diffusion 仍須以大量影像訓練前向加噪與反向去噪過程",
+          "Diffusion 完全捨棄神經網路結構,僅以統計取樣流程即可完成影像生成": "Diffusion 內仍以 U-Net 等神經網路預測噪聲,並非純統計流程"
+        },
+        "hook": "Diffusion 取代 GAN 主因 = 多樣性 + 品質穩定 + 訓練穩定"
+      },
+      "misconceptions": ["以為 Diffusion 推論最快"],
+      "related_node_ids": ["n_L21103_001"],
+      "tags": ["生成式", "Diffusion", "趨勢"]
+    },
+    {
+      "id": "q_n3_genai_017",
+      "knowledge_code": "L21103",
+      "node_id": "n_L21103_004",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某律師事務所欲導入生成式 AI,需要兼顧「可引用法條來源」、「易於更新最新判例」與「降低幻覺風險」三項條件。下列導入策略哪一項最為適切?",
+      "options": [
+        {"text": "建立內部判例與法條向量庫,搭配可顯示引用來源的 RAG 流程", "is_correct": true},
+        {"text": "全面採用 GAN 生成法律文件,讓對抗訓練自動消除幻覺並提供來源", "is_correct": false, "trap_type": "GAN 並非文字生成主流且無法提供來源"},
+        {"text": "完全依賴閉卷 LLM,並要求每位律師事後人工驗證所有輸出內容", "is_correct": false, "trap_type": "閉卷 LLM 易幻覺且無來源"},
+        {"text": "改用 Word2Vec 詞向量取代 LLM,以靜態詞向量直接組裝出最新法律意見書", "is_correct": false, "trap_type": "Word2Vec 無生成能力"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "RAG 既能引用判例來源、又能透過更新向量庫維持時效,並可透過檢索證據降低幻覺,符合三項需求",
+        "wrong": {
+          "全面採用 GAN 生成法律文件,讓對抗訓練自動消除幻覺並提供來源": "GAN 是影像生成主流而非文字主流,且無法天然提供文件來源",
+          "完全依賴閉卷 LLM,並要求每位律師事後人工驗證所有輸出內容": "閉卷 LLM 沒有檢索與引用機制,人工驗證成本與漏洞風險都偏高",
+          "改用 Word2Vec 詞向量取代 LLM,以靜態詞向量直接組裝出最新法律意見書": "Word2Vec 為靜態詞嵌入,無生成能力,也無法輸出複雜法律論述"
+        },
+        "hook": "需要可引用 + 可更新 + 反幻覺 → RAG 是最直觀解"
+      },
+      "misconceptions": ["以為 GAN 適合法律文字生成"],
+      "related_node_ids": ["n_L21103_004"],
+      "tags": ["生成式", "RAG", "情境", "hard"]
+    },
+    {
+      "id": "q_n3_genai_018",
+      "knowledge_code": "L21103",
+      "node_id": "n_L21103_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "下列關於 VAE / GAN / Diffusion 三大模型在「企業導入時最常被誤解的特性」之描述,何者**最不正確**?",
+      "options": [
+        {"text": "VAE 可直接生成高解析度且銳利度勝過 Diffusion 的廣告主視覺成品圖", "is_correct": true, "trap_type": "VAE 影像偏模糊"},
+        {"text": "GAN 在沒有額外損失改良時,容易出現 Mode Collapse 而導致樣本多樣性塌陷", "is_correct": false},
+        {"text": "Diffusion 雖品質高但因多步去噪推論速度較慢,需以加速取樣器補償", "is_correct": false},
+        {"text": "三者潛在空間建模方式不同,並非單純以解碼器架構差異即可互相替代", "is_correct": false}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "VAE 因變分平均化生成偏模糊,並非高解析度廣告主視覺首選;此項描述不符實際",
+        "wrong": {
+          "GAN 在沒有額外損失改良時,容易出現 Mode Collapse 而導致樣本多樣性塌陷": "此為 GAN 經典問題,描述正確",
+          "Diffusion 雖品質高但因多步去噪推論速度較慢,需以加速取樣器補償": "Diffusion 推論慢是已知特性,描述正確",
+          "三者潛在空間建模方式不同,並非單純以解碼器架構差異即可互相替代": "VAE 顯式變分、GAN 隱式映射、Diffusion 噪聲過程,潛在空間建模有本質差異"
+        },
+        "hook": "VAE 一定要記:訓練穩 + 影像糊"
+      },
+      "misconceptions": ["以為 VAE 是高解析廣告主視覺首選"],
+      "related_node_ids": ["n_L21103_001", "n_L21103_002"],
+      "tags": ["生成式", "誤解辨識"]
+    },
+    {
+      "id": "q_n3_genai_019",
+      "knowledge_code": "L21104",
+      "node_id": "n_L21104_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "下列關於 CLIP(Contrastive Language-Image Pretraining)模型的{descriptor},何者最為正確?",
+      "stem_variables": {"descriptor": ["關鍵特性", "核心架構", "本質設計"]},
+      "options": [
+        {"text": "用對比學習將圖像與文字嵌入對齊到共享空間,可直接做 Zero-shot 分類", "is_correct": true},
+        {"text": "用 GAN 對抗損失把影像直接生成出對應的文字標籤,屬於文字生成模型", "is_correct": false, "trap_type": "CLIP 非生成模型"},
+        {"text": "以監督式 MLP 在固定類別空間做圖像分類,無法泛化到未見過的標籤", "is_correct": false, "trap_type": "CLIP 採對比學習,非 MLP 監督"},
+        {"text": "由 Diffusion 結構直接訓練影像與文字之間的去噪馬可夫鏈進行配對", "is_correct": false, "trap_type": "CLIP 非 Diffusion"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "CLIP 由文字編碼器與影像編碼器組成,以對比學習(InfoNCE)將配對(image, text)拉近、未配對推遠,於共享嵌入空間中以語意相似度做 Zero-shot 分類",
+        "wrong": {
+          "用 GAN 對抗損失把影像直接生成出對應的文字標籤,屬於文字生成模型": "CLIP 是判別/對比式模型,並非用於文字生成",
+          "以監督式 MLP 在固定類別空間做圖像分類,無法泛化到未見過的標籤": "CLIP 並未限定固定類別,反而是 Zero-shot 通用模型",
+          "由 Diffusion 結構直接訓練影像與文字之間的去噪馬可夫鏈進行配對": "Diffusion 是另一類生成模型,CLIP 採用的是對比學習"
+        },
+        "hook": "CLIP 三特徵:對比學習 + 共享嵌入 + Zero-shot"
+      },
+      "misconceptions": ["以為 CLIP 是文字生成模型"],
+      "related_node_ids": ["n_L21104_001"],
+      "tags": ["多模態", "CLIP", "Zero-shot"]
+    },
+    {
+      "id": "q_n3_genai_020",
+      "knowledge_code": "L21104",
+      "node_id": "n_L21104_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某電商團隊使用 CLIP 進行 Zero-shot 商品分類,卻發現對於「中文細分品類」效果遠差於英文。最可能的根本原因為何?",
+      "options": [
+        {"text": "預訓練語料以英文圖文對為主,文字編碼器在中文細分語意上對齊不足", "is_correct": true},
+        {"text": "CLIP 結構天生只能處理英文,對所有非英文語言完全無法輸出嵌入向量", "is_correct": false, "trap_type": "CLIP 可吃任何文字 token"},
+        {"text": "影像解析度低於 4K 時,CLIP 對中文標籤之嵌入皆會被自動清零", "is_correct": false, "trap_type": "與解析度無關"},
+        {"text": "中文標籤格式不符 JSON 規範,因此編碼器拒絕輸出對應嵌入向量", "is_correct": false, "trap_type": "JSON 與嵌入無關"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "CLIP 預訓練語料以英文 alt text 為主,文字編碼器對中文細分品類的語意對齊不足,需重訓或對齊微調(如 Chinese-CLIP)",
+        "wrong": {
+          "CLIP 結構天生只能處理英文,對所有非英文語言完全無法輸出嵌入向量": "CLIP 文字編碼器本身可接受任何 token,只是訓練資料偏英文",
+          "影像解析度低於 4K 時,CLIP 對中文標籤之嵌入皆會被自動清零": "CLIP 嵌入計算與影像解析度區段無關,更不會自動清零",
+          "中文標籤格式不符 JSON 規範,因此編碼器拒絕輸出對應嵌入向量": "嵌入計算與 JSON 規範完全無關,屬於杜撰"
+        },
+        "hook": "CLIP 在多語言任務上常需重訓或對齊微調"
+      },
+      "misconceptions": ["以為 CLIP 文字編碼器跨語言能力天然完備"],
+      "related_node_ids": ["n_L21104_001"],
+      "tags": ["多模態", "CLIP", "情境"]
+    },
+    {
+      "id": "q_n3_genai_021",
+      "knowledge_code": "L21104",
+      "node_id": "n_L21104_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "關於 CLIP「對比學習(Contrastive Learning)」的訓練機制,下列敘述何者最為正確?",
+      "options": [
+        {"text": "讓配對的 (圖像, 文字) 嵌入在共享空間中互相靠近,讓不配對的嵌入互相遠離", "is_correct": true},
+        {"text": "讓所有圖像都儘量靠近單一固定文字向量,文字嵌入彼此完全不需互動或對齊", "is_correct": false, "trap_type": "與單一向量靠近非對比學習"},
+        {"text": "把圖像逐張壓縮為文字 token,並訓練語言模型進行下一個字符的自迴歸預測", "is_correct": false, "trap_type": "自迴歸非對比學習"},
+        {"text": "以對抗損失讓判別器分辨真假圖像,使生成器逐步逼近真實影像分佈", "is_correct": false, "trap_type": "對抗損失屬 GAN"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "對比學習以配對 (image, text) 嵌入互相吸引,不配對互相排斥;訓練後在共享空間中可由相似度做 Zero-shot 對齊",
+        "wrong": {
+          "讓所有圖像都儘量靠近單一固定文字向量,文字嵌入彼此完全不需互動或對齊": "若所有嵌入都靠近單一向量,反而會導致表徵塌陷,違反對比學習設計",
+          "把圖像逐張壓縮為文字 token,並訓練語言模型進行下一個字符的自迴歸預測": "自迴歸文字生成非 CLIP 訓練機制,而是 GPT 類模型流程",
+          "以對抗損失讓判別器分辨真假圖像,使生成器逐步逼近真實影像分佈": "對抗損失為 GAN 訓練機制,並非 CLIP 對比學習"
+        },
+        "hook": "對比學習口訣:配對拉近、不配對推遠"
+      },
+      "misconceptions": ["把對比學習與自迴歸或對抗訓練混淆"],
+      "related_node_ids": ["n_L21104_001"],
+      "tags": ["多模態", "對比學習"]
+    },
+    {
+      "id": "q_n3_genai_022",
+      "knowledge_code": "L21104",
+      "node_id": "n_L21104_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某團隊發現 CLIP 在「醫療影像」上的 Zero-shot 表現遠差於通用影像。最可能的根本原因與最佳改善方向為何?",
+      "options": [
+        {"text": "預訓練語料缺乏專業醫療圖文,文字-影像在醫療領域對齊不足,需以醫療領域圖文對齊微調", "is_correct": true},
+        {"text": "CLIP 結構在所有醫療任務皆完全失效,只能改用傳統 SVM 重新監督式訓練", "is_correct": false, "trap_type": "未必失效,可微調"},
+        {"text": "醫療影像解析度過低使 CLIP 影像編碼器無法輸出嵌入,需先用 GAN 提升解析度", "is_correct": false, "trap_type": "解析度非根因"},
+        {"text": "CLIP 僅適用於黑白影像,所有彩色醫療影像皆無法生成有效跨模態嵌入向量", "is_correct": false, "trap_type": "CLIP 不限色彩"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "CLIP 預訓練語料以網路通用圖文為主,缺乏專業醫療領域對應描述,需用醫療圖文對齊資料進行領域微調",
+        "wrong": {
+          "CLIP 結構在所有醫療任務皆完全失效,只能改用傳統 SVM 重新監督式訓練": "CLIP 並非完全失效,透過領域對齊微調(如 BiomedCLIP)即可顯著改善",
+          "醫療影像解析度過低使 CLIP 影像編碼器無法輸出嵌入,需先用 GAN 提升解析度": "解析度問題僅是工程細節,不是 Zero-shot 失效的根因",
+          "CLIP 僅適用於黑白影像,所有彩色醫療影像皆無法生成有效跨模態嵌入向量": "CLIP 對彩色與灰階影像均可處理,沒有此種限制"
+        },
+        "hook": "CLIP 領域失準根因 = 預訓練語料分佈偏移 → 領域對齊微調"
+      },
+      "misconceptions": ["以為 CLIP 在醫療失效是技術上限"],
+      "related_node_ids": ["n_L21104_001", "n_L21104_002"],
+      "tags": ["多模態", "領域偏移", "hard"]
+    },
+    {
+      "id": "q_n3_genai_023",
+      "knowledge_code": "L21104",
+      "node_id": "n_L21104_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "在多模態模型部署時,經常遇到「部分模態資料缺失」的情況。下列哪項策略**最有效**?",
+      "options": [
+        {"text": "訓練具備模態缺失感知能力(modality-aware)的模型,讓其在缺失時仍可推論", "is_correct": true},
+        {"text": "對所有缺失模態一律以零向量填補,不做任何結構或訓練面向之相應調整與最佳化", "is_correct": false, "trap_type": "零向量填充失準"},
+        {"text": "凡有任一模態缺失的樣本,皆從訓練及推論流程中完全捨棄,不進行任何後續運算", "is_correct": false, "trap_type": "捨棄樣本浪費資料"},
+        {"text": "在缺失模態上隨機亂填合理範圍內數值,讓模型自行透過 L2 正則化抑制其影響", "is_correct": false, "trap_type": "亂填會引入雜訊"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "讓模型本身知道『此模態可能缺失』(透過缺失旗標、Dropout-style 訓練等),比機械式填充零向量更穩健,效果最佳",
+        "wrong": {
+          "對所有缺失模態一律以零向量填補,不做任何結構或訓練面向之相應調整與最佳化": "零向量會被誤認為有效輸入,導致學習到錯誤關聯",
+          "凡有任一模態缺失的樣本,皆從訓練及推論流程中完全捨棄,不進行任何後續運算": "捨棄樣本會嚴重浪費資料,且實務上常導致樣本不足",
+          "在缺失模態上隨機亂填合理範圍內數值,讓模型自行透過 L2 正則化抑制其影響": "隨機亂填等同人為注入雜訊,並非穩健的缺失處理方式"
+        },
+        "hook": "最佳策略 = 讓模型知道『可能會缺』,而非偽造資料"
+      },
+      "misconceptions": ["以為零向量填充是最佳實踐"],
+      "related_node_ids": ["n_L21104_002"],
+      "tags": ["多模態", "缺失策略"]
+    },
+    {
+      "id": "q_n3_genai_024",
+      "knowledge_code": "L21104",
+      "node_id": "n_L21104_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某客服 AI 同時使用「語音」與「文字」兩種模態,實務上常遇到語音檔遺失但文字逐字稿仍存在的情況。下列處理策略,何者最為穩健?",
+      "options": [
+        {"text": "於模型結構引入模態旗標(modality flag),訓練其在語音缺失時仍能僅靠文字推論", "is_correct": true},
+        {"text": "將所有語音缺失的樣本一律從資料集中捨棄,僅以兩模態皆完整之乾淨資料進行訓練與評估", "is_correct": false, "trap_type": "捨棄損失大量資料"},
+        {"text": "把缺失的語音資料以隨機高斯雜訊填補進輸入序列,讓模型誤以為使用者只是當下錄音品質不佳", "is_correct": false, "trap_type": "雜訊填補會誤導模型"},
+        {"text": "把文字逐字稿透過 TTS 轉成語音波形偽造輸入,讓兩模態看起來總是完整存在於系統中", "is_correct": false, "trap_type": "偽造模態引入幻覺"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "以模態旗標 + 缺失感知訓練,讓模型在缺失語音時仍能單靠文字進行推論,既保留資料又維持穩健度",
+        "wrong": {
+          "將所有語音缺失的樣本一律從資料集中捨棄,僅以兩模態皆完整之乾淨資料進行訓練與評估": "客服場景中部分模態缺失極為常見,直接捨棄將大量浪費可用資料",
+          "把缺失的語音資料以隨機高斯雜訊填補進輸入序列,讓模型誤以為使用者只是當下錄音品質不佳": "雜訊填補會讓模型學到錯誤的『偽相關』,影響線上效果",
+          "把文字逐字稿透過 TTS 轉成語音波形偽造輸入,讓兩模態看起來總是完整存在於系統中": "TTS 生成的語音與真實語音分佈不同,易引入新一層幻覺與偏差"
+        },
+        "hook": "缺失模態最佳解 = 模型結構支援缺失,而非偽造輸入"
+      },
+      "misconceptions": ["以為填補假資料能讓多模態系統更穩"],
+      "related_node_ids": ["n_L21104_002", "n_L21104_001"],
+      "tags": ["多模態", "缺失感知", "情境"]
+    },
+    {
+      "id": "q_n3_genai_025",
+      "knowledge_code": "L21104",
+      "node_id": "n_L21104_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "下列關於「多模態資料缺失四大策略(零向量填充 / 缺失感知模型 / 生成模型補全 / 捨棄樣本)」的敘述,何者**最為正確**?",
+      "options": [
+        {"text": "缺失感知模型最穩健;生成模型補全成本高且需注意幻覺;零向量與捨棄屬下策", "is_correct": true},
+        {"text": "零向量填充為公認最佳實踐,因實作最簡單故品質也最高,可作為任何場景首選", "is_correct": false, "trap_type": "零向量並非最佳"},
+        {"text": "捨棄樣本最佳,因可確保訓練集絕對乾淨;捨棄資料量再多都不影響模型效能", "is_correct": false, "trap_type": "捨棄會影響資料代表性"},
+        {"text": "生成模型補全絕對無風險,可在所有場景無條件取代真實模態資料用於上線", "is_correct": false, "trap_type": "生成補全有幻覺風險"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "缺失感知模型為主流首選;生成補全對複雜資料雖可行但需審慎評估幻覺風險;零向量填充與直接捨棄樣本皆屬下策,僅在特定簡單情境可短期使用",
+        "wrong": {
+          "零向量填充為公認最佳實踐,因實作最簡單故品質也最高,可作為任何場景首選": "零向量易讓模型學到錯誤關聯,並非任何場景的首選",
+          "捨棄樣本最佳,因可確保訓練集絕對乾淨;捨棄資料量再多都不影響模型效能": "捨棄大量樣本會嚴重影響代表性與模型泛化能力",
+          "生成模型補全絕對無風險,可在所有場景無條件取代真實模態資料用於上線": "生成補全會帶入訓練分佈外幻覺,需嚴格驗證後才能使用"
+        },
+        "hook": "排序口訣:缺失感知 > 生成補全 > 零向量 ≈ 捨棄"
+      },
+      "misconceptions": ["以為零向量是最佳實踐", "以為生成補全完全無風險"],
+      "related_node_ids": ["n_L21104_002", "n_L21104_001"],
+      "tags": ["多模態", "缺失策略", "hard"]
+    }
+  ]
+}

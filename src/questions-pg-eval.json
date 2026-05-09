@@ -218,64 +218,6 @@
       "tags": ["calculation", "MCC", "F1", "Balanced Accuracy", "極度不平衡", "詐欺偵測"]
     },
     {
-      "id": "q_pg_008",
-      "knowledge_code": "L23303",
-      "node_id": "n_L23303_012",
-      "subject": 3,
-      "format": "single_choice",
-      "difficulty": "hard",
-      "source_level": "L2",
-      "stem": "某醫學影像團隊請 3 位放射師對 200 張 CT 影像獨立標註『有/無病灶』,要評估標註者間一致性以決定是否需要再訓練。同時也想評估『AI 模型 vs 多數投票真值』的一致性。下列何者最正確描述 Cohen's Kappa 在兩個情境的應用?",
-      "options": [
-        {"text": "標註者間一致性:可用兩兩配對的 Cohen's Kappa(3 位則計算 3 對 K 取平均),或直接用 Fleiss' Kappa(三位以上專用);AI vs 真值:可用 Cohen's Kappa 衡量超越隨機一致(prevalence adjusted),比 Accuracy 更能反映類別不平衡下的真實一致性", "is_correct": true},
-        {"text": "Cohen's Kappa 只適用於『二位標註者』之間的兩兩配對比較,三位或更多位標註者的多人標註情境必須改用簡單 Accuracy 來計算彼此的一致性、不應使用 Kappa 系列;所謂的 Fleiss' Kappa 屬於不正確的統計學推廣、不應該被採用於實務分析或學術研究", "is_correct": false, "trap_type": "Fleiss' Kappa 正是 Cohen's Kappa 的多位標註者推廣,公式合理且廣為使用,並非錯誤統計"},
-        {"text": "Cohen's Kappa 與 Accuracy 在數學上完全等價,差別僅在於 Kappa 多除以一個類別數常數作為標準化處理;在實務應用上兩者輸出的數值意義完全一致、無論選擇哪一個指標都不會影響最終評估結論與審查意見,因此實作時挑選團隊最熟悉、最易於溝通給臨床端的指標即可", "is_correct": false, "trap_type": "兩者完全不等價:Kappa = (Po - Pe)/(1 - Pe),減去『隨機一致機率 Pe』;Accuracy 不做隨機調整,在不平衡時被高估"},
-        {"text": "Cohen's Kappa 雖然適合評估人類放射師標註者彼此之間的一致性,但不適合用來評估 AI 模型 vs 多數投票真值之間的一致性;因為 AI 並非『獨立標註者』而是『系統輸出』,兩種情境背後的統計推論假設不同、概念不可混用於同一份醫療影像驗收報告中", "is_correct": false, "trap_type": "Kappa 衡量任兩個分類序列的一致性,不要求都是『人』;AI 與真值一致性可用 Kappa,且常見於模型驗收"}
-      ],
-      "shuffle_options": true,
-      "explanation": {
-        "correct": "Cohen's Kappa κ = (Po - Pe) / (1 - Pe),Po=觀察到的一致比例,Pe=隨機期望一致比例;κ ∈ [-1, +1],+1=完美一致、0=僅與隨機相當、<0=反向。應用場景:(1) 標註者間一致性:兩位用 Cohen's Kappa,三位以上用 Fleiss' Kappa(Cohen's 的多人推廣);通常 κ>0.61 為強一致(Landis-Koch 標準)。(2) AI 模型 vs 真值:Kappa 比 Accuracy 更能反映『超越隨機』的真實一致性,在類別不平衡時尤其重要(因 Pe 會調整高基線);臨床 AI 驗收常用此指標。",
-        "wrong": {
-          "Cohen's Kappa 只適用於『二位標註者』之間的兩兩配對比較,三位或更多位標註者的多人標註情境必須改用簡單 Accuracy 來計算彼此的一致性、不應使用 Kappa 系列;所謂的 Fleiss' Kappa 屬於不正確的統計學推廣、不應該被採用於實務分析或學術研究": "Fleiss' Kappa 是 Cohen's 的多位標註者推廣,公式為各類別觀察比例與期望比例之差,廣泛用於醫學標註研究;『錯誤統計』為謬誤",
-          "Cohen's Kappa 與 Accuracy 在數學上完全等價,差別僅在於 Kappa 多除以一個類別數常數作為標準化處理;在實務應用上兩者輸出的數值意義完全一致、無論選擇哪一個指標都不會影響最終評估結論與審查意見,因此實作時挑選團隊最熟悉、最易於溝通給臨床端的指標即可": "Kappa 公式 κ = (Po - Pe)/(1 - Pe) 減去隨機期望 Pe,Accuracy = Po 不做調整;當 Pe 高(類別極不平衡)時 Accuracy 嚴重高估,兩者數值差異可達 0.4 以上",
-          "Cohen's Kappa 雖然適合評估人類放射師標註者彼此之間的一致性,但不適合用來評估 AI 模型 vs 多數投票真值之間的一致性;因為 AI 並非『獨立標註者』而是『系統輸出』,兩種情境背後的統計推論假設不同、概念不可混用於同一份醫療影像驗收報告中": "Kappa 數學上只衡量任兩序列的一致性,不要求都來自人;醫學 AI 驗收(FDA、CE 標籤)常以 AI vs 真值 Kappa 為審查指標,實務廣用"
-        },
-        "hook": "Kappa 公式:κ = (Po - Pe)/(1 - Pe),減去隨機期望;兩位 = Cohen's,三位以上 = Fleiss';κ>0.81 近乎完美、0.61-0.80 強、0.41-0.60 中等、<0.40 弱(Landis-Koch)"
-      },
-      "misconceptions": ["以為 Kappa 與 Accuracy 等價", "認為 Kappa 只適用兩位標註者", "認為 Kappa 不能用於 AI 驗收"],
-      "related_node_ids": ["n_L23303_002", "n_L23303_012", "n_L24201_004"],
-      "tags": ["Cohen's Kappa", "Fleiss' Kappa", "標註一致性", "AI驗收", "醫學影像"]
-    },
-    {
-      "id": "q_pg_009",
-      "knowledge_code": "L23303",
-      "node_id": "n_L23303_013",
-      "subject": 3,
-      "format": "single_choice",
-      "difficulty": "hard",
-      "source_level": "L2",
-      "stem": "某風控團隊繪製模型校準圖(Calibration Plot,X=預測機率分組,Y=該組實際陽性比例)。發現曲線『系統性高於對角線(y=x)』,即模型在 P=0.7 時實際陽性率為 0.85;P=0.3 時實際陽性率為 0.45。模型整體 AUC=0.92 看似不錯。下列校準診斷與調整策略何者正確?",
-      "options": [
-        {"text": "模型為『under-confident』(預測機率系統性低於真實);若 reliability diagram 接近線性可用 Platt Scaling(sigmoid 校準);若呈現非單調或彎曲則用 Isotonic Regression(非參數單調回歸,更彈性但需更多資料防過擬合)", "is_correct": true},
-        {"text": "模型屬於『over-confident』(預測機率系統性高於真實陽性率);應採用 Temperature Scaling 把 logits 除以 T>1 使機率分布變得更為扁平,降低模型對極端機率值的過度自信、讓校準曲線回到對角線並修正風險評分偏移", "is_correct": false, "trap_type": "本題實際 > 預測,代表模型『低估』機率,屬於 under-confident;over-confident 是『預測 > 實際』,方向相反"},
-        {"text": "AUC=0.92 已經達到風控業界足夠優秀的水準,校準偏差不需要特別處理;因為當模型的排序能力夠強的時候,直接以 threshold 調整即可同時解決決策邊界與機率偏移兩個問題,屬於最具成本效益、工程最簡潔的處理方式", "is_correct": false, "trap_type": "AUC 衡量排序能力,與校準是兩個獨立面向;高 AUC 模型仍可能機率偏移,在『需直接使用機率值』(如風險定價、bayes 決策)場景仍需校準"},
-        {"text": "Platt Scaling 與 Isotonic Regression 在校準偏差修正場景完全等價,兩者皆能將預測機率重新映射回對角線,選擇哪一個都可以、不影響最終 reliability diagram 的形狀與評估指標,屬於實務上可互換的兩種校準方法", "is_correct": false, "trap_type": "Platt 是參數化 sigmoid(只 2 參數),擬合彈性低但抗 overfit;Isotonic 是非參數單調回歸(N 段函數),彈性高但需更多資料,兩者並非等價"}
-      ],
-      "shuffle_options": true,
-      "explanation": {
-        "correct": "校準診斷邏輯:Calibration Plot 中 y(實際陽性率) > x(預測機率) 代表模型『低估真實機率』,即 under-confident;反之 y < x 為 over-confident。校準方法選擇:(1) Platt Scaling:對 logits 套 sigmoid 重新映射,只有 2 個參數,適合『近似線性偏移』,抗過擬合,需要資料量少。(2) Isotonic Regression:非參數單調回歸(階梯函數),彈性極高可處理任意非線性偏移,但需要較多資料(>1000)防止 overfit。AUC 衡量排序而非機率值準確,兩者獨立。",
-        "wrong": {
-          "模型屬於『over-confident』(預測機率系統性高於真實陽性率);應採用 Temperature Scaling 把 logits 除以 T>1 使機率分布變得更為扁平,降低模型對極端機率值的過度自信、讓校準曲線回到對角線並修正風險評分偏移": "本題實際陽性率(0.85)>預測機率(0.7),代表模型機率『偏低』,屬 under-confident;若做 T>1 扁平化會更糟。Over-confident 是預測值>實際,方向完全相反",
-          "AUC=0.92 已經達到風控業界足夠優秀的水準,校準偏差不需要特別處理;因為當模型的排序能力夠強的時候,直接以 threshold 調整即可同時解決決策邊界與機率偏移兩個問題,屬於最具成本效益、工程最簡潔的處理方式": "AUC 衡量『樣本兩兩排序正確比例』,與機率絕對值無關;在『風險定價』『Bayes 決策』『信賴度展示』需要『可解釋的機率值』場景,即使高 AUC 模型仍可能機率失準需校準",
-          "Platt Scaling 與 Isotonic Regression 在校準偏差修正場景完全等價,兩者皆能將預測機率重新映射回對角線,選擇哪一個都可以、不影響最終 reliability diagram 的形狀與評估指標,屬於實務上可互換的兩種校準方法": "兩者背後假設不同:Platt 假設 sigmoid 形狀(2 參數),適合資料少且偏差近似線性;Isotonic 為非參數單調回歸(N 段),彈性高但需更多資料防 overfit;選擇取決於資料量與偏差形狀"
-        },
-        "hook": "Calibration 口訣:y > x → under-confident(低估),y < x → over-confident(高估);Platt = sigmoid 參數化(資料少),Isotonic = 非參數單調(資料多);AUC 高 ≠ 校準好"
-      },
-      "misconceptions": ["把 under/over-confident 方向搞反", "認為 AUC 高就不需校準", "把 Platt 與 Isotonic 視為等價"],
-      "related_node_ids": ["n_L23303_002", "n_L23303_013", "n_L23303_007"],
-      "tags": ["Calibration", "Platt Scaling", "Isotonic Regression", "Temperature Scaling", "風控"]
-    },
-    {
       "id": "q_pg_010",
       "knowledge_code": "L23304",
       "node_id": "n_L23304_004",
@@ -332,64 +274,6 @@
       "misconceptions": ["把 Stochastic Depth 與 Dropout 視為等價", "認為 Dropout 已被全面淘汰", "顛倒 DropPath 適用架構"],
       "related_node_ids": ["n_L23304_005", "n_L23304_002", "n_L23304_001"],
       "tags": ["Stochastic Depth", "DropPath", "Dropout", "深度網路", "進階正則化"]
-    },
-    {
-      "id": "q_pg_012",
-      "knowledge_code": "L23304",
-      "node_id": "n_L23304_007",
-      "subject": 3,
-      "format": "single_choice",
-      "difficulty": "hard",
-      "source_level": "L2",
-      "stem": "某 ML 平台需在大規模超參搜尋(1000 組候選)+ 預算受限(總計算量等於 200 組完整訓練)下完成調校。團隊比較 Hyperband 與 ASHA(Asynchronous Successive Halving)。下列何者最正確描述兩者 trade-off 與選擇?",
-      "options": [
-        {"text": "兩者都用『多階段早停』(逐輪淘汰差的配置),但 ASHA 是『非同步』(任一資源空出立即指派下一組,不等同步點),適合大規模平行;Hyperband 為『同步』分桶 + bracket 結構,理論保證較強但平行效率低。本題大規模 + 平行優先 → ASHA", "is_correct": true},
-        {"text": "Hyperband 與 ASHA 在演算法本質上完全等價,只是命名不同(2017 與 2018 兩種版本);兩者皆採用同步多 bracket 結構、選擇任一個都會得到一致的最終最佳配置與相同的計算成本,可視為文獻上同一思想的不同名稱", "is_correct": false, "trap_type": "兩者結構與平行化能力差異顯著:Hyperband 同步 bracket 結構,ASHA 非同步;在大規模平行下 ASHA 加速比顯著高於 Hyperband"},
-        {"text": "Hyperband 只能應用於連續超參的搜尋空間、ASHA 則只能應用於離散超參空間,兩者在使用情境上是互斥關係;若搜尋空間同時包含連續與離散超參則必須拆成兩階段分別執行,合併使用會導致資源誤配與配置選擇衝突", "is_correct": false, "trap_type": "兩者皆可同時處理連續+離散超參,並無此區分;通常與 Random Search 或 BO 結合做配置生成"},
-        {"text": "本題候選 1000 組過多,應優先採用 GridSearch 完整探索整個搜尋空間;Hyperband 與 ASHA 因為採用早停機制會在資源不足時錯過真正最佳的配置點,實務上不應採用、會嚴重影響最終模型效能", "is_correct": false, "trap_type": "GridSearch 在 1000 候選下需完整訓練 1000 次(超出 200 預算上限);Hyperband/ASHA 透過早停集中資源到有潛力配置,實證上找到的最佳點通常與 GridSearch 接近甚至更好"}
-      ],
-      "shuffle_options": true,
-      "explanation": {
-        "correct": "Successive Halving 思想:用少量資源訓練多組配置,淘汰最差一半;倖存者再以倍數資源續訓,直到剩 1-2 組。Hyperband(2017):用多個 bracket(不同初始 budget)避免單 bracket 早停過於積極,理論保證較強,但 bracket 內為同步等待。ASHA(2018):非同步版本,任一 worker 空閒立即指派新配置,不等待同步點,大規模平行加速比顯著(>10×)。本題 1000 組候選 + 大規模平行需求,ASHA 顯然優於 Hyperband。",
-        "wrong": {
-          "Hyperband 與 ASHA 在演算法本質上完全等價,只是命名不同(2017 與 2018 兩種版本);兩者皆採用同步多 bracket 結構、選擇任一個都會得到一致的最終最佳配置與相同的計算成本,可視為文獻上同一思想的不同名稱": "兩者結構不同:Hyperband 用同步 bracket(必須等所有配置在當前 rung 跑完才晉級),ASHA 為非同步晉級;在大規模平行(>50 workers)ASHA 加速比超過 Hyperband 一個量級",
-          "Hyperband 只能應用於連續超參的搜尋空間、ASHA 則只能應用於離散超參空間,兩者在使用情境上是互斥關係;若搜尋空間同時包含連續與離散超參則必須拆成兩階段分別執行,合併使用會導致資源誤配與配置選擇衝突": "兩者皆與配置生成器(Random Search、BO)解耦,可處理任意超參空間(連續+離散+條件);區分連續/離散是 BO acquisition function 的議題,不是早停演算法的議題",
-          "本題候選 1000 組過多,應優先採用 GridSearch 完整探索整個搜尋空間;Hyperband 與 ASHA 因為採用早停機制會在資源不足時錯過真正最佳的配置點,實務上不應採用、會嚴重影響最終模型效能": "GridSearch 1000 配置需完整訓練 1000 次,遠超 200 預算;Hyperband/ASHA 在 200 預算下可探索更多 partial training,實證上 Top-1 配置不遜於甚至優於 GridSearch"
-        },
-        "hook": "Hyperband vs ASHA 口訣:都用 Successive Halving 早停;Hyperband=同步多 bracket(理論保證強,平行差);ASHA=非同步單流(平行優,大規模首選);GridSearch 在預算受限完全失效"
-      },
-      "misconceptions": ["把 Hyperband 與 ASHA 視為等價", "認為 GridSearch 在大規模搜尋仍最優", "誤分連續/離散超參的演算法歸屬"],
-      "related_node_ids": ["n_L23304_005", "n_L23304_007", "n_L23303_008"],
-      "tags": ["Hyperband", "ASHA", "Successive Halving", "超參調校", "大規模平行"]
-    },
-    {
-      "id": "q_pg_013",
-      "knowledge_code": "L23304",
-      "node_id": "n_L23304_008",
-      "subject": 3,
-      "format": "single_choice",
-      "difficulty": "hard",
-      "source_level": "L2",
-      "stem": "某團隊為 Transformer 模型調校,搜尋空間包含:learning_rate(連續 log-scale)、batch_size(離散 [16,32,64,128])、optimizer(類別 [Adam, AdamW, Lion])、warmup_steps(條件超參:僅當 optimizer=Adam 時生效)。可使用 16 個 GPU 平行訓練。比較 GP-based BO 與 TPE-based(Optuna 預設)。下列何者最正確?",
-      "options": [
-        {"text": "TPE 對『條件超參+類別+混合連續離散』天然友善(以樹結構建模條件依賴),且支援 Asynchronous 平行;GP-based BO 在『純連續低維(<20)』表現最強,但對類別與條件超參需特殊 kernel,且平行化效率較低。本題情境 → TPE/Optuna 較合適", "is_correct": true},
-        {"text": "GP-based BO 在所有情境下永遠優於 TPE,因為高斯過程能提供完整且精確的後驗不確定性量化、有理論保證,而 TPE 只是 GP 的簡化版本;在條件超參與類別空間下也能透過特殊 kernel(如 ARD、混合 kernel)取得更好的結果與更快的收斂速度", "is_correct": false, "trap_type": "GP-based BO 在『連續低維』有優勢,但對類別/條件超參需特殊 kernel(如 ARD、混合 kernel),工程複雜度高;TPE 並非『簡化版本』而是『另一種建模思路』"},
-        {"text": "TPE 與 GP-based BO 在數學原理上完全等價,差別只在於套件實作不同(分別來自 scikit-optimize 與 Optuna);兩者最終所建立的代理模型一致、最佳配置的搜尋效果與收斂曲線也完全相同,可視為同一演算法的兩種程式語言實作", "is_correct": false, "trap_type": "兩者背後機率模型完全不同:GP 直接建模 p(y|x),TPE 建模 p(x|y) 並比較『好區域』與『壞區域』分佈比;在處理條件超參時 TPE 結構優勢明顯"},
-        {"text": "TPE 與 GP-based BO 兩者皆不適合本題場景,應改用 GridSearch 完整探索 16(GPU 平行度)×3(optimizer)×4(batch_size)×多種 warmup 組合才能找到真正的全域最佳配置點", "is_correct": false, "trap_type": "包含連續 learning_rate 無法 Grid 完全列舉;且條件超參使有效配置數受 optimizer 影響,GridSearch 會浪費大量無效配置(如 Lion 仍探索 warmup)"}
-      ],
-      "shuffle_options": true,
-      "explanation": {
-        "correct": "Bayesian Optimization 兩大流派:(1) GP-based BO(scikit-optimize、GPyOpt):用 Gaussian Process 建模 p(y|x) 後驗分佈,提供精確不確定性量化,適合『純連續低維(<20)』;對類別/條件超參需特殊 kernel(ARD、混合 kernel),工程困難且 GP 計算複雜度 O(n³),平行化效率低。(2) TPE(Tree-structured Parzen Estimator,Optuna 預設):用樹結構建模條件依賴,以 KDE 估 p(x|y<γ) 與 p(x|y≥γ) 比例選下一點;天然支援類別+條件+混合空間,且 Optuna 提供 Asynchronous 平行。本題有條件超參+類別+16 GPU → TPE/Optuna 較合適。",
-        "wrong": {
-          "GP-based BO 在所有情境下永遠優於 TPE,因為高斯過程能提供完整且精確的後驗不確定性量化、有理論保證,而 TPE 只是 GP 的簡化版本;在條件超參與類別空間下也能透過特殊 kernel(如 ARD、混合 kernel)取得更好的結果與更快的收斂速度": "GP-based BO 在『純連續低維』確實優,但對類別/條件超參需特殊 kernel,工程複雜;TPE 並非簡化版本,而是基於不同建模假設(p(x|y) 分位數比),在條件空間表現更強",
-          "TPE 與 GP-based BO 在數學原理上完全等價,差別只在於套件實作不同(分別來自 scikit-optimize 與 Optuna);兩者最終所建立的代理模型一致、最佳配置的搜尋效果與收斂曲線也完全相同,可視為同一演算法的兩種程式語言實作": "兩者數學基礎完全不同:GP 直接擬合代理函數 p(y|x);TPE 比較『好/壞區域』KDE 比例;在處理條件依賴與類別空間時 TPE 結構性優勢明顯",
-          "TPE 與 GP-based BO 兩者皆不適合本題場景,應改用 GridSearch 完整探索 16(GPU 平行度)×3(optimizer)×4(batch_size)×多種 warmup 組合才能找到真正的全域最佳配置點": "連續 learning_rate(log-scale)無法 Grid 完整列舉;條件超參(warmup 僅 Adam 用)使 GridSearch 在非 Adam 配置下浪費 warmup 探索;BO/TPE 透過代理模型聚焦有潛力區域,在預算受限時更高效"
-        },
-        "hook": "BO 流派口訣:純連續低維(<20)→ GP-based BO(精確);類別+條件+混合 → TPE(Optuna);大規模平行 → 兩者都需異步機制(Optuna 內建好);GridSearch 在連續+條件下完全失效"
-      },
-      "misconceptions": ["以為 GP-based BO 永遠最優", "把 TPE 視為 GP 的簡化版本", "在連續+條件超參空間仍迷信 GridSearch"],
-      "related_node_ids": ["n_L23304_005", "n_L23304_008", "n_L23304_007"],
-      "tags": ["Bayesian Optimization", "GP-based", "TPE", "Optuna", "條件超參", "超參調校"]
     }
   ]
 }

@@ -537,15 +537,23 @@ const Wrongbook = {
 let QUESTIONS = [];
 async function loadQuestions() {
   const files = [
-    'questions.json',                // 50 題 baseline(批 1)
-    'questions-pa-code.json',        // 15 題 程式判讀(原創 + 完整 code_block)
-    'questions-pb-visual.json',      // 10 題 表格判讀(VGG16 完整 39 行)
-    'questions-pc-modes.json',       // 15 題 matching/sequence/calculation
-    'questions-pd-scenario.json',    // 15 題 情境決策進化
-    'questions-pe-advanced-s1.json', // 12 題 進階 NLP/CV/GenAI/Multimodal
-    'questions-pf-advanced-s3.json', // 12 題 進階 ML 演算法選型
-    'questions-pg-eval.json',        // 13 題 進階評估/不平衡/CV/調校
-    'questions-ph-mlops.json'        // 13 題 進階 MLOps/治理/隱私
+    'questions.json',                  // 50 baseline
+    'questions-pa-code.json',          // 12 程式判讀(刪 3 後)
+    'questions-pb-visual.json',        // 10 表格判讀
+    'questions-pc-modes.json',         // 15 matching/sequence/calc
+    'questions-pd-scenario.json',      // 15 情境決策
+    'questions-pe-advanced-s1.json',   // 5 進階 NLP/CV/GenAI(刪 7 後)
+    'questions-pf-advanced-s3.json',   // 6 進階 ML(刪 6 後)
+    'questions-pg-eval.json',          // 9 進階評估(刪 4 後)
+    'questions-ph-mlops.json',         // 6 進階 MLOps(刪 7 後)
+    'questions-batch-n1-nlp.json',     // 25 NLP 新批
+    'questions-batch-n2-cv.json',      // 25 CV 新批
+    'questions-batch-n3-genai.json',   // 25 GenAI+多模態 新批
+    'questions-batch-n4-planning.json',// 25 AI 規劃 新批
+    'questions-batch-n5-deploy.json',  // 25 部署 新批
+    'questions-batch-n6-ml-core.json', // 22 ML 基礎 新批
+    'questions-batch-n7-dl.json',      // 25 DL+數據準備 新批
+    'questions-batch-n8-eval-gov.json' // 25 評估治理 新批
   ];
   try {
     const results = await Promise.all(
