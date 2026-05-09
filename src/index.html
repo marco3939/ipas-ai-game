@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f172a">
+<title>IPAS AI 中級 — 互動學習遊戲</title>
+<style>
+  :root {
+    --bg: #0f172a; --bg-2: #1e293b; --bg-3: #334155;
+    --fg: #e2e8f0; --fg-dim: #94a3b8; --fg-mute: #64748b;
+    --primary: #38bdf8; --primary-fg: #0c4a6e;
+    --success: #4ade80; --danger: #f87171; --warn: #facc15;
+    --border: #334155; --shadow: 0 4px 20px rgba(0,0,0,0.4);
+    --radius: 12px; --radius-sm: 6px;
+  }
+  @media (prefers-color-scheme: light) {
+    :root { --bg: #f8fafc; --bg-2: #ffffff; --bg-3: #e2e8f0;
+      --fg: #0f172a; --fg-dim: #475569; --fg-mute: #94a3b8;
+      --primary: #0284c7; --primary-fg: #f0f9ff; --border: #cbd5e1;
+      --shadow: 0 4px 20px rgba(0,0,0,0.08); }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { font-family: 'Noto Sans TC', 'Noto Sans CJK TC', system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--fg); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  body { min-height: 100vh; display: flex; flex-direction: column; }
+  button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  a { color: var(--primary); text-decoration: none; }
+
+  header { background: var(--bg-2); border-bottom: 1px solid var(--border);
+    padding: 12px 16px; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
+  .header-inner { max-width: 1200px; margin: 0 auto; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .countdown { font-weight: 700; font-size: 1.1rem; color: var(--warn); }
+  .countdown.urgent { color: var(--danger); animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+  .header-stats { display: flex; gap: 12px; font-size: 0.875rem; color: var(--fg-dim); flex-wrap: wrap; }
+  .badge { background: var(--bg-3); padding: 2px 8px; border-radius: var(--radius-sm); font-size: 0.8rem; }
+
+  main { flex: 1; padding: 20px 16px; max-width: 1200px; margin: 0 auto; width: 100%; }
+
+  .view { display: none; animation: fadeIn 0.3s; }
+  .view.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  /* 首頁 */
+  h1 { font-size: 1.5rem; margin-bottom: 16px; }
+  h2 { font-size: 1.25rem; margin: 16px 0 8px; }
+  h3 { font-size: 1.1rem; margin: 12px 0 6px; }
+
+  .card { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow); }
+  .card h2 { color: var(--primary); margin-top: 0; }
+
+  .modes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+  .mode-card { background: var(--bg-2); border: 2px solid var(--border); border-radius: var(--radius);
+    padding: 16px; cursor: pointer; transition: all 0.2s; text-align: left; width: 100%; }
+  .mode-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+  .mode-card .mode-num { font-size: 0.75rem; color: var(--fg-mute); font-weight: 700; }
+  .mode-card .mode-title { font-size: 1.1rem; font-weight: 700; margin: 4px 0; }
+  .mode-card .mode-desc { font-size: 0.875rem; color: var(--fg-dim); }
+  .mode-card .mode-stats { margin-top: 8px; font-size: 0.75rem; color: var(--fg-mute); }
+
+  .progress-bar { height: 8px; background: var(--bg-3); border-radius: var(--radius-sm); overflow: hidden; margin: 8px 0; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--success));
+    transition: width 0.5s; }
+
+  /* Play view */
+  .question-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 24px; margin-bottom: 16px; }
+  .question-meta { display: flex; gap: 8px; font-size: 0.75rem; color: var(--fg-mute); margin-bottom: 12px; flex-wrap: wrap; }
+  .question-stem { font-size: 1.1rem; line-height: 1.8; margin-bottom: 16px; }
+  .question-code { background: #0a0e1a; color: #cdd6f4; padding: 12px; border-radius: var(--radius-sm);
+    font-family: 'Cascadia Code', 'JetBrains Mono', Consolas, monospace; font-size: 0.875rem;
+    overflow-x: auto; margin: 12px 0; white-space: pre; }
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .option-btn { padding: 12px 16px; background: var(--bg-3); border: 2px solid var(--border);
+    border-radius: var(--radius-sm); text-align: left; transition: all 0.2s; font-size: 0.95rem; }
+  .option-btn:hover:not(:disabled) { border-color: var(--primary); background: var(--bg-2); }
+  .option-btn .option-key { font-weight: 700; color: var(--primary); margin-right: 8px; }
+  .option-btn:disabled { cursor: not-allowed; }
+  .option-btn.correct { border-color: var(--success); background: rgba(74,222,128,0.1); }
+  .option-btn.wrong { border-color: var(--danger); background: rgba(248,113,113,0.1); }
+
+  /* Explanation */
+  .explanation { margin-top: 16px; padding: 16px; background: var(--bg-3);
+    border-left: 4px solid var(--primary); border-radius: var(--radius-sm); animation: fadeIn 0.4s; }
+  .explanation h3 { color: var(--primary); margin-top: 0; }
+  .explanation .verdict { font-weight: 700; font-size: 1.1rem; margin-bottom: 8px; }
+  .explanation .verdict.correct { color: var(--success); }
+  .explanation .verdict.wrong { color: var(--danger); }
+  .explanation .hook { background: var(--bg-2); padding: 8px 12px; border-radius: var(--radius-sm);
+    margin: 8px 0; border-left: 3px solid var(--warn); font-style: italic; }
+  .explanation .miscon { font-size: 0.875rem; color: var(--fg-dim); margin-top: 8px; }
+  .explanation .miscon strong { color: var(--warn); }
+
+  /* 動作按鈕 */
+  .actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .btn { padding: 10px 20px; border-radius: var(--radius-sm); font-weight: 600; transition: all 0.2s;
+    border: 2px solid transparent; }
+  .btn-primary { background: var(--primary); color: var(--primary-fg); }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+  .btn-ghost { border-color: var(--border); color: var(--fg-dim); background: transparent; }
+  .btn-ghost:hover { border-color: var(--primary); color: var(--fg); }
+  .btn-danger { background: var(--danger); color: white; }
+  .btn-warn { background: var(--warn); color: #0c0c0c; }
+
+  /* Stats / weak points */
+  .weak-list { display: flex; flex-direction: column; gap: 8px; }
+  .weak-item { display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 12px; background: var(--bg-3); border-radius: var(--radius-sm); }
+  .weak-item .weak-score { font-weight: 700; }
+  .weak-item .weak-score.low { color: var(--danger); }
+  .weak-item .weak-score.mid { color: var(--warn); }
+  .weak-item .weak-score.high { color: var(--success); }
+
+  /* Bottom nav for mobile */
+  nav.bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--bg-2); border-top: 1px solid var(--border); padding: 8px;
+    justify-content: space-around; z-index: 100; }
+  nav.bottom-nav button { padding: 8px 12px; font-size: 0.75rem; color: var(--fg-dim); flex: 1; }
+  nav.bottom-nav button.active { color: var(--primary); }
+
+  /* 響應式 */
+  @media (max-width: 600px) {
+    main { padding: 12px; padding-bottom: 80px; }
+    .modes-grid { grid-template-columns: 1fr; }
+    .question-stem { font-size: 1rem; }
+    nav.bottom-nav { display: flex; }
+    .header-stats { display: none; }
+    .header-stats.expanded { display: flex; }
+  }
+
+  /* 配對戰專屬(案 4) */
+  .pair-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .pair-card { background: var(--bg-2); border: 2px solid var(--border); border-radius: var(--radius-sm);
+    padding: 12px; cursor: pointer; transition: all 0.2s; min-height: 60px;
+    display: flex; align-items: center; justify-content: center; text-align: center; }
+  .pair-card:hover { border-color: var(--primary); }
+  .pair-card.selected { border-color: var(--warn); background: rgba(250,204,21,0.1); }
+  .pair-card.matched { border-color: var(--success); background: rgba(74,222,128,0.15); cursor: default; }
+  .pair-card.mismatched { border-color: var(--danger); animation: shake 0.4s; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+  /* RPG 對話框(案 1) */
+  .rpg-scene { background: linear-gradient(135deg, #1e3a5f, #2d4a7a); border-radius: var(--radius);
+    padding: 24px; margin-bottom: 16px; min-height: 200px; position: relative; overflow: hidden; }
+  .rpg-character { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 16px; }
+  .rpg-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--bg-3);
+    display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+  .rpg-dialogue { flex: 1; background: rgba(255,255,255,0.1); border-radius: var(--radius-sm); padding: 12px; }
+  .rpg-industry-tag { background: var(--primary); color: var(--primary-fg); padding: 2px 8px;
+    border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 700; }
+
+  /* Pipeline 拼圖(案 3 簡化版:點擊排序) */
+  .pipeline-list { display: flex; flex-direction: column; gap: 6px; margin: 12px 0; }
+  .pipeline-step { background: var(--bg-3); padding: 10px 14px; border-radius: var(--radius-sm);
+    border: 2px solid transparent; cursor: pointer; transition: all 0.2s; user-select: none; }
+  .pipeline-step.selected { border-color: var(--primary); background: var(--bg-2); }
+  .pipeline-step.placed { border-color: var(--success); background: rgba(74,222,128,0.1); }
+  .pipeline-step .step-order { display: inline-block; width: 24px; height: 24px; line-height: 24px;
+    text-align: center; background: var(--primary); color: var(--primary-fg); border-radius: 50%;
+    font-weight: 700; margin-right: 8px; font-size: 0.875rem; }
+
+  /* Hunter mode boss(案 5) */
+  .boss-bar { background: linear-gradient(90deg, var(--danger), #ff8c42); padding: 12px;
+    border-radius: var(--radius); margin-bottom: 16px; box-shadow: 0 0 20px rgba(248,113,113,0.4); }
+  .boss-bar .boss-name { font-weight: 800; font-size: 1.2rem; color: white; }
+  .boss-hp { background: rgba(0,0,0,0.3); height: 8px; border-radius: 4px; overflow: hidden; margin-top: 6px; }
+  .boss-hp-fill { background: var(--danger); height: 100%; transition: width 0.4s; }
+
+  /* 程式碼判讀(案 2) */
+  .code-question { background: #0a0e1a; color: #cdd6f4; padding: 16px; border-radius: var(--radius);
+    font-family: monospace; line-height: 1.7; overflow-x: auto; }
+  .code-question .keyword { color: #cba6f7; }
+  .code-question .string { color: #a6e3a1; }
+  .code-question .number { color: #fab387; }
+  .code-question .comment { color: #6c7086; font-style: italic; }
+
+  /* Toast */
+  .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+    background: var(--bg-3); padding: 12px 20px; border-radius: var(--radius); box-shadow: var(--shadow);
+    z-index: 200; animation: fadeIn 0.3s; max-width: 90%; }
+
+  .loading { text-align: center; padding: 40px; color: var(--fg-dim); }
+  .empty { text-align: center; padding: 40px; color: var(--fg-mute); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="countdown" id="countdown">D-?</div>
+    <div class="header-stats" id="header-stats">
+      <span class="badge">已熟練 <span id="stat-mastered">0</span> / <span id="stat-total">87</span></span>
+      <span class="badge">錯題 <span id="stat-wrong">0</span></span>
+      <span class="badge">場次 <span id="stat-sessions">0</span></span>
+    </div>
+    <button class="btn btn-ghost" onclick="goHome()" style="margin-left:auto">🏠 首頁</button>
+  </div>
+</header>
+
+<main>
+  <!-- 首頁 -->
+  <section id="view-home" class="view active">
+    <div class="card">
+      <h1>📘 IPAS AI 中級 — 衝刺練習場</h1>
+      <p style="color:var(--fg-dim)">考試日:2026-05-23 · 鐵律驅動的個人化學習</p>
+      <div class="progress-bar"><div class="progress-fill" id="overall-progress" style="width:0%"></div></div>
+    </div>
+
+    <div class="card">
+      <h2>🎮 選擇模式</h2>
+      <div class="modes-grid">
+        <button class="mode-card" onclick="enterMode(4)">
+          <div class="mode-num">案 4</div>
+          <div class="mode-title">⚡ 易混淆配對戰</div>
+          <div class="mode-desc">14 組高頻易混淆對,快速記憶 + 配對挑戰</div>
+          <div class="mode-stats">入門 · 速戰</div>
+        </button>
+        <button class="mode-card" onclick="enterMode(2)">
+          <div class="mode-num">案 2</div>
+          <div class="mode-title">💻 程式判讀道場</div>
+          <div class="mode-desc">numpy / sklearn / PyTorch 程式碼題</div>
+          <div class="mode-stats">中級 · VGG16 連戰</div>
+        </button>
+        <button class="mode-card" onclick="enterMode(5)">
+          <div class="mode-num">案 5</div>
+          <div class="mode-title">🎯 弱點獵人</div>
+          <div class="mode-desc">系統追蹤熟練度,自動針對弱點下鑽</div>
+          <div class="mode-stats">自適應 · Boss 戰</div>
+        </button>
+        <button class="mode-card" onclick="enterMode(1)">
+          <div class="mode-num">案 1</div>
+          <div class="mode-title">🏢 AI 顧問實驗室</div>
+          <div class="mode-desc">12 產業情境決策,扮演企業 AI 顧問</div>
+          <div class="mode-stats">情境 · 產業任務</div>
+        </button>
+        <button class="mode-card" onclick="enterMode(3)">
+          <div class="mode-num">案 3</div>
+          <div class="mode-title">🧩 Pipeline 拼圖工坊</div>
+          <div class="mode-desc">ML 流程排序與步驟判斷</div>
+          <div class="mode-stats">進階 · 流程</div>
+        </button>
+        <button class="mode-card" onclick="enterMode('review')">
+          <div class="mode-num">📝</div>
+          <div class="mode-title">錯題本</div>
+          <div class="mode-desc">回顧錯題 + 變化型訓練(鐵律 #1)</div>
+          <div class="mode-stats">個人化</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📊 弱點 Top 5</h2>
+      <div class="weak-list" id="weak-list"><div class="empty">尚無資料,先做題再回來看</div></div>
+    </div>
+  </section>
+
+  <!-- Play 答題 -->
+  <section id="view-play" class="view"></section>
+
+  <!-- 結算 -->
+  <section id="view-result" class="view"></section>
+
+  <!-- 錯題本 -->
+  <section id="view-review" class="view"></section>
+
+  <!-- Stats -->
+  <section id="view-stats" class="view"></section>
+</main>
+
+<nav class="bottom-nav">
+  <button onclick="goHome()">🏠 首頁</button>
+  <button onclick="enterMode('review')">📝 錯題</button>
+  <button onclick="goStats()">📊 統計</button>
+</nav>
+
+<div id="toast-container"></div>
+
+<script>
+/*=== 鐵律 #1+#2 核心引擎 ===*/
+
+// === Storage 包裝 ===
+const Storage = {
+  K_PROGRESS: 'ipas_progress_v1',
+  K_MASTERY: 'ipas_mastery_v1',
+  K_WRONGBOOK: 'ipas_wrongbook_v1',
+  K_SETTINGS: 'ipas_settings_v1',
+  K_SESSION: 'ipas_session_state_v1',
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) { console.warn('storage full:', e); } },
+  del(k) { localStorage.removeItem(k); }
+};
+
+// === Random / Seed ===
+const RNG = {
+  seed: Date.now(),
+  set(s) { this.seed = s; },
+  // mulberry32
+  next() { let t = this.seed += 0x6D2B79F5;
+    t = Math.imul(t ^ t >>> 15, t | 1);
+    t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+    return ((t ^ t >>> 14) >>> 0) / 4294967296; },
+  pick(arr) { return arr[Math.floor(this.next() * arr.length)]; },
+  shuffle(arr) { const a = [...arr]; for (let i = a.length-1; i > 0; i--) {
+    const j = Math.floor(this.next() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; },
+  pickN(arr, n) { return this.shuffle(arr).slice(0, n); }
+};
+
+// === Variation:鐵律 #2 變數池替換 ===
+function applyVariables(stem, variables) {
+  if (!variables) return stem;
+  let result = stem;
+  for (const [key, pool] of Object.entries(variables)) {
+    if (Array.isArray(pool)) {
+      const pick = RNG.pick(pool);
+      result = result.replaceAll(`{${key}}`, pick);
+    }
+  }
+  return result;
+}
+
+// === 計算題 case 隨機(鐵律 #2)===
+function pickCase(question) {
+  if (question.format !== 'calculation' || !question.stem_variables) return null;
+  const cases = Object.entries(question.stem_variables).filter(([k]) => k.startsWith('case_'));
+  if (cases.length === 0) return null;
+  return RNG.pick(cases)[1];
+}
+
+// === 渲染題目(鐵律 #2 應用變數池 + 選項洗牌)===
+function renderQuestion(q) {
+  const rendered = JSON.parse(JSON.stringify(q));
+  // 計算題 case
+  const c = pickCase(rendered);
+  if (c) {
+    for (const [k, v] of Object.entries(c)) {
+      rendered.stem = rendered.stem.replaceAll(`{${k}}`, v);
+      rendered.explanation.correct = rendered.explanation.correct.replaceAll(`{${k}}`, v);
+      if (k === 'answer') {
+        rendered.options = rendered.options.map(o => ({...o, is_correct: o.text === v}));
+      }
+    }
+  }
+  // 變數池
+  rendered.stem = applyVariables(rendered.stem, rendered.stem_variables);
+  // 洗牌選項
+  if (rendered.shuffle_options !== false) {
+    rendered.options = RNG.shuffle(rendered.options);
+  }
+  // 加 key A/B/C/D
+  rendered.options = rendered.options.map((o, i) => ({...o, key: String.fromCharCode(65+i)}));
+  return rendered;
+}
+
+// === 進度 / 倒數 ===
+const Progress = {
+  EXAM_DATE: new Date('2026-05-23T00:00:00+08:00'),
+  init() {
+    const p = Storage.get(Storage.K_PROGRESS, null);
+    if (!p) Storage.set(Storage.K_PROGRESS, { started: Date.now(), sessions: 0, totalAnswered: 0, totalCorrect: 0 });
+  },
+  daysLeft() { return Math.max(0, Math.ceil((this.EXAM_DATE - Date.now()) / 86400000)); },
+  addSession() { const p = Storage.get(Storage.K_PROGRESS, {sessions:0}); p.sessions++; Storage.set(Storage.K_PROGRESS, p); },
+  addAnswer(correct) {
+    const p = Storage.get(Storage.K_PROGRESS, {totalAnswered:0,totalCorrect:0});
+    p.totalAnswered = (p.totalAnswered||0) + 1;
+    if (correct) p.totalCorrect = (p.totalCorrect||0) + 1;
+    Storage.set(Storage.K_PROGRESS, p);
+  }
+};
+
+// === Mastery 熟練度 ===
+const Mastery = {
+  load() { return Storage.get(Storage.K_MASTERY, {}); },
+  save(m) { Storage.set(Storage.K_MASTERY, m); },
+  get(nodeId) { return this.load()[nodeId] || { score: 0, attempts: 0, correct: 0, streak: 0 }; },
+  update(nodeId, isCorrect) {
+    const m = this.load();
+    const node = m[nodeId] || { score: 0, attempts: 0, correct: 0, streak: 0 };
+    node.attempts++;
+    if (isCorrect) {
+      node.correct++; node.streak++;
+      node.score = Math.min(100, node.score + 10 + Math.min(15, node.streak * 2));
+    } else {
+      node.streak = 0;
+      node.score = Math.max(0, node.score - 5);
+    }
+    node.lastSeen = Date.now();
+    m[nodeId] = node; this.save(m);
+    return node;
+  },
+  drillBonus(nodeId) { const m = this.load(); if (!m[nodeId]) m[nodeId] = {score:0,attempts:0,correct:0,streak:0};
+    m[nodeId].score = Math.min(100, m[nodeId].score + 20); this.save(m); },
+  getWeakest(nodeIds, n = 5) {
+    const m = this.load();
+    return nodeIds
+      .map(id => ({ id, score: (m[id] && m[id].attempts > 0) ? m[id].score : 50 }))
+      .sort((a,b) => a.score - b.score).slice(0, n);
+  },
+  countMastered() { const m = this.load(); return Object.values(m).filter(n => n.score >= 90).length; }
+};
+
+// === Wrongbook 錯題本 ===
+const Wrongbook = {
+  load() { return Storage.get(Storage.K_WRONGBOOK, []); },
+  save(w) { Storage.set(Storage.K_WRONGBOOK, w); },
+  add(qid, nodeId, userChoice, correctChoice) {
+    const w = this.load();
+    const existing = w.find(x => x.qid === qid);
+    if (existing) {
+      existing.wrongCount = (existing.wrongCount||1) + 1;
+      existing.lastWrong = Date.now();
+    } else {
+      w.push({ qid, nodeId, userChoice, correctChoice, wrongCount: 1, addedAt: Date.now(), lastWrong: Date.now(), mastered: false, drillCount: 0 });
+    }
+    this.save(w);
+  },
+  markMastered(qid) {
+    const w = this.load();
+    const x = w.find(e => e.qid === qid);
+    if (x) { x.mastered = true; this.save(w); }
+  },
+  count() { return this.load().filter(x => !x.mastered).length; }
+};
+
+// === Question Bank Loader ===
+let QUESTIONS = [];
+async function loadQuestions() {
+  try {
+    const [a, b] = await Promise.all([
+      fetch('questions.json').then(r => r.json()),
+      fetch('questions-extra.json').then(r => r.json())
+    ]);
+    QUESTIONS = [...a.questions, ...b.questions];
+    document.getElementById('stat-total').textContent = QUESTIONS.length;
+    return QUESTIONS;
+  } catch (e) {
+    showToast('題庫載入失敗,請以 http server 啟動本檔案'); throw e;
+  }
+}
+
+// === Variation 鐵律 #1 變化型生成 ===
+function generateVariation(originalQ, count = 3) {
+  // 找同 node_id 或 related_node_ids 的其他題
+  const sameNode = QUESTIONS.filter(q => q.id !== originalQ.id && q.node_id === originalQ.node_id);
+  const relatedNodes = (originalQ.related_node_ids || []);
+  const sameRelated = QUESTIONS.filter(q => relatedNodes.includes(q.node_id));
+  const pool = [...sameNode, ...sameRelated, originalQ]; // 包含原題作為最後保險
+  const picks = RNG.pickN(pool, count);
+  return picks.map(renderQuestion);
+}
+
+// === Toast ===
+function showToast(msg, ms = 2000) {
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = 'toast'; t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), ms);
+}
+
+// === Router ===
+function show(viewId) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(viewId).classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function goHome() { refreshHome(); show('view-home'); }
+function goStats() { renderStats(); show('view-stats'); }
+
+function refreshHome() {
+  // 倒數
+  const d = Progress.daysLeft();
+  const cd = document.getElementById('countdown');
+  cd.textContent = `D-${d}`;
+  if (d <= 7) cd.classList.add('urgent');
+  // 統計
+  document.getElementById('stat-mastered').textContent = Mastery.countMastered();
+  document.getElementById('stat-wrong').textContent = Wrongbook.count();
+  const sess = Storage.get(Storage.K_PROGRESS, {sessions:0}).sessions;
+  document.getElementById('stat-sessions').textContent = sess;
+  // 進度條
+  const total = QUESTIONS.length;
+  const masterCount = Mastery.countMastered();
+  const pct = total > 0 ? Math.round(masterCount / total * 100) : 0;
+  document.getElementById('overall-progress').style.width = pct + '%';
+  // 弱點
+  renderWeakList();
+}
+
+function renderWeakList() {
+  const allNodes = [...new Set(QUESTIONS.map(q => q.node_id).filter(Boolean))];
+  const m = Mastery.load();
+  const attempted = Object.keys(m);
+  if (attempted.length === 0) {
+    document.getElementById('weak-list').innerHTML = '<div class="empty">尚無資料,先做題再回來看</div>';
+    return;
+  }
+  const weak = Mastery.getWeakest(attempted, 5);
+  document.getElementById('weak-list').innerHTML = weak.map(w => {
+    const cls = w.score < 40 ? 'low' : w.score < 70 ? 'mid' : 'high';
+    return `<div class="weak-item">
+      <span>${w.id}</span>
+      <span class="weak-score ${cls}">熟練度 ${w.score}%</span>
+    </div>`;
+  }).join('');
+}
+
+// === 模式進入 ===
+function enterMode(mode) {
+  Progress.addSession();
+  if (mode === 4) Mode4.start();
+  else if (mode === 2) Mode2.start();
+  else if (mode === 5) Mode5.start();
+  else if (mode === 1) Mode1.start();
+  else if (mode === 3) Mode3.start();
+  else if (mode === 'review') Review.start();
+}
+
+// === 共用 Play 引擎(各 mode 可呼叫)===
+const PlayEngine = {
+  current: null,
+  history: [],
+
+  show(question, opts = {}) {
+    this.current = renderQuestion(question);
+    const view = document.getElementById('view-play');
+    const ctx = opts.contextHTML || '';
+    const code = this.current.code_block ? `<pre class="question-code">${this.current.code_block}</pre>` : '';
+    view.innerHTML = `
+      ${ctx}
+      <div class="question-card">
+        <div class="question-meta">
+          <span class="badge">編碼 ${this.current.knowledge_code}</span>
+          <span class="badge">${this.current.difficulty}</span>
+          <span class="badge">${this.current.format}</span>
+          ${this.current.errata_critical ? '<span class="badge" style="background:var(--danger);color:white">⚠️ 勘誤必出</span>' : ''}
+        </div>
+        <div class="question-stem">${this.current.stem}</div>
+        ${code}
+        <div class="options" id="play-options">
+          ${this.current.options.map(o => `
+            <button class="option-btn" data-key="${o.key}" onclick="PlayEngine.answer('${o.key}')">
+              <span class="option-key">${o.key}.</span>${o.text}
+            </button>
+          `).join('')}
+        </div>
+        <div id="play-explanation"></div>
+      </div>
+    `;
+    show('view-play');
+  },
+
+  answer(key) {
+    const opt = this.current.options.find(o => o.key === key);
+    const isCorrect = opt.is_correct;
+    // 鎖定按鈕
+    document.querySelectorAll('#play-options .option-btn').forEach(b => {
+      b.disabled = true;
+      const k = b.dataset.key;
+      const optionData = this.current.options.find(o => o.key === k);
+      if (optionData.is_correct) b.classList.add('correct');
+      else if (k === key && !isCorrect) b.classList.add('wrong');
+    });
+    // 更新熟練度 + 錯題本
+    if (this.current.node_id) Mastery.update(this.current.node_id, isCorrect);
+    Progress.addAnswer(isCorrect);
+    if (!isCorrect) {
+      const correctOpt = this.current.options.find(o => o.is_correct);
+      Wrongbook.add(this.current.id, this.current.node_id, key, correctOpt.key);
+    }
+    // 顯示解釋
+    this.showExplanation(opt, isCorrect);
+  },
+
+  showExplanation(opt, isCorrect) {
+    const e = this.current.explanation || {};
+    const wrongExp = (e.wrong && opt && !isCorrect) ? (e.wrong[opt.text] || '此選項不正確') : '';
+    const html = `
+      <div class="explanation">
+        <div class="verdict ${isCorrect ? 'correct' : 'wrong'}">${isCorrect ? '✅ 答對!' : '❌ 答錯'}</div>
+        <div><strong>正解說明:</strong>${e.correct || '(無)'}</div>
+        ${!isCorrect && wrongExp ? `<div style="margin-top:8px"><strong>你選的錯處:</strong>${wrongExp}</div>` : ''}
+        ${e.hook ? `<div class="hook">💡 ${e.hook}</div>` : ''}
+        ${this.current.misconceptions && this.current.misconceptions.length > 0 ?
+          `<div class="miscon"><strong>易錯點:</strong>${this.current.misconceptions.join(' / ')}</div>` : ''}
+        <div class="actions">
+          <button class="btn btn-primary" onclick="PlayEngine.next()">繼續下一題 →</button>
+          ${!isCorrect ? `<button class="btn btn-warn" onclick="PlayEngine.drill()">🎯 立即下鑽變化型(鐵律 #1)</button>` : ''}
+          <button class="btn btn-ghost" onclick="goHome()">回首頁</button>
+        </div>
+      </div>
+    `;
+    document.getElementById('play-explanation').innerHTML = html;
+    refreshHome(); // 更新統計列
+  },
+
+  drill() {
+    // 鐵律 #1:對錯題生成 3 個變化型,連續挑戰
+    const variations = generateVariation(this.current, 3);
+    if (variations.length === 0) { showToast('找不到變化型,回原題'); return; }
+    DrillSession.start(this.current.node_id, variations);
+  },
+
+  next() {
+    if (this.onNext) this.onNext();
+    else goHome();
+  }
+};
+
+// === Drill Session(鐵律 #1 下鑽連戰)===
+const DrillSession = {
+  queue: [], targetNode: null, correct: 0,
+  start(nodeId, questions) {
+    this.queue = questions; this.targetNode = nodeId; this.correct = 0;
+    showToast(`🎯 下鑽訓練啟動:${questions.length} 題變化型`);
+    this.next();
+  },
+  next() {
+    if (this.queue.length === 0) {
+      Mastery.drillBonus(this.targetNode);
+      Wrongbook.markMastered(PlayEngine.current.id);
+      showToast(`🎉 下鑽完成!熟練度 +20%`);
+      setTimeout(goHome, 1500);
+      return;
+    }
+    const q = this.queue.shift();
+    PlayEngine.show(q, { contextHTML: `<div class="boss-bar"><div class="boss-name">🎯 下鑽訓練 (剩 ${this.queue.length+1})</div></div>` });
+    PlayEngine.onNext = () => DrillSession.next();
+  }
+};
+
+// === Review 錯題本 ===
+const Review = {
+  start() {
+    const w = Wrongbook.load().filter(x => !x.mastered);
+    if (w.length === 0) {
+      document.getElementById('view-review').innerHTML = '<div class="card"><div class="empty">🎉 沒有未復習的錯題,做題後再來</div><div style="text-align:center"><button class="btn btn-primary" onclick="goHome()">回首頁</button></div></div>';
+      show('view-review'); return;
+    }
+    const html = `<div class="card"><h2>📝 錯題本(${w.length} 題待復習)</h2>
+      <p style="color:var(--fg-dim);margin-bottom:12px">點擊任一題進入下鑽訓練(鐵律 #1)</p>
+      <div class="weak-list">${w.map(x => {
+        const q = QUESTIONS.find(qq => qq.id === x.qid);
+        if (!q) return '';
+        return `<button class="weak-item" style="cursor:pointer" onclick="Review.drillItem('${x.qid}')">
+          <span style="text-align:left;flex:1">${q.stem.substring(0,60).replace(/\\{[^}]+\\}/g,'')}...</span>
+          <span class="weak-score low">錯 ${x.wrongCount} 次</span>
+        </button>`;
+      }).join('')}</div>
+      <div class="actions" style="margin-top:12px">
+        <button class="btn btn-primary" onclick="Review.drillAll()">🎯 全部下鑽訓練</button>
+        <button class="btn btn-ghost" onclick="goHome()">回首頁</button>
+      </div></div>`;
+    document.getElementById('view-review').innerHTML = html;
+    show('view-review');
+  },
+  drillItem(qid) {
+    const q = QUESTIONS.find(qq => qq.id === qid);
+    if (!q) return;
+    const variations = generateVariation(q, 3);
+    DrillSession.start(q.node_id, variations);
+  },
+  drillAll() {
+    const w = Wrongbook.load().filter(x => !x.mastered);
+    if (w.length === 0) return;
+    const allVariations = [];
+    w.forEach(x => {
+      const q = QUESTIONS.find(qq => qq.id === x.qid);
+      if (q) allVariations.push(...generateVariation(q, 1));
+    });
+    DrillSession.start('mixed', allVariations);
+  }
+};
+
+// === Stats 弱點分析 ===
+function renderStats() {
+  const m = Mastery.load();
+  const allNodes = [...new Set(QUESTIONS.map(q => q.node_id).filter(Boolean))];
+  const attempted = allNodes.filter(n => m[n] && m[n].attempts > 0);
+  const html = `<div class="card">
+    <h2>📊 學習統計</h2>
+    <p>已挑戰節點:${attempted.length} / ${allNodes.length}</p>
+    <p>已熟練(≥90%):${Mastery.countMastered()}</p>
+    <p>錯題本:${Wrongbook.count()} 題待復習</p>
+    <p>總場次:${Storage.get(Storage.K_PROGRESS,{sessions:0}).sessions}</p>
+    <div class="actions">
+      <button class="btn btn-danger" onclick="if(confirm('確定清除所有進度?'))resetAll()">清除進度</button>
+      <button class="btn btn-ghost" onclick="goHome()">回首頁</button>
+    </div>
+  </div>`;
+  document.getElementById('view-stats').innerHTML = html;
+}
+
+function resetAll() {
+  Storage.del(Storage.K_PROGRESS);
+  Storage.del(Storage.K_MASTERY);
+  Storage.del(Storage.K_WRONGBOOK);
+  Storage.del(Storage.K_SESSION);
+  showToast('已清除所有進度');
+  setTimeout(() => location.reload(), 500);
+}
+
+// === 模式佔位符(由 sub agent 各自實作)===
+// 案 1 RPG 顧問:由 sub agent 1 實作 → modes/mode1.js
+// 案 2 程式判讀:由 sub agent 2 實作 → modes/mode2.js
+// 案 3 Pipeline:由 sub agent 3 實作 → modes/mode3.js
+// 案 4 配對戰:本檔內含基礎版(下方)
+// 案 5 弱點獵人:由 sub agent 5 實作 → modes/mode5.js
+
+// === 案 4 配對戰(reference 實作)===
+const Mode4 = {
+  start() {
+    // 抽 6 題 matching format
+    const pool = QUESTIONS.filter(q => q.format === 'matching');
+    if (pool.length < 4) {
+      showToast('配對題數不足,請先確保 questions-extra.json 已載入');
+      goHome(); return;
+    }
+    this.queue = RNG.pickN(pool, Math.min(8, pool.length));
+    this.idx = 0; this.correct = 0;
+    this.nextOne();
+  },
+  nextOne() {
+    if (this.idx >= this.queue.length) { this.finish(); return; }
+    const q = this.queue[this.idx++];
+    PlayEngine.show(q, { contextHTML: `<div class="card"><h2>⚡ 易混淆配對戰(${this.idx}/${this.queue.length})</h2></div>` });
+    PlayEngine.onNext = () => this.nextOne();
+  },
+  finish() {
+    document.getElementById('view-result').innerHTML = `<div class="card">
+      <h2>🎉 配對戰結束</h2>
+      <p>本場 ${this.queue.length} 題</p>
+      <div class="actions">
+        <button class="btn btn-primary" onclick="Mode4.start()">再來一場</button>
+        <button class="btn btn-ghost" onclick="goHome()">回首頁</button>
+      </div></div>`;
+    show('view-result');
+  }
+};
+
+// === 模式佔位符(實作後此處取消註解)===
+const Mode1 = window.Mode1 || { start() { showToast('案 1 RPG 顧問:由 sub agent 1 載入'); goHome(); } };
+const Mode2 = window.Mode2 || { start() { showToast('案 2 程式判讀:由 sub agent 2 載入'); goHome(); } };
+const Mode3 = window.Mode3 || { start() { showToast('案 3 Pipeline:由 sub agent 3 載入'); goHome(); } };
+const Mode5 = window.Mode5 || { start() { showToast('案 5 弱點獵人:由 sub agent 5 載入'); goHome(); } };
+
+// === 啟動 ===
+(async function() {
+  Progress.init();
+  await loadQuestions();
+  // 動態載入 mode 模組(若存在)
+  ['mode1', 'mode2', 'mode3', 'mode5'].forEach(name => {
+    const s = document.createElement('script');
+    s.src = `modes/${name}.js`;
+    s.onerror = () => console.log(`${name}.js 尚未實作`);
+    document.head.appendChild(s);
+  });
+  refreshHome();
+})();
+</script>
+</body>
+</html>
