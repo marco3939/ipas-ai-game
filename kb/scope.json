@@ -1,0 +1,431 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-05-09",
+  "phase": 1,
+  "source": [
+    "01指引/AI 應用規劃師能力鑑定 評鑑內容範圍參考.pdf",
+    "01指引/AI應用規劃師(中級)_學習指引勘誤表_1150410_20260410150331.pdf",
+    "01指引/AI應用規劃師(中級)-學習指引-科目1人工智慧技術應用規劃_20251222101833.pdf (Ch1 & TOC)",
+    "01指引/AI應用規劃師(中級)-學習指引-科目2大數據處理分析與應用_20251222101850.pdf (Ch1 & TOC)",
+    "01指引/AI應用規劃師(中級)-學習指引-科目3機器學習技術與應用_20251222101907.pdf (Ch1 & TOC)"
+  ],
+  "exam": {
+    "name": "IPAS AI 應用規劃師中級能力鑑定",
+    "level": "中級",
+    "exam_date": "2026-05-23",
+    "official_subjects": {
+      "L21": "人工智慧技術應用與規劃",
+      "L22": "大數據處理分析與應用",
+      "L23": "機器學習技術與應用"
+    },
+    "target_subjects": ["L21", "L23"],
+    "boundary_subject": "L22"
+  },
+  "official_correction": [
+    "原 PDF L233 之子項誤植為 L22303 / L22304,正確應為 L23303 / L23304(scope.json 已採正確編碼)"
+  ],
+  "knowledge_codes": [
+    {
+      "code": "L21101",
+      "title": "自然語言處理技術與應用",
+      "subject": 1,
+      "category": "core",
+      "include": true,
+      "guideline_chapter": "科一指引 Ch3.1",
+      "overlap_with": [],
+      "notes": "NLP 為科一 L211 第一個技術主題,核心必考"
+    },
+    {
+      "code": "L21102",
+      "title": "電腦視覺技術與應用",
+      "subject": 1,
+      "category": "core",
+      "include": true,
+      "guideline_chapter": "科一指引 Ch3.2",
+      "overlap_with": [],
+      "notes": "CV 為科一 L211 第二個技術主題,核心必考"
+    },
+    {
+      "code": "L21103",
+      "title": "生成式 AI 技術與應用",
+      "subject": 1,
+      "category": "core",
+      "include": true,
+      "guideline_chapter": "科一指引 Ch3.3",
+      "overlap_with": ["L22403"],
+      "notes": "生成式 AI 為熱門主題,與 L22403 大數據在生成式 AI 中之應用重疊"
+    },
+    {
+      "code": "L21104",
+      "title": "多模態人工智慧應用",
+      "subject": 1,
+      "category": "core",
+      "include": true,
+      "guideline_chapter": "科一指引 Ch3.4",
+      "overlap_with": [],
+      "notes": "多模態為新興主題;勘誤 3-80 修正『多模態多模態』筆誤"
+    },
+    {
+      "code": "L21201",
+      "title": "AI 導入評估",
+      "subject": 1,
+      "category": "core",
+      "include": true,
+      "guideline_chapter": "科一指引 Ch4.1",
+      "overlap_with": [],
+      "notes": "情境決策題重點區"
+    },
+    {
+      "code": "L21202",
+      "title": "AI 導入規劃",
+      "subject": 1,
+      "category": "core",
+      "include": true,
+      "guideline_chapter": "科一指引 Ch4.2",
+      "overlap_with": [],
+      "notes": "需求分析、技術方案設計、目標設置、資源分配"
+    },
+    {
+      "code": "L21203",
+      "title": "AI 風險管理",
+      "subject": 1,
+      "category": "core",
+      "include": true,
+      "guideline_chapter": "科一指引 Ch4.3",
+      "overlap_with": ["L22404", "L23401", "L23402"],
+      "notes": "含 AI 倫理、負責任 AI;勘誤 4-34 補完 PDPA 事前告知義務六項(高頻法規考點)"
+    },
+    {
+      "code": "L21301",
+      "title": "數據準備與模型選擇",
+      "subject": 1,
+      "category": "core",
+      "include": true,
+      "guideline_chapter": "科一指引 Ch5.1",
+      "overlap_with": ["L22201", "L23301"],
+      "notes": "三方重疊核心:資料前處理 / 特徵工程 / 模型選型"
+    },
+    {
+      "code": "L21302",
+      "title": "AI 技術系統集成與部署",
+      "subject": 1,
+      "category": "core",
+      "include": true,
+      "guideline_chapter": "科一指引 Ch5.2",
+      "overlap_with": ["L22202"],
+      "notes": "雲端部署、模型監控、系統可用性"
+    },
+    {
+      "code": "L22101",
+      "title": "敘述性統計與資料摘要技術",
+      "subject": 2,
+      "category": "boundary_overlap",
+      "include": true,
+      "inclusion_reason": "與 L23101 機率/統計之機器學習基礎應用重疊;為 ML 數學基礎",
+      "guideline_chapter": "科二指引 Ch3.1",
+      "overlap_with": ["L23101"],
+      "notes": "集中趨勢、離散程度、分佈型態,ML 模型評估前置概念"
+    },
+    {
+      "code": "L22102",
+      "title": "機率分佈與資料分佈模型",
+      "subject": 2,
+      "category": "boundary_overlap",
+      "include": true,
+      "inclusion_reason": "與 L23101 機率/統計之機器學習基礎應用重疊",
+      "guideline_chapter": "科二指引 Ch3.2",
+      "overlap_with": ["L23101"],
+      "notes": "Normal、Bernoulli、Binomial、Poisson 等"
+    },
+    {
+      "code": "L22103",
+      "title": "假設檢定與統計推論",
+      "subject": 2,
+      "category": "boundary_overlap",
+      "include": true,
+      "inclusion_reason": "與 L23101 機器學習基礎統計重疊",
+      "guideline_chapter": "科二指引 Ch3.3",
+      "overlap_with": ["L23101"],
+      "notes": "p-value、信賴區間、t 檢定;ML 模型假設驗證基礎"
+    },
+    {
+      "code": "L22201",
+      "title": "數據收集與清理",
+      "subject": 2,
+      "category": "boundary_overlap",
+      "include": true,
+      "inclusion_reason": "與 L21301、L23301 三方重疊",
+      "guideline_chapter": "科二指引 Ch4.1",
+      "overlap_with": ["L21301", "L23301"],
+      "notes": "缺值處理、離群值、資料清洗"
+    },
+    {
+      "code": "L22202",
+      "title": "數據儲存與管理",
+      "subject": 2,
+      "category": "boundary_subject_only",
+      "include": false,
+      "exclusion_reason": "純科二:NoSQL、HBase、HDFS、資料倉儲架構,不在科一/科三範圍",
+      "guideline_chapter": "科二指引 Ch4.2",
+      "overlap_with": [],
+      "notes": "標 [L4 範圍外],若題庫題目涉及則剔除"
+    },
+    {
+      "code": "L22203",
+      "title": "數據處理技術與工具",
+      "subject": 2,
+      "category": "boundary_subject_only",
+      "include": false,
+      "exclusion_reason": "純科二:Hadoop、Spark、Flink、批次/串流處理,不在科一/科三範圍",
+      "guideline_chapter": "科二指引 Ch4.3",
+      "overlap_with": [],
+      "notes": "標 [L4 範圍外],排除"
+    },
+    {
+      "code": "L22301",
+      "title": "統計學在大數據中的應用",
+      "subject": 2,
+      "category": "boundary_subject_only",
+      "include": false,
+      "exclusion_reason": "純科二:大數據環境下的特徵縮放與分佈調整,概念雖與 L23 重疊但科目歸屬明確",
+      "guideline_chapter": "科二指引 Ch5.1",
+      "overlap_with": ["L23101", "L23301"],
+      "notes": "標 [L4 範圍外];若題目以一般 ML 語境出現相關概念,以 L23101/L23301 處理"
+    },
+    {
+      "code": "L22302",
+      "title": "常見的大數據分析方法",
+      "subject": 2,
+      "category": "boundary_subject_only",
+      "include": false,
+      "exclusion_reason": "純科二:大數據環境演算法應用,與 L23202 ML 演算法概念重疊但科目歸屬明確",
+      "guideline_chapter": "科二指引 Ch5.2",
+      "overlap_with": ["L23202"],
+      "notes": "標 [L4 範圍外];若題目以一般 ML 語境出現,以 L23202 處理"
+    },
+    {
+      "code": "L22303",
+      "title": "數據可視化工具",
+      "subject": 2,
+      "category": "boundary_subject_only",
+      "include": false,
+      "exclusion_reason": "純科二:matplotlib/Tableau/Power BI 工具操作,不在科一/科三範圍",
+      "guideline_chapter": "科二指引 Ch5.3",
+      "overlap_with": [],
+      "notes": "標 [L4 範圍外],排除"
+    },
+    {
+      "code": "L22401",
+      "title": "大數據與機器學習",
+      "subject": 2,
+      "category": "boundary_overlap",
+      "include": true,
+      "inclusion_reason": "大數據特性對 ML 演算法的底層影響;直接連接 L23 主題",
+      "guideline_chapter": "科二指引 Ch6.1",
+      "overlap_with": ["L23201", "L23202"],
+      "notes": "資料規模對訓練方法的挑戰、分散式 ML"
+    },
+    {
+      "code": "L22402",
+      "title": "大數據在鑑別式 AI 中的應用",
+      "subject": 2,
+      "category": "boundary_overlap",
+      "include": true,
+      "inclusion_reason": "鑑別式 AI 的預測/分類任務,與 L21、L23202 共同概念",
+      "guideline_chapter": "科二指引 Ch6.2",
+      "overlap_with": ["L23202"],
+      "notes": "預測、分類、實務應用案例"
+    },
+    {
+      "code": "L22403",
+      "title": "大數據在生成式 AI 中的應用",
+      "subject": 2,
+      "category": "boundary_overlap",
+      "include": true,
+      "inclusion_reason": "生成式模型訓練的大規模語料需求,與 L21103 直接重疊",
+      "guideline_chapter": "科二指引 Ch6.3",
+      "overlap_with": ["L21103"],
+      "notes": "LLM 預訓練資料、生成式模型 scale up"
+    },
+    {
+      "code": "L22404",
+      "title": "大數據隱私保護、安全與合規",
+      "subject": 2,
+      "category": "boundary_overlap",
+      "include": true,
+      "inclusion_reason": "與 L21203 AI 風險、L23401 ML 治理深度重疊",
+      "guideline_chapter": "科二指引 Ch6.4",
+      "overlap_with": ["L21203", "L23401"],
+      "notes": "PDPA、GDPR、差分隱私、聯邦學習"
+    },
+    {
+      "code": "L23101",
+      "title": "機率/統計之機器學習基礎應用",
+      "subject": 3,
+      "category": "core",
+      "include": true,
+      "guideline_chapter": "科三指引 Ch3.1",
+      "overlap_with": ["L22101", "L22102", "L22103"],
+      "notes": "機率分佈在 ML 中的應用、貝氏推論、最大概似估計"
+    },
+    {
+      "code": "L23102",
+      "title": "線性代數之機器學習基礎應用",
+      "subject": 3,
+      "category": "core",
+      "include": true,
+      "guideline_chapter": "科三指引 Ch3.2",
+      "overlap_with": [],
+      "notes": "向量、矩陣運算、特徵分解、SVD;勘誤 3-15 補非負矩陣 NMF 標準簡寫說明"
+    },
+    {
+      "code": "L23103",
+      "title": "數值優化技術與方法",
+      "subject": 3,
+      "category": "core",
+      "include": true,
+      "guideline_chapter": "科三指引 Ch3.3",
+      "overlap_with": [],
+      "notes": "梯度下降、學習率、正則化、收斂性"
+    },
+    {
+      "code": "L23201",
+      "title": "機器學習原理與技術",
+      "subject": 3,
+      "category": "core",
+      "include": true,
+      "guideline_chapter": "科三指引 Ch4.1",
+      "overlap_with": [],
+      "notes": "監督/非監督/強化學習基本框架、訓練/測試/驗證集"
+    },
+    {
+      "code": "L23202",
+      "title": "常見機器學習演算法",
+      "subject": 3,
+      "category": "core",
+      "include": true,
+      "guideline_chapter": "科三指引 Ch4.2",
+      "overlap_with": [],
+      "notes": "邏輯迴歸、決策樹、SVM、隨機森林、KNN、K-means 等;勘誤 4-27 修正『對數勝算的線性關係』譯名"
+    },
+    {
+      "code": "L23203",
+      "title": "深度學習原理與框架",
+      "subject": 3,
+      "category": "core",
+      "include": true,
+      "guideline_chapter": "科三指引 Ch4.3",
+      "overlap_with": [],
+      "notes": "CNN、RNN、Transformer、BP;勘誤 4-55/4-56 修正加權求和公式索引(w_i x_i)"
+    },
+    {
+      "code": "L23301",
+      "title": "數據準備與特徵工程",
+      "subject": 3,
+      "category": "core",
+      "include": true,
+      "guideline_chapter": "科三指引 Ch5.1",
+      "overlap_with": ["L21301", "L22201"],
+      "notes": "特徵縮放、編碼、降維、PCA"
+    },
+    {
+      "code": "L23302",
+      "title": "模型選擇與架構設計",
+      "subject": 3,
+      "category": "core",
+      "include": true,
+      "guideline_chapter": "科三指引 Ch5.2",
+      "overlap_with": [],
+      "notes": "模型架構選擇、超參數初始化"
+    },
+    {
+      "code": "L23303",
+      "title": "模型訓練、評估與驗證",
+      "subject": 3,
+      "category": "core",
+      "include": true,
+      "guideline_chapter": "科三指引 Ch5.3",
+      "overlap_with": [],
+      "notes": "K-fold、混淆矩陣、ROC/AUC、過擬合;勘誤 5-21 修正 Recall = TP/(TP+FN)(高頻必考公式)。原 PDF 編碼誤植為 L22303"
+    },
+    {
+      "code": "L23304",
+      "title": "模型調整與優化",
+      "subject": 3,
+      "category": "core",
+      "include": true,
+      "guideline_chapter": "科三指引 Ch5.4",
+      "overlap_with": [],
+      "notes": "超參數調整、Grid/Random Search、Early Stopping、Dropout、Regularization。原 PDF 編碼誤植為 L22304"
+    },
+    {
+      "code": "L23401",
+      "title": "數據隱私、安全與合規",
+      "subject": 3,
+      "category": "core",
+      "include": true,
+      "guideline_chapter": "科三指引 Ch6.1",
+      "overlap_with": ["L21203", "L22404"],
+      "notes": "PDPA、GDPR、差分隱私、模型推論隱私"
+    },
+    {
+      "code": "L23402",
+      "title": "演算法偏見與公平性",
+      "subject": 3,
+      "category": "core",
+      "include": true,
+      "guideline_chapter": "科三指引 Ch6.2",
+      "overlap_with": ["L21203"],
+      "notes": "Bias、Fairness、Disparate Impact"
+    }
+  ],
+  "errata_critical_points": [
+    {
+      "page": "科一 4-34",
+      "topic": "PDPA 事前告知義務六項",
+      "knowledge_code": "L21203",
+      "importance": "high",
+      "exam_likelihood": "高:法規條文題型常見"
+    },
+    {
+      "page": "科三 5-21",
+      "topic": "Recall = TP/(TP+FN)",
+      "knowledge_code": "L23303",
+      "importance": "high",
+      "exam_likelihood": "極高:評估指標核心公式必考"
+    },
+    {
+      "page": "科三 4-27",
+      "topic": "Linearity in Log-Odds 譯為對數勝算的線性關係",
+      "knowledge_code": "L23202",
+      "importance": "medium",
+      "exam_likelihood": "中:術語對應題"
+    },
+    {
+      "page": "科三 3-15",
+      "topic": "NMF 非負矩陣為 element-wise non-negative",
+      "knowledge_code": "L23102",
+      "importance": "medium",
+      "exam_likelihood": "中:降維題型細節"
+    },
+    {
+      "page": "科三 4-55, 4-56",
+      "topic": "加權求和公式索引修正 w_i x_i(原誤植 w_1 x_1)",
+      "knowledge_code": "L23203",
+      "importance": "medium",
+      "exam_likelihood": "中:神經網路公式題"
+    }
+  ],
+  "summary": {
+    "total_codes": 34,
+    "include_count": 29,
+    "exclude_count": 5,
+    "by_subject": {
+      "subject_1_core": 9,
+      "subject_3_core": 12,
+      "subject_2_boundary_include": 8,
+      "subject_2_boundary_exclude": 5
+    },
+    "high_priority_errata": 2
+  }
+}

@@ -14,3 +14,9 @@
 
 ### Notes
 - 工作目錄已從 `%USERPROFILE%\Documents\Claude\Projects\ipas-ai-game` 遷移至 `%USERPROFILE%\.ipas-ai-game`,理由見 `docs/plan.md`「環境意外」段。
+
+### Added — 2026-05-09(階段 1)
+- `kb/scope.json`:34 個官方知識編碼之納入/排除判定,29 納入 + 5 排除
+- `docs/scope-review.md`:三欄對照表、邊界判定邏輯、勘誤要點、審視檢查清單(供使用者人工審視)
+- 採用模式 B(輕量 bypass):階段內動作直接執行,僅在決策節點強制停
+- 修正官方 PDF 排版錯字:科三 L233 之 L22303/L22304 → 正確 L23303/L23304
