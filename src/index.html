@@ -508,15 +508,18 @@ function renderWeakList() {
   }).join('');
 }
 
-// === 模式進入 ===
+// === 模式進入(動態查找,解決時序問題)===
 function enterMode(mode) {
   Progress.addSession();
-  if (mode === 4) Mode4.start();
-  else if (mode === 2) Mode2.start();
-  else if (mode === 5) Mode5.start();
-  else if (mode === 1) Mode1.start();
-  else if (mode === 3) Mode3.start();
-  else if (mode === 'review') Review.start();
+  if (mode === 4) return Mode4.start();
+  if (mode === 'review') return Review.start();
+  // 案 1/2/3/5 從 window 動態取
+  const M = window['Mode' + mode];
+  if (M && typeof M.start === 'function') {
+    M.start();
+  } else {
+    showToast('案 ' + mode + ' 模組尚未載入,請稍候 1 秒再試或重新整理');
+  }
 }
 
 // === 共用 Play 引擎(各 mode 可呼叫)===
@@ -741,11 +744,8 @@ const Mode4 = {
   }
 };
 
-// === 模式佔位符(實作後此處取消註解)===
-const Mode1 = window.Mode1 || { start() { showToast('案 1 RPG 顧問:由 sub agent 1 載入'); goHome(); } };
-const Mode2 = window.Mode2 || { start() { showToast('案 2 程式判讀:由 sub agent 2 載入'); goHome(); } };
-const Mode3 = window.Mode3 || { start() { showToast('案 3 Pipeline:由 sub agent 3 載入'); goHome(); } };
-const Mode5 = window.Mode5 || { start() { showToast('案 5 弱點獵人:由 sub agent 5 載入'); goHome(); } };
+// 注意:Mode1/2/3/5 由 modes/*.js 動態載入後寫入 window.ModeN
+// enterMode() 動態查找 window.ModeN,避免 const 綁定 placeholder 的時序問題
 
 // === 啟動 ===
 (async function() {
