@@ -8,6 +8,17 @@
 
 ---
 
+## 免責聲明 / Disclaimer
+
+> **本專案為獨立社群作品**,**非經濟部產業發展署 / 經濟部 iPAS 官方**製作,亦非工業技術研究院產業學院授權。
+>
+> 「iPAS AI 應用規劃師中級」為**經濟部產業發展署**所推動之**產業人才能力鑑定**(iPAS,小寫 i + 大寫 PAS)服務標章。
+> 本專案題庫為**原創改寫**(嚴守鐵律 #3 不複製 114-2 原題),僅作為**非商業性學習練習工具**,**不代表官方考試內容**,亦**不可作為官方應試替代品**。
+>
+> 正式應試請以 iPAS 官方公告為準:<https://www.ipas.org.tw/>
+
+---
+
 ## 五大鐵律(設計原則,不可妥協)
 
 | # | 鐵律 | 為何重要 |
@@ -179,9 +190,17 @@ python -m http.server 8000
 
 ## 致謝
 
-- 經濟部 IPAS 提供官方學習指引與考綱
-- 開源套件:[GSAP](https://gsap.com/) 3.12.5、[canvas-confetti](https://github.com/catdad/canvas-confetti) 1.9.3
+- 經濟部 iPAS 提供官方學習指引與考綱(指稱性引用,非授權關係)
 - Anthropic Claude Code 協作開發
+
+### 第三方依賴授權
+
+| 套件 | 版本 | 授權 | 官方授權連結 |
+|:--|:--|:--|:--|
+| [GSAP](https://gsap.com/) | 3.12.5 | **GreenSock Standard "No Charge" License**(2024 年由 Webflow 收購後對所有人免費,**含商業用途**;但禁止用於開發競爭性「無程式碼視覺動畫建構工具」、禁止 reverse engineering 製造競品、禁止移除內建 proprietary notice) | <https://gsap.com/standard-license> |
+| [canvas-confetti](https://github.com/catdad/canvas-confetti) | 1.9.3 | **ISC License**(© 2020 Kiril Vatev,permissive,與 MIT 法律效力等價) | <https://github.com/catdad/canvas-confetti/blob/master/LICENSE> |
+
+> **下游 fork 注意**:GSAP 並非 MIT 授權,fork 本專案者仍須遵守 GreenSock Standard No Charge License 條款(主要影響「不得用於建構與 Webflow 競爭的視覺動畫工具」)。本專案作為教育用 SPA RPG 遊戲,使用情境**合規**。
 
 ---
 

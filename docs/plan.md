@@ -61,7 +61,7 @@
 - LICENSE 檔於**階段 8** 才實際建立
 
 ### Q3 決議:Git 使用者識別
-- 全域 config 已設:`user.name=Marco Lin` / `user.email=marcolin.888@gmail.com`
+- 全域 config 已設(沿用 git global,具體值見 `git config --global --get user.email`)
 - 沿用全域,**不在 local repo 設置覆寫**
 
 ### Q4 決議:GitHub Repo 現況

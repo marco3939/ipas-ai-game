@@ -6,8 +6,12 @@
 <meta name="theme-color" content="#0f172a">
 <title>IPAS AI 中級 — 互動學習遊戲</title>
 <!-- 遊戲化 CDN(使用者已解禁) -->
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"
+        integrity="sha384-Rv68Y7adOjMMJc1/xFMcdNvXre/HF51to4GZjBALmXr7ABnVl5V4UajJwBu7zbhN"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"
+        integrity="sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt"
+        crossorigin="anonymous"></script>
 <style>
   :root {
     --bg: #0f172a; --bg-2: #1e293b; --bg-3: #334155;
@@ -440,14 +444,25 @@ function pickCase(question) {
 // === 渲染題目(鐵律 #2 應用變數池 + 選項洗牌)===
 function renderQuestion(q) {
   const rendered = JSON.parse(JSON.stringify(q));
-  // 計算題 case
+  // 計算題 case:對 stem / options.text / explanation.correct/wrong/hook 全面替換 placeholder
   const c = pickCase(rendered);
   if (c) {
-    for (const [k, v] of Object.entries(c)) {
-      rendered.stem = rendered.stem.replaceAll(`{${k}}`, v);
-      rendered.explanation.correct = rendered.explanation.correct.replaceAll(`{${k}}`, v);
-      if (k === 'answer') {
-        rendered.options = rendered.options.map(o => ({...o, is_correct: o.text === v}));
+    const subAll = (s) => {
+      let r = s;
+      for (const [k, v] of Object.entries(c)) r = r.replaceAll(`{${k}}`, v);
+      return r;
+    };
+    rendered.stem = subAll(rendered.stem);
+    rendered.options = rendered.options.map(o => ({...o, text: subAll(o.text)}));
+    if (rendered.explanation) {
+      if (rendered.explanation.correct) rendered.explanation.correct = subAll(rendered.explanation.correct);
+      if (rendered.explanation.hook) rendered.explanation.hook = subAll(rendered.explanation.hook);
+      if (rendered.explanation.wrong) {
+        const newWrong = {};
+        for (const [oldKey, oldVal] of Object.entries(rendered.explanation.wrong)) {
+          newWrong[subAll(oldKey)] = subAll(oldVal);
+        }
+        rendered.explanation.wrong = newWrong;
       }
     }
   }

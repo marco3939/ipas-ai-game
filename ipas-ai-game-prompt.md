@@ -427,6 +427,25 @@ node scripts/audit-source-fidelity.js    # 鐵律 #5
 - **根因**:Round 1 修補時用固定 HP floor=50,沒對齊實際 baseDmg=27
 - **教訓**:平衡公式必須 trace 上下游;Mode2 改用 `max(perQ, qcount*perQ)` 對齊
 
+### 案例 8:Calculation 題 placeholder 沒替換(critical,Round 1+2 + 交叉驗證全漏抓)
+- **症狀**:瀏覽器顯示 `A. {answer}` `B. {wrong1}`,而非實際數值如 `A. 2.50` `B. 0.50`
+- **根因**:`renderQuestion` 函數只對 `stem` 做 placeholder 替換,**沒處理 `options[].text` 與 `explanation.correct/wrong/hook`**;且原本一行 `is_correct: o.text === v` 因 string 比較失敗反而把 is_correct 從 true 改成 false → **正解標記都被吃掉了**(嚴重副作用)
+- **影響**:全部 17 題 calculation 題都壞,玩家完全看不到正解
+- **為何 QA Round 1+2 + 機器稽核全部漏抓**(系統性盲點):
+  1. **沒人實際開瀏覽器測試**:全部做靜態 read code + Node mock + audit script,但 `renderQuestion` 在瀏覽器執行才會跑;Node mock 沒 stub `document` / DOM,執行路徑沒觸發
+  2. **Audit scripts 看 schema 不看 rendered output**:`audit-option-length.js` 量字串長度,`{answer}` 也是字串通過檢查;`audit-source-fidelity.js` 只看 knowledge_code / node_id;**沒有 audit 檢查 rendered output 的 placeholder 殘留**
+  3. **共用層被當黑盒**:5 mode QA 看 mode 檔,但 `renderQuestion` 在 index.html 共用層;Integration QA 看跨檔契約但沒驗共用層邏輯正確性
+  4. **Happy Path Trace 沒涵蓋 calculation 路徑**:QA trace 預設 `single_choice`,calculation 分支(5% 題目)沒被走過
+  5. **寫題 sub agent 沒驗自己題目能渲染**:N1~N8 確認 stem_variables 結構對,但沒模擬 renderQuestion 跑一次
+- **修補**:重寫 `renderQuestion` 的 case 替換,對 stem + options.text + explanation.correct/wrong/hook 全面 placeholder 替換;移除有問題的 `is_correct: o.text === v`
+- **加固**:新增 `scripts/audit-render.js`(模擬 renderQuestion 驗 rendered output 無 placeholder 殘留 + is_correct count 正確),加入 commit 必跑清單
+- **教訓**:
+  - **Audit 腳本必涵蓋執行時行為**(不只 raw schema)
+  - **共用層必有獨立 QA 角色**,不可被當黑盒
+  - **Happy Path Trace 必涵蓋每種 format**(single / matching / sequence / calculation / code_reading)
+  - **任何渲染相關修改必跑 mock render 驗輸出**
+  - **使用者人工抽查瀏覽器是目前唯一可靠的「真實渲染驗證」**
+
 ---
 
 ## 10. Sub Agent 自我驗證模板(每個 sub agent prompt 結尾必加)
@@ -505,7 +524,8 @@ node scripts/audit-source-fidelity.js    # 鐵律 #5
 | 2026-05-09 | v2 | 加鐵律 #5 來源忠實性 | 使用者要求嚴查幻覺考點 |
 | 2026-05-10 | v3 | 五案 RPG 化完成 + 題庫擴到 325 + QA Round 1 修 59 bugs | 使用者要求遊戲化 + 新題庫到 300 |
 | 2026-05-10 | v4 | QA Round 2 修 9 bugs + 整合契約檢查 + 案例庫 §9 | 使用者抓出 Mode3/4 進不去,要更嚴 QA |
-| **2026-05-10** | **v5** | **首次寫此 meta-prompt 整合所有規則** | **使用者要求建立可維護的主提示詞** |
+| 2026-05-10 | v5 | 首次寫此 meta-prompt 整合所有規則 | 使用者要求建立可維護的主提示詞 |
+| **2026-05-10** | **v6** | **加案例 8 Calculation placeholder 殘留 + 強化 audit 機制** | **使用者抓出 calculation 題顯示 `{answer}`,QA 全部漏抓** |
 
 ---
 

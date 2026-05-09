@@ -286,7 +286,7 @@
       "knowledge_code": "L21103",
       "node_id": "n_L21103_003",
       "subject": 1,
-      "format": "calculation",
+      "format": "single_choice",
       "difficulty": "medium",
       "source_level": "L1",
       "stem": "某 Stable Diffusion 服務在 GPU 上,單一取樣步驟平均耗時 0.08 秒。若使用者將取樣步數從 25 步調整為 50 步,預期單張影像「總取樣時間」會從多少秒上升至多少秒?(忽略其他固定開銷)",

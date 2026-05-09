@@ -1,0 +1,232 @@
+{
+  "totalFiles": 6,
+  "totalFindings": 24,
+  "bySeverity": {
+    "CRITICAL": 0,
+    "HIGH": 2,
+    "MEDIUM": 0,
+    "INFO": 22
+  },
+  "byRule": {
+    "innerhtml-tmpl": 22,
+    "onclick-tmpl": 2
+  },
+  "findings": [
+    {
+      "file": "src/index.html",
+      "line": 740,
+      "rule": "innerhtml-tmpl",
+      "severity": "INFO",
+      "match": ".innerHTML = `\r\n      ${ctx}\r\n      <div class=\"question-card\">\r\n        <div class=\"question-meta\">\r\n          <span class=\"badge\">編碼 ${this.current.knowledge_code}</span>\r\n          <span class=\"badge\">${this.current.difficulty}</span>\r\n          <span class=\"badge\">${this.current.format}</span>\r\n          ${",
+      "context": ".innerHTML = ` ${ctx} <div class=\"question-card\"> <div class=\"question-meta\"> <span class=\"badge\">編碼 ${this.current.knowledge_code}</span> <span class=\"bad",
+      "desc": "innerHTML 帶 ${...} 模板字串,需確認變數已 escape"
+    },
+    {
+      "file": "src/index.html",
+      "line": 1064,
+      "rule": "innerhtml-tmpl",
+      "severity": "INFO",
+      "match": ".innerHTML = `<div class=\"card\">\r\n      <h2>🎉 配對戰結束</h2>\r\n      <p>本場 ${",
+      "context": ".innerHTML = `<div class=\"card\"> <h2>🎉 配對戰結束</h2> <p>本場 ${this.queue.length} 題</p> <div class=\"actions\"> <button class=\"btn btn-primary\" onclick=\"Mode4.start()",
+      "desc": "innerHTML 帶 ${...} 模板字串,需確認變數已 escape"
+    },
+    {
+      "file": "src/index.html",
+      "line": 1117,
+      "rule": "innerhtml-tmpl",
+      "severity": "INFO",
+      "match": ".innerHTML = `🔥 <span class=\"combo-num\">${",
+      "context": ".innerHTML = `🔥 <span class=\"combo-num\">${n}</span> COMBO!`; el.classList.add('show'); if (window.gsap) { gsap.fromTo(el, { scale: 0.5, x: 50 }, { scale: 1, x:",
+      "desc": "innerHTML 帶 ${...} 模板字串,需確認變數已 escape"
+    },
+    {
+      "file": "src/modes/mode1.js",
+      "line": 143,
+      "rule": "innerhtml-tmpl",
+      "severity": "INFO",
+      "match": ".innerHTML = `\n        <div class=\"card\">\n          <h1>🗺️ AI 顧問救援 — 任務地圖</h1>\n          <p style=\"color:var(--fg-dim)\">12 個產業客戶等待協助。挑選一場 BOSS 戰鬥開始。答對攻擊敵人、答錯被反擊。</p>\n        </div>\n\n        <div class=\"battle-arena\" style=\"padding:16px\">\n          <div class=\"player-bar\">\n            <div class=\"avatar\">🧑‍💼</div>\n            <div class=\"bar-info\">\n              <div class=\"bar-name\"><span class=\"level\">Lv.${player.level}</span> AI 顧問(你)</div>\n              <div class=\"hp-track\"><div class=\"hp-fill ${playerHpPct < 30 ? 'critical' : playerHpPct < 60 ? 'low' : ''}\" style=\"width:${playerHpPct}%\"></div></div>\n              <div class=\"hp-text\">HP ${player.hp} / ${player.hpMax} · MP ${player.mp} / ${player.mpMax} · EXP ${player.exp}/${",
+      "context": ".innerHTML = ` <div class=\"card\"> <h1>🗺️ AI 顧問救援 — 任務地圖</h1> <p style=\"color:var(--fg-dim)\">12 個產業客戶等待協助。挑選一場 BOSS 戰鬥開始。答對攻擊敵人、答錯被反擊。</p> </div> <div clas",
+      "desc": "innerHTML 帶 ${...} 模板字串,需確認變數已 escape"
+    },
+    {
+      "file": "src/modes/mode1.js",
+      "line": 237,
+      "rule": "innerhtml-tmpl",
+      "severity": "INFO",
+      "match": ".innerHTML = `\n        <div class=\"battle-arena\">\n          <div class=\"enemy-bar\">\n            <div class=\"avatar boss\" style=\"font-size:2.5rem\">${boss.avatar}</div>\n            <div class=\"bar-info\">\n              <div class=\"bar-name\">${boss.name}</div>\n              <div class=\"hp-text\">HP ${boss.hp}</div>\n            </div>\n          </div>\n          <div class=\"dialogue-box\">\n            <div class=\"dialogue-name\">${",
+      "context": ".innerHTML = ` <div class=\"battle-arena\"> <div class=\"enemy-bar\"> <div class=\"avatar boss\" style=\"font-size:2.5rem\">${boss.avatar}</div> <div class=\"bar-info\"",
+      "desc": "innerHTML 帶 ${...} 模板字串,需確認變數已 escape"
+    },
+    {
+      "file": "src/modes/mode1.js",
+      "line": 286,
+      "rule": "innerhtml-tmpl",
+      "severity": "INFO",
+      "match": ".innerHTML = `\n        <div class=\"battle-arena\" id=\"arena\">\n          <div class=\"enemy-bar\">\n            <div class=\"avatar boss\" id=\"boss-avatar\" style=\"font-size:2.5rem\">${this.state.boss.avatar}</div>\n            <div class=\"bar-info\">\n              <div class=\"bar-name\">${this.state.boss.name}</div>\n              <div class=\"hp-track\"><div class=\"hp-fill\" id=\"boss-hp-fill\" style=\"width:100%\"></div></div>\n              <div class=\"hp-text\" id=\"boss-hp-text\">${this.state.bossHp} / ${this.state.bossHpMax}</div>\n            </div>\n          </div>\n          <div class=\"player-bar\">\n            <div class=\"avatar\" id=\"player-avatar\">🧑‍💼</div>\n            <div class=\"bar-info\">\n              <div class=\"bar-name\"><span class=\"level\">Lv.${",
+      "context": ".innerHTML = ` <div class=\"battle-arena\" id=\"arena\"> <div class=\"enemy-bar\"> <div class=\"avatar boss\" id=\"boss-avatar\" style=\"font-size:2.5rem\">${this.state.bos",
+      "desc": "innerHTML 帶 ${...} 模板字串,需確認變數已 escape"
+    },
+    {
+      "file": "src/modes/mode1.js",
+      "line": 344,
+      "rule": "innerhtml-tmpl",
+      "severity": "INFO",
+      "match": ".innerHTML = `\n        <div class=\"question-card\">\n          <div class=\"question-meta\">\n            <span class=\"badge\">第 ${this.state.idx + 1} / ${this.state.questions.length} 回合</span>\n            <span class=\"badge\">${q.knowledge_code}</span>\n            <span class=\"badge\">${q.difficulty}</span>\n            ${",
+      "context": ".innerHTML = ` <div class=\"question-card\"> <div class=\"question-meta\"> <span class=\"badge\">第 ${this.state.idx + 1} / ${this.state.questions.length} 回合</span> ",
+      "desc": "innerHTML 帶 ${...} 模板字串,需確認變數已 escape"
+    },
+    {
+      "file": "src/modes/mode1.js",
+      "line": 494,
+      "rule": "innerhtml-tmpl",
+      "severity": "INFO",
+      "match": ".innerHTML = `\n        ${enemyTaunt}\n        <div class=\"explanation\">\n          <div class=\"verdict ${isCorrect ? 'correct' : 'wrong'}\">${",
+      "context": ".innerHTML = ` ${enemyTaunt} <div class=\"explanation\"> <div class=\"verdict ${isCorrect ? 'correct' : 'wrong'}\">${isCorrect ? '⚔️ 攻擊命中!' : '🩸 你受到攻擊!'}</div> <di",
+      "desc": "innerHTML 帶 ${...} 模板字串,需確認變數已 escape"
+    },
+    {
+      "file": "src/modes/mode2.js",
+      "line": 131,
+      "rule": "innerhtml-tmpl",
+      "severity": "INFO",
+      "match": ".innerHTML = `\n        <div class=\"card\">\n          <h1>💻 程式判讀道場 — Bug 獵人</h1>\n          <p style=\"color:var(--fg-dim)\">你是資料科學偵探,要在 6 個程式語意惡魔的領域中找出陷阱。答對攻擊 BOSS,答錯被反擊並進入下鑽訓練。</p>\n        </div>\n\n        <div class=\"battle-arena\" style=\"padding:16px\">\n          <div class=\"player-bar\">\n            <div class=\"avatar\">🕵️</div>\n            <div class=\"bar-info\">\n              <div class=\"bar-name\"><span class=\"level\">Lv.${player.level}</span> 資料科學偵探(你)</div>\n              <div class=\"hp-track\"><div class=\"hp-fill ${playerHpPct < 30 ? 'critical' : playerHpPct < 60 ? 'low' : ''}\" style=\"width:${playerHpPct}%\"></div></div>\n              <div class=\"hp-text\">HP ${player.hp} / ${player.hpMax} · MP ${player.mp} / ${player.mpMax} · EXP ${player.exp}/${",
+      "context": ".innerHTML = ` <div class=\"card\"> <h1>💻 程式判讀道場 — Bug 獵人</h1> <p style=\"color:var(--fg-dim)\">你是資料科學偵探,要在 6 個程式語意惡魔的領域中找出陷阱。答對攻擊 BOSS,答錯被反擊並進入下鑽訓練。</p> </div> ",
+      "desc": "innerHTML 帶 ${...} 模板字串,需確認變數已 escape"
+    },
+    {
+      "file": "src/modes/mode2.js",
+      "line": 244,
+      "rule": "innerhtml-tmpl",
+      "severity": "INFO",
+      "match": ".innerHTML = `\n        <div class=\"battle-arena\">\n          <div class=\"enemy-bar\">\n            <div class=\"avatar boss\" style=\"font-size:2.5rem\">${boss.avatar}</div>\n            <div class=\"bar-info\">\n              <div class=\"bar-name\">${boss.name}</div>\n              <div class=\"hp-text\">HP ${dynHp} · ${questions.length} 題程式判讀${questions.length < boss.qids.length ? ' (題庫減量)' : ''}</div>\n            </div>\n          </div>\n          <div class=\"dialogue-box\">\n            <div class=\"dialogue-name\">${",
+      "context": ".innerHTML = ` <div class=\"battle-arena\"> <div class=\"enemy-bar\"> <div class=\"avatar boss\" style=\"font-size:2.5rem\">${boss.avatar}</div> <div class=\"bar-info\"",
+      "desc": "innerHTML 帶 ${...} 模板字串,需確認變數已 escape"
+    },
+    {
+      "file": "src/modes/mode2.js",
+      "line": 300,
+      "rule": "innerhtml-tmpl",
+      "severity": "INFO",
+      "match": ".innerHTML = `\n        <div class=\"battle-arena\" id=\"m2-arena\">\n          <div class=\"enemy-bar\">\n            <div class=\"avatar boss\" id=\"m2-boss-avatar\" style=\"font-size:2.5rem\">${this.state.boss.avatar}</div>\n            <div class=\"bar-info\">\n              <div class=\"bar-name\">${this.state.boss.name}</div>\n              <div class=\"hp-track\"><div class=\"hp-fill\" id=\"m2-boss-hp-fill\" style=\"width:100%\"></div></div>\n              <div class=\"hp-text\" id=\"m2-boss-hp-text\">${this.state.bossHp} / ${this.state.bossHpMax}</div>\n            </div>\n          </div>\n          <div class=\"player-bar\">\n            <div class=\"avatar\" id=\"m2-player-avatar\">🕵️</div>\n            <div class=\"bar-info\">\n              <div class=\"bar-name\"><span class=\"level\">Lv.${",
+      "context": ".innerHTML = ` <div class=\"battle-arena\" id=\"m2-arena\"> <div class=\"enemy-bar\"> <div class=\"avatar boss\" id=\"m2-boss-avatar\" style=\"font-size:2.5rem\">${this.sta",
+      "desc": "innerHTML 帶 ${...} 模板字串,需確認變數已 escape"
+    },
+    {
+      "file": "src/modes/mode2.js",
+      "line": 382,
+      "rule": "innerhtml-tmpl",
+      "severity": "INFO",
+      "match": ".innerHTML = `\n        <div class=\"question-card\">\n          <div class=\"question-meta\">\n            <span class=\"badge\">第 ${this.state.idx + 1} / ${this.state.questions.length} 回合</span>\n            <span class=\"badge\">${q.knowledge_code}</span>\n            <span class=\"badge\">${q.difficulty}</span>\n            <span class=\"badge\">${q.format}</span>\n          </div>\n          <div class=\"question-stem\">${q.stem}</div>\n          ${codeBlock}\n          ${visualData}\n          <div class=\"options\" id=\"m2-options\">\n            ${q.options.map(o => `<button class=\"option-btn\" data-key=\"${o.key}\" onclick=\"Mode2.answer('${o.key}')\">\n              <span class=\"option-key\">${o.key}.</span>${",
+      "context": ".innerHTML = ` <div class=\"question-card\"> <div class=\"question-meta\"> <span class=\"badge\">第 ${this.state.idx + 1} / ${this.state.questions.length} 回合</span> ",
+      "desc": "innerHTML 帶 ${...} 模板字串,需確認變數已 escape"
+    },
+    {
+      "file": "src/modes/mode2.js",
+      "line": 546,
+      "rule": "innerhtml-tmpl",
+      "severity": "INFO",
+      "match": ".innerHTML = `\n        ${enemyTaunt}\n        <div class=\"explanation\">\n          <div class=\"verdict ${isCorrect ? 'correct' : 'wrong'}\">${",
+      "context": ".innerHTML = ` ${enemyTaunt} <div class=\"explanation\"> <div class=\"verdict ${isCorrect ? 'correct' : 'wrong'}\">${isCorrect ? '🔍 推理命中!' : '🩸 程式陷阱反噬!'}</div> <d",
+      "desc": "innerHTML 帶 ${...} 模板字串,需確認變數已 escape"
+    },
+    {
+      "file": "src/modes/mode3.js",
+      "line": 207,
+      "rule": "innerhtml-tmpl",
+      "severity": "INFO",
+      "match": ".innerHTML = `\n        <div class=\"card\">\n          <h1>🔧 ML Pipeline 工坊 — 拖拉拼圖</h1>\n          <p style=\"color:var(--fg-dim)\">\n            身份:資料科學工程師。每關一條 ML 管線,從打亂的步驟卡片中\n            <strong style=\"color:var(--primary)\">拖拉</strong>到 SVG 管線正確坑位。\n            時間越快、Combo 越高、傷害越爆。\n          </p>\n        </div>\n\n        <div class=\"m3-arena\" style=\"padding:14px\">\n          <div class=\"player-bar\">\n            <div class=\"avatar\">🧑‍💻</div>\n            <div class=\"bar-info\">\n              <div class=\"bar-name\"><span class=\"level\">Lv.${player.level}</span> 資料科學工程師</div>\n              <div class=\"hp-track\"><div class=\"hp-fill ${playerHpPct < 30 ? 'critical' : playerHpPct < 60 ? 'low' : ''}\" style=\"width:${playerHpPct}%\"></div></div>\n              <div class=\"hp-text\">HP ${player.hp} / ${player.hpMax} · MP ${player.mp} / ${player.mpMax} · EXP ${player.exp}/${",
+      "context": ".innerHTML = ` <div class=\"card\"> <h1>🔧 ML Pipeline 工坊 — 拖拉拼圖</h1> <p style=\"color:var(--fg-dim)\"> 身份:資料科學工程師。每關一條 ML 管線,從打亂的步驟卡片中 <strong style=\"c",
+      "desc": "innerHTML 帶 ${...} 模板字串,需確認變數已 escape"
+    },
+    {
+      "file": "src/modes/mode3.js",
+      "line": 398,
+      "rule": "innerhtml-tmpl",
+      "severity": "INFO",
+      "match": ".innerHTML = `\n        <div class=\"m3-arena\">\n          <div class=\"m3-status-row\">\n            <span style=\"font-size:1.6rem\">${",
+      "context": ".innerHTML = ` <div class=\"m3-arena\"> <div class=\"m3-status-row\"> <span style=\"font-size:1.6rem\">${s.meta.avatar}</span> <div style=\"flex:1\"> <d",
+      "desc": "innerHTML 帶 ${...} 模板字串,需確認變數已 escape"
+    },
+    {
+      "file": "src/modes/mode4.js",
+      "line": 623,
+      "rule": "innerhtml-tmpl",
+      "severity": "INFO",
+      "match": ".innerHTML = `\n        <button class=\"skill-btn\" onclick=\"Mode4.useReveal()\" ${p.mp < HINT_COST ? 'disabled' : ''}>🔍 揭露一對 <span class=\"skill-cost\">${HINT_COST}MP</span></button>\n        <button class=\"skill-btn\" onclick=\"Mode4.useFreeze()\" ${p.mp < FREEZE_COST || this.state.frozen > 0 ? 'disabled' : ''}>❄️ 凍結 ${FREEZE_SECONDS}s <span class=\"skill-cost\">${FREEZE_COST}MP</span></button>\n        <button class=\"skill-btn\" onclick=\"Mode4.useShuffle()\" ${p.mp < SHUFFLE_COST ? 'disabled' : ''}>🔀 重排棋盤 <span class=\"skill-cost\">${",
+      "context": ".innerHTML = ` <button class=\"skill-btn\" onclick=\"Mode4.useReveal()\" ${p.mp < HINT_COST ? 'disabled' : ''}>🔍 揭露一對 <span class=\"skill-cost\">${HINT_COST}MP</span",
+      "desc": "innerHTML 帶 ${...} 模板字串,需確認變數已 escape"
+    },
+    {
+      "file": "src/modes/mode5.js",
+      "line": 190,
+      "rule": "onclick-tmpl",
+      "severity": "HIGH",
+      "match": "onclick=\"Mode5.engageBoss(${idx}",
+      "context": "onclick=\"Mode5.engageBoss(${idx})\" style=\"${defeated ? 'opacity:0.65;border-color:var(--success)' : 'border-color:var(--danger)'}\"> <div style=\"display:flex;ali",
+      "desc": "inline onclick 內含 ${...},需確認變數來源可信"
+    },
+    {
+      "file": "src/modes/mode5.js",
+      "line": 859,
+      "rule": "onclick-tmpl",
+      "severity": "HIGH",
+      "match": "onclick=\"Mode5.engageBoss(${s.bossIdx}",
+      "context": "onclick=\"Mode5.engageBoss(${s.bossIdx})\">⚔️ 再戰</button> <button class=\"btn btn-ghost\" onclick=\"Mode5.renderMap()\">🗺️ 回地圖</button> </div> </div> `; }, ques",
+      "desc": "inline onclick 內含 ${...},需確認變數來源可信"
+    },
+    {
+      "file": "src/modes/mode5.js",
+      "line": 216,
+      "rule": "innerhtml-tmpl",
+      "severity": "INFO",
+      "match": ".innerHTML = `\n        <div class=\"card\">\n          <h1>🎯 弱點獵人 — 自適應 BOSS 戰</h1>\n          <p style=\"color:var(--fg-dim)\">系統依你的<strong>錯題本</strong>與<strong>熟練度</strong>動態鎖定 BOSS。每個 BOSS 是一個你最弱的知識節點,熟練度推到 80% 以上才算擊敗。</p>\n          ${",
+      "context": ".innerHTML = ` <div class=\"card\"> <h1>🎯 弱點獵人 — 自適應 BOSS 戰</h1> <p style=\"color:var(--fg-dim)\">系統依你的<strong>錯題本</strong>與<strong>熟練度</strong>動態鎖定 BOSS。每個 BOSS 是",
+      "desc": "innerHTML 帶 ${...} 模板字串,需確認變數已 escape"
+    },
+    {
+      "file": "src/modes/mode5.js",
+      "line": 318,
+      "rule": "innerhtml-tmpl",
+      "severity": "INFO",
+      "match": ".innerHTML = `\n        <div class=\"battle-arena\">\n          <div class=\"enemy-bar\">\n            <div class=\"avatar boss\" style=\"font-size:2.5rem\">${s.avatarIcon}</div>\n            <div class=\"bar-info\">\n              <div class=\"bar-name\">弱點 BOSS:${nodeDisplayName(s.boss.nodeId)}</div>\n              <div class=\"hp-text\">當前熟練度 ${score}% · 目標 ≥ ${",
+      "context": ".innerHTML = ` <div class=\"battle-arena\"> <div class=\"enemy-bar\"> <div class=\"avatar boss\" style=\"font-size:2.5rem\">${s.avatarIcon}</div> <div class=\"bar-info",
+      "desc": "innerHTML 帶 ${...} 模板字串,需確認變數已 escape"
+    },
+    {
+      "file": "src/modes/mode5.js",
+      "line": 371,
+      "rule": "innerhtml-tmpl",
+      "severity": "INFO",
+      "match": ".innerHTML = `\n        <div class=\"battle-arena\" id=\"m5-arena\">\n          <div class=\"enemy-bar\">\n            <div class=\"avatar boss\" id=\"m5-boss-avatar\" style=\"font-size:2.5rem\">${this.state.avatarIcon}</div>\n            <div class=\"bar-info\">\n              <div class=\"bar-name\">弱點 BOSS:${nodeDisplayName(this.state.boss.nodeId)}</div>\n              <div class=\"hp-track\"><div class=\"hp-fill\" id=\"m5-boss-hp-fill\"></div></div>\n              <div class=\"hp-text\" id=\"m5-boss-hp-text\"></div>\n            </div>\n          </div>\n          <div class=\"player-bar\">\n            <div class=\"avatar\" id=\"m5-player-avatar\">🏹</div>\n            <div class=\"bar-info\">\n              <div class=\"bar-name\"><span class=\"level\">Lv.${",
+      "context": ".innerHTML = ` <div class=\"battle-arena\" id=\"m5-arena\"> <div class=\"enemy-bar\"> <div class=\"avatar boss\" id=\"m5-boss-avatar\" style=\"font-size:2.5rem\">${this.sta",
+      "desc": "innerHTML 帶 ${...} 模板字串,需確認變數已 escape"
+    },
+    {
+      "file": "src/modes/mode5.js",
+      "line": 470,
+      "rule": "innerhtml-tmpl",
+      "severity": "INFO",
+      "match": ".innerHTML = `\n        <div class=\"question-card\">\n          <div class=\"question-meta\">\n            <span class=\"badge\">第 ${s.idx + 1} 回合</span>\n            <span class=\"badge\">${q.knowledge_code}</span>\n            <span class=\"badge\">${q.difficulty}</span>\n            <span class=\"badge\">${q.format}</span>\n            ${",
+      "context": ".innerHTML = ` <div class=\"question-card\"> <div class=\"question-meta\"> <span class=\"badge\">第 ${s.idx + 1} 回合</span> <span class=\"badge\">${q.knowledge_code}</s",
+      "desc": "innerHTML 帶 ${...} 模板字串,需確認變數已 escape"
+    },
+    {
+      "file": "src/modes/mode5.js",
+      "line": 631,
+      "rule": "innerhtml-tmpl",
+      "severity": "INFO",
+      "match": ".innerHTML = `\n        <div class=\"explanation\">\n          <div class=\"verdict ${isCorrect ? 'correct' : 'wrong'}\">${",
+      "context": ".innerHTML = ` <div class=\"explanation\"> <div class=\"verdict ${isCorrect ? 'correct' : 'wrong'}\">${isCorrect ? '🎯 正中弱點要害!熟練度 +15' : '🩸 BOSS 反噬!熟練度 -5'}</div> ",
+      "desc": "innerHTML 帶 ${...} 模板字串,需確認變數已 escape"
+    },
+    {
+      "file": "src/modes/mode5.js",
+      "line": 870,
+      "rule": "innerhtml-tmpl",
+      "severity": "INFO",
+      "match": ".innerHTML = `\n        <div class=\"battle-arena\" style=\"text-align:center\">\n          <h1 style=\"color:var(--warn)\">⚠️ 題庫耗盡</h1>\n          <p>該節點題庫題目已全部出完,且無法再生成有效變化型。</p>\n          <p>當前熟練度:<strong>${Math.round(m.score || 0)}%</strong> / ${",
+      "context": ".innerHTML = ` <div class=\"battle-arena\" style=\"text-align:center\"> <h1 style=\"color:var(--warn)\">⚠️ 題庫耗盡</h1> <p>該節點題庫題目已全部出完,且無法再生成有效變化型。</p> <p>當前熟練度:<strong",
+      "desc": "innerHTML 帶 ${...} 模板字串,需確認變數已 escape"
+    }
+  ]
+}

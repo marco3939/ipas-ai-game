@@ -406,6 +406,37 @@ Orchestrator **必須停下來問使用者**的場景:
 - 漏抓原因:平衡公式沒對齊上下游(boss HP vs baseDmg)
 - 教訓:**任何遊戲平衡參數必跨變數驗證,不可單變數設計**
 
+### 案例 8:Calculation 題 placeholder 殘留(critical,所有 QA + 交叉驗證全漏抓)
+- 症狀:`{answer}` `{wrong1}` 顯示在瀏覽器,沒被替換成實際數值
+- 漏抓原因(**系統性盲點**):
+  1. 全部 QA 做靜態 read code + Node mock + audit script,**沒人實際開瀏覽器**
+  2. Audit script 看 raw schema 不看 rendered output(`{answer}` 通過長度檢查)
+  3. 共用層 `renderQuestion` 被當黑盒,沒人挑骨頭
+  4. Happy Path Trace 沒涵蓋 calculation 分支(只 5% 題目)
+- 教訓:**Audit 必涵蓋執行時行為**;**共用層必獨立 QA**;**任何渲染相關修改必跑 mock render**;**使用者人工抽查瀏覽器是不可省略的最後一道防線**
+
+---
+
+## 9.5 必加的渲染強制驗證(從案例 8 學到)
+
+任何涉及以下檔的修改 → orchestrator 必跑 `node scripts/audit-render.js`:
+- `src/index.html`(共用層 `renderQuestion` / `applyVariables` / `pickCase` / `renderVisualData` / `highlightCodeSimple`)
+- `src/questions*.json`(任一題庫檔)
+- `src/modes/*.js`(任一 mode 渲染相關函數)
+
+**驗證內容**:
+- 每題每 case 模擬 renderQuestion → 輸出**不含**任何 `{xxx}` placeholder
+- options.length 與 is_correct count 正確(每題剛好 1 個 is_correct: true)
+
+**Sub agent 自驗也必跑此項**(寫進 §3.1 worker prompt 的「完成前必跑」清單)。
+
+**使用者人工抽查清單**(orchestrator 推 commit 前必請使用者抽查):
+- 任意 1 題 calculation(看數值是否正確替換)
+- 任意 1 題 single_choice with stem_variables(看變數池是否替換)
+- 任意 1 題 matching / sequence(看渲染流程)
+- 任意 1 題 code_reading(看 code_block 是否高亮)
+- 答錯 1 題 → 看下鑽是否進 DrillSession,完成後是否回戰鬥
+
 ---
 
 ## 10. 最終 Commit Checklist(Orchestrator 必跑)

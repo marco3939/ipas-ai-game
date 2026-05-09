@@ -153,26 +153,24 @@
       "source_level": "L1",
       "stem": "若輸入特徵圖大小為 {in_size}×{in_size}、卷積核 {k}×{k}、Stride={s}、Padding={p},則輸出特徵圖大小為何?(公式:⌊(N+2P-K)/S⌋+1)",
       "stem_variables": {
-        "case_a": {"in_size": "32", "k": "3", "s": "1", "p": "1", "answer": "32"},
-        "case_b": {"in_size": "224", "k": "7", "s": "2", "p": "3", "answer": "112"},
-        "case_c": {"in_size": "28", "k": "5", "s": "1", "p": "0", "answer": "24"},
-        "case_d": {"in_size": "64", "k": "3", "s": "2", "p": "0", "answer": "31"}
+        "case_a": {"in_size": "32", "k": "3", "s": "1", "p": "1", "answer": "32", "wrong1": "30", "wrong2": "34", "wrong3": "31"},
+        "case_b": {"in_size": "224", "k": "7", "s": "2", "p": "3", "answer": "112", "wrong1": "109", "wrong2": "115", "wrong3": "111"},
+        "case_c": {"in_size": "28", "k": "5", "s": "1", "p": "0", "answer": "24", "wrong1": "25", "wrong2": "26", "wrong3": "23"},
+        "case_d": {"in_size": "64", "k": "3", "s": "2", "p": "0", "answer": "31", "wrong1": "33", "wrong2": "32", "wrong3": "30"}
       },
-      "options_template": {
-        "case_a": [
-          {"text": "32", "is_correct": true},
-          {"text": "30", "is_correct": false, "trap_type": "忽略 padding"},
-          {"text": "34", "is_correct": false, "trap_type": "padding 計算錯誤"},
-          {"text": "31", "is_correct": false, "trap_type": "公式錯記"}
-        ]
-      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "忽略 padding(將 N+2P 寫成 N)或 K 加減弄反"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "padding 計算錯誤(將 2P 算成 4P)"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "公式漏 +1(只取 floor((N+2P-K)/S))"}
+      ],
       "shuffle_options": true,
       "explanation": {
         "correct": "輸出尺寸 = ⌊(N+2P-K)/S⌋+1。代入 N={in_size}, K={k}, S={s}, P={p},得 ⌊({in_size}+2×{p}-{k})/{s}⌋+1 = {answer}。",
         "wrong": {
-          "30": "若忽略 padding,直接以 N-K+1=30 計算,將少算 padding 補入像素帶來的尺寸保持。",
-          "34": "可能誤把 padding 兩邊各加錯成 +2 而非 +1,造成輸出大於輸入的錯誤。",
-          "31": "可能將整除位置記錯,或將 stride 由 1 誤算成 2,造成下採樣量計算偏差。"
+          "{wrong1}": "若忽略 padding 或誤把 K 加減方向弄反,將少算 padding 補入像素帶來的尺寸保持。",
+          "{wrong2}": "可能誤把 padding 兩邊各加成 +2 而非 +1(等於把 2P 寫成 4P),造成輸出大於正確值。",
+          "{wrong3}": "可能將公式末端的 +1 漏掉,造成下採樣量計算偏差,輸出比正確值少 1。"
         },
         "hook": "口訣:加 padding(2P)、扣 kernel(K)、除 stride(S)、加 1"
       },
@@ -479,26 +477,24 @@
       "source_level": "L1",
       "stem": "若預測框與真實框的交集面積為 {inter} 平方像素,聯集面積為 {union} 平方像素,則 IoU 約為多少?",
       "stem_variables": {
-        "case_a": {"inter": "60", "union": "100", "answer": "0.60"},
-        "case_b": {"inter": "45", "union": "150", "answer": "0.30"},
-        "case_c": {"inter": "120", "union": "160", "answer": "0.75"},
-        "case_d": {"inter": "20", "union": "80", "answer": "0.25"}
+        "case_a": {"inter": "60", "union": "100", "answer": "0.60", "wrong1": "0.40", "wrong2": "1.67", "wrong3": "0.38"},
+        "case_b": {"inter": "45", "union": "150", "answer": "0.30", "wrong1": "0.70", "wrong2": "3.33", "wrong3": "0.23"},
+        "case_c": {"inter": "120", "union": "160", "answer": "0.75", "wrong1": "0.25", "wrong2": "1.33", "wrong3": "0.43"},
+        "case_d": {"inter": "20", "union": "80", "answer": "0.25", "wrong1": "0.75", "wrong2": "4.00", "wrong3": "0.20"}
       },
-      "options_template": {
-        "case_a": [
-          {"text": "0.60", "is_correct": true},
-          {"text": "0.40", "is_correct": false, "trap_type": "用 union/inter"},
-          {"text": "1.67", "is_correct": false, "trap_type": "分子分母顛倒"},
-          {"text": "0.50", "is_correct": false, "trap_type": "近似猜測"}
-        ]
-      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "用 (union-inter)/union(非重疊比例)誤當 IoU"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "分子分母顛倒(union/inter)"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "分母誤算為 union+inter(把交集多算一次)"}
+      ],
       "shuffle_options": true,
       "explanation": {
         "correct": "IoU = 交集 / 聯集 = {inter} / {union} = {answer}。",
         "wrong": {
-          "0.40": "誤把 (聯集-交集)/聯集 視為 IoU,實際上這是『非重疊比例』。",
-          "1.67": "分子分母顛倒造成大於 1 的不合理結果,IoU 必須介於 0~1。",
-          "0.50": "未實際代入計算,憑直覺猜測中間值。"
+          "{wrong1}": "誤把 (聯集-交集)/聯集 視為 IoU,實際上這是『非重疊比例』,與 IoU 互補(IoU + 非重疊比例 = 1)。",
+          "{wrong2}": "分子分母顛倒造成大於 1 的不合理結果,IoU 必須介於 0~1,大於 1 一定是公式記反。",
+          "{wrong3}": "誤把分母寫成 union+inter(等於把交集多算一次計入分母),會壓低數值。"
         },
         "hook": "IoU 永遠 0~1;大於 1 一定是公式記反了"
       },

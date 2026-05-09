@@ -60,36 +60,23 @@
       "source_level": "L1",
       "stem": "某倉儲安防 AI 偵測『包裹遭撬』之事件:背景發生率 P(撬) = {prior};若真實遭撬,警報觸發機率 P(警|撬) = {tpr};若未遭撬,系統誤報率 P(警|未撬) = {fpr}。當警報響起時,實際遭撬的後驗機率約為多少?(取小數第 3 位)",
       "stem_variables": {
-        "case_a": {"prior": "0.01", "tpr": "0.95", "fpr": "0.05", "answer": "0.161"},
-        "case_b": {"prior": "0.02", "tpr": "0.90", "fpr": "0.10", "answer": "0.155"},
-        "case_c": {"prior": "0.05", "tpr": "0.80", "fpr": "0.10", "answer": "0.296"}
+        "case_a": {"prior": "0.01", "tpr": "0.95", "fpr": "0.05", "answer": "0.161", "wrong1": "0.950", "wrong2": "0.475", "wrong3": "0.050"},
+        "case_b": {"prior": "0.02", "tpr": "0.90", "fpr": "0.10", "answer": "0.155", "wrong1": "0.900", "wrong2": "0.450", "wrong3": "0.100"},
+        "case_c": {"prior": "0.05", "tpr": "0.80", "fpr": "0.10", "answer": "0.296", "wrong1": "0.800", "wrong2": "0.400", "wrong3": "0.100"}
       },
-      "options_template": {
-        "case_a": [
-          {"text": "0.161", "is_correct": true},
-          {"text": "0.950", "is_correct": false, "trap_type": "誤把 P(警|撬) 當後驗"},
-          {"text": "0.475", "is_correct": false, "trap_type": "誤算分母用簡單平均"},
-          {"text": "0.050", "is_correct": false, "trap_type": "誤把 FPR 當後驗"}
-        ],
-        "case_b": [
-          {"text": "0.155", "is_correct": true},
-          {"text": "0.900", "is_correct": false, "trap_type": "誤把概似當後驗"},
-          {"text": "0.450", "is_correct": false, "trap_type": "分母誤算"},
-          {"text": "0.020", "is_correct": false, "trap_type": "誤把先驗當後驗"}
-        ],
-        "case_c": [
-          {"text": "0.296", "is_correct": true},
-          {"text": "0.800", "is_correct": false, "trap_type": "誤把 TPR 當後驗"},
-          {"text": "0.500", "is_correct": false, "trap_type": "未考慮先驗"},
-          {"text": "0.050", "is_correct": false, "trap_type": "與 FPR 混淆"}
-        ]
-      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤把 P(警|撬)(TPR)直接當作後驗 P(撬|警)"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤把分母簡化(如直接除以 2),未做先驗加權"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤把 P(警|未撬)(FPR)當作後驗"}
+      ],
       "shuffle_options": true,
       "explanation": {
         "correct": "P(撬|警) = P(警|撬)·P(撬) / [P(警|撬)·P(撬) + P(警|未撬)·P(未撬)] = {tpr}·{prior} / [{tpr}·{prior} + {fpr}·(1-{prior})] = {answer}",
         "wrong": {
-          "0.950": "此為條件概似 P(警|撬) 並非後驗 P(撬|警),兩者方向相反",
-          "0.475": "誤把分母當作 (TPR + FPR) / 2,未做先驗加權"
+          "{wrong1}": "此為條件概似 P(警|撬)(TPR),並非後驗 P(撬|警),兩者方向相反:前者是『真撬時警響的機率』,後者才是『警響時真撬的機率』",
+          "{wrong2}": "誤把分母簡化為 TPR/2 或 (TPR+FPR)/2,未做先驗加權,因此忽略事件罕見度的影響",
+          "{wrong3}": "誤把 P(警|未撬)(FPR)當作後驗。FPR 是未發生事件下警響的機率,與後驗方向相反"
         },
         "hook": "Base Rate Fallacy:即使警報靈敏度 95%,因事件本身罕見(先驗低),警響後實際發生率仍偏低。先驗很重要"
       },
@@ -368,44 +355,24 @@
       "source_level": "L1",
       "stem": "某 B2B 媒合平台需對 n 個客戶兩兩比對相似度建立潛在合作網路,演算法為 O(n²) 兩層巢狀比對。當客戶數從 n₁ = {n1} 倍增至 n₂ = {n2} 時,執行時間約成幾倍?(以 n₂² / n₁² 估算)",
       "stem_variables": {
-        "case_a": {"n1": "1000", "n2": "10000", "answer": "100"},
-        "case_b": {"n1": "500", "n2": "5000", "answer": "100"},
-        "case_c": {"n1": "1000", "n2": "5000", "answer": "25"},
-        "case_d": {"n1": "200", "n2": "1000", "answer": "25"}
+        "case_a": {"n1": "1000", "n2": "10000", "answer": "100", "wrong1": "10", "wrong2": "1024", "wrong3": "33"},
+        "case_b": {"n1": "500", "n2": "5000", "answer": "100", "wrong1": "10", "wrong2": "1024", "wrong3": "33"},
+        "case_c": {"n1": "1000", "n2": "5000", "answer": "25", "wrong1": "5", "wrong2": "32", "wrong3": "12"},
+        "case_d": {"n1": "200", "n2": "1000", "answer": "25", "wrong1": "5", "wrong2": "32", "wrong3": "12"}
       },
-      "options_template": {
-        "case_a": [
-          {"text": "100", "is_correct": true},
-          {"text": "10", "is_correct": false, "trap_type": "誤判為 O(n) 線性"},
-          {"text": "1024", "is_correct": false, "trap_type": "誤判為 O(2ⁿ) 指數"},
-          {"text": "33", "is_correct": false, "trap_type": "誤判為 O(n log n)"}
-        ],
-        "case_b": [
-          {"text": "100", "is_correct": true},
-          {"text": "10", "is_correct": false, "trap_type": "誤判為線性"},
-          {"text": "1000", "is_correct": false, "trap_type": "誤算為 n²/n"},
-          {"text": "50", "is_correct": false, "trap_type": "未平方"}
-        ],
-        "case_c": [
-          {"text": "25", "is_correct": true},
-          {"text": "5", "is_correct": false, "trap_type": "誤判為線性"},
-          {"text": "32", "is_correct": false, "trap_type": "誤判為 O(2ⁿ)"},
-          {"text": "12", "is_correct": false, "trap_type": "未平方"}
-        ],
-        "case_d": [
-          {"text": "25", "is_correct": true},
-          {"text": "5", "is_correct": false, "trap_type": "誤判為線性"},
-          {"text": "10", "is_correct": false, "trap_type": "未平方"},
-          {"text": "32", "is_correct": false, "trap_type": "誤判為指數"}
-        ]
-      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤判為 O(n) 線性,只看 n₂/n₁"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤判為 O(2ⁿ) 指數,計算成 2^(n₂/n₁)"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤判為 O(n log n),計算成 (n₂/n₁)·log₂(n₂/n₁)"}
+      ],
       "shuffle_options": true,
       "explanation": {
         "correct": "O(n²) 兩兩比對:時間倍率 = (n₂/n₁)² = ({n2}/{n1})² = {answer} 倍。兩層巢狀迴圈為 O(n²) 平方複雜度",
         "wrong": {
-          "10": "誤判為 O(n) 線性;線性僅在『單迴圈巡訪 n 個元素』成立",
-          "1024": "誤判為 O(2ⁿ) 指數;指數複雜度通常為窮舉所有子集",
-          "33": "誤判為 O(n log n);O(n log n) 為快速排序、合併排序、FFT"
+          "{wrong1}": "誤判為 O(n) 線性;線性僅在『單迴圈巡訪 n 個元素』成立",
+          "{wrong2}": "誤判為 O(2ⁿ) 指數;指數複雜度通常為窮舉所有子集,而非兩兩比對",
+          "{wrong3}": "誤判為 O(n log n);O(n log n) 為快速排序、合併排序、FFT,並非兩層巢狀迴圈"
         },
         "hook": "六大複雜度:O(1) < O(log n) < O(n) < O(n log n) < O(n²) < O(2ⁿ);兩兩比對 = O(n²)"
       },
@@ -539,43 +506,24 @@
       "source_level": "L1",
       "stem": "某共享單車違停預測二元邏輯迴歸模型,線性輸出 z = β₀ + β₁·x₁ + β₂·x₂ = {z}。經 Sigmoid σ(z) = 1/(1+e⁻ᶻ) 後,該樣本被預測為違停的機率約為多少?",
       "stem_variables": {
-        "case_a": {"z": "0", "answer": "0.500"},
-        "case_b": {"z": "1", "answer": "0.731"},
-        "case_c": {"z": "-1", "answer": "0.269"},
-        "case_d": {"z": "2", "answer": "0.881"}
+        "case_a": {"z": "0", "answer": "0.500", "wrong1": "0.000", "wrong2": "1.000", "wrong3": "0.731"},
+        "case_b": {"z": "1", "answer": "0.731", "wrong1": "1.000", "wrong2": "0.269", "wrong3": "0.500"},
+        "case_c": {"z": "-1", "answer": "0.269", "wrong1": "-1.000", "wrong2": "0.731", "wrong3": "0.500"},
+        "case_d": {"z": "2", "answer": "0.881", "wrong1": "2.000", "wrong2": "0.119", "wrong3": "0.500"}
       },
-      "options_template": {
-        "case_a": [
-          {"text": "0.500", "is_correct": true},
-          {"text": "0.000", "is_correct": false, "trap_type": "誤把線性輸出當機率"},
-          {"text": "1.000", "is_correct": false, "trap_type": "誤判最大值"},
-          {"text": "0.250", "is_correct": false, "trap_type": "計算錯誤"}
-        ],
-        "case_b": [
-          {"text": "0.731", "is_correct": true},
-          {"text": "1.000", "is_correct": false, "trap_type": "誤把線性輸出 z=1 直接當機率"},
-          {"text": "0.500", "is_correct": false, "trap_type": "未代入 Sigmoid"},
-          {"text": "0.269", "is_correct": false, "trap_type": "與 -1 的結果混淆"}
-        ],
-        "case_c": [
-          {"text": "0.269", "is_correct": true},
-          {"text": "0.731", "is_correct": false, "trap_type": "與 +1 的結果混淆"},
-          {"text": "-1.000", "is_correct": false, "trap_type": "誤把 z 當機率"},
-          {"text": "0.500", "is_correct": false, "trap_type": "未代入 Sigmoid"}
-        ],
-        "case_d": [
-          {"text": "0.881", "is_correct": true},
-          {"text": "2.000", "is_correct": false, "trap_type": "誤把 z 當機率"},
-          {"text": "0.500", "is_correct": false, "trap_type": "未代入"},
-          {"text": "0.731", "is_correct": false, "trap_type": "與 z=1 結果混淆"}
-        ]
-      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤把線性輸出 z 直接當機率"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤把 σ(-z) 當作 σ(z),搞混 ± 號"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "未代入 Sigmoid 或誤算為固定中間值"}
+      ],
       "shuffle_options": true,
       "explanation": {
         "correct": "Sigmoid σ(z) = 1 / (1+e⁻ᶻ),代入 z = {z} → σ({z}) ≈ {answer}。Sigmoid 將線性輸出 z ∈ ℝ 壓縮到 (0,1) 機率區間",
         "wrong": {
-          "0.000": "z = 0 時 σ(0) = 1/(1+1) = 0.5,並非 0",
-          "1.000": "Sigmoid 永遠不等於 1,只在 z → ∞ 時逼近"
+          "{wrong1}": "誤把線性輸出 z 直接當機率;z 可為任意實數,需經 Sigmoid 才壓縮到 (0,1)",
+          "{wrong2}": "搞混 σ(z) 與 σ(-z),兩者互為 1 的補數(σ(z) + σ(-z) = 1);代入 z 的負值會得到反向結果",
+          "{wrong3}": "未代入 Sigmoid 直接套用預設中點 0.5,或與 z=1/0 等其他輸入結果混淆"
         },
         "hook": "Sigmoid 三特性:σ(0) = 0.5、σ(z) + σ(-z) = 1、輸出範圍永遠 (0,1) 不含端點"
       },
@@ -680,38 +628,25 @@
       "source_level": "L1",
       "stem": "某外送平台一維配送時間資料 [{points}] 進行 K-means(K=2)聚類,最終分群為 [群 A: {a}] / [群 B: {b}],兩群質心分別為 {ca} 與 {cb}。該分群結果之 Inertia(總群內平方距離和,SSE)為何?",
       "stem_variables": {
-        "case_a": {"points": "1, 2, 8, 9", "a": "1, 2", "b": "8, 9", "ca": "1.5", "cb": "8.5", "answer": "1.0"},
-        "case_b": {"points": "2, 4, 10, 12", "a": "2, 4", "b": "10, 12", "ca": "3", "cb": "11", "answer": "4.0"},
-        "case_c": {"points": "0, 2, 4, 10, 12", "a": "0, 2, 4", "b": "10, 12", "ca": "2", "cb": "11", "answer": "10.0"}
+        "case_a": {"points": "1, 2, 8, 9", "a": "1, 2", "b": "8, 9", "ca": "1.5", "cb": "8.5", "answer": "1.0", "wrong1": "0.5", "wrong2": "0.3", "wrong3": "49.0"},
+        "case_b": {"points": "2, 4, 10, 12", "a": "2, 4", "b": "10, 12", "ca": "3", "cb": "11", "answer": "4.0", "wrong1": "2.0", "wrong2": "1.0", "wrong3": "64.0"},
+        "case_c": {"points": "0, 2, 4, 10, 12", "a": "0, 2, 4", "b": "10, 12", "ca": "2", "cb": "11", "answer": "10.0", "wrong1": "8.0", "wrong2": "2.0", "wrong3": "81.0"}
       },
-      "options_template": {
-        "case_a": [
-          {"text": "1.0", "is_correct": true},
-          {"text": "0.5", "is_correct": false, "trap_type": "只算單群"},
-          {"text": "2.0", "is_correct": false, "trap_type": "用絕對值而非平方"},
-          {"text": "49.0", "is_correct": false, "trap_type": "誤算群間距離"}
-        ],
-        "case_b": [
-          {"text": "4.0", "is_correct": true},
-          {"text": "2.0", "is_correct": false, "trap_type": "只算單群"},
-          {"text": "8.0", "is_correct": false, "trap_type": "未開平方完成"},
-          {"text": "64.0", "is_correct": false, "trap_type": "誤算群間距"}
-        ],
-        "case_c": [
-          {"text": "10.0", "is_correct": true},
-          {"text": "8.0", "is_correct": false, "trap_type": "漏算一個點"},
-          {"text": "5.0", "is_correct": false, "trap_type": "只算半邊"},
-          {"text": "81.0", "is_correct": false, "trap_type": "誤算群間距"}
-        ]
-      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "只算其中一群的 SSE,未加總兩群"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤算成平均距離平方(把 SSE 除以樣本數 n)"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤算為兩群質心距離平方(屬群間,而 Inertia 是群內)"}
+      ],
       "shuffle_options": true,
       "explanation": {
         "correct": "Inertia = Σ Σ ||xᵢ − μⱼ||²,以 case_a 為例:群 A (1−1.5)²+(2−1.5)² = 0.25+0.25 = 0.5;群 B (8−8.5)²+(9−8.5)² = 0.5;總計 = {answer}",
         "wrong": {
-          "0.5": "僅計算單一群內 SSE,未加總兩群",
-          "2.0": "誤把絕對距離 |xᵢ − μⱼ| 當作平方距離"
+          "{wrong1}": "僅計算單一群內 SSE,未加總兩群;Inertia 必須對所有群求和",
+          "{wrong2}": "誤把 SSE 除以樣本數變成『均方距離』;Inertia 是總和並非平均",
+          "{wrong3}": "誤算兩群質心距離平方,但 Inertia 是『群內』平方距離,並非『群間』"
         },
-        "hook": "Inertia = 群內平方距離和(SSE);K-means 目標函數即最小化此值。注意是平方距離,不是絕對值"
+        "hook": "Inertia = 群內平方距離和(SSE);K-means 目標函數即最小化此值。注意是『群內』而非『群間』,且是『總和』而非平均"
       },
       "misconceptions": ["把絕對距離當平方距離", "誤把群間距離當作 Inertia"],
       "related_node_ids": ["n_L23202_002"],

@@ -173,23 +173,25 @@
       "source_level": "L1",
       "stem": "若某二元分類模型之 Precision = {p}、Recall = {r},則 F1 分數約為多少?",
       "stem_variables": {
-        "case_a": {"p": "0.8", "r": "0.6", "answer": "0.686"},
-        "case_b": {"p": "0.9", "r": "0.5", "answer": "0.643"},
-        "case_c": {"p": "0.7", "r": "0.7", "answer": "0.700"},
-        "case_d": {"p": "0.6", "r": "0.4", "answer": "0.480"}
+        "case_a": {"p": "0.8", "r": "0.6", "answer": "0.686", "wrong1": "0.700", "wrong2": "0.480", "wrong3": "0.800"},
+        "case_b": {"p": "0.9", "r": "0.5", "answer": "0.643", "wrong1": "0.700", "wrong2": "0.450", "wrong3": "0.900"},
+        "case_c": {"p": "0.85", "r": "0.6", "answer": "0.703", "wrong1": "0.725", "wrong2": "0.510", "wrong3": "0.850"},
+        "case_d": {"p": "0.6", "r": "0.4", "answer": "0.480", "wrong1": "0.500", "wrong2": "0.240", "wrong3": "0.600"}
       },
-      "options_template": {
-        "case_a": [
-          {"text": "0.686", "is_correct": true},
-          {"text": "0.700", "is_correct": false, "trap_type": "誤算為平均"},
-          {"text": "0.720", "is_correct": false},
-          {"text": "0.750", "is_correct": false}
-        ]
-      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤算為算術平均 (P+R)/2,非調和平均"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤算為 P·R(乘法,缺除以 (P+R) 與乘 2)"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤取 max(P, R),忽略對小值敏感的調和平均特性"}
+      ],
       "shuffle_options": true,
       "explanation": {
         "correct": "F1 = 2·P·R / (P+R) = 2 × {p} × {r} / ({p}+{r}) = {answer}",
-        "wrong": {"0.700": "此為算術平均 (P+R)/2,非調和平均"},
+        "wrong": {
+          "{wrong1}": "此為算術平均 (P+R)/2,非調和平均;算術平均對極端值不敏感,F1 必須用調和平均",
+          "{wrong2}": "誤把 F1 算成 P·R 乘積,缺少『2 / (P+R)』的調和標準化",
+          "{wrong3}": "誤取 max(P, R) 作為單一指標;F1 的設計目的就是要避免只看高的那一面而忽略低的那一面"
+        },
         "hook": "F1 為調和平均,對小值敏感;P 或 R 任一低 → F1 大幅下降"
       },
       "misconceptions": ["把 F1 當算術平均", "公式記錯為 (P+R)/2"],
@@ -412,24 +414,24 @@
       "format": "single_choice",
       "difficulty": "easy",
       "source_level": "L1",
-      "stem": "某醫療早期偵測模型,正樣本(確診病例)僅佔 3%。下列哪一種作法**最不適合**用於提升對少數類病例的預測能力?",
+      "stem": "金管會反洗錢監理沙盒上線一份疑似可疑交易監測模型,實際命中可疑案件僅佔全部交易的 0.4%。為了提升模型抓出可疑樣本的能力,下列何項做法**反而會誤導**團隊判斷模型表現?",
       "options": [
-        {"text": "採用整體準確率(Accuracy)作為主要模型評估指標", "is_correct": true},
-        {"text": "使用 SMOTE 對少數類進行合成過採樣以平衡資料", "is_correct": false},
-        {"text": "在損失函數中加入 class_weight 調整少數類權重", "is_correct": false},
-        {"text": "對多數類(陰性樣本)進行隨機欠採樣以縮減比例", "is_correct": false}
+        {"text": "把整體分類準確率(Accuracy)當作優先觀察與調整方向的核心指標", "is_correct": true},
+        {"text": "對少數類別執行 SMOTE 合成過採樣,讓訓練集中可疑與正常筆數差距縮小", "is_correct": false},
+        {"text": "在訓練損失中為可疑類別配置較高的 class_weight,加重少數類錯分懲罰", "is_correct": false},
+        {"text": "對佔比超過 99% 的正常交易做隨機欠採樣,降低多數類在訓練時的主導力", "is_correct": false}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "正樣本 3% 時,模型全猜負例 Accuracy=97%,但 Recall=0,完全失去早期偵測意義;**Accuracy 在不平衡資料下嚴重誤導**",
+        "correct": "正樣本只有 0.4%,只要模型一律預測為「正常」,Accuracy 就能輕易接近 99.6%;但 Recall 幾乎為零,所有可疑交易都被漏掉,代表 Accuracy 在這種懸殊比例下會給出極具誤導性的成績單",
         "wrong": {
-          "使用 SMOTE 對少數類進行合成過採樣以平衡資料": "合成少數類樣本,提升 Recall",
-          "在損失函數中加入 class_weight 調整少數類權重": "讓模型重視少數類",
-          "對多數類(陰性樣本)進行隨機欠採樣以縮減比例": "降低多數類佔比"
+          "對少數類別執行 SMOTE 合成過採樣,讓訓練集中可疑與正常筆數差距縮小": "透過合成少數類樣本,讓模型有更多機會學習可疑型態,有助提升 Recall",
+          "在訓練損失中為可疑類別配置較高的 class_weight,加重少數類錯分懲罰": "從目標函數的角度逼迫模型不要忽略可疑類別,屬有效策略",
+          "對佔比超過 99% 的正常交易做隨機欠採樣,降低多數類在訓練時的主導力": "雖會犧牲一部分多數類資訊,但確實能讓決策邊界向可疑類別靠近"
         },
-        "hook": "97% Accuracy 全猜正常 → 漏掉所有病人;應用 Recall / F1 / PR-AUC"
+        "hook": "極不平衡時看 Recall / F1 / PR-AUC,Accuracy 只會讓你誤判模型有效"
       },
-      "misconceptions": ["把 Accuracy 視為通用指標"],
+      "misconceptions": ["將 Accuracy 視為通用首選指標,忽略類別比例懸殊時的失效"],
       "related_node_ids": ["n_L23303_001"],
       "exam_appearance": [{"exam": "114-2", "q": 19, "subject": 3}],
       "tags": ["評估", "不平衡", "陷阱題"]
@@ -498,20 +500,24 @@
       "format": "single_choice",
       "difficulty": "easy",
       "source_level": "L1",
-      "stem": "下列何者**不屬於**降低模型複雜度或限制學習能力的過擬合對策?",
+      "stem": "教育部 K-12 預警平台用學生缺曠、評量成績、輔導紀錄訓練輟學風險模型,實驗中已出現訓練表現遠優於驗證表現的徵兆。下列哪一個操作**目的不在「縮小模型可行解空間」**,因此不算典型的抗過擬合手段?",
       "options": [
-        {"text": "擴增輸入特徵變數以提升模型表達能力", "is_correct": true, "trap_type": "反向操作"},
-        {"text": "採用 L1 或 L2 正則化", "is_correct": false},
-        {"text": "在訓練過程中使用 Dropout 技術", "is_correct": false},
-        {"text": "採取早期停止(Early Stopping)機制", "is_correct": false}
+        {"text": "再從學生資料庫中拉入更多輔助欄位接入模型,例如家長學歷、同儕成績與打工時數", "is_correct": true, "trap_type": "增加特徵反而擴大模型自由度,效果與抑制過擬合相反"},
+        {"text": "在 Logistic Regression 損失中疊加 L1 或 L2 懲罰項,壓制不必要的權重幅度", "is_correct": false},
+        {"text": "於神經網路全連接層之間插入 Dropout,訓練時隨機關閉部分神經元", "is_correct": false},
+        {"text": "啟用 Early Stopping,當驗證集 AUC 連續若干回合無進步時就停止訓練", "is_correct": false}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "擴增特徵變數會**增加**模型自由度,反而提升過擬合風險,不屬於降低複雜度策略",
-        "wrong": {"採用 L1 或 L2 正則化": "限制權重幅度", "在訓練過程中使用 Dropout 技術": "隨機關閉神經元降低過擬合", "採取早期停止(Early Stopping)機制": "防止訓練過久"},
-        "hook": "降低複雜度 = 限制自由度;增加特徵 = 反向操作"
+        "correct": "L1/L2、Dropout、Early Stopping 都是「限制模型可表達範圍」的方向;反觀繼續擴充特徵欄位等於放大可探索的假設空間,參數量、互動可能性都會上升,反而提升過擬合風險,因此本題答案是它",
+        "wrong": {
+          "在 Logistic Regression 損失中疊加 L1 或 L2 懲罰項,壓制不必要的權重幅度": "藉由懲罰大權重把模型推向更平滑的解",
+          "於神經網路全連接層之間插入 Dropout,訓練時隨機關閉部分神經元": "等於在訓練時取多個子網路平均,降低共適應與過度依賴",
+          "啟用 Early Stopping,當驗證集 AUC 連續若干回合無進步時就停止訓練": "在模型開始記住雜訊之前先收手,屬於隱式正則化"
+        },
+        "hook": "抗過擬合 = 收斂自由度;盲加特徵 = 把自由度推回去"
       },
-      "misconceptions": ["以為『更多特徵 = 更好模型』"],
+      "misconceptions": ["以為「特徵越多模型越強」,忽略它會把過擬合風險拉高"],
       "related_node_ids": ["n_L23304_001", "n_L23304_002", "n_L23304_003", "n_L23304_004"],
       "exam_appearance": [{"exam": "114-2", "q": 26, "subject": 3}],
       "tags": ["過擬合", "陷阱題", "高頻"]
@@ -723,23 +729,27 @@
       "knowledge_code": "L23102",
       "node_id": "n_L23102_001",
       "subject": 3,
-      "format": "calculation",
+      "format": "single_choice",
       "difficulty": "medium",
       "source_level": "L1",
-      "stem": "某資料的 PCA 三個主成分特徵值為 λ₁=6.0、λ₂=3.0、λ₃=1.0。若希望保留至少 80% 變異量,應保留幾個主成分?",
+      "stem": "國家太空中心對某顆觀測衛星的多波段遙測資料做主成分分析,前四個成分得到的特徵值依序為 λ₁ = 4.5、λ₂ = 2.7、λ₃ = 0.9、λ₄ = 0.9(其餘成分可忽略)。團隊定下「累計變異量需達 85% 以上」的維持標準,最少要留下幾個主成分?",
       "options": [
-        {"text": "前 2 個主成分(累計 90%)", "is_correct": true},
-        {"text": "僅 1 個主成分(60%)", "is_correct": false, "trap_type": "不足 80%"},
-        {"text": "全部 3 個主成分", "is_correct": false, "trap_type": "保留過多失去降維意義"},
-        {"text": "前 2 個 + 部分第 3", "is_correct": false, "trap_type": "PCA 主成分為整體保留"}
+        {"text": "前 3 個主成分,累計約 91.7%,首次跨越 85% 門檻", "is_correct": true},
+        {"text": "僅前 1 個主成分,佔約 50%,已能凸顯主要趨勢即可", "is_correct": false, "trap_type": "50% 與 85% 門檻仍有相當距離"},
+        {"text": "前 2 個主成分,累計約 80%,接近 85% 應屬可接受", "is_correct": false, "trap_type": "80% 仍未達標,規則是嚴格大於等於 85%"},
+        {"text": "全部 4 個主成分都應保留以避免任何資訊損失,降維幅度交由視覺化階段處理", "is_correct": false, "trap_type": "全保留等於沒做降維,違背 PCA 的目的"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "總變異 = 6+3+1 = 10;前兩主成分 = 9/10 = 90% > 80%,因此保留 2 個即可",
-        "wrong": {"僅 1 個主成分(60%)": "60% < 80%"},
-        "hook": "保留主成分數量規則:累計變異比例 ≥ 目標(常見 80% / 95%)"
+        "correct": "總變異 = 4.5 + 2.7 + 0.9 + 0.9 = 9.0;前 1 個 = 50.0%、前 2 個 = 80.0%、前 3 個 = 91.7%;首次跨過 85% 的就是第 3 個,因此最少要留 3 個主成分",
+        "wrong": {
+          "僅前 1 個主成分,佔約 50%,已能凸顯主要趨勢即可": "50% 距離 85% 還差很遠,顯然不足以代表整體變異",
+          "前 2 個主成分,累計約 80%,接近 85% 應屬可接受": "保留主成分的判斷是嚴格的累計比例 ≥ 目標,80% 並未達門檻",
+          "全部 4 個主成分都應保留以避免任何資訊損失,降維幅度交由視覺化階段處理": "全保留等同於不降維,既無法簡化分析,也失去 PCA 的目的"
+        },
+        "hook": "PCA 取幾個成分的判準:累計變異比例首次達到目標即停"
       },
-      "misconceptions": ["不會計算累積變異比例"],
+      "misconceptions": ["把 80% 視為「接近就好」,忽略門檻是嚴格達標"],
       "related_node_ids": [],
       "exam_appearance": [{"exam": "114-2", "q": 35, "subject": 3}],
       "tags": ["PCA", "計算", "高頻"]
@@ -812,20 +822,24 @@
       "format": "single_choice",
       "difficulty": "easy",
       "source_level": "L1",
-      "stem": "下列哪一種應用最適合採用 LSTM 模型?",
+      "stem": "某航空貨運公司想導入深度學習以強化營運分析,評估四個專案。下列哪一個專案的問題本質**最契合 LSTM 架構**?",
       "options": [
-        {"text": "預測未來七天的電力需求變化趨勢", "is_correct": true},
-        {"text": "辨識監視影像中不同類別的物件", "is_correct": false, "trap_type": "用 CNN/Object Detection"},
-        {"text": "將大量顧客資料依相似特徵自動分群", "is_correct": false, "trap_type": "用 K-means/DBSCAN"},
-        {"text": "將高維度感測器資料壓縮成低維表示", "is_correct": false, "trap_type": "用 PCA/Autoencoder"}
+        {"text": "依過去 90 天每小時的進出港貨量,動態推估隔日各時段倉儲飽和度", "is_correct": true},
+        {"text": "從機坪攝影機畫面標記出推車、貨櫃與工作人員的座標範圍", "is_correct": false, "trap_type": "為影像物件偵測任務,適合 YOLO / Faster R-CNN"},
+        {"text": "把長期累積的客戶提單依寄件習慣相似度自動劃分成數個族群", "is_correct": false, "trap_type": "為非監督分群任務,適合 K-means / 階層式分群"},
+        {"text": "從上百種感測欄位中萃取代表性軸,讓報表能以二維散佈圖呈現", "is_correct": false, "trap_type": "為線性降維任務,適合 PCA / Autoencoder"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "LSTM 透過 Input/Forget/Output 三閘 + Cell State 解決梯度消失,適合時序與序列任務",
-        "wrong": {"辨識監視影像中不同類別的物件": "為物件偵測任務,用 YOLO/Faster R-CNN"},
-        "hook": "LSTM = 時序;CNN = 空間;K-means = 分群;PCA = 降維"
+        "correct": "LSTM 透過 Input / Forget / Output 三閘搭配 Cell State 處理長序列依賴,逐小時貨量這類具時間順序與週期性的資料,正是 LSTM 的主場",
+        "wrong": {
+          "從機坪攝影機畫面標記出推車、貨櫃與工作人員的座標範圍": "屬於影像中物件位置與類別的偵測,核心是空間特徵抽取,應使用卷積架構或物件偵測模型",
+          "把長期累積的客戶提單依寄件習慣相似度自動劃分成數個族群": "目標是無標籤的分群,屬於非監督學習,應採用 K-means、DBSCAN 等聚類方法",
+          "從上百種感測欄位中萃取代表性軸,讓報表能以二維散佈圖呈現": "目標是降維與視覺化,需要 PCA 或 Autoencoder,而非處理時序的 LSTM"
+        },
+        "hook": "LSTM 看時間順序;CNN 看畫面內容;聚類看相似度;降維看軸"
       },
-      "misconceptions": ["把 LSTM 用在非時序任務"],
+      "misconceptions": ["把 LSTM 套用到無時序結構的影像或表格分群任務"],
       "related_node_ids": [],
       "exam_appearance": [{"exam": "114-2", "q": 7, "subject": 3}],
       "tags": ["RNN", "LSTM"]
@@ -865,24 +879,24 @@
       "format": "single_choice",
       "difficulty": "easy",
       "source_level": "L1",
-      "stem": "某線性迴歸模型 R² 值為 0.85,其意義為下列何者?",
+      "stem": "連鎖咖啡品牌的營運分析師用一條多元線性迴歸預估各門市的週末日營收,模型在驗證集得到 R² = 0.72。從統計學角度,這個 0.72 在描述什麼?",
       "options": [
-        {"text": "模型能解釋因變數總變異(TSS)中 85% 的部分", "is_correct": true},
-        {"text": "模型在分類任務上的整體預測正確率(Accuracy)達到 85%", "is_correct": false, "trap_type": "Accuracy 用於分類"},
-        {"text": "模型對每筆樣本的平均預測誤差大約為實際值的 15%", "is_correct": false, "trap_type": "錯誤解讀"},
-        {"text": "模型估計結果在統計上對應的信心水準(CL)為 85%", "is_correct": false, "trap_type": "與假設檢定 CL 混淆"}
+        {"text": "模型挑選的特徵能解釋驗證集週末日營收總變異中約 72%", "is_correct": true},
+        {"text": "模型若被用來判斷「是否達標」這類二分類任務,Accuracy 將達 72%", "is_correct": false, "trap_type": "把迴歸 R² 與分類 Accuracy 混為一談"},
+        {"text": "模型預測值平均偏離實際營收的幅度大約是實際值的 28%", "is_correct": false, "trap_type": "誤把 1 - R² 解讀為相對誤差比例"},
+        {"text": "估計係數的統計顯著性所對應的信賴水準維持在 72%", "is_correct": false, "trap_type": "與假設檢定的信賴水準混淆"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "R² = 1 - RSS/TSS;0.85 表示 85% 變異可被模型解釋",
+        "correct": "R² = 1 - RSS/TSS,核心是「模型解釋的變異佔總變異的比例」;0.72 即代表特徵組合說明了驗證集中約 72% 的營收波動,剩下 28% 屬於模型未捕捉的殘差成分",
         "wrong": {
-          "模型在分類任務上的整體預測正確率(Accuracy)達到 85%": "Accuracy 為分類指標,不是迴歸",
-          "模型對每筆樣本的平均預測誤差大約為實際值的 15%": "R² 為變異解釋比例,並非殘差百分比,1-R² 也不等於誤差率",
-          "模型估計結果在統計上對應的信心水準(CL)為 85%": "信心水準是假設檢定/區間估計概念,與 R² 不同範疇"
+          "模型若被用來判斷「是否達標」這類二分類任務,Accuracy 將達 72%": "Accuracy 是分類指標,迴歸 R² 與分類正確率定義截然不同",
+          "模型預測值平均偏離實際營收的幅度大約是實際值的 28%": "1 − R² 描述的是未被解釋的變異比例,並非每筆樣本相對誤差,兩者口徑完全不同",
+          "估計係數的統計顯著性所對應的信賴水準維持在 72%": "信賴水準屬於假設檢定與區間估計的概念,與衡量解釋力的 R² 並不在同一座標系"
         },
-        "hook": "R² ≠ Accuracy;R² 是『變異解釋比例』"
+        "hook": "R² 看「變異被解釋多少」,不是分類正確率,也不是相對誤差"
       },
-      "misconceptions": ["把 R² 當作分類準確率"],
+      "misconceptions": ["把 R² 當成分類準確率或相對誤差"],
       "related_node_ids": [],
       "exam_appearance": [{"exam": "114-2", "q": 15, "subject": 3}],
       "tags": ["評估", "迴歸"]
@@ -951,24 +965,24 @@
       "format": "single_choice",
       "difficulty": "easy",
       "source_level": "L1",
-      "stem": "在建構以距離為基礎的機器學習模型(如 KNN、SVM)時,下列哪一項資料前處理**最為關鍵**?",
+      "stem": "自駕車團隊使用 LiDAR 距離(公尺)、車速(公里/小時)、轉向角(度)、加速度(m/s²)等異質感測欄位,訓練 KNN 與 RBF-SVM 來判定駕駛情境。**最先且最不可省略**的前處理為何?",
       "options": [
-        {"text": "對各特徵進行特徵縮放(Feature Scaling),統一數值範圍", "is_correct": true},
-        {"text": "將連續型數值特徵以等距或等頻分箱方式轉換為類別型離散變數", "is_correct": false, "trap_type": "資訊損失"},
-        {"text": "對含有缺失值的欄位統一以欄位平均值或中位數進行統一補齊處理", "is_correct": false, "trap_type": "通用前處理但非『最關鍵』"},
-        {"text": "對訓練樣本進行隨機抽樣,使各類別之間的資料筆數比例維持平衡", "is_correct": false, "trap_type": "與距離計算無關"}
+        {"text": "對所有數值欄位施作標準化或 Min-Max 正規化,讓量級彼此可比", "is_correct": true},
+        {"text": "把連續的車速與加速度切成「低 / 中 / 高」三檔分箱,改餵離散標籤", "is_correct": false, "trap_type": "離散化損失資訊,削弱距離精度"},
+        {"text": "針對偶有遺失的轉向角欄位以該欄位均值補齊,避免空值中斷訓練", "is_correct": false, "trap_type": "為通用步驟,但非距離型模型最敏感的環節"},
+        {"text": "重抽訓練樣本讓正常駕駛、緊急煞車、急轉彎的筆數維持均勻", "is_correct": false, "trap_type": "屬於樣本層級處理,並未解決尺度差異"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "距離型模型對特徵尺度極敏感:大尺度特徵(如金額)會主導距離計算,小尺度特徵(如年齡)被忽略;必須縮放",
+        "correct": "KNN 與 RBF-SVM 都建立在歐氏距離上,LiDAR 公尺數的數值跨度遠大於轉向角度數,若不先把所有欄位拉到同一量級,模型幾乎只看 LiDAR 距離,其餘訊號形同被忽略",
         "wrong": {
-          "將連續型數值特徵以等距或等頻分箱方式轉換為類別型離散變數": "離散化會損失連續資訊,不利距離計算的精度",
-          "對含有缺失值的欄位統一以欄位平均值或中位數進行統一補齊處理": "通用前處理但本題重點在距離型模型對尺度敏感",
-          "對訓練樣本進行隨機抽樣,使各類別之間的資料筆數比例維持平衡": "類別平衡屬於樣本面處理,與距離計算尺度問題無直接關係"
+          "把連續的車速與加速度切成「低 / 中 / 高」三檔分箱,改餵離散標籤": "分箱會把連續變化壓成幾個格子,讓距離度量失去細部解析力",
+          "針對偶有遺失的轉向角欄位以該欄位均值補齊,避免空值中斷訓練": "缺值補齊雖屬必要工序,但本題重點在尺度差異引發的距離扭曲",
+          "重抽訓練樣本讓正常駕駛、緊急煞車、急轉彎的筆數維持均勻": "類別平衡處理的是樣本分佈,並沒有改變特徵之間的數值倍率落差"
         },
-        "hook": "KNN/SVM/線性迴歸/神經網路皆需縮放;**樹模型不需要**"
+        "hook": "KNN / SVM / 線性迴歸 / 神經網路都怕尺度差異,只有樹模型可省略縮放"
       },
-      "misconceptions": ["以為樹模型也需要縮放"],
+      "misconceptions": ["誤以為樹模型也必須先做特徵縮放"],
       "related_node_ids": [],
       "exam_appearance": [{"exam": "114-2", "q": 9, "subject": 3}],
       "tags": ["特徵工程", "縮放"]
@@ -1011,24 +1025,24 @@
       "format": "single_choice",
       "difficulty": "medium",
       "source_level": "L1",
-      "stem": "某大型醫院即將部署輔助診斷 AI 系統。為降低臨床流程衝擊、確保風險可控與回饋可收斂,應採取何種**漸進式部署(Phased Rollout)**策略最合適?",
+      "stem": "某 12 吋晶圓廠導入 AI 缺陷分類系統,工程主管希望以**Phased Rollout**降低良率損失、便於蒐集修正樣本。下列導入順序何者最契合此原則?",
       "options": [
-        {"text": "從單一專科(如放射科)或特定病房開始啟用,逐步擴展至全院", "is_correct": true},
-        {"text": "優先部署於急診單位以加速累積真實病例與回饋資料", "is_correct": false, "trap_type": "急診風險高"},
-        {"text": "限定僅於夜班或假日離峰時段啟用,避開白班尖峰流量", "is_correct": false, "trap_type": "代表性低"},
-        {"text": "全院所有單位同步以提示(advisory)模式啟用以蒐集大量資料", "is_correct": false, "trap_type": "失控風險高"}
+        {"text": "先選一條成熟製程的測試線實際接管 AOI 判讀,觀察兩週後再擴及量產線", "is_correct": true},
+        {"text": "從產品轉版、新製程的試產線開始啟用,期望讓模型直接面對最複雜的情境", "is_correct": false, "trap_type": "新製程變動大,風險首當其衝"},
+        {"text": "規定只在大夜班、無工程師在場時自動判讀,以避免影響白班生產節奏", "is_correct": false, "trap_type": "夜班缺陷型態不具代表性"},
+        {"text": "全廠所有機台同步切換到「並行建議」模式,讓模型對所有檢測站同時提供分類", "is_correct": false, "trap_type": "全面啟用即使是 advisory 也難以收斂"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "Phased Rollout 邏輯:小範圍驗證 → 收集回饋 → 逐步擴展;選定單一單位可控制變數",
+        "correct": "Phased Rollout 的核心是先小範圍驗證、再逐步放大:挑一條穩定製程的測試線可凍結其他變數,讓模型表現與工程師判讀的差異最容易釐清",
         "wrong": {
-          "優先部署於急診單位以加速累積真實病例與回饋資料": "急診高風險、高壓,不適合作為首發",
-          "限定僅於夜班或假日離峰時段啟用,避開白班尖峰流量": "夜間病例組成偏特殊,無法代表整體臨床流程",
-          "全院所有單位同步以提示(advisory)模式啟用以蒐集大量資料": "一次全院啟用即使是 advisory,也難以追蹤、回收與控管"
+          "從產品轉版、新製程的試產線開始啟用,期望讓模型直接面對最複雜的情境": "新製程本身良率波動就大,直接套上未驗證的模型會把失敗成本疊加",
+          "規定只在大夜班、無工程師在場時自動判讀,以避免影響白班生產節奏": "限定離峰時段會讓樣本侷限於特定產品族與環境條件,代表性不足",
+          "全廠所有機台同步切換到「並行建議」模式,讓模型對所有檢測站同時提供分類": "看似只是建議,但全面同步啟用後一旦出現偏差便無法判定來源,難以回收與校正"
         },
-        "hook": "Phased Rollout = 範圍逐步;Canary Release = 流量逐步"
+        "hook": "Phased Rollout 是「範圍由窄到寬」;Canary Release 是「流量由小到大」"
       },
-      "misconceptions": ["以為高頻次科別優先(忽略風險)"],
+      "misconceptions": ["誤以為應該先丟到最具挑戰性的場景以快速取得回饋"],
       "related_node_ids": [],
       "exam_appearance": [{"exam": "114-2", "q": 23, "subject": 1}],
       "tags": ["部署", "漸進式"]
@@ -1067,24 +1081,24 @@
       "format": "single_choice",
       "difficulty": "medium",
       "source_level": "L1",
-      "stem": "某銀行將 AI 詐欺偵測模組整合至核心交易系統,主管機關要求符合金融監管的**不可否認性(Non-repudiation)**規範。下列哪一項措施最能落實此要求?",
+      "stem": "某律師事務所推出 AI 合約風險審閱平台,客戶法務之後可能會在訴訟中引用平台給出的審閱結論。為符合電子簽章法的**不可否認(Non-repudiation)**要求,下列哪個機制最切合此目的?",
       "options": [
-        {"text": "為每筆推論記錄輸入與輸出之 Hash + 數位簽章", "is_correct": true},
-        {"text": "優化模型推論延遲至 100 毫秒以下,提升交易處理效能", "is_correct": false, "trap_type": "效能非安全"},
-        {"text": "增加應用伺服器主機備援數量,確保高可用性與容錯", "is_correct": false, "trap_type": "可用性非不可否認"},
-        {"text": "於推論服務前導入負載平衡器,分散流量以避免單點過載", "is_correct": false, "trap_type": "效能非安全"}
+        {"text": "對每次審閱結果連同輸入合約計算雜湊值,並由平台與客戶端各自以私鑰完成數位簽章後一併保存", "is_correct": true},
+        {"text": "升級審閱模型到更大的語言模型,讓單次審閱回應時間壓在 5 秒內,提升使用者體驗", "is_correct": false, "trap_type": "屬效能優化,無法證明訊息來源與內容未被竄改"},
+        {"text": "於核心審閱服務後方布署主備機房,確保任一節點故障時平台可以即時接手", "is_correct": false, "trap_type": "解決的是可用性,不負責對外可舉證的紀錄"},
+        {"text": "在 API 層加上 Rate Limit 與 IP 白名單,封鎖異常頻率與非預期來源的呼叫", "is_correct": false, "trap_type": "屬於存取控制,雖能擋外部濫用,但不證明內部紀錄未被否認"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "不可否認性 = 完整性(Hash)+ 來源證明(數位簽章);兩者結合確保推論記錄不可被否認、可法務追蹤",
+        "correct": "不可否認性同時要保證「內容未被改」(完整性)與「動作真的由聲稱方做出」(來源真實性);Hash + 雙方數位簽章正是把兩者疊在一起,後續打官司時即可以同一份簽署紀錄反證任何事後否認",
         "wrong": {
-          "優化模型推論延遲至 100 毫秒以下,提升交易處理效能": "效能優化,與不可否認性無關",
-          "增加應用伺服器主機備援數量,確保高可用性與容錯": "備援屬於可用性(Availability)範疇,並非不可否認性",
-          "於推論服務前導入負載平衡器,分散流量以避免單點過載": "負載平衡解決效能與可用性,與訊息來源不可否認無關"
+          "升級審閱模型到更大的語言模型,讓單次審閱回應時間壓在 5 秒內,提升使用者體驗": "回應變快是效能議題,不能證明審閱結果由誰、在哪一刻產出且未被改寫",
+          "於核心審閱服務後方布署主備機房,確保任一節點故障時平台可以即時接手": "主備機房處理可用性與容錯,與是否可舉證為某一方所作沒有關係",
+          "在 API 層加上 Rate Limit 與 IP 白名單,封鎖異常頻率與非預期來源的呼叫": "屬於存取控制,可降低濫用,但不會替每一筆審閱結果蓋上可證明來源的章"
         },
-        "hook": "完整性 = Hash;不可否認 = Hash + 數位簽章;機密性 = 加密"
+        "hook": "完整性看 Hash;不可否認看 Hash + 簽章;可用性看備援;機密性看加密"
       },
-      "misconceptions": ["把不可否認性當作機密性"],
+      "misconceptions": ["把可用性、效能、存取控制誤當成不可否認的解決方案"],
       "related_node_ids": [],
       "exam_appearance": [{"exam": "114-2", "q": 30, "subject": 1}],
       "tags": ["風險", "資安", "不可否認"]
@@ -1210,7 +1224,7 @@
       "knowledge_code": "L23103",
       "node_id": "n_L23103_004",
       "subject": 3,
-      "format": "calculation",
+      "format": "single_choice",
       "difficulty": "easy",
       "source_level": "L1",
       "stem": "某客戶相似度比對系統需逐一比對每位客戶與其他所有客戶的資料組合,此演算法的時間複雜度為何?",
@@ -1325,20 +1339,24 @@
       "format": "single_choice",
       "difficulty": "medium",
       "source_level": "L1",
-      "stem": "在 DBSCAN 群集分析中,某資料點鄰域內樣本數不足以形成核心點,且未被任何核心點鄰域包含,也未與其他群集形成密度可達。此資料點將被歸類為何?",
+      "stem": "電網調度中心使用 DBSCAN 對全國變電所每 15 分鐘的負載剖面分群以揪出異常用電型態。某個變電所的剖面落在低密度區:它本身的 ε 鄰域內可數樣本未達 MinPts,亦不落在任何已成形群集的 ε 鄰域內,因此沒有任何核心點能藉由密度可達抵達它。DBSCAN 會把這個剖面標成什麼?",
       "options": [
         {"text": "雜訊點(Noise Point)", "is_correct": true},
-        {"text": "鄰近點(Neighbor Point)", "is_correct": false, "trap_type": "杜撰名詞"},
-        {"text": "邊界點(Border Point)", "is_correct": false, "trap_type": "需被核心點覆蓋"},
-        {"text": "潛在點(Potential Point)", "is_correct": false, "trap_type": "杜撰名詞"}
+        {"text": "鄰近點(Neighbor Point)", "is_correct": false, "trap_type": "DBSCAN 並沒有此分類,屬杜撰名詞"},
+        {"text": "邊界點(Border Point)", "is_correct": false, "trap_type": "邊界點必須位於某核心點的 ε 鄰域中"},
+        {"text": "潛在點(Potential Point)", "is_correct": false, "trap_type": "DBSCAN 並沒有此分類,屬杜撰名詞"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "DBSCAN 三類點:Core(ε 內 ≥ MinPts)/ Border(< MinPts 但被 Core 覆蓋)/ **Noise(三條件全違反)**",
-        "wrong": {"邊界點(Border Point)": "Border 需被某 Core 覆蓋"},
-        "hook": "Noise = 不夠核心 + 不在邊界 + 無密度可達"
+        "correct": "DBSCAN 只區分三類:核心點(自身 ε 鄰域內樣本數 ≥ MinPts)、邊界點(自身不夠核心,但落於某核心點的 ε 鄰域)、雜訊點(以上皆否)。題目同時否定『核心』與『被核心覆蓋』,因此只剩雜訊點",
+        "wrong": {
+          "邊界點(Border Point)": "邊界點仍需與某個核心點建立密度可達關係,題目明確排除這個情況",
+          "鄰近點(Neighbor Point)": "DBSCAN 只給三種角色,鄰近點並非標準術語",
+          "潛在點(Potential Point)": "同樣為杜撰名稱,DBSCAN 不會將樣本歸類為此種角色"
+        },
+        "hook": "排除核心、排除被覆蓋,剩下的只有雜訊"
       },
-      "misconceptions": ["把 Noise 與 Border 混淆"],
+      "misconceptions": ["把雜訊點與邊界點視為同一種「不夠中心」的角色"],
       "related_node_ids": ["n_L23202_002"],
       "exam_appearance": [{"exam": "114-2", "q": 4, "subject": 3}],
       "tags": ["DBSCAN", "聚類"]
@@ -1411,24 +1429,24 @@
       "format": "single_choice",
       "difficulty": "medium",
       "source_level": "L1",
-      "stem": "某電信公司客戶流失預測模型有大量高度相關特徵。希望模型在避免過擬合同時**自動篩選代表性特徵**。最適合的方法為何?",
+      "stem": "精準農業團隊整合土壤 N/P/K、含水率、EC、pH 與多波段衛星指標,共 60 多個高度相關欄位來預測單期作物產量。在控制過擬合的同時,希望讓模型「**自己**」決定哪些欄位真正影響產量、其餘自動關閉。下列何者最直接達成此需求?",
       "options": [
-        {"text": "L1 正則化(Lasso)透過懲罰使部分特徵係數縮為 0", "is_correct": true},
-        {"text": "採用 Early Stopping 監控驗證集損失提前中止訓練回合", "is_correct": false, "trap_type": "不做特徵選擇"},
-        {"text": "L2 正則化(Ridge)抑制權重幅度,但保留全部特徵不歸零", "is_correct": false, "trap_type": "L2 不歸零"},
-        {"text": "先以 VIF 移除多重共線性特徵,再僅以 L2 Ridge 訓練模型", "is_correct": false, "trap_type": "兩者複合但 L2 仍不選特徵"}
+        {"text": "在迴歸目標上加 L1 懲罰(Lasso),逼迫一部分係數收斂到 0,等同於做出特徵取捨", "is_correct": true},
+        {"text": "改採 Early Stopping,在驗證集 RMSE 連續上升時提早結束本輪訓練", "is_correct": false, "trap_type": "Early Stopping 控制的是訓練回合,不會把任何特徵的權重設為 0"},
+        {"text": "改用 L2 懲罰(Ridge),統一收斂全部係數的數值幅度但仍保留所有欄位", "is_correct": false, "trap_type": "Ridge 只縮小,不歸零,故無法產生稀疏的特徵集合"},
+        {"text": "事前先用 VIF 抽掉共線性最嚴重的欄位,再於剩餘欄位上只施加 L2 訓練", "is_correct": false, "trap_type": "VIF 是人工篩,L2 仍不會稀疏化,缺乏「自動關閉特徵」的機制"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "Lasso 自帶特徵選擇:稀疏化使部分權重歸零,自動排除不重要特徵",
+        "correct": "L1 懲罰會在最佳化過程中把對應損失下降貢獻有限的係數壓到精確的 0,等於模型一邊訓練、一邊篩出值得保留的特徵子集,是同時控過擬合與選特徵的標準解",
         "wrong": {
-          "採用 Early Stopping 監控驗證集損失提前中止訓練回合": "Early Stopping 屬訓練回合控制,不會將權重歸零做特徵選擇",
-          "L2 正則化(Ridge)抑制權重幅度,但保留全部特徵不歸零": "Ridge 只縮小不歸零,不做特徵選擇",
-          "先以 VIF 移除多重共線性特徵,再僅以 L2 Ridge 訓練模型": "VIF 是事前手動篩選,L2 仍不會自動選特徵,缺少自動化稀疏化能力"
+          "改採 Early Stopping,在驗證集 RMSE 連續上升時提早結束本輪訓練": "Early Stopping 是早收手,不會更動任何欄位的權重結構,因此不會做出取捨",
+          "改用 L2 懲罰(Ridge),統一收斂全部係數的數值幅度但仍保留所有欄位": "Ridge 只把權重整體縮小,不會精確歸零,因此 60 多個欄位仍會全數存在於模型中",
+          "事前先用 VIF 抽掉共線性最嚴重的欄位,再於剩餘欄位上只施加 L2 訓練": "VIF 屬於人工事前篩選,後段配 L2 仍不會在訓練中自動丟特徵,缺少模型自身的稀疏化能力"
         },
-        "hook": "想自動特徵選 → L1 Lasso;只想穩定 → L2 Ridge"
+        "hook": "要稀疏 → L1 Lasso;只要平滑 → L2 Ridge"
       },
-      "misconceptions": ["以為 L2 也能特徵選擇"],
+      "misconceptions": ["以為 L2 也能讓特徵權重歸零、達到自動特徵選擇"],
       "related_node_ids": ["n_L23304_002"],
       "exam_appearance": [{"exam": "114-2", "q": 32, "subject": 3}],
       "tags": ["正則化", "特徵選擇"]

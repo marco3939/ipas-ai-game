@@ -1,0 +1,273 @@
+﻿[
+  {
+    "file": "questions-batch-n2-cv.json",
+    "id": "q_n2_cv_005",
+    "knowledge_code": "L21102",
+    "schemaVariant": "B_TEMPLATE",
+    "hasOptionsArr": false,
+    "hasOptionsTpl": true,
+    "casesCount": 4,
+    "stem_excerpt": "若輸入特徵圖大小為 {in_size}×{in_size}、卷積核 {k}×{k}、Stride={s}、Padding={p},則輸出特徵圖大小為何?(公式:⌊(N+2P-K)/S⌋+1)",
+    "violations": [
+      "B: TEMPLATE_MISSING_FOR_case_b",
+      "B: TEMPLATE_MISSING_FOR_case_c",
+      "B: TEMPLATE_MISSING_FOR_case_d",
+      "B: NO_q.options_FIELD (renderQuestion cannot pick per-case template — runtime breakage)"
+    ]
+  },
+  {
+    "file": "questions-batch-n2-cv.json",
+    "id": "q_n2_cv_015",
+    "knowledge_code": "L21102",
+    "schemaVariant": "B_TEMPLATE",
+    "hasOptionsArr": false,
+    "hasOptionsTpl": true,
+    "casesCount": 4,
+    "stem_excerpt": "若預測框與真實框的交集面積為 {inter} 平方像素,聯集面積為 {union} 平方像素,則 IoU 約為多少?",
+    "violations": [
+      "B: TEMPLATE_MISSING_FOR_case_b",
+      "B: TEMPLATE_MISSING_FOR_case_c",
+      "B: TEMPLATE_MISSING_FOR_case_d",
+      "B: NO_q.options_FIELD (renderQuestion cannot pick per-case template — runtime breakage)"
+    ]
+  },
+  {
+    "file": "questions-batch-n3-genai.json",
+    "id": "q_n3_genai_010",
+    "knowledge_code": "L21103",
+    "schemaVariant": "C_NO_VARS",
+    "hasOptionsArr": true,
+    "hasOptionsTpl": false,
+    "casesCount": 0,
+    "stem_excerpt": "某 Stable Diffusion 服務在 GPU 上,單一取樣步驟平均耗時 0.08 秒。若使用者將取樣步數從 25 步調整為 50 步,預期單張影像「總取樣時間」會從多少秒上升至多少秒?(忽略其",
+    "violations": [
+      "NO_STEM_VARIABLES"
+    ]
+  },
+  {
+    "file": "questions-batch-n5-deploy.json",
+    "id": "q_n5_018",
+    "knowledge_code": "L21302",
+    "schemaVariant": "A_ARRAY",
+    "hasOptionsArr": true,
+    "hasOptionsTpl": false,
+    "casesCount": 4,
+    "stem_excerpt": "某模型監控只取兩桶分布。訓練期『正常』{train_a}%、『高風險』{train_b}%;當期『正常』{cur_a}%、『高風險』{cur_b}%。請計算 PSI(取小數點後三位四捨五入,公式:Σ(",
+    "violations": []
+  },
+  {
+    "file": "questions-batch-n5-deploy.json",
+    "id": "q_n5_024",
+    "knowledge_code": "L21302",
+    "schemaVariant": "A_ARRAY",
+    "hasOptionsArr": true,
+    "hasOptionsTpl": false,
+    "casesCount": 4,
+    "stem_excerpt": "某 AI 模型在 GPU 訓練時,目前 Batch Size = {orig_bs} 會發生 CUDA OOM。已知記憶體佔用大致與 Batch Size 成線性比例,GPU 總共 {gpu_mem}",
+    "violations": []
+  },
+  {
+    "file": "questions-batch-n6-ml-core.json",
+    "id": "q_n6_002",
+    "knowledge_code": "L23101",
+    "schemaVariant": "B_TEMPLATE",
+    "hasOptionsArr": false,
+    "hasOptionsTpl": true,
+    "casesCount": 3,
+    "stem_excerpt": "某倉儲安防 AI 偵測『包裹遭撬』之事件:背景發生率 P(撬) = {prior};若真實遭撬,警報觸發機率 P(警|撬) = {tpr};若未遭撬,系統誤報率 P(警|未撬) = {fpr}。當警報",
+    "violations": [
+      "B: NO_q.options_FIELD (renderQuestion cannot pick per-case template — runtime breakage)"
+    ]
+  },
+  {
+    "file": "questions-batch-n6-ml-core.json",
+    "id": "q_n6_012",
+    "knowledge_code": "L23103",
+    "schemaVariant": "B_TEMPLATE",
+    "hasOptionsArr": false,
+    "hasOptionsTpl": true,
+    "casesCount": 4,
+    "stem_excerpt": "某 B2B 媒合平台需對 n 個客戶兩兩比對相似度建立潛在合作網路,演算法為 O(n²) 兩層巢狀比對。當客戶數從 n₁ = {n1} 倍增至 n₂ = {n2} 時,執行時間約成幾倍?(以 n₂² ",
+    "violations": [
+      "B: NO_q.options_FIELD (renderQuestion cannot pick per-case template — runtime breakage)"
+    ]
+  },
+  {
+    "file": "questions-batch-n6-ml-core.json",
+    "id": "q_n6_017",
+    "knowledge_code": "L23202",
+    "schemaVariant": "B_TEMPLATE",
+    "hasOptionsArr": false,
+    "hasOptionsTpl": true,
+    "casesCount": 4,
+    "stem_excerpt": "某共享單車違停預測二元邏輯迴歸模型,線性輸出 z = β₀ + β₁·x₁ + β₂·x₂ = {z}。經 Sigmoid σ(z) = 1/(1+e⁻ᶻ) 後,該樣本被預測為違停的機率約為多少?",
+    "violations": [
+      "B: NO_q.options_FIELD (renderQuestion cannot pick per-case template — runtime breakage)"
+    ]
+  },
+  {
+    "file": "questions-batch-n6-ml-core.json",
+    "id": "q_n6_021",
+    "knowledge_code": "L23202",
+    "schemaVariant": "B_TEMPLATE",
+    "hasOptionsArr": false,
+    "hasOptionsTpl": true,
+    "casesCount": 3,
+    "stem_excerpt": "某外送平台一維配送時間資料 [{points}] 進行 K-means(K=2)聚類,最終分群為 [群 A: {a}] / [群 B: {b}],兩群質心分別為 {ca} 與 {cb}。該分群結果之 ",
+    "violations": [
+      "B: NO_q.options_FIELD (renderQuestion cannot pick per-case template — runtime breakage)"
+    ]
+  },
+  {
+    "file": "questions-batch-n7-dl.json",
+    "id": "q_n7_dl_019",
+    "knowledge_code": "L23301",
+    "schemaVariant": "A_ARRAY",
+    "hasOptionsArr": true,
+    "hasOptionsTpl": false,
+    "casesCount": 4,
+    "stem_excerpt": "某資料科學家以 PCA 對 4 維資料降維,計算得到 4 個特徵值依序為 λ₁={l1}、λ₂={l2}、λ₃={l3}、λ₄={l4}。若希望降維後保留至少 80% 的累計變異比例,請問至少要保留前",
+    "violations": []
+  },
+  {
+    "file": "questions-batch-n8-eval-gov.json",
+    "id": "q_n8_001",
+    "knowledge_code": "L23303",
+    "schemaVariant": "A_ARRAY",
+    "hasOptionsArr": true,
+    "hasOptionsTpl": false,
+    "casesCount": 4,
+    "stem_excerpt": "某客服意圖分類模型在驗證集測得混淆矩陣:TP={tp}、FP={fp}、FN={fn}、TN={tn}(正類 = 客訴意圖)。請計算 F1 分數,四捨五入到小數點第三位。",
+    "violations": []
+  },
+  {
+    "file": "questions-batch-n8-eval-gov.json",
+    "id": "q_n8_002",
+    "knowledge_code": "L23303",
+    "schemaVariant": "A_ARRAY",
+    "hasOptionsArr": true,
+    "hasOptionsTpl": false,
+    "casesCount": 4,
+    "stem_excerpt": "某癌症篩檢模型在驗證集測得混淆矩陣:TP={tp}、FP={fp}、FN={fn}、TN={tn}(正類 = 罹癌)。考量漏診後果嚴重,請計算 Recall(召回率),四捨五入到小數點第三位。注意:R",
+    "violations": []
+  },
+  {
+    "file": "questions-batch-n8-eval-gov.json",
+    "id": "q_n8_003",
+    "knowledge_code": "L23303",
+    "schemaVariant": "A_ARRAY",
+    "hasOptionsArr": true,
+    "hasOptionsTpl": false,
+    "casesCount": 4,
+    "stem_excerpt": "某垃圾郵件過濾器在驗證集測得混淆矩陣:TP={tp}、FP={fp}、FN={fn}、TN={tn}(正類 = 垃圾郵件)。為避免誤判正常信件,團隊聚焦 Precision。請計算 Precision",
+    "violations": []
+  },
+  {
+    "file": "questions-batch-n8-eval-gov.json",
+    "id": "q_n8_004",
+    "knowledge_code": "L23303",
+    "schemaVariant": "A_ARRAY",
+    "hasOptionsArr": true,
+    "hasOptionsTpl": false,
+    "casesCount": 4,
+    "stem_excerpt": "某文本情感分類器測得 Precision = {p}、Recall = {r}。請計算 F1 分數,四捨五入到小數點第三位。F1 = 2·P·R/(P+R)。",
+    "violations": []
+  },
+  {
+    "file": "questions-batch-n8-eval-gov.json",
+    "id": "q_n8_005",
+    "knowledge_code": "L23303",
+    "schemaVariant": "A_ARRAY",
+    "hasOptionsArr": true,
+    "hasOptionsTpl": false,
+    "casesCount": 4,
+    "stem_excerpt": "某網路釣魚偵測模型在 1000 筆驗證集得混淆矩陣:TP={tp}、FP={fp}、FN={fn}、TN={tn}(正類 = 釣魚)。請計算 Accuracy 並對照其在不平衡資料下的可信度,四捨五入",
+    "violations": []
+  },
+  {
+    "file": "questions-pc-modes.json",
+    "id": "q_pc_calc_001",
+    "knowledge_code": "L23303",
+    "schemaVariant": "A_ARRAY",
+    "hasOptionsArr": true,
+    "hasOptionsTpl": false,
+    "casesCount": 4,
+    "stem_excerpt": "某醫療診斷模型在測試集得到混淆矩陣:TP={tp}、FP={fp}、FN={fn}、TN={tn}。請計算 F1-Score(取小數點後三位四捨五入)。",
+    "violations": []
+  },
+  {
+    "file": "questions-pc-modes.json",
+    "id": "q_pc_calc_002",
+    "knowledge_code": "L23202",
+    "schemaVariant": "A_ARRAY",
+    "hasOptionsArr": true,
+    "hasOptionsTpl": false,
+    "casesCount": 4,
+    "stem_excerpt": "電商平台分析購物籃,發現 P(購買 A)={pa}、P(購買 B)={pb}、P(同時購買 A 和 B)={pab}。請計算關聯規則 A→B 的 Lift 值(取兩位小數)。",
+    "violations": []
+  },
+  {
+    "file": "questions-pc-modes.json",
+    "id": "q_pc_calc_003",
+    "knowledge_code": "L21302",
+    "schemaVariant": "A_ARRAY",
+    "hasOptionsArr": true,
+    "hasOptionsTpl": false,
+    "casesCount": 4,
+    "stem_excerpt": "某企業導入 AI 客服系統,初期投資 {cost} 萬元,系統運作一年後創造收益 {gain} 萬元。請計算投資報酬率 ROI(以百分比表示,取整數)。",
+    "violations": []
+  },
+  {
+    "file": "questions-pg-eval.json",
+    "id": "q_pg_007",
+    "knowledge_code": "L23303",
+    "schemaVariant": "A_ARRAY",
+    "hasOptionsArr": true,
+    "hasOptionsTpl": false,
+    "casesCount": 4,
+    "stem_excerpt": "某詐欺偵測模型在驗證集表現如下混淆矩陣:TP={tp}、FP={fp}、FN={fn}、TN={tn}(正樣本即詐欺)。資料極度不平衡(正樣本 < 1%)。請計算 Matthews Correlati",
+    "violations": []
+  },
+  {
+    "file": "questions.json",
+    "id": "q_0006",
+    "knowledge_code": "L23303",
+    "schemaVariant": "B_TEMPLATE",
+    "hasOptionsArr": false,
+    "hasOptionsTpl": true,
+    "casesCount": 4,
+    "stem_excerpt": "若某二元分類模型之 Precision = {p}、Recall = {r},則 F1 分數約為多少?",
+    "violations": [
+      "B: TEMPLATE_MISSING_FOR_case_b",
+      "B: TEMPLATE_MISSING_FOR_case_c",
+      "B: TEMPLATE_MISSING_FOR_case_d",
+      "B: NO_q.options_FIELD (renderQuestion cannot pick per-case template — runtime breakage)"
+    ]
+  },
+  {
+    "file": "questions.json",
+    "id": "q_0025",
+    "knowledge_code": "L23102",
+    "schemaVariant": "C_NO_VARS",
+    "hasOptionsArr": true,
+    "hasOptionsTpl": false,
+    "casesCount": 0,
+    "stem_excerpt": "國家太空中心對某顆觀測衛星的多波段遙測資料做主成分分析,前四個成分得到的特徵值依序為 λ₁ = 4.5、λ₂ = 2.7、λ₃ = 0.9、λ₄ = 0.9(其餘成分可忽略)。團隊定下「累計變異量需達",
+    "violations": [
+      "NO_STEM_VARIABLES"
+    ]
+  },
+  {
+    "file": "questions.json",
+    "id": "q_0042",
+    "knowledge_code": "L23103",
+    "schemaVariant": "C_NO_VARS",
+    "hasOptionsArr": true,
+    "hasOptionsTpl": false,
+    "casesCount": 0,
+    "stem_excerpt": "某客戶相似度比對系統需逐一比對每位客戶與其他所有客戶的資料組合,此演算法的時間複雜度為何?",
+    "violations": [
+      "NO_STEM_VARIABLES"
+    ]
+  }
+]

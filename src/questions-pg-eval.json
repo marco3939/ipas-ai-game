@@ -192,22 +192,22 @@
       "source_level": "L2",
       "stem": "某詐欺偵測模型在驗證集表現如下混淆矩陣:TP={tp}、FP={fp}、FN={fn}、TN={tn}(正樣本即詐欺)。資料極度不平衡(正樣本 < 1%)。請計算 Matthews Correlation Coefficient(MCC),四捨五入到小數點第三位。MCC 公式:(TP·TN - FP·FN) / sqrt((TP+FP)·(TP+FN)·(TN+FP)·(TN+FN))",
       "stem_variables": {
-        "case_a": {"tp": "30", "fp": "20", "fn": "10", "tn": "9940", "answer": "0.766", "wrong1": "0.857", "wrong2": "0.500", "wrong3": "0.997"},
-        "case_b": {"tp": "20", "fp": "30", "fn": "20", "tn": "9930", "answer": "0.491", "wrong1": "0.400", "wrong2": "0.500", "wrong3": "0.995"},
-        "case_c": {"tp": "45", "fp": "15", "fn": "15", "tn": "9925", "answer": "0.812", "wrong1": "0.750", "wrong2": "0.667", "wrong3": "0.997"},
-        "case_d": {"tp": "10", "fp": "40", "fn": "30", "tn": "9920", "answer": "0.272", "wrong1": "0.200", "wrong2": "0.250", "wrong3": "0.993"}
+        "case_a": {"tp": "30", "fp": "20", "fn": "10", "tn": "9940", "answer": "0.669", "wrong1": "0.874", "wrong2": "0.667", "wrong3": "0.997"},
+        "case_b": {"tp": "20", "fp": "30", "fn": "20", "tn": "9930", "answer": "0.445", "wrong1": "0.748", "wrong2": "0.444", "wrong3": "0.995"},
+        "case_c": {"tp": "45", "fp": "15", "fn": "15", "tn": "9925", "answer": "0.748", "wrong1": "0.874", "wrong2": "0.750", "wrong3": "0.997"},
+        "case_d": {"tp": "10", "fp": "40", "fn": "30", "tn": "9920", "answer": "0.220", "wrong1": "0.623", "wrong2": "0.222", "wrong3": "0.993"}
       },
       "options": [
         {"text": "{answer},MCC 同時考量四個矩陣象限與類別比例,最不易被多數類掩蓋", "is_correct": true},
-        {"text": "{wrong1},僅以 Recall = TP/(TP+FN) 計算,完全未納入 FP 與 TN", "is_correct": false, "trap_type": "Recall 只看 TP/正類錯誤,忽略多數類資訊"},
+        {"text": "{wrong1},僅以 Balanced Accuracy = (Recall + Specificity) / 2 計算,屬算術平均;未對四象限做幾何平均標準化", "is_correct": false, "trap_type": "BA 雖比 Accuracy 公平,仍未對 P-N 比例做幾何標準化"},
         {"text": "{wrong2},僅以 F1 = 2·P·R/(P+R) 計算,只考慮 TP/FP/FN 三象限,忽略 TN", "is_correct": false, "trap_type": "F1 不含 TN,在不平衡資料仍可能誤導,MCC 是其進階版"},
         {"text": "{wrong3},以 Accuracy = (TP+TN)/全體計算,被 TN 主導而高估", "is_correct": false, "trap_type": "極不平衡時 Accuracy 被 TN 主導,常達 99% 卻無實質意義"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "MCC = (TP·TN - FP·FN) / sqrt((TP+FP)·(TP+FN)·(TN+FP)·(TN+FN));範圍 [-1, +1],+1=完美、0=隨機、-1=完全反向。以 case_a 為例:分子 = 30·9940 - 20·10 = 298200 - 200 = 298000;分母 = sqrt(50·40·9960·9950) = sqrt(50·40·99,102,000) ≈ sqrt(198,204,000,000) ≈ 388,927;MCC ≈ 298000 / 388927 ≈ 0.766。MCC 同時納入四個象限,且分母對類別比例做標準化,是極度不平衡資料下最不易被誤導的指標,優於 F1(忽略 TN)與 Accuracy(被 TN 主導)。",
+        "correct": "MCC = (TP·TN - FP·FN) / sqrt((TP+FP)·(TP+FN)·(TN+FP)·(TN+FN));範圍 [-1, +1],+1=完美、0=隨機、-1=完全反向。以 case_a 為例:分子 = 30·9940 - 20·10 = 298200 - 200 = 298000;分母 = sqrt(50·40·9960·9950) = sqrt(198,012,000,000) ≈ 445,201;MCC ≈ 298000 / 445201 ≈ 0.669。MCC 同時納入四個象限,且分母對類別比例做標準化,是極度不平衡資料下最不易被誤導的指標,優於 F1(忽略 TN)與 Accuracy(被 TN 主導)。",
         "wrong": {
-          "{wrong1},僅以 Recall = TP/(TP+FN) 計算,完全未納入 FP 與 TN": "Recall 只衡量正類被找出比例,完全不考慮 FP(誤報)與 TN(正確排除),在詐欺偵測會產生『高 Recall 但濫報』的偏頗模型",
+          "{wrong1},僅以 Balanced Accuracy = (Recall + Specificity) / 2 計算,屬算術平均;未對四象限做幾何平均標準化": "Balanced Accuracy = (Recall + Specificity) / 2 比 Accuracy 對少數類更公平,但仍是算術平均、未對 P/N 數量做幾何標準化;MCC 用四個邊和的乘積開根號,對極不平衡情境最穩健",
           "{wrong2},僅以 F1 = 2·P·R/(P+R) 計算,只考慮 TP/FP/FN 三象限,忽略 TN": "F1 不含 TN,在不平衡資料仍可能誤導(雖優於 Accuracy);MCC 將 TN 納入並用幾何平均做標準化,更嚴謹",
           "{wrong3},以 Accuracy = (TP+TN)/全體計算,被 TN 主導而高估": "極度不平衡(正樣本 <1%)時,模型全猜陰性 Accuracy 也達 99%,完全失效;MCC 透過分母項抑制此效應"
         },
