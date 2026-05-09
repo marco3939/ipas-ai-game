@@ -561,15 +561,61 @@ async function loadQuestions() {
   }
 }
 
-// === Variation 鐵律 #1 變化型生成 ===
+// === Variation 鐵律 #1 結構化下鑽(換角度 + 易混淆 + 加深難度)===
 function generateVariation(originalQ, count = 3) {
-  // 找同 node_id 或 related_node_ids 的其他題
-  const sameNode = QUESTIONS.filter(q => q.id !== originalQ.id && q.node_id === originalQ.node_id);
-  const relatedNodes = (originalQ.related_node_ids || []);
-  const sameRelated = QUESTIONS.filter(q => relatedNodes.includes(q.node_id));
-  const pool = [...sameNode, ...sameRelated, originalQ]; // 包含原題作為最後保險
-  const picks = RNG.pickN(pool, count);
-  return picks.map(renderQuestion);
+  const candidates = QUESTIONS.filter(q => q.id !== originalQ.id); // **絕不包含原題**
+  const sameNode = candidates.filter(q => q.node_id === originalQ.node_id);
+  const relatedIds = originalQ.related_node_ids || [];
+  const relatedNode = candidates.filter(q => relatedIds.includes(q.node_id) && q.node_id !== originalQ.node_id);
+  const sameCode = candidates.filter(q => q.knowledge_code === originalQ.knowledge_code && !sameNode.includes(q) && !relatedNode.includes(q));
+  const diffOrder = { easy: 0, medium: 1, hard: 2 };
+  const harderThan = (level) => (q) => (diffOrder[q.difficulty] ?? 1) > (diffOrder[level] ?? 1);
+
+  const result = [];
+  const used = new Set();
+  const addPick = (q, strategy) => {
+    if (!q || used.has(q.id)) return false;
+    used.add(q.id);
+    q._drillStrategy = strategy;
+    result.push(q);
+    return true;
+  };
+
+  // 變化 1:換角度(同 node_id 不同 format)
+  const diffFormat = sameNode.filter(q => q.format !== originalQ.format);
+  if (!addPick(RNG.pick(diffFormat), '換角度')) {
+    addPick(RNG.pick(sameNode), '同知識點');
+  }
+
+  // 變化 2:易混淆對手(related_node_ids)
+  if (!addPick(RNG.pick(relatedNode.filter(q => !used.has(q.id))), '易混淆對手')) {
+    addPick(RNG.pick(sameCode.filter(q => !used.has(q.id))), '同主題擴展');
+  }
+
+  // 變化 3:加深難度(同主題的 hard 題)
+  const harderPool = [...sameNode, ...relatedNode, ...sameCode]
+    .filter(q => !used.has(q.id) && harderThan(originalQ.difficulty || 'medium')(q));
+  if (!addPick(RNG.pick(harderPool), '加深難度')) {
+    // 若無更難,選 errata_critical 或 must_cover 的題
+    const critical = [...sameNode, ...relatedNode, ...sameCode]
+      .filter(q => !used.has(q.id) && (q.errata_critical || q.must_cover));
+    if (!addPick(RNG.pick(critical), '勘誤強化')) {
+      addPick(RNG.pick([...sameNode, ...relatedNode, ...sameCode].filter(q => !used.has(q.id))), '同主題綜合');
+    }
+  }
+
+  // 補足
+  while (result.length < count) {
+    const remaining = [...sameNode, ...relatedNode, ...sameCode].filter(q => !used.has(q.id));
+    if (remaining.length === 0) break;
+    addPick(RNG.pick(remaining), '同主題補強');
+  }
+
+  return result.map(q => {
+    const rendered = renderQuestion(q);
+    rendered._drillStrategy = q._drillStrategy;
+    return rendered;
+  });
 }
 
 // === Toast ===
@@ -724,10 +770,10 @@ const PlayEngine = {
   },
 
   drill() {
-    // 鐵律 #1:對錯題生成 3 個變化型,連續挑戰
+    // 鐵律 #1:對錯題生成 3 個結構化變化型(換角度 / 易混淆 / 加深難度)
     const variations = generateVariation(this.current, 3);
     if (variations.length === 0) { showToast('找不到變化型,回原題'); return; }
-    DrillSession.start(this.current.node_id, variations);
+    DrillSession.start(this.current.node_id, variations, this.current);
   },
 
   next() {
@@ -736,25 +782,57 @@ const PlayEngine = {
   }
 };
 
-// === Drill Session(鐵律 #1 下鑽連戰)===
+// === Drill Session(鐵律 #1 結構化下鑽連戰)===
 const DrillSession = {
-  queue: [], targetNode: null, correct: 0,
-  start(nodeId, questions) {
-    this.queue = questions; this.targetNode = nodeId; this.correct = 0;
-    showToast(`🎯 下鑽訓練啟動:${questions.length} 題變化型`);
+  queue: [], targetNode: null, correct: 0, total: 0, originalQ: null,
+  strategyEmoji: { '換角度': '🔄', '易混淆對手': '⚔️', '加深難度': '🔥', '勘誤強化': '⚠️',
+    '同知識點': '📚', '同主題擴展': '🌐', '同主題綜合': '🎯', '同主題補強': '➕' },
+  start(nodeId, questions, originalQ) {
+    this.queue = questions; this.targetNode = nodeId; this.originalQ = originalQ;
+    this.correct = 0; this.total = questions.length;
+    showToast(`🎯 結構化下鑽啟動:${questions.length} 題(換角度 → 易混淆 → 加深難度)`, 3500);
     this.next();
   },
   next() {
     if (this.queue.length === 0) {
       Mastery.drillBonus(this.targetNode);
-      Wrongbook.markMastered(PlayEngine.current.id);
-      showToast(`🎉 下鑽完成!熟練度 +20%`);
-      setTimeout(goHome, 1500);
+      if (PlayEngine.current && PlayEngine.current.id) Wrongbook.markMastered(PlayEngine.current.id);
+      const ratio = this.total > 0 ? Math.round(this.correct / this.total * 100) : 100;
+      showToast(`🎉 下鑽完成!正答 ${this.correct}/${this.total} (${ratio}%) · 熟練度 +20%`, 3500);
+      if (window.confetti && this.correct === this.total) GameFX.bigConfetti();
+      setTimeout(goHome, 2000);
       return;
     }
     const q = this.queue.shift();
-    PlayEngine.show(q, { contextHTML: `<div class="boss-bar"><div class="boss-name">🎯 下鑽訓練 (剩 ${this.queue.length+1})</div></div>` });
-    PlayEngine.onNext = () => DrillSession.next();
+    const strategy = q._drillStrategy || '同主題';
+    const emoji = this.strategyEmoji[strategy] || '🎯';
+    const stepNum = this.total - this.queue.length;
+    const ctx = `<div class="boss-bar" style="background:linear-gradient(90deg,#ef4444,#f59e0b)">
+      <div class="boss-name">${emoji} 下鑽訓練 ${stepNum}/${this.total} — 策略:<strong style="color:#fef3c7">${strategy}</strong></div>
+      <div style="font-size:0.85rem;color:rgba(255,255,255,0.8);margin-top:4px">
+        ${strategy === '換角度' ? '同一知識點換不同形式呈現,測試你是否真懂概念' : ''}
+        ${strategy === '易混淆對手' ? '從相關易混淆知識點挑題,訓練辨別能力' : ''}
+        ${strategy === '加深難度' ? '更難的陷阱題,挑戰你對細節的掌握' : ''}
+        ${strategy === '勘誤強化' ? '官方勘誤關鍵點,絕不能漏' : ''}
+        ${strategy === '同知識點' ? '同一知識點不同題目,鞏固記憶' : ''}
+        ${strategy === '同主題擴展' ? '相同知識編碼下的其他角度' : ''}
+        ${strategy === '同主題綜合' ? '同主題下的綜合應用' : ''}
+        ${strategy === '同主題補強' ? '主題內補強訓練' : ''}
+      </div>
+    </div>`;
+    PlayEngine.show(q, { contextHTML: ctx });
+    PlayEngine.onNext = () => {
+      // 統計正答(從 PlayEngine 的最後一題狀態判斷)
+      DrillSession.next();
+    };
+    // 包裝 PlayEngine.answer 以便統計正答
+    const origAnswer = PlayEngine.answer.bind(PlayEngine);
+    PlayEngine.answer = function(key) {
+      const o = this.current.options.find(opt => opt.key === key);
+      if (o && o.is_correct) DrillSession.correct++;
+      origAnswer(key);
+      PlayEngine.answer = origAnswer; // 還原
+    };
   }
 };
 
