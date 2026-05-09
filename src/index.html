@@ -616,7 +616,25 @@ function generateVariation(originalQ, count = 3) {
     addPick(RNG.pick(sameCodeFiltered.filter(q => !used.has(q.id))), '同主題延伸');
   }
 
-  // 不再硬補 sameCode 不相關題目!寧少勿濫
+  // 最終保險:若三策略全失敗 → 用同 knowledge_code 任意題(誠實標註寬鬆 fallback)
+  if (result.length === 0) {
+    const anyInCode = candidates.filter(q => q.knowledge_code === originalQ.knowledge_code);
+    if (anyInCode.length > 0) {
+      const q = RNG.pick(anyInCode);
+      q._drillStrategy = '寬鬆延伸';
+      result.push(q);
+    }
+    // 若同 code 也沒題,使用同 subject 任意題
+    if (result.length === 0) {
+      const anyInSubject = candidates.filter(q => q.subject === originalQ.subject);
+      if (anyInSubject.length > 0) {
+        const q = RNG.pick(anyInSubject);
+        q._drillStrategy = '寬鬆延伸';
+        result.push(q);
+      }
+    }
+  }
+
   return result.map(q => {
     const rendered = renderQuestion(q);
     rendered._drillStrategy = q._drillStrategy;
@@ -811,9 +829,12 @@ const PlayEngine = {
   },
 
   drill() {
-    // 鐵律 #1:對錯題生成 3 個結構化變化型(換角度 / 易混淆 / 加深難度)
+    // 鐵律 #1:對錯題生成結構化變化型(換角度 / 易混淆 / 加深難度)
     const variations = generateVariation(this.current, 3);
-    if (variations.length === 0) { showToast('找不到變化型,回原題'); return; }
+    if (!variations || variations.length === 0) {
+      showToast('⚠️ 此題知識點變化型不足,題庫尚未充實。請繼續下一題', 3000);
+      return;
+    }
     DrillSession.start(this.current.node_id, variations, this.current);
   },
 
@@ -829,18 +850,33 @@ const DrillSession = {
   strategyEmoji: { '換角度': '🔄', '易混淆對手': '⚔️', '加深難度': '🔥', '勘誤強化': '⚠️',
     '同知識點': '📚', '同主題擴展': '🌐', '同主題綜合': '🎯', '同主題補強': '➕' },
   start(nodeId, questions, originalQ) {
+    if (!questions || questions.length === 0) {
+      showToast('⚠️ 找不到變化型題目,題庫該知識點不足。請繼續其他題目', 3500);
+      setTimeout(() => {
+        if (PlayEngine.onNext) PlayEngine.onNext();
+      }, 1200);
+      return;
+    }
     this.queue = questions; this.targetNode = nodeId; this.originalQ = originalQ;
     this.correct = 0; this.total = questions.length;
-    showToast(`🎯 結構化下鑽啟動:${questions.length} 題(換角度 → 易混淆 → 加深難度)`, 3500);
+    showToast(`🎯 結構化下鑽啟動:${questions.length} 題(${questions.map(q => q._drillStrategy).join(' → ')})`, 3500);
     this.next();
   },
   next() {
     if (this.queue.length === 0) {
+      // 必須有實際做過題目才算完成,total = 0 不算
+      if (this.total === 0) {
+        // 不應該發生(start 已防 0),但保險
+        if (PlayEngine.onNext) PlayEngine.onNext();
+        return;
+      }
       Mastery.drillBonus(this.targetNode);
       if (PlayEngine.current && PlayEngine.current.id) Wrongbook.markMastered(PlayEngine.current.id);
-      const ratio = this.total > 0 ? Math.round(this.correct / this.total * 100) : 100;
-      showToast(`🎉 下鑽完成!正答 ${this.correct}/${this.total} (${ratio}%) · 熟練度 +20%`, 3500);
-      if (window.confetti && this.correct === this.total) GameFX.bigConfetti();
+      const ratio = Math.round(this.correct / this.total * 100);
+      const allCorrect = this.correct === this.total;
+      showToast(`${allCorrect ? '🎉' : '✓'} 下鑽完成!正答 ${this.correct}/${this.total} (${ratio}%) · 熟練度 +20%`, 3500);
+      // 只在「實際做題且全對」才放大煙火
+      if (window.confetti && allCorrect && this.total > 0) GameFX.bigConfetti();
       setTimeout(goHome, 2000);
       return;
     }
