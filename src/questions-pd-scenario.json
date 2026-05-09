@@ -37,9 +37,9 @@
     },
     {
       "id": "q_pd_002",
-      "knowledge_code": "L24201",
-      "node_id": "n_L24201_002",
-      "subject": 4,
+      "knowledge_code": "L21203",
+      "node_id": "n_L21203_001",
+      "subject": 1,
       "format": "single_choice",
       "difficulty": "hard",
       "source_level": "L2",
@@ -62,7 +62,7 @@
         "hook": "PDPA 第 8 條告知六項口訣:機構、目的、類別、期間、地區、對象 + 權利義務"
       },
       "misconceptions": ["將 PDPA 與 GDPR 條文混淆", "誤把『安全維護』當作『事前告知』內容", "忽略『利用地區』在雲端時代的重要性"],
-      "related_node_ids": ["n_L24201_001", "n_L24201_002", "n_L24201_003"],
+      "related_node_ids": ["n_L21203_001", "n_L21203_002"],
       "tags": ["PDPA", "事前告知", "errata進化版", "智慧醫療", "情境決策"]
     },
     {
@@ -186,9 +186,9 @@
     },
     {
       "id": "q_pd_007",
-      "knowledge_code": "L22202",
-      "node_id": "n_L22202_003",
-      "subject": 2,
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_002",
+      "subject": 3,
       "format": "single_choice",
       "difficulty": "hard",
       "source_level": "L2",
@@ -210,7 +210,7 @@
         "hook": "DBSCAN 高維失效三步驟:降維(PCA/UMAP)→ 換演算法(HDBSCAN)→ 領域特徵選擇;不要靠調 ε / MinPts 硬撐"
       },
       "misconceptions": ["以為調 ε 或 MinPts 可解決維度詛咒", "誤認 K-Means 不受高維影響", "忽略降維是高維分群的標準預處理"],
-      "related_node_ids": ["n_L22202_002", "n_L22202_003", "n_L22202_005"],
+      "related_node_ids": ["n_L23202_002", "n_L23202_008", "n_L23102_001"],
       "tags": ["DBSCAN", "維度詛咒", "進化版", "點雲", "情境決策"]
     },
     {
@@ -244,9 +244,9 @@
     },
     {
       "id": "q_pd_009",
-      "knowledge_code": "L24102",
-      "node_id": "n_L24102_002",
-      "subject": 4,
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_003",
+      "subject": 1,
       "format": "single_choice",
       "difficulty": "hard",
       "source_level": "L2",
@@ -268,14 +268,14 @@
         "hook": "PSI 黃金分界:0.1 / 0.25;< 0.1 穩定、0.1~0.25 輕微監控、> 0.25 顯著漂移立即處置"
       },
       "misconceptions": ["把 PSI 數值方向理解反", "誤認 PSI < 1 都是安全的", "忽略單一關鍵特徵漂移的影響"],
-      "related_node_ids": ["n_L24102_001", "n_L24102_002", "n_L24102_004"],
+      "related_node_ids": ["n_L21302_003", "n_L21302_002"],
       "tags": ["PSI", "Drift偵測", "MLOps", "進化版", "情境決策"]
     },
     {
       "id": "q_pd_010",
-      "knowledge_code": "L23502",
-      "node_id": "n_L23502_004",
-      "subject": 3,
+      "knowledge_code": "L21103",
+      "node_id": "n_L21103_001",
+      "subject": 1,
       "format": "single_choice",
       "difficulty": "hard",
       "source_level": "L2",
@@ -297,14 +297,14 @@
         "hook": "2025 年生成模型選型:文生圖選 Diffusion(SD/SDXL/Flux);潛空間操作選 VAE;特定風格遷移可選 StyleGAN;PixelCNN/PixelRNN 已被取代"
       },
       "misconceptions": ["把 VAE / GAN / Diffusion 視為等價選項", "忽略文字條件能力的重要性", "輕忽訓練成本與時程限制"],
-      "related_node_ids": ["n_L23502_002", "n_L23502_004", "n_L23502_006"],
+      "related_node_ids": ["n_L21103_001", "n_L21103_002", "n_L21103_003"],
       "tags": ["生成模型", "Diffusion", "VAE", "GAN", "進化版", "情境決策"]
     },
     {
       "id": "q_pd_011",
-      "knowledge_code": "L24202",
-      "node_id": "n_L24202_003",
-      "subject": 4,
+      "knowledge_code": "L23401",
+      "node_id": "n_L23401_002",
+      "subject": 3,
       "format": "single_choice",
       "difficulty": "hard",
       "source_level": "L2",
@@ -326,14 +326,14 @@
         "hook": "多方協作隱私保護四件組:FL(資料不動)+ HE(密文聚合)+ MPC(分散運算)+ DP(防逆推);缺一不可"
       },
       "misconceptions": ["把 TLS 等同於資料隱私保護", "認為 DP 可單獨解決所有問題", "把法律合規與技術手段混為一談"],
-      "related_node_ids": ["n_L24202_002", "n_L24202_003", "n_L24202_005"],
+      "related_node_ids": ["n_L23401_001", "n_L23401_002", "n_L23401_003"],
       "tags": ["FL", "HE", "MPC", "DP", "進化版", "金融合作", "情境決策"]
     },
     {
       "id": "q_pd_012",
-      "knowledge_code": "L24102",
-      "node_id": "n_L24102_005",
-      "subject": 4,
+      "knowledge_code": "L23402",
+      "node_id": "n_L23402_002",
+      "subject": 3,
       "format": "single_choice",
       "difficulty": "hard",
       "source_level": "L2",
@@ -355,14 +355,14 @@
         "hook": "公平緩解三層次:Pre(重採樣/重加權)+ In(對抗式去偏)+ Post(Equalized Odds 校準);監控用 DI Ratio + 80% rule"
       },
       "misconceptions": ["以為刪敏感欄位就能去偏", "認為加噪聲能解決公平性", "誤把硬偏移當作合法緩解手段"],
-      "related_node_ids": ["n_L24102_003", "n_L24102_005", "n_L24102_007"],
+      "related_node_ids": ["n_L23402_001", "n_L23402_002", "n_L23402_003"],
       "tags": ["公平性", "Adversarial Debiasing", "Equalized Odds", "進化版", "招聘AI", "情境決策"]
     },
     {
       "id": "q_pd_013",
-      "knowledge_code": "L24202",
-      "node_id": "n_L24202_006",
-      "subject": 4,
+      "knowledge_code": "L21203",
+      "node_id": "n_L21203_004",
+      "subject": 1,
       "format": "single_choice",
       "difficulty": "hard",
       "source_level": "L2",
@@ -384,14 +384,14 @@
         "hook": "智慧城市 AI 治理四層:技術(隱私保護)+ 公平(多族群測試)+ 應用(human-in-the-loop)+ 治理(DPIA + 獨立監督)"
       },
       "misconceptions": ["以為高準確率即代表合規", "認為內網部署可解決所有風險", "誤用公益豁免規避全部義務"],
-      "related_node_ids": ["n_L24202_004", "n_L24202_006", "n_L24102_005"],
+      "related_node_ids": ["n_L21203_003", "n_L21203_004", "n_L23402_002"],
       "tags": ["智慧城市", "CV治理", "公平性", "隱私", "課責", "跨產業綜合", "情境決策"]
     },
     {
       "id": "q_pd_014",
-      "knowledge_code": "L24102",
-      "node_id": "n_L24102_006",
-      "subject": 4,
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_003",
+      "subject": 1,
       "format": "single_choice",
       "difficulty": "hard",
       "source_level": "L2",
@@ -413,14 +413,14 @@
         "hook": "工業推薦系統 = retrieval(向量索引粗排)+ ranking(輕量精排)+ Feature Store(一致性)+ Drift 監測自動 retrain"
       },
       "misconceptions": ["以為單一大模型可解決推薦延遲", "輕忽 Feature Store 的工程必要性", "認為預計算結果可取代即時推薦"],
-      "related_node_ids": ["n_L24102_004", "n_L24102_006", "n_L23502_005"],
+      "related_node_ids": ["n_L21302_003", "n_L21302_002", "n_L21302_005"],
       "tags": ["推薦系統", "Two-tower", "Feature Store", "Drift監測", "跨產業綜合", "情境決策"]
     },
     {
       "id": "q_pd_015",
-      "knowledge_code": "L24102",
-      "node_id": "n_L24102_008",
-      "subject": 4,
+      "knowledge_code": "L21101",
+      "node_id": "n_L21101_006",
+      "subject": 1,
       "format": "single_choice",
       "difficulty": "hard",
       "source_level": "L2",
@@ -442,7 +442,7 @@
         "hook": "法律 RAG 四要素:權威向量庫 + 強制 citation + self-RAG/reflection + 私有部署/enterprise tier"
       },
       "misconceptions": ["以為 prompt 可禁止幻覺", "誤把 fine-tune 當作消除幻覺手段", "把『拒用』當作工程答案"],
-      "related_node_ids": ["n_L24102_006", "n_L24102_008", "n_L23502_007"],
+      "related_node_ids": ["n_L21101_006", "n_L21103_004"],
       "tags": ["RAG", "幻覺", "法律AI", "合規", "跨產業綜合", "情境決策"]
     }
   ]

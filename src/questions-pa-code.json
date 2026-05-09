@@ -309,7 +309,7 @@
     {
       "id": "q_pa_011",
       "knowledge_code": "L23302",
-      "node_id": "n_L23302_003",
+      "node_id": "NEEDS_DELETION",
       "subject": 3,
       "format": "code_reading",
       "difficulty": "medium",
@@ -339,7 +339,7 @@
     {
       "id": "q_pa_012",
       "knowledge_code": "L23302",
-      "node_id": "n_L23302_005",
+      "node_id": "NEEDS_DELETION",
       "subject": 3,
       "format": "code_reading",
       "difficulty": "hard",
@@ -428,8 +428,8 @@
     },
     {
       "id": "q_pa_015",
-      "knowledge_code": "L23502",
-      "node_id": "n_L23502_001",
+      "knowledge_code": "NEEDS_DELETION",
+      "node_id": "NEEDS_DELETION",
       "subject": 3,
       "format": "code_reading",
       "difficulty": "medium",
@@ -453,8 +453,8 @@
         "hook": "顏色在前線型在後;-=實 / --=虛 / :=點 / -.=點虛"
       },
       "misconceptions": ["把 -- 當實線", "把 -- 與 : 混用"],
-      "related_node_ids": ["n_L23502_001"],
-      "tags": ["matplotlib", "plot", "格式字串"]
+      "related_node_ids": ["NEEDS_DELETION"],
+      "tags": ["matplotlib", "plot", "格式字串", "NEEDS_DELETION"]
     }
   ]
 }

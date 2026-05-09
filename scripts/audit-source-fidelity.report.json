@@ -1,8 +1,8 @@
 {
   "summary": {
     "totalQ": 155,
-    "violationCount": 71,
-    "compliantPct": "54.2",
+    "violationCount": 32,
+    "compliantPct": "79.4",
     "kbNodeCount": 94,
     "kbCodeCount": 21
   },
@@ -12,7 +12,7 @@
       "id": "q_pa_011",
       "stem": "在自駕車感知模型訓練中,工程師忘記呼叫 optimizer.zero_grad()。請問此時連續兩次 loss.back",
       "issues": [
-        "node_id \"n_L23302_003\" 不存在於 kb",
+        "node_id \"NEEDS_DELETION\" 不存在於 kb",
         "related_node_ids 中 \"n_L23302_003\" 不存在於 kb"
       ]
     },
@@ -21,7 +21,7 @@
       "id": "q_pa_012",
       "stem": "在多類別新聞分類,工程師對模型最後一層 logits 直接接 nn.CrossEntropyLoss,但又額外手動套了 ",
       "issues": [
-        "node_id \"n_L23302_005\" 不存在於 kb",
+        "node_id \"NEEDS_DELETION\" 不存在於 kb",
         "related_node_ids 中 \"n_L23302_005\" 不存在於 kb"
       ]
     },
@@ -30,75 +30,9 @@
       "id": "q_pa_015",
       "stem": "在實驗結果視覺化中,工程師同時繪製訓練與驗證準確率。請問下列 matplotlib 程式中,'r--' 的意義為何?",
       "issues": [
-        "node_id \"n_L23502_001\" 不存在於 kb",
-        "knowledge_code \"L23502\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23502_001\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pb-visual.json",
-      "id": "q_pb_001",
-      "stem": "下表為某團隊將 VGG16 用於『工廠 PCB 瑕疵分類』的 torchsummary 完整輸出(輸入 224×224×",
-      "issues": [
-        "node_id \"n_L23204_001\" 不存在於 kb",
-        "knowledge_code \"L23204\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23204_001\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23204_002\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pb-visual.json",
-      "id": "q_pb_002",
-      "stem": "同一份 VGG16 表格,某團隊將其應用於『胸部 X 光肺炎篩檢』,訓練時發現某層在反向傳播計算時最耗 GPU 時間。*",
-      "issues": [
-        "node_id \"n_L23204_002\" 不存在於 kb",
-        "knowledge_code \"L23204\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23204_001\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23204_002\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pb-visual.json",
-      "id": "q_pb_003",
-      "stem": "**遷移學習**情境:某新創欲將 ImageNet 預訓練 VGG16 微調至『貓狗 2 分類』,但資料集僅 800 張",
-      "issues": [
-        "node_id \"n_L23204_003\" 不存在於 kb",
-        "knowledge_code \"L23204\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23204_001\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23204_004\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pb-visual.json",
-      "id": "q_pb_004",
-      "stem": "某學生想用『**1 GB 顯卡**』(如 GTX 1050)訓練上表 VGG16,batch size = 32、FP3",
-      "issues": [
-        "node_id \"n_L23204_004\" 不存在於 kb",
-        "knowledge_code \"L23204\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23204_001\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23204_005\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pb-visual.json",
-      "id": "q_pb_005",
-      "stem": "某 NLP 團隊使用標準 Transformer Encoder(d_model=512,heads=8,FFN_dim",
-      "issues": [
-        "node_id \"n_L23205_001\" 不存在於 kb",
-        "knowledge_code \"L23205\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23205_001\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23205_002\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pb-visual.json",
-      "id": "q_pb_006",
-      "stem": "下表為某『中文摘要 Transformer Decoder』的 6 層每層運算延遲(ms),架構 d_model=512",
-      "issues": [
-        "node_id \"n_L23205_002\" 不存在於 kb",
-        "knowledge_code \"L23205\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23205_002\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23205_003\" 不存在於 kb"
+        "node_id \"NEEDS_DELETION\" 不存在於 kb",
+        "knowledge_code \"NEEDS_DELETION\" 不存在於 kb",
+        "related_node_ids 中 \"NEEDS_DELETION\" 不存在於 kb"
       ]
     },
     {
@@ -106,7 +40,7 @@
       "id": "q_pc_seq_001",
       "stem": "請依正確順序排列『CNN 影像分類完整訓練流程』(從原始影像到上線監控)。",
       "issues": [
-        "node_id \"n_L21102_005\" 不存在於 kb",
+        "node_id \"NEEDS_DELETION\" 不存在於 kb",
         "related_node_ids 中 \"n_L21102_005\" 不存在於 kb"
       ]
     },
@@ -115,7 +49,7 @@
       "id": "q_pc_seq_002",
       "stem": "請依正確順序排列『BERT 預訓練模型應用於下游情感分類任務的微調流程』。",
       "issues": [
-        "node_id \"n_L21101_007\" 不存在於 kb",
+        "node_id \"NEEDS_DELETION\" 不存在於 kb",
         "related_node_ids 中 \"n_L21101_007\" 不存在於 kb"
       ]
     },
@@ -124,21 +58,9 @@
       "id": "q_pc_seq_004",
       "stem": "請依正確順序排列『使用 AutoML 平台進行模型自動選擇與導入』流程。",
       "issues": [
-        "node_id \"n_L23304_008\" 不存在於 kb",
+        "node_id \"NEEDS_DELETION\" 不存在於 kb",
         "related_node_ids 中 \"n_L23304_007\" 不存在於 kb",
         "related_node_ids 中 \"n_L23304_008\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pd-scenario.json",
-      "id": "q_pd_002",
-      "stem": "某新創公司發表智慧醫療 App「HealthAI Plus」,蒐集使用者每日步數、心率、睡眠品質與飲食紀錄,用於 AI ",
-      "issues": [
-        "node_id \"n_L24201_002\" 不存在於 kb",
-        "knowledge_code \"L24201\" 不存在於 kb",
-        "related_node_ids 中 \"n_L24201_001\" 不存在於 kb",
-        "related_node_ids 中 \"n_L24201_002\" 不存在於 kb",
-        "related_node_ids 中 \"n_L24201_003\" 不存在於 kb"
       ]
     },
     {
@@ -164,116 +86,11 @@
       ]
     },
     {
-      "file": "questions-pd-scenario.json",
-      "id": "q_pd_007",
-      "stem": "某自駕車團隊用 LiDAR 點雲(每筆樣本含 128 維特徵:x、y、z、反射強度、時序差等)做物件分群,初步用 DBS",
-      "issues": [
-        "node_id \"n_L22202_003\" 不存在於 kb",
-        "knowledge_code \"L22202\" 不存在於 kb",
-        "related_node_ids 中 \"n_L22202_002\" 不存在於 kb",
-        "related_node_ids 中 \"n_L22202_003\" 不存在於 kb",
-        "related_node_ids 中 \"n_L22202_005\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pd-scenario.json",
-      "id": "q_pd_009",
-      "stem": "某電信公司 AI 退訂預測模型上線 6 個月後,客服反映預測準確度明顯下降。MLOps 工程師抽取部分特徵的近期分布與訓",
-      "issues": [
-        "node_id \"n_L24102_002\" 不存在於 kb",
-        "knowledge_code \"L24102\" 不存在於 kb",
-        "related_node_ids 中 \"n_L24102_001\" 不存在於 kb",
-        "related_node_ids 中 \"n_L24102_002\" 不存在於 kb",
-        "related_node_ids 中 \"n_L24102_004\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pd-scenario.json",
-      "id": "q_pd_010",
-      "stem": "某產品設計工作室收到客戶委託:『請用 AI 生成 50 張不同風格的室內設計圖以供發想,需求:(1) 生成品質須高、能用",
-      "issues": [
-        "node_id \"n_L23502_004\" 不存在於 kb",
-        "knowledge_code \"L23502\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23502_002\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23502_004\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23502_006\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pd-scenario.json",
-      "id": "q_pd_011",
-      "stem": "三家銀行(A、B、C)欲協作建立信用評分模型,共同的需求是:(1) 任何一家銀行不能看到其他兩家的『原始客戶資料』、(2",
-      "issues": [
-        "node_id \"n_L24202_003\" 不存在於 kb",
-        "knowledge_code \"L24202\" 不存在於 kb",
-        "related_node_ids 中 \"n_L24202_002\" 不存在於 kb",
-        "related_node_ids 中 \"n_L24202_003\" 不存在於 kb",
-        "related_node_ids 中 \"n_L24202_005\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pd-scenario.json",
-      "id": "q_pd_012",
-      "stem": "某科技公司招聘 AI 篩選履歷模型上線後,人資發現男性候選人通過率為 42%,女性為 28%,差距顯著。經分析發現訓練資",
-      "issues": [
-        "node_id \"n_L24102_005\" 不存在於 kb",
-        "knowledge_code \"L24102\" 不存在於 kb",
-        "related_node_ids 中 \"n_L24102_003\" 不存在於 kb",
-        "related_node_ids 中 \"n_L24102_005\" 不存在於 kb",
-        "related_node_ids 中 \"n_L24102_007\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pd-scenario.json",
-      "id": "q_pd_013",
-      "stem": "某縣政府推動智慧城市 CV 監控專案,將在 200 個路口部署人臉辨識+車牌辨識,目的是治安、交通與失蹤人口協尋。市議員",
-      "issues": [
-        "node_id \"n_L24202_006\" 不存在於 kb",
-        "knowledge_code \"L24202\" 不存在於 kb",
-        "related_node_ids 中 \"n_L24202_004\" 不存在於 kb",
-        "related_node_ids 中 \"n_L24202_006\" 不存在於 kb",
-        "related_node_ids 中 \"n_L24102_005\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pd-scenario.json",
-      "id": "q_pd_014",
-      "stem": "某零售平台推出『即時個人化推薦』服務,需求:(1) 平均回應 < 100ms、(2) 同時上線用戶 50 萬以上、(3)",
-      "issues": [
-        "node_id \"n_L24102_006\" 不存在於 kb",
-        "knowledge_code \"L24102\" 不存在於 kb",
-        "related_node_ids 中 \"n_L24102_004\" 不存在於 kb",
-        "related_node_ids 中 \"n_L24102_006\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23502_005\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pd-scenario.json",
-      "id": "q_pd_015",
-      "stem": "某律師事務所欲導入『法律 RAG 助手』讓初級律師查詢判例與法規。合夥人列出三大顧慮:(A) LLM 可能虛構不存在的判",
-      "issues": [
-        "node_id \"n_L24102_008\" 不存在於 kb",
-        "knowledge_code \"L24102\" 不存在於 kb",
-        "related_node_ids 中 \"n_L24102_006\" 不存在於 kb",
-        "related_node_ids 中 \"n_L24102_008\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23502_007\" 不存在於 kb"
-      ]
-    },
-    {
       "file": "questions-pe-advanced-s1.json",
       "id": "q_pe_001",
       "stem": "某跨國電商平台要訓練支援繁中、簡中、日文、韓文、泰文、阿拉伯文的多語言客服意圖分類模型,語言學家提醒:泰文無空白分隔、阿",
       "issues": [
-        "node_id \"n_L21101_101\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pe-advanced-s1.json",
-      "id": "q_pe_002",
-      "stem": "某法律科技新創要建立『判決書全文摘要與條文比對』系統,單篇輸入可達 32K tokens,GPU 預算僅有 4 張 A1",
-      "issues": [
-        "node_id \"n_L21101_102\" 不存在於 kb",
-        "related_node_ids 中 \"n_L21101_007\" 不存在於 kb"
+        "node_id \"NEEDS_DELETION\" 不存在於 kb"
       ]
     },
     {
@@ -281,7 +98,7 @@
       "id": "q_pe_003",
       "stem": "某金融機構要把 LLaMA-2-13B 微調為內部信用審核問答助理,但合規規定『base model 權重須維持原始版本",
       "issues": [
-        "node_id \"n_L21101_103\" 不存在於 kb"
+        "node_id \"NEEDS_DELETION\" 不存在於 kb"
       ]
     },
     {
@@ -289,28 +106,8 @@
       "id": "q_pe_004",
       "stem": "某顧問公司把『金融領域 BERT』直接套用到法律與醫療客戶,結果在法律文件分類 F1 從 0.91 跌到 0.62、醫療",
       "issues": [
-        "node_id \"n_L21101_104\" 不存在於 kb",
+        "node_id \"NEEDS_DELETION\" 不存在於 kb",
         "related_node_ids 中 \"n_L21101_007\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pe-advanced-s1.json",
-      "id": "q_pe_005",
-      "stem": "某智慧工廠 AGV 自走車上要部署『障礙物即時偵測』模型,規格為:邊緣 GPU(Jetson Orin NX、20W 功",
-      "issues": [
-        "node_id \"n_L21102_101\" 不存在於 kb",
-        "related_node_ids 中 \"n_L21102_005\" 不存在於 kb",
-        "related_node_ids 中 \"n_L21102_006\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pe-advanced-s1.json",
-      "id": "q_pe_006",
-      "stem": "某醫學影像新創接到三個專案:(A) 醫療顯微鏡細胞核分割(高精度、樣本少、像素級邊界要嚴謹)、(B) 衛星影像建築物實例",
-      "issues": [
-        "node_id \"n_L21102_102\" 不存在於 kb",
-        "related_node_ids 中 \"n_L21102_005\" 不存在於 kb",
-        "related_node_ids 中 \"n_L21102_006\" 不存在於 kb"
       ]
     },
     {
@@ -318,7 +115,7 @@
       "id": "q_pe_007",
       "stem": "某 CV 工程師同時做三個專案:(A) ImageNet 級影像分類(資料 100 萬張)、(B) 自駕場景物件偵測(行",
       "issues": [
-        "node_id \"n_L21102_103\" 不存在於 kb",
+        "node_id \"NEEDS_DELETION\" 不存在於 kb",
         "related_node_ids 中 \"n_L21102_005\" 不存在於 kb",
         "related_node_ids 中 \"n_L21102_007\" 不存在於 kb"
       ]
@@ -328,7 +125,7 @@
       "id": "q_pe_008",
       "stem": "某廣告代理商接到 B2B 客戶委託:用 Stable Diffusion 為其新品做產品圖,要求『模特兒姿勢與客戶提供的",
       "issues": [
-        "node_id \"n_L21103_101\" 不存在於 kb",
+        "node_id \"NEEDS_DELETION\" 不存在於 kb",
         "related_node_ids 中 \"n_L21103_005\" 不存在於 kb"
       ]
     },
@@ -337,7 +134,7 @@
       "id": "q_pe_009",
       "stem": "某 LLM 新創團隊要對 7B 基礎模型做對齊(alignment),目標是『有用、誠實、無害』。資源:8 張 A100",
       "issues": [
-        "node_id \"n_L21103_102\" 不存在於 kb",
+        "node_id \"NEEDS_DELETION\" 不存在於 kb",
         "related_node_ids 中 \"n_L24201_002\" 不存在於 kb"
       ]
     },
@@ -346,36 +143,9 @@
       "id": "q_pe_010",
       "stem": "某邊緣 AI 公司要把 LLaMA-2-13B 部署到客戶現場的 RTX 4090(24GB)單卡,需求:吞吐量 30+",
       "issues": [
-        "node_id \"n_L21103_103\" 不存在於 kb",
+        "node_id \"NEEDS_DELETION\" 不存在於 kb",
         "related_node_ids 中 \"n_L21103_005\" 不存在於 kb",
         "related_node_ids 中 \"n_L21101_007\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pe-advanced-s1.json",
-      "id": "q_pe_011",
-      "stem": "某科技公司同時開發三個多模態應用:(A) 電商以圖搜圖/以文搜圖檢索 200 萬商品庫、(B) 視覺對話助理(使用者上傳",
-      "issues": [
-        "node_id \"n_L21104_101\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pe-advanced-s1.json",
-      "id": "q_pe_012",
-      "stem": "某時尚電商導入 CLIP 做以文搜圖,在英文資料集 R@1 = 72%,但中文時尚情境(如『高領毛衣搭配格紋裙』)零樣本",
-      "issues": [
-        "node_id \"n_L21104_102\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pf-advanced-s3.json",
-      "id": "q_pf_adv_s3_001",
-      "stem": "某電商平台資料科學團隊要建立『顧客次月回購率』預測模型,資料規模約 50 萬筆訂單,特徵共 87 維,其中 41 維為高",
-      "issues": [
-        "node_id \"n_L23202_011\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23202_010\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23202_011\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23202_012\" 不存在於 kb"
       ]
     },
     {
@@ -383,7 +153,7 @@
       "id": "q_pf_adv_s3_002",
       "stem": "某金融科技公司針對 LightGBM 信用評分模型,被監管機關要求提供『可解釋性報告』,需同時呈現:(A)全球(Glob",
       "issues": [
-        "node_id \"n_L23202_013\" 不存在於 kb",
+        "node_id \"NEEDS_DELETION\" 不存在於 kb",
         "related_node_ids 中 \"n_L23202_011\" 不存在於 kb",
         "related_node_ids 中 \"n_L23202_013\" 不存在於 kb",
         "related_node_ids 中 \"n_L23202_014\" 不存在於 kb"
@@ -391,43 +161,10 @@
     },
     {
       "file": "questions-pf-advanced-s3.json",
-      "id": "q_pf_adv_s3_003",
-      "stem": "某物流公司以 XGBoost 預測『配送延誤』,訓練曲線顯示:訓練 RMSE 從 12 持續下降到 3,驗證 RMSE ",
-      "issues": [
-        "node_id \"n_L23202_015\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23202_013\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23202_015\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23202_016\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pf-advanced-s3.json",
-      "id": "q_pf_adv_s3_004",
-      "stem": "某 AI 顧問公司同時接到三個 SVM 專案需求:(A)新聞分類(TF-IDF 向量,45000 維,稀疏度 99%);",
-      "issues": [
-        "node_id \"n_L23202_021\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23202_020\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23202_021\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23202_022\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pf-advanced-s3.json",
-      "id": "q_pf_adv_s3_005",
-      "stem": "某半導體廠用 RBF-SVM 做晶圓缺陷分類,當前超參 C=1000、γ=10、class_weight=None,訓練",
-      "issues": [
-        "node_id \"n_L23202_023\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23202_022\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23202_023\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23202_024\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pf-advanced-s3.json",
       "id": "q_pf_adv_s3_006",
       "stem": "某深度學習團隊同時開發四個模型,各使用不同的激活函數:(A)語音分類 MLP 全部用 tanh;(B)影像分類 ResN",
       "issues": [
-        "node_id \"n_L23203_011\" 不存在於 kb",
+        "node_id \"NEEDS_DELETION\" 不存在於 kb",
         "related_node_ids 中 \"n_L23203_010\" 不存在於 kb",
         "related_node_ids 中 \"n_L23203_011\" 不存在於 kb",
         "related_node_ids 中 \"n_L23203_012\" 不存在於 kb"
@@ -438,7 +175,7 @@
       "id": "q_pf_adv_s3_007",
       "stem": "某 AI 平台公司同時部署四個模型在生產環境:(A)CNN 影像分類(ImageNet 資料,Batch=256);(B",
       "issues": [
-        "node_id \"n_L23203_013\" 不存在於 kb",
+        "node_id \"NEEDS_DELETION\" 不存在於 kb",
         "related_node_ids 中 \"n_L23203_012\" 不存在於 kb",
         "related_node_ids 中 \"n_L23203_013\" 不存在於 kb",
         "related_node_ids 中 \"n_L23203_014\" 不存在於 kb"
@@ -449,7 +186,7 @@
       "id": "q_pf_adv_s3_008",
       "stem": "某資深面試官問新進工程師:『ResNet 殘差連接 H(x) = F(x) + x,為什麼能解決極深網路梯度消失問題?』",
       "issues": [
-        "node_id \"n_L23203_015\" 不存在於 kb",
+        "node_id \"NEEDS_DELETION\" 不存在於 kb",
         "related_node_ids 中 \"n_L23203_013\" 不存在於 kb",
         "related_node_ids 中 \"n_L23203_015\" 不存在於 kb",
         "related_node_ids 中 \"n_L23203_017\" 不存在於 kb"
@@ -460,7 +197,7 @@
       "id": "q_pf_adv_s3_009",
       "stem": "某 AI 實驗室同時遭遇三組梯度問題:(A)LSTM 訓練第 8 個 epoch loss 突然變 NaN;(B)20 ",
       "issues": [
-        "node_id \"n_L23203_018\" 不存在於 kb",
+        "node_id \"NEEDS_DELETION\" 不存在於 kb",
         "related_node_ids 中 \"n_L23203_015\" 不存在於 kb",
         "related_node_ids 中 \"n_L23203_017\" 不存在於 kb",
         "related_node_ids 中 \"n_L23203_018\" 不存在於 kb"
@@ -468,80 +205,13 @@
     },
     {
       "file": "questions-pf-advanced-s3.json",
-      "id": "q_pf_adv_s3_010",
-      "stem": "某零售集團資料科學中心同時進行三個聚類專案:(A)會員分群:消費金額連續、消費頻率連續、客戶可能跨多個典型樣貌(高頻低額",
-      "issues": [
-        "node_id \"n_L23202_031\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23202_030\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23202_031\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23202_032\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pf-advanced-s3.json",
-      "id": "q_pf_adv_s3_011",
-      "stem": "某生物資訊團隊用層次聚類(Hierarchical Clustering)分析基因表達資料,設計四個版本分別採用 Sin",
-      "issues": [
-        "node_id \"n_L23202_033\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23202_032\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23202_033\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23202_034\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pf-advanced-s3.json",
       "id": "q_pf_adv_s3_012",
       "stem": "某金融科技集團同時部署三個異常偵測場景:(A)信用卡詐欺偵測:結構化交易特徵共 320 維、樣本 1000 萬筆、需毫秒",
       "issues": [
-        "node_id \"n_L23202_041\" 不存在於 kb",
+        "node_id \"NEEDS_DELETION\" 不存在於 kb",
         "related_node_ids 中 \"n_L23202_040\" 不存在於 kb",
         "related_node_ids 中 \"n_L23202_041\" 不存在於 kb",
         "related_node_ids 中 \"n_L23202_042\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pg-eval.json",
-      "id": "q_pg_002",
-      "stem": "某醫學中心部署 AI 輔助診斷罕見癌症模型。臨床經驗顯示:漏診一名真實癌症病患的後果(延誤治療、死亡風險)約為誤診一名健",
-      "issues": [
-        "related_node_ids 中 \"n_L23301_005\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pg-eval.json",
-      "id": "q_pg_003",
-      "stem": "某遺傳檢測公司開發罕見遺傳病多分類模型,共 8 種疾病類別,其中『類別 H』僅佔 0.5%、其他類別在 5%-25% 之",
-      "issues": [
-        "node_id \"n_L23301_004\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23301_004\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pg-eval.json",
-      "id": "q_pg_005",
-      "stem": "某零售集團要建立日銷售預測模型,資料 2018~2025 八年。團隊比較三種時間序列 CV:(I) Expanding ",
-      "issues": [
-        "node_id \"n_L23303_009\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23303_009\" 不存在於 kb",
-        "related_node_ids 中 \"n_L22301_006\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pg-eval.json",
-      "id": "q_pg_006",
-      "stem": "某新藥研發團隊面臨三個 CV 評估場景:(X) 罕見副作用資料僅 80 筆樣本;(Y) 中等規模臨床試驗 350 筆;(",
-      "issues": [
-        "node_id \"n_L23303_010\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23303_010\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pg-eval.json",
-      "id": "q_pg_007",
-      "stem": "某詐欺偵測模型在驗證集表現如下混淆矩陣:TP={tp}、FP={fp}、FN={fn}、TN={tn}(正樣本即詐欺)。",
-      "issues": [
-        "node_id \"n_L23303_011\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23303_011\" 不存在於 kb"
       ]
     },
     {
@@ -565,24 +235,6 @@
     },
     {
       "file": "questions-pg-eval.json",
-      "id": "q_pg_010",
-      "stem": "某 CV 工程師面臨四項任務:(α) 影像分類(ImageNet 1000 類)、(β) 物件偵測(COCO,需框出物件",
-      "issues": [
-        "related_node_ids 中 \"n_L22302_005\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pg-eval.json",
-      "id": "q_pg_011",
-      "stem": "某團隊訓練 200 層的 ResNet 用於醫學影像辨識,發現訓練不穩定且過擬合嚴重,加深層數反而效果變差。考慮採用 S",
-      "issues": [
-        "node_id \"n_L23304_006\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23304_006\" 不存在於 kb",
-        "related_node_ids 中 \"n_L22302_007\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-pg-eval.json",
       "id": "q_pg_012",
       "stem": "某 ML 平台需在大規模超參搜尋(1000 組候選)+ 預算受限(總計算量等於 200 組完整訓練)下完成調校。團隊比較",
       "issues": [
@@ -602,17 +254,6 @@
     },
     {
       "file": "questions-ph-mlops.json",
-      "id": "q_ph_001",
-      "stem": "某金融科技新創團隊只有 4 位 ML 工程師,需在 6 個月內建立完整 MLOps 平台,要求(1)實驗追蹤與模型版本控",
-      "issues": [
-        "node_id \"n_L21302_010\" 不存在於 kb",
-        "related_node_ids 中 \"n_L21302_008\" 不存在於 kb",
-        "related_node_ids 中 \"n_L21302_010\" 不存在於 kb",
-        "related_node_ids 中 \"n_L21302_012\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-ph-mlops.json",
       "id": "q_ph_002",
       "stem": "某電商平台導入 Feature Store 後,發現信用卡盜刷偵測模型在離線評估 F1=0.92 但上線後實際 F1 僅",
       "issues": [
@@ -620,17 +261,6 @@
         "related_node_ids 中 \"n_L21302_013\" 不存在於 kb",
         "related_node_ids 中 \"n_L21302_014\" 不存在於 kb",
         "related_node_ids 中 \"n_L21302_016\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-ph-mlops.json",
-      "id": "q_ph_003",
-      "stem": "某保險公司客戶流失預測模型已上線 9 個月,Champion 模型(v1.4, AUC=0.81)正受 Challeng",
-      "issues": [
-        "node_id \"n_L21302_018\" 不存在於 kb",
-        "related_node_ids 中 \"n_L21302_017\" 不存在於 kb",
-        "related_node_ids 中 \"n_L21302_018\" 不存在於 kb",
-        "related_node_ids 中 \"n_L21302_020\" 不存在於 kb"
       ]
     },
     {
@@ -653,50 +283,6 @@
         "related_node_ids 中 \"n_L21302_025\" 不存在於 kb",
         "related_node_ids 中 \"n_L21302_026\" 不存在於 kb",
         "related_node_ids 中 \"n_L21302_028\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-ph-mlops.json",
-      "id": "q_ph_006",
-      "stem": "某銀行欲推出新版反洗錢(AML)模型 v3.0,法遵要求嚴格且模型誤判將觸發人工調查成本。SRE Lead 規劃部署策略",
-      "issues": [
-        "node_id \"n_L21302_030\" 不存在於 kb",
-        "related_node_ids 中 \"n_L21302_029\" 不存在於 kb",
-        "related_node_ids 中 \"n_L21302_030\" 不存在於 kb",
-        "related_node_ids 中 \"n_L21302_032\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-ph-mlops.json",
-      "id": "q_ph_007",
-      "stem": "某客服 AI 平台需監控三類資料漂移:(A) 客戶基本資料 (age, income — 數值);(B) 商品類別 (c",
-      "issues": [
-        "node_id \"n_L21302_034\" 不存在於 kb",
-        "related_node_ids 中 \"n_L21302_033\" 不存在於 kb",
-        "related_node_ids 中 \"n_L21302_034\" 不存在於 kb",
-        "related_node_ids 中 \"n_L21302_036\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-ph-mlops.json",
-      "id": "q_ph_008",
-      "stem": "某保險公司客戶風險模型上線一週,監控報告顯示:特徵 X1(年收入)KS test p-value = 0.001、PSI",
-      "issues": [
-        "node_id \"n_L21302_038\" 不存在於 kb",
-        "related_node_ids 中 \"n_L21302_037\" 不存在於 kb",
-        "related_node_ids 中 \"n_L21302_038\" 不存在於 kb",
-        "related_node_ids 中 \"n_L21302_040\" 不存在於 kb"
-      ]
-    },
-    {
-      "file": "questions-ph-mlops.json",
-      "id": "q_ph_009",
-      "stem": "某銀行貸款核准模型對性別存在 Disparate Impact(女性核准率/男性核准率 = 0.65,違反 80% 規則",
-      "issues": [
-        "node_id \"n_L23402_010\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23402_009\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23402_010\" 不存在於 kb",
-        "related_node_ids 中 \"n_L23402_012\" 不存在於 kb"
       ]
     },
     {

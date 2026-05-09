@@ -8,7 +8,7 @@
     {
       "id": "q_pe_001",
       "knowledge_code": "L21101",
-      "node_id": "n_L21101_101",
+      "node_id": "NEEDS_DELETION",
       "subject": 1,
       "format": "single_choice",
       "difficulty": "hard",
@@ -37,7 +37,7 @@
     {
       "id": "q_pe_002",
       "knowledge_code": "L21101",
-      "node_id": "n_L21101_102",
+      "node_id": "n_L21101_002",
       "subject": 1,
       "format": "single_choice",
       "difficulty": "hard",
@@ -60,13 +60,13 @@
         "hook": "長文選 Sparse(局部+全域 anchor);GQA 是省『KV cache』不是省序列長度;Linear/Performer 速度快但品質會掉"
       },
       "misconceptions": ["把 GQA 誤認為解決長序列複雜度的方案", "以為 Linear Attention 在所有任務都等價於 full attention", "低估 32K² attention matrix 的實際顯存占用"],
-      "related_node_ids": ["n_L21101_002", "n_L21101_006", "n_L21101_007"],
+      "related_node_ids": ["n_L21101_002", "n_L21101_006", "n_L21101_001"],
       "tags": ["Attention", "Longformer", "Performer", "GQA", "長文處理", "進階NLP"]
     },
     {
       "id": "q_pe_003",
       "knowledge_code": "L21101",
-      "node_id": "n_L21101_103",
+      "node_id": "NEEDS_DELETION",
       "subject": 1,
       "format": "single_choice",
       "difficulty": "hard",
@@ -95,7 +95,7 @@
     {
       "id": "q_pe_004",
       "knowledge_code": "L21101",
-      "node_id": "n_L21101_104",
+      "node_id": "NEEDS_DELETION",
       "subject": 1,
       "format": "single_choice",
       "difficulty": "hard",
@@ -124,7 +124,7 @@
     {
       "id": "q_pe_005",
       "knowledge_code": "L21102",
-      "node_id": "n_L21102_101",
+      "node_id": "n_L21102_002",
       "subject": 1,
       "format": "single_choice",
       "difficulty": "hard",
@@ -147,13 +147,13 @@
         "hook": "邊緣即時 + 小物件 → YOLO 一階段 + 多尺度 + TRT INT8;兩階段、原版 DETR 邊緣端 FPS 不足"
       },
       "misconceptions": ["以為精度最高的兩階段一定最佳", "把『即時』命名等同於邊緣可用", "忽略 small object detection 需專屬 feature pyramid 設計"],
-      "related_node_ids": ["n_L21102_002", "n_L21102_005", "n_L21102_006"],
+      "related_node_ids": ["n_L21102_002", "n_L21102_004", "n_L21102_001"],
       "tags": ["YOLO", "Faster R-CNN", "DETR", "RT-DETR", "邊緣推論", "進階CV"]
     },
     {
       "id": "q_pe_006",
       "knowledge_code": "L21102",
-      "node_id": "n_L21102_102",
+      "node_id": "n_L21102_002",
       "subject": 1,
       "format": "single_choice",
       "difficulty": "hard",
@@ -176,13 +176,13 @@
         "hook": "醫療小樣本 → U-Net;多實例個別物件 → Mask R-CNN;零樣本提示通用 → SAM(但領域差距大時要微調)"
       },
       "misconceptions": ["把 SAM 當作所有分割任務的萬靈丹", "混淆 semantic 與 instance segmentation 的需求", "忽略 domain gap 對 SAM zero-shot 的影響"],
-      "related_node_ids": ["n_L21102_001", "n_L21102_005", "n_L21102_006"],
+      "related_node_ids": ["n_L21102_001", "n_L21102_002", "n_L21102_004"],
       "tags": ["U-Net", "Mask R-CNN", "SAM", "分割架構", "醫療影像", "進階CV"]
     },
     {
       "id": "q_pe_007",
       "knowledge_code": "L21102",
-      "node_id": "n_L21102_103",
+      "node_id": "NEEDS_DELETION",
       "subject": 1,
       "format": "single_choice",
       "difficulty": "hard",
@@ -211,7 +211,7 @@
     {
       "id": "q_pe_008",
       "knowledge_code": "L21103",
-      "node_id": "n_L21103_101",
+      "node_id": "NEEDS_DELETION",
       "subject": 1,
       "format": "single_choice",
       "difficulty": "hard",
@@ -240,7 +240,7 @@
     {
       "id": "q_pe_009",
       "knowledge_code": "L21103",
-      "node_id": "n_L21103_102",
+      "node_id": "NEEDS_DELETION",
       "subject": 1,
       "format": "single_choice",
       "difficulty": "hard",
@@ -269,7 +269,7 @@
     {
       "id": "q_pe_010",
       "knowledge_code": "L21103",
-      "node_id": "n_L21103_103",
+      "node_id": "NEEDS_DELETION",
       "subject": 1,
       "format": "single_choice",
       "difficulty": "hard",
@@ -298,7 +298,7 @@
     {
       "id": "q_pe_011",
       "knowledge_code": "L21104",
-      "node_id": "n_L21104_101",
+      "node_id": "n_L21104_001",
       "subject": 1,
       "format": "single_choice",
       "difficulty": "hard",
@@ -327,7 +327,7 @@
     {
       "id": "q_pe_012",
       "knowledge_code": "L21104",
-      "node_id": "n_L21104_102",
+      "node_id": "n_L21104_001",
       "subject": 1,
       "format": "single_choice",
       "difficulty": "hard",

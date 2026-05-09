@@ -11,8 +11,8 @@
   "questions": [
     {
       "id": "q_pb_001",
-      "knowledge_code": "L23204",
-      "node_id": "n_L23204_001",
+      "knowledge_code": "L21102",
+      "node_id": "n_L21102_004",
       "subject": 3,
       "format": "table_reading",
       "difficulty": "medium",
@@ -81,13 +81,13 @@
         "誤以為網路越深的卷積參數越多(其實 3×3 共享權重很省)",
         "把 25088×4096 與 4096×4096 等同看待"
       ],
-      "related_node_ids": ["n_L23204_001", "n_L23204_002"],
+      "related_node_ids": ["n_L21102_004", "n_L21102_001"],
       "tags": ["VGG16", "CNN", "參數量", "FC層", "PCB瑕疵"]
     },
     {
       "id": "q_pb_002",
-      "knowledge_code": "L23204",
-      "node_id": "n_L23204_002",
+      "knowledge_code": "L21102",
+      "node_id": "n_L21102_004",
       "subject": 3,
       "format": "table_reading",
       "difficulty": "hard",
@@ -156,13 +156,13 @@
         "把 Params 與 FLOPs 視為同一指標",
         "誤以為最深層 Conv 一定 FLOPs 最高"
       ],
-      "related_node_ids": ["n_L23204_001", "n_L23204_002"],
+      "related_node_ids": ["n_L21102_004", "n_L21102_001"],
       "tags": ["VGG16", "FLOPs", "計算量", "GPU", "醫療影像"]
     },
     {
       "id": "q_pb_003",
-      "knowledge_code": "L23204",
-      "node_id": "n_L23204_003",
+      "knowledge_code": "L21102",
+      "node_id": "n_L21102_004",
       "subject": 3,
       "format": "table_reading",
       "difficulty": "medium",
@@ -231,13 +231,13 @@
         "誤以為遷移學習就是『重新訓練全部』",
         "顛倒『前段通用 / 後段專屬』的角色"
       ],
-      "related_node_ids": ["n_L23204_001", "n_L23204_004"],
+      "related_node_ids": ["n_L21102_004", "n_L21102_001"],
       "tags": ["VGG16", "遷移學習", "微調", "凍結", "貓狗分類"]
     },
     {
       "id": "q_pb_004",
-      "knowledge_code": "L23204",
-      "node_id": "n_L23204_004",
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_006",
       "subject": 3,
       "format": "table_reading",
       "difficulty": "hard",
@@ -273,13 +273,13 @@
         "忽略 Adam optimizer 額外占用 2 倍參數量",
         "忘記 activations 隨 batch size 線性成長"
       ],
-      "related_node_ids": ["n_L23204_001", "n_L23204_005"],
+      "related_node_ids": ["n_L21302_006", "n_L21102_004"],
       "tags": ["VGG16", "GPU記憶體", "訓練成本", "Adam", "mixed-precision"]
     },
     {
       "id": "q_pb_005",
-      "knowledge_code": "L23205",
-      "node_id": "n_L23205_001",
+      "knowledge_code": "L21101",
+      "node_id": "n_L21101_002",
       "subject": 3,
       "format": "table_reading",
       "difficulty": "medium",
@@ -320,13 +320,13 @@
         "漏算 FFN 的兩段 Linear",
         "把『每層』與『總層數』混淆"
       ],
-      "related_node_ids": ["n_L23205_001", "n_L23205_002"],
+      "related_node_ids": ["n_L21101_002", "n_L21101_001"],
       "tags": ["Transformer", "Self-Attention", "FFN", "參數量", "NLP"]
     },
     {
       "id": "q_pb_006",
-      "knowledge_code": "L23205",
-      "node_id": "n_L23205_002",
+      "knowledge_code": "L21101",
+      "node_id": "n_L21101_002",
       "subject": 3,
       "format": "table_reading",
       "difficulty": "hard",
@@ -363,7 +363,7 @@
         "誤以為 FFN(4× hidden)是最慢的子模組",
         "忽略 Attention 的時間複雜度是 O(L²)"
       ],
-      "related_node_ids": ["n_L23205_002", "n_L23205_003"],
+      "related_node_ids": ["n_L21101_002", "n_L21101_001"],
       "tags": ["Transformer", "Decoder", "FlashAttention", "瓶頸分析", "L²"]
     },
     {

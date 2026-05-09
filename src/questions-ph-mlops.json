@@ -12,7 +12,7 @@
     {
       "id": "q_ph_001",
       "knowledge_code": "L21302",
-      "node_id": "n_L21302_010",
+      "node_id": "n_L21302_002",
       "subject": 2,
       "format": "single_choice",
       "difficulty": "hard",
@@ -35,7 +35,7 @@
         "hook": "MLOps 平台選型口訣:開源自管→MLflow/Kubeflow;純體驗追蹤→W&B;一站式雲服務→Vertex AI/SageMaker(代價:鎖定+用量費)"
       },
       "misconceptions": ["把企業版 W&B 當作免費社群版", "認為雲端 ML 平台沒有鎖定問題", "誤以為 SageMaker 可隨意搬到任何 K8s"],
-      "related_node_ids": ["n_L21302_008", "n_L21302_010", "n_L21302_012"],
+      "related_node_ids": ["n_L21302_001", "n_L21302_004", "n_L21302_007"],
       "tags": ["MLOps平台", "MLflow", "供應商鎖定", "選型決策"]
     },
     {
@@ -70,7 +70,7 @@
     {
       "id": "q_ph_003",
       "knowledge_code": "L21302",
-      "node_id": "n_L21302_018",
+      "node_id": "n_L21302_002",
       "subject": 2,
       "format": "single_choice",
       "difficulty": "hard",
@@ -93,7 +93,7 @@
         "hook": "Champion-Challenger 回滾三層條件:模型品質(PR-AUC)+系統 SLA(延遲)+業務 KPI(留存率),OR 邏輯且嚴於晉升條件"
       },
       "misconceptions": ["把回滾與晉升條件混為一談", "只看模型指標忽略業務指標", "誤以為人工月檢可取代自動回滾"],
-      "related_node_ids": ["n_L21302_017", "n_L21302_018", "n_L21302_020"],
+      "related_node_ids": ["n_L21302_007", "n_L21302_003", "n_L21302_005"],
       "tags": ["ModelRegistry", "ChampionChallenger", "回滾策略", "版本控制"]
     },
     {
@@ -157,7 +157,7 @@
     {
       "id": "q_ph_006",
       "knowledge_code": "L21302",
-      "node_id": "n_L21302_030",
+      "node_id": "n_L21302_007",
       "subject": 2,
       "format": "single_choice",
       "difficulty": "hard",
@@ -180,13 +180,13 @@
         "hook": "部署模式光譜:Shadow(0% 風險,先觀察)→Canary(漸進風險,可回滾)→A/B(對照驗證,統計顯著);AML 高風險場景應全用"
       },
       "misconceptions": ["把 Shadow 當作冗餘步驟", "誤以為 A/B Testing 可取代 Canary", "忽略 AML 等高風險場景的部署門檻"],
-      "related_node_ids": ["n_L21302_029", "n_L21302_030", "n_L21302_032"],
+      "related_node_ids": ["n_L21302_002", "n_L21302_005", "n_L21202_001"],
       "tags": ["部署策略", "Shadow", "Canary", "ABTesting", "AML"]
     },
     {
       "id": "q_ph_007",
       "knowledge_code": "L21302",
-      "node_id": "n_L21302_034",
+      "node_id": "n_L21302_003",
       "subject": 2,
       "format": "single_choice",
       "difficulty": "hard",
@@ -209,13 +209,13 @@
         "hook": "Drift 偵測工具定位:Evidently(表格 Report)/Whylogs(輕量 Profile 大規模)/Arize(embedding+LLM observability)"
       },
       "misconceptions": ["以為 embedding 不會 drift", "認為一套工具通吃所有監控需求", "把工具與資料型態作絕對分工"],
-      "related_node_ids": ["n_L21302_033", "n_L21302_034", "n_L21302_036"],
+      "related_node_ids": ["n_L21302_002", "n_L21302_001", "n_L21104_001"],
       "tags": ["DriftDetection", "Evidently", "Whylogs", "Arize", "embedding監控"]
     },
     {
       "id": "q_ph_008",
       "knowledge_code": "L21302",
-      "node_id": "n_L21302_038",
+      "node_id": "n_L21302_003",
       "subject": 2,
       "format": "single_choice",
       "difficulty": "hard",
@@ -238,13 +238,13 @@
         "hook": "Drift 統計量綜合判讀:p-value(顯著性)+PSI(經驗閾值)+KL/Wasserstein(effect size)合看;PSI 0.10-0.25=中度需評估"
       },
       "misconceptions": ["把 p-value 顯著等同嚴重", "忽略 PSI 業界閾值階梯", "把絕對距離不正規化解讀"],
-      "related_node_ids": ["n_L21302_037", "n_L21302_038", "n_L21302_040"],
+      "related_node_ids": ["n_L21302_002", "n_L21302_001", "n_L21302_007"],
       "tags": ["Drift偵測", "PSI", "KStest", "Wasserstein", "統計判讀"]
     },
     {
       "id": "q_ph_009",
       "knowledge_code": "L23402",
-      "node_id": "n_L23402_010",
+      "node_id": "n_L23402_002",
       "subject": 3,
       "format": "single_choice",
       "difficulty": "hard",
@@ -267,7 +267,7 @@
         "hook": "公平性介入三層:預處理(調資料)/in-processing(調演算法)/後處理(調輸出);後處理對黑盒模型最友善"
       },
       "misconceptions": ["把後處理當作弱化的妥協方案", "忽略 in-processing 對既有訓練流程影響", "認為 Reweighting 不算改動訓練"],
-      "related_node_ids": ["n_L23402_009", "n_L23402_010", "n_L23402_012"],
+      "related_node_ids": ["n_L23402_001", "n_L23402_003", "n_L21203_001"],
       "tags": ["AIF360", "Fairlearn", "公平性", "後處理", "EqualizedOdds"]
     },
     {

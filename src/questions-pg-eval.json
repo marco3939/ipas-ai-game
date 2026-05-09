@@ -63,13 +63,13 @@
         "hook": "Cost-Sensitive Bayes 最佳門檻公式:t* = C(FP) / (C(FP) + C(FN));FN 成本越大 → 門檻越低 → Recall 越高"
       },
       "misconceptions": ["把『少數類權重』與『全體權重等比放大』混為一談", "在高 FN 成本場景反而提高 threshold", "在不平衡資料仍用 Accuracy 作調校指標"],
-      "related_node_ids": ["n_L23303_003", "n_L23303_007", "n_L23301_005"],
+      "related_node_ids": ["n_L23303_003", "n_L23303_007", "n_L23303_004"],
       "tags": ["Cost-Sensitive", "threshold調整", "醫療AI", "不平衡資料", "Bayes最佳門檻"]
     },
     {
       "id": "q_pg_003",
       "knowledge_code": "L23301",
-      "node_id": "n_L23301_004",
+      "node_id": "n_L23301_003",
       "subject": 3,
       "format": "single_choice",
       "difficulty": "hard",
@@ -92,7 +92,7 @@
         "hook": "Macro-F1 低落的真因 = 某類 F1 接近 0;Micro-F1 會掩蓋,Macro-F1 才暴露問題;解法是『樣本層+架構層+監控層』三管齊下"
       },
       "misconceptions": ["把 Micro-F1 當作不平衡資料的最佳指標", "用『加大模型』解決『樣本太少』的根本問題", "在多類別不平衡情境捨棄少數類"],
-      "related_node_ids": ["n_L23301_002", "n_L23301_004", "n_L23303_002"],
+      "related_node_ids": ["n_L23301_002", "n_L23303_004", "n_L23303_002"],
       "tags": ["多類別不平衡", "Macro-F1", "OvR", "罕見病AI", "誤差分析"]
     },
     {
@@ -127,7 +127,7 @@
     {
       "id": "q_pg_005",
       "knowledge_code": "L23303",
-      "node_id": "n_L23303_009",
+      "node_id": "n_L23303_005",
       "subject": 3,
       "format": "single_choice",
       "difficulty": "hard",
@@ -150,13 +150,13 @@
         "hook": "時序 CV 口訣:長期穩定看 Expanding,概念漂移看 Sliding,分段檢驗看 Blocked;絕對禁止隨機 K-Fold(會洩漏未來)"
       },
       "misconceptions": ["把時序 CV 與隨機 K-Fold 混淆", "認為時序 CV 三方法等價", "忽略 Sliding Window 在概念漂移場景的優勢"],
-      "related_node_ids": ["n_L23303_004", "n_L23303_009", "n_L22301_006"],
+      "related_node_ids": ["n_L23303_008", "n_L23303_007", "n_L23303_004"],
       "tags": ["時序CV", "Expanding Window", "Sliding Window", "Blocked CV", "概念漂移", "情境決策"]
     },
     {
       "id": "q_pg_006",
       "knowledge_code": "L23303",
-      "node_id": "n_L23303_010",
+      "node_id": "n_L23303_005",
       "subject": 3,
       "format": "single_choice",
       "difficulty": "hard",
@@ -179,13 +179,13 @@
         "hook": "樣本量 CV 口訣:<100 → Bootstrap(.632+ 校正);100-500 → Stratified 10-fold;>5000 → 5-fold 或單次 split;LOOCV 慎用(計算貴 + variance 高)"
       },
       "misconceptions": ["以為 LOOCV 永遠最優", "在小樣本仍用單次 split", "把 Bootstrap 與 K-Fold CV 視為大樣本場景的選擇"],
-      "related_node_ids": ["n_L23303_003", "n_L23303_010", "n_L23303_004"],
+      "related_node_ids": ["n_L23303_003", "n_L23303_002", "n_L23303_004"],
       "tags": ["Bootstrap", "K-Fold", "LOOCV", "小樣本CV", "情境決策"]
     },
     {
       "id": "q_pg_007",
       "knowledge_code": "L23303",
-      "node_id": "n_L23303_011",
+      "node_id": "n_L23303_002",
       "subject": 3,
       "format": "calculation",
       "difficulty": "hard",
@@ -214,7 +214,7 @@
         "hook": "MCC 公式記憶:分子=對角差積(TP·TN - FP·FN),分母=四邊和的幾何平均(每行每列加總相乘開根);範圍 [-1,+1] 是最強健的不平衡指標"
       },
       "misconceptions": ["把 MCC 算成 (TP·TN)/(FP·FN)", "忽略 MCC 分母的標準化作用", "在極不平衡仍用 F1 而非 MCC"],
-      "related_node_ids": ["n_L23303_002", "n_L23303_011", "n_L23303_007"],
+      "related_node_ids": ["n_L23303_001", "n_L23303_004", "n_L23303_006"],
       "tags": ["calculation", "MCC", "F1", "Balanced Accuracy", "極度不平衡", "詐欺偵測"]
     },
     {
@@ -301,13 +301,13 @@
         "hook": "進階正則化任務口訣:文字→Label Smoothing;影像分類→Mixup/Cutout;偵測/分割→CutMix(避免 Cutout);Mixup 是『連續混合』、CutMix 是『局部替換』,意義不同"
       },
       "misconceptions": ["以為 Cutout 通用於所有 CV 任務", "誤以為 Label Smoothing 只適合二分類", "把 Mixup 與 CutMix 視為等價"],
-      "related_node_ids": ["n_L23304_002", "n_L23304_004", "n_L22302_005"],
+      "related_node_ids": ["n_L23304_002", "n_L23304_004", "n_L23304_005"],
       "tags": ["Label Smoothing", "Mixup", "Cutout", "CutMix", "進階正則化", "情境決策"]
     },
     {
       "id": "q_pg_011",
       "knowledge_code": "L23304",
-      "node_id": "n_L23304_006",
+      "node_id": "n_L23304_004",
       "subject": 3,
       "format": "single_choice",
       "difficulty": "hard",
@@ -330,7 +330,7 @@
         "hook": "深層網路正則化口訣:Dropout=神經元級(FC 層、Transformer);Stochastic Depth=層級(>100 層 ResNet);DropPath=路徑級(multi-branch 如 Inception);三者粒度漸增、適用架構漸特化"
       },
       "misconceptions": ["把 Stochastic Depth 與 Dropout 視為等價", "認為 Dropout 已被全面淘汰", "顛倒 DropPath 適用架構"],
-      "related_node_ids": ["n_L23304_004", "n_L23304_006", "n_L22302_007"],
+      "related_node_ids": ["n_L23304_005", "n_L23304_002", "n_L23304_001"],
       "tags": ["Stochastic Depth", "DropPath", "Dropout", "深度網路", "進階正則化"]
     },
     {
