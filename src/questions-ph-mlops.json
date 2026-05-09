@@ -19,18 +19,18 @@
       "source_level": "L2",
       "stem": "某金融科技新創團隊只有 4 位 ML 工程師,需在 6 個月內建立完整 MLOps 平台,要求(1)實驗追蹤與模型版本控制、(2)避免雲端鎖定以利日後遷移、(3)能與既有 Kubernetes 叢集整合、(4)預算極有限不能採用每月數萬美元的企業級 SaaS。CTO 比較 MLflow、Weights & Biases、Vertex AI、SageMaker 四個方案。下列何者為最適合本案的選型分析?",
       "options": [
-        {"text": "選 MLflow,因其為 Apache 2.0 開源專案、可自架於 K8s、提供 Tracking/Registry/Projects/Models 四大組件,符合無雲端鎖定與低預算需求,但需自行負責高可用與擴展", "is_correct": true},
-        {"text": "選 Vertex AI,因為 Google 提供完整 AutoML 與 Pipeline,只要一鍵部署,沒有任何鎖定問題,小團隊應優先採用", "is_correct": false, "trap_type": "Vertex AI 為 GCP 專屬 SaaS,模型 Registry 與 Pipeline 元資料皆綁定 GCP,日後遷移成本高,且按用量計費對小團隊預算壓力大"},
-        {"text": "選 Weights & Biases 企業版,因其 UI 最美且實驗追蹤功能最強大,小團隊應追求最佳開發體驗", "is_correct": false, "trap_type": "W&B 雖體驗佳,但企業版為 SaaS 訂閱制(每席位月費),資料儲存於其雲端,屬於供應商鎖定;社群版有資料量上限"},
-        {"text": "選 SageMaker,因其與 K8s 原生整合且不收平台費,只要付運算費即可,適合預算有限的團隊", "is_correct": false, "trap_type": "SageMaker 為 AWS 專屬服務,並非與任意 K8s 原生整合(需特定 EKS 設置),且 Notebook/Training/Endpoint 用量費並不便宜,亦造成 AWS 鎖定"}
+        {"text": "選 MLflow,Apache 2.0 開源、可自架於 K8s、提供 Tracking/Registry/Projects/Models 四大組件,符合低預算與無雲端鎖定需求,但需自管 HA", "is_correct": true},
+        {"text": "選 Vertex AI,Google 提供完整 AutoML、Pipeline 與 Feature Store 整合,跨雲 Artefact 可直接搬遷無鎖定,按用量計費對小團隊壓力有限可優先採用", "is_correct": false, "trap_type": "Vertex AI 為 GCP 專屬 SaaS,模型 Registry 與 Pipeline 元資料皆綁定 GCP,日後遷移成本高,且按用量計費對小團隊預算壓力大"},
+        {"text": "選 W&B 企業版,UI 與實驗追蹤功能業界最強,席位費可議,實驗 metadata 採開放格式儲存,後續可任意匯出至自架後端,小團隊應追求開發體驗", "is_correct": false, "trap_type": "W&B 雖體驗佳,但企業版為 SaaS 訂閱制(每席位月費),資料儲存於其雲端,屬於供應商鎖定;社群版有資料量上限"},
+        {"text": "選 SageMaker,可與任意 K8s 原生整合且不收平台費,只付實際運算用量,Endpoint 與 Notebook 計費單純透明,適合預算受限的小團隊起步", "is_correct": false, "trap_type": "SageMaker 為 AWS 專屬服務,並非與任意 K8s 原生整合(需特定 EKS 設置),且 Notebook/Training/Endpoint 用量費並不便宜,亦造成 AWS 鎖定"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "MLflow 由 Databricks 開源(Apache 2.0)且為 Linux Foundation AI 託管專案。提供 Tracking(實驗紀錄)、Model Registry(版本控管+階段標籤 Staging/Production/Archived)、Projects(可重現的封裝)、Models(統一模型格式)四大組件。可自架於 K8s 後端搭配 PostgreSQL+S3 相容物件儲存,符合『無雲端鎖定』與『低預算』條件,且能與 Kubeflow/Argo Workflow 整合。代價是需自行負責 HA、備份與權限管理。",
         "wrong": {
-          "選 Vertex AI,因為 Google 提供完整 AutoML 與 Pipeline,只要一鍵部署,沒有任何鎖定問題,小團隊應優先採用": "Vertex AI 雖整合度極高,但模型成品、Pipeline 定義、Feature Store 與 Metadata 皆儲存於 GCP 專屬服務,遷出時需大量重寫,屬於明顯供應商鎖定,違反限制條件 (2)",
-          "選 Weights & Biases 企業版,因其 UI 最美且實驗追蹤功能最強大,小團隊應追求最佳開發體驗": "W&B 企業版採訂閱制,席位費對小團隊造成預算壓力;且實驗 metadata 儲存於其雲端,日後遷移需匯出格式不通用,亦屬於資料層鎖定",
-          "選 SageMaker,因其與 K8s 原生整合且不收平台費,只要付運算費即可,適合預算有限的團隊": "SageMaker 並非任意 K8s 原生整合,且 Endpoint Hours、Notebook Hours、Training Hours 累計費用對小團隊不友善;模型 Artefact 與 Pipeline 綁定 AWS 服務,屬 AWS 鎖定"
+          "選 Vertex AI,Google 提供完整 AutoML、Pipeline 與 Feature Store 整合,跨雲 Artefact 可直接搬遷無鎖定,按用量計費對小團隊壓力有限可優先採用": "Vertex AI 雖整合度極高,但模型成品、Pipeline 定義、Feature Store 與 Metadata 皆儲存於 GCP 專屬服務,遷出時需大量重寫,屬於明顯供應商鎖定,違反限制條件 (2)",
+          "選 W&B 企業版,UI 與實驗追蹤功能業界最強,席位費可議,實驗 metadata 採開放格式儲存,後續可任意匯出至自架後端,小團隊應追求開發體驗": "W&B 企業版採訂閱制,席位費對小團隊造成預算壓力;且實驗 metadata 儲存於其雲端,日後遷移需匯出格式不通用,亦屬於資料層鎖定",
+          "選 SageMaker,可與任意 K8s 原生整合且不收平台費,只付實際運算用量,Endpoint 與 Notebook 計費單純透明,適合預算受限的小團隊起步": "SageMaker 並非任意 K8s 原生整合,且 Endpoint Hours、Notebook Hours、Training Hours 累計費用對小團隊不友善;模型 Artefact 與 Pipeline 綁定 AWS 服務,屬 AWS 鎖定"
         },
         "hook": "MLOps 平台選型口訣:開源自管→MLflow/Kubeflow;純體驗追蹤→W&B;一站式雲服務→Vertex AI/SageMaker(代價:鎖定+用量費)"
       },
@@ -48,18 +48,18 @@
       "source_level": "L2",
       "stem": "某電商平台導入 Feature Store 後,發現信用卡盜刷偵測模型在離線評估 F1=0.92 但上線後實際 F1 僅 0.71,Data Engineer 排查發現訓練時使用『過去 24 小時內交易筆數』特徵是用 Spark 批次計算,而線上推論則由 Redis 即時計數;訓練資料的特徵時點為交易發生後第 6 小時統計值,推論時則為當下值。下列何者為主因?",
       "options": [
-        {"text": "Online/Offline 雙軌特徵未保證『時點一致性(Point-in-Time Correctness)』,離線特徵帶有未來資訊洩漏(label leakage by time),導致訓練分數虛高、上線跌落", "is_correct": true},
-        {"text": "Redis 容量不足導致部分特徵被淘汰,模型抓不到特徵就退回缺值,F1 自然下降", "is_correct": false, "trap_type": "問題核心是『計算時點』而非快取容量;Redis 容量問題會表現為大量缺值,通常先觸發監控警報"},
-        {"text": "Spark 與 Redis 計算結果在數值精度上不同,造成特徵分布不一致,但與時點無關", "is_correct": false, "trap_type": "雖然兩端 implementation 也可能造成 skew,但核心成因是『離線特徵以未來時點計算』,屬於時點洩漏而非數值精度"},
-        {"text": "離線評估資料切分使用 Random Split 而非 Time Split,屬於切分方法錯誤,與 Feature Store 無關", "is_correct": false, "trap_type": "切分方式雖也會造成過於樂觀,但題目明確指出『特徵時點為交易後 6 小時統計值』,核心問題在 Feature Store 的時點處理"}
+        {"text": "Online/Offline 雙軌特徵未保證 Point-in-Time Correctness,離線特徵帶有未來資訊洩漏,訓練分數虛高、上線跌落", "is_correct": true},
+        {"text": "Redis 容量不足導致部分特徵被 LRU 淘汰,模型抓不到特徵退回缺值預設值,F1 因 missing value 比例提高而下降", "is_correct": false, "trap_type": "問題核心是『計算時點』而非快取容量;Redis 容量問題會表現為大量缺值,通常先觸發監控警報"},
+        {"text": "Spark 浮點精度與 Redis Lua 整數計算不同,造成特徵分布尾端統計量不一致,屬實作層 skew 與時點無關", "is_correct": false, "trap_type": "雖然兩端 implementation 也可能造成 skew,但核心成因是『離線特徵以未來時點計算』,屬於時點洩漏而非數值精度"},
+        {"text": "離線評估資料切分採 Random Split 而非依時間 Time Split,屬切分方法錯誤,與 Feature Store 計算邏輯無關", "is_correct": false, "trap_type": "切分方式雖也會造成過於樂觀,但題目明確指出『特徵時點為交易後 6 小時統計值』,核心問題在 Feature Store 的時點處理"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "Feature Store 的核心挑戰之一即是『訓練-推論一致性(Training-Serving Skew)』,具體表現為:離線(Offline Store, 通常為 BigQuery/Snowflake/Parquet)以批次回填,容易把『未來時點』的統計值寫進歷史特徵;而線上(Online Store, Redis/Cassandra)只能以『當下』可得資訊計算。若訓練資料中『過去 24 小時交易筆數』是以交易後 6 小時統計值落表,模型實際看到了『未來 6 小時』的訊息,屬於時點型 label leakage。正確做法是 Point-in-Time Join:把標籤時點往前推,僅取彼時可得的特徵值。",
         "wrong": {
-          "Redis 容量不足導致部分特徵被淘汰,模型抓不到特徵就退回缺值,F1 自然下降": "容量問題的典型徵兆是『大量缺值』與快取命中率掉到極低,且通常會被監控警報先發現;與題目敘述的『時點計算差異』本質不同",
-          "Spark 與 Redis 計算結果在數值精度上不同,造成特徵分布不一致,但與時點無關": "雖然數值實作也會帶來 skew(屬於 Implementation Skew),但本題明確指出特徵的時點差異,核心是 Time Skew 而非 Implementation Skew",
-          "離線評估資料切分使用 Random Split 而非 Time Split,屬於切分方法錯誤,與 Feature Store 無關": "切分方法是另一個問題,但題目核心成因是『特徵時點計算』,屬於 Feature Store 的 Point-in-Time Correctness 議題"
+          "Redis 容量不足導致部分特徵被 LRU 淘汰,模型抓不到特徵退回缺值預設值,F1 因 missing value 比例提高而下降": "容量問題的典型徵兆是『大量缺值』與快取命中率掉到極低,且通常會被監控警報先發現;與題目敘述的『時點計算差異』本質不同",
+          "Spark 浮點精度與 Redis Lua 整數計算不同,造成特徵分布尾端統計量不一致,屬實作層 skew 與時點無關": "雖然數值實作也會帶來 skew(屬於 Implementation Skew),但本題明確指出特徵的時點差異,核心是 Time Skew 而非 Implementation Skew",
+          "離線評估資料切分採 Random Split 而非依時間 Time Split,屬切分方法錯誤,與 Feature Store 計算邏輯無關": "切分方法是另一個問題,但題目核心成因是『特徵時點計算』,屬於 Feature Store 的 Point-in-Time Correctness 議題"
         },
         "hook": "Feature Store 三大 Skew:Implementation(實作差異)、Time(時點不同)、Distribution(分布漂移);本題為 Time Skew"
       },
@@ -77,18 +77,18 @@
       "source_level": "L2",
       "stem": "某保險公司客戶流失預測模型已上線 9 個月,Champion 模型(v1.4, AUC=0.81)正受 Challenger 模型(v2.0, AUC=0.85)挑戰。MLOps Lead 設計 Model Registry 治理規則,要求(1)Champion-Challenger 必須同時推論 14 天、(2)Challenger 在生產真實流量上 PR-AUC 達 Champion 的 1.05 倍才晉升、(3)觸發即時回滾的條件應比晉升條件嚴格。下列何者為最合理的回滾觸發條件設計?",
       "options": [
-        {"text": "回滾條件:連續 24 小時 Online PR-AUC < Champion baseline 的 0.90 倍 OR 推論延遲 P95 > SLA 兩倍 OR 業務指標(留存率)單日跌幅超過 3 σ", "is_correct": true},
-        {"text": "回滾條件:離線評估每週重跑一次,當離線 AUC 不再提升即回滾,毋須監測線上指標", "is_correct": false, "trap_type": "離線重跑無法及時偵測線上漂移與災難性失效,且『不再提升』是常態,不是回滾理由"},
-        {"text": "回滾條件:只要 Challenger 流量錯誤率 > 0%,立即無條件回滾,寧可錯殺", "is_correct": false, "trap_type": "錯誤率 > 0% 是常態(任何模型都有錯誤),這設計會造成無法上線任何 Challenger,過度敏感"},
-        {"text": "回滾條件:Champion 與 Challenger 由人工每月會議檢討一次決定是否替換,毋須自動化", "is_correct": false, "trap_type": "月度人工檢討無法應對突發 drift 或 degradation,違反『回滾條件應比晉升條件嚴格且即時』的要求"}
+        {"text": "連續 24 小時 PR-AUC < baseline×0.90 OR P95 延遲 > SLA 兩倍 OR 留存率單日跌幅 > 3σ,任一觸發即回滾", "is_correct": true},
+        {"text": "離線評估每週以最新 holdout 重跑一次,當離線 AUC 連續兩週不再提升即視為退化並回滾,僅依離線指標即可確保穩健,毋須線上即時監測", "is_correct": false, "trap_type": "離線重跑無法及時偵測線上漂移與災難性失效,且『不再提升』是常態,不是回滾理由"},
+        {"text": "只要 Challenger 流量錯誤率 > 0% 即立即無條件回滾,寧可錯殺一千;此設計可確保任何個案錯誤都不會擴散影響客戶決策", "is_correct": false, "trap_type": "錯誤率 > 0% 是常態(任何模型都有錯誤),這設計會造成無法上線任何 Challenger,過度敏感"},
+        {"text": "Champion 與 Challenger 由產品+資料科學+風控每月固定會議檢討,綜合業務 KPI 與用戶反饋決定是否替換,毋須自動觸發", "is_correct": false, "trap_type": "月度人工檢討無法應對突發 drift 或 degradation,違反『回滾條件應比晉升條件嚴格且即時』的要求"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "Model Registry 的回滾條件應採『多重條件 OR 邏輯+時間視窗+門檻嚴於晉升』。這裡:模型品質指標用 PR-AUC < baseline×0.90(對應晉升的 1.05 倍,顯著嚴於);系統指標用 P95 延遲超 SLA;業務指標用留存率 3σ 跌幅(避免技術指標表面正常但業務崩盤)。三條件 OR 確保任一面向異常皆能觸發。連續 24 小時視窗則避免短暫雜訊造成誤觸發。回滾觸發後,Registry 將 Champion 標籤從 v2.0 撤回 v1.4 即可,屬於版本控制標籤的切換,而非重新部署。",
         "wrong": {
-          "回滾條件:離線評估每週重跑一次,當離線 AUC 不再提升即回滾,毋須監測線上指標": "離線評估有時點延遲(數天至數週),無法即時反應線上 drift 與災難性失效;『不再提升』是飽和的正常狀態,並非回滾理由",
-          "回滾條件:只要 Challenger 流量錯誤率 > 0%,立即無條件回滾,寧可錯殺": "任何模型在生產都不可能 0 錯誤,此條件等於『永不允許上線新模型』,過度嚴苛且不合工程實務",
-          "回滾條件:Champion 與 Challenger 由人工每月會議檢討一次決定是否替換,毋須自動化": "月度會議延遲過長,期間若發生 catastrophic failure 或 fairness 退化,業務可能已嚴重受損,違反 MLOps 自動化原則"
+          "離線評估每週以最新 holdout 重跑一次,當離線 AUC 連續兩週不再提升即視為退化並回滾,僅依離線指標即可確保穩健,毋須線上即時監測": "離線評估有時點延遲(數天至數週),無法即時反應線上 drift 與災難性失效;『不再提升』是飽和的正常狀態,並非回滾理由",
+          "只要 Challenger 流量錯誤率 > 0% 即立即無條件回滾,寧可錯殺一千;此設計可確保任何個案錯誤都不會擴散影響客戶決策": "任何模型在生產都不可能 0 錯誤,此條件等於『永不允許上線新模型』,過度嚴苛且不合工程實務",
+          "Champion 與 Challenger 由產品+資料科學+風控每月固定會議檢討,綜合業務 KPI 與用戶反饋決定是否替換,毋須自動觸發": "月度會議延遲過長,期間若發生 catastrophic failure 或 fairness 退化,業務可能已嚴重受損,違反 MLOps 自動化原則"
         },
         "hook": "Champion-Challenger 回滾三層條件:模型品質(PR-AUC)+系統 SLA(延遲)+業務 KPI(留存率),OR 邏輯且嚴於晉升條件"
       },
@@ -106,18 +106,18 @@
       "source_level": "L2",
       "stem": "某 AIoT 廠商需將同一個 BERT-base 文本分類模型部署到三類硬體:雲端 NVIDIA A100 GPU(高吞吐)、邊緣 Jetson Nano(低功耗)、Android 手機(無 GPU 僅 CPU+NPU)。團隊比較 INT8 量化、知識蒸餾、結構化剪枝、ONNX Runtime 四種加速技術。下列何者為最合理的『硬體-技術』配對策略?",
       "options": [
-        {"text": "A100 用 FP16+ONNX Runtime/TensorRT 提升吞吐;Jetson Nano 用 INT8 量化(TensorRT)壓縮算力;Android 用 知識蒸餾→小模型(如 DistilBERT/TinyBERT)再 INT8+ONNX Runtime Mobile,搭配剪枝控制權重數", "is_correct": true},
-        {"text": "三種硬體一律使用 FP32 原始模型,只調 batch size 即可,因為任何量化都會造成精度大幅下降不可接受", "is_correct": false, "trap_type": "FP32 在 Jetson Nano 與手機上會嚴重超出記憶體與算力,batch size 無法解決;現代 INT8 量化精度損失通常 < 1%"},
-        {"text": "三種硬體一律使用 INT8 量化,因為 INT8 在所有硬體上都最快,毋須再做蒸餾或剪枝", "is_correct": false, "trap_type": "A100 對 FP16/BF16 也有 Tensor Core 加速,且高吞吐場景對精度敏感;INT8 並非萬靈丹,手機端還需更小模型搭配"},
-        {"text": "知識蒸餾僅適用於 GPU 訓練階段,推論階段毋須使用;部署時三種硬體一律用原始 BERT-base+ONNX 即可", "is_correct": false, "trap_type": "蒸餾的『產物』是小模型(student),正是要拿去部署的對象;Jetson 與手機若用 BERT-base 原始模型必然 OOM 或超時"}
+        {"text": "A100 用 FP16+TensorRT 提升吞吐;Jetson Nano 用 INT8 量化壓縮算力;Android 先蒸餾再 INT8+ONNX Mobile", "is_correct": true},
+        {"text": "三種硬體一律使用 FP32 原始模型,僅透過調整 batch size 與 thread 數即可達標;任何量化都會造成精度大幅下降,生產環境不可採用", "is_correct": false, "trap_type": "FP32 在 Jetson Nano 與手機上會嚴重超出記憶體與算力,batch size 無法解決;現代 INT8 量化精度損失通常 < 1%"},
+        {"text": "三種硬體一律使用 INT8 量化(PTQ 後直接部署),INT8 在 GPU/Jetson/Mobile 上都是公認最快路徑,蒸餾與剪枝皆屬訓練期冗餘多此一舉", "is_correct": false, "trap_type": "A100 對 FP16/BF16 也有 Tensor Core 加速,且高吞吐場景對精度敏感;INT8 並非萬靈丹,手機端還需更小模型搭配"},
+        {"text": "知識蒸餾僅在 GPU 訓練階段作為 regularizer 提升泛化能力,推論部署階段毋須引入;三種硬體部署時一律使用原始 BERT-base+ONNX", "is_correct": false, "trap_type": "蒸餾的『產物』是小模型(student),正是要拿去部署的對象;Jetson 與手機若用 BERT-base 原始模型必然 OOM 或超時"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "推論加速技術需依硬體特性組合:A100 屬於高算力 GPU,FP16 可發揮 Tensor Core(2× 算力)且精度幾乎無損;TensorRT/ONNX RT 提供算子融合與 kernel 自動選擇。Jetson Nano 算力與記憶體受限,INT8(TensorRT)可省 4× 記憶體與功耗。Android 手機完全不能跑 BERT-base(>400MB),需先以 知識蒸餾(KD)壓成 DistilBERT/TinyBERT/MobileBERT(40-65MB),再 INT8+ONNX Runtime Mobile/TFLite,結構化剪枝可進一步減重。實務上『先蒸餾→再量化→必要時剪枝』為標準 pipeline。",
         "wrong": {
-          "三種硬體一律使用 FP32 原始模型,只調 batch size 即可,因為任何量化都會造成精度大幅下降不可接受": "現代 PTQ/QAT 在 BERT 類模型精度損失通常 <1%;Jetson Nano 4GB RAM 與手機都跑不動 FP32 BERT-base,batch=1 也會 OOM 或推論時間過長",
-          "三種硬體一律使用 INT8 量化,因為 INT8 在所有硬體上都最快,毋須再做蒸餾或剪枝": "A100 上 INT8 雖快但 Tensor Core 對 FP16/BF16 同樣高效且精度更佳;手機端 BERT-base 即使 INT8 仍嫌大,需先蒸餾出小型 backbone",
-          "知識蒸餾僅適用於 GPU 訓練階段,推論階段毋須使用;部署時三種硬體一律用原始 BERT-base+ONNX 即可": "蒸餾的目的就是『產生可部署的 student 模型』,本質是替換要部署的模型;BERT-base 在邊緣/手機端在記憶體與延遲上都不可行"
+          "三種硬體一律使用 FP32 原始模型,僅透過調整 batch size 與 thread 數即可達標;任何量化都會造成精度大幅下降,生產環境不可採用": "現代 PTQ/QAT 在 BERT 類模型精度損失通常 <1%;Jetson Nano 4GB RAM 與手機都跑不動 FP32 BERT-base,batch=1 也會 OOM 或推論時間過長",
+          "三種硬體一律使用 INT8 量化(PTQ 後直接部署),INT8 在 GPU/Jetson/Mobile 上都是公認最快路徑,蒸餾與剪枝皆屬訓練期冗餘多此一舉": "A100 上 INT8 雖快但 Tensor Core 對 FP16/BF16 同樣高效且精度更佳;手機端 BERT-base 即使 INT8 仍嫌大,需先蒸餾出小型 backbone",
+          "知識蒸餾僅在 GPU 訓練階段作為 regularizer 提升泛化能力,推論部署階段毋須引入;三種硬體部署時一律使用原始 BERT-base+ONNX": "蒸餾的目的就是『產生可部署的 student 模型』,本質是替換要部署的模型;BERT-base 在邊緣/手機端在記憶體與延遲上都不可行"
         },
         "hook": "推論加速金字塔:Cloud GPU→FP16+RT;Edge→INT8(QAT)+RT;Mobile→蒸餾→INT8→剪枝→ONNX Runtime Mobile"
       },
@@ -135,18 +135,18 @@
       "source_level": "L2",
       "stem": "某 AI 平台公司同時運行三類服務:(A) 多個 ONNX/TensorRT 視覺模型同機共用 GPU、需動態 batching 提升吞吐;(B) 純 PyTorch 模型,模型團隊持續發新版需熱更新;(C) 7B-13B 參數 LLM 推論需高吞吐+低延遲+ KV cache 管理。架構師需為三類分別選擇推論服務化框架。下列何者為最合理的配對?",
       "options": [
-        {"text": "(A)→Triton Inference Server(支援 ONNX/TRT/PyTorch/TF 多 backend、Dynamic Batching、Concurrent Model Execution);(B)→TorchServe(原生 PyTorch、Model Archive 熱更新);(C)→vLLM(PagedAttention+Continuous Batching,專為 LLM 高吞吐設計)", "is_correct": true},
-        {"text": "三類服務一律用 TensorFlow Serving,因其最成熟最穩定,可承擔所有推論需求", "is_correct": false, "trap_type": "TF Serving 主要為 SavedModel 格式設計,對 PyTorch/ONNX 與 LLM PagedAttention 無原生支援,通用性不如 Triton"},
-        {"text": "三類服務一律用 Flask + 自製 batching 邏輯,完全自寫最有彈性,毋須使用框架", "is_correct": false, "trap_type": "Flask 為同步 WSGI,缺乏 Dynamic Batching、Concurrent Execution、KV cache 管理等高階功能,自製不實際且工程成本巨大"},
-        {"text": "(A)→vLLM,(B)→Triton,(C)→TorchServe;因為 vLLM 通用性最佳,LLM 反而適合 TorchServe", "is_correct": false, "trap_type": "vLLM 專為 transformer LLM 設計,並非通用視覺模型框架;TorchServe 缺 PagedAttention 與 Continuous Batching,LLM 吞吐不佳"}
+        {"text": "(A)→Triton(多 backend+Dynamic Batching);(B)→TorchServe(Model Archive 熱更新);(C)→vLLM(PagedAttention)", "is_correct": true},
+        {"text": "三類服務一律使用 TensorFlow Serving,其為 Google 出品最成熟穩定的服務框架,且 SavedModel 格式可承載 ONNX 與 LLM 結構,生態最完整無短板", "is_correct": false, "trap_type": "TF Serving 主要為 SavedModel 格式設計,對 PyTorch/ONNX 與 LLM PagedAttention 無原生支援,通用性不如 Triton"},
+        {"text": "三類服務一律用 Flask + 自製 micro-batching 邏輯,框架越精簡彈性越大,可依各模型需求自訂 GPU 排程、KV cache 與優先序策略,工程可控", "is_correct": false, "trap_type": "Flask 為同步 WSGI,缺乏 Dynamic Batching、Concurrent Execution、KV cache 管理等高階功能,自製不實際且工程成本巨大"},
+        {"text": "(A)→vLLM、(B)→Triton、(C)→TorchServe;vLLM 通用性最強且 PagedAttention 對視覺也適用,LLM 反而用 TorchServe 的 Model Archive 才能熱更新", "is_correct": false, "trap_type": "vLLM 專為 transformer LLM 設計,並非通用視覺模型框架;TorchServe 缺 PagedAttention 與 Continuous Batching,LLM 吞吐不佳"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "服務化框架需依工作負載特性選擇:Triton(NVIDIA)是多 backend 統一服務器,支援 ONNX/TensorRT/PyTorch/TF/Python,提供 Dynamic Batching(將多請求合併推論)與 Concurrent Model Execution(同 GPU 多模型並行),適合(A)。TorchServe(Meta+AWS)為 PyTorch 原生服務器,Model Archive(.mar)可熱更新且 workflow API 友善,適合純 PyTorch 模型迭代(B)。vLLM(UC Berkeley)為 LLM 專用,核心創新為 PagedAttention(類似虛擬記憶體分頁管理 KV cache,提升 GPU 記憶體利用率)與 Continuous Batching(請求動態進出 batch),吞吐遠勝傳統框架,適合(C)。",
         "wrong": {
-          "三類服務一律用 TensorFlow Serving,因其最成熟最穩定,可承擔所有推論需求": "TF Serving 雖穩定但生態以 TF SavedModel 為主,對 PyTorch/ONNX 多 backend 支援薄弱;對 LLM 的 PagedAttention/Continuous Batching 並無原生支援",
-          "三類服務一律用 Flask + 自製 batching 邏輯,完全自寫最有彈性,毋須使用框架": "Flask 是同步 WSGI 框架,無 GPU 排程、無 Dynamic Batching、無 KV cache,自製成本高且效能不足以支撐生產級 LLM 推論",
-          "(A)→vLLM,(B)→Triton,(C)→TorchServe;因為 vLLM 通用性最佳,LLM 反而適合 TorchServe": "vLLM 專注 LLM 推論優化(PagedAttention),並非通用視覺/多 backend 框架;LLM 用 TorchServe 缺乏 Continuous Batching 會浪費 GPU 算力"
+          "三類服務一律使用 TensorFlow Serving,其為 Google 出品最成熟穩定的服務框架,且 SavedModel 格式可承載 ONNX 與 LLM 結構,生態最完整無短板": "TF Serving 雖穩定但生態以 TF SavedModel 為主,對 PyTorch/ONNX 多 backend 支援薄弱;對 LLM 的 PagedAttention/Continuous Batching 並無原生支援",
+          "三類服務一律用 Flask + 自製 micro-batching 邏輯,框架越精簡彈性越大,可依各模型需求自訂 GPU 排程、KV cache 與優先序策略,工程可控": "Flask 是同步 WSGI 框架,無 GPU 排程、無 Dynamic Batching、無 KV cache,自製成本高且效能不足以支撐生產級 LLM 推論",
+          "(A)→vLLM、(B)→Triton、(C)→TorchServe;vLLM 通用性最強且 PagedAttention 對視覺也適用,LLM 反而用 TorchServe 的 Model Archive 才能熱更新": "vLLM 專注 LLM 推論優化(PagedAttention),並非通用視覺/多 backend 框架;LLM 用 TorchServe 缺乏 Continuous Batching 會浪費 GPU 算力"
         },
         "hook": "服務化框架配對:多 backend GPU→Triton;純 PyTorch 熱更新→TorchServe;LLM 高吞吐→vLLM(PagedAttention);TF SavedModel→TF Serving"
       },
@@ -164,18 +164,18 @@
       "source_level": "L2",
       "stem": "某銀行欲推出新版反洗錢(AML)模型 v3.0,法遵要求嚴格且模型誤判將觸發人工調查成本。SRE Lead 規劃部署策略:(1)新模型尚未驗證業務正確性、(2)需先觀察與舊版差異不影響任何客戶、(3)驗證通過後逐步切流量、(4)最終完全替換。下列何者為最合理的『部署模式組合』?",
       "options": [
-        {"text": "先 Shadow Deployment(0% 真實流量,僅 mirror 比對輸出)→ 通過 → Canary(5%→25%→50% 漸進)→ 達標後 100% 切換;A/B Testing 用於『同時驗證兩模型業務 KPI 差異』而非『先觀察不影響』,故不在前期使用", "is_correct": true},
-        {"text": "直接從 Day 1 起 A/B Testing 50/50 分流,因為 A/B 才是金標準,Shadow 與 Canary 都不必要", "is_correct": false, "trap_type": "A/B 分流意味 50% 客戶會直接被新模型決策,違反『不影響任何客戶』的限制(1)(2)"},
-        {"text": "直接 100% 切換到 v3.0,因為 v2.0 已過時,只要回滾按鈕在手就無風險", "is_correct": false, "trap_type": "AML 場景中錯誤決策可能造成法遵風險與真實客戶損害,Big Bang 部署違反所有限制條件"},
-        {"text": "Canary 5% 流量先,Shadow 部署只是冗餘無意義,A/B 也不需要", "is_correct": false, "trap_type": "Canary 5% 仍代表 5% 真實客戶被新模型決策,違反『先觀察不影響任何客戶』(2);Shadow 並非冗餘,正是『驗證不影響客戶』的最佳模式"}
+        {"text": "先 Shadow(0% 流量,僅 mirror 比對輸出)→ Canary(5→25→50% 漸進)→ 達標後 100% 切換;A/B 不在前期使用", "is_correct": true},
+        {"text": "Day 1 起直接 A/B Testing 50/50 分流並計算統計顯著性,A/B 為實證金標準,Shadow 與 Canary 都是過度設計的流程冗餘可省略", "is_correct": false, "trap_type": "A/B 分流意味 50% 客戶會直接被新模型決策,違反『不影響任何客戶』的限制(1)(2)"},
+        {"text": "直接 100% 切換到 v3.0(Big Bang),v2.0 已過時且 v3.0 訓練資料更新,只要保留 rollback 按鈕在手即可即時承擔任何風險", "is_correct": false, "trap_type": "AML 場景中錯誤決策可能造成法遵風險與真實客戶損害,Big Bang 部署違反所有限制條件"},
+        {"text": "從 Canary 5% 流量先導開始,Shadow 為流量重複的冗餘步驟可省略,A/B 在 AML 場景毋須使用,僅 Canary 即足以漸進控管風險", "is_correct": false, "trap_type": "Canary 5% 仍代表 5% 真實客戶被新模型決策,違反『先觀察不影響任何客戶』(2);Shadow 並非冗餘,正是『驗證不影響客戶』的最佳模式"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "三模式各有適用情境:Shadow Deployment 將生產流量複製給新模型推論但不採用其結果(只比對 log),用於『驗證新模型在真實流量分布上的行為』而完全不影響客戶,適合 AML 等高風險場景的早期驗證。Canary Deployment 將少量真實流量(5%→25%→...)導向新模型,用於『漸進式風險控制』,可即時監測異常並回滾。A/B Testing 用於『有業務假設要對照驗證』(例如新模型是否提升留存率),需要統計顯著性檢定。本案順序:Shadow(零風險觀察)→Canary(漸進切流)→100%。",
         "wrong": {
-          "直接從 Day 1 起 A/B Testing 50/50 分流,因為 A/B 才是金標準,Shadow 與 Canary 都不必要": "A/B 50/50 等於讓 50% 客戶被未驗證的新模型決策,違反『先觀察不影響』限制;且 A/B 設計目的是『驗證假設』,不適用於『先確認不出錯』階段",
-          "直接 100% 切換到 v3.0,因為 v2.0 已過時,只要回滾按鈕在手就無風險": "AML 模型誤判會觸發人工調查與法遵通報,Big Bang 部署將所有客戶暴露於未驗證模型;『回滾』通常已是事故發生後,造成的客戶與品牌損害無法挽回",
-          "Canary 5% 流量先,Shadow 部署只是冗餘無意義,A/B 也不需要": "Canary 5% 仍意味 5% 客戶承擔風險,在 AML 嚴格場景中前期應先 Shadow(零風險);Shadow 提供『真實流量上模型行為』的驗證,絕非冗餘"
+          "Day 1 起直接 A/B Testing 50/50 分流並計算統計顯著性,A/B 為實證金標準,Shadow 與 Canary 都是過度設計的流程冗餘可省略": "A/B 50/50 等於讓 50% 客戶被未驗證的新模型決策,違反『先觀察不影響』限制;且 A/B 設計目的是『驗證假設』,不適用於『先確認不出錯』階段",
+          "直接 100% 切換到 v3.0(Big Bang),v2.0 已過時且 v3.0 訓練資料更新,只要保留 rollback 按鈕在手即可即時承擔任何風險": "AML 模型誤判會觸發人工調查與法遵通報,Big Bang 部署將所有客戶暴露於未驗證模型;『回滾』通常已是事故發生後,造成的客戶與品牌損害無法挽回",
+          "從 Canary 5% 流量先導開始,Shadow 為流量重複的冗餘步驟可省略,A/B 在 AML 場景毋須使用,僅 Canary 即足以漸進控管風險": "Canary 5% 仍意味 5% 客戶承擔風險,在 AML 嚴格場景中前期應先 Shadow(零風險);Shadow 提供『真實流量上模型行為』的驗證,絕非冗餘"
         },
         "hook": "部署模式光譜:Shadow(0% 風險,先觀察)→Canary(漸進風險,可回滾)→A/B(對照驗證,統計顯著);AML 高風險場景應全用"
       },
@@ -193,18 +193,18 @@
       "source_level": "L2",
       "stem": "某客服 AI 平台需監控三類資料漂移:(A) 客戶基本資料 (age, income — 數值);(B) 商品類別 (category id — 類別);(C) 客服對話文本(由 BERT 取出 768 維 embedding)。MLOps 評估 Evidently AI、Whylogs、Arize 三套漂移偵測工具。下列何者為最合理的選型考量?",
       "options": [
-        {"text": "Evidently 適合表格(數值/類別)且 Report 直觀,適合(A)(B);Whylogs 強於資料 profiling 與大規模日誌串流;Arize 對 embedding/LLM 監控有專門模組(UMAP/cluster drift),適合(C);三者可互補,並非單選", "is_correct": true},
-        {"text": "三類資料一律用 Evidently 即可,因其支援所有資料型態且免費,毋須其他工具", "is_correct": false, "trap_type": "Evidently 對 768 維 embedding drift 雖能算 cosine 距離,但缺 UMAP/cluster 視覺化與 LLM-specific metric;對大規模串流亦不及 Whylogs"},
-        {"text": "Evidently 只能監控影像,Whylogs 只能監控文本,Arize 只能監控表格,不可混用", "is_correct": false, "trap_type": "三者實際支援多種資料型態,並非分工專一;Evidently 主力為表格,Arize 主力為 embedding/LLM,並非絕對分工"},
-        {"text": "embedding drift 不存在(向量無分布概念),(C) 不需要工具,只要監控 (A)(B) 即可", "is_correct": false, "trap_type": "embedding 是高維連續向量,有分布概念;業界用 KS test on PCA、cosine 距離分布、UMAP cluster shift、MMD 等方法偵測 embedding drift"}
+        {"text": "Evidently 適合表格(A)(B)的 Report;Whylogs 強於大規模 profile 串流;Arize 有 embedding/LLM 專用模組適合(C);三者互補非單選", "is_correct": true},
+        {"text": "三類資料一律使用 Evidently 即可,其支援所有資料型態且開源免費,內建 UMAP 與 LLM-specific 模組,毋須再引入 Whylogs 或 Arize 增加維運與授權成本", "is_correct": false, "trap_type": "Evidently 對 768 維 embedding drift 雖能算 cosine 距離,但缺 UMAP/cluster 視覺化與 LLM-specific metric;對大規模串流亦不及 Whylogs"},
+        {"text": "Evidently 專為影像分布監控設計、Whylogs 僅支援文本資料 logging、Arize 僅處理表格特徵,三者按資料型態嚴格分工互不重疊不可混用", "is_correct": false, "trap_type": "三者實際支援多種資料型態,並非分工專一;Evidently 主力為表格,Arize 主力為 embedding/LLM,並非絕對分工"},
+        {"text": "embedding 為連續高維向量無離散分布概念,因此 drift 偵測在數學上不成立,(C) 毋須監控工具,只需聚焦 (A)(B) 表格資料的傳統指標即可", "is_correct": false, "trap_type": "embedding 是高維連續向量,有分布概念;業界用 KS test on PCA、cosine 距離分布、UMAP cluster shift、MMD 等方法偵測 embedding drift"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "三套工具定位不同:Evidently AI(開源)強項為表格資料的 Report Suite(數值-KS test/Wasserstein,類別-Chi²/PSI),內建 HTML 報表方便分享。Whylogs(WhyLabs 開源)強項為輕量 statistical profile(可序列化的 dataset profile),適合大規模串流寫入 data lake 後比對。Arize(商用)為 ML observability 平台,對 embedding 與 LLM 監控有專門模組(UMAP 視覺化、cluster drift、prompt-completion drift)。本案表格(A)(B)優先 Evidently,大規模 logging 用 Whylogs,embedding(C)用 Arize 或 Evidently 進階模組。",
         "wrong": {
-          "三類資料一律用 Evidently 即可,因其支援所有資料型態且免費,毋須其他工具": "Evidently 雖支援多型態,但 768 維 embedding 視覺化與 LLM 專用指標較弱;大規模串流場景 Whylogs profile 序列化更高效",
-          "Evidently 只能監控影像,Whylogs 只能監控文本,Arize 只能監控表格,不可混用": "三者皆為通用 ML 監控工具,並非按資料型態分工;此選項陳述完全錯誤",
-          "embedding drift 不存在(向量無分布概念),(C) 不需要工具,只要監控 (A)(B) 即可": "embedding 為高維連續向量,可透過 PCA/UMAP 降維、cosine 距離分布、MMD、cluster drift 偵測分布變化;業界廣泛監控"
+          "三類資料一律使用 Evidently 即可,其支援所有資料型態且開源免費,內建 UMAP 與 LLM-specific 模組,毋須再引入 Whylogs 或 Arize 增加維運與授權成本": "Evidently 雖支援多型態,但 768 維 embedding 視覺化與 LLM 專用指標較弱;大規模串流場景 Whylogs profile 序列化更高效",
+          "Evidently 專為影像分布監控設計、Whylogs 僅支援文本資料 logging、Arize 僅處理表格特徵,三者按資料型態嚴格分工互不重疊不可混用": "三者皆為通用 ML 監控工具,並非按資料型態分工;此選項陳述完全錯誤",
+          "embedding 為連續高維向量無離散分布概念,因此 drift 偵測在數學上不成立,(C) 毋須監控工具,只需聚焦 (A)(B) 表格資料的傳統指標即可": "embedding 為高維連續向量,可透過 PCA/UMAP 降維、cosine 距離分布、MMD、cluster drift 偵測分布變化;業界廣泛監控"
         },
         "hook": "Drift 偵測工具定位:Evidently(表格 Report)/Whylogs(輕量 Profile 大規模)/Arize(embedding+LLM observability)"
       },
@@ -222,18 +222,18 @@
       "source_level": "L2",
       "stem": "某保險公司客戶風險模型上線一週,監控報告顯示:特徵 X1(年收入)KS test p-value = 0.001、PSI = 0.18、KL Divergence = 0.42、Wasserstein 距離 = 12,500。團隊對嚴重度有不同判讀。下列何者為最合理的綜合判讀?",
       "options": [
-        {"text": "KS p<0.001 高度顯著、PSI 0.10-0.25 屬中度漂移、KL=0.42 顯示分布偏離明顯、Wasserstein 12500 在年收入單位下需參照 baseline 比例;綜合判定為『中度漂移、需啟動再訓練評估但尚未到緊急回滾』", "is_correct": true},
-        {"text": "KS p<0.001 即代表災難級漂移,應立即回滾模型並停止服務,毋須看其他統計量", "is_correct": false, "trap_type": "p-value 顯著只代表『分布有差異』而非『差異很大』,大樣本下極小差異也會 p<0.001;需配合 effect size(PSI/KL/Wasserstein)綜合判讀"},
-        {"text": "PSI 0.18 < 0.25 屬輕微,可忽略;其他統計量都不重要", "is_correct": false, "trap_type": "業界 PSI 閾值 0.10-0.25 為中度漂移需關注、>0.25 才嚴重;0.18 不可忽略,且應綜合多種指標"},
-        {"text": "Wasserstein 距離 12,500 數值最大故最嚴重;p-value、PSI、KL 皆可忽略,只看 Wasserstein", "is_correct": false, "trap_type": "Wasserstein 是『搬土』距離,單位與資料同(年收入元),12500 元相對年收入百萬級可能很小;不能僅憑絕對值判斷"}
+        {"text": "KS 顯著、PSI 0.18 屬中度、KL 0.42 偏離明顯、Wasserstein 須參照 baseline 比例;綜合為『中度漂移、啟動再訓練評估非緊急回滾』", "is_correct": true},
+        {"text": "KS p<0.001 即代表災難級漂移應立即回滾並停服,p-value 為最權威指標,毋須再看 PSI/KL/Wasserstein 等次要統計量", "is_correct": false, "trap_type": "p-value 顯著只代表『分布有差異』而非『差異很大』,大樣本下極小差異也會 p<0.001;需配合 effect size(PSI/KL/Wasserstein)綜合判讀"},
+        {"text": "PSI 0.18 仍 < 0.25 屬輕微範圍可忽略,只要 PSI 未達紅線即視為穩定;其他統計量並非業界標準可不參考", "is_correct": false, "trap_type": "業界 PSI 閾值 0.10-0.25 為中度漂移需關注、>0.25 才嚴重;0.18 不可忽略,且應綜合多種指標"},
+        {"text": "Wasserstein 12500 為四項中數值最大代表漂移最嚴重,p-value、PSI、KL 都可忽略,只看 Wasserstein 絕對值即可", "is_correct": false, "trap_type": "Wasserstein 是『搬土』距離,單位與資料同(年收入元),12500 元相對年收入百萬級可能很小;不能僅憑絕對值判斷"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "Drift 嚴重度需多統計量綜合判讀:KS test p-value 偵測『是否有差異』(統計顯著性),受樣本數影響,大樣本下極小差異也顯著,故 p<0.001 不等於嚴重。PSI(Population Stability Index)業界經驗:<0.10 穩定、0.10-0.25 中度漂移需關注、>0.25 嚴重需處置,本案 0.18 屬中度。KL Divergence 0.42 顯示分布顯著偏離(>0 即有差異,通常 >0.1 需注意)。Wasserstein 12500 屬『絕對距離』,需相對 baseline mean(年收入百萬級則 1% 偏移)判讀。綜合『中度漂移、啟動再訓練評估而非緊急回滾』為合理判讀。",
         "wrong": {
-          "KS p<0.001 即代表災難級漂移,應立即回滾模型並停止服務,毋須看其他統計量": "p-value 衡量『差異是否統計顯著』而非『差異大小』,大樣本下微小差異也顯著;立即回滾過度反應,且未利用 PSI/KL/Wasserstein 提供的 effect size 訊息",
-          "PSI 0.18 < 0.25 屬輕微,可忽略;其他統計量都不重要": "業界 PSI 閾值 0.10-0.25 為『中度漂移需關注』而非『輕微可忽略』;且 KL=0.42 與 KS p<0.001 都指向需採取行動,不可單看 PSI",
-          "Wasserstein 距離 12,500 數值最大故最嚴重;p-value、PSI、KL 皆可忽略,只看 Wasserstein": "Wasserstein 為『搬土距離』有量綱(同資料單位),須相對 baseline mean 比例化解讀;12500 元相對百萬年收入屬小幅;單看絕對值會誤判"
+          "KS p<0.001 即代表災難級漂移應立即回滾並停服,p-value 為最權威指標,毋須再看 PSI/KL/Wasserstein 等次要統計量": "p-value 衡量『差異是否統計顯著』而非『差異大小』,大樣本下微小差異也顯著;立即回滾過度反應,且未利用 PSI/KL/Wasserstein 提供的 effect size 訊息",
+          "PSI 0.18 仍 < 0.25 屬輕微範圍可忽略,只要 PSI 未達紅線即視為穩定;其他統計量並非業界標準可不參考": "業界 PSI 閾值 0.10-0.25 為『中度漂移需關注』而非『輕微可忽略』;且 KL=0.42 與 KS p<0.001 都指向需採取行動,不可單看 PSI",
+          "Wasserstein 12500 為四項中數值最大代表漂移最嚴重,p-value、PSI、KL 都可忽略,只看 Wasserstein 絕對值即可": "Wasserstein 為『搬土距離』有量綱(同資料單位),須相對 baseline mean 比例化解讀;12500 元相對百萬年收入屬小幅;單看絕對值會誤判"
         },
         "hook": "Drift 統計量綜合判讀:p-value(顯著性)+PSI(經驗閾值)+KL/Wasserstein(effect size)合看;PSI 0.10-0.25=中度需評估"
       },
@@ -251,18 +251,18 @@
       "source_level": "L2",
       "stem": "某銀行貸款核准模型對性別存在 Disparate Impact(女性核准率/男性核准率 = 0.65,違反 80% 規則)。團隊評估三類公平性介入:預處理(Reweighting / Disparate Impact Remover)、in-processing(Adversarial Debiasing)、後處理(Equalized Odds Postprocessing)。法遵要求(1)模型內部訓練流程可審計、(2)不可改動既有 LightGBM 訓練程式碼、(3)需要保留原始決策分數供業務參照。下列何者為最合理的選擇?",
       "options": [
-        {"text": "選後處理 Equalized Odds Postprocessing,因不需改動模型內部訓練(滿足限制 2),且原始分數可保留;只在輸出端依群組調整決策閾值或 randomized output,使 TPR/FPR 跨群組對齊", "is_correct": true},
-        {"text": "選 in-processing Adversarial Debiasing,因其在訓練中加入 adversary 網路最強大;但需重寫訓練流程(會改既有 LightGBM 程式)且模型內部不易審計", "is_correct": false, "trap_type": "Adversarial Debiasing 為神經網路 in-processing 技術,無法直接套用 LightGBM,且違反限制(2)『不可改既有訓練程式』與(1)『可審計』要求"},
-        {"text": "選預處理 Reweighting,因預處理最簡單,只調整訓練樣本權重;但會改動訓練資料且重新訓練,違反『不改既有訓練程式』限制", "is_correct": false, "trap_type": "Reweighting 雖是預處理,但仍需重新訓練且改動 sample weight 設定,雖未必改演算法但會改 training pipeline,違反限制(2);且原始分數定義會改變"},
-        {"text": "三類介入都不適用,只能放棄模型,改用人工核准制度", "is_correct": false, "trap_type": "公平性問題在 ML 工程上有成熟解法(AIF360/Fairlearn 提供多種介入),棄用 ML 屬於過度反應,違反業務目標"}
+        {"text": "選後處理 Equalized Odds Postprocessing:不改訓練流程、保留原始分數、僅在輸出端依群組調整閾值使 TPR/FPR 對齊", "is_correct": true},
+        {"text": "選 in-processing Adversarial Debiasing,在訓練中加入 adversary 網路理論最強大,雖然需要重寫 LightGBM 訓練流程但仍值得", "is_correct": false, "trap_type": "Adversarial Debiasing 為神經網路 in-processing 技術,無法直接套用 LightGBM,且違反限制(2)『不可改既有訓練程式』與(1)『可審計』要求"},
+        {"text": "選預處理 Reweighting,僅調整訓練樣本權重最為簡潔,需重新訓練但 sample_weight 屬資料層調整不算改程式碼", "is_correct": false, "trap_type": "Reweighting 雖是預處理,但仍需重新訓練且改動 sample weight 設定,雖未必改演算法但會改 training pipeline,違反限制(2);且原始分數定義會改變"},
+        {"text": "三類技術介入都不適用本案,放棄 ML 改回完全人工核准制度,以人工審查徹底排除演算法歧視風險", "is_correct": false, "trap_type": "公平性問題在 ML 工程上有成熟解法(AIF360/Fairlearn 提供多種介入),棄用 ML 屬於過度反應,違反業務目標"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "三類公平性介入按 ML pipeline 階段:預處理(調整訓練資料,如 Reweighting/DIR/Learning Fair Representations)、in-processing(調整訓練演算法,如 Adversarial Debiasing/Prejudice Remover)、後處理(調整輸出,如 Equalized Odds Postprocessing/Reject Option Classification)。後處理的關鍵優勢:不需改動模型內部訓練(對接黑盒模型如 LightGBM 友善)、保留原始分數(僅在 thresholding 階段做群組差異化或隨機化)、易審計(改變僅在決策層)。本案三項限制皆指向後處理,故 Equalized Odds Postprocessing 為最合理選擇。",
         "wrong": {
-          "選 in-processing Adversarial Debiasing,因其在訓練中加入 adversary 網路最強大;但需重寫訓練流程(會改既有 LightGBM 程式)且模型內部不易審計": "Adversarial Debiasing 屬神經網路技術,套用至 LightGBM 需重寫整個訓練流程;且對抗訓練黑盒度高,法遵審計困難,違反限制(1)(2)",
-          "選預處理 Reweighting,因預處理最簡單,只調整訓練樣本權重;但會改動訓練資料且重新訓練,違反『不改既有訓練程式』限制": "Reweighting 雖『預處理』但仍須重新訓練,且調整 sample_weight 屬於改 training pipeline 的一環;原始決策分數的定義也會改變,違反限制(2)(3)",
-          "三類介入都不適用,只能放棄模型,改用人工核准制度": "AIF360 與 Fairlearn 等成熟工具庫已提供多種公平性介入,棄用 ML 屬於極端反應且不符成本效益,放棄 ML 模型亦違反業務目標"
+          "選 in-processing Adversarial Debiasing,在訓練中加入 adversary 網路理論最強大,雖然需要重寫 LightGBM 訓練流程但仍值得": "Adversarial Debiasing 屬神經網路技術,套用至 LightGBM 需重寫整個訓練流程;且對抗訓練黑盒度高,法遵審計困難,違反限制(1)(2)",
+          "選預處理 Reweighting,僅調整訓練樣本權重最為簡潔,需重新訓練但 sample_weight 屬資料層調整不算改程式碼": "Reweighting 雖『預處理』但仍須重新訓練,且調整 sample_weight 屬於改 training pipeline 的一環;原始決策分數的定義也會改變,違反限制(2)(3)",
+          "三類技術介入都不適用本案,放棄 ML 改回完全人工核准制度,以人工審查徹底排除演算法歧視風險": "AIF360 與 Fairlearn 等成熟工具庫已提供多種公平性介入,棄用 ML 屬於極端反應且不符成本效益,放棄 ML 模型亦違反業務目標"
         },
         "hook": "公平性介入三層:預處理(調資料)/in-processing(調演算法)/後處理(調輸出);後處理對黑盒模型最友善"
       },
@@ -280,18 +280,18 @@
       "source_level": "L2",
       "stem": "某醫療 AI 公司部署『心臟病風險預測模型』於多個醫院。倫理委員會主張採用 Counterfactual Fairness(反事實公平性),認為傳統群體公平性指標(Demographic Parity / Equalized Odds)不足。若該模型同時使用於招聘、貸款、醫療三場景,下列何者為最合理的『Counterfactual Fairness』概念與應用情境分析?",
       "options": [
-        {"text": "Counterfactual Fairness 基於因果推論:『若改變敏感屬性(如性別),其他保持不變,模型對同一個體的預測應一致』;在醫療(因果路徑明確、性別本身可能是醫學變數)需謹慎區分『直接歧視』vs『合法醫學差異』,在招聘/貸款場景因果路徑可定義且歧視較易識別,適用性強", "is_correct": true},
-        {"text": "Counterfactual Fairness 等同於 Demographic Parity 的另一種說法,只是用因果推論術語包裝,不需區分", "is_correct": false, "trap_type": "Counterfactual Fairness 處理『個體層級因果』,Demographic Parity 處理『群體層級統計差異』,兩者本質不同;且 CF 可區分『合法醫學差異』與『歧視』,DP 不能"},
-        {"text": "Counterfactual Fairness 只適用於影像辨識,文字與表格資料無法應用", "is_correct": false, "trap_type": "CF 基於因果圖,可應用於任何資料型態;與資料型態無關,與『因果路徑是否可定義』有關"},
-        {"text": "Counterfactual Fairness 在醫療場景完全不適用,因為醫學差異不存在", "is_correct": false, "trap_type": "醫療場景中部分性別/種族差異可能是真實的生理因素(如孕婦、特定族群基因風險),CF 框架正是用來區分這類『合法差異』與『社會歧視』,應用價值高"}
+        {"text": "CF 基於因果推論(改敏感屬性其他不變則預測一致);醫療需區分『直接歧視 vs 合法醫學差異』,招聘/貸款因果路徑明確適用性強", "is_correct": true},
+        {"text": "Counterfactual Fairness 等同於 Demographic Parity 的另一種說法,只是用因果推論術語包裝兩者數學定義完全等價,不需特別區分", "is_correct": false, "trap_type": "Counterfactual Fairness 處理『個體層級因果』,Demographic Parity 處理『群體層級統計差異』,兩者本質不同;且 CF 可區分『合法醫學差異』與『歧視』,DP 不能"},
+        {"text": "Counterfactual Fairness 因依賴像素級反事實只適用於影像辨識,結構化文字與表格資料缺乏連續變化空間無法應用", "is_correct": false, "trap_type": "CF 基於因果圖,可應用於任何資料型態;與資料型態無關,與『因果路徑是否可定義』有關"},
+        {"text": "Counterfactual Fairness 在醫療場景完全不適用,因為醫學上不應存在性別或種族差異,差異即代表演算法偏誤", "is_correct": false, "trap_type": "醫療場景中部分性別/種族差異可能是真實的生理因素(如孕婦、特定族群基因風險),CF 框架正是用來區分這類『合法差異』與『社會歧視』,應用價值高"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "Counterfactual Fairness(Kusner et al. 2017)定義:『對於任何個體 X,在反事實世界中改變敏感屬性 A 而其他變數依因果結構推導,模型對該個體的預測 Y 應相同』。其核心是因果圖(SCM, Structural Causal Model),需建模 A 對其他變數的因果影響路徑。與 Demographic Parity 等群體指標差異:CF 處理個體層級因果,DP 處理群體統計差異。應用情境:招聘/貸款 — 因果路徑相對清楚、歧視易識別;醫療 — 性別/種族可能是真實的生理因素(孕婦、基因),CF 框架可區分『歧視性差異』與『合法醫學差異』,但需專業醫學知識建構因果圖。",
         "wrong": {
-          "Counterfactual Fairness 等同於 Demographic Parity 的另一種說法,只是用因果推論術語包裝,不需區分": "DP 是群體統計平等(P(Ŷ|A=0)=P(Ŷ|A=1)),CF 是個體因果一致;兩者數學定義不同。CF 可區分合法醫學差異,DP 一視同仁要求群體平等,概念與適用情境差異很大",
-          "Counterfactual Fairness 只適用於影像辨識,文字與表格資料無法應用": "CF 框架基於因果圖,與資料型態無關,可應用於表格(如招聘資料)、文字(如履歷)、影像;限制在於『因果結構是否可定義與驗證』",
-          "Counterfactual Fairness 在醫療場景完全不適用,因為醫學差異不存在": "醫療中真實生理差異存在(孕婦劑量、特定族群基因風險),CF 正是用因果圖區分『合法醫學差異(因果路徑通過真實生理)』與『社會歧視』,應用價值高;斷言『不存在』錯誤"
+          "Counterfactual Fairness 等同於 Demographic Parity 的另一種說法,只是用因果推論術語包裝兩者數學定義完全等價,不需特別區分": "DP 是群體統計平等(P(Ŷ|A=0)=P(Ŷ|A=1)),CF 是個體因果一致;兩者數學定義不同。CF 可區分合法醫學差異,DP 一視同仁要求群體平等,概念與適用情境差異很大",
+          "Counterfactual Fairness 因依賴像素級反事實只適用於影像辨識,結構化文字與表格資料缺乏連續變化空間無法應用": "CF 框架基於因果圖,與資料型態無關,可應用於表格(如招聘資料)、文字(如履歷)、影像;限制在於『因果結構是否可定義與驗證』",
+          "Counterfactual Fairness 在醫療場景完全不適用,因為醫學上不應存在性別或種族差異,差異即代表演算法偏誤": "醫療中真實生理差異存在(孕婦劑量、特定族群基因風險),CF 正是用因果圖區分『合法醫學差異(因果路徑通過真實生理)』與『社會歧視』,應用價值高;斷言『不存在』錯誤"
         },
         "hook": "Counterfactual Fairness:個體因果一致(改 A 不影響預測);與群體 DP 互補;醫療需區分『生理差異 vs 歧視』"
       },
@@ -309,18 +309,18 @@
       "source_level": "L2",
       "stem": "某監理機關要求金融模型同時滿足:(a) 對每個群體的 Calibration 一致(即不同群體的『預測分數 0.7 對應實際違約率 0.7』)、(b) Equalized Odds(跨群體 TPR 與 FPR 相等)、(c) 群體基底違約率(base rate)不同。風控長詢問模型是否可同時滿足三者。下列何者為最合理的回答?",
       "options": [
-        {"text": "由 Chouldechova/Kleinberg 等人證明的 Impossibility Theorem,當群體 base rate 不同時,Calibration、Equalized Odds(TPR=FPR)、Predictive Parity 三者無法同時滿足(除非完美分類器);需依場景權衡優先級,監理應指定優先指標而非全要", "is_correct": true},
-        {"text": "可以同時滿足,只要訓練資料足夠多、模型參數足夠大,三者都可達成;這是模型工程問題", "is_correct": false, "trap_type": "Impossibility Theorem 為數學定理,與資料量/模型大小無關;只要 base rate 不同就一定有取捨,並非工程問題"},
-        {"text": "Calibration 與 Equalized Odds 完全等價,不存在衝突,監理擔心多餘", "is_correct": false, "trap_type": "Calibration 與 Equalized Odds 是不同的公平性度量,前者關心預測分數準確度,後者關心錯誤類型分布;不僅不等價,當 base rate 不同時還相互衝突"},
-        {"text": "只要把 base rate 對齊(強制兩群體訓練資料 50/50 抽樣),就能同時滿足三者,屬於資料層解法", "is_correct": false, "trap_type": "強制重抽改變的是『資料分布』,但群體真實 base rate 不同(現實世界差異)無法改變;且重抽會破壞模型對真實人口的預測校正"}
+        {"text": "Chouldechova/Kleinberg 證明的 Impossibility Theorem:base rate 不同時三者不可兼得,需擇優先指標", "is_correct": true},
+        {"text": "可以同時滿足三者,只要訓練資料量足夠大、模型參數足夠多並搭配多目標損失函數聯合最佳化,即屬於可在工程上完全解決且可重現的標準問題", "is_correct": false, "trap_type": "Impossibility Theorem 為數學定理,與資料量/模型大小無關;只要 base rate 不同就一定有取捨,並非工程問題"},
+        {"text": "Calibration 與 Equalized Odds 在數學上完全等價,僅是不同學派的命名差異,監理同時要求三者僅是術語重複,實屬概念誤解多餘", "is_correct": false, "trap_type": "Calibration 與 Equalized Odds 是不同的公平性度量,前者關心預測分數準確度,後者關心錯誤類型分布;不僅不等價,當 base rate 不同時還相互衝突"},
+        {"text": "只要將兩群體訓練資料以 oversampling/undersampling 強制 50/50 對齊 base rate,即可同時滿足三者,屬資料層解法", "is_correct": false, "trap_type": "強制重抽改變的是『資料分布』,但群體真實 base rate 不同(現實世界差異)無法改變;且重抽會破壞模型對真實人口的預測校正"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "Impossibility Theorem(Chouldechova 2017、Kleinberg-Mullainathan-Raghavan 2016)指出:當不同群體的真實 base rate p_A ≠ p_B 時,以下三項公平性指標『無法同時滿足』(除非完美分類器 AUC=1):(1) Calibration within groups(群體內預測校正一致)、(2) Equal False Positive Rate、(3) Equal False Negative Rate(後二合稱 Equalized Odds)。這是數學上的不可能性,與訓練資料量、模型容量、超參數調校都無關。實務做法:監理機關應指定優先指標(例如金融場景常重 Equalized Odds,刑事司法場景 Predictive Parity 重要),並接受其他指標的合理偏離。",
         "wrong": {
-          "可以同時滿足,只要訓練資料足夠多、模型參數足夠大,三者都可達成;這是模型工程問題": "Impossibility Theorem 為形式化證明的數學定理,與資料量、模型容量無關;只要 base rate 真實不同(現實世界差異),三者就一定有取捨,絕非工程可解決",
-          "Calibration 與 Equalized Odds 完全等價,不存在衝突,監理擔心多餘": "Calibration 是『預測分數=實際發生率』(校正性質),Equalized Odds 是『跨群組 TPR/FPR 一致』(錯誤類型);兩者數學定義不同,base rate 不同時更會直接衝突",
-          "只要把 base rate 對齊(強制兩群體訓練資料 50/50 抽樣),就能同時滿足三者,屬於資料層解法": "重抽改的是『訓練分布』,但模型部署於真實人口仍面臨真實 base rate;且重抽會破壞 calibration 對真實 prevalence 的校正,反而讓問題更糟"
+          "可以同時滿足三者,只要訓練資料量足夠大、模型參數足夠多並搭配多目標損失函數聯合最佳化,即屬於可在工程上完全解決且可重現的標準問題": "Impossibility Theorem 為形式化證明的數學定理,與資料量、模型容量無關;只要 base rate 真實不同(現實世界差異),三者就一定有取捨,絕非工程可解決",
+          "Calibration 與 Equalized Odds 在數學上完全等價,僅是不同學派的命名差異,監理同時要求三者僅是術語重複,實屬概念誤解多餘": "Calibration 是『預測分數=實際發生率』(校正性質),Equalized Odds 是『跨群組 TPR/FPR 一致』(錯誤類型);兩者數學定義不同,base rate 不同時更會直接衝突",
+          "只要將兩群體訓練資料以 oversampling/undersampling 強制 50/50 對齊 base rate,即可同時滿足三者,屬資料層解法": "重抽改的是『訓練分布』,但模型部署於真實人口仍面臨真實 base rate;且重抽會破壞 calibration 對真實 prevalence 的校正,反而讓問題更糟"
         },
         "hook": "Fair-ML Impossibility:base rate 不同時 Calibration vs Equalized Odds vs Predictive Parity 三者不可兼得,需擇其優先"
       },
@@ -338,18 +338,18 @@
       "source_level": "L2",
       "stem": "某醫療 AI 團隊使用 DP-SGD(差分隱私 SGD)訓練病歷分類模型,設計總隱私預算 ε=2.0、δ=10^-5。若每個 epoch 的單步 ε_step ≈ 0.005、訓練 100 epochs(每 epoch 約 1000 個 batch),下列何者為最正確的隱私預算管理策略?",
       "options": [
-        {"text": "採用 RDP(Rényi Differential Privacy)會計或 Moments Accountant 計算累積 ε,因 Basic Composition(線性加總)會嚴重高估;同時控制 epoch 數、clipping norm、noise multiplier、subsampling rate 以控制最終 ε 在 2.0 內", "is_correct": true},
-        {"text": "採用 Basic Composition 線性加總:總 ε = 0.005 × 1000 × 100 = 500,遠超預算 2.0,所以 DP-SGD 無法實作", "is_correct": false, "trap_type": "Basic Composition 是『最壞情況』bound,過於保守;實務 DP-SGD 採用 RDP/Moments Accountant 可得緊得多的 bound,並非無法實作"},
-        {"text": "DP-SGD 的隱私預算只看訓練最後一步 ε,不需累積,故 100 epochs 等於 1 epoch 的 ε", "is_correct": false, "trap_type": "差分隱私 Composition Theorem 要求所有訪問資料的查詢都計入累積 ε;『只看最後一步』完全錯誤"},
-        {"text": "把 ε 設為無限大就能避免追蹤累積,反正 δ 已設小即可保證隱私", "is_correct": false, "trap_type": "(ε,δ)-DP 中 ε 與 δ 必須同時有限且小;ε 無限大等於『無隱私保護』,δ 再小也無意義"}
+        {"text": "採用 RDP 或 Moments Accountant 計算累積 ε(Basic Composition 過於保守);調控 clipping/noise/subsampling 控 ε≤2.0", "is_correct": true},
+        {"text": "採用 Basic Composition 線性加總:總 ε = 0.005 × 1000 × 100 = 500 遠超預算 2.0,因此本案 DP-SGD 在 ε=2.0 限制下根本無法實作,應放棄 DP-SGD 改用 federated 設計", "is_correct": false, "trap_type": "Basic Composition 是『最壞情況』bound,過於保守;實務 DP-SGD 採用 RDP/Moments Accountant 可得緊得多的 bound,並非無法實作"},
+        {"text": "DP-SGD 隱私預算僅以訓練最終 step 的 ε 為準,中間 step 因參數會被持續覆寫不需累積,故 100 epochs × 1000 batch 等於 1 epoch 的 ε", "is_correct": false, "trap_type": "差分隱私 Composition Theorem 要求所有訪問資料的查詢都計入累積 ε;『只看最後一步』完全錯誤"},
+        {"text": "將 ε 設為無限大以省略累積追蹤的工程負擔,只要 δ 設得足夠小(如 10^-9)即可由 δ 端的指數衰減提供強隱私保證,屬合理替代設計簡化實作", "is_correct": false, "trap_type": "(ε,δ)-DP 中 ε 與 δ 必須同時有限且小;ε 無限大等於『無隱私保護』,δ 再小也無意義"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "DP-SGD 隱私預算管理需 advanced accountant:Basic Composition(Dwork-Roth)線性加總 ε,過於保守;Advanced Composition 在多次重複時 √(k·ε²) bound;RDP(Rényi DP, Mironov 2017)與 Moments Accountant(Abadi et al. 2016)可得最緊 bound,業界 DP-SGD 標準作法。具體控制變數:(1) noise multiplier σ 越大 → ε 累積越慢、(2) gradient clipping norm C 越小 → 敏感度越低、(3) subsampling rate q(每 batch 抽樣比例)越小 → privacy amplification、(4) epoch 數越少累積越少。Opacus 與 TensorFlow Privacy 內建 RDP accountant,可即時報告當前 ε 並在達 budget 時停訓。",
         "wrong": {
-          "採用 Basic Composition 線性加總:總 ε = 0.005 × 1000 × 100 = 500,遠超預算 2.0,所以 DP-SGD 無法實作": "Basic Composition 為最壞情況上界,過度保守;RDP accountant 對 Gaussian Mechanism+subsampling 可得緊許多的 bound,DP-SGD 在 ε=1-3 範圍內訓練深度模型已是業界常見做法",
-          "DP-SGD 的隱私預算只看訓練最後一步 ε,不需累積,故 100 epochs 等於 1 epoch 的 ε": "DP 的核心 Composition Theorem 要求所有訪問私人資料的查詢都納入累積 ε;『只看最後一步』違反 DP 基本定義,將造成嚴重隱私洩漏",
-          "把 ε 設為無限大就能避免追蹤累積,反正 δ 已設小即可保證隱私": "(ε,δ)-DP 隱私強度由 ε 主導,ε 越大保護越弱;ε=∞ 等於 0 保護,δ 小也無補,是對 DP 定義的誤解"
+          "採用 Basic Composition 線性加總:總 ε = 0.005 × 1000 × 100 = 500 遠超預算 2.0,因此本案 DP-SGD 在 ε=2.0 限制下根本無法實作,應放棄 DP-SGD 改用 federated 設計": "Basic Composition 為最壞情況上界,過度保守;RDP accountant 對 Gaussian Mechanism+subsampling 可得緊許多的 bound,DP-SGD 在 ε=1-3 範圍內訓練深度模型已是業界常見做法",
+          "DP-SGD 隱私預算僅以訓練最終 step 的 ε 為準,中間 step 因參數會被持續覆寫不需累積,故 100 epochs × 1000 batch 等於 1 epoch 的 ε": "DP 的核心 Composition Theorem 要求所有訪問私人資料的查詢都納入累積 ε;『只看最後一步』違反 DP 基本定義,將造成嚴重隱私洩漏",
+          "將 ε 設為無限大以省略累積追蹤的工程負擔,只要 δ 設得足夠小(如 10^-9)即可由 δ 端的指數衰減提供強隱私保證,屬合理替代設計簡化實作": "(ε,δ)-DP 隱私強度由 ε 主導,ε 越大保護越弱;ε=∞ 等於 0 保護,δ 小也無補,是對 DP 定義的誤解"
         },
         "hook": "DP-SGD 三件套:RDP/Moments Accountant(緊 bound)+clipping norm(限敏感度)+noise multiplier(雜訊強度)+subsampling(隱私放大)"
       },
@@ -367,18 +367,18 @@
       "source_level": "L2",
       "stem": "三家醫療機構欲協作訓練罕見疾病診斷模型,各自病例 < 5,000 筆,總計 14,000 筆。資料絕對不可離開機構(法規限制),且擔心模型權重或梯度反向洩漏個案。資工團隊評估 PATE(Private Aggregation of Teachers Ensembles)與 Federated Averaging(FedAvg)兩種方案。下列何者為最合理的權衡分析?",
       "options": [
-        {"text": "PATE:各機構各訓 teacher 模型→以雜訊投票方式對未標記公開資料產生 student 標籤→部署 student 模型;隱私強(僅輸出層交換+DP 雜訊)但需『未標記公開資料池』。FedAvg:各機構在本地訓練→交換模型權重/梯度→中央聚合;沒有公開資料需求但梯度可能洩漏(需配合 DP-FedAvg 或 Secure Aggregation)。罕見病有公開未標記資料時 PATE 更安全;否則 FedAvg+Secure Aggregation 為主流", "is_correct": true},
-        {"text": "PATE 與 FedAvg 等價,選哪個都一樣,只看程式庫支援度", "is_correct": false, "trap_type": "兩者隱私模型本質不同:PATE 透過 teacher voting+DP 在標籤層保護,FedAvg 透過權重聚合;隱私威脅模型、所需資源(PATE 需未標記公開資料)、保護強度差異顯著"},
-        {"text": "FedAvg 不存在隱私問題,純粹聚合權重就無法洩漏資料,毋須額外保護", "is_correct": false, "trap_type": "已有研究證明 model inversion、membership inference、gradient leakage 攻擊可從聚合權重/梯度反推原始資料;FedAvg 需配合 DP-FedAvg 或 Secure Aggregation"},
-        {"text": "只能用 PATE,FedAvg 在 < 5000 樣本時完全失效,沒有討論價值", "is_correct": false, "trap_type": "FedAvg 在小樣本時仍可運作,只是收斂較慢、需更多輪次;與 PATE 並非互斥,常實務上配合使用"}
+        {"text": "PATE 走 teacher 投票+DP 雜訊產生 student 標籤,需未標記公開資料但隱私強;FedAvg 交換權重免公開資料但需 DP/Secure Aggregation 防梯度洩漏", "is_correct": true},
+        {"text": "PATE 與 FedAvg 在隱私保護機制與適用情境上完全等價,選哪個都一樣不需深究數學差異,只需考量程式庫成熟度、工程師熟悉度與既有 K8s 平台整合便利性", "is_correct": false, "trap_type": "兩者隱私模型本質不同:PATE 透過 teacher voting+DP 在標籤層保護,FedAvg 透過權重聚合;隱私威脅模型、所需資源(PATE 需未標記公開資料)、保護強度差異顯著"},
+        {"text": "FedAvg 純粹聚合各方加權平均權重,中央 server 從不直接接觸原始病例資料,因此天然不存在隱私洩漏問題,毋須再疊加 DP 雜訊或密碼學加密保護等額外成本", "is_correct": false, "trap_type": "已有研究證明 model inversion、membership inference、gradient leakage 攻擊可從聚合權重/梯度反推原始資料;FedAvg 需配合 DP-FedAvg 或 Secure Aggregation"},
+        {"text": "本案只能採用 PATE,FedAvg 在每方樣本 < 5000 時模型收斂完全失敗,跨機構非 IID 資料下根本無法產出可用診斷模型,不具備任何實務討論價值與比較意義", "is_correct": false, "trap_type": "FedAvg 在小樣本時仍可運作,只是收斂較慢、需更多輪次;與 PATE 並非互斥,常實務上配合使用"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "PATE(Papernot et al.)架構:資料持有方訓 N 個 teacher 模型 → 每個 teacher 對未標記公開資料投票 → 投票結果加 Gaussian 雜訊後取 argmax 作為 student 訓練標籤 → 公開部署 student。隱私強(個別 teacher 不公開、僅雜訊化標籤外流),但前提是『有未標記公開資料池』可供 student 學習。FedAvg(McMahan et al.)架構:每方在本地以本地資料更新模型 → 上傳權重/梯度 → 中央 server 加權平均 → 廣播新權重。優點:不需公開資料;缺點:已知 gradient leakage、model inversion、membership inference 攻擊可從交換權重反推資料,故需配合 DP-FedAvg(每方訓練加 DP 雜訊)或 Secure Aggregation(密碼學保證 server 只能看到聚合)。罕見疾病若有未標記公開影像/文本可用 PATE,否則 FedAvg+SA 為實務主流。",
         "wrong": {
-          "PATE 與 FedAvg 等價,選哪個都一樣,只看程式庫支援度": "兩者隱私威脅模型不同(PATE 在標籤層、FedAvg 在權重層)、資源需求不同(PATE 需未標記公開資料)、保護強度與適用場景差異顯著,絕非等價",
-          "FedAvg 不存在隱私問題,純粹聚合權重就無法洩漏資料,毋須額外保護": "已多次學術證明 gradient leakage(Zhu et al. 2019)、deep leakage(DLG)、model inversion(Fredrikson et al.)能從交換權重重建訓練資料,FedAvg 必須配合 DP 與 Secure Aggregation",
-          "只能用 PATE,FedAvg 在 < 5000 樣本時完全失效,沒有討論價值": "FedAvg 在小樣本下仍可訓練,只是收斂較慢、可能需要更多輪通訊;且 FedAvg 與 PATE 並非互斥,實務上有結合(FedPATE)等變種"
+          "PATE 與 FedAvg 在隱私保護機制與適用情境上完全等價,選哪個都一樣不需深究數學差異,只需考量程式庫成熟度、工程師熟悉度與既有 K8s 平台整合便利性": "兩者隱私威脅模型不同(PATE 在標籤層、FedAvg 在權重層)、資源需求不同(PATE 需未標記公開資料)、保護強度與適用場景差異顯著,絕非等價",
+          "FedAvg 純粹聚合各方加權平均權重,中央 server 從不直接接觸原始病例資料,因此天然不存在隱私洩漏問題,毋須再疊加 DP 雜訊或密碼學加密保護等額外成本": "已多次學術證明 gradient leakage(Zhu et al. 2019)、deep leakage(DLG)、model inversion(Fredrikson et al.)能從交換權重重建訓練資料,FedAvg 必須配合 DP 與 Secure Aggregation",
+          "本案只能採用 PATE,FedAvg 在每方樣本 < 5000 時模型收斂完全失敗,跨機構非 IID 資料下根本無法產出可用診斷模型,不具備任何實務討論價值與比較意義": "FedAvg 在小樣本下仍可訓練,只是收斂較慢、可能需要更多輪通訊;且 FedAvg 與 PATE 並非互斥,實務上有結合(FedPATE)等變種"
         },
         "hook": "跨機構協作:有未標記公開資料→PATE(標籤層 DP 投票);純權重聚合→FedAvg+DP+Secure Aggregation(防 gradient leakage)"
       },

@@ -20,7 +20,7 @@
 
 ---
 
-## 🔴 三大鐵律(跨階段強制)
+## 🔴 五大鐵律(跨階段強制)
 
 1. **鐵律 #1**:錯題驅動下鑽學習
    - 每題必有 explanation.correct/wrong/hook + misconceptions + related_node_ids
@@ -32,6 +32,16 @@
    - 每場 RNG.set(Date.now())
 3. **鐵律 #3**:不可複製 114-2 原題
    - 全原創情境 + 更深陷阱 + 跨產業綜合
+4. **鐵律 #4**:選項長度均衡(2026-05-09 新增)
+   - 正解/平均錯解長度比落在 [0.8x, 1.25x]
+   - 「最長 = 正解」比例 ≤ 35%(理想 25%)
+   - 錯解必須寫成「看起來專業合理的另一個描述」,不可短小敷衍
+   - 稽核腳本:`node scripts/audit-option-length.js`
+5. **鐵律 #5**:來源忠實性(2026-05-09 新增)
+   - 每題 knowledge_code / node_id 必須對應 kb/*.json 真實 node
+   - 禁止憑空生成不在來源資料的知識點/技術名詞/公式
+   - sub agent 升級 mode 時不得新增題目,只能從現有 9 檔 questions*.json 抓題
+   - 階段 8 push 前需做 source-fidelity audit
 
 ---
 

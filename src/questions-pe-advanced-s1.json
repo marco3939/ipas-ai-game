@@ -16,17 +16,17 @@
       "stem": "某跨國電商平台要訓練支援繁中、簡中、日文、韓文、泰文、阿拉伯文的多語言客服意圖分類模型,語言學家提醒:泰文無空白分隔、阿拉伯文有複雜詞綴、中文與日文混用漢字。資料工程師在 WordPiece(BERT)、BPE(GPT)、SentencePiece(T5/XLM-R)三種 Tokenizer 中要選最適合的方案。請問下列何者最為正確?",
       "options": [
         {"text": "選 SentencePiece,因其直接以原始 Unicode bytes/字元為單位、不依賴前置斷詞,內建 Unigram 或 BPE 演算法可在多語料上學出語言無關的子詞表,對泰文等無空白語言與阿拉伯詞綴皆能良好處理", "is_correct": true},
-        {"text": "選 WordPiece,因 BERT 已被驗證於 104 種語言效果最佳,只要把所有語言 concat 後直接訓練即可,不需考慮無空白語言的特殊處理", "is_correct": false, "trap_type": "WordPiece 仍需先做 whitespace pre-tokenization,泰文無空白會導致整句被視為單一 token"},
-        {"text": "選 BPE,GPT 已證明 BPE 是最強通用方案,且可直接處理 byte-level 輸入,泰文與阿拉伯文均無問題,且 OOV 率最低", "is_correct": false, "trap_type": "原始 BPE 仍須 whitespace 切分;byte-level BPE 雖可處理任意 bytes,但對 CJK/泰文會切碎、平均 token 數膨脹"},
-        {"text": "三者效果一致,只要詞彙表(vocab size)夠大(如 250K)即可彌補語言差異,實務只需挑訓練速度最快的 WordPiece", "is_correct": false, "trap_type": "Tokenizer 對多語言效果有顯著差異,單純放大 vocab 會推高 embedding 參數但無法解決切分問題"}
+        {"text": "選 WordPiece,因 BERT 已被 mBERT 驗證於 104 種語言效果最佳,只要把所有語言 concat 後直接以原 BPE 詞表訓練即可,泰文與阿拉伯文均能良好處理,不需特殊前處理", "is_correct": false, "trap_type": "WordPiece 仍需先做 whitespace pre-tokenization,泰文無空白會導致整句被視為單一 token"},
+        {"text": "選 BPE,GPT 已證明 BPE 是最強通用方案,可直接處理 byte-level 輸入,泰文與阿拉伯文 OOV 率最低,中日韓漢字混用也能直接合併共享 subword 表", "is_correct": false, "trap_type": "原始 BPE 仍須 whitespace 切分;byte-level BPE 雖可處理任意 bytes,但對 CJK/泰文會切碎、平均 token 數膨脹"},
+        {"text": "三者效果幾乎一致,只要詞彙表 vocab size 夠大(如 250K)即可彌補不同語言的切分差異;實務上只需挑訓練速度最快、收斂最穩的 WordPiece,搭配大量 GPU 重新訓練 MLM 即可達到同等多語覆蓋", "is_correct": false, "trap_type": "Tokenizer 對多語言效果有顯著差異,單純放大 vocab 會推高 embedding 參數但無法解決切分問題"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "SentencePiece 的核心設計是『language-agnostic』:把句子當作 Unicode 字串(或 bytes)直接輸入,不依賴空白做 pre-tokenization,內部以 Unigram LM 或 BPE 演算法在多語語料上聯合學出子詞表。對於泰文(無空白)、阿拉伯文(連寫詞綴)、中日韓(無詞界)都能正確處理。XLM-R、mBART、T5、ALBERT 多語版皆採用 SentencePiece,正是因為它能輸出可逆的(detokenizable)子詞,且 vocab 共享率高、跨語遷移能力佳。",
         "wrong": {
-          "選 WordPiece,因 BERT 已被驗證於 104 種語言效果最佳,只要把所有語言 concat 後直接訓練即可,不需考慮無空白語言的特殊處理": "WordPiece 與原始 BPE 都假設輸入已先以 whitespace 切分為 word,泰文等無空白語言會把整句視為一個 word,接著被切成大量小子詞,效率與品質都差;mBERT 對泰文效果不佳即此原因",
-          "選 BPE,GPT 已證明 BPE 是最強通用方案,且可直接處理 byte-level 輸入,泰文與阿拉伯文均無問題,且 OOV 率最低": "原始 BPE 需空白切分;byte-level BPE(GPT-2)雖然 0 OOV,但對 UTF-8 多 byte 字元(中文/泰文)會把單一字元拆成 2-4 bytes,平均序列長度顯著膨脹,資源代價高",
-          "三者效果一致,只要詞彙表(vocab size)夠大(如 250K)即可彌補語言差異,實務只需挑訓練速度最快的 WordPiece": "Tokenizer 演算法本身對多語的表徵品質影響顯著,放大 vocab 主要增加 embedding 層參數,並未解決『泰文整句被當一個詞』這類結構性問題"
+          "選 WordPiece,因 BERT 已被 mBERT 驗證於 104 種語言效果最佳,只要把所有語言 concat 後直接以原 BPE 詞表訓練即可,泰文與阿拉伯文均能良好處理,不需特殊前處理": "WordPiece 與原始 BPE 都假設輸入已先以 whitespace 切分為 word,泰文等無空白語言會把整句視為一個 word,接著被切成大量小子詞,效率與品質都差;mBERT 對泰文效果不佳即此原因",
+          "選 BPE,GPT 已證明 BPE 是最強通用方案,可直接處理 byte-level 輸入,泰文與阿拉伯文 OOV 率最低,中日韓漢字混用也能直接合併共享 subword 表": "原始 BPE 需空白切分;byte-level BPE(GPT-2)雖然 0 OOV,但對 UTF-8 多 byte 字元(中文/泰文)會把單一字元拆成 2-4 bytes,平均序列長度顯著膨脹,資源代價高",
+          "三者效果幾乎一致,只要詞彙表 vocab size 夠大(如 250K)即可彌補不同語言的切分差異;實務上只需挑訓練速度最快、收斂最穩的 WordPiece,搭配大量 GPU 重新訓練 MLM 即可達到同等多語覆蓋": "Tokenizer 演算法本身對多語的表徵品質影響顯著,放大 vocab 主要增加 embedding 層參數,並未解決『泰文整句被當一個詞』這類結構性問題"
         },
         "hook": "多語首選 SentencePiece:不靠空白、字元/bytes 直接輸入、可逆;BPE/WordPiece 假設先有 whitespace 切分"
       },
@@ -45,17 +45,17 @@
       "stem": "某法律科技新創要建立『判決書全文摘要與條文比對』系統,單篇輸入可達 32K tokens,GPU 預算僅有 4 張 A10(24GB)。架構師在 Multi-Head Attention、Sparse Attention(Longformer)、Linear Attention(Performer)、Grouped-Query Attention(GQA)中尋找最適配的注意力變形。請問下列何者最為正確?",
       "options": [
         {"text": "Sparse Attention(Longformer)最適合:結合 sliding window 與 global tokens,計算複雜度由 O(n²) 降為 O(n·w),對長判決書能保留局部上下文與少數全域 anchor token,32K 輸入仍可在 24GB 顯存內運作", "is_correct": true},
-        {"text": "標準 Multi-Head Attention 即可,只要 batch size 設為 1 並開 gradient checkpointing,32K × 32K 注意力矩陣 24GB 顯存綽綽有餘", "is_correct": false, "trap_type": "32K² × 4 bytes ≈ 4GB 僅單頭單層,實際多頭多層會爆顯存,且推論時 KV cache 也巨大"},
-        {"text": "Linear Attention(Performer)是唯一選擇,O(n) 複雜度可任意擴張到百萬 tokens,且品質與 full attention 完全相同無差異", "is_correct": false, "trap_type": "Performer 的隨機特徵近似在長距語意比對任務上會有精度損失,且實證在多數 NLU 任務略遜於稀疏注意力"},
-        {"text": "Grouped-Query Attention(GQA)能直接降低長文 attention 的計算複雜度,32K 輸入可立即使用無須其他改動", "is_correct": false, "trap_type": "GQA 是降低 KV head 數以減少『推論時 KV cache 記憶體』,並未改變 attention 對序列長度的 O(n²) 複雜度"}
+        {"text": "標準 Multi-Head Attention 即可,只要把 batch size 設為 1、開啟 gradient checkpointing 並使用 mixed precision FP16,32K × 32K 注意力矩陣對 A10 24GB 顯存綽綽有餘,推論時 KV cache 也可動態釋放", "is_correct": false, "trap_type": "32K² × 4 bytes ≈ 4GB 僅單頭單層,實際多頭多層會爆顯存,且推論時 KV cache 也巨大"},
+        {"text": "Linear Attention(Performer)是唯一選擇,O(n) 複雜度可任意擴張到百萬 tokens,品質與 full attention 完全相同無差異,實務在判決條文比對等精細語意任務上甚至更佳", "is_correct": false, "trap_type": "Performer 的隨機特徵近似在長距語意比對任務上會有精度損失,且實證在多數 NLU 任務略遜於稀疏注意力"},
+        {"text": "Grouped-Query Attention(GQA)能直接降低長文 attention 的計算複雜度,把 query head 數除以 4 後 32K 輸入即可立即使用,無須其他注意力結構改動,適合長判決書全文一次性編碼", "is_correct": false, "trap_type": "GQA 是降低 KV head 數以減少『推論時 KV cache 記憶體』,並未改變 attention 對序列長度的 O(n²) 複雜度"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "Longformer 的 Sparse Attention 結合『sliding window(局部關注)』與『global attention(少量全域 token,如 [CLS])』,把 self-attention 的 O(n²) 降為 O(n·w),其中 w 為窗口大小。對 32K 長度的判決書,只要 w 設為 512,計算量約等同 32K × 512 而非 32K × 32K,顯存與時間都可控。判決書摘要任務本就具『局部依賴強 + 少量跨段引用』特性,符合稀疏注意力的歸納偏差。",
         "wrong": {
-          "標準 Multi-Head Attention 即可,只要 batch size 設為 1 並開 gradient checkpointing,32K × 32K 注意力矩陣 24GB 顯存綽綽有餘": "32K² 注意力矩陣對每個 head 每層都需獨立儲存,假設 16 heads × 24 layers × FP16,中間值已超過 12GB,加上參數、梯度、activation 必然爆顯存",
-          "Linear Attention(Performer)是唯一選擇,O(n) 複雜度可任意擴張到百萬 tokens,且品質與 full attention 完全相同無差異": "Performer 用 random feature map 近似 softmax 核,理論複雜度 O(n) 但近似誤差會在需要精確語意比對(如判決對應條文)的任務上造成可觀精度下降",
-          "Grouped-Query Attention(GQA)能直接降低長文 attention 的計算複雜度,32K 輸入可立即使用無須其他改動": "GQA(LLaMA-2/3、Mistral 採用)是把多個 query head 共享同一組 KV head,目的是降低『推論時 KV cache』與『記憶體頻寬』,attention 對序列長度仍是 O(n²)"
+          "標準 Multi-Head Attention 即可,只要把 batch size 設為 1、開啟 gradient checkpointing 並使用 mixed precision FP16,32K × 32K 注意力矩陣對 A10 24GB 顯存綽綽有餘,推論時 KV cache 也可動態釋放": "32K² 注意力矩陣對每個 head 每層都需獨立儲存,假設 16 heads × 24 layers × FP16,中間值已超過 12GB,加上參數、梯度、activation 必然爆顯存",
+          "Linear Attention(Performer)是唯一選擇,O(n) 複雜度可任意擴張到百萬 tokens,品質與 full attention 完全相同無差異,實務在判決條文比對等精細語意任務上甚至更佳": "Performer 用 random feature map 近似 softmax 核,理論複雜度 O(n) 但近似誤差會在需要精確語意比對(如判決對應條文)的任務上造成可觀精度下降",
+          "Grouped-Query Attention(GQA)能直接降低長文 attention 的計算複雜度,把 query head 數除以 4 後 32K 輸入即可立即使用,無須其他注意力結構改動,適合長判決書全文一次性編碼": "GQA(LLaMA-2/3、Mistral 採用)是把多個 query head 共享同一組 KV head,目的是降低『推論時 KV cache』與『記憶體頻寬』,attention 對序列長度仍是 O(n²)"
         },
         "hook": "長文選 Sparse(局部+全域 anchor);GQA 是省『KV cache』不是省序列長度;Linear/Performer 速度快但品質會掉"
       },
@@ -102,18 +102,18 @@
       "source_level": "L2",
       "stem": "某顧問公司把『金融領域 BERT』直接套用到法律與醫療客戶,結果在法律文件分類 F1 從 0.91 跌到 0.62、醫療病歷標註從 0.88 跌到 0.55。資深 ML 工程師要對症下藥,診斷『遷移失準』的根本原因。請問下列何者**最完整正確**?",
       "options": [
-        {"text": "根因為『領域詞彙分布偏移(domain vocabulary shift)+ 子詞切分結構崩壞』:法律/醫療專有名詞在金融 BERT 的 tokenizer 下被切成大量碎片(unk-like),embedding 表徵失去語意,需執行 vocab 擴充 + DAPT(Domain Adaptive Pre-Training)+ 任務微調的三階段流程", "is_correct": true},
-        {"text": "根因為『樣本數不足』,只要把法律與醫療資料分別擴增 10 倍,即使仍用金融 BERT 為起點,效能即可恢復到 0.85 以上", "is_correct": false, "trap_type": "資料量大但若 tokenizer 對該領域詞彙切分崩壞,embedding 起點仍差,單純加資料邊際效益遞減"},
-        {"text": "根因為『學習率設定錯誤』,只要把 fine-tune 學習率從 2e-5 改為 5e-4,所有領域均可恢復原效能", "is_correct": false, "trap_type": "學習率過大反而使預訓練語言知識遺忘加速;此選項把超參數誤當核心病根"},
-        {"text": "根因為『驗證集污染』,法律與醫療資料的訓練/驗證切分不正確造成假象,實際模型本身正常,重做切分即可", "is_correct": false, "trap_type": "切分污染通常造成『高估』效能,題目觀察到的是大幅下降,方向相反"}
+        {"text": "根因為『領域詞彙分布偏移 + 子詞切分結構崩壞』:法律與醫療專有名詞在金融 BERT 的 tokenizer 下被切成大量碎片,embedding 表徵語意失真,需執行 vocab 擴充 + DAPT 領域續訓 + 任務微調的三階段流程", "is_correct": true},
+        {"text": "根因為『樣本數不足』,只要把法律與醫療資料分別擴增 10 倍,即使仍用金融 BERT 為起點,搭配輕量 fine-tune 不需更換 tokenizer 或續訓 backbone,效能即可恢復到 0.85 以上的實用水準", "is_correct": false, "trap_type": "資料量大但若 tokenizer 對該領域詞彙切分崩壞,embedding 起點仍差,單純加資料邊際效益遞減"},
+        {"text": "根因為『學習率設定錯誤』,只要把 fine-tune 學習率從 2e-5 上調為 5e-4,搭配 linear warmup 與 cosine decay,所有領域均可在不換 backbone 的情況下恢復原效能", "is_correct": false, "trap_type": "學習率過大反而使預訓練語言知識遺忘加速;此選項把超參數誤當核心病根"},
+        {"text": "根因為『驗證集污染』,法律與醫療資料的訓練/驗證切分未做去重與時序隔離,且部分樣本同時出現在訓練與驗證集,造成評估分數偏低假象,實際模型本身正常,重做切分並引入 k-fold 交叉驗證即可解決問題", "is_correct": false, "trap_type": "切分污染通常造成『高估』效能,題目觀察到的是大幅下降,方向相反"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "跨領域遷移失準的核心是『預訓練語料分布 vs 目標領域分布』的差距(domain gap)。當金融 BERT 的 vocab 對法律(如『簡易判決』『裁定駁回』)、醫療(如『心肌梗塞』『MRI T2 加權』)專有詞彙切分崩壞,embedding 等於從 unk-like 子詞拼湊,語意失真。標準解法為三階段:(1) Vocab 擴充加入領域高頻新詞,(2) DAPT(Domain Adaptive Pre-Training)在無標領域語料上續訓 MLM,(3) 任務微調(Task-Adaptive Fine-Tuning)。Gururangan et al. 2020 提出 DAPT+TAPT 的方法已成為跨領域遷移的標準範式。",
         "wrong": {
-          "根因為『樣本數不足』,只要把法律與醫療資料分別擴增 10 倍,即使仍用金融 BERT 為起點,效能即可恢復到 0.85 以上": "資料量是其中一個因素,但若 tokenizer 與 embedding 對領域詞彙的表徵崩壞,擴增資料只是讓模型『硬背』而非真正建立語意;邊際效益會在中段急速遞減",
-          "根因為『學習率設定錯誤』,只要把 fine-tune 學習率從 2e-5 改為 5e-4,所有領域均可恢復原效能": "BERT 微調最佳 LR 通常 1e-5~5e-5,提到 5e-4 反而會引發災難性遺忘(catastrophic forgetting),預訓練語言知識被覆蓋,效能更差",
-          "根因為『驗證集污染』,法律與醫療資料的訓練/驗證切分不正確造成假象,實際模型本身正常,重做切分即可": "資料污染通常導致驗證/測試效能『高估』(資料外洩到訓練集);題目觀察是『下降』,方向相反,診斷錯誤"
+          "根因為『樣本數不足』,只要把法律與醫療資料分別擴增 10 倍,即使仍用金融 BERT 為起點,搭配輕量 fine-tune 不需更換 tokenizer 或續訓 backbone,效能即可恢復到 0.85 以上的實用水準": "資料量是其中一個因素,但若 tokenizer 與 embedding 對領域詞彙的表徵崩壞,擴增資料只是讓模型『硬背』而非真正建立語意;邊際效益會在中段急速遞減",
+          "根因為『學習率設定錯誤』,只要把 fine-tune 學習率從 2e-5 上調為 5e-4,搭配 linear warmup 與 cosine decay,所有領域均可在不換 backbone 的情況下恢復原效能": "BERT 微調最佳 LR 通常 1e-5~5e-5,提到 5e-4 反而會引發災難性遺忘(catastrophic forgetting),預訓練語言知識被覆蓋,效能更差",
+          "根因為『驗證集污染』,法律與醫療資料的訓練/驗證切分未做去重與時序隔離,且部分樣本同時出現在訓練與驗證集,造成評估分數偏低假象,實際模型本身正常,重做切分並引入 k-fold 交叉驗證即可解決問題": "資料污染通常導致驗證/測試效能『高估』(資料外洩到訓練集);題目觀察是『下降』,方向相反,診斷錯誤"
         },
         "hook": "跨領域失準三劍客:Vocab 擴充 + DAPT(無標續訓 MLM)+ 任務微調"
       },
@@ -131,18 +131,18 @@
       "source_level": "L2",
       "stem": "某智慧工廠 AGV 自走車上要部署『障礙物即時偵測』模型,規格為:邊緣 GPU(Jetson Orin NX、20W 功耗)、需 30 FPS 以上、每幀 1080p、要偵測小物件(掉落螺絲)。工程師在 YOLOv8、Faster R-CNN、DETR、RT-DETR 之間選型。請問下列何者最為正確?",
       "options": [
-        {"text": "選 YOLOv8(s/m 版本):一階段端到端、anchor-free、CSPDarknet backbone,在 Jetson Orin NX 上經 TensorRT FP16/INT8 量化後可達 30+ FPS,小物件偵測可透過 P2 feature 與多尺度 mosaic 增強,符合即時與功耗約束", "is_correct": true},
-        {"text": "選 Faster R-CNN(ResNet-50 backbone),兩階段精度最高,小物件靠 RoI Align 最強,Jetson Orin NX FP16 推論可輕鬆達 30 FPS", "is_correct": false, "trap_type": "Faster R-CNN 兩階段在邊緣裝置常僅 5-10 FPS,RPN+RCNN 雙網路計算量大,難達即時"},
-        {"text": "選 DETR(原版),Transformer 端到端設計、無需 NMS、收斂快、邊緣 FPS 高,即時與小物件均優", "is_correct": false, "trap_type": "原版 DETR 收斂極慢(500 epochs)、推論 FPS 低(<10 on edge)、且小物件偵測弱"},
-        {"text": "選 RT-DETR,雖名為 Real-Time,但其 backbone 仍是大型 ViT,Jetson 邊緣端 FPS 顯著低於 YOLO 系列,僅適合雲端 GPU,且小物件偵測能力遜於 YOLO", "is_correct": false, "trap_type": "RT-DETR 採用 hybrid encoder 與 IoU-aware query,實測在中階邊緣 GPU 已可接近 YOLOv8;但其優勢相較『要不要 NMS、是否可端到端』,本題小物件+極端邊緣功耗 YOLOv8 仍更穩"}
+        {"text": "選 YOLOv8(s/m 版本):一階段、anchor-free、CSPDarknet backbone,在 Jetson Orin NX 經 TensorRT FP16/INT8 量化後可達 30+ FPS,小物件可用 P2 feature 與 mosaic 增強,符合即時與功耗約束", "is_correct": true},
+        {"text": "選 Faster R-CNN(ResNet-50 backbone),兩階段精度最高,小物件靠 RoI Align 對齊最強,Jetson Orin NX FP16 推論可輕鬆達 30 FPS,且 RPN 區域提案能精準鎖定螺絲級小物件,工業 AGV 場景表現最穩", "is_correct": false, "trap_type": "Faster R-CNN 兩階段在邊緣裝置常僅 5-10 FPS,RPN+RCNN 雙網路計算量大,難達即時"},
+        {"text": "選 DETR(原版),Transformer 端到端設計、無需 NMS 後處理、訓練收斂快、object query 機制使邊緣 FPS 高,即時偵測與螺絲級小物件場景均最優,1080p 30 FPS 在 Jetson 上可輕鬆達標", "is_correct": false, "trap_type": "原版 DETR 收斂極慢(500 epochs)、推論 FPS 低(<10 on edge)、且小物件偵測弱"},
+        {"text": "選 RT-DETR,雖名為 Real-Time,但其 backbone 採用大型 ViT 結構,Jetson 邊緣端 FPS 顯著低於 YOLO 系列,僅適合資料中心級雲端 GPU 上線,且小物件偵測能力明顯遜於 YOLO 多尺度設計", "is_correct": false, "trap_type": "RT-DETR 採用 hybrid encoder 與 IoU-aware query,實測在中階邊緣 GPU 已可接近 YOLOv8;但其優勢相較『要不要 NMS、是否可端到端』,本題小物件+極端邊緣功耗 YOLOv8 仍更穩"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "邊緣即時偵測的決策邏輯:功耗與 FPS 約束 → 一階段優於兩階段;小物件 → 需高解析特徵金字塔(P2/P3)與多尺度增強。YOLOv8 為一階段、anchor-free、整合 task aligned assigner 與 distribution focal loss,在 TensorRT FP16/INT8 量化後 Jetson Orin NX 可穩定 30-60 FPS。對小物件可採用 P2 head、mosaic+mixup、提高輸入解析度(如 1280×1280)。Faster R-CNN/DETR 在邊緣裝置 FPS 不足;RT-DETR 雖名為即時但對邊緣端來說仍較吃力,且小物件偵測 YOLOv8 配合多尺度仍是工程實務最穩選擇。",
         "wrong": {
-          "選 Faster R-CNN(ResNet-50 backbone),兩階段精度最高,小物件靠 RoI Align 最強,Jetson Orin NX FP16 推論可輕鬆達 30 FPS": "Faster R-CNN 由 RPN(候選區域)+ Fast R-CNN(分類迴歸)兩階段組成,計算量約是同等大小一階段模型的 2-3 倍;Jetson Orin NX 上 ResNet-50 版實測約 5-10 FPS,遠低於即時要求",
-          "選 DETR(原版),Transformer 端到端設計、無需 NMS、收斂快、邊緣 FPS 高,即時與小物件均優": "原版 DETR 出名的問題:訓練收斂需 500 epochs(後續 Deformable DETR 才改善)、推論在邊緣端 FPS 通常 <10、且 object query 機制對小物件學習特別弱(Deformable/DINO 才補強)",
-          "選 RT-DETR,雖名為 Real-Time,但其 backbone 仍是大型 ViT,Jetson 邊緣端 FPS 顯著低於 YOLO 系列,僅適合雲端 GPU,且小物件偵測能力遜於 YOLO": "RT-DETR 用的是 CNN+hybrid encoder 而非純大型 ViT,在 T4/A10 等雲端 GPU 已超越 YOLO;但本題情境是 20W 功耗的邊緣裝置 + 螺絲級小物件,YOLOv8 多尺度配置工程上仍更穩;此選項『只能用雲端 GPU』描述過度絕對化,但本題情境下 YOLOv8 仍是最佳"
+          "選 Faster R-CNN(ResNet-50 backbone),兩階段精度最高,小物件靠 RoI Align 對齊最強,Jetson Orin NX FP16 推論可輕鬆達 30 FPS,且 RPN 區域提案能精準鎖定螺絲級小物件,工業 AGV 場景表現最穩": "Faster R-CNN 由 RPN(候選區域)+ Fast R-CNN(分類迴歸)兩階段組成,計算量約是同等大小一階段模型的 2-3 倍;Jetson Orin NX 上 ResNet-50 版實測約 5-10 FPS,遠低於即時要求",
+          "選 DETR(原版),Transformer 端到端設計、無需 NMS 後處理、訓練收斂快、object query 機制使邊緣 FPS 高,即時偵測與螺絲級小物件場景均最優,1080p 30 FPS 在 Jetson 上可輕鬆達標": "原版 DETR 出名的問題:訓練收斂需 500 epochs(後續 Deformable DETR 才改善)、推論在邊緣端 FPS 通常 <10、且 object query 機制對小物件學習特別弱(Deformable/DINO 才補強)",
+          "選 RT-DETR,雖名為 Real-Time,但其 backbone 採用大型 ViT 結構,Jetson 邊緣端 FPS 顯著低於 YOLO 系列,僅適合資料中心級雲端 GPU 上線,且小物件偵測能力明顯遜於 YOLO 多尺度設計": "RT-DETR 用的是 CNN+hybrid encoder 而非純大型 ViT,在 T4/A10 等雲端 GPU 已超越 YOLO;但本題情境是 20W 功耗的邊緣裝置 + 螺絲級小物件,YOLOv8 多尺度配置工程上仍更穩;此選項『只能用雲端 GPU』描述過度絕對化,但本題情境下 YOLOv8 仍是最佳"
         },
         "hook": "邊緣即時 + 小物件 → YOLO 一階段 + 多尺度 + TRT INT8;兩階段、原版 DETR 邊緣端 FPS 不足"
       },
@@ -160,18 +160,18 @@
       "source_level": "L2",
       "stem": "某醫學影像新創接到三個專案:(A) 醫療顯微鏡細胞核分割(高精度、樣本少、像素級邊界要嚴謹)、(B) 衛星影像建築物實例分割(每張影像多達數百個物件、需區分個別建築)、(C) 通用社群圖片產品標註工具(任意物體、零樣本、由使用者點擊提示)。資深 CV 工程師要分別選 U-Net、Mask R-CNN、SAM 中最合適的模型。請問下列何者最為正確?",
       "options": [
-        {"text": "(A) U-Net、(B) Mask R-CNN、(C) SAM:U-Net encoder-decoder 加 skip connection 對小資料集醫療影像最強;Mask R-CNN 兩階段 + RoIAlign 適合多實例分割;SAM 預訓練於 11M 影像 + 1B masks,具零樣本提示分割能力", "is_correct": true},
-        {"text": "(A) Mask R-CNN、(B) U-Net、(C) SAM:Mask R-CNN 像素級最精準適合醫療;U-Net 對大物件衛星較好;SAM 仍負責零樣本通用", "is_correct": false, "trap_type": "U-Net 對小資料醫療影像才是經典最佳,Mask R-CNN 是實例分割且訓練需大量標註"},
-        {"text": "(A) SAM、(B) Mask R-CNN、(C) U-Net:SAM 零樣本能力可省下醫療標註成本;U-Net 反而最適合通用零樣本任務", "is_correct": false, "trap_type": "SAM 在醫療影像零樣本表現不穩(domain gap);U-Net 不具零樣本提示能力,無法直接用於通用任意物體"},
-        {"text": "三者全選 SAM 即可,SAM 預訓練資料涵蓋醫療、衛星、通用,所有任務零樣本均超越專屬模型,不再需要 U-Net/Mask R-CNN", "is_correct": false, "trap_type": "SAM 在醫療(顯微鏡、CT/MRI)與衛星(俯視角)領域 zero-shot 效果普遍不如領域訓練專屬模型,須做 SAM-Med、SAM-Sat 之類微調"}
+        {"text": "(A) U-Net、(B) Mask R-CNN、(C) SAM:U-Net encoder-decoder + skip connection 對小資料醫療最強;Mask R-CNN 兩階段 + RoIAlign 適合多實例分割;SAM 預訓練 11M 影像 + 1B masks,具零樣本提示能力", "is_correct": true},
+        {"text": "(A) Mask R-CNN、(B) U-Net、(C) SAM:Mask R-CNN 兩階段加 RoIAlign 像素級最精準適合醫療顯微鏡;U-Net encoder-decoder 對大物件衛星建築較好;SAM 仍負責零樣本通用點擊提示", "is_correct": false, "trap_type": "U-Net 對小資料醫療影像才是經典最佳,Mask R-CNN 是實例分割且訓練需大量標註"},
+        {"text": "(A) SAM、(B) Mask R-CNN、(C) U-Net:SAM 零樣本能力可大幅省下醫療顯微鏡標註成本,直接點擊細胞核即可生成精準像素 mask;U-Net 的 encoder-decoder 結構反而最適合通用零樣本任意物體分割任務,可由使用者點擊提示", "is_correct": false, "trap_type": "SAM 在醫療影像零樣本表現不穩(domain gap);U-Net 不具零樣本提示能力,無法直接用於通用任意物體"},
+        {"text": "三者全選 SAM 即可,SAM 預訓練資料涵蓋醫療顯微鏡、衛星俯視、通用社群三大領域,所有 semantic 與 instance 分割任務零樣本均能超越領域專屬模型,不再需要 U-Net 或 Mask R-CNN,工程實作可大幅簡化部署成本與標註成本", "is_correct": false, "trap_type": "SAM 在醫療(顯微鏡、CT/MRI)與衛星(俯視角)領域 zero-shot 效果普遍不如領域訓練專屬模型,須做 SAM-Med、SAM-Sat 之類微調"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "三模型的歸納偏差(inductive bias)各不相同:U-Net 的 encoder-decoder + skip connection 在小樣本醫療影像保留高頻邊界資訊最強(原論文即為細胞分割設計);Mask R-CNN 是 instance segmentation 範式,RPN 找候選 + RoIAlign 對齊 + 平行 mask head,適合『需要區分個別物件』的衛星建築場景;SAM(Segment Anything Model)以 11M 影像 + 10 億 masks 預訓練,核心是『可提示(promptable)』分割,使用者點擊/框選即可零樣本生成 mask,適合通用工具型應用。但 SAM 在醫療、衛星等與訓練分布差異大的領域常需做 SAM-Med/SAM-Sat 等領域微調。",
         "wrong": {
-          "(A) Mask R-CNN、(B) U-Net、(C) SAM:Mask R-CNN 像素級最精準適合醫療;U-Net 對大物件衛星較好;SAM 仍負責零樣本通用": "Mask R-CNN 雖然 mask head 可像素級,但需大量標註的 instance 級資料才能收斂良好;醫療顯微鏡常面臨小資料集挑戰,U-Net 對此最穩。U-Net 反而對需區分個別實例的衛星建築不擅長",
-          "(A) SAM、(B) Mask R-CNN、(C) U-Net:SAM 零樣本能力可省下醫療標註成本;U-Net 反而最適合通用零樣本任務": "SAM 在醫療影像領域 zero-shot 表現不穩(顯微鏡、放射科風格與自然影像差異大),需 SAM-Med 等微調;U-Net 不具備『提示式』與『任意類別』能力,不適合通用零樣本工具",
-          "三者全選 SAM 即可,SAM 預訓練資料涵蓋醫療、衛星、通用,所有任務零樣本均超越專屬模型,不再需要 U-Net/Mask R-CNN": "SAM 訓練資料以自然影像為主,醫療(顯微鏡、CT/MRI)、衛星俯視角等領域 domain gap 大,zero-shot 常輸給專屬模型;且 SAM 是『提示分割』,沒有自動分類標籤"
+          "(A) Mask R-CNN、(B) U-Net、(C) SAM:Mask R-CNN 兩階段加 RoIAlign 像素級最精準適合醫療顯微鏡;U-Net encoder-decoder 對大物件衛星建築較好;SAM 仍負責零樣本通用點擊提示": "Mask R-CNN 雖然 mask head 可像素級,但需大量標註的 instance 級資料才能收斂良好;醫療顯微鏡常面臨小資料集挑戰,U-Net 對此最穩。U-Net 反而對需區分個別實例的衛星建築不擅長",
+          "(A) SAM、(B) Mask R-CNN、(C) U-Net:SAM 零樣本能力可大幅省下醫療顯微鏡標註成本,直接點擊細胞核即可生成精準像素 mask;U-Net 的 encoder-decoder 結構反而最適合通用零樣本任意物體分割任務,可由使用者點擊提示": "SAM 在醫療影像領域 zero-shot 表現不穩(顯微鏡、放射科風格與自然影像差異大),需 SAM-Med 等微調;U-Net 不具備『提示式』與『任意類別』能力,不適合通用零樣本工具",
+          "三者全選 SAM 即可,SAM 預訓練資料涵蓋醫療顯微鏡、衛星俯視、通用社群三大領域,所有 semantic 與 instance 分割任務零樣本均能超越領域專屬模型,不再需要 U-Net 或 Mask R-CNN,工程實作可大幅簡化部署成本與標註成本": "SAM 訓練資料以自然影像為主,醫療(顯微鏡、CT/MRI)、衛星俯視角等領域 domain gap 大,zero-shot 常輸給專屬模型;且 SAM 是『提示分割』,沒有自動分類標籤"
         },
         "hook": "醫療小樣本 → U-Net;多實例個別物件 → Mask R-CNN;零樣本提示通用 → SAM(但領域差距大時要微調)"
       },
@@ -190,17 +190,17 @@
       "stem": "某 CV 工程師同時做三個專案:(A) ImageNet 級影像分類(資料 100 萬張)、(B) 自駕場景物件偵測(行人、車、號誌)、(C) 醫療影像分割(像素級、邊界敏感)。他在 RandAugment、AutoAugment、Mixup、CutMix 中要分別選最適合的資料增強策略。請問下列何者最為正確?",
       "options": [
         {"text": "(A) RandAugment 或 AutoAugment(配合 Mixup)、(B) Mosaic + CutMix(避免破壞 box 標註)、(C) 幾何/彈性變形為主、慎用 CutMix(會把跨物件 patch 混入造成 mask 不一致)", "is_correct": true},
-        {"text": "三任務全用 Mixup 最佳:Mixup 線性插值同時增加分類、偵測、分割效能,且實作最簡單", "is_correct": false, "trap_type": "Mixup 對偵測會把兩張圖 box 重疊混合成『半透明』邊界,標註語意混亂;對分割則會出現非整數類別像素"},
-        {"text": "(A) CutMix、(B) AutoAugment、(C) Mixup,因 CutMix 對分類最強、AutoAugment 對偵測效果最佳、Mixup 對分割最佳", "is_correct": false, "trap_type": "CutMix 直接貼補丁,對分割尤其危險(mask 跨物件不一致),用於分類雖可,但 Mixup 對分割效益差"},
-        {"text": "三任務全用 AutoAugment 即可,AutoAugment 透過 RL 搜出的最佳策略在所有任務都最佳,不需區分", "is_correct": false, "trap_type": "AutoAugment 是針對 ImageNet/CIFAR 分類搜尋的策略,直接套到偵測/分割未必最佳;且搜尋成本高,RandAugment 已可媲美並廣泛取代"}
+        {"text": "三任務全用 Mixup 最佳:Mixup 用 Beta 分布抽樣 λ 對兩張圖做線性插值並同步混合 one-hot 標籤,可同時提升分類、偵測、分割效能,實作最簡單,只需四行程式碼即可整合進任何訓練 pipeline,跨任務通用性最好", "is_correct": false, "trap_type": "Mixup 對偵測會把兩張圖 box 重疊混合成『半透明』邊界,標註語意混亂;對分割則會出現非整數類別像素"},
+        {"text": "(A) CutMix、(B) AutoAugment、(C) Mixup,因 CutMix 在 ImageNet 分類最強且 paper 已驗證、AutoAugment 對偵測效果最佳因有 RL 搜尋過、Mixup 對像素級分割能保留邊界連續性最佳", "is_correct": false, "trap_type": "CutMix 直接貼補丁,對分割尤其危險(mask 跨物件不一致),用於分類雖可,但 Mixup 對分割效益差"},
+        {"text": "三任務全用 AutoAugment 即可,AutoAugment 透過強化學習在 ImageNet 上搜出的 25 條 sub-policy 增強策略在所有 CV 任務都最佳,不需再區分分類、偵測、分割,可直接複用相同策略包並省下重新搜尋成本", "is_correct": false, "trap_type": "AutoAugment 是針對 ImageNet/CIFAR 分類搜尋的策略,直接套到偵測/分割未必最佳;且搜尋成本高,RandAugment 已可媲美並廣泛取代"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "資料增強策略需符合任務的『標註不變性(label invariance)』:(A) 影像分類僅單一類別標籤,RandAugment(隨機選 N 個 op、強度 M)或 AutoAugment(RL 搜尋策略)可大幅擴增表徵,且 Mixup(αβ 線性插值)對分類軟標籤友好。(B) 偵測有 bounding box,Mosaic(YOLO 系列預設)拼接四圖、CutMix 局部貼補丁仍能維持 box 一致;但 Mixup 會讓兩張圖 box 變得『半透明』語意混亂。(C) 分割是像素級 mask,CutMix 跨物件邊界貼補丁會造成 mask 標註不一致(同一像素屬於兩物件);幾何變換、彈性變形(elastic deformation,U-Net 原論文使用)、亮度/對比擾動才安全。",
         "wrong": {
-          "三任務全用 Mixup 最佳:Mixup 線性插值同時增加分類、偵測、分割效能,且實作最簡單": "Mixup 對分類效果極佳但對偵測/分割語意破壞嚴重:偵測 box 變成『半透明標註』、分割 mask 會出現非整數中間類別;不能直接套用",
-          "(A) CutMix、(B) AutoAugment、(C) Mixup,因 CutMix 對分類最強、AutoAugment 對偵測效果最佳、Mixup 對分割最佳": "CutMix 對分類有效但與 RandAugment/Mixup 通常組合使用;AutoAugment 是分類專用策略;Mixup 對分割不適合(像素級 mask 線性插值產生非整數標籤)",
-          "三任務全用 AutoAugment 即可,AutoAugment 透過 RL 搜出的最佳策略在所有任務都最佳,不需區分": "AutoAugment 的策略池是針對 ImageNet/CIFAR 分類 RL 搜尋的,搜尋成本極高(數千 GPU hour);RandAugment 用更簡單的 (N, M) 兩超參即可媲美並廣泛取代,且分類專用策略不一定適用偵測/分割"
+          "三任務全用 Mixup 最佳:Mixup 用 Beta 分布抽樣 λ 對兩張圖做線性插值並同步混合 one-hot 標籤,可同時提升分類、偵測、分割效能,實作最簡單,只需四行程式碼即可整合進任何訓練 pipeline,跨任務通用性最好": "Mixup 對分類效果極佳但對偵測/分割語意破壞嚴重:偵測 box 變成『半透明標註』、分割 mask 會出現非整數中間類別;不能直接套用",
+          "(A) CutMix、(B) AutoAugment、(C) Mixup,因 CutMix 在 ImageNet 分類最強且 paper 已驗證、AutoAugment 對偵測效果最佳因有 RL 搜尋過、Mixup 對像素級分割能保留邊界連續性最佳": "CutMix 對分類有效但與 RandAugment/Mixup 通常組合使用;AutoAugment 是分類專用策略;Mixup 對分割不適合(像素級 mask 線性插值產生非整數標籤)",
+          "三任務全用 AutoAugment 即可,AutoAugment 透過強化學習在 ImageNet 上搜出的 25 條 sub-policy 增強策略在所有 CV 任務都最佳,不需再區分分類、偵測、分割,可直接複用相同策略包並省下重新搜尋成本": "AutoAugment 的策略池是針對 ImageNet/CIFAR 分類 RL 搜尋的,搜尋成本極高(數千 GPU hour);RandAugment 用更簡單的 (N, M) 兩超參即可媲美並廣泛取代,且分類專用策略不一定適用偵測/分割"
         },
         "hook": "增強要看『標註型態』:分類 → RandAugment/Mixup;偵測 → Mosaic/CutMix(box 仍對齊);分割 → 幾何/彈性變形(避免跨物件 patch)"
       },
@@ -219,17 +219,17 @@
       "stem": "某廣告代理商接到 B2B 客戶委託:用 Stable Diffusion 為其新品做產品圖,要求『模特兒姿勢與客戶提供的草圖完全一致(手放心臟、頭微微側 30 度)、產品外觀與參考圖視覺風格一致、可批量產出 200 張不同背景但構圖一致的成品』。AI 創作總監要在 ControlNet、IP-Adapter、T2I-Adapter、LoRA 中組合最佳方案。請問下列何者最為正確?",
       "options": [
         {"text": "ControlNet(OpenPose/Canny)鎖定姿勢與構圖 + IP-Adapter 注入產品視覺風格 + LoRA 微調品牌專屬風格,三者可同時疊加;單純文字 prompt 無法精準控制空間結構", "is_correct": true},
-        {"text": "只用 LoRA 即可:把客戶草圖與產品圖訓練成一個 LoRA,後續所有 prompt 都自動產生符合姿勢與產品外觀的圖,不需 ControlNet", "is_correct": false, "trap_type": "LoRA 主要編碼風格/概念分布,對『精確空間結構(姿勢、構圖)』控制力弱,難以保證每張姿勢一致"},
-        {"text": "只用 IP-Adapter 即可:IP-Adapter 把參考圖編碼進 cross-attention,自動同時控制姿勢、產品外觀、風格,無需其他模組", "is_correct": false, "trap_type": "IP-Adapter 偏向『視覺風格與內容語意』條件,空間結構控制(精準姿勢)能力遠不如 ControlNet"},
-        {"text": "只用 T2I-Adapter 與 ControlNet 擇一即可,兩者功能完全相同,T2I-Adapter 較新所以一定較好,直接全替換 ControlNet", "is_correct": false, "trap_type": "T2I-Adapter 與 ControlNet 設計類似但不相同,且 ControlNet 生態與精度更成熟,『更新就更好』為錯誤直覺"}
+        {"text": "只用 LoRA 即可:把客戶草圖與產品圖一同訓練成單一 LoRA,後續任何 prompt 都能自動產生符合姿勢、產品外觀與品牌風格的成品,不需 ControlNet 等空間條件模組", "is_correct": false, "trap_type": "LoRA 主要編碼風格/概念分布,對『精確空間結構(姿勢、構圖)』控制力弱,難以保證每張姿勢一致"},
+        {"text": "只用 IP-Adapter 即可:IP-Adapter 把參考圖經 image encoder 編碼後注入 cross-attention,即可自動同時控制姿勢、產品外觀與品牌風格,無需 ControlNet 或 LoRA 等其他模組", "is_correct": false, "trap_type": "IP-Adapter 偏向『視覺風格與內容語意』條件,空間結構控制(精準姿勢)能力遠不如 ControlNet"},
+        {"text": "只用 T2I-Adapter 與 ControlNet 擇一即可,兩者注入機制完全相同、效果無差異,T2I-Adapter 較新且設計更輕量所以一定較好,可直接全面替換 ControlNet 並省下顯存", "is_correct": false, "trap_type": "T2I-Adapter 與 ControlNet 設計類似但不相同,且 ControlNet 生態與精度更成熟,『更新就更好』為錯誤直覺"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "Stable Diffusion 的條件控制可分三層:(1)『空間結構』(姿勢、邊緣、深度) → ControlNet,以額外 trainable copy 注入空間條件特徵,精準鎖定姿勢/構圖;(2)『視覺內容/風格』 → IP-Adapter,把參考圖經 image encoder 編碼後注入 cross-attention,讓生成保留參考圖的視覺特徵;(3)『領域/品牌風格分布』 → LoRA,以低秩微調讓模型內化特定風格。三者疊加(ControlNet 鎖姿勢 + IP-Adapter 鎖產品外觀 + LoRA 鎖品牌風格)是商業精準控制的標準做法,200 張只變背景但構圖一致即可量產。",
         "wrong": {
-          "只用 LoRA 即可:把客戶草圖與產品圖訓練成一個 LoRA,後續所有 prompt 都自動產生符合姿勢與產品外觀的圖,不需 ControlNet": "LoRA 編碼的是『分布層級』的風格/概念,對『精確空間佈局』(如手放心臟、頭側 30 度)控制力弱,生成時姿勢會隨機抖動,無法保證 200 張一致",
-          "只用 IP-Adapter 即可:IP-Adapter 把參考圖編碼進 cross-attention,自動同時控制姿勢、產品外觀、風格,無需其他模組": "IP-Adapter 強在『視覺語意/風格』移植(類似 prompt 的圖片版),但對精準空間結構(關節角度、相對位置)控制有限,姿勢會偏離草圖",
-          "只用 T2I-Adapter 與 ControlNet 擇一即可,兩者功能完全相同,T2I-Adapter 較新所以一定較好,直接全替換 ControlNet": "T2I-Adapter 與 ControlNet 設計類似但實作不同(T2I-Adapter 注入 encoder feature、ControlNet 是 trainable copy),社群 ControlNet 生態(模型、預處理器)更成熟;且本題重點是『多種條件疊加』而非二者擇一"
+          "只用 LoRA 即可:把客戶草圖與產品圖一同訓練成單一 LoRA,後續任何 prompt 都能自動產生符合姿勢、產品外觀與品牌風格的成品,不需 ControlNet 等空間條件模組": "LoRA 編碼的是『分布層級』的風格/概念,對『精確空間佈局』(如手放心臟、頭側 30 度)控制力弱,生成時姿勢會隨機抖動,無法保證 200 張一致",
+          "只用 IP-Adapter 即可:IP-Adapter 把參考圖經 image encoder 編碼後注入 cross-attention,即可自動同時控制姿勢、產品外觀與品牌風格,無需 ControlNet 或 LoRA 等其他模組": "IP-Adapter 強在『視覺語意/風格』移植(類似 prompt 的圖片版),但對精準空間結構(關節角度、相對位置)控制有限,姿勢會偏離草圖",
+          "只用 T2I-Adapter 與 ControlNet 擇一即可,兩者注入機制完全相同、效果無差異,T2I-Adapter 較新且設計更輕量所以一定較好,可直接全面替換 ControlNet 並省下顯存": "T2I-Adapter 與 ControlNet 設計類似但實作不同(T2I-Adapter 注入 encoder feature、ControlNet 是 trainable copy),社群 ControlNet 生態(模型、預處理器)更成熟;且本題重點是『多種條件疊加』而非二者擇一"
         },
         "hook": "SD 控制三層:空間結構 → ControlNet;視覺內容 → IP-Adapter;風格分布 → LoRA;商業需求常需三者疊加"
       },
@@ -248,17 +248,17 @@
       "stem": "某 LLM 新創團隊要對 7B 基礎模型做對齊(alignment),目標是『有用、誠實、無害』。資源:8 張 A100、3 個月工期、無專業安全標註團隊但有開源人類偏好資料。團隊在 RLHF、DPO、Constitutional AI、RLAIF 中尋找最佳方案。請問下列何者最為正確?",
       "options": [
         {"text": "首選 DPO(Direct Preference Optimization):以 chosen/rejected pair 直接優化策略,跳過獨立 reward model 與 PPO 的不穩定,工程複雜度顯著低於 RLHF,適合資源有限團隊,在多項基準已近 RLHF 效果", "is_correct": true},
-        {"text": "首選 RLHF(SFT + RM + PPO):業界事實標準、效果絕對最佳,即使資源有限也應投入硬做,DPO 等都是退而求其次", "is_correct": false, "trap_type": "RLHF 的 PPO 階段對超參數敏感、工程複雜、易發散;在 8 卡 + 3 個月 + 無安全標註團隊條件下,DPO 性價比顯著更高"},
-        {"text": "首選 Constitutional AI:用一組憲法原則自動生成偏好資料完全不需人類標註,適合任何規模團隊且效果保證最佳", "is_correct": false, "trap_type": "Constitutional AI 仍需有能力的『critique/revise』模型作為起點,且憲法原則設計本身需要安全專業;直接套用常出現對齊偏弱"},
-        {"text": "首選 RLAIF:讓另一個 LLM 取代人類提供偏好,完全自動化、效果與 RLHF 相同且成本歸零", "is_correct": false, "trap_type": "RLAIF 仍需高質量 critic LLM 與精心設計 prompt;『效果完全相同且成本歸零』為過度簡化;且仍需 PPO/類似訓練框架"}
+        {"text": "首選 RLHF(SFT + RM + PPO 三階段):業界事實標準、效果絕對最佳且最穩健,即使 8 卡資源有限也應投入硬做完整 PPO 流程,DPO 與 CAI 等替代方案在生產環境都只是退而求其次的折衷,7B 模型尤其需要完整 RLHF 才能達到商用對齊水準", "is_correct": false, "trap_type": "RLHF 的 PPO 階段對超參數敏感、工程複雜、易發散;在 8 卡 + 3 個月 + 無安全標註團隊條件下,DPO 性價比顯著更高"},
+        {"text": "首選 Constitutional AI:用一組精心設計的憲法原則,讓模型自動生成 chosen/rejected 偏好資料,完全不需任何人類標註,適合任何規模團隊且對齊效果保證優於 RLHF 與 DPO,可同時達成有用、誠實、無害三目標", "is_correct": false, "trap_type": "Constitutional AI 仍需有能力的『critique/revise』模型作為起點,且憲法原則設計本身需要安全專業;直接套用常出現對齊偏弱"},
+        {"text": "首選 RLAIF:讓另一個 LLM 取代人類提供偏好評分,完全自動化、效果與 RLHF 完全相同、訓練成本歸零、可直接跳過 reward model 與 PPO 兩個階段,工程實作最簡單,適合無專業安全標註團隊的小型新創", "is_correct": false, "trap_type": "RLAIF 仍需高質量 critic LLM 與精心設計 prompt;『效果完全相同且成本歸零』為過度簡化;且仍需 PPO/類似訓練框架"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "DPO(Rafailov et al. 2023)從 Bradley-Terry 偏好模型推導出『直接以策略網路本身做 implicit reward』的損失函數,訓練流程僅需 SFT + DPO 兩階段,移除獨立 reward model 與 PPO,大幅降低工程複雜度與訓練不穩定性。在 8 卡 + 3 個月 + 開源偏好資料的限制下,DPO 是最務實的選擇。實證顯示 DPO 在多項基準(AlpacaEval、MT-Bench)已接近 RLHF 效果。RLHF 仍是金本位但需強團隊;Constitutional AI/RLAIF 適合資料量大但人標困難的場景,且皆需基礎 critic 模型與精心設計。",
         "wrong": {
-          "首選 RLHF(SFT + RM + PPO):業界事實標準、效果絕對最佳,即使資源有限也應投入硬做,DPO 等都是退而求其次": "RLHF 的 PPO 階段對 KL coefficient、reward scaling、advantage normalization 等高度敏感,易發生 reward hacking 或 collapse;沒有專業團隊強行硬做常無法收斂,DPO 在資源限制下性價比明顯更高",
-          "首選 Constitutional AI:用一組憲法原則自動生成偏好資料完全不需人類標註,適合任何規模團隊且效果保證最佳": "Constitutional AI(Anthropic)的 SL-CAI / RL-CAI 流程仍需『有能力 critique/revise 的基礎模型』作為起點,且原則設計需要安全專業;『不需人類標註且效果最佳』是過度簡化",
-          "首選 RLAIF:讓另一個 LLM 取代人類提供偏好,完全自動化、效果與 RLHF 相同且成本歸零": "RLAIF 仍需訓練 reward model 與 PPO 流程,『成本歸零』錯誤;品質依賴 critic LLM 的能力,小團隊若無強大 critic 反而引入偏差"
+          "首選 RLHF(SFT + RM + PPO 三階段):業界事實標準、效果絕對最佳且最穩健,即使 8 卡資源有限也應投入硬做完整 PPO 流程,DPO 與 CAI 等替代方案在生產環境都只是退而求其次的折衷,7B 模型尤其需要完整 RLHF 才能達到商用對齊水準": "RLHF 的 PPO 階段對 KL coefficient、reward scaling、advantage normalization 等高度敏感,易發生 reward hacking 或 collapse;沒有專業團隊強行硬做常無法收斂,DPO 在資源限制下性價比明顯更高",
+          "首選 Constitutional AI:用一組精心設計的憲法原則,讓模型自動生成 chosen/rejected 偏好資料,完全不需任何人類標註,適合任何規模團隊且對齊效果保證優於 RLHF 與 DPO,可同時達成有用、誠實、無害三目標": "Constitutional AI(Anthropic)的 SL-CAI / RL-CAI 流程仍需『有能力 critique/revise 的基礎模型』作為起點,且原則設計需要安全專業;『不需人類標註且效果最佳』是過度簡化",
+          "首選 RLAIF:讓另一個 LLM 取代人類提供偏好評分,完全自動化、效果與 RLHF 完全相同、訓練成本歸零、可直接跳過 reward model 與 PPO 兩個階段,工程實作最簡單,適合無專業安全標註團隊的小型新創": "RLAIF 仍需訓練 reward model 與 PPO 流程,『成本歸零』錯誤;品質依賴 critic LLM 的能力,小團隊若無強大 critic 反而引入偏差"
         },
         "hook": "資源有限對齊 → DPO(無 RM、無 PPO);RLHF 是金本位但工程貴;CAI/RLAIF 需強 critic LLM"
       },
@@ -277,17 +277,17 @@
       "stem": "某邊緣 AI 公司要把 LLaMA-2-13B 部署到客戶現場的 RTX 4090(24GB)單卡,需求:吞吐量 30+ tokens/sec、首 token 延遲 < 500ms、可離線執行。團隊在量化(GPTQ/AWQ/GGUF)、Flash Attention、Speculative Decoding 中組合最佳推理優化方案。請問下列何者最為正確?",
       "options": [
         {"text": "GPTQ 或 AWQ 量化到 4-bit 將顯存從 26GB 壓到約 7GB + Flash Attention 2 加速 attention + Speculative Decoding 用小 draft model 預測再驗證,三者疊加可同時達吞吐與延遲目標", "is_correct": true},
-        {"text": "只做 Speculative Decoding 即可,不需量化,RTX 4090 24GB 直接跑 fp16 13B 綽綽有餘,且 Speculative 自動把吞吐提升 5 倍", "is_correct": false, "trap_type": "13B fp16 權重 26GB > 24GB,根本載不進 4090;且 Speculative Decoding 只加速 decoding 階段,無法解決顯存問題"},
-        {"text": "只做 Flash Attention 即可,Flash Attention 自動量化模型,顯存與延遲一次解決", "is_correct": false, "trap_type": "Flash Attention 是『記憶體高效的 exact attention 演算法』,並不做量化,主要降低 attention 中間 activation 而非權重"},
-        {"text": "GGUF 是專為 GPU 設計的格式,效能優於 GPTQ/AWQ,RTX 4090 應強制使用 GGUF 才能達到 30+ tokens/sec", "is_correct": false, "trap_type": "GGUF 主要是 llama.cpp 在 CPU 與 Apple Silicon 的格式;在 NVIDIA GPU 上 GPTQ/AWQ 通常吞吐更佳"}
+        {"text": "只做 Speculative Decoding 即可,不需任何量化,RTX 4090 24GB 直接跑 fp16 LLaMA-2-13B 綽綽有餘,且 Speculative 配合 7B draft model 可自動把推論吞吐提升 5 倍以上", "is_correct": false, "trap_type": "13B fp16 權重 26GB > 24GB,根本載不進 4090;且 Speculative Decoding 只加速 decoding 階段,無法解決顯存問題"},
+        {"text": "只做 Flash Attention 即可,Flash Attention 內建自動權重量化機制,可同時降低權重顯存占用與首 token 延遲,一次解決邊緣部署所有顯存與吞吐問題,無須再做 GPTQ、AWQ 或 GGUF 等量化處理", "is_correct": false, "trap_type": "Flash Attention 是『記憶體高效的 exact attention 演算法』,並不做量化,主要降低 attention 中間 activation 而非權重"},
+        {"text": "GGUF 是專為 NVIDIA GPU 設計的張量格式,推理效能顯著優於 GPTQ/AWQ,RTX 4090 上應強制使用 GGUF 並搭配 llama.cpp 才能穩定達到 30+ tokens/sec 的吞吐", "is_correct": false, "trap_type": "GGUF 主要是 llama.cpp 在 CPU 與 Apple Silicon 的格式;在 NVIDIA GPU 上 GPTQ/AWQ 通常吞吐更佳"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "邊緣部署優化的三個正交維度:(1)『模型大小』→ 量化(GPTQ post-training 整數量化、AWQ 對重要權重保護更精)4-bit 可把 13B 從 26GB 壓到約 7-8GB,在 4090 24GB 上即可載入並留下 KV cache 空間;(2)『attention 計算』→ Flash Attention 2 用 tiling 與 online softmax 降低 attention 的 HBM 讀寫,顯著降低顯存與時間;(3)『decoding 速度』→ Speculative Decoding 用小 draft model 預測未來 N 個 tokens,主模型一次驗證,期望 1.5-3 倍加速。三者作用層級不同、可疊加,在 RTX 4090 上是達 30+ tokens/sec 的標準組合。",
         "wrong": {
-          "只做 Speculative Decoding 即可,不需量化,RTX 4090 24GB 直接跑 fp16 13B 綽綽有餘,且 Speculative 自動把吞吐提升 5 倍": "13B 模型 fp16 權重 26GB,單張 RTX 4090(24GB)無法載入,連 forward pass 都跑不起來;且 Speculative Decoding 加速通常 1.5-3 倍,『5 倍』為過度誇大",
-          "只做 Flash Attention 即可,Flash Attention 自動量化模型,顯存與延遲一次解決": "Flash Attention 是『記憶體高效的 exact attention 演算法』(IO-aware tiling + online softmax),主要降低 attention 計算中的 activation 顯存與 HBM 流量,並不做權重量化,無法解決 13B 載不進 24GB 的問題",
-          "GGUF 是專為 GPU 設計的格式,效能優於 GPTQ/AWQ,RTX 4090 應強制使用 GGUF 才能達到 30+ tokens/sec": "GGUF 是 llama.cpp 為 CPU 與 Apple Silicon Metal 設計的張量格式,雖然新版可 GPU offload,但在 NVIDIA GPU 上的吞吐通常不及 GPTQ/AWQ 配 vLLM/ExLlama 的優化推理路徑"
+          "只做 Speculative Decoding 即可,不需任何量化,RTX 4090 24GB 直接跑 fp16 LLaMA-2-13B 綽綽有餘,且 Speculative 配合 7B draft model 可自動把推論吞吐提升 5 倍以上": "13B 模型 fp16 權重 26GB,單張 RTX 4090(24GB)無法載入,連 forward pass 都跑不起來;且 Speculative Decoding 加速通常 1.5-3 倍,『5 倍』為過度誇大",
+          "只做 Flash Attention 即可,Flash Attention 內建自動權重量化機制,可同時降低權重顯存占用與首 token 延遲,一次解決邊緣部署所有顯存與吞吐問題,無須再做 GPTQ、AWQ 或 GGUF 等量化處理": "Flash Attention 是『記憶體高效的 exact attention 演算法』(IO-aware tiling + online softmax),主要降低 attention 計算中的 activation 顯存與 HBM 流量,並不做權重量化,無法解決 13B 載不進 24GB 的問題",
+          "GGUF 是專為 NVIDIA GPU 設計的張量格式,推理效能顯著優於 GPTQ/AWQ,RTX 4090 上應強制使用 GGUF 並搭配 llama.cpp 才能穩定達到 30+ tokens/sec 的吞吐": "GGUF 是 llama.cpp 為 CPU 與 Apple Silicon Metal 設計的張量格式,雖然新版可 GPU offload,但在 NVIDIA GPU 上的吞吐通常不及 GPTQ/AWQ 配 vLLM/ExLlama 的優化推理路徑"
         },
         "hook": "邊緣 LLM 部署疊三件:量化(壓權重)+ Flash Attention(壓 activation)+ Speculative(壓 decode 步驟);GGUF 對 CPU/Mac、GPTQ/AWQ 對 NV GPU"
       },
@@ -306,17 +306,17 @@
       "stem": "某科技公司同時開發三個多模態應用:(A) 電商以圖搜圖/以文搜圖檢索 200 萬商品庫、(B) 視覺對話助理(使用者上傳圖+問問題,模型回答)、(C) 自動為盲人朗讀社群圖片內容(影像描述生成)。產品經理在 CLIP、BLIP-2、Flamingo、LLaVA 中分別選最佳模型。請問下列何者最為正確?",
       "options": [
         {"text": "(A) CLIP(對比學習雙編碼器,推論時可預先索引)、(B) LLaVA 或 BLIP-2(視覺特徵透過 projector/Q-Former 對接 LLM,擅長多輪對話)、(C) BLIP-2 或 Flamingo(具描述生成能力,Flamingo 還支援少樣本上下文)", "is_correct": true},
-        {"text": "(A) BLIP-2、(B) CLIP、(C) Flamingo:BLIP-2 雙編碼最快適合檢索;CLIP 對話最佳;Flamingo 描述最佳", "is_correct": false, "trap_type": "CLIP 是雙編碼可預索引適合檢索;BLIP-2 是 frozen LLM + Q-Former 不適合大規模索引;CLIP 沒有生成能力無法做對話"},
-        {"text": "(A) Flamingo、(B) Flamingo、(C) Flamingo,Flamingo 是最新最強的通用多模態模型,所有任務都最佳", "is_correct": false, "trap_type": "Flamingo 是 DeepMind 內部模型未開源,且大模型推論成本對 200 萬商品檢索完全不切實際"},
-        {"text": "(A) LLaVA、(B) CLIP、(C) LLaVA:LLaVA 對檢索最佳因含 LLM 理解;CLIP 對話最佳因延遲低;LLaVA 描述最佳", "is_correct": false, "trap_type": "LLaVA 推論需走整個 LLM forward,200 萬庫檢索成本爆炸;CLIP 不能對話"}
+        {"text": "(A) BLIP-2、(B) CLIP、(C) Flamingo:BLIP-2 的 Q-Former 雙編碼設計推論最快適合大規模檢索;CLIP 雙塔對齊機制對多輪對話延遲最低;Flamingo 的 cross-attention 對影像描述生成最佳", "is_correct": false, "trap_type": "CLIP 是雙編碼可預索引適合檢索;BLIP-2 是 frozen LLM + Q-Former 不適合大規模索引;CLIP 沒有生成能力無法做對話"},
+        {"text": "(A) Flamingo、(B) Flamingo、(C) Flamingo,Flamingo 是 DeepMind 最新最強的通用多模態模型,所有檢索、對話、描述任務都最佳,且 few-shot 圖文交錯上下文能力可省下大量微調成本,完全可開源直接部署到 200 萬商品庫", "is_correct": false, "trap_type": "Flamingo 是 DeepMind 內部模型未開源,且大模型推論成本對 200 萬商品檢索完全不切實際"},
+        {"text": "(A) LLaVA、(B) CLIP、(C) LLaVA:LLaVA 對 200 萬庫檢索最佳因含 LLM 語意理解;CLIP 雙塔結構延遲低最適合多輪對話即時回覆;LLaVA 對盲人朗讀的影像描述生成最佳", "is_correct": false, "trap_type": "LLaVA 推論需走整個 LLM forward,200 萬庫檢索成本爆炸;CLIP 不能對話"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "多模態模型架構各有強項:CLIP 採『雙編碼器(image encoder + text encoder)+ 對比學習』,推論時 image embedding 可預計算入向量資料庫,text query 即時編碼後做 cosine 相似度,毫秒級檢索 200 萬商品。BLIP-2 用 Q-Former 把 image feature 抽成 32 個 query 接到 frozen LLM,具備生成與推理能力,適合對話與描述。LLaVA 把 CLIP-ViT 經 MLP projector 接 Vicuna,instruction-tuned 後對話表現強。Flamingo 在 frozen LLM 中插入 perceiver resampler 與 cross-attention,並支援『few-shot in-context』圖文交錯,但未開源。檢索 → CLIP 雙編碼;對話 → LLaVA/BLIP-2;描述 → BLIP-2/Flamingo。",
         "wrong": {
-          "(A) BLIP-2、(B) CLIP、(C) Flamingo:BLIP-2 雙編碼最快適合檢索;CLIP 對話最佳;Flamingo 描述最佳": "BLIP-2 不是純雙編碼器(包含 Q-Former+LLM),不適合大庫檢索預索引;CLIP 只做 embedding 比對沒有生成能力,不能對話",
-          "(A) Flamingo、(B) Flamingo、(C) Flamingo,Flamingo 是最新最強的通用多模態模型,所有任務都最佳": "Flamingo 是 DeepMind 私有模型未開源,實務無法直接使用;且檢索 200 萬商品需要可預索引的雙編碼器,大型生成式模型逐一打分計算成本爆炸",
-          "(A) LLaVA、(B) CLIP、(C) LLaVA:LLaVA 對檢索最佳因含 LLM 理解;CLIP 對話最佳因延遲低;LLaVA 描述最佳": "LLaVA 是 LLM-based 多模態問答模型,每次推論需跑完整 LLM forward,2M 商品檢索完全不可行;CLIP 是 embedding 模型沒有生成能力無法回答多輪對話"
+          "(A) BLIP-2、(B) CLIP、(C) Flamingo:BLIP-2 的 Q-Former 雙編碼設計推論最快適合大規模檢索;CLIP 雙塔對齊機制對多輪對話延遲最低;Flamingo 的 cross-attention 對影像描述生成最佳": "BLIP-2 不是純雙編碼器(包含 Q-Former+LLM),不適合大庫檢索預索引;CLIP 只做 embedding 比對沒有生成能力,不能對話",
+          "(A) Flamingo、(B) Flamingo、(C) Flamingo,Flamingo 是 DeepMind 最新最強的通用多模態模型,所有檢索、對話、描述任務都最佳,且 few-shot 圖文交錯上下文能力可省下大量微調成本,完全可開源直接部署到 200 萬商品庫": "Flamingo 是 DeepMind 私有模型未開源,實務無法直接使用;且檢索 200 萬商品需要可預索引的雙編碼器,大型生成式模型逐一打分計算成本爆炸",
+          "(A) LLaVA、(B) CLIP、(C) LLaVA:LLaVA 對 200 萬庫檢索最佳因含 LLM 語意理解;CLIP 雙塔結構延遲低最適合多輪對話即時回覆;LLaVA 對盲人朗讀的影像描述生成最佳": "LLaVA 是 LLM-based 多模態問答模型,每次推論需跑完整 LLM forward,2M 商品檢索完全不可行;CLIP 是 embedding 模型沒有生成能力無法回答多輪對話"
         },
         "hook": "雙編碼可索引 → CLIP(檢索);Q-Former/Projector 接 LLM → BLIP-2/LLaVA(對話/描述);Flamingo 強但未開源"
       },
@@ -334,18 +334,18 @@
       "source_level": "L2",
       "stem": "某時尚電商導入 CLIP 做以文搜圖,在英文資料集 R@1 = 72%,但中文時尚情境(如『高領毛衣搭配格紋裙』)零樣本檢索 R@1 僅 18%。資深 ML 工程師要系統性診斷『跨模態檢索失準』根因。請問下列何者**最完整正確**?",
       "options": [
-        {"text": "三大根因疊加:(1) 編碼器跨模態對齊偏差(CLIP 主要用英文 alt-text 訓練,中文文字編碼器未充分對齊影像空間)、(2) 預訓練語料偏見(時尚精細品類在 LAION 中分布稀疏)、(3) 領域差距(電商商品圖風格與 web 自然圖差異大);需 CN-CLIP/Chinese-CLIP 重訓 + 領域微調 + 困難負樣本挖掘", "is_correct": true},
-        {"text": "唯一根因是『索引向量資料庫(FAISS/Milvus)的近似最近鄰演算法精度問題』,只要把 IVF 改 HNSW 或精確查詢即可恢復", "is_correct": false, "trap_type": "ANN 精度差距通常 1-3%,無法解釋 72% → 18% 的差距;且 18% 的低召回不是 ANN 近似誤差層級"},
-        {"text": "唯一根因是『中文 query 太短』,只要在 query 前面自動加入『請尋找:』提示詞即可恢復", "is_correct": false, "trap_type": "Prompt engineering 對 CLIP 雙塔有限助益(數個百分點),無法解釋 54 個百分點的落差"},
-        {"text": "唯一根因是『影像 encoder 解析度太低』,只要把 ViT-B/32 換成 ViT-L/14 即可恢復;與中文無關", "is_correct": false, "trap_type": "影像 encoder 升級提升通常 3-7%,且本題核心在語言端與領域差距,非影像端解析度"}
+        {"text": "三大根因疊加:(1) 編碼器跨模態對齊偏差(中文編碼器未對齊影像空間)、(2) 預訓練語料偏見(時尚品類在 LAION 稀疏)、(3) 領域差距(電商商品圖 vs web 自然圖);需 Chinese-CLIP 重訓 + 領域微調 + 困難負樣本", "is_correct": true},
+        {"text": "唯一根因是『索引向量資料庫(FAISS/Milvus)的近似最近鄰演算法精度問題』,只要把 IVF 索引結構改為 HNSW、提高 nprobe 與 efSearch 參數或改用精確暴力查詢即可恢復至原英文水準", "is_correct": false, "trap_type": "ANN 精度差距通常 1-3%,無法解釋 72% → 18% 的差距;且 18% 的低召回不是 ANN 近似誤差層級"},
+        {"text": "唯一根因是『中文 query 太短不利雙塔對比學習』,只要在所有中文 query 前自動加入『請尋找一張:』『時尚穿搭情境是』等通用提示詞做 prompt ensemble 並重新加權,即可恢復原英文水準的檢索效能,無需更換模型", "is_correct": false, "trap_type": "Prompt engineering 對 CLIP 雙塔有限助益(數個百分點),無法解釋 54 個百分點的落差"},
+        {"text": "唯一根因是『影像 encoder 解析度太低』,只要把 ViT-B/32 直接換成 ViT-L/14 並提高輸入解析度至 336 px,搭配多 crop 推論策略,中文檢索效能即可立刻恢復至英文水準,與語言端對齊完全無關", "is_correct": false, "trap_type": "影像 encoder 升級提升通常 3-7%,且本題核心在語言端與領域差距,非影像端解析度"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "跨模態零樣本檢索失準需從三個層面系統診斷:(1)『編碼器對齊』— CLIP 原版以 4 億英文 alt-text 對訓練,文字編碼器對中文處理弱,即便有多語言版本,中英對齊空間仍非等價,跨語言檢索 gap 巨大;(2)『預訓練語料偏見』— LAION/WIT 等網路語料中,時尚精細品類(如『高領毛衣』『格紋』)分布稀疏,CLIP 對這些細粒度概念表徵不足;(3)『領域差距』— 電商商品圖通常為純色背景、置中、單一商品,與 web 自然圖差異大,encoder feature 分布偏移。系統性對策:Chinese-CLIP/CN-CLIP 模型替換、用電商標題-商品圖對做領域微調、引入 hard negative mining 強化細粒度分辨。",
         "wrong": {
-          "唯一根因是『索引向量資料庫(FAISS/Milvus)的近似最近鄰演算法精度問題』,只要把 IVF 改 HNSW 或精確查詢即可恢復": "ANN(IVF/HNSW)的 recall@1 與精確查詢相比通常差距僅 1-3%(可調 nprobe/efSearch 控制),無法解釋 72% → 18% 的 54% 落差;且本題還報告英文集仍 72%,顯示 ANN 並非瓶頸",
-          "唯一根因是『中文 query 太短』,只要在 query 前面自動加入『請尋找:』提示詞即可恢復": "Prompt engineering(如 OpenCLIP 的 prompt ensemble)對零樣本分類有 3-5% 助益,但無法跨越語言與領域 gap 的根本問題",
-          "唯一根因是『影像 encoder 解析度太低』,只要把 ViT-B/32 換成 ViT-L/14 即可恢復;與中文無關": "影像 encoder 升級(B/32 → L/14)通常提升 3-7%,但本題瓶頸在文字端與領域差距,單純升級影像 encoder 無法跨越語言不對齊的核心問題"
+          "唯一根因是『索引向量資料庫(FAISS/Milvus)的近似最近鄰演算法精度問題』,只要把 IVF 索引結構改為 HNSW、提高 nprobe 與 efSearch 參數或改用精確暴力查詢即可恢復至原英文水準": "ANN(IVF/HNSW)的 recall@1 與精確查詢相比通常差距僅 1-3%(可調 nprobe/efSearch 控制),無法解釋 72% → 18% 的 54% 落差;且本題還報告英文集仍 72%,顯示 ANN 並非瓶頸",
+          "唯一根因是『中文 query 太短不利雙塔對比學習』,只要在所有中文 query 前自動加入『請尋找一張:』『時尚穿搭情境是』等通用提示詞做 prompt ensemble 並重新加權,即可恢復原英文水準的檢索效能,無需更換模型": "Prompt engineering(如 OpenCLIP 的 prompt ensemble)對零樣本分類有 3-5% 助益,但無法跨越語言與領域 gap 的根本問題",
+          "唯一根因是『影像 encoder 解析度太低』,只要把 ViT-B/32 直接換成 ViT-L/14 並提高輸入解析度至 336 px,搭配多 crop 推論策略,中文檢索效能即可立刻恢復至英文水準,與語言端對齊完全無關": "影像 encoder 升級(B/32 → L/14)通常提升 3-7%,但本題瓶頸在文字端與領域差距,單純升級影像 encoder 無法跨越語言不對齊的核心問題"
         },
         "hook": "跨模態檢索失準三診斷:對齊偏差(語言)+ 語料偏見(細粒度)+ 領域差距(商品 vs web)"
       },

@@ -16,17 +16,17 @@
       "stem": "某電商平台資料科學團隊要建立『顧客次月回購率』預測模型,資料規模約 50 萬筆訂單,特徵共 87 維,其中 41 維為高基數(High-cardinality)類別變數(例:商品 SKU、配送縣市、付款方式組合),GPU 記憶體預算僅 8GB,訓練時間限制在 30 分鐘內。團隊在 XGBoost、LightGBM、CatBoost 三者間抉擇。下列分析何者最能匹配此情境的最佳工具?",
       "options": [
         {"text": "首選 CatBoost,因其 Ordered Target Encoding 對高基數類別有原生最佳化處理,可避免目標洩漏(Target Leakage),且 GPU 上對類別變數編碼後的記憶體使用較 XGBoost 友善", "is_correct": true},
-        {"text": "首選 XGBoost,因為 XGBoost 採用 Pre-sorted 演算法,在類別變數眾多時準確度最高,GPU 加速也最成熟", "is_correct": false, "trap_type": "XGBoost 的 Pre-sorted 演算法在高基數類別下記憶體爆炸,且 XGBoost 對類別變數需額外 One-hot 或 Target encoding,並非原生支援"},
-        {"text": "首選 LightGBM,因為 GOSS(Gradient-based One-Side Sampling)在 50 萬筆規模有絕對速度優勢,類別處理交給 categorical_feature 即可,效果與 CatBoost 相當", "is_correct": false, "trap_type": "LightGBM 的 categorical_feature 採用 Fisher 分桶,對極高基數仍可能過擬合,且未處理目標洩漏問題;速度優勢不等於整體最佳"},
-        {"text": "三者皆可,差異不大,選 GPU 支援最早成熟的 XGBoost 即可,類別變數先 One-hot 編碼後送入即可", "is_correct": false, "trap_type": "高基數 One-hot 會把 87 維膨脹到數千維,GPU 8GB 不足且訓練時間爆增;『差異不大』是錯誤判斷"}
+        {"text": "首選 XGBoost,因 Pre-sorted 演算法在類別變數眾多時準確度最高,GPU 加速最成熟,只要把高基數類別先做 Target Encoding 後輸入即可達成最佳效能與記憶體平衡", "is_correct": false, "trap_type": "XGBoost 的 Pre-sorted 演算法在高基數類別下記憶體爆炸,且 XGBoost 對類別變數需額外 One-hot 或 Target encoding,並非原生支援"},
+        {"text": "首選 LightGBM,因 GOSS(Gradient-based One-Side Sampling)在 50 萬筆規模有絕對速度優勢,類別欄位直接交給 categorical_feature 即可,效果與 CatBoost 相當且訓練時間最短", "is_correct": false, "trap_type": "LightGBM 的 categorical_feature 採用 Fisher 分桶,對極高基數仍可能過擬合,且未處理目標洩漏問題;速度優勢不等於整體最佳"},
+        {"text": "三者皆可,差異不大,選 GPU 支援最早成熟的 XGBoost 即可,把高基數類別先做 One-hot 編碼後送入即可,訓練時間與精度都會落在可接受範圍", "is_correct": false, "trap_type": "高基數 One-hot 會把 87 維膨脹到數千維,GPU 8GB 不足且訓練時間爆增;『差異不大』是錯誤判斷"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "CatBoost 的核心競爭力在於『Ordered Target Encoding』與『Symmetric Tree(Oblivious Tree)』兩項設計。對於 41 維高基數類別變數,CatBoost 不需要事先 One-hot 編碼,直接以 Permutation-driven 的方式計算每個類別的目標統計值,並且嚴格遵守時間順序避免目標洩漏。Symmetric Tree 結構讓推論速度最快,且 GPU 記憶體用量比 XGBoost Pre-sorted 與 LightGBM Histogram 更可預測。在 50 萬筆 + 8GB GPU + 30 分限制下,CatBoost 通常是最平衡的選擇。",
         "wrong": {
-          "首選 XGBoost,因為 XGBoost 採用 Pre-sorted 演算法,在類別變數眾多時準確度最高,GPU 加速也最成熟": "XGBoost Pre-sorted 在高基數類別下記憶體膨脹至 O(n × features × bins),GPU 8GB 容易爆掉。XGBoost 雖支援 enable_categorical 但仍是後加功能,對極高基數編碼仍弱於 CatBoost",
-          "首選 LightGBM,因為 GOSS(Gradient-based One-Side Sampling)在 50 萬筆規模有絕對速度優勢,類別處理交給 categorical_feature 即可,效果與 CatBoost 相當": "LightGBM 對類別變數採 Fisher 最優分割,但對基數極高(如 SKU 上萬種)易過擬合;且 LightGBM 不處理 Target Leakage 問題,在時間序列性質的回購預測上會偏樂觀",
-          "三者皆可,差異不大,選 GPU 支援最早成熟的 XGBoost 即可,類別變數先 One-hot 編碼後送入即可": "高基數 One-hot 會將 41 維膨脹到上萬維,稀疏矩陣在 GPU 8GB 下幾乎必爆;且『差異不大』完全忽略三者對類別變數處理方式的本質差異"
+          "首選 XGBoost,因 Pre-sorted 演算法在類別變數眾多時準確度最高,GPU 加速最成熟,只要把高基數類別先做 Target Encoding 後輸入即可達成最佳效能與記憶體平衡": "XGBoost Pre-sorted 在高基數類別下記憶體膨脹至 O(n × features × bins),GPU 8GB 容易爆掉。XGBoost 雖支援 enable_categorical 但仍是後加功能,對極高基數編碼仍弱於 CatBoost",
+          "首選 LightGBM,因 GOSS(Gradient-based One-Side Sampling)在 50 萬筆規模有絕對速度優勢,類別欄位直接交給 categorical_feature 即可,效果與 CatBoost 相當且訓練時間最短": "LightGBM 對類別變數採 Fisher 最優分割,但對基數極高(如 SKU 上萬種)易過擬合;且 LightGBM 不處理 Target Leakage 問題,在時間序列性質的回購預測上會偏樂觀",
+          "三者皆可,差異不大,選 GPU 支援最早成熟的 XGBoost 即可,把高基數類別先做 One-hot 編碼後送入即可,訓練時間與精度都會落在可接受範圍": "高基數 One-hot 會將 41 維膨脹到上萬維,稀疏矩陣在 GPU 8GB 下幾乎必爆;且『差異不大』完全忽略三者對類別變數處理方式的本質差異"
         },
         "hook": "選樹模型口訣:高基數類別 + 防洩漏 → CatBoost;海量資料純數值 + 速度第一 → LightGBM;中等規模 + 細調超參 → XGBoost"
       },
@@ -45,17 +45,17 @@
       "stem": "某金融科技公司針對 LightGBM 信用評分模型,被監管機關要求提供『可解釋性報告』,需同時呈現:(A)全球(Global)層級各特徵對模型整體決策的貢獻、(B)局部(Local)層級為何此特定客戶被拒絕、(C)報告須在 4 小時內出具(模型有 200 棵樹、150 萬筆驗證集)。資深分析師思考應採用 SHAP、Permutation Importance、Gini-based Feature Importance 何者組合。下列分析何者最為正確?",
       "options": [
         {"text": "SHAP(TreeSHAP)同時提供 Global(全資料 SHAP 平均絕對值)與 Local(單筆 SHAP 值)解釋,且 TreeSHAP 對樹模型有 O(TLD²) 多項式複雜度,4 小時內可完成,是唯一同時滿足三項需求的方法", "is_correct": true},
-        {"text": "Permutation Importance 最佳,因為它『模型無關(Model-agnostic)』,可同時提供 Global 與 Local 解釋,且計算速度最快", "is_correct": false, "trap_type": "Permutation Importance 僅能提供 Global 解釋(全資料 shuffle 後性能下降),不提供單筆 Local 解釋;且每特徵需重跑整個驗證集評估,複雜度為 O(features × n) 並不快"},
-        {"text": "Gini-based Feature Importance 最佳,LightGBM 訓練後即可直接讀取,不需額外計算,完全免費", "is_correct": false, "trap_type": "Gini Importance 僅 Global、且對高基數特徵有偏誤,完全不提供 Local 解釋,無法回答『此客戶為何被拒絕』"},
-        {"text": "三者並用,SHAP 跑 Global、Permutation 跑 Local、Gini 做雙重驗證,以求嚴謹", "is_correct": false, "trap_type": "Permutation 不提供 Local 解釋,『跑 Local』本身錯誤;且三者並用浪費 4 小時時間預算,工程上不合理"}
+        {"text": "Permutation Importance 最佳,因為它具備『模型無關(Model-agnostic)』特性,既可同時提供 Global 與 Local 兩層解釋,且在大資料上的計算速度遠勝 SHAP,可在 1 小時內完成", "is_correct": false, "trap_type": "Permutation Importance 僅能提供 Global 解釋(全資料 shuffle 後性能下降),不提供單筆 Local 解釋;且每特徵需重跑整個驗證集評估,複雜度為 O(features × n) 並不快"},
+        {"text": "Gini-based Feature Importance 最佳,LightGBM 訓練後即可直接讀取 feature_importance_,不需額外計算且免費,在類別不平衡與高基數特徵下表現最穩定可信", "is_correct": false, "trap_type": "Gini Importance 僅 Global、且對高基數特徵有偏誤,完全不提供 Local 解釋,無法回答『此客戶為何被拒絕』"},
+        {"text": "三者並用是最嚴謹的監管報告方案,SHAP 負責 Global、Permutation 負責 Local 的逐筆推理、Gini 做雙重驗證,雖耗時但能完整覆蓋監管要求的所有解釋層面", "is_correct": false, "trap_type": "Permutation 不提供 Local 解釋,『跑 Local』本身錯誤;且三者並用浪費 4 小時時間預算,工程上不合理"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "SHAP(SHapley Additive exPlanations)基於賽局理論的 Shapley Value,提供唯一同時滿足『Local Accuracy(單筆解釋加總等於模型輸出)』、『Missingness(缺失特徵 SHAP 為 0)』、『Consistency(模型變動後重要特徵 SHAP 不會反向變動)』三公理的解釋方法。TreeSHAP 對樹模型的多項式複雜度為 O(TLD²)(T=樹數、L=葉子數、D=深度),遠優於原始 Shapley 的指數複雜度。在 200 棵樹 × 150 萬筆下,實務上 1-2 小時可完成。同時提供 Global(SHAP 平均絕對值排序)與 Local(單筆 SHAP 值瀑布圖)兩層解釋,完美匹配監管報告需求。",
         "wrong": {
-          "Permutation Importance 最佳,因為它『模型無關(Model-agnostic)』,可同時提供 Global 與 Local 解釋,且計算速度最快": "Permutation Importance 透過『打亂某特徵後測量驗證集性能下降』來衡量重要性,本質上是 Global 指標,無法回答單筆樣本『為何被拒絕』。且每個特徵須重跑整個驗證集,在 150 萬筆 × 87 特徵下並不比 TreeSHAP 快",
-          "Gini-based Feature Importance 最佳,LightGBM 訓練後即可直接讀取,不需額外計算,完全免費": "Gini Importance(分裂時不純度減少累計)只能提供 Global 解釋,且對高基數類別與連續特徵存在 selection bias(偏好可分裂點多的特徵),完全無法回答 Local 問題,不符合監管局部解釋要求",
-          "三者並用,SHAP 跑 Global、Permutation 跑 Local、Gini 做雙重驗證,以求嚴謹": "Permutation Importance 本質不是 Local 方法,『跑 Local』是錯誤分工;且三者並用會超過 4 小時預算(Permutation 在大資料上特別耗時),浪費資源"
+          "Permutation Importance 最佳,因為它具備『模型無關(Model-agnostic)』特性,既可同時提供 Global 與 Local 兩層解釋,且在大資料上的計算速度遠勝 SHAP,可在 1 小時內完成": "Permutation Importance 透過『打亂某特徵後測量驗證集性能下降』來衡量重要性,本質上是 Global 指標,無法回答單筆樣本『為何被拒絕』。且每個特徵須重跑整個驗證集,在 150 萬筆 × 87 特徵下並不比 TreeSHAP 快",
+          "Gini-based Feature Importance 最佳,LightGBM 訓練後即可直接讀取 feature_importance_,不需額外計算且免費,在類別不平衡與高基數特徵下表現最穩定可信": "Gini Importance(分裂時不純度減少累計)只能提供 Global 解釋,且對高基數類別與連續特徵存在 selection bias(偏好可分裂點多的特徵),完全無法回答 Local 問題,不符合監管局部解釋要求",
+          "三者並用是最嚴謹的監管報告方案,SHAP 負責 Global、Permutation 負責 Local 的逐筆推理、Gini 做雙重驗證,雖耗時但能完整覆蓋監管要求的所有解釋層面": "Permutation Importance 本質不是 Local 方法,『跑 Local』是錯誤分工;且三者並用會超過 4 小時預算(Permutation 在大資料上特別耗時),浪費資源"
         },
         "hook": "解釋性方法選型:Global+Local 一站式 → SHAP;只要 Global 且 model-agnostic → Permutation;最快免費但有偏誤 → Gini"
       },
@@ -74,17 +74,17 @@
       "stem": "某物流公司以 XGBoost 預測『配送延誤』,訓練曲線顯示:訓練 RMSE 從 12 持續下降到 3,驗證 RMSE 從 14 下降到第 50 棵樹的 9 後反彈上升到 11.5。當前超參:n_estimators=300、max_depth=12、learning_rate=0.3、subsample=1.0、reg_lambda=0、min_child_weight=1。團隊資深 ML 工程師判斷模型嚴重過擬合,僅能挑一個參數立即調整。下列何者最為有效且符合 GBDT 過擬合處置原則?",
       "options": [
         {"text": "降低 max_depth 從 12 到 5-6,因為深度 12 對單棵樹過於激進,GBDT 應採『淺樹弱學習器 + 多輪 boosting』,深度過深會讓單棵樹直接記憶訓練雜訊,是當前最大病灶", "is_correct": true},
-        {"text": "提高 learning_rate 從 0.3 到 1.0,加速收斂並使用 early stopping,可在過擬合前停下來", "is_correct": false, "trap_type": "提高 learning_rate 會放大每棵樹的更新幅度,加劇過擬合而非緩解;『加速收斂避免過擬合』是錯誤直覺"},
-        {"text": "增加 n_estimators 從 300 到 1000,讓模型有足夠輪次學到更穩定的解", "is_correct": false, "trap_type": "驗證 RMSE 已從第 50 棵樹開始反彈,增加 n_estimators 只會讓過擬合更嚴重,完全反向操作"},
-        {"text": "設定 subsample=0.5 即可,單一參數調整,降低訓練資料利用比例必然減少過擬合", "is_correct": false, "trap_type": "subsample 確實有正則化效果,但對 max_depth=12 這個根本病灶無法救治;『單一參數效果優劣』比較下,max_depth 影響遠大於 subsample"}
+        {"text": "提高 learning_rate 從 0.3 到 1.0,加速收斂並搭配 early stopping,可在過擬合曲線反彈前提早停下來,等於用步長控制風險的標準做法", "is_correct": false, "trap_type": "提高 learning_rate 會放大每棵樹的更新幅度,加劇過擬合而非緩解;『加速收斂避免過擬合』是錯誤直覺"},
+        {"text": "增加 n_estimators 從 300 到 1000,讓模型有足夠輪次學到更穩定的解,並依賴 boosting 後段的平均效果壓低驗證 RMSE 反彈", "is_correct": false, "trap_type": "驗證 RMSE 已從第 50 棵樹開始反彈,增加 n_estimators 只會讓過擬合更嚴重,完全反向操作"},
+        {"text": "設定 subsample=0.5,僅此單一參數調整,透過 stochastic gradient boosting 機制降低訓練資料利用比例,即可有效抑制當前過擬合徵兆", "is_correct": false, "trap_type": "subsample 確實有正則化效果,但對 max_depth=12 這個根本病灶無法救治;『單一參數效果優劣』比較下,max_depth 影響遠大於 subsample"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "GBDT 的核心理念是『弱學習器加總(Boosting)』,每棵樹只需修正前一輪殘差的小部分,深度通常控制在 3-8。當 max_depth=12,單棵樹葉子數可達 2^12=4096,等同建立極強的單棵決策樹,直接記憶訓練資料雜訊。驗證 RMSE 從第 50 棵樹開始反彈,正是『單棵樹過深 → 偏差很低但方差爆炸 → 集成後仍嚴重過擬合』的典型徵兆。降低 max_depth 到 5-6 是修正最根本病灶的關鍵動作。其他正則化參數(reg_lambda、subsample、min_child_weight)是次要輔助,但若 max_depth 不修,僅靠它們效果有限。",
         "wrong": {
-          "提高 learning_rate 從 0.3 到 1.0,加速收斂並使用 early stopping,可在過擬合前停下來": "learning_rate 是『每棵樹貢獻的縮放比例』,提高會讓每輪更新更激進,過擬合會更快發生且更嚴重。正確的調法是『降低 learning_rate + 增加 n_estimators + early stopping』,本選項方向完全反了",
-          "增加 n_estimators 從 300 到 1000,讓模型有足夠輪次學到更穩定的解": "驗證 RMSE 已從第 50 棵樹反彈,代表第 50 棵之後都是『純粹擬合雜訊』。增加 n_estimators 只會更糟,正確處置應反向減少並設置 early stopping",
-          "設定 subsample=0.5 即可,單一參數調整,降低訓練資料利用比例必然減少過擬合": "subsample 確有正則化效果(類似 Stochastic Gradient Boosting),但對 max_depth=12 這個結構性問題只是『輔助救火』。當題目限定挑一個最有效參數時,動 max_depth 的邊際效益遠大於 subsample"
+          "提高 learning_rate 從 0.3 到 1.0,加速收斂並搭配 early stopping,可在過擬合曲線反彈前提早停下來,等於用步長控制風險的標準做法": "learning_rate 是『每棵樹貢獻的縮放比例』,提高會讓每輪更新更激進,過擬合會更快發生且更嚴重。正確的調法是『降低 learning_rate + 增加 n_estimators + early stopping』,本選項方向完全反了",
+          "增加 n_estimators 從 300 到 1000,讓模型有足夠輪次學到更穩定的解,並依賴 boosting 後段的平均效果壓低驗證 RMSE 反彈": "驗證 RMSE 已從第 50 棵樹反彈,代表第 50 棵之後都是『純粹擬合雜訊』。增加 n_estimators 只會更糟,正確處置應反向減少並設置 early stopping",
+          "設定 subsample=0.5,僅此單一參數調整,透過 stochastic gradient boosting 機制降低訓練資料利用比例,即可有效抑制當前過擬合徵兆": "subsample 確有正則化效果(類似 Stochastic Gradient Boosting),但對 max_depth=12 這個結構性問題只是『輔助救火』。當題目限定挑一個最有效參數時,動 max_depth 的邊際效益遠大於 subsample"
         },
         "hook": "GBDT 過擬合處置優先順序:max_depth(結構)> learning_rate(步長)> reg_lambda/min_child_weight(權重正則)> subsample/colsample(隨機性)"
       },
@@ -103,17 +103,17 @@
       "stem": "某 AI 顧問公司同時接到三個 SVM 專案需求:(A)新聞分類(TF-IDF 向量,45000 維,稀疏度 99%);(B)影像 CNN 中間層特徵分類(2048 維連續密集向量);(C)機械振動感測器訊號(經 FFT 轉換的 256 維頻域特徵,具週期性)。團隊資深數據科學家為三個專案分別配置不同的核函數。下列配置何者最為合理?",
       "options": [
         {"text": "(A)文本→Linear Kernel;(B)CNN 特徵→RBF Kernel;(C)振動訊號→RBF Kernel(或多項式 Kernel),理由是文本高維稀疏線性已足夠分,密集連續特徵需 RBF 捕捉非線性,週期性訊號可考慮 RBF 或 Polynomial 但需驗證", "is_correct": true},
-        {"text": "(A)文本→Polynomial Kernel(degree=3);(B)CNN→Linear;(C)振動→Linear,因為文本詞彙組合需多項式,CNN 已自帶非線性,訊號頻域是線性可分", "is_correct": false, "trap_type": "文本高維下 Linear 通常已最佳,Polynomial 反而會過擬合且 SV 數量爆炸;CNN 中層特徵雖經非線性提取,做 SVM 分類仍常用 RBF 而非 Linear"},
-        {"text": "三者皆用 RBF Kernel,因為 RBF 最通用,Cover's theorem 保證在高維可分", "is_correct": false, "trap_type": "Cover's theorem 是『隨機把資料投到高維會線性可分機率提高』,不代表 RBF 處處最佳;高維稀疏文本上 RBF 反而易過擬合且訓練極慢"},
-        {"text": "三者皆用 Linear Kernel,因為現代資料皆為高維,Linear 必為最佳選擇且訓練最快", "is_correct": false, "trap_type": "Linear 適合『高維稀疏』但不適合『中維密集連續』;CNN 特徵通常仍需 RBF 才能達到最佳邊界"}
+        {"text": "(A)文本→Polynomial Kernel(degree=3);(B)CNN→Linear;(C)振動→Linear,因為文本詞彙組合需要多項式互動才能捕捉,CNN 中層已自帶足夠非線性,FFT 後的振動訊號頻域可視為線性可分問題", "is_correct": false, "trap_type": "文本高維下 Linear 通常已最佳,Polynomial 反而會過擬合且 SV 數量爆炸;CNN 中層特徵雖經非線性提取,做 SVM 分類仍常用 RBF 而非 Linear"},
+        {"text": "三者皆用 RBF Kernel,因為 RBF 最通用,根據 Cover's theorem 在足夠高維下可保證線性可分,加上 γ 與 C 兩個關鍵參數可調足以涵蓋所有資料分佈情境;經適當交叉驗證後即可取得三場景一致的最佳泛化效能", "is_correct": false, "trap_type": "Cover's theorem 是『隨機把資料投到高維會線性可分機率提高』,不代表 RBF 處處最佳;高維稀疏文本上 RBF 反而易過擬合且訓練極慢"},
+        {"text": "三者皆用 Linear Kernel,因為現代資料皆屬高維情境,Linear Kernel 必為最佳選擇且訓練速度最快,使用 LIBLINEAR 在百萬級資料上能在數分鐘內完成;以線性決策邊界搭配適當 C 值即可取得最佳精度與效率平衡", "is_correct": false, "trap_type": "Linear 適合『高維稀疏』但不適合『中維密集連續』;CNN 特徵通常仍需 RBF 才能達到最佳邊界"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "Kernel 選擇的核心邏輯為『資料維度 × 稀疏度 × 結構』:(A)文本 TF-IDF 是典型『超高維稀疏』,在 45000 維空間中類別已大致線性可分(類別資訊集中於少數關鍵字),Linear Kernel 訓練快且不過擬合,LIBLINEAR 是業界標配;(B)CNN 中間層 2048 維連續密集向量,類別之間邊界通常非線性,RBF 用 γ 控制局部影響範圍最合適;(C)機械振動訊號雖經 FFT 線性轉換,但故障模式之間關係仍是非線性(諧波互動),RBF 是首選,Polynomial 也可考慮但需小心 degree 過高造成的數值不穩定。",
         "wrong": {
-          "(A)文本→Polynomial Kernel(degree=3);(B)CNN→Linear;(C)振動→Linear,因為文本詞彙組合需多項式,CNN 已自帶非線性,訊號頻域是線性可分": "文本在 45000 維幾乎線性可分,Polynomial 反而會引入過多互動項導致 SV 爆炸與過擬合;CNN 中間層雖經非線性,但分類邊界仍可能曲折,Linear 在中維密集場景常輸給 RBF;FFT 是線性轉換不代表故障模式線性可分",
-          "三者皆用 RBF Kernel,因為 RBF 最通用,Cover's theorem 保證在高維可分": "Cover's theorem 講『高維下隨機線性可分機率上升』,推論是『高維可用 Linear』而非『RBF 處處最佳』。在 45000 維稀疏文本上,RBF 訓練時間爆增、γ 難調且容易過擬合",
-          "三者皆用 Linear Kernel,因為現代資料皆為高維,Linear 必為最佳選擇且訓練最快": "Linear 只適合『高維稀疏線性可分』場景。CNN 的 2048 維是密集連續、類別間邊界曲折,Linear 通常表現顯著低於 RBF;振動訊號頻域亦同"
+          "(A)文本→Polynomial Kernel(degree=3);(B)CNN→Linear;(C)振動→Linear,因為文本詞彙組合需要多項式互動才能捕捉,CNN 中層已自帶足夠非線性,FFT 後的振動訊號頻域可視為線性可分問題": "文本在 45000 維幾乎線性可分,Polynomial 反而會引入過多互動項導致 SV 爆炸與過擬合;CNN 中間層雖經非線性,但分類邊界仍可能曲折,Linear 在中維密集場景常輸給 RBF;FFT 是線性轉換不代表故障模式線性可分",
+          "三者皆用 RBF Kernel,因為 RBF 最通用,根據 Cover's theorem 在足夠高維下可保證線性可分,加上 γ 與 C 兩個關鍵參數可調足以涵蓋所有資料分佈情境;經適當交叉驗證後即可取得三場景一致的最佳泛化效能": "Cover's theorem 講『高維下隨機線性可分機率上升』,推論是『高維可用 Linear』而非『RBF 處處最佳』。在 45000 維稀疏文本上,RBF 訓練時間爆增、γ 難調且容易過擬合",
+          "三者皆用 Linear Kernel,因為現代資料皆屬高維情境,Linear Kernel 必為最佳選擇且訓練速度最快,使用 LIBLINEAR 在百萬級資料上能在數分鐘內完成;以線性決策邊界搭配適當 C 值即可取得最佳精度與效率平衡": "Linear 只適合『高維稀疏線性可分』場景。CNN 的 2048 維是密集連續、類別間邊界曲折,Linear 通常表現顯著低於 RBF;振動訊號頻域亦同"
         },
         "hook": "SVM Kernel 速查:高維稀疏(文本)→ Linear;中維密集(CNN/表格)→ RBF;明確多項式互動 → Polynomial;序列/週期 → RBF/特殊 String Kernel"
       },
@@ -132,17 +132,17 @@
       "stem": "某半導體廠用 RBF-SVM 做晶圓缺陷分類,當前超參 C=1000、γ=10、class_weight=None,訓練資料正常品:缺陷品=98:2。觀察結果:訓練集準確率 99.8%、F1=0.97;驗證集準確率 95% 但缺陷品 Recall 僅 0.18,模型嚴重偏向預測『正常』。資深工程師建議僅做一項超參調整,下列哪項調整最能直接命中根本原因?",
       "options": [
         {"text": "設定 class_weight='balanced',讓少數類缺陷品的 hinge loss 權重提高約 49 倍(98/2),強迫決策邊界向多數類傾斜,直接修正類別不平衡造成的『多數類主導』偏誤", "is_correct": true},
-        {"text": "降低 C 從 1000 到 1,讓模型更寬容於誤分類,自然會分配更多預測到缺陷類", "is_correct": false, "trap_type": "降低 C 是放鬆軟邊界容忍度,只會更傾向多數類(因為錯分多數類的代價也下降),反而讓 Recall 更差"},
-        {"text": "降低 γ 從 10 到 0.01,讓 RBF 影響範圍變大,缺陷類樣本影響擴散到更廣區域,自然提高 Recall", "is_correct": false, "trap_type": "γ 過大確會造成過擬合,但本題核心問題是『類別嚴重不平衡』,光調 γ 無法直接讓少數類在 loss 中受重視"},
-        {"text": "提高 C 從 1000 到 10000,讓模型更嚴格不放過任何錯分,自然包括缺陷類", "is_correct": false, "trap_type": "提高 C 會更嚴格懲罰所有誤分類,但因為多數類錯分代價也同步放大,結果仍是模型優先擬合多數類"}
+        {"text": "降低 C 從 1000 到 1,讓模型大幅放寬誤分類容忍度、形成更軟的決策邊界;在軟邊界擴張下模型會自然把更多模糊區域劃為缺陷類以平衡兩類表現,直接拉抬 Recall", "is_correct": false, "trap_type": "降低 C 是放鬆軟邊界容忍度,只會更傾向多數類(因為錯分多數類的代價也下降),反而讓 Recall 更差"},
+        {"text": "降低 γ 從 10 到 0.01,讓 RBF kernel 影響半徑大幅變大,使少量缺陷類樣本影響範圍擴散到更廣的特徵空間區域;模型在較平滑的決策邊界下自然會把更多邊緣樣本劃為缺陷類", "is_correct": false, "trap_type": "γ 過大確會造成過擬合,但本題核心問題是『類別嚴重不平衡』,光調 γ 無法直接讓少數類在 loss 中受重視"},
+        {"text": "提高 C 從 1000 到 10000,讓模型對任何誤分類都採取最嚴格的懲罰權重、絕不放過任何邊界外的樣本,進而連同少數的缺陷類也會被嚴格地正確分類", "is_correct": false, "trap_type": "提高 C 會更嚴格懲罰所有誤分類,但因為多數類錯分代價也同步放大,結果仍是模型優先擬合多數類"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "98:2 的極度類別不平衡下,SVM 的 hinge loss 預設對所有樣本同權重,模型最佳化會壓倒性地偏向多數類(預測全為正常即可達 98% 準確率)。設定 class_weight='balanced' 後,sklearn 會自動將每類權重設為 n_samples/(n_classes × n_samples_class),少數類權重提高為多數類的約 49 倍,直接修改 Lagrangian 中對應該樣本的 C_i = C × class_weight,等價地讓決策邊界向少數類擴張。這是修正類別不平衡的最直接方法。C 與 γ 主要控制 bias-variance,對類別不平衡無直接修正力。",
         "wrong": {
-          "降低 C 從 1000 到 1,讓模型更寬容於誤分類,自然會分配更多預測到缺陷類": "降低 C 等於放鬆所有樣本的誤分類懲罰,模型會選『更安全的多數類預測』,因為錯分多數類的代價也降了。降 C 並不會偏向少數類,反而 Recall 可能更差",
-          "降低 γ 從 10 到 0.01,讓 RBF 影響範圍變大,缺陷類樣本影響擴散到更廣區域,自然提高 Recall": "γ 控制 RBF 的局部 vs 全域影響範圍。γ=10 確實過大且可能過擬合,但本題的『嚴重不平衡』是 loss 權重問題,不是邊界形狀問題。光調 γ 無法解決多數類主導的根本病灶",
-          "提高 C 從 1000 到 10000,讓模型更嚴格不放過任何錯分,自然包括缺陷類": "提高 C 是『硬化邊界』,所有樣本錯分代價都放大,但因為多數類絕對數量遠多,加總代價仍主導最佳化方向。提高 C 在不平衡資料上反而易過擬合多數類"
+          "降低 C 從 1000 到 1,讓模型大幅放寬誤分類容忍度、形成更軟的決策邊界;在軟邊界擴張下模型會自然把更多模糊區域劃為缺陷類以平衡兩類表現,直接拉抬 Recall": "降低 C 等於放鬆所有樣本的誤分類懲罰,模型會選『更安全的多數類預測』,因為錯分多數類的代價也降了。降 C 並不會偏向少數類,反而 Recall 可能更差",
+          "降低 γ 從 10 到 0.01,讓 RBF kernel 影響半徑大幅變大,使少量缺陷類樣本影響範圍擴散到更廣的特徵空間區域;模型在較平滑的決策邊界下自然會把更多邊緣樣本劃為缺陷類": "γ 控制 RBF 的局部 vs 全域影響範圍。γ=10 確實過大且可能過擬合,但本題的『嚴重不平衡』是 loss 權重問題,不是邊界形狀問題。光調 γ 無法解決多數類主導的根本病灶",
+          "提高 C 從 1000 到 10000,讓模型對任何誤分類都採取最嚴格的懲罰權重、絕不放過任何邊界外的樣本,進而連同少數的缺陷類也會被嚴格地正確分類": "提高 C 是『硬化邊界』,所有樣本錯分代價都放大,但因為多數類絕對數量遠多,加總代價仍主導最佳化方向。提高 C 在不平衡資料上反而易過擬合多數類"
         },
         "hook": "SVM 處理類別不平衡優先序:class_weight(直接修 loss)> SMOTE/上採樣(改資料)> 調整閾值(改決策);C 與 γ 是 bias-variance 旋鈕,不解類別不平衡"
       },
@@ -161,17 +161,17 @@
       "stem": "某深度學習團隊同時開發四個模型,各使用不同的激活函數:(A)語音分類 MLP 全部用 tanh;(B)影像分類 ResNet-50 用 ReLU;(C)時序預測 LSTM(內部含 sigmoid+tanh);(D)Transformer 用 GELU 但結構特殊。團隊技術主管要求依各模型特性指定權重初始化策略。下列指派何者最匹配理論依據?",
       "options": [
         {"text": "(A)tanh→Xavier(Glorot);(B)ReLU→He(Kaiming);(C)LSTM→Orthogonal;(D)Transformer→Xavier 或 He 皆可,但極深 Transformer 可考慮 LSUV 校準", "is_correct": true},
-        {"text": "(A)tanh→He;(B)ReLU→Xavier;(C)LSTM→He;(D)Transformer→Orthogonal,因為 He 適合所有深度模型,Xavier 已過時", "is_correct": false, "trap_type": "He 是針對 ReLU 修正的(計算 fan_in 時加 2 倍),用在 tanh 會讓激活前段過飽和;Xavier 適 tanh/sigmoid,並非過時"},
-        {"text": "全部使用 Xavier(Glorot),因為 Glorot 是最早最完整的理論初始化,通用性最強", "is_correct": false, "trap_type": "Xavier 假設激活函數對稱於原點且導數約為 1(tanh 在 0 附近成立),但 ReLU 不對稱,使用 Xavier 會出現深層訊號逐漸萎縮(Vanishing Activation)"},
-        {"text": "全部使用 He,因為 ResNet 證明 He 即使在非 ReLU 場景也表現良好,額外的 RNN orthogonal 是過時技巧", "is_correct": false, "trap_type": "He 對 ReLU 是最佳但對 tanh 變數方差過大會造成飽和;Orthogonal 對 RNN 並非過時,反而是業界標準預防梯度爆炸的方法"}
+        {"text": "(A)tanh→He;(B)ReLU→Xavier;(C)LSTM→He;(D)Transformer→Orthogonal,理由是 He 經 ResNet 驗證適合所有深度模型,Xavier 在現代深度學習已被證明過時且效果普遍偏弱", "is_correct": false, "trap_type": "He 是針對 ReLU 修正的(計算 fan_in 時加 2 倍),用在 tanh 會讓激活前段過飽和;Xavier 適 tanh/sigmoid,並非過時"},
+        {"text": "全部使用 Xavier(Glorot),因為 Glorot 是最早最完整的理論初始化方法,涵蓋對稱激活函數的方差守恆推導,通用性最強且工業實務最穩定,不必為不同激活函數另外維護初始化策略", "is_correct": false, "trap_type": "Xavier 假設激活函數對稱於原點且導數約為 1(tanh 在 0 附近成立),但 ReLU 不對稱,使用 Xavier 會出現深層訊號逐漸萎縮(Vanishing Activation)"},
+        {"text": "全部使用 He,因為 ResNet 已證明 He 即使在非 ReLU 場景也表現良好,額外的 RNN orthogonal 屬於過時技巧,直接使用 He 即可同時涵蓋所有深度模型需求並減少超參搜尋空間", "is_correct": false, "trap_type": "He 對 ReLU 是最佳但對 tanh 變數方差過大會造成飽和;Orthogonal 對 RNN 並非過時,反而是業界標準預防梯度爆炸的方法"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "權重初始化的核心目標是『前向傳播時激活方差不爆炸不消失,反向傳播時梯度方差也保持』。各方法數學依據如下:Xavier(Glorot)→ Var(W) = 2/(fan_in + fan_out),假設激活對稱且導數約 1,適 tanh、sigmoid;He(Kaiming)→ Var(W) = 2/fan_in,因 ReLU 半邊歸零會丟失一半方差,故乘 2 補償;Orthogonal → 權重矩陣為正交矩陣,在 RNN 中遞迴乘法不放大不衰減,有效抑制 LSTM 梯度爆炸/消失;LSUV → Layer-Sequential Unit-Variance,以正交初始化 + 逐層校準輸出方差為 1,適合極深網路或自定義激活。Transformer 多採 Xavier 或 He,LSUV 是極深場景的進階校準。",
         "wrong": {
-          "(A)tanh→He;(B)ReLU→Xavier;(C)LSTM→He;(D)Transformer→Orthogonal,因為 He 適合所有深度模型,Xavier 已過時": "He 把 fan_in 變異數設為 2/fan_in,對 tanh 會讓輸入過大進入飽和區(|tanh(x)|→1),導數→0 出現梯度消失;Xavier 並未過時,在對稱激活仍是首選。LSTM 不適 He 而是 Orthogonal",
-          "全部使用 Xavier(Glorot),因為 Glorot 是最早最完整的理論初始化,通用性最強": "Xavier 推導假設激活函數導數均值約 1 且對稱於原點。ReLU 半邊為 0,Var(ReLU(z)) = Var(z)/2,Xavier 不補償這個損失,深層 ReLU 網路會出現激活逐層衰減",
-          "全部使用 He,因為 ResNet 證明 He 即使在非 ReLU 場景也表現良好,額外的 RNN orthogonal 是過時技巧": "ResNet 用 He 是因為 ReLU,但 ResNet 並非『證明 He 在非 ReLU 也最佳』。LSTM 中遞迴矩陣連乘會放大方差,Orthogonal 是 Saxe et al. 2014 證明的有效初始化,業界並未過時"
+          "(A)tanh→He;(B)ReLU→Xavier;(C)LSTM→He;(D)Transformer→Orthogonal,理由是 He 經 ResNet 驗證適合所有深度模型,Xavier 在現代深度學習已被證明過時且效果普遍偏弱": "He 把 fan_in 變異數設為 2/fan_in,對 tanh 會讓輸入過大進入飽和區(|tanh(x)|→1),導數→0 出現梯度消失;Xavier 並未過時,在對稱激活仍是首選。LSTM 不適 He 而是 Orthogonal",
+          "全部使用 Xavier(Glorot),因為 Glorot 是最早最完整的理論初始化方法,涵蓋對稱激活函數的方差守恆推導,通用性最強且工業實務最穩定,不必為不同激活函數另外維護初始化策略": "Xavier 推導假設激活函數導數均值約 1 且對稱於原點。ReLU 半邊為 0,Var(ReLU(z)) = Var(z)/2,Xavier 不補償這個損失,深層 ReLU 網路會出現激活逐層衰減",
+          "全部使用 He,因為 ResNet 已證明 He 即使在非 ReLU 場景也表現良好,額外的 RNN orthogonal 屬於過時技巧,直接使用 He 即可同時涵蓋所有深度模型需求並減少超參搜尋空間": "ResNet 用 He 是因為 ReLU,但 ResNet 並非『證明 He 在非 ReLU 也最佳』。LSTM 中遞迴矩陣連乘會放大方差,Orthogonal 是 Saxe et al. 2014 證明的有效初始化,業界並未過時"
         },
         "hook": "初始化速查表:tanh/sigmoid → Xavier;ReLU/Leaky ReLU → He;RNN/LSTM → Orthogonal;極深或自定激活 → LSUV"
       },
@@ -191,16 +191,16 @@
       "options": [
         {"text": "(A)CNN→BatchNorm;(B)Transformer→LayerNorm;(C)風格遷移→InstanceNorm;(D)小 batch 醫學 U-Net→GroupNorm", "is_correct": true},
         {"text": "(A)CNN→LayerNorm;(B)Transformer→BatchNorm;(C)GAN→BatchNorm;(D)U-Net→BatchNorm,理由是 BatchNorm 最早最成熟,通用最佳", "is_correct": false, "trap_type": "Transformer 序列長度可變 + 小 batch,BatchNorm 統計不穩定;GAN 風格遷移用 BN 會把 batch 內不同風格混在一起;U-Net 在 Batch=2 下 BN 統計失準"},
-        {"text": "全部使用 BatchNorm,因為 BatchNorm 證明加速訓練,經典原始論文已驗證在所有任務都可用", "is_correct": false, "trap_type": "BatchNorm 在 batch_size 太小時統計嚴重失準,且不適合序列長度可變或單樣本獨立統計需求的任務"},
-        {"text": "全部使用 LayerNorm,因為 LayerNorm 跨樣本獨立計算,完全消除 batch 依賴,理論最優", "is_correct": false, "trap_type": "LayerNorm 對 CNN 反而表現不如 BN(它跨 channel × H × W 算統計量,把不同空間位置混合,模糊空間特徵)"}
+        {"text": "全部使用 BatchNorm,因為 BatchNorm 已被證明可加速收斂並降低內部協變量偏移,經典原始論文(Ioffe & Szegedy, 2015)已驗證在所有 CV/NLP 任務皆可達最佳訓練穩定度", "is_correct": false, "trap_type": "BatchNorm 在 batch_size 太小時統計嚴重失準,且不適合序列長度可變或單樣本獨立統計需求的任務"},
+        {"text": "全部使用 LayerNorm,因為 LayerNorm 跨樣本獨立計算每筆統計量,完全消除 batch_size 依賴,在序列、影像、生成等任務皆可一致應用,屬於理論最優且實作最簡潔", "is_correct": false, "trap_type": "LayerNorm 對 CNN 反而表現不如 BN(它跨 channel × H × W 算統計量,把不同空間位置混合,模糊空間特徵)"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "Normalization 選型核心是『沿哪些維度統計均值方差』:BatchNorm 沿 (N, H, W) 統計每個 channel,需大 batch 統計才穩,適 CNN 大 batch;LayerNorm 沿 (C, H, W) 統計每個樣本,batch 無關,適序列長度可變、batch 小的 Transformer/RNN;InstanceNorm 沿 (H, W) 統計每個 (N, C),完全保留樣本獨立風格資訊,是風格遷移與 CycleGAN 標配;GroupNorm 把 channels 分組沿 (group_C, H, W) 統計,batch=1-4 仍穩定,適 batch 緊繃的醫學 3D U-Net。原始 GroupNorm 論文(Wu & He, 2018)正以醫學影像為主要實驗場景。",
         "wrong": {
           "(A)CNN→LayerNorm;(B)Transformer→BatchNorm;(C)GAN→BatchNorm;(D)U-Net→BatchNorm,理由是 BatchNorm 最早最成熟,通用最佳": "Transformer 用 BN 會因為 padding 造成有效樣本不齊,且小 batch 統計失準;風格遷移用 BN 會混合不同風格的統計量;Batch=2 的 U-Net 用 BN 統計樣本不足。BN 並非通用最佳",
-          "全部使用 BatchNorm,因為 BatchNorm 證明加速訓練,經典原始論文已驗證在所有任務都可用": "BN 原論文(Ioffe & Szegedy, 2015)以 CNN ImageNet 為實驗場景,並未測試小 batch 或變長序列。後續論文已明確指出 BN 在 batch<8 時統計失準,在 NLP 與 GAN 上效果不如 LN/IN",
-          "全部使用 LayerNorm,因為 LayerNorm 跨樣本獨立計算,完全消除 batch 依賴,理論最優": "LayerNorm 對 CNN 把所有 channel × 空間位置統計合一,會抹平 spatial 與 channel 的局部差異,影響卷積特徵表達,實證上 CNN 用 LN 通常輸給 BN 與 GN"
+          "全部使用 BatchNorm,因為 BatchNorm 已被證明可加速收斂並降低內部協變量偏移,經典原始論文(Ioffe & Szegedy, 2015)已驗證在所有 CV/NLP 任務皆可達最佳訓練穩定度": "BN 原論文(Ioffe & Szegedy, 2015)以 CNN ImageNet 為實驗場景,並未測試小 batch 或變長序列。後續論文已明確指出 BN 在 batch<8 時統計失準,在 NLP 與 GAN 上效果不如 LN/IN",
+          "全部使用 LayerNorm,因為 LayerNorm 跨樣本獨立計算每筆統計量,完全消除 batch_size 依賴,在序列、影像、生成等任務皆可一致應用,屬於理論最優且實作最簡潔": "LayerNorm 對 CNN 把所有 channel × 空間位置統計合一,會抹平 spatial 與 channel 的局部差異,影響卷積特徵表達,實證上 CNN 用 LN 通常輸給 BN 與 GN"
         },
         "hook": "Norm 速查:大 batch CNN→BN;序列/Transformer→LN;風格保留 GAN→IN;小 batch CNN/3D→GN"
       },
@@ -219,17 +219,17 @@
       "stem": "某資深面試官問新進工程師:『ResNet 殘差連接 H(x) = F(x) + x,為什麼能解決極深網路梯度消失問題?』新進工程師給出四種解釋,試問何者數學上最為正確?",
       "options": [
         {"text": "因為 ∂H/∂x = ∂F/∂x + I,『+ I』讓恆等映射梯度永遠存在;鏈式法則展開深層梯度時,每層至少有一個『1』的乘法因子,使整體梯度無論深度多大都不會被連乘的小數值壓到 0", "is_correct": true},
-        {"text": "因為 H(x) = F(x) + x 把激活前的訊號做加法增益,等於每層自動放大訊號 2 倍,深層也不會消失", "is_correct": false, "trap_type": "+x 是恆等加,不是『放大 2 倍』;且若是放大反而會造成梯度爆炸而非消失"},
-        {"text": "因為 ResNet 採用 ReLU 不使用 sigmoid,梯度天然不會消失,殘差連接只是次要設計", "is_correct": false, "trap_type": "ReLU 確實減輕梯度消失但無法完全解決極深(>50 層)問題,殘差連接才是 ResNet 能訓練 152 層甚至 1000 層的關鍵"},
-        {"text": "因為殘差連接讓每層學習『近似 0 的擾動』,擾動小所以梯度也小,反而避免梯度爆炸", "is_correct": false, "trap_type": "ResNet 解的是梯度消失而非爆炸;『梯度小』是錯的,是『梯度有保底』"}
+        {"text": "因為 H(x) = F(x) + x 把激活前的訊號做加法增益,等於每層自動放大訊號約 2 倍,使前向傳播訊號逐層遞增,深層也不會出現梯度消失或訊號萎縮的問題", "is_correct": false, "trap_type": "+x 是恆等加,不是『放大 2 倍』;且若是放大反而會造成梯度爆炸而非消失"},
+        {"text": "因為 ResNet 採用 ReLU 取代 sigmoid 作為主要激活函數,ReLU 在正區間導數恆為 1,梯度天然不會消失;殘差連接只是次要的工程設計細節,並非解決深度問題的核心", "is_correct": false, "trap_type": "ReLU 確實減輕梯度消失但無法完全解決極深(>50 層)問題,殘差連接才是 ResNet 能訓練 152 層甚至 1000 層的關鍵"},
+        {"text": "因為殘差連接讓每一層只需學習『近似 0 的小幅擾動』,F(x) 數值極小所以梯度也跟著縮小,反向傳播時自動避免梯度爆炸並抑制深層訊號發散", "is_correct": false, "trap_type": "ResNet 解的是梯度消失而非爆炸;『梯度小』是錯的,是『梯度有保底』"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "ResNet 數學分析(He et al., 2016):設 H(x_l) = F(x_l, W_l) + x_l,則第 L 層輸出可遞迴展開為 x_L = x_l + Σ(i=l→L-1) F(x_i, W_i)。對 x_l 求偏微分得 ∂x_L/∂x_l = I + Σ ∂F/∂x_l。鏈式法則計算 ∂Loss/∂x_l = ∂Loss/∂x_L × (I + Σ ∂F/∂x_l)。關鍵:括號內含 I(恆等矩陣),即使所有 F 的偏微分都接近 0,整體梯度仍至少保留 ∂Loss/∂x_L × I 的成分,不會被連乘衰減到 0。這是『梯度近似恆等映射』的核心,讓 152 層甚至 1202 層的網路得以訓練。",
         "wrong": {
-          "因為 H(x) = F(x) + x 把激活前的訊號做加法增益,等於每層自動放大訊號 2 倍,深層也不會消失": "+x 是『恆等映射加上殘差』,不是放大 2 倍;若真的每層放大 2 倍,L 層後訊號會放大 2^L 倍造成梯度爆炸,反而是壞事。原論文要求 F 與 x 維度一致或用 1×1 卷積對齊,並非倍增",
-          "因為 ResNet 採用 ReLU 不使用 sigmoid,梯度天然不會消失,殘差連接只是次要設計": "ReLU 確實緩解梯度消失(因為其導數在正區間為 1),但 VGG 也用 ReLU 卻無法訓練超過 19 層;ResNet 能達 152 層的關鍵不是 ReLU 而是 skip connection。He et al. 原論文明確指出殘差是核心",
-          "因為殘差連接讓每層學習『近似 0 的擾動』,擾動小所以梯度也小,反而避免梯度爆炸": "ResNet 主要解的是梯度消失而非爆炸;且『擾動小』是訓練後的觀察(F(x) 確實往往很小),不是因果。真正機制是 ∂H/∂x 含 I,讓梯度有保底而非『梯度變小』"
+          "因為 H(x) = F(x) + x 把激活前的訊號做加法增益,等於每層自動放大訊號約 2 倍,使前向傳播訊號逐層遞增,深層也不會出現梯度消失或訊號萎縮的問題": "+x 是『恆等映射加上殘差』,不是放大 2 倍;若真的每層放大 2 倍,L 層後訊號會放大 2^L 倍造成梯度爆炸,反而是壞事。原論文要求 F 與 x 維度一致或用 1×1 卷積對齊,並非倍增",
+          "因為 ResNet 採用 ReLU 取代 sigmoid 作為主要激活函數,ReLU 在正區間導數恆為 1,梯度天然不會消失;殘差連接只是次要的工程設計細節,並非解決深度問題的核心": "ReLU 確實緩解梯度消失(因為其導數在正區間為 1),但 VGG 也用 ReLU 卻無法訓練超過 19 層;ResNet 能達 152 層的關鍵不是 ReLU 而是 skip connection。He et al. 原論文明確指出殘差是核心",
+          "因為殘差連接讓每一層只需學習『近似 0 的小幅擾動』,F(x) 數值極小所以梯度也跟著縮小,反向傳播時自動避免梯度爆炸並抑制深層訊號發散": "ResNet 主要解的是梯度消失而非爆炸;『梯度小』是錯的,是『梯度有保底』"
         },
         "hook": "ResNet 公式:∂H/∂x = I + ∂F/∂x → 連乘 L 層後仍含 I 成分 → 梯度有保底 → 可訓練極深網路"
       },
@@ -247,18 +247,18 @@
       "source_level": "L2",
       "stem": "某 AI 實驗室同時遭遇三組梯度問題:(A)LSTM 訓練第 8 個 epoch loss 突然變 NaN;(B)20 層普通 CNN(無 skip connection)前幾層幾乎無更新;(C)GAN 訓練判別器(Discriminator)loss 振盪劇烈不收斂。資深研究員為三組問題各開出最對症的處方。下列搭配何者最佳?",
       "options": [
-        {"text": "(A)LSTM 梯度爆炸→Gradient Clipping(限制範數);(B)深層 CNN 梯度消失→改用 ReLU+He 初始化或加入 ResNet skip connection;(C)GAN 不穩→Spectral Normalization 限制 Discriminator 的 Lipschitz 常數", "is_correct": true},
-        {"text": "(A)LSTM→ReLU 取代 tanh;(B)CNN→Gradient Clipping;(C)GAN→Dropout 大幅提高,三者通用 dropout 即可", "is_correct": false, "trap_type": "LSTM 內部 tanh 不可亂改 ReLU(會破壞 cell state 數值穩定);CNN 梯度消失用 clipping 無效(clipping 是治爆炸);GAN 用 dropout 對 Lipschitz 約束無效"},
-        {"text": "三者皆用 Batch Normalization,BN 同時解決梯度爆炸與梯度消失,GAN 也適用", "is_correct": false, "trap_type": "BN 在 GAN 的 Discriminator 上反而會加重 mode collapse;LSTM 上 BN 並不直接適用(序列維度問題);BN 是緩解,不是專治"},
-        {"text": "(A)LSTM→learning_rate 降為原本 1/100;(B)CNN→Adam 優化器;(C)GAN→Wasserstein Loss 即可,不需 Spectral Norm", "is_correct": false, "trap_type": "降 lr 是治標(會延緩爆炸但不修),CNN 換 Adam 不解梯度消失根本病灶,WGAN 確需 Lipschitz 但 SN 比 weight clipping 更精確"}
+        {"text": "(A)LSTM 梯度爆炸→Gradient Clipping;(B)深層 CNN 梯度消失→改用 ReLU+He 初始化或加入 ResNet skip connection;(C)GAN 不穩→Spectral Normalization 限制 Discriminator 的 Lipschitz 常數", "is_correct": true},
+        {"text": "(A)LSTM 梯度爆炸→把 cell state 內部的 tanh 全部換成 ReLU 以避免飽和;(B)CNN 梯度消失→套用 Gradient Clipping 限制梯度範數;(C)GAN 振盪→大幅提高 Dropout 比例;三者皆通用 dropout 即可", "is_correct": false, "trap_type": "LSTM 內部 tanh 不可亂改 ReLU(會破壞 cell state 數值穩定);CNN 梯度消失用 clipping 無效(clipping 是治爆炸);GAN 用 dropout 對 Lipschitz 約束無效"},
+        {"text": "三者皆採用 Batch Normalization 解決梯度問題,因為 BN 可同時抑制梯度爆炸與梯度消失、加速深層網路收斂,且在 GAN 的 Discriminator 上也能穩定收斂並提升生成品質,屬於跨模型萬用解決方案", "is_correct": false, "trap_type": "BN 在 GAN 的 Discriminator 上反而會加重 mode collapse;LSTM 上 BN 並不直接適用(序列維度問題);BN 是緩解,不是專治"},
+        {"text": "(A)LSTM→把 learning_rate 降為原本 1/100 抑制爆炸;(B)深層 CNN→改用 Adam 自適應優化器解決梯度消失;(C)GAN→改用 Wasserstein Loss 即可穩定收斂,不必額外引入 Spectral Norm 等複雜約束機制", "is_correct": false, "trap_type": "降 lr 是治標(會延緩爆炸但不修),CNN 換 Adam 不解梯度消失根本病灶,WGAN 確需 Lipschitz 但 SN 比 weight clipping 更精確"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "三組問題對症處方分別:(A)LSTM 梯度爆炸:遞迴矩陣連乘特徵值若>1 會指數放大,Gradient Clipping(如 clip_grad_norm_,閾值 1-5)是 Pascanu et al. 2013 提出的標準解,直接限制梯度範數防止 NaN;(B)深層 CNN 梯度消失:訊號逐層衰減的根因是激活函數導數<1 連乘,解法是 ReLU(導數為 1)+He 初始化(補償 ReLU 半邊歸零的方差)或 ResNet skip(讓梯度有保底);(C)GAN 訓練不穩:Discriminator 梯度過大會壓倒 Generator,Spectral Normalization(Miyato et al. 2018)透過約束權重矩陣的最大奇異值=1,限制 Lipschitz 常數=1,是 SN-GAN/BigGAN 的標配技巧。",
         "wrong": {
-          "(A)LSTM→ReLU 取代 tanh;(B)CNN→Gradient Clipping;(C)GAN→Dropout 大幅提高,三者通用 dropout 即可": "LSTM 內部 tanh+sigmoid 是經過數學設計的 gating 機制,改 ReLU 會破壞 cell state 邊界並引發爆炸;Gradient Clipping 是治『爆炸』不治『消失』,深層 CNN 更新太小是消失;Dropout 是正則化,對 Lipschitz 約束無效",
-          "三者皆用 Batch Normalization,BN 同時解決梯度爆炸與梯度消失,GAN 也適用": "BN 在 GAN Discriminator 上會引入 batch 統計噪音導致 mode collapse(SN-GAN 論文明確指出);LSTM 上 BN 對序列維度不友善;BN 是緩解性技巧而非每場景的專治",
-          "(A)LSTM→learning_rate 降為原本 1/100;(B)CNN→Adam 優化器;(C)GAN→Wasserstein Loss 即可,不需 Spectral Norm": "降 lr 會延緩但無法根治梯度爆炸;Adam 雖自適應,但 20 層無 skip 的 CNN 梯度消失主因是初始化與激活,Adam 救不了;WGAN 仍需要 Lipschitz=1 約束,原版 WGAN 用 weight clipping 但有缺陷,SN 才是更好方案"
+          "(A)LSTM 梯度爆炸→把 cell state 內部的 tanh 全部換成 ReLU 以避免飽和;(B)CNN 梯度消失→套用 Gradient Clipping 限制梯度範數;(C)GAN 振盪→大幅提高 Dropout 比例;三者皆通用 dropout 即可": "LSTM 內部 tanh+sigmoid 是經過數學設計的 gating 機制,改 ReLU 會破壞 cell state 邊界並引發爆炸;Gradient Clipping 是治『爆炸』不治『消失』,深層 CNN 更新太小是消失;Dropout 是正則化,對 Lipschitz 約束無效",
+          "三者皆採用 Batch Normalization 解決梯度問題,因為 BN 可同時抑制梯度爆炸與梯度消失、加速深層網路收斂,且在 GAN 的 Discriminator 上也能穩定收斂並提升生成品質,屬於跨模型萬用解決方案": "BN 在 GAN Discriminator 上會引入 batch 統計噪音導致 mode collapse(SN-GAN 論文明確指出);LSTM 上 BN 對序列維度不友善;BN 是緩解性技巧而非每場景的專治",
+          "(A)LSTM→把 learning_rate 降為原本 1/100 抑制爆炸;(B)深層 CNN→改用 Adam 自適應優化器解決梯度消失;(C)GAN→改用 Wasserstein Loss 即可穩定收斂,不必額外引入 Spectral Norm 等複雜約束機制": "降 lr 會延緩但無法根治梯度爆炸;Adam 雖自適應,但 20 層無 skip 的 CNN 梯度消失主因是初始化與激活,Adam 救不了;WGAN 仍需要 Lipschitz=1 約束,原版 WGAN 用 weight clipping 但有缺陷,SN 才是更好方案"
         },
         "hook": "梯度問題對症速查:爆炸(LSTM/RNN)→ Clipping;消失(深 CNN)→ ReLU+He 或 ResNet;GAN 不穩 → Spectral Norm 或 WGAN-GP"
       },
@@ -277,17 +277,17 @@
       "stem": "某零售集團資料科學中心同時進行三個聚類專案:(A)會員分群:消費金額連續、消費頻率連續、客戶可能跨多個典型樣貌(高頻低額/低頻高額/混合);(B)商品圖片自動分類:CNN 已抽出 256 維特徵,類別之間相對球狀且大小相近;(C)犯罪熱點地圖:GPS 經緯度,熱點形狀不規則(沿馬路或商業區)、密度差異大、有明顯異常點。技術主管要求三個專案分別配置最對症的聚類演算法。下列建議何者最佳?",
       "options": [
         {"text": "(A)會員分群→GMM(Gaussian Mixture Model,軟分群+可表達重疊);(B)商品圖片→K-means(球狀大小相近最契合);(C)犯罪熱點→DBSCAN(密度為基底+不規則形狀+原生離群偵測)", "is_correct": true},
-        {"text": "(A)會員→K-means(最常用最簡單);(B)圖片→GMM(EM 比 K-means 強);(C)熱點→Hierarchical Clustering,因為層次聚類最通用", "is_correct": false, "trap_type": "K-means 是硬分群無法表達『跨多典型樣貌』的客戶;GMM 對球狀大小相近場景反而沒有優勢且計算成本高;Hierarchical 對地理熱點不規則形狀仍弱於 DBSCAN 且對離群點敏感"},
-        {"text": "三者皆用 K-means,因為 K-means 工業標準最快最穩,差異不大", "is_correct": false, "trap_type": "K-means 假設『球狀+相近大小+硬分群』,完全不契合『重疊客群』與『不規則地理熱點』兩情境"},
-        {"text": "三者皆用 DBSCAN,因為 DBSCAN 不需指定 K 且能處理離群點,通用最強", "is_correct": false, "trap_type": "DBSCAN 對球狀大小相近的情境其實沒有優勢且需細調 ε 參數;在會員分群這種高重疊場景無『重疊歸屬』表達能力"}
+        {"text": "(A)會員分群→K-means(最常用最簡單);(B)圖片特徵→GMM(EM 比 K-means 強);(C)犯罪熱點→Hierarchical Clustering,因為層次聚類在不規則地理形狀下最通用且能保留階層關係", "is_correct": false, "trap_type": "K-means 是硬分群無法表達『跨多典型樣貌』的客戶;GMM 對球狀大小相近場景反而沒有優勢且計算成本高;Hierarchical 對地理熱點不規則形狀仍弱於 DBSCAN 且對離群點敏感"},
+        {"text": "三者皆採用 K-means,因為 K-means 是聚類工業標準、最快最穩,在三種情境下差異不大,只要適當挑選 K 值搭配 K-means++ 初始化即可達到最佳結果", "is_correct": false, "trap_type": "K-means 假設『球狀+相近大小+硬分群』,完全不契合『重疊客群』與『不規則地理熱點』兩情境"},
+        {"text": "三者皆採用 DBSCAN,因為 DBSCAN 不需事先指定 K 值且能原生處理離群點,在三種情境下都是通用最強的密度型聚類方法,搭配適當的 ε 與 MinPts 即可取得最佳結果", "is_correct": false, "trap_type": "DBSCAN 對球狀大小相近的情境其實沒有優勢且需細調 ε 參數;在會員分群這種高重疊場景無『重疊歸屬』表達能力"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "三場景數學特性對應:(A)會員分群有『重疊典型樣貌』,GMM 用 EM 算法擬合多個高斯分布,每個樣本對所有 cluster 有 soft assignment(機率),可表達『此客戶 60% 像 A 群、30% 像 B 群』,且可學習各 cluster 的協方差矩陣(非等向)而非僅球狀;(B)CNN 影像特徵假設球狀+大小相近,K-means 的歐式距離+硬分群最契合,計算最快;(C)犯罪熱點是密度差異大+不規則形狀+有離群點,DBSCAN 透過 ε(鄰域半徑)與 MinPts(核心點密度)兩參數,可發現任意形狀 cluster 並原生標註 noise points,是地理空間聚類的首選。",
         "wrong": {
-          "(A)會員→K-means(最常用最簡單);(B)圖片→GMM(EM 比 K-means 強);(C)熱點→Hierarchical Clustering,因為層次聚類最通用": "K-means 硬分群無法表達『此客戶橫跨多典型樣貌』(會員場景的關鍵需求);GMM 在球狀大小相近時計算成本(EM 多輪)反而不如 K-means;層次聚類對地理熱點不規則形狀的處理弱於 DBSCAN,且時間複雜度 O(n²) 在大規模 GPS 資料下不可行",
-          "三者皆用 K-means,因為 K-means 工業標準最快最穩,差異不大": "K-means 三大假設(球狀+相近大小+硬分群)在情境(A)和(C)都不成立。會員『重疊樣貌』需 soft 分群,熱點『不規則+離群』需密度方法。差異很大",
-          "三者皆用 DBSCAN,因為 DBSCAN 不需指定 K 且能處理離群點,通用最強": "DBSCAN 對球狀大小相近(影像特徵)場景沒有比 K-means 優,且 ε 與 MinPts 仍需細調;會員場景的『重疊典型樣貌』DBSCAN 也無法用機率表達"
+          "(A)會員分群→K-means(最常用最簡單);(B)圖片特徵→GMM(EM 比 K-means 強);(C)犯罪熱點→Hierarchical Clustering,因為層次聚類在不規則地理形狀下最通用且能保留階層關係": "K-means 硬分群無法表達『此客戶橫跨多典型樣貌』(會員場景的關鍵需求);GMM 在球狀大小相近時計算成本(EM 多輪)反而不如 K-means;層次聚類對地理熱點不規則形狀的處理弱於 DBSCAN,且時間複雜度 O(n²) 在大規模 GPS 資料下不可行",
+          "三者皆採用 K-means,因為 K-means 是聚類工業標準、最快最穩,在三種情境下差異不大,只要適當挑選 K 值搭配 K-means++ 初始化即可達到最佳結果": "K-means 三大假設(球狀+相近大小+硬分群)在情境(A)和(C)都不成立。會員『重疊樣貌』需 soft 分群,熱點『不規則+離群』需密度方法。差異很大",
+          "三者皆採用 DBSCAN,因為 DBSCAN 不需事先指定 K 值且能原生處理離群點,在三種情境下都是通用最強的密度型聚類方法,搭配適當的 ε 與 MinPts 即可取得最佳結果": "DBSCAN 對球狀大小相近(影像特徵)場景沒有比 K-means 優,且 ε 與 MinPts 仍需細調;會員場景的『重疊典型樣貌』DBSCAN 也無法用機率表達"
         },
         "hook": "聚類選型口訣:重疊軟分群→GMM;球狀硬分群→K-means;不規則密度+離群→DBSCAN;階層需求→Hierarchical"
       },
@@ -306,17 +306,17 @@
       "stem": "某生物資訊團隊用層次聚類(Hierarchical Clustering)分析基因表達資料,設計四個版本分別採用 Single、Complete、Average、Ward 四種 linkage,結果顯示某版本出現嚴重『鏈式效應(chaining effect)』:形成一條長串連 cluster,失去分群意義;另一版本則產生『多個大小極不平衡的 cluster』。資深生物統計學家被請來檢視。下列分析何者最為正確?",
       "options": [
         {"text": "鏈式效應主要由 Single linkage(取最小距離)造成,因為只要兩 cluster 中有任一對最近點靠近就會合併,雜訊點易連成串;Ward linkage 則因最小化 cluster 內方差,傾向產生大小相近的緊密 cluster,過於均衡時對自然不平衡資料適配性差", "is_correct": true},
-        {"text": "鏈式效應由 Complete linkage(取最大距離)造成,因為它太嚴格只允許緊密 cluster 合併,反而把長距離點串成鏈;Single 則最均衡", "is_correct": false, "trap_type": "完全相反!Complete 是『最大距離』,反而傾向產生緊湊球狀 cluster,絕不會造成鏈式;Single 才是鏈式元兇"},
-        {"text": "鏈式效應由 Average linkage 造成,因為平均距離模糊了類別邊界,反而 Single 最不易產生鏈式", "is_correct": false, "trap_type": "Average 介於 Single 與 Complete 之間,對鏈式相對溫和;Single 才是鏈式元兇,完全顛倒"},
-        {"text": "四種 linkage 對鏈式效應敏感度相同,差異僅在計算速度,Ward 最快", "is_correct": false, "trap_type": "四種對鏈式敏感度差異極大;Ward 因需重複計算 cluster 內方差,計算成本通常不是最快"}
+        {"text": "鏈式效應主要由 Complete linkage(取最大距離)造成,因為它條件太嚴格只允許所有點對都緊密的 cluster 合併,反而把長距離點串成鏈狀;Single linkage 則因為取最小距離而能均衡分布,屬於最不易產生鏈式的方法", "is_correct": false, "trap_type": "完全相反!Complete 是『最大距離』,反而傾向產生緊湊球狀 cluster,絕不會造成鏈式;Single 才是鏈式元兇"},
+        {"text": "鏈式效應由 Average linkage(取平均距離)造成,因為平均距離會模糊類別邊界、難以分辨緊密與鬆散群體;反觀 Single linkage 因為對最近點敏感能在早期合併真正同類樣本、形成緊湊球狀 cluster,屬於四種 linkage 中最不易產生鏈式效應的方法", "is_correct": false, "trap_type": "Average 介於 Single 與 Complete 之間,對鏈式相對溫和;Single 才是鏈式元兇,完全顛倒"},
+        {"text": "四種 linkage 對鏈式效應的敏感度其實相同,差異僅在於計算速度;由於 Ward 採用合併內方差最小化目標可預先快取距離矩陣,在四種 linkage 中執行速度最快、最適合大規模基因表達資料這類 cluster 數較多的情境", "is_correct": false, "trap_type": "四種對鏈式敏感度差異極大;Ward 因需重複計算 cluster 內方差,計算成本通常不是最快"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "Hierarchical Clustering 四種 linkage 的數學定義與行為:Single linkage d(A,B) = min{d(a,b)|a∈A, b∈B},只要 A、B 之間有一對最近點就合併,在鏈狀資料或雜訊點存在時會把整串連起來變成一條長 cluster(chaining effect),這是 Single 最知名的缺陷;Complete linkage d(A,B) = max{d(a,b)},要求所有點對都接近,傾向產生緊湊球狀 cluster,但對離群點敏感;Average linkage 取平均距離,介於兩者之間;Ward linkage 最小化合併後 cluster 內方差(類似 K-means 目標),會產生大小相近、緊密的球狀 cluster,但對自然不平衡資料適配差(會強行均勻化)。",
         "wrong": {
-          "鏈式效應由 Complete linkage(取最大距離)造成,因為它太嚴格只允許緊密 cluster 合併,反而把長距離點串成鏈;Single 則最均衡": "完全顛倒。Complete 取最大距離反而避免鏈式(因為要全部點對都接近才合併);Single 取最小距離才是鏈式元兇,只要兩串中各有一點靠近就會合併",
-          "鏈式效應由 Average linkage 造成,因為平均距離模糊了類別邊界,反而 Single 最不易產生鏈式": "Average 介於 Single 與 Complete 之間,對鏈式相對緩和;Single 才是鏈式效應的最大元兇。此選項完全反轉了事實",
-          "四種 linkage 對鏈式效應敏感度相同,差異僅在計算速度,Ward 最快": "敏感度差異極大,鏈式效應從 Single>Average>Complete>Ward 漸減;Ward 並非最快(每次合併需重算內方差),計算成本依資料規模而異"
+          "鏈式效應主要由 Complete linkage(取最大距離)造成,因為它條件太嚴格只允許所有點對都緊密的 cluster 合併,反而把長距離點串成鏈狀;Single linkage 則因為取最小距離而能均衡分布,屬於最不易產生鏈式的方法": "完全顛倒。Complete 取最大距離反而避免鏈式(因為要全部點對都接近才合併);Single 取最小距離才是鏈式元兇,只要兩串中各有一點靠近就會合併",
+          "鏈式效應由 Average linkage(取平均距離)造成,因為平均距離會模糊類別邊界、難以分辨緊密與鬆散群體;反觀 Single linkage 因為對最近點敏感能在早期合併真正同類樣本、形成緊湊球狀 cluster,屬於四種 linkage 中最不易產生鏈式效應的方法": "Average 介於 Single 與 Complete 之間,對鏈式相對緩和;Single 才是鏈式效應的最大元兇。此選項完全反轉了事實",
+          "四種 linkage 對鏈式效應的敏感度其實相同,差異僅在於計算速度;由於 Ward 採用合併內方差最小化目標可預先快取距離矩陣,在四種 linkage 中執行速度最快、最適合大規模基因表達資料這類 cluster 數較多的情境": "敏感度差異極大,鏈式效應從 Single>Average>Complete>Ward 漸減;Ward 並非最快(每次合併需重算內方差),計算成本依資料規模而異"
         },
         "hook": "Linkage 行為記憶:Single→鏈式(min);Complete→緊湊但對離群敏感(max);Average→中庸;Ward→均衡球狀但強行均勻"
       },
@@ -334,18 +334,18 @@
       "source_level": "L2",
       "stem": "某金融科技集團同時部署三個異常偵測場景:(A)信用卡詐欺偵測:結構化交易特徵共 320 維、樣本 1000 萬筆、需毫秒級推論;(B)製造廠感測器:時序振動信號、有明顯週期性、訓練資料只含正常運轉數據;(C)安全監控影像:每分鐘 30 張高解析圖,正常場景變異大,需偵測未見過的異常事件。資深 ML 架構師為三場景指派最佳異常偵測演算法。下列何者最為合理?",
       "options": [
-        {"text": "(A)信用卡詐欺→Isolation Forest(高維結構化、訓練快、推論毫秒);(B)感測器時序→One-Class SVM 或 Autoencoder(學習正常模式重建誤差);(C)監控影像→Autoencoder/Variational Autoencoder(高維影像重建誤差為異常分數)", "is_correct": true},
-        {"text": "(A)信用卡→Autoencoder(深度學習最強);(B)感測器→LOF;(C)影像→Isolation Forest,因為三者通用 Isolation Forest 即可", "is_correct": false, "trap_type": "信用卡 1000 萬筆毫秒推論用 Autoencoder GPU 推論成本過高;LOF 對時序週期性資料效果不佳;Isolation Forest 對影像高維像素層級不適合"},
-        {"text": "三者皆用 LOF(Local Outlier Factor),LOF 在所有異常偵測場景都最強", "is_correct": false, "trap_type": "LOF 計算複雜度 O(n²),1000 萬筆信用卡資料完全無法跑;LOF 對時序與高維影像都不適合"},
-        {"text": "三者皆用 One-Class SVM,因為 OC-SVM 是異常偵測經典方法且支援核函數通用最強", "is_correct": false, "trap_type": "OC-SVM 在 1000 萬筆規模下訓練成本過高(O(n²~n³));高維影像直接餵 OC-SVM 效果遠不如 Autoencoder 重建"}
+        {"text": "(A)信用卡詐欺→Isolation Forest(高維結構化、訓練快、推論毫秒);(B)感測器時序→One-Class SVM 或 Autoencoder(學習正常模式);(C)監控影像→Autoencoder/VAE(以重建誤差為異常分數)", "is_correct": true},
+        {"text": "(A)信用卡→Autoencoder(深度學習方法在大規模結構化資料表現最強);(B)感測器→LOF(局部密度比較最能捕捉異常時序);(C)影像→Isolation Forest,三者皆可改採 Isolation Forest 取得統一架構", "is_correct": false, "trap_type": "信用卡 1000 萬筆毫秒推論用 Autoencoder GPU 推論成本過高;LOF 對時序週期性資料效果不佳;Isolation Forest 對影像高維像素層級不適合"},
+        {"text": "三者皆採用 LOF(Local Outlier Factor),因為 LOF 透過比較樣本與其 k 個近鄰之間的局部可達密度比,可精確識別密度差異下的離群點,在結構化交易、時序振動、高維影像三種異常偵測場景下都屬於最強方法", "is_correct": false, "trap_type": "LOF 計算複雜度 O(n²),1000 萬筆信用卡資料完全無法跑;LOF 對時序與高維影像都不適合"},
+        {"text": "三者皆採用 One-Class SVM,因為 OC-SVM 是異常偵測領域的經典方法、可透過 ν 參數控制離群比例並支援 RBF 等多種核函數,能同時應用於結構化、時序、影像三類任務,屬於通用性最強的異常偵測解決方案", "is_correct": false, "trap_type": "OC-SVM 在 1000 萬筆規模下訓練成本過高(O(n²~n³));高維影像直接餵 OC-SVM 效果遠不如 Autoencoder 重建"}
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "異常偵測選型核心:(A)信用卡詐欺 1000 萬筆+320 維結構化+毫秒推論,Isolation Forest 訓練 O(n log n)、推論 O(log n)、不需特徵縮放、原生支援高維,且只需『隨機切分越快被孤立越異常』的直覺,是業界 fraud detection 標配;(B)感測器時序+只有正常數據,One-Class SVM 學一個包覆正常區域的超球面,Autoencoder 訓練重建正常訊號 → 重建誤差大即異常,兩者對『One-class learning』場景皆合適;(C)監控影像高維像素+正常變異大,Autoencoder/VAE 將圖片壓縮到 latent 再重建,異常事件因模型未見過會有大重建誤差,且能用 latent 空間做更深入分析,是影像異常偵測的主流。",
         "wrong": {
-          "(A)信用卡→Autoencoder(深度學習最強);(B)感測器→LOF;(C)影像→Isolation Forest,因為三者通用 Isolation Forest 即可": "信用卡 1000 萬筆毫秒推論的工程約束下,Autoencoder GPU 推論延遲與成本都不適合線上 fraud detection;LOF 對時序週期性效果差且 O(n²) 太慢;Isolation Forest 在像素級高維影像上會被無關特徵主導",
-          "三者皆用 LOF(Local Outlier Factor),LOF 在所有異常偵測場景都最強": "LOF 計算複雜度 O(n²),1000 萬筆資料即 10^14 次運算完全不可行;LOF 對高維資料受 curse of dimensionality 影響,在影像或感測器時序上效能不佳",
-          "三者皆用 One-Class SVM,因為 OC-SVM 是異常偵測經典方法且支援核函數通用最強": "OC-SVM 訓練複雜度 O(n²~n³),1000 萬筆規模需數天甚至無法完成;影像若不先用 CNN 抽特徵,直接餵 OC-SVM 效果遠不如 Autoencoder;OC-SVM 經典但非萬用"
+          "(A)信用卡→Autoencoder(深度學習方法在大規模結構化資料表現最強);(B)感測器→LOF(局部密度比較最能捕捉異常時序);(C)影像→Isolation Forest,三者皆可改採 Isolation Forest 取得統一架構": "信用卡 1000 萬筆毫秒推論的工程約束下,Autoencoder GPU 推論延遲與成本都不適合線上 fraud detection;LOF 對時序週期性效果差且 O(n²) 太慢;Isolation Forest 在像素級高維影像上會被無關特徵主導",
+          "三者皆採用 LOF(Local Outlier Factor),因為 LOF 透過比較樣本與其 k 個近鄰之間的局部可達密度比,可精確識別密度差異下的離群點,在結構化交易、時序振動、高維影像三種異常偵測場景下都屬於最強方法": "LOF 計算複雜度 O(n²),1000 萬筆資料即 10^14 次運算完全不可行;LOF 對高維資料受 curse of dimensionality 影響,在影像或感測器時序上效能不佳",
+          "三者皆採用 One-Class SVM,因為 OC-SVM 是異常偵測領域的經典方法、可透過 ν 參數控制離群比例並支援 RBF 等多種核函數,能同時應用於結構化、時序、影像三類任務,屬於通用性最強的異常偵測解決方案": "OC-SVM 訓練複雜度 O(n²~n³),1000 萬筆規模需數天甚至無法完成;影像若不先用 CNN 抽特徵,直接餵 OC-SVM 效果遠不如 Autoencoder;OC-SVM 經典但非萬用"
         },
         "hook": "異常偵測選型速查:超大量結構化→Isolation Forest;少量+只有正常→One-Class SVM/Autoencoder;高維影像→Autoencoder/VAE;小資料局部密度→LOF"
       },
