@@ -533,16 +533,24 @@ const Wrongbook = {
   count() { return this.load().filter(x => !x.mastered).length; }
 };
 
-// === Question Bank Loader ===
+// === Question Bank Loader(高品質原創題庫,鐵律 #3 全合規)===
 let QUESTIONS = [];
 async function loadQuestions() {
+  const files = [
+    'questions.json',            // 50 題 baseline(批 1)
+    'questions-pa-code.json',    // 15 題 程式判讀(原創 + 完整 code_block)
+    'questions-pb-visual.json',  // 10 題 表格判讀(含 VGG16 完整 27 層)
+    'questions-pc-modes.json',   // 15 題 matching/sequence/calculation(遊戲模式專用)
+    'questions-pd-scenario.json' // 15 題 情境決策進化(errata + 高優先 + 跨產業)
+  ];
   try {
-    const [a, b] = await Promise.all([
-      fetch('questions.json').then(r => r.json()),
-      fetch('questions-extra.json').then(r => r.json())
-    ]);
-    QUESTIONS = [...a.questions, ...b.questions];
+    const results = await Promise.all(
+      files.map(f => fetch(f).then(r => r.ok ? r.json() : { questions: [] })
+                              .catch(() => ({ questions: [] })))
+    );
+    QUESTIONS = results.flatMap(r => r.questions || []);
     document.getElementById('stat-total').textContent = QUESTIONS.length;
+    console.log(`已載入 ${QUESTIONS.length} 題,來自 ${files.length} 個題庫檔`);
     return QUESTIONS;
   } catch (e) {
     showToast('題庫載入失敗,請以 http server 啟動本檔案'); throw e;

@@ -1,0 +1,460 @@
+{
+  "version": "1.0",
+  "agent": "A",
+  "purpose": "原創程式判讀題庫,鐵律 #1+#2+#3 全合規",
+  "iron_rule_1_compliance": "all questions have explanation.correct/wrong/hook + misconceptions + related_node_ids",
+  "iron_rule_2_compliance": "all shuffle_options:true",
+  "iron_rule_3_compliance": "no copy from 114-2; all original scenarios",
+  "questions": [
+    {
+      "id": "q_pa_001",
+      "knowledge_code": "L23102",
+      "node_id": "n_L23102_001",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "資料科學家在處理 IoT 感測器訊號時,需計算協方差矩陣的反矩陣以做白化(whitening)。請問下列程式輸出的對角元素和為何?",
+      "code_block": "import numpy as np\nC = np.array([[2.0, 0.0],\n              [0.0, 4.0]])\nC_inv = np.linalg.inv(C)\nprint(np.trace(C_inv))",
+      "options": [
+        {"text": "0.75", "is_correct": true},
+        {"text": "6.0", "is_correct": false, "trap_type": "誤算成原矩陣的跡"},
+        {"text": "0.125", "is_correct": false, "trap_type": "誤算為對角元素相乘的倒數"},
+        {"text": "ValueError", "is_correct": false, "trap_type": "誤以為對角矩陣不可反"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "對角矩陣的反矩陣為各對角元素取倒數,故 C_inv = diag(0.5, 0.25)。np.trace 取對角和,0.5 + 0.25 = 0.75。對角矩陣只要對角元素皆非零即可逆。",
+        "wrong": {
+          "6.0": "6.0 是原矩陣 C 的跡(2+4),題目問的是 C_inv 的跡,需先反矩陣再求和。",
+          "0.125": "0.125 是 1/(2*4) = 1/8 = 行列式的倒數,並非對角和。注意跡與行列式是兩種不同統計量。",
+          "ValueError": "對角矩陣只要對角元素皆非零就可逆,2 與 4 皆非零,不會丟出例外。"
+        },
+        "hook": "對角反矩陣 = 每個對角元素取倒數;跡是對角加總"
+      },
+      "misconceptions": ["把跡與行列式混淆", "以為對角矩陣不可逆"],
+      "related_node_ids": ["n_L23102_001", "n_L23102_002"],
+      "tags": ["numpy", "線性代數", "反矩陣"]
+    },
+    {
+      "id": "q_pa_002",
+      "knowledge_code": "L23102",
+      "node_id": "n_L23102_003",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "金融風控團隊以 PCA 處理客戶特徵,需驗證共變異數矩陣特徵值的乘積關係。請問下列程式輸出值最接近?",
+      "code_block": "import numpy as np\nM = np.array([[5.0, 2.0],\n              [2.0, 5.0]])\neigvals, _ = np.linalg.eig(M)\nresult = np.prod(eigvals)\nprint(round(result, 2))",
+      "options": [
+        {"text": "21.0", "is_correct": true},
+        {"text": "10.0", "is_correct": false, "trap_type": "誤算為特徵值總和"},
+        {"text": "25.0", "is_correct": false, "trap_type": "誤算為對角線之積"},
+        {"text": "29.0", "is_correct": false, "trap_type": "誤把所有元素相加"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "特徵值乘積等於行列式 det(M)。det = 5*5 - 2*2 = 25 - 4 = 21。eig 解出兩個特徵值為 7 與 3,7*3 = 21,與行列式相符。",
+        "wrong": {
+          "10.0": "10 是特徵值之和(=跡=5+5),本題問乘積不是和。乘積對應行列式,和對應跡,兩者意義不同。",
+          "25.0": "25 是對角元素的乘積(5*5),忽略了非對角項 2 的貢獻;行列式為 5*5 - 2*2 = 21。",
+          "29.0": "29 是 5+2+2+5+15 之類的湊數,並無線性代數意義。"
+        },
+        "hook": "特徵值乘積 = 行列式;特徵值總和 = 跡"
+      },
+      "misconceptions": ["以為對角元素積就是行列式", "把和與積混用"],
+      "related_node_ids": ["n_L23102_001", "n_L23102_003"],
+      "tags": ["numpy", "特徵值", "行列式"]
+    },
+    {
+      "id": "q_pa_003",
+      "knowledge_code": "L23102",
+      "node_id": "n_L23102_005",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "資料工程師為了正規化推薦系統的使用者向量,需求其 L2 範數。下列程式輸出為何?",
+      "code_block": "import numpy as np\nuser_vec = np.array([3.0, 4.0, 0.0, 0.0])\nnorm = np.linalg.norm(user_vec)\nprint(norm)",
+      "options": [
+        {"text": "5.0", "is_correct": true},
+        {"text": "7.0", "is_correct": false, "trap_type": "誤算為 L1 範數(絕對值和)"},
+        {"text": "25.0", "is_correct": false, "trap_type": "忘記開根號"},
+        {"text": "4.0", "is_correct": false, "trap_type": "誤取最大絕對值(L∞)"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "np.linalg.norm 預設為 L2(Frobenius)範數,即 sqrt(3^2 + 4^2 + 0 + 0) = sqrt(25) = 5.0。L2 範數常用於歐氏距離與向量正規化。",
+        "wrong": {
+          "7.0": "7.0 是 L1 範數 |3|+|4|+0+0,需在 norm 設 ord=1 才會得到此值。",
+          "25.0": "25 是平方和但忘記開根號,L2 範數需要 sqrt。",
+          "4.0": "4.0 是最大絕對值(L∞ / max-norm),需設 ord=np.inf 才會得到此值。"
+        },
+        "hook": "linalg.norm 預設 L2 = 平方和開根號"
+      },
+      "misconceptions": ["以為 norm 預設是 L1", "忘記 L2 要開根號"],
+      "related_node_ids": ["n_L23102_005"],
+      "tags": ["numpy", "範數", "正規化"]
+    },
+    {
+      "id": "q_pa_004",
+      "knowledge_code": "L23102",
+      "node_id": "n_L23102_006",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "在類神經權重更新時,工程師對兩個一維權重向量做運算,但混用了 dot 與 *。請問下列程式輸出形狀(shape)為何?",
+      "code_block": "import numpy as np\nw1 = np.array([1, 2, 3])\nw2 = np.array([4, 5, 6])\na = np.dot(w1, w2)\nb = w1 * w2\nprint(np.shape(a), np.shape(b))",
+      "options": [
+        {"text": "() (3,)", "is_correct": true},
+        {"text": "(1,) (3,)", "is_correct": false, "trap_type": "誤以為純量是 (1,)"},
+        {"text": "(3,) (3,)", "is_correct": false, "trap_type": "誤以為 dot 也回傳向量"},
+        {"text": "(3,) ()", "is_correct": false, "trap_type": "搞反 dot 與 elementwise"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "np.dot 對兩個一維陣列做內積,回傳純量(0 維 ndarray,shape 為空 tuple ())。* 是逐元素乘法,維持形狀 (3,)。內積值為 1*4+2*5+3*6=32。",
+        "wrong": {
+          "(1,) (3,)": "純量的 shape 是 () 不是 (1,)。(1,) 代表長度為 1 的一維陣列,例如 [32]。",
+          "(3,) (3,)": "dot 對兩個一維陣列回傳純量;唯有對矩陣 dot 才會得到向量或矩陣。",
+          "(3,) ()": "搞反了。dot 才是回傳純量,逐元素 * 才會保留形狀 (3,)。"
+        },
+        "hook": "1D dot 1D = 純量(shape=());* 是逐元素保形狀"
+      },
+      "misconceptions": ["把 dot 與 * 混用", "以為純量 shape 是 (1,)"],
+      "related_node_ids": ["n_L23102_006"],
+      "tags": ["numpy", "內積", "shape"]
+    },
+    {
+      "id": "q_pa_005",
+      "knowledge_code": "L23102",
+      "node_id": "n_L23102_007",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "在 Transformer attention 計算中,工程師使用 einsum 對 batch 矩陣做縮並。請問下列程式輸出形狀為何?",
+      "code_block": "import numpy as np\nQ = np.random.rand(2, 4, 8)  # batch=2, seq=4, d=8\nK = np.random.rand(2, 4, 8)\nscores = np.einsum('bid,bjd->bij', Q, K)\nprint(scores.shape)",
+      "options": [
+        {"text": "(2, 4, 4)", "is_correct": true},
+        {"text": "(2, 8, 8)", "is_correct": false, "trap_type": "誤把 d 當輸出維度"},
+        {"text": "(2, 4, 8)", "is_correct": false, "trap_type": "未理解縮並"},
+        {"text": "(4, 4)", "is_correct": false, "trap_type": "忽略 batch 維"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "einsum 表示式 'bid,bjd->bij':b 是 batch 共享,d 是被縮並(沒出現在右側),i 來自 Q,j 來自 K。所以輸出為 (b, i, j) = (2, 4, 4),即 attention scores 矩陣。",
+        "wrong": {
+          "(2, 8, 8)": "d=8 沒在右側,代表它被縮並消去,不會出現在輸出。",
+          "(2, 4, 8)": "若是 (2,4,8) 表示 d 與 i 都保留,但表達式明確只保留 b、i、j。",
+          "(4, 4)": "b 在右側仍存在(共享 batch 維),不會被消去。"
+        },
+        "hook": "einsum 右側沒出現的字母 = 被縮並(消去);共享字母 = 保留"
+      },
+      "misconceptions": ["不熟 einsum 字母對應", "忽略左右側差異判斷縮並維"],
+      "related_node_ids": ["n_L23102_007"],
+      "tags": ["numpy", "einsum", "矩陣縮並"]
+    },
+    {
+      "id": "q_pa_006",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_001",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "在 5 維基因表現資料的降維專案中,資料科學家保留 2 個主成分。請問下列程式輸出 X_pca 的形狀為何?",
+      "code_block": "from sklearn.decomposition import PCA\nimport numpy as np\nX = np.random.rand(120, 5)\npca = PCA(n_components=2)\nX_pca = pca.fit_transform(X)\nprint(X_pca.shape)",
+      "options": [
+        {"text": "(120, 2)", "is_correct": true},
+        {"text": "(2, 120)", "is_correct": false, "trap_type": "搞反列與欄"},
+        {"text": "(120, 5)", "is_correct": false, "trap_type": "誤以為原維度保留"},
+        {"text": "(2, 5)", "is_correct": false, "trap_type": "把 components_ 形狀當成 transform 輸出"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "fit_transform 同時 fit 且把資料投影到主成分空間。樣本數不變(120),特徵維度降為 n_components(2),所以形狀為 (120, 2)。",
+        "wrong": {
+          "(2, 120)": "sklearn 慣例是 (n_samples, n_features),樣本在列、特徵在欄,不會把樣本擺到欄。",
+          "(120, 5)": "PCA 主目的就是降維,輸出維度為 n_components 不是原 5 維。",
+          "(2, 5)": "(2,5) 是 pca.components_ 的形狀(每列是一個主成分向量),不是 fit_transform 結果。"
+        },
+        "hook": "fit_transform 後形狀 = (樣本數, n_components)"
+      },
+      "misconceptions": ["把 components_ 與 transform 結果混淆", "搞反 sklearn 的列欄慣例"],
+      "related_node_ids": ["n_L23202_001"],
+      "tags": ["sklearn", "PCA", "降維"]
+    },
+    {
+      "id": "q_pa_007",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_002",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "在電商點擊率預測模型,工程師用 KFold 做交叉驗證。資料 1000 筆、n_splits=5。請問下列程式輸出迴圈執行次數與每次測試集大小?",
+      "code_block": "from sklearn.model_selection import KFold\nimport numpy as np\nX = np.arange(1000).reshape(-1, 1)\nkf = KFold(n_splits=5, shuffle=True, random_state=0)\ncount = 0\ntest_sizes = []\nfor _, test_idx in kf.split(X):\n    count += 1\n    test_sizes.append(len(test_idx))\nprint(count, set(test_sizes))",
+      "options": [
+        {"text": "5 {200}", "is_correct": true},
+        {"text": "1 {1000}", "is_correct": false, "trap_type": "誤以為只 split 一次"},
+        {"text": "5 {800}", "is_correct": false, "trap_type": "搞反訓練/測試大小"},
+        {"text": "10 {100}", "is_correct": false, "trap_type": "誤以為 split 數翻倍"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "KFold(n_splits=5) 把資料切 5 等份,迴圈執行 5 次。每次以 1/5 = 200 筆為 test,其餘 800 為 train。set 去重後僅剩 {200}。",
+        "wrong": {
+          "1 {1000}": "split 是產生 5 組 (train_idx, test_idx) 索引,迴圈會跑 5 次而非 1 次。",
+          "5 {800}": "800 是訓練集大小不是測試集。題目印的是 len(test_idx)。",
+          "10 {100}": "n_splits=5 就是 5 折,不會翻倍。10 折需要設定 n_splits=10。"
+        },
+        "hook": "KFold n_splits = K → 跑 K 次,每次 test = 1/K"
+      },
+      "misconceptions": ["搞反訓練/測試比例", "以為 KFold 是隨機抽一次"],
+      "related_node_ids": ["n_L23202_002"],
+      "tags": ["sklearn", "交叉驗證", "KFold"]
+    },
+    {
+      "id": "q_pa_008",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_004",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "醫療影像團隊比較 StandardScaler 與 MinMaxScaler 的效果。對特徵 [10, 20, 30, 40, 50] 兩者都 fit_transform 後,請問 StandardScaler 的中位數輸出最接近?",
+      "code_block": "from sklearn.preprocessing import StandardScaler\nimport numpy as np\nx = np.array([[10],[20],[30],[40],[50]], dtype=float)\nss = StandardScaler()\nz = ss.fit_transform(x)\nprint(round(float(np.median(z)), 2))",
+      "options": [
+        {"text": "0.0", "is_correct": true},
+        {"text": "0.5", "is_correct": false, "trap_type": "誤把它當 MinMaxScaler"},
+        {"text": "30.0", "is_correct": false, "trap_type": "誤以為輸出原值的中位數"},
+        {"text": "1.0", "is_correct": false, "trap_type": "誤以為 z-score 的中位數是 1"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "StandardScaler 做 z-score:減平均除標準差。資料 [10..50] 平均 30,中位數同為 30,標準化後對應位置為 (30-30)/std = 0。z-score 的中位數約為 0(對對稱資料正好為 0)。",
+        "wrong": {
+          "0.5": "0.5 是 MinMaxScaler 對中位點 30 的輸出 (30-10)/(50-10) = 0.5。題目用的是 StandardScaler 不是 MinMax。",
+          "30.0": "標準化後資料分布變為平均 0、標準差 1,不會回傳原始 30。",
+          "1.0": "z-score 整體標準差為 1,但中位數一般不為 1。對對稱資料中位數會落在平均處,即 0。"
+        },
+        "hook": "StandardScaler → z-score(平均 0、std 1);MinMax → 範圍 [0,1]"
+      },
+      "misconceptions": ["把兩種 Scaler 混用", "誤以為 z-score 中位數是 1"],
+      "related_node_ids": ["n_L23202_004"],
+      "tags": ["sklearn", "標準化", "StandardScaler"]
+    },
+    {
+      "id": "q_pa_009",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_006",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "在二元客戶流失預測中,工程師訓練 LogisticRegression。資料只有兩個特徵。請問下列程式輸出 model.coef_ 形狀為何?",
+      "code_block": "from sklearn.linear_model import LogisticRegression\nimport numpy as np\nX = np.random.rand(200, 2)\ny = (X[:, 0] + X[:, 1] > 1).astype(int)\nmodel = LogisticRegression()\nmodel.fit(X, y)\nprint(model.coef_.shape)",
+      "options": [
+        {"text": "(1, 2)", "is_correct": true},
+        {"text": "(2,)", "is_correct": false, "trap_type": "誤以為 coef 是一維"},
+        {"text": "(2, 1)", "is_correct": false, "trap_type": "搞反列與欄"},
+        {"text": "(2, 2)", "is_correct": false, "trap_type": "誤以為兩類各有兩列"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "LogisticRegression 的 coef_ 形狀為 (n_classes-1 或 n_classes, n_features)。在二元分類時 sklearn 只儲存一組係數,故為 (1, 2)。注意這與 numpy 一維 (2,) 不同——它一定是 2D。",
+        "wrong": {
+          "(2,)": "sklearn 規範 coef_ 為 2D 陣列以統一多類介面,二元仍會包成 (1, n_features) 而非 (2,)。",
+          "(2, 1)": "n_features 在第二軸不是第一軸。形狀是 (n_classes_or_1, n_features)。",
+          "(2, 2)": "二元分類只儲存 1 組係數,不是 2 組。多類別時才會是 (n_classes, n_features)。"
+        },
+        "hook": "coef_ 永遠 2D:(類別數或1, 特徵數)"
+      },
+      "misconceptions": ["以為 coef_ 是 1D", "搞反軸的順序"],
+      "related_node_ids": ["n_L23202_006"],
+      "tags": ["sklearn", "邏輯回歸", "係數"]
+    },
+    {
+      "id": "q_pa_010",
+      "knowledge_code": "L23302",
+      "node_id": "n_L23302_001",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "在語音辨識前處理,工程師建立全連接層 nn.Linear(in=64, out=16),輸入 batch=8 的特徵。請問下列程式輸出形狀為何?",
+      "code_block": "import torch\nimport torch.nn as nn\nlayer = nn.Linear(64, 16)\nx = torch.randn(8, 64)\ny = layer(x)\nprint(y.shape)",
+      "options": [
+        {"text": "torch.Size([8, 16])", "is_correct": true},
+        {"text": "torch.Size([8, 64])", "is_correct": false, "trap_type": "誤以為輸入維不變"},
+        {"text": "torch.Size([16, 8])", "is_correct": false, "trap_type": "搞反 batch 與特徵軸"},
+        {"text": "torch.Size([64, 16])", "is_correct": false, "trap_type": "誤把權重形狀當輸出"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "nn.Linear(in=64, out=16) 對最後一軸做仿射變換 y = xW^T + b。輸入 (8, 64) 通過後最後一軸由 64 變 16,故輸出為 (8, 16)。batch 維保留。",
+        "wrong": {
+          "torch.Size([8, 64])": "Linear 會改變最後一軸從 in_features→out_features。若不變表示沒套用。",
+          "torch.Size([16, 8])": "PyTorch 以最前軸為 batch,batch 始終在第 0 軸不會跟特徵軸交換。",
+          "torch.Size([64, 16])": "(64,16) 是 weight 的儲存形狀(實際 weight 是 (out, in) = (16, 64)),不是輸出。"
+        },
+        "hook": "nn.Linear 只改最後一軸:in→out,batch 不變"
+      },
+      "misconceptions": ["搞反 weight 與輸出形狀", "以為 Linear 改 batch"],
+      "related_node_ids": ["n_L23302_001"],
+      "tags": ["pytorch", "nn.Linear", "shape"]
+    },
+    {
+      "id": "q_pa_011",
+      "knowledge_code": "L23302",
+      "node_id": "n_L23302_003",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "在自駕車感知模型訓練中,工程師忘記呼叫 optimizer.zero_grad()。請問此時連續兩次 loss.backward() 後,參數梯度的行為為何?",
+      "code_block": "import torch\nw = torch.tensor([1.0], requires_grad=True)\nopt = torch.optim.SGD([w], lr=0.1)\n# 假設 loss = w * 2,d(loss)/dw = 2\nfor _ in range(2):\n    loss = w * 2\n    loss.backward()\nprint(w.grad.item())",
+      "options": [
+        {"text": "4.0", "is_correct": true},
+        {"text": "2.0", "is_correct": false, "trap_type": "誤以為 backward 自動歸零"},
+        {"text": "0.0", "is_correct": false, "trap_type": "誤以為梯度被覆寫"},
+        {"text": "RuntimeError", "is_correct": false, "trap_type": "誤以為會丟出例外"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "PyTorch 預設累加(accumulate)梯度。沒呼叫 zero_grad 時,每次 backward 把新算的梯度加到 w.grad 上。第一次 +2,第二次 +2,共 4。這正是必須在 step 前 zero_grad 的原因。",
+        "wrong": {
+          "2.0": "若 backward 自動歸零才會是 2,但 PyTorch 並非如此設計,梯度會累加。",
+          "0.0": "梯度只在明確呼叫 zero_grad 或 detach 時才歸零,不會自動。",
+          "RuntimeError": "未呼叫 zero_grad 不會丟例外,只會默默累加,造成訓練錯誤但程式仍跑。"
+        },
+        "hook": "PyTorch 梯度預設累加 → 每個 step 前必 zero_grad"
+      },
+      "misconceptions": ["以為 backward 自動歸零", "忽略梯度累加是有意設計"],
+      "related_node_ids": ["n_L23302_003"],
+      "tags": ["pytorch", "梯度", "optimizer"]
+    },
+    {
+      "id": "q_pa_012",
+      "knowledge_code": "L23302",
+      "node_id": "n_L23302_005",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "在多類別新聞分類,工程師對模型最後一層 logits 直接接 nn.CrossEntropyLoss,但又額外手動套了 softmax。請問此寫法的問題?",
+      "code_block": "import torch\nimport torch.nn as nn\nlogits = torch.tensor([[2.0, 1.0, 0.1]])\nprob = torch.softmax(logits, dim=1)\ntarget = torch.tensor([0])\ncriterion = nn.CrossEntropyLoss()\nloss = criterion(prob, target)\nprint(round(loss.item(), 4))",
+      "options": [
+        {"text": "梯度與訓練都會錯,因為 CE 內含 log_softmax,等於對 softmax 再做一次,造成數值錯誤", "is_correct": true},
+        {"text": "完全正確,結果與直接傳 logits 相同", "is_correct": false, "trap_type": "忽略 CE 內含 softmax"},
+        {"text": "會丟出 ValueError 因為機率超過 1", "is_correct": false, "trap_type": "誤以為會有形狀錯誤"},
+        {"text": "loss 一定為 0,因為 prob 已是機率", "is_correct": false, "trap_type": "把交叉熵與 0 混用"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "nn.CrossEntropyLoss 內部已做 log_softmax + NLLLoss。直接餵 softmax 過的機率,等於對機率再 log_softmax,梯度與數值都會偏離正確結果。應該餵 raw logits。本例會跑出一個錯誤但合法的數字,訓練時會收斂變慢甚至錯方向。",
+        "wrong": {
+          "完全正確,結果與直接傳 logits 相同": "結果不同。CE 預期輸入是 logits 不是 probabilities。",
+          "會丟出 ValueError 因為機率超過 1": "PyTorch 不檢查輸入是否為 logit,程式不會丟錯,只是結果語義錯誤,更危險。",
+          "loss 一定為 0": "交叉熵在預測完美時才會接近 0,且本例輸入錯誤,不會剛好為 0。"
+        },
+        "hook": "CrossEntropyLoss 吃 logits;BCEWithLogitsLoss 也是吃 logits"
+      },
+      "misconceptions": ["以為 CE 吃機率", "誤以為會自動偵測輸入"],
+      "related_node_ids": ["n_L23302_005"],
+      "tags": ["pytorch", "CrossEntropyLoss", "softmax"]
+    },
+    {
+      "id": "q_pa_013",
+      "knowledge_code": "L23402",
+      "node_id": "n_L23402_001",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "在保險理賠資料清理中,分析師檢查缺值。請問下列程式中,a 與 b 的關係為何?",
+      "code_block": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'claim': [100, np.nan, 50, np.nan]})\na = df['claim'].isna().sum()\nb = df['claim'].isnull().sum()\nprint(a == b, a)",
+      "options": [
+        {"text": "True 2", "is_correct": true},
+        {"text": "False 2", "is_correct": false, "trap_type": "誤以為 isna/isnull 不同"},
+        {"text": "True 4", "is_correct": false, "trap_type": "誤以為計算總列數"},
+        {"text": "False 0", "is_correct": false, "trap_type": "誤以為 NaN 不算缺值"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "pandas 的 isna() 與 isnull() 是同一個函式的別名,行為完全相同。兩者都把 NaN 視為缺值,故 a == b。資料中有 2 個 NaN,所以 a = b = 2。",
+        "wrong": {
+          "False 2": "isna 與 isnull 完全等價,不會 False。pandas 為了 R 與 SQL 使用者各取一個別名。",
+          "True 4": "4 是總筆數,但 sum 在布林上計算的是 True 的個數,只有 NaN 處為 True,故為 2。",
+          "False 0": "np.nan 在 isna/isnull 都會回傳 True,絕不會視為非缺值。"
+        },
+        "hook": "isna == isnull(別名);兩個都偵測 NaN"
+      },
+      "misconceptions": ["以為 isna 與 isnull 行為不同", "忽略 sum 在布林上的意義"],
+      "related_node_ids": ["n_L23402_001"],
+      "tags": ["pandas", "缺值", "isna"]
+    },
+    {
+      "id": "q_pa_014",
+      "knowledge_code": "L23402",
+      "node_id": "n_L23402_003",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "在零售營收分析中,分析師用 groupby 對地區同時計算總和與平均。請問下列程式輸出 result 的欄(columns)結構為何?",
+      "code_block": "import pandas as pd\ndf = pd.DataFrame({\n    'region': ['N', 'S', 'N', 'S', 'N'],\n    'sales': [100, 80, 120, 90, 110]\n})\nresult = df.groupby('region')['sales'].agg(['sum', 'mean'])\nprint(list(result.columns))",
+      "options": [
+        {"text": "['sum', 'mean']", "is_correct": true},
+        {"text": "['sales']", "is_correct": false, "trap_type": "誤以為只保留欄名"},
+        {"text": "['sales_sum', 'sales_mean']", "is_correct": false, "trap_type": "誤以為自動加前綴"},
+        {"text": "['region', 'sum', 'mean']", "is_correct": false, "trap_type": "誤以為 region 也是欄"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "對單一 Series 做 agg(list) 時,輸出欄位即為函式名稱,故為 ['sum', 'mean']。region 已成為 index,不在 columns。若要自訂欄名需用 NamedAgg。",
+        "wrong": {
+          "['sales']": "agg(list) 會展開成多欄,不會只剩單一 'sales' 欄。",
+          "['sales_sum', 'sales_mean']": "pandas 預設不會把欄前綴上原欄名;此格式要傳 dict 或 NamedAgg。",
+          "['region', 'sum', 'mean']": "groupby key 默認進入 index,不會出現在 columns(除非 reset_index)。"
+        },
+        "hook": "agg(list) 後欄名 = 函式名;groupby key 預設變 index"
+      },
+      "misconceptions": ["以為 agg 自動帶上原欄名", "以為 groupby key 留在欄"],
+      "related_node_ids": ["n_L23402_003"],
+      "tags": ["pandas", "groupby", "agg"]
+    },
+    {
+      "id": "q_pa_015",
+      "knowledge_code": "L23502",
+      "node_id": "n_L23502_001",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "在實驗結果視覺化中,工程師同時繪製訓練與驗證準確率。請問下列 matplotlib 程式中,'r--' 的意義為何?",
+      "code_block": "import matplotlib.pyplot as plt\nepochs = [1, 2, 3, 4]\ntrain_acc = [0.6, 0.7, 0.8, 0.9]\nval_acc = [0.55, 0.65, 0.7, 0.75]\nplt.plot(epochs, train_acc, 'r--', label='train')\nplt.plot(epochs, val_acc, 'b-', label='val')\nplt.legend()",
+      "options": [
+        {"text": "紅色虛線", "is_correct": true},
+        {"text": "紅色實線", "is_correct": false, "trap_type": "誤把 -- 當實線"},
+        {"text": "藍色虛線", "is_correct": false, "trap_type": "看錯顏色字母"},
+        {"text": "紅色點線(dotted)", "is_correct": false, "trap_type": "把 -- 當 :"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "matplotlib 的格式字串混合顏色與線型:'r' = red、'--' = dashed(虛線)。所以 'r--' = 紅色虛線;'b-' = 藍色實線。記憶:- 是 solid、-- 是 dashed、: 是 dotted、-. 是 dash-dot。",
+        "wrong": {
+          "紅色實線": "'-' 才是實線,'--' 是虛線。容易混淆。",
+          "藍色虛線": "顏色字母在前,'r' = red 不是 blue。'b--' 才是藍虛線。",
+          "紅色點線(dotted)": "':' 才是點線(dotted),'--' 是虛線(dashed)。"
+        },
+        "hook": "顏色在前線型在後;-=實 / --=虛 / :=點 / -.=點虛"
+      },
+      "misconceptions": ["把 -- 當實線", "把 -- 與 : 混用"],
+      "related_node_ids": ["n_L23502_001"],
+      "tags": ["matplotlib", "plot", "格式字串"]
+    }
+  ]
+}

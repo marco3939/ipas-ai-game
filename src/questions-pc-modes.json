@@ -1,0 +1,467 @@
+{
+  "version": "1.0",
+  "agent": "C",
+  "purpose": "原創 matching/sequence/calculation 題庫(遊戲模式專用)",
+  "schema_version": "iron-rule-1+2+3",
+  "generated_at": "2026-05-09",
+  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "iron_rule_1_compliance": "every question has explanation.correct + explanation.wrong + explanation.hook + misconceptions + related_node_ids",
+  "iron_rule_2_compliance": "shuffle_options:true on every question; calculation 題使用 stem_variables 多 case 池",
+  "iron_rule_3_compliance": "全部 15 題為原創,未複製 114-2 原題;所有情境與陷阱經換寫",
+  "questions": [
+    {
+      "id": "q_pc_match_001",
+      "knowledge_code": "L23304",
+      "node_id": "n_L23304_002",
+      "subject": 3,
+      "format": "matching",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "在『信用評分模型有 200 個高度共線變數,需要保留全部特徵僅縮小其影響力』情境下,正確配對:**L2 正則化(Ridge)** ↔ ?",
+      "options": [
+        {"text": "懲罰項為權重平方和(λ·Σwᵢ²),平滑縮小所有權重但不歸零,適合多重共線性問題", "is_correct": true},
+        {"text": "懲罰項為權重絕對值和(λ·Σ|wᵢ|),產生稀疏解使部分權重歸零,自動進行特徵選擇", "is_correct": false, "trap_type": "為 L1 Lasso 描述"},
+        {"text": "L1 與 L2 線性組合,需調 α∈[0,1] 平衡稀疏化與群組效應", "is_correct": false, "trap_type": "為 Elastic Net"},
+        {"text": "訓練時隨機關閉一定比例神經元,推論時還原並縮放權重", "is_correct": false, "trap_type": "為 Dropout 神經網路正則化"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "L2 Ridge 損失加 λ·Σwᵢ²;平方項在原點可微且圓滑,使最佳解只『縮小』權重而不會落在軸上 → 全部特徵都保留但影響力降低,正好適合『多重共線性』場景(高度相關變數的權重會被均分)",
+        "wrong": {
+          "懲罰項為權重絕對值和(λ·Σ|wᵢ|),產生稀疏解使部分權重歸零,自動進行特徵選擇": "此為 L1 Lasso;絕對值在原點不可微、邊界尖銳,故最佳解常落在座標軸上(權重歸零)",
+          "L1 與 L2 線性組合,需調 α∈[0,1] 平衡稀疏化與群組效應": "此為 Elastic Net,結合兩者優點:既稀疏化又能處理共線群組",
+          "訓練時隨機關閉一定比例神經元,推論時還原並縮放權重": "此為 Dropout,屬於神經網路專用正則化技術,非權重懲罰項"
+        },
+        "hook": "L2 縮小不歸零(平滑);L1 歸零產稀疏(尖銳);Elastic 兩者組合;Dropout 為 NN 專用"
+      },
+      "misconceptions": ["把 L1 / L2 的歸零行為搞反", "認為 L2 也能做特徵選擇", "把 Dropout 套用到線性回歸"],
+      "related_node_ids": ["n_L23304_001", "n_L23304_002", "n_L23304_004"],
+      "tags": ["matching", "正則化", "L1L2", "易混淆"]
+    },
+    {
+      "id": "q_pc_match_002",
+      "knowledge_code": "L21101",
+      "node_id": "n_L21101_004",
+      "subject": 1,
+      "format": "matching",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "訓練 Word2Vec 詞向量時,『資料中有大量罕見專業術語(醫學、法律)需要好的語意表徵』,正確配對:**Skip-gram** ↔ ?",
+      "options": [
+        {"text": "以中心詞預測周圍詞,對罕見詞語意建模佳但訓練較慢", "is_correct": true},
+        {"text": "以周圍上下文詞預測中心詞,訓練快速且高頻詞語意佳", "is_correct": false, "trap_type": "為 CBOW 描述"},
+        {"text": "對全域詞共現矩陣進行加權矩陣分解以取得詞向量", "is_correct": false, "trap_type": "為 GloVe 全域統計法"},
+        {"text": "用子詞 n-gram 平均合成詞向量,可處理 OOV 與形態變化", "is_correct": false, "trap_type": "為 FastText"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Skip-gram 給定中心詞 wₜ,最大化 P(w_{t±k}|wₜ);因每個罕見詞都會出現在中心位置數次,其向量更新次數較 CBOW 多 → 罕見詞表徵品質更佳,但訓練步數較多較慢",
+        "wrong": {
+          "以周圍上下文詞預測中心詞,訓練快速且高頻詞語意佳": "此為 CBOW(Continuous Bag-of-Words);上下文平均做為輸入故收斂快,但偏好高頻詞",
+          "對全域詞共現矩陣進行加權矩陣分解以取得詞向量": "此為 GloVe(Global Vectors),先建共現矩陣再分解,不是局部窗口預測",
+          "用子詞 n-gram 平均合成詞向量,可處理 OOV 與形態變化": "此為 FastText,每個詞拆成 char n-gram 後平均,因此可表徵未登錄詞"
+        },
+        "hook": "Skip-gram 罕見詞贏(中心預測周圍);CBOW 高頻詞贏(周圍預測中心);GloVe 全域;FastText 子詞"
+      },
+      "misconceptions": ["把 Skip-gram 與 CBOW 預測方向倒置", "以為 GloVe 也是窗口預測"],
+      "related_node_ids": ["n_L21101_003", "n_L21101_004"],
+      "tags": ["matching", "NLP", "詞向量", "Word2Vec"]
+    },
+    {
+      "id": "q_pc_match_003",
+      "knowledge_code": "L23304",
+      "node_id": "n_L23304_005",
+      "subject": 3,
+      "format": "matching",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "輸出層設計時,『一張影像可能同時屬於多個類別(多標籤),例如 X 光片同時有肺炎+氣胸』,正確配對:**Sigmoid** ↔ ?",
+      "options": [
+        {"text": "每個輸出獨立壓縮到 [0,1],各類機率彼此獨立、可同時為高,適合二元或多標籤分類", "is_correct": true},
+        {"text": "對所有輸出做指數正規化使總和為 1,各類機率互斥,適合單一互斥多類別分類", "is_correct": false, "trap_type": "為 Softmax"},
+        {"text": "x>0 時恆等,x≤0 時為 0,可解決梯度消失,屬於隱藏層常用激活", "is_correct": false, "trap_type": "為 ReLU 隱藏層用"},
+        {"text": "輸出範圍 [-1,1] 且零中心,於 RNN 早期廣泛使用", "is_correct": false, "trap_type": "為 Tanh"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Sigmoid σ(x)=1/(1+e^{-x}) 對每個 logit 獨立做壓縮;由於不在類別維度做正規化,各輸出值彼此獨立,故適合『多標籤(可同時屬於多類)』與二元分類;X 光多病灶共存正是多標籤情境",
+        "wrong": {
+          "對所有輸出做指數正規化使總和為 1,各類機率互斥,適合單一互斥多類別分類": "此為 Softmax;σᵢ=e^{xᵢ}/Σe^{xⱼ},強制總和=1,故適合『互斥多類別』(只能屬於一類)",
+          "x>0 時恆等,x≤0 時為 0,可解決梯度消失,屬於隱藏層常用激活": "此為 ReLU(Rectified Linear Unit),為隱藏層激活,非輸出層概率函數",
+          "輸出範圍 [-1,1] 且零中心,於 RNN 早期廣泛使用": "此為 Tanh(雙曲正切),也是隱藏層激活,非分類輸出"
+        },
+        "hook": "Sigmoid 獨立壓縮 → 二元/多標籤;Softmax 互斥正規化 → 多類別;ReLU/Tanh 隱藏層用"
+      },
+      "misconceptions": ["把多標籤誤用 Softmax 導致機率被搶走", "輸出層用 ReLU 而忘了壓縮到機率"],
+      "related_node_ids": ["n_L23304_004", "n_L23304_005"],
+      "tags": ["matching", "激活函數", "Sigmoid", "Softmax"]
+    },
+    {
+      "id": "q_pc_match_004",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_005",
+      "subject": 3,
+      "format": "matching",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "面對『高方差(過擬合)模型且訓練資料量充足』,需用集成學習降低變異,正確配對:**Bagging** ↔ ?",
+      "options": [
+        {"text": "用 Bootstrap 重複抽樣訓練多個彼此獨立的弱模型,平行訓練後投票/平均;主要降低變異(variance)", "is_correct": true},
+        {"text": "弱模型串行訓練,後者針對前者錯誤樣本加權學習;主要降低偏差(bias)", "is_correct": false, "trap_type": "為 Boosting"},
+        {"text": "將多個異質模型輸出再餵給一個 meta-learner 學最佳組合", "is_correct": false, "trap_type": "為 Stacking 堆疊"},
+        {"text": "保留每個模型的訓練/驗證分數加權成最終分數", "is_correct": false, "trap_type": "為一般加權平均,非 Bagging 定義"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Bagging(Bootstrap Aggregating)=有放回隨機抽樣產生 N 個訓練子集,各自訓練獨立弱模型(可平行),最後分類投票/回歸平均;由於樣本+特徵的隨機性,各模型誤差去相關 → 主要降低 variance;Random Forest 為其代表",
+        "wrong": {
+          "弱模型串行訓練,後者針對前者錯誤樣本加權學習;主要降低偏差(bias)": "此為 Boosting(AdaBoost/GBDT/XGBoost);序列依賴無法平行,後輪特別關注前輪錯題",
+          "將多個異質模型輸出再餵給一個 meta-learner 學最佳組合": "此為 Stacking(堆疊),用第二層模型學習如何最佳組合第一層輸出",
+          "保留每個模型的訓練/驗證分數加權成最終分數": "此為一般加權平均融合,並非 Bagging 的『重抽樣訓練』機制"
+        },
+        "hook": "Bagging 平行降變異(獨立模型);Boosting 串行降偏差(序列加權);Stacking 元學習組合"
+      },
+      "misconceptions": ["把 Bagging 與 Boosting 的並行/序列性質互換", "以為 Random Forest 是 Boosting"],
+      "related_node_ids": ["n_L23303_004", "n_L23303_005"],
+      "tags": ["matching", "集成學習", "Bagging", "Boosting"]
+    },
+    {
+      "id": "q_pc_match_005",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_007",
+      "subject": 3,
+      "format": "matching",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "監控生產環境模型發現:『近三個月使用者輸入特徵 X 的分布明顯偏移,但 P(Y|X) 關係未變』,正確配對:**Data Drift** ↔ ?",
+      "options": [
+        {"text": "輸入特徵分布 P(X) 改變,但條件機率 P(Y|X) 不變,常因使用者群體或資料來源變化", "is_correct": true},
+        {"text": "X 與 Y 的條件關係 P(Y|X) 改變,即使 P(X) 不變模型也會失效", "is_correct": false, "trap_type": "為 Concept Drift"},
+        {"text": "標籤分布 P(Y) 變化(如類別不平衡程度改變)", "is_correct": false, "trap_type": "為 Label Drift / Prior Shift"},
+        {"text": "訓練與測試集都來自同一分布但模型本身退化", "is_correct": false, "trap_type": "邏輯錯誤,描述不存在的概念"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Data Drift(又稱 Covariate Shift)= 輸入分布 P(X) 偏移但 P(Y|X) 維持原樣;例如電商在某地區開新據點導致使用者年齡分布改變,但『年齡-購買』的關係未變;處理方式:重新訓練、重抽樣權重、特徵正規化",
+        "wrong": {
+          "X 與 Y 的條件關係 P(Y|X) 改變,即使 P(X) 不變模型也會失效": "此為 Concept Drift(概念漂移),即標籤產生機制改變,例如疫情後消費偏好結構性變化",
+          "標籤分布 P(Y) 變化(如類別不平衡程度改變)": "此為 Label Drift / Prior Probability Shift,僅 P(Y) 變但 P(X|Y) 不變",
+          "訓練與測試集都來自同一分布但模型本身退化": "並非標準 drift 類型;模型本身不會自我退化,退化現象本質都是分布變了"
+        },
+        "hook": "Data Drift = 輸入變(P(X) 變);Concept Drift = 關係變(P(Y|X) 變);Label Drift = 標籤先驗變(P(Y) 變)"
+      },
+      "misconceptions": ["把 Data Drift 與 Concept Drift 混為一談", "認為只要重訓就能解 Concept Drift"],
+      "related_node_ids": ["n_L23303_007", "n_L23303_008"],
+      "tags": ["matching", "MLOps", "資料漂移", "監控"]
+    },
+    {
+      "id": "q_pc_match_006",
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_004",
+      "subject": 1,
+      "format": "matching",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "公平性審查發現:『訓練集中女性履歷被人工標註為合格的比例異常低於男性,且文字標註者本身存在性別偏見』,正確配對:**Label Bias** ↔ ?",
+      "options": [
+        {"text": "標註者主觀偏見或標準不一致,使同樣特徵在不同群組上得到不同標籤", "is_correct": true},
+        {"text": "資料蒐集時某些群組被過度/不足代表,導致樣本分布與母體不符", "is_correct": false, "trap_type": "為 Sampling Bias"},
+        {"text": "歷史資料反映既存社會結構不公,模型放大歧視", "is_correct": false, "trap_type": "為 Historical Bias 歷史偏見"},
+        {"text": "模型對訓練分布內樣本表現好但對分布外樣本失效", "is_correct": false, "trap_type": "為 Distribution Shift,非偏見"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Label Bias(標註偏差)= 監督學習的 ground truth 本身受人為主觀影響;標註者性別刻板印象使『相同條件履歷』在女性身上被標 0,訓練後模型也學會這種偏見;緩解:多人標註交叉驗證、標註指南明確化、敏感群組事後校正",
+        "wrong": {
+          "資料蒐集時某些群組被過度/不足代表,導致樣本分布與母體不符": "此為 Sampling Bias(取樣偏差),例如只爬某論壇導致某族群缺席;與標註過程無關",
+          "歷史資料反映既存社會結構不公,模型放大歧視": "此為 Historical Bias,即使取樣完美、標註正確,歷史本身的不公仍會被學進模型",
+          "模型對訓練分布內樣本表現好但對分布外樣本失效": "此為 OOD/Distribution Shift 議題,屬於泛化問題,非『偏見』類別"
+        },
+        "hook": "Sampling 偏取樣;Label 偏標註;Historical 偏歷史;Drift 偏分布(非偏見而是泛化)"
+      },
+      "misconceptions": ["以為偏見只會發生在資料蒐集階段", "把標註偏差全歸咎於演算法"],
+      "related_node_ids": ["n_L21302_003", "n_L21302_004"],
+      "tags": ["matching", "AI 倫理", "Bias", "公平性"]
+    },
+    {
+      "id": "q_pc_match_007",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_002",
+      "subject": 3,
+      "format": "matching",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "癌症篩檢假設檢定中,『若 H0=健康為真,卻被誤判為有病、進行不必要侵入性檢查』,正確配對:**型一錯誤(Type I, α)** ↔ ?",
+      "options": [
+        {"text": "錯誤拒絕真實的虛無假設(False Positive),其機率為顯著水準 α", "is_correct": true},
+        {"text": "錯誤接受錯誤的虛無假設(False Negative),其機率為 β,1-β 即統計檢定力", "is_correct": false, "trap_type": "為 Type II 錯誤"},
+        {"text": "樣本變異數過大導致信賴區間過寬,無法達成顯著", "is_correct": false, "trap_type": "為 power/precision 議題,非 Type I"},
+        {"text": "實際分布為厚尾,t 檢定假設失效", "is_correct": false, "trap_type": "為 model assumption violation"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Type I error(α、誤拒)= H0 為真卻被拒絕,即『沒病被判有病』(False Positive);α 通常設 0.05,代表 5% 機率犯此誤;醫療篩檢中對應後續『多餘檢查/治療』的成本",
+        "wrong": {
+          "錯誤接受錯誤的虛無假設(False Negative),其機率為 β,1-β 即統計檢定力": "此為 Type II error(β、漏判);H0 為假卻沒拒絕,即『有病被判沒病』,癌症篩檢漏判致死風險高",
+          "樣本變異數過大導致信賴區間過寬,無法達成顯著": "此為 statistical power 不足或變異性過高,屬樣本/資料品質問題,非 Type I/II 定義",
+          "實際分布為厚尾,t 檢定假設失效": "此為違反模型假設(violation of assumption),屬於另一個構面"
+        },
+        "hook": "Type I 誤拒(α=False Positive,沒病判有病);Type II 漏判(β=False Negative,有病判沒病);1-β=檢定力"
+      },
+      "misconceptions": ["把 α 與 β 互換", "認為 α 越小越好(忽略相對 β 增大)"],
+      "related_node_ids": ["n_L23303_001", "n_L23303_002"],
+      "tags": ["matching", "統計檢定", "Type I/II", "假設檢定"]
+    },
+    {
+      "id": "q_pc_match_008",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_003",
+      "subject": 3,
+      "format": "matching",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "多類別文字分類中,『資料嚴重不平衡(類 A 9000 筆,類 B 50 筆,類 C 50 筆),希望小類也被公平評估』,正確配對:**Macro F1** ↔ ?",
+      "options": [
+        {"text": "對每個類別獨立計算 F1 後取算術平均,所有類別權重相同,小類也能影響整體分數", "is_correct": true},
+        {"text": "把所有類別的 TP/FP/FN 加總後再算單一 F1,大類因樣本多會主導分數", "is_correct": false, "trap_type": "為 Micro F1"},
+        {"text": "依各類樣本數加權平均各類 F1", "is_correct": false, "trap_type": "為 Weighted F1"},
+        {"text": "準確率(Accuracy)在所有類別上平均", "is_correct": false, "trap_type": "為 Balanced Accuracy 概念,非 F1"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Macro F1 = (F1_A + F1_B + F1_C) / 3;每個類別不論樣本多寡都佔 1/3 權重 → 小類表現差會大幅拉低分數;適合『關心每個類別的公平性』,如疾病分類、少數族群任務",
+        "wrong": {
+          "把所有類別的 TP/FP/FN 加總後再算單一 F1,大類因樣本多會主導分數": "此為 Micro F1;在多類分類中,Micro F1 = Micro Precision = Micro Recall = Accuracy(在每筆只屬一類時)",
+          "依各類樣本數加權平均各類 F1": "此為 Weighted F1;考慮類別大小但仍受大類主導,介於 Macro 與 Micro 之間",
+          "準確率(Accuracy)在所有類別上平均": "此為 Balanced Accuracy(各類 Recall 平均),不是 F1 家族指標"
+        },
+        "hook": "Macro=類別平等(每類同權);Micro=樣本平等(每筆同權);Weighted=按類大小加權"
+      },
+      "misconceptions": ["在不平衡資料下用 Micro F1 而誤判模型很好", "誤認 Macro F1 = Balanced Accuracy"],
+      "related_node_ids": ["n_L23303_002", "n_L23303_003"],
+      "tags": ["matching", "評估指標", "F1", "不平衡資料"]
+    },
+    {
+      "id": "q_pc_seq_001",
+      "knowledge_code": "L21102",
+      "node_id": "n_L21102_005",
+      "subject": 1,
+      "format": "sequence",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "請依正確順序排列『CNN 影像分類完整訓練流程』(從原始影像到上線監控)。",
+      "options": [
+        {"text": "影像資料載入 → 資料增強(翻轉/裁切/色彩抖動) → 切分 train/val/test → 定義 CNN 模型架構 → 模型訓練(forward/back-prop) → 驗證集調超參 → 測試集評估 → 部署上線", "is_correct": true},
+        {"text": "切分 train/val/test → 影像資料載入 → 定義 CNN 模型架構 → 資料增強 → 模型訓練 → 測試集評估 → 驗證集調超參 → 部署上線", "is_correct": false, "trap_type": "切分先於載入不合理,且驗證/測試順序倒置"},
+        {"text": "定義 CNN 模型架構 → 影像資料載入 → 資料增強 → 切分 train/val/test → 模型訓練 → 驗證集調超參 → 部署上線 → 測試集評估", "is_correct": false, "trap_type": "部署放在測試前,違反 ML 流程"},
+        {"text": "影像資料載入 → 切分 train/val/test → 定義 CNN 模型架構 → 模型訓練 → 資料增強 → 驗證集調超參 → 測試集評估 → 部署上線", "is_correct": false, "trap_type": "增強應在訓練『前/期間』而非訓練後"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "正確順序:(1)載入原始影像 (2)做資料增強(隨機翻轉、裁切、ColorJitter)以擴增有限資料 (3)切分 train/val/test 確保測試集潔淨 (4)定義 CNN(卷積/池化/全連接)架構 (5)以 forward/back-prop 訓練 (6)驗證集監控 loss 並調整 lr/正則化 (7)測試集做最終一次性評估 (8)模型上線部署並設定監控",
+        "wrong": {
+          "切分 train/val/test → 影像資料載入 → 定義 CNN 模型架構 → 資料增強 → 模型訓練 → 測試集評估 → 驗證集調超參 → 部署上線": "資料還沒載入怎麼切分?且測試集只能在最終評估,不可拿來調超參(否則洩漏)",
+          "定義 CNN 模型架構 → 影像資料載入 → 資料增強 → 切分 train/val/test → 模型訓練 → 驗證集調超參 → 部署上線 → 測試集評估": "未經測試集評估即部署是嚴重 ML 工程風險,測試必先於上線",
+          "影像資料載入 → 切分 train/val/test → 定義 CNN 模型架構 → 模型訓練 → 資料增強 → 驗證集調超參 → 測試集評估 → 部署上線": "資料增強通常在 DataLoader 中即時做(隨每 epoch 重採),不會排在訓練之後"
+        },
+        "hook": "口訣:『載增切定訓驗測署』 — 載入→增強→切分→定義→訓練→驗證→測試→部署"
+      },
+      "misconceptions": ["把資料增強放在訓練之後", "用測試集調超參(資料洩漏)", "未驗證即上線"],
+      "related_node_ids": ["n_L21102_004", "n_L21102_005"],
+      "tags": ["sequence", "CNN", "ML pipeline", "影像"]
+    },
+    {
+      "id": "q_pc_seq_002",
+      "knowledge_code": "L21101",
+      "node_id": "n_L21101_007",
+      "subject": 1,
+      "format": "sequence",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "請依正確順序排列『BERT 預訓練模型應用於下游情感分類任務的微調流程』。",
+      "options": [
+        {"text": "載入預訓練 BERT 權重 → 文本 Tokenization 與加 [CLS]/[SEP] → 接上分類頭(全連接層) → 凍結底層編碼器(可選) → 用下游標註資料微調 → 驗證/測試集評估 → 推論部署 → 監控與重訓觸發", "is_correct": true},
+        {"text": "文本 Tokenization → 載入預訓練 BERT 權重 → 用下游標註資料微調 → 接上分類頭 → 凍結底層編碼器 → 驗證評估 → 監控與重訓 → 推論部署", "is_correct": false, "trap_type": "微調在加分類頭前,順序錯誤"},
+        {"text": "載入預訓練 BERT 權重 → 接上分類頭 → 凍結底層編碼器 → 文本 Tokenization → 用下游標註資料微調 → 推論部署 → 驗證評估 → 監控與重訓", "is_correct": false, "trap_type": "Tokenization 應在訓練前,評估在部署後不合理"},
+        {"text": "載入預訓練 BERT 權重 → 文本 Tokenization → 用下游資料微調 → 接上分類頭 → 凍結底層編碼器 → 驗證評估 → 推論部署 → 監控與重訓", "is_correct": false, "trap_type": "未加分類頭如何微調?"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "BERT 微調標準八步:(1)載入預訓練權重 (2)用對應 tokenizer 切詞並加 [CLS]/[SEP] 與 padding/mask (3)在 [CLS] 之上接 Dense+Softmax 分類頭 (4)若資料少,凍結底層或低 lr 部分微調以避免災難遺忘 (5)以下游標註資料微調(常用 AdamW、lr=2e-5) (6)驗證/測試集評估 F1/Accuracy (7)推論部署(轉 ONNX/TorchScript) (8)上線後監控漂移觸發重訓",
+        "wrong": {
+          "文本 Tokenization → 載入預訓練 BERT 權重 → 用下游標註資料微調 → 接上分類頭 → 凍結底層編碼器 → 驗證評估 → 監控與重訓 → 推論部署": "未加分類頭就微調等於只更新編碼器,沒輸出層;且部署應在監控前",
+          "載入預訓練 BERT 權重 → 接上分類頭 → 凍結底層編碼器 → 文本 Tokenization → 用下游標註資料微調 → 推論部署 → 驗證評估 → 監控與重訓": "Tokenization 是進模型前的資料前處理,必先於訓練;且未驗證即部署有風險",
+          "載入預訓練 BERT 權重 → 文本 Tokenization → 用下游資料微調 → 接上分類頭 → 凍結底層編碼器 → 驗證評估 → 推論部署 → 監控與重訓": "分類頭必須先存在才能訓練;且凍結需在開始微調前決定"
+        },
+        "hook": "口訣:『載切頭凍調驗署監』 — 載權重→切 token→加分類頭→凍結→微調→驗證→部署→監控"
+      },
+      "misconceptions": ["未加分類頭就嘗試微調", "用錯 tokenizer(必須與預訓練一致)", "微調時 lr 過大造成災難遺忘"],
+      "related_node_ids": ["n_L21101_006", "n_L21101_007"],
+      "tags": ["sequence", "NLP", "BERT", "Fine-tuning"]
+    },
+    {
+      "id": "q_pc_seq_003",
+      "knowledge_code": "L21203",
+      "node_id": "n_L21203_005",
+      "subject": 1,
+      "format": "sequence",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "請依正確順序排列『歐盟 GDPR 個人資料保護合規導入流程』(企業首次合規路徑)。",
+      "options": [
+        {"text": "個人資料盤點(Data Mapping) → 確立法律基礎(同意/契約/合法利益) → 取得當事人同意/通知 → 實施資料安全維護措施 → 建立資料主體權利響應機制(查閱/更正/刪除) → 跨境傳輸合法性評估 → 高風險處理執行 DPIA → 持續監督與內部稽核", "is_correct": true},
+        {"text": "確立法律基礎 → 個人資料盤點 → 跨境傳輸評估 → 取得當事人同意 → 主體權利響應機制 → 實施安全措施 → 持續監督 → 高風險 DPIA", "is_correct": false, "trap_type": "未先盤點如何確立基礎?DPIA 應在識別高風險後盡早做"},
+        {"text": "取得當事人同意 → 個人資料盤點 → 確立法律基礎 → 實施安全措施 → 跨境傳輸評估 → DPIA → 主體權利響應 → 持續監督", "is_correct": false, "trap_type": "未盤點未確立法律基礎就先取得同意,違反 GDPR 透明原則"},
+        {"text": "個人資料盤點 → 取得當事人同意 → 確立法律基礎 → 實施安全措施 → DPIA → 跨境傳輸評估 → 主體權利響應 → 持續監督", "is_correct": false, "trap_type": "同意只是六種法律基礎之一,不能在『確立法律基礎』前先取得"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "GDPR 合規導入八步:(1)Data Mapping 盤點所有個資流程與儲存 (2)依 Art.6 從同意/契約/法律義務/重大利益/公共任務/合法利益六種中選擇法律基礎 (3)若以同意為基礎則明確取得;否則為對應通知 (4)落實 Art.32 安全措施(加密、存取控制、備份) (5)建立 Art.15-22 資料主體權利響應流程(查閱/更正/刪除/可攜) (6)若涉跨境(EU 出 EEA)依 Art.44-49 評估 SCC/BCR/充足性決定 (7)高風險處理(大規模特殊類別、自動化決策)依 Art.35 進行 DPIA (8)持續監督、內部稽核、必要時通報 DPA",
+        "wrong": {
+          "確立法律基礎 → 個人資料盤點 → 跨境傳輸評估 → 取得當事人同意 → 主體權利響應機制 → 實施安全措施 → 持續監督 → 高風險 DPIA": "未盤點則不知有哪些資料需確立基礎;DPIA 必須在『高風險處理開始前』而非最後做",
+          "取得當事人同意 → 個人資料盤點 → 確立法律基礎 → 實施安全措施 → 跨境傳輸評估 → DPIA → 主體權利響應 → 持續監督": "未盤點、未確立基礎就先取得同意違反『資料最小化+透明』原則,且同意僅為六基礎之一",
+          "個人資料盤點 → 取得當事人同意 → 確立法律基礎 → 實施安全措施 → DPIA → 跨境傳輸評估 → 主體權利響應 → 持續監督": "邏輯顛倒:應先確立『法律基礎』,而同意只是其中一種;若契約必要根本不需同意"
+        },
+        "hook": "口訣:『盤基同安權跨D監』 — 盤點→法律基礎→同意/通知→安全→權利→跨境→DPIA→監督"
+      },
+      "misconceptions": ["把『同意』當作唯一合法依據", "DPIA 在事後做(GDPR 要求事前)", "忘記跨境傳輸需獨立評估"],
+      "related_node_ids": ["n_L21203_004", "n_L21203_005"],
+      "tags": ["sequence", "法規", "GDPR", "合規"]
+    },
+    {
+      "id": "q_pc_seq_004",
+      "knowledge_code": "L23304",
+      "node_id": "n_L23304_008",
+      "subject": 3,
+      "format": "sequence",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "請依正確順序排列『使用 AutoML 平台進行模型自動選擇與導入』流程。",
+      "options": [
+        {"text": "問題定義與目標指標 → 資料探索與品質評估 → 特徵工程與資料前處理 → AutoML 模型搜索(NAS/HPO) → 候選模型對比與排名 → 最佳模型微調與校準 → 模型部署 → 持續學習與重訓觸發", "is_correct": true},
+        {"text": "資料探索 → 問題定義 → AutoML 搜索 → 特徵工程 → 模型對比 → 部署 → 微調 → 持續學習", "is_correct": false, "trap_type": "問題定義應在探索前;微調在部署後不合理"},
+        {"text": "問題定義 → 特徵工程 → 資料探索 → AutoML 搜索 → 微調 → 模型對比 → 部署 → 持續學習", "is_correct": false, "trap_type": "未探索就做特徵工程很危險;對比應在搜索後微調前"},
+        {"text": "問題定義 → 資料探索 → AutoML 搜索 → 特徵工程 → 模型對比 → 微調 → 部署 → 持續學習", "is_correct": false, "trap_type": "AutoML 搜索通常已含基本前處理,但顯式特徵工程應先於搜索以確保特徵品質"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "AutoML 標準八步:(1)業務問題明確化(分類/回歸/排序)、定主指標(F1/AUC/MAPE) (2)EDA 看缺值、分布、相關性、目標分布 (3)做基本特徵工程(類別編碼、缺值填補、標準化、衍生特徵) (4)啟動 AutoML(同時做 NAS 神經結構搜索與 HPO 超參搜索) (5)候選模型在 hold-out 集對比(精度/推論延遲/模型大小) (6)選最佳模型,做門檻校準、機率校準(Platt/Isotonic) (7)封裝成 API/容器部署 (8)上線後監控漂移、定期重訓",
+        "wrong": {
+          "資料探索 → 問題定義 → AutoML 搜索 → 特徵工程 → 模型對比 → 部署 → 微調 → 持續學習": "未先定義問題就探索資料像沒地圖在探險;且部署後再微調是反向操作",
+          "問題定義 → 特徵工程 → 資料探索 → AutoML 搜索 → 微調 → 模型對比 → 部署 → 持續學習": "特徵工程必須建立在 EDA 發現上,順序倒置;微調在對比之前無法選最佳",
+          "問題定義 → 資料探索 → AutoML 搜索 → 特徵工程 → 模型對比 → 微調 → 部署 → 持續學習": "若把基本特徵工程放在 AutoML 之後,搜索器是用未處理資料找最佳模型,結果並不可靠"
+        },
+        "hook": "口訣:『定探特搜對調署續』 — 定問題→探資料→特徵→搜索→對比→微調→部署→持續"
+      },
+      "misconceptions": ["以為 AutoML 不需要特徵工程", "把模型部署放在對比/微調之前", "未做機率校準就用 AutoML 模型輸出機率做業務決策"],
+      "related_node_ids": ["n_L23304_007", "n_L23304_008"],
+      "tags": ["sequence", "AutoML", "ML pipeline", "模型選擇"]
+    },
+    {
+      "id": "q_pc_calc_001",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_002",
+      "subject": 3,
+      "format": "calculation",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某醫療診斷模型在測試集得到混淆矩陣:TP={tp}、FP={fp}、FN={fn}、TN={tn}。請計算 F1-Score(取小數點後三位四捨五入)。",
+      "stem_variables": {
+        "case_a": {"tp": "60", "fp": "20", "fn": "10", "tn": "910", "answer": "0.800", "wrong1": "0.857", "wrong2": "0.667", "wrong3": "0.750"},
+        "case_b": {"tp": "45", "fp": "15", "fn": "30", "tn": "910", "answer": "0.667", "wrong1": "0.750", "wrong2": "0.600", "wrong3": "0.692"},
+        "case_c": {"tp": "100", "fp": "50", "fn": "10", "tn": "840", "answer": "0.769", "wrong1": "0.667", "wrong2": "0.909", "wrong3": "0.833"},
+        "case_d": {"tp": "80", "fp": "40", "fn": "20", "tn": "860", "answer": "0.727", "wrong1": "0.667", "wrong2": "0.800", "wrong3": "0.690"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "只算 Recall 或 Precision 之一"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "用算術平均而非調和平均"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "分母錯用 (TP+FP+FN+TN)"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "F1 = 2·P·R/(P+R),其中 P=TP/(TP+FP),R=TP/(TP+FN);以 case_a 為例:P=60/80=0.75,R=60/70≈0.857,F1=2·0.75·0.857/(0.75+0.857)≈0.800;F1 是 P 與 R 的調和平均,對極端值更敏感",
+        "wrong": {
+          "{wrong1}": "此值通常是只算 P 或 R,未做調和平均;F1 必須兩者皆計算後再合成",
+          "{wrong2}": "此值來自算術平均 (P+R)/2,但 F1 是調和平均 2PR/(P+R),數值通常較算術平均小",
+          "{wrong3}": "此值疑似算成 Accuracy=(TP+TN)/全體,Accuracy 在類別不平衡時會誤導,F1 則只看正類"
+        },
+        "hook": "F1 口訣:『兩倍 PR 比 P 加 R』(調和平均);Accuracy 看全體,F1 只看正類"
+      },
+      "misconceptions": ["把 F1 算成 (P+R)/2 算術平均", "在類別不平衡時用 Accuracy 取代 F1", "忘記 F1 範圍為 [0,1]"],
+      "related_node_ids": ["n_L23303_001", "n_L23303_002"],
+      "tags": ["calculation", "F1", "混淆矩陣", "醫療"]
+    },
+    {
+      "id": "q_pc_calc_002",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_003",
+      "subject": 3,
+      "format": "calculation",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "電商平台分析購物籃,發現 P(購買 A)={pa}、P(購買 B)={pb}、P(同時購買 A 和 B)={pab}。請計算關聯規則 A→B 的 Lift 值(取兩位小數)。",
+      "stem_variables": {
+        "case_a": {"pa": "0.20", "pb": "0.10", "pab": "0.05", "answer": "2.50", "wrong1": "0.50", "wrong2": "0.25", "wrong3": "1.50"},
+        "case_b": {"pa": "0.40", "pb": "0.30", "pab": "0.20", "answer": "1.67", "wrong1": "0.67", "wrong2": "0.50", "wrong3": "1.20"},
+        "case_c": {"pa": "0.30", "pb": "0.20", "pab": "0.06", "answer": "1.00", "wrong1": "0.30", "wrong2": "0.20", "wrong3": "0.50"},
+        "case_d": {"pa": "0.50", "pb": "0.40", "pab": "0.30", "answer": "1.50", "wrong1": "0.60", "wrong2": "0.75", "wrong3": "1.20"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤算為 Confidence(P(B|A)=P(AB)/P(A))"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤算為 Support(P(AB))×某倍數"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "分母誤用 P(A)+P(B) 或其他組合"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Lift(A→B) = P(A∩B) / (P(A)·P(B)) = Confidence(A→B) / P(B);以 case_a 為例:Lift = 0.05/(0.20·0.10) = 0.05/0.02 = 2.50,代表買 A 後再買 B 的機率是隨機買 B 的 2.5 倍;Lift>1 正相關、=1 獨立、<1 負相關",
+        "wrong": {
+          "{wrong1}": "此值疑似 Confidence = P(B|A) = P(AB)/P(A);Confidence 不會除以 P(B),無法判斷是否優於隨機",
+          "{wrong2}": "此值疑似 Support 或其變體;Support = P(AB) 只看共現頻率,未做基準比較",
+          "{wrong3}": "分母誤用 P(A)+P(B) 等不正確組合;Lift 分母必須是 P(A)·P(B)(獨立假設下的期望共現)"
+        },
+        "hook": "Lift 口訣:『實際 比 獨立期望』(Lift = P(AB) / [P(A)·P(B)]);Lift>1 才有推薦價值"
+      },
+      "misconceptions": ["把 Lift 與 Confidence 混淆", "認為 Support 高就是好規則", "忽略 Lift=1 代表 A、B 獨立"],
+      "related_node_ids": ["n_L23202_002", "n_L23202_003"],
+      "tags": ["calculation", "關聯規則", "Lift", "電商"]
+    },
+    {
+      "id": "q_pc_calc_003",
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_006",
+      "subject": 1,
+      "format": "calculation",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某企業導入 AI 客服系統,初期投資 {cost} 萬元,系統運作一年後創造收益 {gain} 萬元。請計算投資報酬率 ROI(以百分比表示,取整數)。",
+      "stem_variables": {
+        "case_a": {"cost": "200", "gain": "260", "answer": "30%", "wrong1": "130%", "wrong2": "23%", "wrong3": "60%"},
+        "case_b": {"cost": "500", "gain": "800", "answer": "60%", "wrong1": "160%", "wrong2": "37%", "wrong3": "300%"},
+        "case_c": {"cost": "100", "gain": "150", "answer": "50%", "wrong1": "150%", "wrong2": "33%", "wrong3": "67%"},
+        "case_d": {"cost": "400", "gain": "440", "answer": "10%", "wrong1": "110%", "wrong2": "9%", "wrong3": "40%"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤算為 (Gain/Cost)×100%(未扣成本)"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "分母誤用 Gain 而非 Cost"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "用淨利除以一個錯誤分母"}
+      ],
+      "shuffle_options": true,
+      "options_template_note": "ROI = (Gain - Cost) / Cost × 100%",
+      "explanation": {
+        "correct": "ROI =(收益 - 成本)/ 成本 × 100%;以 case_a 為例:ROI = (260-200)/200 × 100% = 30%,代表每投入 1 元獲得 0.3 元淨利;ROI 是 AI 投資評估的核心指標,應與 NPV、IRR、Payback Period 一併分析",
+        "wrong": {
+          "{wrong1}": "此值疑似算成 Gain/Cost(總收益比),未扣除成本;會嚴重高估投資效益",
+          "{wrong2}": "此值疑似把分母從 Cost 換成 Gain,屬定義錯誤;ROI 永遠以投入成本為基準",
+          "{wrong3}": "此值來自不正確的扣除/除法組合;ROI 必須是淨利除以投入成本"
+        },
+        "hook": "ROI 口訣:『淨利 除以 投入』((Gain-Cost)/Cost);別把總收益當 ROI"
+      },
+      "misconceptions": ["把總收益比當 ROI", "忽略時間因素(應同時看 IRR/Payback)", "ROI 為負時忽視沉沒成本"],
+      "related_node_ids": ["n_L21302_005", "n_L21302_006"],
+      "tags": ["calculation", "ROI", "AI 投資評估", "商業分析"]
+    }
+  ]
+}
