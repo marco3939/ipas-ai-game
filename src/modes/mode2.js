@@ -89,13 +89,16 @@
     return RNG.shuffle(list);
   }
 
-  // 動態調整 BOSS HP 以匹配實際存活題數(避免題庫被刪後出現「打不完」的情況)
-  // 公式:每題預期約 35 HP(約 lvl 1 玩家 1~2 擊),HP 下限保留 50,最高不超過原 hp
+  // 動態調整 BOSS HP 以匹配實際存活題數(避免題庫被刪後出現「打不完」殘血的視覺殘留)
+  // 公式對齊 lvl 1 baseDmg≈27:每題 25 HP 為最低保證玩家答對全題能歸零 BOSS,最高不超過原 hp
+  // 1 題 BOSS:25 HP → 1 hit 27 dmg 可清(probability)
+  // 2 題 BOSS:50 HP → 2 hits 54 dmg 可清(pytorch reduced / pandas)
+  // 5 題 BOSS:125 HP(被原 140 cap)→ 5 hits 135 dmg 可清(numpy)
   function effectiveBossHp(boss, qcount) {
     if (qcount <= 0) return 0;
-    const perQ = 35;
+    const perQ = 25;
     const calc = qcount * perQ;
-    return Math.min(boss.hp, Math.max(50, calc));
+    return Math.min(boss.hp, Math.max(perQ, calc));
   }
 
   // === 招式系統 ===
@@ -109,6 +112,9 @@
 
     start() {
       this.stopTypeText();
+      // 清掉殘留 state(避免從戰鬥中按「退避」回地圖後,先前 takeDamage 排好的
+      // 1.5s gameOver setTimeout 仍會用 state.gameOverPending 觸發,把地圖蓋掉)
+      this.state = null;
       RNG.set(Date.now());
       this.renderMap();
     },

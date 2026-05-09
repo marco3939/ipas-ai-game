@@ -538,10 +538,16 @@
         showToast('⚠️ 此知識點變化型不足,繼續戰鬥', 2500);
         return;
       }
+      // QA Round2:清掉 takeDamage 排的 gameOver timer(若 HP=0 後立即下鑽,
+      // 否則 1.5s 後 gameOver 會把 view-play 寫成「你倒下了」蓋掉下鑽中的題目)
+      this._clearAllTimers();
       // 下鑽完成後返回戰鬥(不回首頁),繼續下一回合
       DrillSession.start(this.state.currentQ.node_id, variations, this.state.currentQ, () => {
         // QA 修補:若中途使用者已切回主地圖,state 可能被清,直接放棄
         if (!this.state) return;
+        // 若 HP 已歸 0(下鑽前 takeDamage 觸發但 timer 已被清),改走 gameOver
+        const p = Player.load();
+        if (p.hp <= 0) { this.gameOver(); return; }
         this.renderBattle();   // 重建戰鬥介面(因為 view-play 已被 DrillSession 覆蓋)
         this.next();           // 進到下一回合
       });
@@ -646,7 +652,10 @@
     },
 
     gameOver() {
-      Player.heal(50);
+      // QA Round2:文案說「恢復一半 HP」,Player.heal(50) 在 Lv1 hpMax=100 時剛好 50%,
+      // 但升級後 hpMax 增加(每級 +20),50 點就低於一半。改為 Math.floor(hpMax/2) 一致化。
+      const before = Player.load();
+      Player.heal(Math.floor(before.hpMax / 2));
       const view = document.getElementById('view-play');
       view.innerHTML = `
         <div class="battle-arena" style="text-align:center">

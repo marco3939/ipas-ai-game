@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body>
+<button id="btn1" onclick="lexicalConst.test()">Click 1: const</button>
+<button id="btn2" onclick="windowAssigned.test()">Click 2: window assigned</button>
+<button id="btn3" onclick="varDeclared.test()">Click 3: var</button>
+<button id="btn4" onclick="funcDeclared.test()">Click 4: function</button>
+<div id="result"></div>
+<script>
+const lexicalConst = { test() { document.getElementById('result').textContent = 'const OK'; } };
+var varDeclared = { test() { document.getElementById('result').textContent = 'var OK'; } };
+function funcDeclared() {} funcDeclared.test = () => { document.getElementById('result').textContent = 'function OK'; };
+window.windowAssigned = { test() { document.getElementById('result').textContent = 'window OK'; } };
+
+// 自動測試:嘗試從 inline onclick 角度解析
+console.log('Top-level inventory:');
+console.log('  typeof lexicalConst:', typeof lexicalConst);  // 'object'
+console.log('  window.lexicalConst:', window.lexicalConst);  // undefined!
+console.log('  typeof varDeclared:', typeof varDeclared);
+console.log('  window.varDeclared:', window.varDeclared);    // 物件
+console.log('  window.funcDeclared:', window.funcDeclared);
+console.log('  window.windowAssigned:', window.windowAssigned);
+
+// 自動觸發點擊測試
+setTimeout(() => {
+  document.getElementById('btn1').click();
+  setTimeout(() => console.log('After btn1 click, result:', document.getElementById('result').textContent), 50);
+}, 100);
+</script>
+</body>
+</html>

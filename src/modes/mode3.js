@@ -173,7 +173,7 @@
     },
 
     getStages() {
-      const all = (window.QUESTIONS || []).filter(q => q.format === 'sequence');
+      const all = (typeof QUESTIONS !== 'undefined' ? QUESTIONS : []).filter(q => q.format === 'sequence');
       // 鐵律 #5:只用題庫內既有的;若不足就只開放實際存在的
       return all;
     },
@@ -270,7 +270,7 @@
     },
 
     selectStage(qid) {
-      const q = (window.QUESTIONS || []).find(x => x.id === qid);
+      const q = (typeof QUESTIONS !== 'undefined' ? QUESTIONS : []).find(x => x.id === qid);
       if (!q) { showToast('找不到此題'); return; }
       const correct = q.options.find(o => o.is_correct);
       const steps = parseSteps(correct ? correct.text : '');
@@ -312,6 +312,16 @@
       if (this.timer) { clearInterval(this.timer); this.timer = null; }
       this.timer = setInterval(() => {
         if (!this.state || this.state.finished) { clearInterval(this.timer); this.timer = null; return; }
+        // 防呆:若使用者已離開 play view(例如點 header 🏠 首頁),靜默清理,不要強拉回敗北畫面
+        const playView = document.getElementById('view-play');
+        if (!playView || !playView.classList.contains('active')) {
+          clearInterval(this.timer); this.timer = null;
+          if (this.state) this.state.finished = true;
+          this._placeCooldown = false;
+          this._dragCardId = null;
+          this._cleanupGhosts && this._cleanupGhosts();
+          return;
+        }
         this.state.timeLeft--;
         if (this.state.timeLeft < 0) this.state.timeLeft = 0;
         const el = document.getElementById('m3-timer');
@@ -769,7 +779,10 @@
       s.used.autoplace++;
       // 把該卡放對位置
       this.tryPlace(card.id, slotIdx);
-      showToast('✨ 已自動定位第 ' + (slotIdx + 1) + ' 格');
+      // tryPlace 可能已觸發 victory(全對最後一格),此時 state 已 finished,不再彈 toast 干擾結算畫面
+      if (this.state && !this.state.finished) {
+        showToast('✨ 已自動定位第 ' + (slotIdx + 1) + ' 格');
+      }
     },
 
     skillHint() {

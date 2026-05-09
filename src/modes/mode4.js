@@ -15,7 +15,7 @@
   // ===== 從題庫抽出配對對 =====
   // 鐵律 #5:絕不自造,僅取 format='matching' 題目的「**中心概念** ↔ 正確選項」
   function extractPairs() {
-    const matches = (window.QUESTIONS || []).filter(q => q.format === 'matching');
+    const matches = (typeof QUESTIONS !== 'undefined' ? QUESTIONS : []).filter(q => q.format === 'matching');
     const pairs = [];
     for (const q of matches) {
       const m = (q.stem || '').match(/\*\*(.+?)\*\*/);
@@ -539,16 +539,21 @@
         .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
       const conceptA = esc(pairA && pairA.concept);
       const conceptB = esc(pairB && pairB.concept);
-      const pairIdSafe = esc(pairA && pairA.pairId || '');
+      // pairId 透過 addEventListener 傳遞,避免將任何字元嵌進 inline onclick(消除 HTML 屬性 → JS 字串雙重解碼風險)
+      const pairId = (pairA && pairA.pairId) || '';
       t.innerHTML = `
         <div style="color:#f87171;font-weight:700;margin-bottom:4px">❌ 配對失敗</div>
         <div style="color:var(--fg-dim);margin-bottom:6px">「${conceptA}」 ✗ 「${conceptB}」 不是同一對</div>
         <div style="display:flex;gap:6px">
-          <button class="btn btn-warn" style="padding:4px 10px;font-size:0.8rem" onclick="Mode4.drillThis('${pairIdSafe}')">🎯 立即下鑽變化型</button>
-          <button class="btn btn-ghost" style="padding:4px 10px;font-size:0.8rem" onclick="document.getElementById('m4-mismatch-toast')?.remove()">關閉</button>
+          <button class="btn btn-warn" data-action="drill" style="padding:4px 10px;font-size:0.8rem">🎯 立即下鑽變化型</button>
+          <button class="btn btn-ghost" data-action="close" style="padding:4px 10px;font-size:0.8rem">關閉</button>
         </div>
       `;
       document.body.appendChild(t);
+      const drillBtn = t.querySelector('[data-action="drill"]');
+      const closeBtn = t.querySelector('[data-action="close"]');
+      if (drillBtn) drillBtn.addEventListener('click', () => this.drillThis(pairId));
+      if (closeBtn) closeBtn.addEventListener('click', () => { const el = document.getElementById('m4-mismatch-toast'); if (el) el.remove(); });
       setTimeout(() => { const el = document.getElementById('m4-mismatch-toast'); if (el === t) t.remove(); }, 4500);
     },
 

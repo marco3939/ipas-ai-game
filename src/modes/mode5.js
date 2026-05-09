@@ -47,12 +47,14 @@
   // Step 3: 若 Wrongbook 為空(新玩家),fallback 隨機 3 個節點
   function selectWeakBosses() {
     const sources = []; // { nodeId, weak, source }
+    // 預先建一個「題庫真的有題目可用」的 nodeId 集合,用於 Step 1/2/3 全域過濾,
+    // 避免 Wrongbook / Mastery 殘留指向已刪題目的 nodeId(stale node)導致 BOSS 名單卡空。
+    const liveNodeSet = new Set(QUESTIONS.map(q => q.node_id).filter(Boolean));
 
-    // Step 1:Wrongbook 聚合
-    const wb = Wrongbook.load().filter(x => !x.mastered && x.nodeId);
+    // Step 1:Wrongbook 聚合(只取題庫仍存在的 nodeId)
+    const wb = Wrongbook.load().filter(x => !x.mastered && x.nodeId && liveNodeSet.has(x.nodeId));
     const nodeWrongCount = {};
     wb.forEach(x => {
-      if (!x.nodeId) return;
       nodeWrongCount[x.nodeId] = (nodeWrongCount[x.nodeId] || 0) + (x.wrongCount || 1);
     });
     const sortedWrong = Object.entries(nodeWrongCount)
@@ -61,13 +63,14 @@
       .map(([nodeId, count]) => ({ nodeId, weak: count, source: 'wrongbook' }));
     sources.push(...sortedWrong);
 
-    // Step 2:Mastery < 0.4 補進(若名單尚未滿 5 個)
+    // Step 2:Mastery < 0.4 補進(只取題庫仍存在的 nodeId,若名單尚未滿 5 個)
     if (sources.length < 5) {
       const m = Mastery.load();
       const existing = new Set(sources.map(s => s.nodeId));
       const lowMastery = Object.entries(m)
         .filter(([nodeId, node]) =>
           !existing.has(nodeId) &&
+          liveNodeSet.has(nodeId) &&
           (node.attempts || 0) > 0 &&
           (node.score || 0) < MASTERY_WEAK_THRESHOLD
         )
@@ -77,15 +80,14 @@
       sources.push(...lowMastery);
     }
 
-    // Step 3:新玩家 fallback —— Wrongbook 空、Mastery 也少 → 隨機 3 個 node
+    // Step 3:新玩家 fallback —— 沒任何 valid 弱點資料時,隨機 3 個 node
     if (sources.length === 0) {
-      const allNodes = [...new Set(QUESTIONS.map(q => q.node_id).filter(Boolean))];
-      const picks = RNG.pickN(allNodes, Math.min(3, allNodes.length));
+      const picks = RNG.pickN([...liveNodeSet], Math.min(3, liveNodeSet.size));
       picks.forEach(nodeId => sources.push({ nodeId, weak: 1, source: 'fallback' }));
     }
 
-    // 過濾:必須題庫真的有題目可用
-    const validBosses = sources.filter(s => QUESTIONS.some(q => q.node_id === s.nodeId));
+    // 雙保險:即使前面已過濾,仍再做一次 sanity check(液態題庫變動或 stub 失效)
+    const validBosses = sources.filter(s => liveNodeSet.has(s.nodeId));
     return validBosses.slice(0, 5);
   }
 
