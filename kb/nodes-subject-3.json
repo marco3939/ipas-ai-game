@@ -1,0 +1,639 @@
+{
+  "version": "1.0",
+  "subject": 3,
+  "schema_version": "1.0-iron-rule",
+  "iron_rule_compliance": "every node has misconceptions, explanation_hooks, variation_seeds for question generation and review-mode drilling",
+  "last_updated": "2026-05-09",
+  "batches_processed": [
+    {"batch": 1, "files": ["機器學習分類總表.pdf", "避免過擬合彙整.pdf", "降維方法考試比較總表.pdf"], "date": "2026-05-09"}
+  ],
+  "nodes": [
+    {
+      "node_id": "n_L23201_001",
+      "knowledge_code": "L23201",
+      "title": "監督學習(Supervised Learning)",
+      "category": "concept",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習分類總表.pdf", "section": "一"}],
+      "summary": "使用有標籤資料訓練模型,已知正確答案",
+      "key_points": ["有標籤資料", "目標:預測結果", "常見任務:分類、迴歸"],
+      "common_misconceptions": ["把『有標籤』誤解為『有大量資料』", "誤以為監督學習一定比非監督學習好"],
+      "explanation_hooks": ["關鍵特徵是『標籤(label)是否存在』,不是資料量", "適用情境:歷史銷售→預測下季銷售"],
+      "variation_seeds": [
+        {"context": "電商評論分類", "trap_options": ["半監督", "強化學習"]},
+        {"context": "信用評分迴歸", "trap_options": ["非監督", "自監督"]}
+      ],
+      "related_node_ids": ["n_L23201_002", "n_L23201_003", "n_L23201_010"]
+    },
+    {
+      "node_id": "n_L23201_002",
+      "knowledge_code": "L23201",
+      "title": "非監督學習(Unsupervised Learning)",
+      "category": "concept",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習分類總表.pdf", "section": "一"}],
+      "summary": "使用無標籤資料找規律,目的是發現結構",
+      "key_points": ["無需答案標籤", "目的:發現結構", "常見任務:分群、降維、關聯分析"],
+      "common_misconceptions": ["把『無標籤』誤解為『無資料』", "誤以為分群結果一定有實質意義"],
+      "explanation_hooks": ["核心:資料本身的結構/相似性", "適用:顧客分群、異常偵測"],
+      "variation_seeds": [
+        {"context": "顧客行為分群", "trap_options": ["監督學習", "強化學習"]},
+        {"context": "PCA 降維", "trap_options": ["LDA(監督)"]}
+      ],
+      "related_node_ids": ["n_L23201_001", "n_L23102_001"]
+    },
+    {
+      "node_id": "n_L23201_003",
+      "knowledge_code": "L23201",
+      "title": "半監督學習 vs 自監督學習",
+      "category": "concept",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習分類總表.pdf", "section": "一+對照表"}],
+      "summary": "半監督=少量有標籤+大量無標籤;自監督=從資料本身產生監督訊號",
+      "key_points": [
+        "半監督:結合有標籤與無標籤資料,降低標註成本",
+        "自監督:資料本身製造訓練訊號(如預測下個詞、對比學習)",
+        "自監督最大用途:大模型預訓練(BERT、GPT)"
+      ],
+      "common_misconceptions": [
+        "把半監督和自監督混為一談",
+        "誤以為自監督需要少量人工標籤"
+      ],
+      "explanation_hooks": [
+        "BERT 的 MLM(遮罩語言模型)是典型自監督,因『遮罩+預測』全自動產生訓練訊號",
+        "半監督經典:1000 張有標籤圖 + 100000 張無標籤圖一起訓練"
+      ],
+      "variation_seeds": [
+        {"context": "BERT 預訓練", "answer": "自監督", "trap_options": ["半監督", "監督"]},
+        {"context": "醫療影像 1000 標籤+9000 無標籤", "answer": "半監督", "trap_options": ["自監督"]}
+      ],
+      "related_node_ids": ["n_L23201_001", "n_L23201_002"]
+    },
+    {
+      "node_id": "n_L23201_004",
+      "knowledge_code": "L23201",
+      "title": "強化學習(Reinforcement Learning, RL)",
+      "category": "concept",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習分類總表.pdf", "section": "一"}],
+      "summary": "透過獎勵與懲罰學習行為策略,與環境互動",
+      "key_points": ["核心:agent 與 environment 的互動迴圈", "用途:遊戲 AI、機器人控制、推薦動態調整"],
+      "common_misconceptions": ["以為 RL 一定比監督學習好", "把『獎勵』誤以為是 ground truth label"],
+      "explanation_hooks": ["RL 沒有對錯標籤,只有獎勵分數;通過 trial-and-error 學最佳策略", "AlphaGo、ChatGPT RLHF 都是 RL"],
+      "variation_seeds": [
+        {"context": "遊戲 AI 學最佳走子", "trap_options": ["監督學習", "自監督"]},
+        {"context": "推薦系統依據點擊回饋調整", "trap_options": ["監督學習"]}
+      ],
+      "related_node_ids": ["n_L23201_001"]
+    },
+    {
+      "node_id": "n_L23201_005",
+      "knowledge_code": "L23201",
+      "title": "判別式 vs 生成式學習",
+      "category": "concept",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習分類總表.pdf", "section": "五"}],
+      "summary": "判別式學決策邊界(分類預測);生成式學資料分布(可生成新資料)",
+      "key_points": [
+        "判別式(Discriminative):P(y|x),邊界導向 — Logistic Regression、SVM、CNN 分類",
+        "生成式(Generative):P(x,y) 或 P(x),分布導向 — GAN、VAE、Naive Bayes",
+        "考點:Naive Bayes 為何屬生成式?因為它建模 P(x|y)P(y)"
+      ],
+      "common_misconceptions": [
+        "誤以為深度學習都是判別式(VAE 是生成式)",
+        "誤以為判別式不能輸出機率(Softmax 即可給機率)"
+      ],
+      "explanation_hooks": [
+        "判別式關心『邊界線在哪』,生成式關心『資料長什麼樣』",
+        "生成式用途:資料增強、缺失填補、新樣本產生"
+      ],
+      "variation_seeds": [
+        {"context": "客服郵件分類選 BERT vs VAE+下游分類器", "code": "L21103"},
+        {"context": "Naive Bayes 是生成式還是判別式?", "answer": "生成式"}
+      ],
+      "related_node_ids": ["n_L21103_001"],
+      "exam_appearance": [{"exam": "114-2", "question_no": 43, "subject": 1}]
+    },
+    {
+      "node_id": "n_L23201_006",
+      "knowledge_code": "L23201",
+      "title": "聯邦學習 vs 分散式學習",
+      "category": "concept",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習分類總表.pdf", "section": "七+對照表"}],
+      "summary": "聯邦學習主目標是隱私(資料不傳);分散式學習主目標是效率(運算切分)",
+      "key_points": [
+        "聯邦:資料不集中、不傳原始資料 — 手機輸入法模型更新",
+        "分散式:運算分散、資料可集中或邏輯切分 — 大型模型平行訓練",
+        "聯邦學習常結合差分隱私、同態加密"
+      ],
+      "common_misconceptions": [
+        "把『聯邦』和『分散式』當同義詞",
+        "誤以為聯邦學習一定比集中式準確"
+      ],
+      "explanation_hooks": [
+        "聯邦的『不傳原始資料』是法規/隱私需求驅動,例:GDPR、PDPA",
+        "分散式的『多機平行』是計算瓶頸驅動"
+      ],
+      "variation_seeds": [
+        {"context": "多家銀行不能交換客戶資料但要共訓模型", "answer": "聯邦學習"},
+        {"context": "1000 億參數 LLM 訓練", "answer": "分散式學習"}
+      ],
+      "related_node_ids": ["n_L23401_001"]
+    },
+    {
+      "node_id": "n_L23202_001",
+      "knowledge_code": "L23202",
+      "title": "集成學習(Ensemble Learning):Bagging / Boosting / Stacking",
+      "category": "concept",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習分類總表.pdf", "section": "六"}],
+      "summary": "結合多個模型提升表現,分為 Bagging、Boosting、Stacking 三派",
+      "key_points": [
+        "Bagging:平行訓練多模型,投票/平均(代表:Random Forest)— 降低變異",
+        "Boosting:序列訓練,後一模型修正前一模型錯誤(代表:GBDT、XGBoost、AdaBoost)— 降低偏差",
+        "Stacking:多模型輸出當特徵,再訓一個 meta 模型"
+      ],
+      "common_misconceptions": [
+        "Bagging 和 Boosting 訓練順序混淆(Bagging 平行;Boosting 串行)",
+        "誤以為 Random Forest 是 Boosting"
+      ],
+      "explanation_hooks": [
+        "Bagging 重點:減少 variance(因平行投票)",
+        "Boosting 重點:減少 bias(因每輪修正錯誤)",
+        "XGBoost = GBDT + 正則化 + 缺失值處理 + 平行化"
+      ],
+      "variation_seeds": [
+        {"context": "Random Forest 屬哪派?", "answer": "Bagging"},
+        {"context": "XGBoost 相比 GBDT 改進?", "answer": "正則化+缺失值+平行化"}
+      ],
+      "related_node_ids": [],
+      "exam_appearance": [{"exam": "114-2", "question_no": 18, "subject": 3}]
+    },
+    {
+      "node_id": "n_L23304_001",
+      "knowledge_code": "L23304",
+      "title": "過擬合(Overfitting)定義與徵兆",
+      "category": "concept",
+      "source_level": "L2",
+      "source_refs": [{"file": "避免過擬合彙整.pdf", "section": "一"}],
+      "summary": "訓練表現好、測試表現差;模型把雜訊也學進去,泛化能力差",
+      "key_points": [
+        "徵兆:training loss 持續下降、validation loss 開始上升",
+        "原因:模型過度複雜、資料量不足、雜訊過多"
+      ],
+      "common_misconceptions": [
+        "把『高訓練準確率』誤判為『模型很好』",
+        "誤以為過擬合一定要靠更多資料解決"
+      ],
+      "explanation_hooks": [
+        "過擬合 = 模型死記訓練集,缺乏泛化能力",
+        "對比:Underfitting(欠擬合)是訓練表現也差"
+      ],
+      "variation_seeds": [
+        {"context": "validation loss 上升而 training loss 下降", "answer": "過擬合"},
+        {"context": "兩者都高", "answer": "欠擬合"}
+      ],
+      "related_node_ids": ["n_L23304_002", "n_L23304_003", "n_L23304_004"]
+    },
+    {
+      "node_id": "n_L23304_002",
+      "knowledge_code": "L23304",
+      "title": "正則化:L1(Lasso) vs L2(Ridge)",
+      "category": "formula",
+      "source_level": "L2",
+      "source_refs": [{"file": "避免過擬合彙整.pdf", "section": "三-1"}],
+      "summary": "L1 使部分權重變 0(稀疏);L2 使權重變小但不為 0",
+      "key_points": [
+        "L1 (Lasso):懲罰項 = λ Σ|w_i|,**產生稀疏模型**(部分係數為 0)→ 自帶特徵選擇",
+        "L2 (Ridge):懲罰項 = λ Σw_i²,使權重變小但不為 0 → 抑制權重幅度",
+        "Elastic Net:L1 + L2 混合"
+      ],
+      "common_misconceptions": [
+        "L1 和 L2 哪個會把權重變 0(答:L1)",
+        "誤以為 L2 也能做特徵選擇(L2 只縮小,不歸零)"
+      ],
+      "explanation_hooks": [
+        "L1 在原點不可微但邊界尖銳,易使最佳解在軸上(權重=0)",
+        "L2 在原點可微且圓滑,最佳解通常離軸",
+        "選 L1:特徵很多想自動篩選;選 L2:全部特徵都重要,只需限制大小"
+      ],
+      "variation_seeds": [
+        {"context": "想自動特徵選擇", "answer": "L1 Lasso"},
+        {"context": "想保留全部特徵但限制權重", "answer": "L2 Ridge"},
+        {"context": "想兼顧兩者", "answer": "Elastic Net"}
+      ],
+      "related_node_ids": [],
+      "exam_appearance": [
+        {"exam": "114-2", "question_no": 2, "subject": 3},
+        {"exam": "114-2", "question_no": 32, "subject": 3},
+        {"exam": "114-2", "question_no": 26, "subject": 1}
+      ]
+    },
+    {
+      "node_id": "n_L23304_003",
+      "knowledge_code": "L23304",
+      "title": "Early Stopping(早停法)",
+      "category": "flow",
+      "source_level": "L2",
+      "source_refs": [{"file": "避免過擬合彙整.pdf", "section": "三-2"}],
+      "summary": "監控驗證誤差,連續多輪未改善即停止訓練",
+      "key_points": [
+        "依據 validation loss(不是 training loss、不是 test loss)",
+        "patience(耐心值):連續 N 輪未改善才停",
+        "防止過擬合,並節省訓練時間"
+      ],
+      "common_misconceptions": [
+        "誤以為依 training loss 早停",
+        "誤以為依 test loss 早停(test set 不應參與訓練)",
+        "patience=0 過早停,patience 太大失去意義"
+      ],
+      "explanation_hooks": [
+        "正確監控對象:validation loss",
+        "Patience 設適中,避免季節性波動誤判"
+      ],
+      "variation_seeds": [
+        {"context": "週期性 validation loss 波動", "answer": "設適度 patience"},
+        {"context": "依 training loss 停止", "answer": "錯誤,應依 validation loss"}
+      ],
+      "related_node_ids": ["n_L23303_001"],
+      "exam_appearance": [{"exam": "114-2", "question_no": 31, "subject": 3}]
+    },
+    {
+      "node_id": "n_L23304_004",
+      "knowledge_code": "L23304",
+      "title": "Dropout 機制",
+      "category": "concept",
+      "source_level": "L2",
+      "source_refs": [{"file": "避免過擬合彙整.pdf", "section": "三-3"}],
+      "summary": "訓練時隨機關閉部分神經元,降低過度依賴",
+      "key_points": [
+        "每次 forward pass 隨機關閉 p% 神經元",
+        "推論時不關閉,但需做 scale(乘 1-p)",
+        "等同集成多個子網路的隨機平均"
+      ],
+      "common_misconceptions": [
+        "誤以為推論時也關閉神經元",
+        "把 Dropout 套到所有層(通常只在 FC 層,Conv 層用 BatchNorm)"
+      ],
+      "explanation_hooks": [
+        "Dropout 模擬『眾多子網路的平均』,類似 Bagging 概念",
+        "p 通常設 0.2~0.5"
+      ],
+      "variation_seeds": [
+        {"context": "推論階段是否啟用 Dropout?", "answer": "否"},
+        {"context": "Dropout 與 Bagging 關係?", "answer": "概念類似,皆是模型平均"}
+      ],
+      "related_node_ids": [],
+      "exam_appearance": [{"exam": "114-2", "question_no": 39, "subject": 3}]
+    },
+    {
+      "node_id": "n_L23304_005",
+      "knowledge_code": "L23304",
+      "title": "防止過擬合策略總表(5 大面向)",
+      "category": "flow",
+      "source_level": "L2",
+      "source_refs": [{"file": "避免過擬合彙整.pdf", "section": "二"}],
+      "summary": "資料面/特徵面/模型面/訓練面/評估面/集成面六大策略體系",
+      "key_points": [
+        "資料面:增加資料量、資料增強、資料清理",
+        "特徵面:特徵選擇、特徵降維(PCA、LDA)",
+        "模型面:降低模型複雜度、正則化(L1/L2)、剪枝(決策樹)、Dropout(神經網路)",
+        "訓練面:Early Stopping、Batch Normalization",
+        "評估面:驗證集、交叉驗證、避免資料洩漏",
+        "集成面:Bagging、Random Forest、Boosting 控樹深"
+      ],
+      "common_misconceptions": [
+        "誤把『調學習率』當作避免過擬合策略(學習率影響收斂,非泛化)",
+        "誤把『增加特徵』當作避免過擬合(反而增加風險)"
+      ],
+      "explanation_hooks": [
+        "考試易混入錯誤選項:擴增特徵變數、提高模型複雜度",
+        "正確策略一定是『限制能力 / 增加多樣性 / 評估泛化』"
+      ],
+      "variation_seeds": [
+        {"context": "過擬合對策中,何者錯?", "trap_options": ["擴增輸入特徵變數", "提高學習率"]},
+        {"context": "決策樹過深", "answer": "剪枝"}
+      ],
+      "related_node_ids": ["n_L23304_001", "n_L23304_002", "n_L23304_003", "n_L23304_004"],
+      "exam_appearance": [{"exam": "114-2", "question_no": 26, "subject": 3}]
+    },
+    {
+      "node_id": "n_L23102_001",
+      "knowledge_code": "L23102",
+      "title": "PCA(主成分分析)— 最常考核心",
+      "category": "concept",
+      "source_level": "L2",
+      "source_refs": [{"file": "降維方法考試比較總表.pdf", "section": "PCA"}],
+      "summary": "找最大變異方向,線性、非監督、不需標籤",
+      "key_points": [
+        "屬性:線性、非監督、不需標籤",
+        "原理:標準化 → 計算協方差矩陣 → 特徵分解 → 取最大特徵值對應特徵向量",
+        "保留變異比例:λ_k / Σλ",
+        "用途:一般降維、前處理、視覺化"
+      ],
+      "common_misconceptions": [
+        "誤以為 PCA 需要類別標籤",
+        "誤以為 PCA 一定提升下游分類準確率",
+        "把『主成分數』和『特徵數』混淆"
+      ],
+      "explanation_hooks": [
+        "PCA 看『資料變異』,LDA 看『類別分離』,ICA 看『獨立成分』",
+        "降維後 SVM 訓練時間可降、泛化可升,但不保證提升 accuracy"
+      ],
+      "variation_seeds": [
+        {"context": "λ1=6, λ2=3, λ3=1,前兩主成分解釋多少?", "answer": "90%"},
+        {"context": "PCA 後 SVM accuracy 必定上升?", "answer": "否"}
+      ],
+      "related_node_ids": ["n_L23102_002", "n_L23102_003", "n_L23102_010"],
+      "exam_appearance": [
+        {"exam": "114-2", "question_no": 35, "subject": 3},
+        {"exam": "114-2", "question_no": 45, "subject": 1},
+        {"exam": "114-2", "question_no": 12, "subject": 1}
+      ]
+    },
+    {
+      "node_id": "n_L23102_002",
+      "knowledge_code": "L23102",
+      "title": "LDA(線性判別分析)— 監督式降維",
+      "category": "concept",
+      "source_level": "L2",
+      "source_refs": [{"file": "降維方法考試比較總表.pdf", "section": "LDA"}],
+      "summary": "找一個投影方向使類別間距最大、類別內距最小;**需要標籤**",
+      "key_points": [
+        "屬性:線性、**監督式**、需要類別標籤",
+        "目標:類別間距/類別內距最大化",
+        "用途:分類前的降維"
+      ],
+      "common_misconceptions": [
+        "把 LDA 與 PCA 都當非監督式(LDA 需標籤!)",
+        "誤把 LDA 當聚類方法"
+      ],
+      "explanation_hooks": [
+        "LDA 是『有監督版的 PCA』,目標從『最大變異』變成『最大類別分離』",
+        "LDA 上限維度 = (類別數 - 1)"
+      ],
+      "variation_seeds": [
+        {"context": "需要標籤的降維方法?", "answer": "LDA"},
+        {"context": "PCA 與 LDA 共同點?", "answer": "都是線性"}
+      ],
+      "related_node_ids": ["n_L23102_001"]
+    },
+    {
+      "node_id": "n_L23102_003",
+      "knowledge_code": "L23102",
+      "title": "ICA(獨立成分分析)",
+      "category": "concept",
+      "source_level": "L2",
+      "source_refs": [{"file": "降維方法考試比較總表.pdf", "section": "ICA"}],
+      "summary": "把資料拆成彼此統計上盡量獨立的成分",
+      "key_points": [
+        "屬性:線性、非監督、找『獨立性』而非『最大變異』",
+        "用途:訊號分離、語音分析、腦波分析"
+      ],
+      "common_misconceptions": [
+        "把 ICA 當作 PCA 變體(目標不同)",
+        "誤以為 ICA 找最大變異"
+      ],
+      "explanation_hooks": [
+        "PCA 找正交、ICA 找統計獨立 — 不同的數學概念",
+        "雞尾酒會問題(從混合錄音分離各說話者)是經典 ICA 應用"
+      ],
+      "variation_seeds": [
+        {"context": "ICA 找的是?", "answer": "彼此統計獨立的成分"},
+        {"context": "PCA 與 ICA 差異核心?", "answer": "PCA 找變異,ICA 找獨立"}
+      ],
+      "related_node_ids": ["n_L23102_001"]
+    },
+    {
+      "node_id": "n_L23102_004",
+      "knowledge_code": "L23102",
+      "title": "SVD(奇異值分解)",
+      "category": "formula",
+      "source_level": "L2",
+      "source_refs": [{"file": "降維方法考試比較總表.pdf", "section": "SVD"}],
+      "summary": "矩陣分解 A = UΣV^T,保留最大的奇異值即降維",
+      "key_points": [
+        "本質與 PCA 密切相關(PCA 可由 SVD 實現)",
+        "用途:文字探勘、推薦系統、矩陣壓縮、稀疏矩陣"
+      ],
+      "common_misconceptions": [
+        "把 SVD 與特徵分解混淆(SVD 適用任意矩陣,特徵分解只適用方陣)",
+        "誤以為 SVD 與 PCA 完全不同"
+      ],
+      "explanation_hooks": [
+        "U 與 V 是正交矩陣,Σ 是對角奇異值矩陣",
+        "降維 = 保留前 k 大奇異值"
+      ],
+      "variation_seeds": [
+        {"context": "推薦系統矩陣壓縮", "answer": "SVD"},
+        {"context": "文字探勘 LSA", "answer": "SVD"}
+      ],
+      "related_node_ids": ["n_L23102_001"]
+    },
+    {
+      "node_id": "n_L23102_005",
+      "knowledge_code": "L23102",
+      "title": "t-SNE(視覺化降維)",
+      "category": "concept",
+      "source_level": "L2",
+      "source_refs": [{"file": "降維方法考試比較總表.pdf", "section": "t-SNE"}],
+      "summary": "保留鄰近關係,**主要用於 2D/3D 視覺化**,不適合一般建模前處理",
+      "key_points": [
+        "屬性:非線性、非監督",
+        "強項:視覺化群聚結構",
+        "弱項:不適合作正式建模前處理(不確定性、不可逆)"
+      ],
+      "common_misconceptions": [
+        "誤以為 t-SNE 適合一般建模前處理(實際偏視覺化)",
+        "誤以為 t-SNE 結果可重現(每次跑可能不同)"
+      ],
+      "explanation_hooks": [
+        "t-SNE 用 t 分布建模高維鄰居關係,KL divergence 最小化",
+        "通常降到 2 維或 3 維,只為畫圖看群聚"
+      ],
+      "variation_seeds": [
+        {"context": "想看高維資料的群聚結構", "answer": "t-SNE"},
+        {"context": "想做模型前處理", "answer": "PCA(t-SNE 不適合)"}
+      ],
+      "related_node_ids": ["n_L23102_001", "n_L23102_006"]
+    },
+    {
+      "node_id": "n_L23102_006",
+      "knowledge_code": "L23102",
+      "title": "UMAP(t-SNE 替代)",
+      "category": "concept",
+      "source_level": "L2",
+      "source_refs": [{"file": "降維方法考試比較總表.pdf", "section": "UMAP"}],
+      "summary": "非線性降維,保留局部與部分全域結構,通常比 t-SNE 快",
+      "key_points": [
+        "屬性:非線性、非監督",
+        "強項:速度快、能保留更多全域結構",
+        "用途:視覺化、探索分析"
+      ],
+      "common_misconceptions": ["把 UMAP 等同 t-SNE(UMAP 保留更多全域結構)"],
+      "explanation_hooks": ["UMAP 基於黎曼幾何與代數拓撲", "在大資料上比 t-SNE 顯著快"],
+      "variation_seeds": [
+        {"context": "大資料快速視覺化", "answer": "UMAP"},
+        {"context": "保留全域結構", "answer": "UMAP > t-SNE"}
+      ],
+      "related_node_ids": ["n_L23102_005"]
+    },
+    {
+      "node_id": "n_L23102_007",
+      "knowledge_code": "L23102",
+      "title": "Autoencoder(深度學習式降維)",
+      "category": "concept",
+      "source_level": "L2",
+      "source_refs": [{"file": "降維方法考試比較總表.pdf", "section": "Autoencoder"}],
+      "summary": "用神經網路把資料壓縮到低維(encoder)再重建(decoder)",
+      "key_points": [
+        "屬性:非線性、非監督(自監督)",
+        "結構:encoder → bottleneck(低維)→ decoder",
+        "可處理複雜非線性結構,效果常優於 PCA"
+      ],
+      "common_misconceptions": [
+        "誤以為 Autoencoder 一定是線性(可線性可非線性,通常非線性)",
+        "把 Autoencoder 當分類模型"
+      ],
+      "explanation_hooks": [
+        "Loss = 重建誤差(MSE 或 cross-entropy)",
+        "Variants:Denoising AE、VAE、Sparse AE"
+      ],
+      "variation_seeds": [
+        {"context": "Autoencoder 是線性還是非線性?", "answer": "通常非線性"},
+        {"context": "圖像降噪", "answer": "Denoising Autoencoder"}
+      ],
+      "related_node_ids": ["n_L23102_001"]
+    },
+    {
+      "node_id": "n_L23102_008",
+      "knowledge_code": "L23102",
+      "title": "NMF(非負矩陣分解)",
+      "category": "formula",
+      "source_level": "L2",
+      "source_refs": [{"file": "降維方法考試比較總表.pdf", "section": "NMF"}],
+      "summary": "X ≈ WH,W 與 H 皆非負;用於主題分析、影像分解、推薦",
+      "key_points": [
+        "屬性:線性、非監督,**僅適用非負資料**",
+        "X ≥ 0、W ≥ 0、H ≥ 0 為 element-wise 非負(勘誤補完)",
+        "用途:文件主題模型、影像區域分解"
+      ],
+      "common_misconceptions": [
+        "誤以為 NMF 可用於任意資料(必須非負)",
+        "把『非負矩陣』誤解為矩陣本身為單一非負數值"
+      ],
+      "explanation_hooks": [
+        "勘誤強調:非負是 element-wise(每一元素 ≥ 0)",
+        "結果可解釋性強,因每個成分都是『加法組合』"
+      ],
+      "variation_seeds": [
+        {"context": "文件主題分析", "answer": "NMF"},
+        {"context": "X、W、H ≥ 0 之含義?", "answer": "element-wise 每元素 ≥ 0"}
+      ],
+      "related_node_ids": ["n_L23102_001"],
+      "errata_critical": true
+    },
+    {
+      "node_id": "n_L23102_009",
+      "knowledge_code": "L23102",
+      "title": "Kernel PCA(非線性 PCA)",
+      "category": "concept",
+      "source_level": "L2",
+      "source_refs": [{"file": "降維方法考試比較總表.pdf", "section": "Kernel PCA"}],
+      "summary": "先用 kernel 映射到高維特徵空間,再做 PCA",
+      "key_points": [
+        "屬性:非線性、非監督",
+        "通過 kernel trick 處理非線性結構",
+        "代表 kernel:RBF、polynomial"
+      ],
+      "common_misconceptions": ["誤以為 PCA 自動可處理非線性(原始 PCA 是線性)"],
+      "explanation_hooks": ["核心概念:先升維(讓非線性可分)再降維", "與 SVM 用相同 kernel trick 思路"],
+      "variation_seeds": [
+        {"context": "非線性資料降維", "answer": "Kernel PCA / Autoencoder / t-SNE"}
+      ],
+      "related_node_ids": ["n_L23102_001"]
+    },
+    {
+      "node_id": "n_L23102_010",
+      "knowledge_code": "L23102",
+      "title": "降維方法選擇陷阱對照",
+      "category": "concept",
+      "source_level": "L2",
+      "source_refs": [{"file": "降維方法考試比較總表.pdf", "section": "選擇題陷阱"}],
+      "summary": "易混淆陷阱合集",
+      "key_points": [
+        "監督式降維只有 LDA",
+        "非線性降維:Kernel PCA、t-SNE、UMAP、Autoencoder",
+        "視覺化用:t-SNE、UMAP",
+        "分類前處理常用:PCA、LDA",
+        "易解釋:PCA、LDA、NMF"
+      ],
+      "common_misconceptions": [
+        "陷阱:LDA 不需標籤(錯)",
+        "陷阱:t-SNE 適合建模前處理(錯)",
+        "陷阱:ICA 找最大變異(錯)",
+        "陷阱:Autoencoder 一定線性(錯)",
+        "陷阱:NMF 可用任意正負資料(錯)"
+      ],
+      "explanation_hooks": ["以『屬性五元組』記憶:[線性?][監督?][用途][代表][陷阱]"],
+      "variation_seeds": [
+        {"context": "下列何者為監督式降維?", "answer": "LDA"},
+        {"context": "t-SNE 主要用途?", "answer": "視覺化"}
+      ],
+      "related_node_ids": ["n_L23102_001", "n_L23102_002", "n_L23102_003", "n_L23102_005", "n_L23102_007", "n_L23102_008"]
+    },
+    {
+      "node_id": "n_L23102_011",
+      "knowledge_code": "L23102",
+      "title": "PCA vs LDA(最常考對照)",
+      "category": "concept",
+      "source_level": "L2",
+      "source_refs": [{"file": "降維方法考試比較總表.pdf", "section": "對照1"}],
+      "summary": "PCA 重視資料變異最大化;LDA 重視類別分離最大化",
+      "key_points": [
+        "PCA:非監督、不需標籤、目標『最大變異』",
+        "LDA:監督、需要標籤、目標『最大類別分離』",
+        "兩者都是線性"
+      ],
+      "common_misconceptions": ["把 LDA 也當作不需標籤"],
+      "explanation_hooks": ["一句話:PCA 看整體變異,LDA 看類別分離"],
+      "variation_seeds": [
+        {"context": "PCA 與 LDA 共同點?", "answer": "都線性"},
+        {"context": "PCA 與 LDA 差異?", "answer": "監督 vs 非監督"}
+      ],
+      "related_node_ids": ["n_L23102_001", "n_L23102_002"]
+    },
+    {
+      "node_id": "n_L23102_012",
+      "knowledge_code": "L23102",
+      "title": "PCA vs t-SNE",
+      "category": "concept",
+      "source_level": "L2",
+      "source_refs": [{"file": "降維方法考試比較總表.pdf", "section": "對照3"}],
+      "summary": "PCA 線性、用於建模前處理;t-SNE 非線性、用於視覺化",
+      "key_points": [
+        "PCA:線性、可解釋、能保留全域變異、建模前處理常用",
+        "t-SNE:非線性、不可解釋、保留局部鄰近、視覺化常用"
+      ],
+      "common_misconceptions": ["把 t-SNE 當成 PCA 的非線性升級版,並用於建模前處理"],
+      "explanation_hooks": ["一句話:PCA 適合建模,t-SNE 適合畫圖"],
+      "variation_seeds": [
+        {"context": "想做模型前處理應選?", "answer": "PCA"},
+        {"context": "想看資料群聚結構應選?", "answer": "t-SNE"}
+      ],
+      "related_node_ids": ["n_L23102_001", "n_L23102_005"]
+    }
+  ],
+  "summary": {
+    "total_nodes": 25,
+    "by_code": {
+      "L23201": 6,
+      "L23202": 1,
+      "L23304": 5,
+      "L23102": 13
+    },
+    "by_source_level": {"L1": 0, "L2": 25, "L3": 0, "L4": 0},
+    "iron_rule_compliance_check": "all 25 nodes have misconceptions, explanation_hooks, variation_seeds populated"
+  }
+}

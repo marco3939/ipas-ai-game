@@ -1,0 +1,812 @@
+{
+  "version": "1.0",
+  "subject": 1,
+  "schema_version": "1.0-iron-rule",
+  "iron_rule_compliance": "every node has misconceptions, explanation_hooks, variation_seeds",
+  "last_updated": "2026-05-09",
+  "batches_processed": [
+    {"batch": 2, "files": ["IPAS_AI中級_5月23日_衝刺複習主檔.md (read 1-800/~1500)"], "date": "2026-05-09"}
+  ],
+  "primary_source_note": "衝刺主檔為高品質 [L1-L2] 級整合(官方指引 + 114-2 考古題 + 補強教材),本檔多數 nodes 以此為主 source",
+  "nodes": [
+    {
+      "node_id": "n_L21101_001",
+      "knowledge_code": "L21101",
+      "title": "NLP 四階段演進",
+      "category": "flow",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.2-1"}],
+      "summary": "Rule-based → 統計(N-gram/HMM/CRF)→ 深度學習(RNN/LSTM/GRU)→ 預訓練(Transformer 系)",
+      "key_points": ["每階段解決前階段痛點", "Transformer 階段:平行 + 長距離依賴 + 預訓練"],
+      "common_misconceptions": ["把 LSTM 當 Transformer 同代", "誤以為 BERT/GPT 是 RNN"],
+      "explanation_hooks": ["階段演進 = 解決『序列建模 + 長距離 + 平行計算』三難題", "Transformer 是當前主流,但不代表 RNN 過時(時序預測仍用)"],
+      "variation_seeds": [{"context": "ARIMA 屬於哪階段?", "answer": "統計"}, {"context": "BERT 屬於哪階段?", "answer": "預訓練"}],
+      "related_node_ids": ["n_L21101_002", "n_L21101_005"]
+    },
+    {
+      "node_id": "n_L21101_002",
+      "knowledge_code": "L21101",
+      "title": "Transformer Self-Attention 與多頭注意力",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.2-2"}, {"exam": "114-2 科一 Q2", "exam": "114-2 科三 Q21"}],
+      "summary": "Self-Attention 捕捉長距離依賴 + 全平行;Multi-head 從不同表示子空間捕捉多樣化關聯",
+      "key_points": ["Q/K/V Scaled Dot-Product", "Multi-head 並行多組 attention", "Positional Encoding 補時序資訊"],
+      "common_misconceptions": [
+        "誤以為 Self-Attention 用卷積",
+        "誤以為 Multi-head 為了加速計算(實際是為了多樣化表示)"
+      ],
+      "explanation_hooks": [
+        "Multi-head 主要優點:不同表示子空間(Representation Subspaces)同時捕捉多樣化關聯",
+        "對比 RNN:Transformer 不需逐步,可平行整個序列"
+      ],
+      "variation_seeds": [
+        {"context": "金融長文翻譯為何用 Transformer", "answer": "Self-Attention 捕捉長距離依賴"},
+        {"context": "Multi-head 的目的", "answer": "多表示子空間捕捉多樣化"},
+        {"context": "Attention Collapse 對策", "answer": "稀疏化約束"}
+      ],
+      "related_node_ids": ["n_L21101_001", "n_L21101_003"],
+      "exam_appearance": [{"exam": "114-2", "question_no": 2, "subject": 1}, {"exam": "114-2", "question_no": 21, "subject": 3}]
+    },
+    {
+      "node_id": "n_L21101_003",
+      "knowledge_code": "L21101",
+      "title": "BERT vs GPT(雙向理解 vs 單向生成)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.2-3"}, {"exam": "114-2 科一 Q3"}],
+      "summary": "BERT 雙向 Transformer Encoder + MLM + NSP;GPT 單向 Decoder + 自迴歸",
+      "key_points": [
+        "BERT MLM:隨機遮罩部分詞,雙向上下文預測",
+        "GPT:左到右逐詞生成",
+        "BERT 適合理解任務(分類、NER);GPT 適合生成任務"
+      ],
+      "common_misconceptions": [
+        "把 BERT 與 GPT 都當 Encoder-Decoder",
+        "誤以為 MLM 是『依序遮罩句尾』"
+      ],
+      "explanation_hooks": [
+        "MLM 隨機遮罩 + 雙向預測 = 強迫模型學上下文",
+        "BERT 結構:只有 Encoder;GPT 結構:只有 Decoder"
+      ],
+      "variation_seeds": [
+        {"context": "MLM 訓練策略?", "answer": "隨機遮罩 + 雙向預測"},
+        {"context": "客戶情感分析適合?", "answer": "BERT(理解任務)"}
+      ],
+      "related_node_ids": ["n_L21101_002"],
+      "exam_appearance": [{"exam": "114-2", "question_no": 3, "subject": 1}]
+    },
+    {
+      "node_id": "n_L21101_004",
+      "knowledge_code": "L21101",
+      "title": "Word2Vec(Skip-gram vs CBOW)+ GloVe + FastText",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "1.1 + 對照表"}],
+      "summary": "Word2Vec=預測式;GloVe=共現統計式;FastText=子詞 n-gram 處理 OOV",
+      "key_points": [
+        "CBOW:周圍預測中心詞,收斂快、適合高頻詞",
+        "Skip-gram:中心詞預測周圍,**低頻詞語意更佳**",
+        "GloVe:基於全域詞共現矩陣分解",
+        "FastText:加入子詞 n-gram,可處理 OOV(未登錄詞)"
+      ],
+      "common_misconceptions": [
+        "把 Word2Vec 當共現矩陣分解(那是 GloVe)",
+        "誤以為 CBOW 對低頻詞較佳(實際是 Skip-gram)"
+      ],
+      "explanation_hooks": [
+        "Skip-gram 比 CBOW 訓練慢但對罕見詞表示更好",
+        "Word2Vec 預測式 vs GloVe 統計式"
+      ],
+      "variation_seeds": [
+        {"context": "想強化低頻詞語意", "answer": "Skip-gram"},
+        {"context": "全域詞共現分解", "answer": "GloVe"},
+        {"context": "處理 OOV 未登錄詞", "answer": "FastText"}
+      ],
+      "related_node_ids": ["n_L21101_001"],
+      "exam_appearance": [{"exam": "114-2", "question_no": 4, "subject": 1}, {"exam": "114-2", "question_no": 33, "subject": 1}]
+    },
+    {
+      "node_id": "n_L21101_005",
+      "knowledge_code": "L21101",
+      "title": "TF-IDF 與 N-gram 限制",
+      "category": "formula",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "1.1 公式"}, {"exam": "114-2 科一 Q5,Q6"}],
+      "summary": "TF-IDF=TF×IDF=詞頻×log(|D|/含詞文件數);N-gram 受固定長度限制無法捕捉長距離依賴",
+      "key_points": [
+        "TF-IDF 長文本:詞頻偏高,常見詞權重被過度放大",
+        "N-gram 限制:固定長度前序詞,難捕長距離依賴",
+        "勘誤 3-18:IDF=log(1000/10)=log(100)=2(原誤近似符號)"
+      ],
+      "common_misconceptions": [
+        "把 N-gram 限制誤判為『詞間獨立假設』(那是 BoW)",
+        "TF-IDF 長文本問題誤以為『無法計算詞頻』"
+      ],
+      "explanation_hooks": [
+        "TF-IDF 長文本問題:常見詞被放大,降低關鍵詞辨識度",
+        "N-gram 假設是『前 N-1 詞決定下一詞』"
+      ],
+      "variation_seeds": [
+        {"context": "TF-IDF 長文本失效原因", "answer": "詞頻偏高、常見詞權重放大"},
+        {"context": "N-gram 主要限制", "answer": "固定長度,難捕長距離依賴"}
+      ],
+      "related_node_ids": ["n_L21101_001"],
+      "exam_appearance": [{"exam": "114-2", "question_no": 5, "subject": 1}, {"exam": "114-2", "question_no": 6, "subject": 1}],
+      "errata_critical": false
+    },
+    {
+      "node_id": "n_L21101_006",
+      "knowledge_code": "L21101",
+      "title": "RAG 檢索增強生成",
+      "category": "scenario",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.2-11"}, {"exam": "114-2 科一 Q17"}],
+      "summary": "結合語言模型與向量搜尋,降低幻覺與知識過時;**檢索階段最大挑戰是『語意相似但意圖不符』**",
+      "key_points": [
+        "比喻:LLM=閉卷考、RAG=開卷考",
+        "向量檢索函式庫:Faiss、ScaNN",
+        "Embedding Model + Context Window",
+        "檢索陷阱:結果僅語意相似,實際與查詢意圖無關"
+      ],
+      "common_misconceptions": [
+        "誤以為 RAG 主要挑戰是『Context Window 大小』",
+        "把『檢索器選型』當作主要難點"
+      ],
+      "explanation_hooks": [
+        "RAG = 檢索 + 生成兩階段;檢索品質決定整體效能",
+        "向量檢索的意圖匹配 > 純語意相似"
+      ],
+      "variation_seeds": [
+        {"context": "RAG 檢索階段最關鍵挑戰?", "answer": "檢索結果語意相似但與意圖不符"}
+      ],
+      "related_node_ids": ["n_L21103_001"],
+      "exam_appearance": [{"exam": "114-2", "question_no": 17, "subject": 1}]
+    },
+    {
+      "node_id": "n_L21102_001",
+      "knowledge_code": "L21102",
+      "title": "CNN vs FCNN(全連接神經網路)優勢",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.2-5"}, {"exam": "114-2 科三 Q5,Q6"}],
+      "summary": "CNN 透過區域感知(Local Receptive Field)+ 參數共享(Parameter Sharing),大幅降低參數量與計算複雜度",
+      "key_points": [
+        "區域感知:每個神經元只看局部",
+        "參數共享:同一卷積核滑過全圖",
+        "第一層卷積層:自動提取局部特徵(邊緣、紋理)"
+      ],
+      "common_misconceptions": [
+        "誤以為 CNN 自動具備旋轉/比例不變性(需透過資料增強)",
+        "誤以為 CNN 第一層做整合分類(實際在最後 FC 層)"
+      ],
+      "explanation_hooks": [
+        "FCNN 每像素獨立連接 → 參數爆炸;CNN 共享 → 參數量大幅下降",
+        "卷積核滑動 = 在每個位置提取相同類型特徵"
+      ],
+      "variation_seeds": [
+        {"context": "CNN 第一層職責?", "answer": "自動提取局部特徵"},
+        {"context": "CNN 比 FCNN 優勢?", "answer": "區域感知 + 參數共享"}
+      ],
+      "related_node_ids": [],
+      "exam_appearance": [{"exam": "114-2", "question_no": 5, "subject": 3}, {"exam": "114-2", "question_no": 6, "subject": 3}]
+    },
+    {
+      "node_id": "n_L21102_002",
+      "knowledge_code": "L21102",
+      "title": "CV 任務四階層:分類 → 物件偵測 → 語意分割 → 實例分割 → 全景分割",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.2-4"}, {"exam": "114-2 科一 Q34"}],
+      "summary": "分類(整圖一標)→ 物件偵測(框+類)→ 語意分割(像素類別,不分實體)→ 實例分割(像素類+實體 ID);**全景分割 = 語意 + 實例整合**",
+      "key_points": [
+        "Image Classification:整張圖一個標籤",
+        "Object Detection:Bounding Box + Class(YOLO、Faster R-CNN、SSD)",
+        "Semantic Segmentation:像素級類別,不區分實體",
+        "Instance Segmentation:像素級類別 + 實體 ID(Mask R-CNN)",
+        "Panoptic Segmentation:結合語意 + 實例"
+      ],
+      "common_misconceptions": [
+        "把語意分割與實例分割混為一談",
+        "誤以為全景分割只做實例"
+      ],
+      "explanation_hooks": [
+        "判別關鍵:能否區分『同類別不同實體』(實例 ✅、語意 ❌)",
+        "全景 = 對所有像素做(語意 + 實例)雙標註"
+      ],
+      "variation_seeds": [
+        {"context": "需區分多位行人,且每像素都有類別", "answer": "全景分割"},
+        {"context": "只需知道每像素是什麼類別", "answer": "語意分割"}
+      ],
+      "related_node_ids": [],
+      "exam_appearance": [{"exam": "114-2", "question_no": 34, "subject": 1}]
+    },
+    {
+      "node_id": "n_L21102_003",
+      "knowledge_code": "L21102",
+      "title": "mAP 與 IoU(物件偵測評估)",
+      "category": "formula",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "1.1 + 公式"}, {"exam": "114-2 科一 Q7"}],
+      "summary": "IoU=交集/聯集;mAP=各類別 AP 平均;**IoU 閾值越高 → 重疊精準度要求越嚴**",
+      "key_points": [
+        "IoU = Intersection / Union(0~1)",
+        "通常 IoU > 0.5 視為成功",
+        "mAP = mean Average Precision over classes",
+        "IoU 閾值 ↑ → 預測框與真實框重疊要求 ↑"
+      ],
+      "common_misconceptions": [
+        "誤以為 IoU 閾值高 → mAP 上升(實際趨於下降)",
+        "把 mAP 與 Top-5 Accuracy 混淆"
+      ],
+      "explanation_hooks": [
+        "IoU 閾值高 = 嚴格;模型偵測準確程度要求更高",
+        "AP = Precision-Recall 曲線下面積"
+      ],
+      "variation_seeds": [
+        {"context": "IoU 閾值高代表?", "answer": "重疊精準度要求嚴"}
+      ],
+      "related_node_ids": [],
+      "exam_appearance": [{"exam": "114-2", "question_no": 7, "subject": 1}]
+    },
+    {
+      "node_id": "n_L21102_004",
+      "knowledge_code": "L21102",
+      "title": "經典 CNN 譜系:LeNet → AlexNet → VGG → GoogLeNet → ResNet",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "1.1 經典架構"}, {"exam": "114-2 科三 Q42-45"}],
+      "summary": "ResNet 透過殘差連接(Residual Connection)解決梯度消失;VGG 用 3×3 小卷積核堆疊;GoogLeNet Inception 多尺度",
+      "key_points": [
+        "AlexNet:首次大規模成功(ReLU + Dropout)",
+        "VGG:3×3 小卷積核、19 層、結構規則",
+        "GoogLeNet:Inception 多尺度 + 1×1 降維",
+        "ResNet:殘差連接 H(x)=F(x)+x,可訓練超深網路",
+        "VGG16:13 Conv + 3 FC = 16 層;FC 層參數最多;Conv 層 FLOPs 最多"
+      ],
+      "common_misconceptions": [
+        "誤以為 VGG 的參數最多在 Conv 層(實際 FC 層)",
+        "把 ResNet 殘差連接當作『跳過層』(實際是加法)"
+      ],
+      "explanation_hooks": [
+        "Residual = F(x) + x,讓深層網路能訓練,不爆梯度消失",
+        "VGG16 FC 層約 1.2 億參數,Conv 層僅約 1500 萬"
+      ],
+      "variation_seeds": [
+        {"context": "VGG16 哪層參數最多?", "answer": "FC 層(Linear)"},
+        {"context": "VGG16 哪層 FLOPs 最多?", "answer": "Conv 層"}
+      ],
+      "related_node_ids": ["n_L21102_001"],
+      "exam_appearance": [{"exam": "114-2", "question_no": 42, "subject": 3}, {"exam": "114-2", "question_no": 43, "subject": 3}, {"exam": "114-2", "question_no": 44, "subject": 3}, {"exam": "114-2", "question_no": 45, "subject": 3}]
+    },
+    {
+      "node_id": "n_L21103_001",
+      "knowledge_code": "L21103",
+      "title": "VAE / GAN / Diffusion 三大生成模型對比",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "3.8"}, {"exam": "114-2 科一 Q40,Q44"}],
+      "summary": "VAE 顯式潛變數+語意對齊;GAN 對抗訓練+影像銳利;Diffusion 條件去噪+品質穩定",
+      "key_points": [
+        "VAE:機率潛變數,訓練穩定但影像模糊",
+        "GAN:對抗訓練,細節銳利但訓練不穩(Mode Collapse)",
+        "Diffusion:逐步去噪,品質穩定多樣性高但推論慢"
+      ],
+      "common_misconceptions": [
+        "誤以為三者都用對抗訓練",
+        "誤以為 Diffusion 推論速度快"
+      ],
+      "explanation_hooks": [
+        "選 VAE:特徵壓縮、變分潛在空間",
+        "選 GAN:高解析度影像生成",
+        "選 Diffusion:現代主流影像生成(SD、DALL-E、Sora)"
+      ],
+      "variation_seeds": [
+        {"context": "想生成新虛擬樣本兼顧預測", "answer": "VAE 或 GAN"},
+        {"context": "現代影像生成主流", "answer": "Diffusion"}
+      ],
+      "related_node_ids": ["n_L21103_002"],
+      "exam_appearance": [{"exam": "114-2", "question_no": 40, "subject": 1}, {"exam": "114-2", "question_no": 44, "subject": 1}]
+    },
+    {
+      "node_id": "n_L21103_002",
+      "knowledge_code": "L21103",
+      "title": "GAN Mode Collapse 與 WGAN 解法",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.2-14"}, {"exam": "114-2 科一 Q20"}],
+      "summary": "Mode Collapse=生成器只產生有限種類;**WGAN(Wasserstein 距離)為主流解法**",
+      "key_points": [
+        "Mode Collapse:生成多樣性崩潰",
+        "WGAN:Wasserstein 距離取代原 GAN 損失",
+        "WGAN-GP:加入梯度懲罰(Gradient Penalty)穩定訓練"
+      ],
+      "common_misconceptions": [
+        "誤以為加噪 / 多尺度鑑別器是 Mode Collapse 主流解法",
+        "把 Mode Collapse 與 Vanishing Gradient 混淆"
+      ],
+      "explanation_hooks": [
+        "Mode Collapse 主流解法是換損失函數,而非結構修改",
+        "WGAN 解決訓練不穩定的根本問題"
+      ],
+      "variation_seeds": [
+        {"context": "GAN 模式崩潰最常用解法", "answer": "WGAN(Wasserstein 損失)"}
+      ],
+      "related_node_ids": ["n_L21103_001"],
+      "exam_appearance": [{"exam": "114-2", "question_no": 20, "subject": 1}]
+    },
+    {
+      "node_id": "n_L21103_003",
+      "knowledge_code": "L21103",
+      "title": "Stable Diffusion 取樣參數(取樣步數 vs CFG)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "1.1 v2"}, {"exam": "114-2 科一 Q38"}],
+      "summary": "取樣步數 ↑ → 細節 / 品質 ↑;CFG(Classifier-Free Guidance)↑ → 創意 / 多樣性",
+      "key_points": [
+        "取樣步數:控制去噪迭代次數",
+        "CFG 值:控制提示語符合度 vs 創意",
+        "想提升細節 → 增加取樣步數 + 高品質取樣器"
+      ],
+      "common_misconceptions": [
+        "誤以為 CFG 提升細節清晰度",
+        "誤以為降低取樣步數能保留細節"
+      ],
+      "explanation_hooks": [
+        "細節 = 取樣步數 + 取樣器選擇",
+        "創意 = CFG"
+      ],
+      "variation_seeds": [
+        {"context": "想提升 4K 影像細節清晰度", "answer": "增加取樣步數 + 高品質取樣器"}
+      ],
+      "related_node_ids": ["n_L21103_001"],
+      "exam_appearance": [{"exam": "114-2", "question_no": 38, "subject": 1}]
+    },
+    {
+      "node_id": "n_L21103_004",
+      "knowledge_code": "L21103",
+      "title": "RAG 開卷 vs LLM 閉卷",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "3.3 v3"}],
+      "summary": "LLM 純依賴訓練記憶(閉卷);RAG 先檢索再生成(開卷),解決幻覺與知識過時",
+      "key_points": [
+        "LLM 限制:訓練截止、可能幻覺、無法即時更新",
+        "RAG 解法:外掛文件向量資料庫,檢索後生成"
+      ],
+      "common_misconceptions": ["誤以為 RAG 是 LLM 替代品(實際是補強)"],
+      "explanation_hooks": ["RAG = LLM + 外部知識,本質仍是 LLM"],
+      "variation_seeds": [
+        {"context": "知識過時 + 幻覺問題", "answer": "RAG"}
+      ],
+      "related_node_ids": ["n_L21101_006"]
+    },
+    {
+      "node_id": "n_L21104_001",
+      "knowledge_code": "L21104",
+      "title": "CLIP 對比學習圖文對齊(Zero-shot)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "1.1 多模態"}, {"exam": "114-2 科一 Q35,Q50"}],
+      "summary": "圖文對比學習(Contrastive Learning)→ 影像與文字映射至共同嵌入空間 → 直接以語意相似度進行 Zero-shot 分類",
+      "key_points": [
+        "Shared Embedding Space:文字編碼器 + 影像編碼器映射至同空間",
+        "Zero-shot:無需新增訓練資料,以文字提示分類影像",
+        "失準原因:文字與影像編碼器在嵌入空間未充分對齊"
+      ],
+      "common_misconceptions": [
+        "誤以為 CLIP 用 MLP 監督式分類",
+        "誤以為 CLIP 是自迴歸生成模型"
+      ],
+      "explanation_hooks": [
+        "對比學習 = 配對的圖文嵌入靠近,不配對的拉遠",
+        "CLIP 是現代多模態基石(SD、Flamingo 等都借用)"
+      ],
+      "variation_seeds": [
+        {"context": "無需新訓練資料,僅以文字提示識別影像", "answer": "CLIP Zero-shot"},
+        {"context": "CLIP 跨模態對齊失準原因", "answer": "文字編碼器與影像編碼器未充分對齊"}
+      ],
+      "related_node_ids": [],
+      "exam_appearance": [{"exam": "114-2", "question_no": 35, "subject": 1}, {"exam": "114-2", "question_no": 50, "subject": 1}]
+    },
+    {
+      "node_id": "n_L21104_002",
+      "knowledge_code": "L21104",
+      "title": "多模態資料缺失策略",
+      "category": "scenario",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.2-15"}, {"exam": "114-2 科一 Q21"}],
+      "summary": "**訓練具備模態缺失感知能力的模型最有效**,優於零向量填充或捨棄樣本",
+      "key_points": [
+        "策略 A:零向量/固定向量填充(簡單但失準)",
+        "策略 B:訓練具缺失感知能力的模型(最佳)",
+        "策略 C:用生成模型補全缺失模態(複雜)",
+        "策略 D:捨棄樣本(浪費資料)"
+      ],
+      "common_misconceptions": ["誤以為零向量填充是最佳實踐"],
+      "explanation_hooks": ["最佳策略:讓模型本身知道『此模態可能缺失』,而非機械填充"],
+      "variation_seeds": [
+        {"context": "影像有但文字說明缺失", "answer": "訓練具缺失感知能力的模型"}
+      ],
+      "related_node_ids": ["n_L21104_001"],
+      "exam_appearance": [{"exam": "114-2", "question_no": 21, "subject": 1}]
+    },
+    {
+      "node_id": "n_L21202_001",
+      "knowledge_code": "L21202",
+      "title": "AI 漸進式部署(Phased Rollout)",
+      "category": "scenario",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.2-17"}, {"exam": "114-2 科一 Q23"}],
+      "summary": "從**單一專科 / 特定病房**開始啟用,逐步擴展至全院;優於急診 / 夜班 / 全院同步",
+      "key_points": [
+        "目的:風險可控、回饋可收斂",
+        "選定單一單位:可控制變數、收集高品質回饋",
+        "錯誤策略:急診(高風險)、夜班(代表性差)、全院同步(失控)"
+      ],
+      "common_misconceptions": ["誤以為從急診開始(誤判『病例量高』為優勢)"],
+      "explanation_hooks": [
+        "Phased Rollout 邏輯:小範圍 → 驗證 → 擴展",
+        "與 Canary Release 區分:後者按流量比例切換"
+      ],
+      "variation_seeds": [
+        {"context": "醫院 AI 輔助診斷漸進部署", "answer": "從單一專科 / 病房開始"}
+      ],
+      "related_node_ids": ["n_L21302_005"],
+      "exam_appearance": [{"exam": "114-2", "question_no": 23, "subject": 1}]
+    },
+    {
+      "node_id": "n_L21202_002",
+      "knowledge_code": "L21202",
+      "title": "AI 導入評估三層 + POC 條件",
+      "category": "flow",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.2-7"}],
+      "summary": "業務需求(As-Is/To-Be、KPI)→ 技術可行性(資料品質、IT 能力、適配性)→ 成本效益(ROI、NPV、Payback)",
+      "key_points": [
+        "POC 必備條件:範圍清晰、可控、具代表性、利害關係人支持",
+        "ROI = (回報-成本)/成本 × 100%",
+        "NPV = Σ(現金流ₜ/(1+r)ᵗ) - 初始投資"
+      ],
+      "common_misconceptions": ["把 POC 當『直接上線小流量試水』(實際是受控測試)"],
+      "explanation_hooks": ["三層遞進:有需求嗎 → 做得到嗎 → 划算嗎"],
+      "variation_seeds": [
+        {"context": "AI 導入第一步應評估?", "answer": "業務需求(As-Is/To-Be)"}
+      ],
+      "related_node_ids": []
+    },
+    {
+      "node_id": "n_L21203_001",
+      "knowledge_code": "L21203",
+      "title": "PDPA 事前告知義務六項(勘誤補完)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "勘誤表 4-34"}, {"file": "衝刺主檔", "section": "1.1 法規"}],
+      "summary": "蒐集個人資料前應告知:機關名稱、目的與範圍、資料類別、利用情形、當事人權利、不提供之影響",
+      "key_points": [
+        "1. 蒐集機關名稱(含公務/非公務)",
+        "2. 蒐集目的與使用範圍",
+        "3. 個人資料之類別",
+        "4. 個人資料利用情形(期間、地區、對象、方式)",
+        "5. 當事人權利及行使方式(查詢、閱覽、更正、刪除)",
+        "6. 不提供資料之影響"
+      ],
+      "common_misconceptions": [
+        "誤以為 PDPA 與 GDPR 條文相同",
+        "把『事前告知』與『事後申訴』混淆"
+      ],
+      "explanation_hooks": [
+        "事前告知 = 確保『充分知情權與自主決定權』",
+        "與 GDPR Art.13/14 對應(告知義務)"
+      ],
+      "variation_seeds": [
+        {"context": "PDPA 事前告知必須包含?", "answer": "六項(機關/目的/類別/利用/權利/影響)"}
+      ],
+      "related_node_ids": ["n_L21203_002"],
+      "errata_critical": true
+    },
+    {
+      "node_id": "n_L21203_002",
+      "knowledge_code": "L21203",
+      "title": "GDPR 七大權利",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "1.1 法規"}],
+      "summary": "Art.15 查閱、Art.16 修正、Art.17 刪除/遺忘、Art.18 處理限制、Art.20 資料可攜、Art.22 反對自動化決策、Art.6/7 同意原則",
+      "key_points": [
+        "刪除權(Art.17)— 又稱『被遺忘權』",
+        "資料可攜(Art.20)— 機器可讀格式輸出",
+        "Art.22 反對自動化決策 — AI 系統重要規範",
+        "同意三要件:自由、明確、可撤回"
+      ],
+      "common_misconceptions": ["把 Art.22 誤認為一般同意條款"],
+      "explanation_hooks": ["GDPR 七權對 AI 系統影響最大者:Art.22 反對自動化決策"],
+      "variation_seeds": [
+        {"context": "GDPR 哪條規範自動化決策?", "answer": "Art.22"},
+        {"context": "資料主體可要求機器可讀格式輸出?", "answer": "Art.20 資料可攜權"}
+      ],
+      "related_node_ids": ["n_L21203_001"]
+    },
+    {
+      "node_id": "n_L21203_003",
+      "knowledge_code": "L21203",
+      "title": "對抗性攻擊(Adversarial Attack)三層防禦",
+      "category": "scenario",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.2-18"}, {"exam": "114-2 科一 Q24"}],
+      "summary": "對抗樣本訓練(In-model)、規則引擎(Post-hoc)、輸入過濾(Pre-hoc);**網路防火牆不針對模型脆弱性**",
+      "key_points": [
+        "對抗樣本訓練:訓練時加入對抗樣本提升魯棒性",
+        "推論後規則引擎:檢查輸出是否違反業務規則",
+        "輸入前處理:過濾異常或極端值",
+        "網路防火牆:防外網入侵,**不**解決模型本身脆弱性"
+      ],
+      "common_misconceptions": ["誤以為網路防火牆能防對抗性攻擊"],
+      "explanation_hooks": ["對抗性攻擊是『模型本身的脆弱性』,要從模型角度解決"],
+      "variation_seeds": [
+        {"context": "下列何者非對抗性攻擊解法?", "answer": "強化網路防火牆"}
+      ],
+      "related_node_ids": [],
+      "exam_appearance": [{"exam": "114-2", "question_no": 24, "subject": 1}]
+    },
+    {
+      "node_id": "n_L21203_004",
+      "knowledge_code": "L21203",
+      "title": "生成式 AI 著作權侵權對策",
+      "category": "scenario",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.2-19"}, {"exam": "114-2 科一 Q25"}],
+      "summary": "**訓練資料篩選 + 授權驗證(源頭管控)為最佳**;優於相似度比對 / 差分隱私 / 浮水印",
+      "key_points": [
+        "源頭管控:排除未授權或高風險資料",
+        "中段管控:差分隱私防止記憶受著作權樣本",
+        "末端管控:語意相似度比對 / 浮水印 / 數位指紋"
+      ],
+      "common_misconceptions": ["誤以為浮水印能預防侵權(只能事後追溯)"],
+      "explanation_hooks": ["源頭預防 > 末端追溯"],
+      "variation_seeds": [
+        {"context": "降低生成式 AI 侵權風險最佳策略?", "answer": "訓練資料篩選與授權驗證"}
+      ],
+      "related_node_ids": [],
+      "exam_appearance": [{"exam": "114-2", "question_no": 25, "subject": 1}]
+    },
+    {
+      "node_id": "n_L21203_005",
+      "knowledge_code": "L21203",
+      "title": "不可否認性(Non-repudiation)= 數位簽章 + Hash",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.2-20"}, {"exam": "114-2 科一 Q30"}],
+      "summary": "金融監管要求:每筆推論記錄輸入/輸出 Hash + 數位簽章,確保不可竄改、可法務追蹤",
+      "key_points": [
+        "資訊安全 CIA + Non-repudiation:不可否認性",
+        "Hash:資料完整性 / 防篡改",
+        "Digital Signature:證明來源不可抵賴",
+        "兩者結合:推論記錄不可被否認"
+      ],
+      "common_misconceptions": ["把『不可否認性』當『機密性』(加密)"],
+      "explanation_hooks": ["完整性 = Hash;不可否認性 = Hash + 數位簽章"],
+      "variation_seeds": [
+        {"context": "金融 AI 推論記錄需符合不可否認性", "answer": "Hash + 數位簽章"}
+      ],
+      "related_node_ids": [],
+      "exam_appearance": [{"exam": "114-2", "question_no": 30, "subject": 1}]
+    },
+    {
+      "node_id": "n_L21302_001",
+      "knowledge_code": "L21302",
+      "title": "Kubernetes 在 AI 部署的核心功能",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "1.1 部署"}, {"exam": "114-2 科一 Q13"}],
+      "summary": "管理與協調模型服務的部署、擴展與運行環境(非訓練 / 非資料儲存 / 非 GPU 加速)",
+      "key_points": [
+        "K8s = 容器編排,管理 Pod、Service、Deployment",
+        "支援 Auto Scaling、滾動更新、自我修復",
+        "**非用於模型訓練流程管控**(那是 Kubeflow Pipelines)"
+      ],
+      "common_misconceptions": [
+        "把 K8s 與 Kubeflow 混淆",
+        "誤以為 K8s 直接負責 GPU 加速"
+      ],
+      "explanation_hooks": ["K8s 的核心是容器編排,不是 AI 框架本身"],
+      "variation_seeds": [
+        {"context": "K8s 在 AI 部署核心功能?", "answer": "管理服務部署/擴展/運行環境"}
+      ],
+      "related_node_ids": ["n_L21302_002"],
+      "exam_appearance": [{"exam": "114-2", "question_no": 13, "subject": 1}]
+    },
+    {
+      "node_id": "n_L21302_002",
+      "knowledge_code": "L21302",
+      "title": "MLOps Model Registry",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "1.1 v2"}, {"exam": "114-2 科一 Q15"}],
+      "summary": "集中管理模型版本、訓練紀錄與部署狀態",
+      "key_points": [
+        "與 Feature Store / Model Monitoring 區分",
+        "代表工具:MLflow、SageMaker Model Registry、Vertex AI"
+      ],
+      "common_misconceptions": ["把 Model Registry 當作運算資源管理(那是 K8s)"],
+      "explanation_hooks": ["Registry = 註冊處 = 版本控管中心"],
+      "variation_seeds": [
+        {"context": "MLOps 中集中管理模型版本與部署狀態?", "answer": "Model Registry"}
+      ],
+      "related_node_ids": ["n_L21302_001"],
+      "exam_appearance": [{"exam": "114-2", "question_no": 15, "subject": 1}]
+    },
+    {
+      "node_id": "n_L21302_003",
+      "knowledge_code": "L21302",
+      "title": "Drift 偵測:Data Drift / Concept Drift / PSI / KL Divergence",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "3.3 v2"}, {"exam": "114-2 科一 Q22,Q32,Q42,Q46"}],
+      "summary": "Data Drift=輸入分佈改變;Concept Drift=輸入–標籤關係改變;**PSI / KL Divergence 為核心偵測工具**",
+      "key_points": [
+        "Data Drift:input X 分佈變了",
+        "Concept Drift:P(y|X) 變了",
+        "PSI(Population Stability Index):< 0.1 穩定 / 0.1-0.25 警戒 / > 0.25 顯著漂移",
+        "KL Divergence:衡量兩分佈差異",
+        "**PSI 為最具預測力指標**(超越 CPU、置信度、回應時間)"
+      ],
+      "common_misconceptions": [
+        "把 Data Drift 與 Concept Drift 混淆",
+        "誤以為系統 CPU / 回應時間能預測模型效能衰退"
+      ],
+      "explanation_hooks": [
+        "Drift 偵測首選 PSI(輸入分佈穩定度)",
+        "PSI 公式:Σ(實際%-期望%)·ln(實際/期望)"
+      ],
+      "variation_seeds": [
+        {"context": "輸入分佈與訓練資料差異大", "answer": "Data Drift,用 KL/PSI 偵測"},
+        {"context": "最具預測力的模型監控指標?", "answer": "PSI"}
+      ],
+      "related_node_ids": [],
+      "exam_appearance": [{"exam": "114-2", "question_no": 22, "subject": 1}, {"exam": "114-2", "question_no": 32, "subject": 1}, {"exam": "114-2", "question_no": 42, "subject": 1}, {"exam": "114-2", "question_no": 46, "subject": 1}]
+    },
+    {
+      "node_id": "n_L21302_004",
+      "knowledge_code": "L21302",
+      "title": "持續整合 CI(Continuous Integration)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "1.1 v2"}, {"exam": "114-2 科一 Q29"}],
+      "summary": "**每次 commit 自動觸發建置、單元測試、靜態程式碼分析**(不是定時、不是手動)",
+      "key_points": [
+        "CI 核心:commit-trigger 自動化",
+        "與 CD(部署)區分:CI 是整合,CD 是部署"
+      ],
+      "common_misconceptions": ["把 CI 當『每日定時整合』"],
+      "explanation_hooks": ["CI = commit 即整合,降低整合風險"],
+      "variation_seeds": [
+        {"context": "CI 最核心實踐?", "answer": "每次 commit 自動觸發建置 + 測試"}
+      ],
+      "related_node_ids": [],
+      "exam_appearance": [{"exam": "114-2", "question_no": 29, "subject": 1}]
+    },
+    {
+      "node_id": "n_L21302_005",
+      "knowledge_code": "L21302",
+      "title": "高可用 AI 服務架構:水平擴展 + Auto Scaling",
+      "category": "scenario",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "2.2-21"}, {"exam": "114-2 科一 Q31"}],
+      "summary": "**容器化 + 水平擴展 + 自動彈性伸縮(Auto Scaling)**;優於垂直擴展或限制連線數",
+      "key_points": [
+        "10,000 RPS 等高流量需要 Auto Scaling",
+        "水平擴展(多實例)優於垂直擴展(單機升規格)",
+        "限制連線會犧牲使用者體驗"
+      ],
+      "common_misconceptions": ["誤以為單機升規格能應對流量峰值"],
+      "explanation_hooks": ["水平 = 多台、可彈性;垂直 = 單台、有上限"],
+      "variation_seeds": [
+        {"context": "高流量峰值穩定服務?", "answer": "容器化 + 水平擴展 + Auto Scaling"}
+      ],
+      "related_node_ids": [],
+      "exam_appearance": [{"exam": "114-2", "question_no": 31, "subject": 1}]
+    },
+    {
+      "node_id": "n_L21302_006",
+      "knowledge_code": "L21302",
+      "title": "GPU 記憶體不足解法:Data Sharding + 較小 Batch Size",
+      "category": "scenario",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "1.1 v2"}, {"exam": "114-2 科一 Q37"}],
+      "summary": "硬體無法換時,降低 Batch Size + 資料分片(Data Sharding),維持效能與收斂",
+      "key_points": [
+        "Data Sharding:資料分散到多 GPU",
+        "Gradient Accumulation 也是相關技術",
+        "Mixed Precision Training(FP16+FP32)亦可降記憶體",
+        "**減少訓練資料 / 提高學習率 / 用測試集訓練都是錯誤**"
+      ],
+      "common_misconceptions": ["誤以為減少訓練資料能解決記憶體問題"],
+      "explanation_hooks": ["Batch Size 是記憶體佔用主因,降低後可加分片"],
+      "variation_seeds": [
+        {"context": "GPU 記憶體不足", "answer": "降 Batch Size + Data Sharding"}
+      ],
+      "related_node_ids": [],
+      "exam_appearance": [{"exam": "114-2", "question_no": 37, "subject": 1}]
+    },
+    {
+      "node_id": "n_L21302_007",
+      "knowledge_code": "L21302",
+      "title": "Canary Release / A-B Testing / 藍綠部署",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "1.1 部署"}],
+      "summary": "Canary=金絲雀,小流量先行;A/B=並行對照;藍綠=完整切換新舊環境",
+      "key_points": [
+        "Canary:5% → 25% → 100% 流量比例切換",
+        "A/B:同時跑兩版本,比較指標",
+        "藍綠:藍環境(舊)、綠環境(新),切換流量"
+      ],
+      "common_misconceptions": ["把 Canary 與 Phased Rollout 混淆(後者按單位/區域)"],
+      "explanation_hooks": ["Canary 流量逐步;Phased Rollout 範圍逐步"],
+      "variation_seeds": [
+        {"context": "想按流量比例逐步切換", "answer": "Canary Release"}
+      ],
+      "related_node_ids": ["n_L21202_001"]
+    },
+    {
+      "node_id": "n_L21301_001",
+      "knowledge_code": "L21301",
+      "title": "JSON 半結構化資料時序特徵抽取",
+      "category": "scenario",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "1.1 v2"}, {"exam": "114-2 科一 Q27"}],
+      "summary": "**設計遞迴函式展開巢狀欄位 + 時間窗口聚合**;優於扁平化 CSV / RNN 直接吃 JSON / 只保留時間戳記",
+      "key_points": [
+        "遞迴展開巢狀 JSON",
+        "Time Window 聚合:5 分鐘 / 1 小時 滑動窗",
+        "計算統計量(均值、次數、變異)作為特徵"
+      ],
+      "common_misconceptions": ["誤以為 RNN 能直接吃原始 JSON 字串"],
+      "explanation_hooks": ["JSON → 結構化展開 → 時間聚合 → 特徵向量"],
+      "variation_seeds": [
+        {"context": "故障預測 + 半結構化日誌", "answer": "遞迴展開 + 時間窗口聚合"}
+      ],
+      "related_node_ids": [],
+      "exam_appearance": [{"exam": "114-2", "question_no": 27, "subject": 1}]
+    },
+    {
+      "node_id": "n_L21301_002",
+      "knowledge_code": "L21301",
+      "title": "連續 + 類別混合特徵工程",
+      "category": "flow",
+      "source_level": "L1",
+      "source_refs": [{"file": "衝刺主檔", "section": "1.1 v2"}, {"exam": "114-2 科一 Q28"}],
+      "summary": "連續特徵標準化 + 類別特徵 Target Encoding + 生成交互特徵 → 最佳實踐",
+      "key_points": [
+        "標準化 Standardization 處理連續特徵",
+        "Target Encoding 處理高基數類別",
+        "Interaction Features:特徵相乘",
+        "錯誤策略:Label Encoding 後直接合併(會引入虛假順序)、僅保留連續、全部離散化"
+      ],
+      "common_misconceptions": ["把 Label Encoding 用在無序類別(會引入虛假順序)"],
+      "explanation_hooks": ["連續用標準化、類別用 Target/One-hot、互動用乘積"],
+      "variation_seeds": [
+        {"context": "混合連續+類別特徵的最佳工程?", "answer": "標準化 + Target Encoding + 交互特徵"}
+      ],
+      "related_node_ids": [],
+      "exam_appearance": [{"exam": "114-2", "question_no": 28, "subject": 1}]
+    }
+  ],
+  "summary": {
+    "total_nodes": 28,
+    "by_code": {
+      "L21101_NLP": 6,
+      "L21102_CV": 4,
+      "L21103_GenAI": 4,
+      "L21104_Multimodal": 2,
+      "L21202_Planning": 2,
+      "L21203_Risk": 5,
+      "L21301_DataPrep": 2,
+      "L21302_Deploy": 7
+    },
+    "by_source_level": {"L1": 28, "L2": 0, "L3": 0, "L4": 0},
+    "iron_rule_compliance_check": "all 28 nodes have misconceptions, explanation_hooks, variation_seeds",
+    "errata_critical_count": 1
+  }
+}
