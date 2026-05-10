@@ -640,7 +640,7 @@
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "Inertia = Σ Σ ||xᵢ − μⱼ||²,以 case_a 為例:群 A (1−1.5)²+(2−1.5)² = 0.25+0.25 = 0.5;群 B (8−8.5)²+(9−8.5)² = 0.5;總計 = {answer}",
+        "correct": "Inertia = Σ Σ ||xᵢ − μⱼ||²(對所有群、所有點求平方距離後加總)。代入 群 A 點集 [{a}](質心 {ca})、群 B 點集 [{b}](質心 {cb}):分別計算每點到所屬質心的平方距離後加總兩群,得 Inertia = {answer}",
         "wrong": {
           "{wrong1}": "僅計算單一群內 SSE,未加總兩群;Inertia 必須對所有群求和",
           "{wrong2}": "誤把 SSE 除以樣本數變成『均方距離』;Inertia 是總和並非平均",

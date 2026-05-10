@@ -1,0 +1,170 @@
+{
+  "generated_at": "2026-05-10T05:53:02.765Z",
+  "summary": {
+    "totalQuestions": 325,
+    "calcQuestions": 19,
+    "scQuestionsWithNumbers": 62,
+    "P0_count": 0,
+    "P1_count": 0,
+    "P2_count": 7
+  },
+  "P0_numericMismatch": [],
+  "P1_caseLeakage": [],
+  "P1_explanationLiteralVsStemPlaceholder": [],
+  "P2_trapTypeUnverified": [
+    {
+      "file": "questions-batch-n8-eval-gov.json",
+      "id": "q_n8_001",
+      "case": "case_a",
+      "field": "wrong1",
+      "recorded": "0.880",
+      "computed": "0.800",
+      "vars": {
+        "tp": "80",
+        "fp": "20",
+        "fn": "20",
+        "tn": "880",
+        "answer": "0.800",
+        "wrong1": "0.880",
+        "wrong2": "0.500",
+        "wrong3": "0.667"
+      },
+      "note": "case.wrong1(0.880)與假設 trap_type 計算法(0.800)不一致,需 review trap_type 是否正確"
+    },
+    {
+      "file": "questions-batch-n8-eval-gov.json",
+      "id": "q_n8_001",
+      "case": "case_a",
+      "field": "wrong2",
+      "recorded": "0.500",
+      "computed": "0.800",
+      "vars": {
+        "tp": "80",
+        "fp": "20",
+        "fn": "20",
+        "tn": "880",
+        "answer": "0.800",
+        "wrong1": "0.880",
+        "wrong2": "0.500",
+        "wrong3": "0.667"
+      },
+      "note": "case.wrong2(0.500)與假設 trap_type 計算法(0.800)不一致,需 review trap_type 是否正確"
+    },
+    {
+      "file": "questions-batch-n8-eval-gov.json",
+      "id": "q_n8_001",
+      "case": "case_a",
+      "field": "wrong3",
+      "recorded": "0.667",
+      "computed": "0.800",
+      "vars": {
+        "tp": "80",
+        "fp": "20",
+        "fn": "20",
+        "tn": "880",
+        "answer": "0.800",
+        "wrong1": "0.880",
+        "wrong2": "0.500",
+        "wrong3": "0.667"
+      },
+      "note": "case.wrong3(0.667)與假設 trap_type 計算法(0.800)不一致,需 review trap_type 是否正確"
+    },
+    {
+      "file": "questions-batch-n8-eval-gov.json",
+      "id": "q_n8_001",
+      "case": "case_c",
+      "field": "wrong1",
+      "recorded": "0.728",
+      "computed": "0.729",
+      "vars": {
+        "tp": "60",
+        "fp": "40",
+        "fn": "10",
+        "tn": "890",
+        "answer": "0.706",
+        "wrong1": "0.728",
+        "wrong2": "0.600",
+        "wrong3": "0.857"
+      },
+      "note": "case.wrong1(0.728)與假設 trap_type 計算法(0.729)不一致,需 review trap_type 是否正確"
+    },
+    {
+      "file": "questions-batch-n8-eval-gov.json",
+      "id": "q_n8_003",
+      "case": "case_a",
+      "field": "wrong2",
+      "recorded": "0.857",
+      "computed": "0.667",
+      "vars": {
+        "tp": "60",
+        "fp": "40",
+        "fn": "20",
+        "tn": "880",
+        "answer": "0.600",
+        "wrong1": "0.750",
+        "wrong2": "0.857",
+        "wrong3": "0.940"
+      },
+      "note": "case.wrong2(0.857)與假設 trap_type 計算法(0.667)不一致,需 review trap_type 是否正確"
+    },
+    {
+      "file": "questions-batch-n8-eval-gov.json",
+      "id": "q_n8_003",
+      "case": "case_b",
+      "field": "wrong2",
+      "recorded": "0.727",
+      "computed": "0.842",
+      "vars": {
+        "tp": "80",
+        "fp": "20",
+        "fn": "10",
+        "tn": "890",
+        "answer": "0.800",
+        "wrong1": "0.889",
+        "wrong2": "0.727",
+        "wrong3": "0.970"
+      },
+      "note": "case.wrong2(0.727)與假設 trap_type 計算法(0.842)不一致,需 review trap_type 是否正確"
+    },
+    {
+      "file": "questions-batch-n8-eval-gov.json",
+      "id": "q_n8_003",
+      "case": "case_d",
+      "field": "wrong2",
+      "recorded": "0.700",
+      "computed": "0.400",
+      "vars": {
+        "tp": "30",
+        "fp": "70",
+        "fn": "20",
+        "tn": "880",
+        "answer": "0.300",
+        "wrong1": "0.600",
+        "wrong2": "0.700",
+        "wrong3": "0.910"
+      },
+      "note": "case.wrong2(0.700)與假設 trap_type 計算法(0.400)不一致,需 review trap_type 是否正確"
+    }
+  ],
+  "verifierCoverage": [
+    "q_n8_001",
+    "q_n8_002",
+    "q_n8_003",
+    "q_n8_004",
+    "q_n8_005",
+    "q_pc_calc_001",
+    "q_pc_calc_002",
+    "q_pc_calc_003",
+    "q_pg_007",
+    "q_0006",
+    "q_n2_cv_005",
+    "q_n2_cv_015",
+    "q_n6_002",
+    "q_n6_012",
+    "q_n6_017",
+    "q_n6_021",
+    "q_n7_dl_019",
+    "q_n5_018",
+    "q_n5_024"
+  ]
+}

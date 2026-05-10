@@ -205,7 +205,7 @@
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "MCC = (TP·TN - FP·FN) / sqrt((TP+FP)·(TP+FN)·(TN+FP)·(TN+FN));範圍 [-1, +1],+1=完美、0=隨機、-1=完全反向。以 case_a 為例:分子 = 30·9940 - 20·10 = 298200 - 200 = 298000;分母 = sqrt(50·40·9960·9950) = sqrt(198,012,000,000) ≈ 445,201;MCC ≈ 298000 / 445201 ≈ 0.669。MCC 同時納入四個象限,且分母對類別比例做標準化,是極度不平衡資料下最不易被誤導的指標,優於 F1(忽略 TN)與 Accuracy(被 TN 主導)。",
+        "correct": "MCC = (TP·TN - FP·FN) / sqrt((TP+FP)·(TP+FN)·(TN+FP)·(TN+FN));範圍 [-1, +1],+1=完美、0=隨機、-1=完全反向。代入 TP={tp}、FP={fp}、FN={fn}、TN={tn}:分子 = TP·TN − FP·FN = {tp}·{tn} − {fp}·{fn};分母 = sqrt((TP+FP)·(TP+FN)·(TN+FP)·(TN+FN));MCC ≈ {answer}。MCC 同時納入四個象限,且分母對類別比例做標準化,是極度不平衡資料下最不易被誤導的指標,優於 F1(忽略 TN)與 Accuracy(被 TN 主導)。",
         "wrong": {
           "{wrong1},僅以 Balanced Accuracy = (Recall + Specificity) / 2 計算,屬算術平均;未對四象限做幾何平均標準化": "Balanced Accuracy = (Recall + Specificity) / 2 比 Accuracy 對少數類更公平,但仍是算術平均、未對 P/N 數量做幾何標準化;MCC 用四個邊和的乘積開根號,對極不平衡情境最穩健",
           "{wrong2},僅以 F1 = 2·P·R/(P+R) 計算,只考慮 TP/FP/FN 三象限,忽略 TN": "F1 不含 TN,在不平衡資料仍可能誤導(雖優於 Accuracy);MCC 將 TN 納入並用幾何平均做標準化,更嚴謹",

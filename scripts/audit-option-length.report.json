@@ -1,11 +1,26 @@
 {
   "summary": {
-    "total": 264,
-    "longestPct": "43.9",
-    "shortestPct": "8.3",
+    "total": 267,
+    "longestPct": "44.2",
+    "shortestPct": "8.2",
     "avgRatio": "1.06",
-    "acceptablePct": "98.9",
-    "flaggedCount": 0
+    "acceptablePct": "98.5",
+    "flaggedCount": 1
   },
-  "flagged": []
+  "flagged": [
+    {
+      "file": "questions.json",
+      "id": "q_0042",
+      "stem": "某客戶相似度比對系統需逐一比對每位客戶與其他所有客戶的資料組合,此演算法的時間複雜度為何?",
+      "correctText": "O(n²) — 執行時間與資料量平方成正比",
+      "correctLen": 21,
+      "avgWrongLen": "12.3",
+      "ratio": "1.70",
+      "wrongLens": [
+        11,
+        11,
+        15
+      ]
+    }
+  ]
 }

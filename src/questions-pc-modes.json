@@ -380,7 +380,7 @@
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "F1 = 2·P·R/(P+R),其中 P=TP/(TP+FP),R=TP/(TP+FN);以 case_a 為例:P=60/80=0.75,R=60/70≈0.857,F1=2·0.75·0.857/(0.75+0.857)≈0.800;F1 是 P 與 R 的調和平均,對極端值更敏感",
+        "correct": "F1 = 2·P·R/(P+R),其中 P=TP/(TP+FP)、R=TP/(TP+FN)。代入 TP={tp}、FP={fp}、FN={fn}:P={tp}/({tp}+{fp})、R={tp}/({tp}+{fn});F1 = 2PR/(P+R) = {answer}。F1 是 P 與 R 的調和平均,對極端值更敏感(任一指標趨近 0,F1 也會明顯下降)",
         "wrong": {
           "{wrong1}": "此值通常是只算 P 或 R,未做調和平均;F1 必須兩者皆計算後再合成",
           "{wrong2}": "此值來自算術平均 (P+R)/2,但 F1 是調和平均 2PR/(P+R),數值通常較算術平均小",
@@ -415,7 +415,7 @@
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "Lift(A→B) = P(A∩B) / (P(A)·P(B)) = Confidence(A→B) / P(B);以 case_a 為例:Lift = 0.05/(0.20·0.10) = 0.05/0.02 = 2.50,代表買 A 後再買 B 的機率是隨機買 B 的 2.5 倍;Lift>1 正相關、=1 獨立、<1 負相關",
+        "correct": "Lift(A→B) = P(A∩B) / (P(A)·P(B)) = Confidence(A→B) / P(B)。代入 P(A)={pa}、P(B)={pb}、P(A∩B)={pab}:Lift = {pab}/({pa}·{pb}) = {answer},代表買 A 後再買 B 的機率是隨機買 B 的 {answer} 倍;Lift>1 正相關、=1 獨立、<1 負相關",
         "wrong": {
           "{wrong1}": "此值疑似 Confidence = P(B|A) = P(AB)/P(A);Confidence 不會除以 P(B),無法判斷是否優於隨機",
           "{wrong2}": "此值疑似 Support 或其變體;Support = P(AB) 只看共現頻率,未做基準比較",
@@ -451,7 +451,7 @@
       "shuffle_options": true,
       "options_template_note": "ROI = (Gain - Cost) / Cost × 100%",
       "explanation": {
-        "correct": "ROI =(收益 - 成本)/ 成本 × 100%;以 case_a 為例:ROI = (260-200)/200 × 100% = 30%,代表每投入 1 元獲得 0.3 元淨利;ROI 是 AI 投資評估的核心指標,應與 NPV、IRR、Payback Period 一併分析",
+        "correct": "ROI =(收益 - 成本)/ 成本 × 100%。代入 成本={cost}、收益={gain}:ROI = ({gain}-{cost})/{cost} × 100% = {answer},代表每投入 1 元的淨利倍率;ROI 是 AI 投資評估的核心指標,應與 NPV、IRR、Payback Period 一併分析",
         "wrong": {
           "{wrong1}": "此值疑似算成 Gain/Cost(總收益比),未扣除成本;會嚴重高估投資效益",
           "{wrong2}": "此值疑似把分母從 Cost 換成 Gain,屬定義錯誤;ROI 永遠以投入成本為基準",

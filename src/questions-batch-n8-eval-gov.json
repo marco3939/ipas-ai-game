@@ -39,7 +39,7 @@
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "F1 = 2·P·R / (P+R),其中 P = TP/(TP+FP),R = TP/(TP+FN);以 case_a 為例:P = 80/100 = 0.800,R = 80/100 = 0.800,F1 = 2·0.8·0.8/(0.8+0.8) = 0.800。F1 是 Precision 與 Recall 的調和平均,對兩者中較小者特別敏感:任一指標趨近 0,F1 也會被拉低。實務上在客訴偵測這類『漏判 / 誤判都有成本』情境採用 F1,優於單看 Precision 或 Recall。",
+        "correct": "F1 = 2·P·R / (P+R),其中 P = TP/(TP+FP),R = TP/(TP+FN)。代入 TP={tp}、FP={fp}、FN={fn}:P = {tp}/({tp}+{fp})、R = {tp}/({tp}+{fn}),F1 = 2PR/(P+R) = {answer}。F1 是 Precision 與 Recall 的調和平均,對兩者中較小者特別敏感:任一指標趨近 0,F1 也會被拉低。實務上在客訴偵測這類『漏判 / 誤判都有成本』情境採用 F1,優於單看 Precision 或 Recall。",
         "wrong": {
           "{wrong1}(誤把 F1 計算成 Precision 與 Recall 的算術平均 (P+R)/2)": "F1 必須以調和平均 2PR/(P+R) 計算;算術平均 (P+R)/2 在 P 與 R 差距大時會高估綜合表現,失去 F1 設計初衷",
           "{wrong2}(只回傳 Precision = TP/(TP+FP) 一項,未計入 Recall)": "Precision 只衡量『預測為正中真為正』,完全不反映漏判;F1 必須同時納入 Recall 才能呈現綜合品質",
@@ -74,7 +74,7 @@
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "Recall = TP / (TP + FN),衡量『真為正中被模型找出比例』。以 case_a 為例:Recall = 40/(40+10) = 40/50 = 0.800。在癌症篩檢這類漏診成本極高的情境,Recall 是首要指標。注意:原版 PDF 誤植為 TP/(TP+FP),勘誤後正確分母為 TP+FN;這是 IPAS 中級的高頻陷阱題,務必牢記『分母看 FN 才正確』。",
+        "correct": "Recall = TP / (TP + FN),衡量『真為正中被模型找出比例』。代入 TP={tp}、FN={fn}:Recall = {tp}/({tp}+{fn}) = {answer}。在癌症篩檢這類漏診成本極高的情境,Recall 是首要指標。注意:原版 PDF 誤植為 TP/(TP+FP),勘誤後正確分母為 TP+FN;這是 IPAS 中級的高頻陷阱題,務必牢記『分母看 FN 才正確』。",
         "wrong": {
           "{wrong1}(誤套 Precision 公式 TP/(TP+FP),即勘誤前 PDF 錯版的版本)": "TP/(TP+FP) 是 Precision 公式,並非 Recall;勘誤前 PDF 將 Recall 公式誤寫為此式,務必避免",
           "{wrong2}(以 TP / 全體 1000 筆樣本計算,並非 Recall 標準定義公式)": "TP / 全體並非任何標準指標,可能與類別比例相近但不等於 Recall;Recall 分母只算正類(TP+FN)",
@@ -109,7 +109,7 @@
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "Precision = TP / (TP + FP),衡量『預測為正中真為正比例』。以 case_a 為例:Precision = 60/(60+40) = 60/100 = 0.600。在垃圾郵件過濾這類『誤判正常信件成本高(信件被誤丟)』情境,Precision 是首要指標。Precision 與 Recall 的差別:Precision 看分子+FP(誤判),Recall 看分子+FN(漏判);兩者分子皆為 TP,但分母不同。",
+        "correct": "Precision = TP / (TP + FP),衡量『預測為正中真為正比例』。代入 TP={tp}、FP={fp}:Precision = {tp}/({tp}+{fp}) = {answer}。在垃圾郵件過濾這類『誤判正常信件成本高(信件被誤丟)』情境,Precision 是首要指標。Precision 與 Recall 的差別:Precision 看分子+FP(誤判),Recall 看分子+FN(漏判);兩者分子皆為 TP,但分母不同。",
         "wrong": {
           "{wrong1}(誤把分母算成 TP+FN,實為 Recall 公式而非 Precision)": "TP/(TP+FN) 是 Recall 公式,衡量漏判;Precision 分母為 TP+FP,衡量誤報;兩者切勿混淆",
           "{wrong2}(誤算成 F1 = 2PR/(P+R) 調和平均,並非 Precision 單值)": "F1 是 P 與 R 的調和平均,需先各自算出 P 與 R;若直接得到 F1 並回填為 Precision 是計算流程錯誤",
@@ -144,7 +144,7 @@
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "F1 = 2·P·R / (P + R) 為 Precision 與 Recall 的調和平均。以 case_a 為例:P=0.80, R=0.60,F1 = 2·0.80·0.60/(0.80+0.60) = 0.96/1.40 ≈ 0.686。調和平均的特性是『對兩者中較小值敏感』,因此即使 P=0.99 但 R=0.10,F1 也只有 0.182,迫使模型同時兼顧兩個指標。",
+        "correct": "F1 = 2·P·R / (P + R) 為 Precision 與 Recall 的調和平均。代入 P={p}、R={r}:F1 = 2·{p}·{r}/({p}+{r}) = {answer}。調和平均的特性是『對兩者中較小值敏感』,因此即使 P=0.99 但 R=0.10,F1 也只有 0.182,迫使模型同時兼顧兩個指標。",
         "wrong": {
           "{wrong1}(誤算成算術平均 (P+R)/2,失去調和特性)": "算術平均對兩者一視同仁,不會被小值拉低,在 P 與 R 差距大時會嚴重高估綜合表現",
           "{wrong2}(誤算成 P·R 兩者直接相乘,非 F1 公式)": "幾何平均 sqrt(PR) 與 F1 不同;P·R 直接相乘也非標準指標",
@@ -179,7 +179,7 @@
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "Accuracy = (TP + TN) / 全體。以 case_a 為例:Accuracy = (5+945)/1000 = 0.950。但此模型 Recall = 5/(5+45) = 0.10,代表 90% 釣魚信被漏判,Accuracy 卻仍高達 95%——這正是『不平衡資料禁用 Accuracy』的典型陷阱。在正類 < 5% 場景應改用 F1、Recall、Precision、PR-AUC 等不被多數類主導的指標。",
+        "correct": "Accuracy = (TP + TN) / 全體。代入 TP={tp}、FP={fp}、FN={fn}、TN={tn}:Accuracy = ({tp}+{tn})/({tp}+{fp}+{fn}+{tn}) = {answer}。但此類模型 Recall = TP/(TP+FN) 在正類稀少時可能僅 10% 上下(代表 90% 釣魚信被漏判),Accuracy 卻仍高達九成以上——這正是『不平衡資料禁用 Accuracy』的典型陷阱。在正類 < 5% 場景應改用 F1、Recall、Precision、PR-AUC 等不被多數類主導的指標。",
         "wrong": {
           "Accuracy = {wrong1},以 (TP)/(TP+FP+FN) 計算,把 TN 排除為 Accuracy 之外的計算錯誤版本": "Accuracy 必須包含 TN(預測為負且真為負也是『正確分類』);排除 TN 將失去全體正確率的意義",
           "Accuracy = {wrong2},以 TP / 全體樣本計算,屬於 TP 占比而非 Accuracy 公式定義,常見於初學者誤算": "TP 單獨除以全體只反映『正類找出比例 × 正類比例』,並非標準的 Accuracy 定義",
