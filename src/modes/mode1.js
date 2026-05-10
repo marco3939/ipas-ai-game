@@ -8,8 +8,9 @@
   // 每場 BOSS 戰題數(原 7,2026-05-10 升 20 — 使用者實測抱怨太短 + 題庫已 325 題支撐)
   const BOSS_QUESTIONS_PER_BATTLE = 20;
   // BOSS HP 縮放(對應題數 7→20,維持「答對 60~80% 才能勝」的戰鬥節奏)
-  // baseDmg ~ 25(Lv1), 20 題 80% 答對 ≈ 400+ 傷害(含 combo/crit),HP_MULTIPLIER=2.4
-  const BOSS_HP_MULTIPLIER = 2.4;
+  // baseDmg ~ 20(Lv1 18+2*1+0), 20 題 80% 答對 ≈ 16 題 × 平均 28 dmg = 448 → HP_MULTIPLIER=4.0 對應平均 HP 524,需 ~19 題 KO
+  // 2026-05-10 從 2.4 升 4.0:原 2.4 算錯 baseDmg(以為 25 實為 20),導致 16 題即 KO 提早結束
+  const BOSS_HP_MULTIPLIER = 4.0;
 
   // === 12 產業 BOSS 配置 ===
   const BOSSES = [
@@ -256,7 +257,8 @@
         questions, idx: 0, combo: 0, maxCombo: 0,
         correct: 0, wrong: 0, totalDamage: 0,
         doubleNext: false, currentQ: null,
-        answering: false }; // QA 修補 A1:防止快速雙擊重入
+        answering: false, // QA 修補 A1:防止快速雙擊重入
+        bossKnockedOutShown: false }; // 2026-05-10:BOSS 倒下後仍跑滿 20 題,只顯示一次衝刺加分提示
 
       const view = document.getElementById('view-play');
       view.innerHTML = `
@@ -360,7 +362,8 @@
 
     showQuestion() {
       if (!this.state) return; // QA 修補:防呆
-      if (this.state.idx >= this.state.questions.length || this.state.bossHp <= 0) { this.victory(); return; }
+      // 即使 BOSS HP 歸零,仍跑完 20 題(衝刺加分模式,提供額外練習機會)
+      if (this.state.idx >= this.state.questions.length) { this.victory(); return; }
       this.state.answering = false; // QA 修補 A1:新題開始解鎖(避免上一題殘留)
       const q = renderQuestion(this.state.questions[this.state.idx]);
       this.state.currentQ = q;
@@ -428,6 +431,12 @@
       if (this.state.doubleNext) { dmg *= 2; this.state.doubleNext = false; }
       this.state.bossHp = Math.max(0, this.state.bossHp - dmg);
       this.state.totalDamage += dmg;
+
+      // 偵測 BOSS 剛倒下的瞬間(從 >0 變 0):顯示「衝刺加分模式」訊息
+      if (this.state.bossHp === 0 && !this.state.bossKnockedOutShown) {
+        this.state.bossKnockedOutShown = true;
+        showToast('💥 BOSS 已倒下!衝刺加分模式 — 答完剩餘題目可獲得額外經驗', 3500);
+      }
 
       GameFX.flash('correct');
       const playerAv = document.getElementById('player-avatar');
@@ -584,7 +593,7 @@
       if (!this.state) return; // QA 修補:防呆
       this.state.answering = false; // QA 修補 A1:解鎖
       this.state.idx++;
-      if (this.state.bossHp <= 0) { this.victory(); return; }
+      // 不在此提早跳 victory,讓題目跑滿(由 showQuestion 的 idx 條件統一判定)
       this.showQuestion();
     },
 
