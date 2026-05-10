@@ -1,0 +1,313 @@
+{
+  "version": "1.0",
+  "schema_version": "iron-rule-1+2+3+5",
+  "purpose": "Mode 8 Code Trace 題庫(v0-minimal 5 題,涵蓋 numpy / 演算法 / 激活 / 邏輯迴歸 / DBSCAN)",
+  "iron_rule_compliance": {
+    "iron_rule_1": "整題層級 explanation.correct/hook/misconceptions/related_node_ids 齊備",
+    "iron_rule_2": "v0 不支援 stem_variables;每場 RNG.pickN(5) + step.options RNG.shuffle",
+    "iron_rule_3": "全原創題目,不複製 IPAS 114-2 真題情境",
+    "iron_rule_5": "node_id 必在 scripts/kb-allowed-nodes.json"
+  },
+  "questions": [
+    {
+      "id": "q_m8_001",
+      "knowledge_code": "L23102",
+      "node_id": "n_L23102_005",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "下列程式手動計算向量的 L2 norm(歐氏距離)。請依提示逐行追蹤變數狀態。",
+      "code_block": "import numpy as np\nv = np.array([3.0, 4.0])\nsq = v ** 2\ns = sq.sum()\nresult = np.sqrt(s)",
+      "trace_steps": [
+        {
+          "after_line": 2,
+          "ask": "v 的 shape 為何?",
+          "options": [
+            {"text": "(2,)", "is_correct": true},
+            {"text": "(2, 1)", "is_correct": false, "trap_type": "誤以為一維等於 column vector"},
+            {"text": "(1, 2)", "is_correct": false, "trap_type": "誤以為一維等於 row vector"},
+            {"text": "(2, 2)", "is_correct": false, "trap_type": "誤算成方陣"}
+          ]
+        },
+        {
+          "after_line": 3,
+          "ask": "sq 的內容為何?",
+          "options": [
+            {"text": "[9.0, 16.0]", "is_correct": true},
+            {"text": "[3.0, 4.0]", "is_correct": false, "trap_type": "未做平方"},
+            {"text": "[6.0, 8.0]", "is_correct": false, "trap_type": "誤用 *2"},
+            {"text": "[9, 16]", "is_correct": false, "trap_type": "忽略 dtype 為 float"}
+          ]
+        },
+        {
+          "after_line": 4,
+          "ask": "s 的值為何?",
+          "options": [
+            {"text": "25.0", "is_correct": true},
+            {"text": "[9.0, 16.0]", "is_correct": false, "trap_type": "未做 sum"},
+            {"text": "5.0", "is_correct": false, "trap_type": "誤已開根號"},
+            {"text": "12.5", "is_correct": false, "trap_type": "誤用 mean"}
+          ]
+        },
+        {
+          "after_line": 5,
+          "ask": "result 的值為何?",
+          "options": [
+            {"text": "5.0", "is_correct": true},
+            {"text": "25.0", "is_correct": false, "trap_type": "未開根號"},
+            {"text": "2.236", "is_correct": false, "trap_type": "誤算 sqrt(5)"},
+            {"text": "4.0", "is_correct": false, "trap_type": "取最大絕對值(L∞)"}
+          ]
+        }
+      ],
+      "options": [
+        {"text": "(全部步驟正確)", "is_correct": true},
+        {"text": "(任一步驟錯誤)", "is_correct": false}
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "L2 norm 流程:平方 [3²,4²]=[9,16] → 加總 25 → 開根號 5。np.linalg.norm(v) 預設等同此 sqrt(平方和) 計算。",
+        "wrong": {
+          "(任一步驟錯誤)": "見各 trace_step 的陷阱類型說明。"
+        },
+        "hook": "L2 norm = sqrt(平方和);沒開根號就停在 25,不是 5"
+      },
+      "misconceptions": ["誤以為 ndarray 一維 shape 是 (n,1)", "L2 norm 忘記開根號"],
+      "related_node_ids": ["n_L23102_005", "n_L23102_001"],
+      "tags": ["code-trace", "python", "numpy", "L2-norm", "降維"]
+    },
+    {
+      "id": "q_m8_002",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_004",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "下列程式以雙層迴圈計算陣列的逆序對(inversion pair)數量。逆序對定義:i<j 但 arr[i]>arr[j]。請追蹤迴圈執行後的變數。",
+      "code_block": "arr = [3, 1, 4, 1, 5]\ncount = 0\nfor i in range(len(arr)):\n    for j in range(i + 1, len(arr)):\n        if arr[i] > arr[j]:\n            count += 1\nprint(count)",
+      "trace_steps": [
+        {
+          "after_line": 1,
+          "ask": "len(arr) 的值為何?",
+          "options": [
+            {"text": "5", "is_correct": true},
+            {"text": "4", "is_correct": false, "trap_type": "誤算 index 而非長度"},
+            {"text": "3", "is_correct": false, "trap_type": "誤以為去重後計數"},
+            {"text": "6", "is_correct": false, "trap_type": "誤多算一個"}
+          ]
+        },
+        {
+          "after_line": 2,
+          "ask": "count 的初始值為何?",
+          "options": [
+            {"text": "0", "is_correct": true},
+            {"text": "1", "is_correct": false, "trap_type": "誤把計數從 1 起算"},
+            {"text": "5", "is_correct": false, "trap_type": "誤把 len(arr) 當 count"},
+            {"text": "None", "is_correct": false, "trap_type": "誤以為 0 等於 None"}
+          ]
+        },
+        {
+          "after_line": 7,
+          "ask": "迴圈結束後 count 的值為何?(逆序對:(3,1)、(3,1)、(4,1))",
+          "options": [
+            {"text": "3", "is_correct": true},
+            {"text": "2", "is_correct": false, "trap_type": "漏算 (4,1)"},
+            {"text": "4", "is_correct": false, "trap_type": "把 (4,5) 之類順序對誤算"},
+            {"text": "10", "is_correct": false, "trap_type": "誤以為總對數 C(5,2)=10"}
+          ]
+        }
+      ],
+      "options": [
+        {"text": "(全部步驟正確)", "is_correct": true},
+        {"text": "(任一步驟錯誤)", "is_correct": false}
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "雙層迴圈走訪所有 i<j 的配對,共 C(5,2)=10 對。逆序對(arr[i]>arr[j]):(3,1)、(3,1)、(4,1) — 共 3 對。雙層迴圈時間複雜度 O(n²)。",
+        "wrong": {
+          "(任一步驟錯誤)": "見各 trace_step 的陷阱類型說明。"
+        },
+        "hook": "兩兩比對 → C(n,2) 對 → O(n²);逆序對只計 i<j 且 arr[i]>arr[j]"
+      },
+      "misconceptions": ["誤把 (4,5) 視為逆序對", "誤把全部對數當逆序對數"],
+      "related_node_ids": ["n_L23103_004"],
+      "tags": ["code-trace", "python", "演算法", "時間複雜度", "雙層迴圈"]
+    },
+    {
+      "id": "q_m8_003",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_001",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "下列程式對神經元輸出陣列做 ReLU 激活並加總。請逐行追蹤變數。",
+      "code_block": "import numpy as np\nx = np.array([-2.0, 0.0, 3.0, -1.0])\nout = np.maximum(0, x)\ntotal = out.sum()",
+      "trace_steps": [
+        {
+          "after_line": 2,
+          "ask": "x 的 dtype 為何?",
+          "options": [
+            {"text": "float64", "is_correct": true},
+            {"text": "int64", "is_correct": false, "trap_type": "忽略 .0 浮點推論"},
+            {"text": "object", "is_correct": false, "trap_type": "誤以為混合型"},
+            {"text": "bool", "is_correct": false, "trap_type": "誤以為負值會被轉布林"}
+          ]
+        },
+        {
+          "after_line": 3,
+          "ask": "out 的內容為何?",
+          "options": [
+            {"text": "[0.0, 0.0, 3.0, 0.0]", "is_correct": true},
+            {"text": "[-2.0, 0.0, 3.0, -1.0]", "is_correct": false, "trap_type": "誤以為 ReLU 不改變"},
+            {"text": "[2.0, 0.0, 3.0, 1.0]", "is_correct": false, "trap_type": "誤用絕對值取代 ReLU"},
+            {"text": "[0, 0, 1, 0]", "is_correct": false, "trap_type": "誤以為 ReLU 是二元門檻"}
+          ]
+        },
+        {
+          "after_line": 4,
+          "ask": "total 的值為何?",
+          "options": [
+            {"text": "3.0", "is_correct": true},
+            {"text": "0.0", "is_correct": false, "trap_type": "誤以為負值抵銷"},
+            {"text": "6.0", "is_correct": false, "trap_type": "誤用絕對值和"},
+            {"text": "1.0", "is_correct": false, "trap_type": "誤計數非零個數"}
+          ]
+        }
+      ],
+      "options": [
+        {"text": "(全部步驟正確)", "is_correct": true},
+        {"text": "(任一步驟錯誤)", "is_correct": false}
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "ReLU(x) = max(0, x):負數 / 零都歸零,正數保留。x=[-2,0,3,-1] → out=[0,0,3,0],sum=3.0。ReLU 解決 sigmoid 在飽和區的梯度消失。",
+        "wrong": {
+          "(任一步驟錯誤)": "見各 trace_step 的陷阱類型說明。"
+        },
+        "hook": "ReLU = max(0, x);負數歸零、正數保留(不取絕對值)"
+      },
+      "misconceptions": ["把 ReLU 與絕對值混用", "把 ReLU 當二元門檻"],
+      "related_node_ids": ["n_L23203_001", "n_L23203_003"],
+      "tags": ["code-trace", "python", "numpy", "ReLU", "激活函數"]
+    },
+    {
+      "id": "q_m8_004",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_003",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "下列程式做邏輯迴歸的單筆預測:線性組合後過 sigmoid,以 0.5 為門檻分類。請逐行追蹤變數。",
+      "code_block": "import numpy as np\nw = np.array([0.5, -1.0, 2.0])\nx = np.array([2.0, 1.0, 0.5])\nb = 0.0\nz = w.dot(x) + b\np = 1.0 / (1.0 + np.exp(-z))\ny_pred = 1 if p >= 0.5 else 0",
+      "trace_steps": [
+        {
+          "after_line": 5,
+          "ask": "z 的值為何?(z = w·x + b)",
+          "options": [
+            {"text": "1.0", "is_correct": true},
+            {"text": "3.5", "is_correct": false, "trap_type": "誤用 elementwise 後加總絕對值"},
+            {"text": "0.0", "is_correct": false, "trap_type": "誤以為 dot 與 b 抵銷"},
+            {"text": "2.5", "is_correct": false, "trap_type": "誤把 -1*1 算成 +1"}
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "p 四捨五入到三位小數為何?(sigmoid(1.0))",
+          "options": [
+            {"text": "0.731", "is_correct": true},
+            {"text": "0.500", "is_correct": false, "trap_type": "誤以為 sigmoid(1)=0.5"},
+            {"text": "0.269", "is_correct": false, "trap_type": "代入 e^z 而非 e^-z"},
+            {"text": "0.880", "is_correct": false, "trap_type": "誤算 sigmoid(2)"}
+          ]
+        },
+        {
+          "after_line": 7,
+          "ask": "y_pred 的值為何?",
+          "options": [
+            {"text": "1", "is_correct": true},
+            {"text": "0", "is_correct": false, "trap_type": "誤以為 p<0.5"},
+            {"text": "0.731", "is_correct": false, "trap_type": "誤把機率當分類結果"},
+            {"text": "True", "is_correct": false, "trap_type": "誤以為三元判定回布林"}
+          ]
+        }
+      ],
+      "options": [
+        {"text": "(全部步驟正確)", "is_correct": true},
+        {"text": "(任一步驟錯誤)", "is_correct": false}
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "邏輯迴歸:z = w·x+b = 0.5*2 + (-1)*1 + 2*0.5 + 0 = 1+(-1)+1+0 = 1.0。p = σ(z) = 1/(1+e^-1) ≈ 0.731。p ≥ 0.5 → y_pred=1。sigmoid 是 0.5 的對稱中心。",
+        "wrong": {
+          "(任一步驟錯誤)": "見各 trace_step 的陷阱類型說明。"
+        },
+        "hook": "sigmoid(0)=0.5、sigmoid(1)≈0.731、sigmoid(2)≈0.881;三元 if 回 0/1 不是 True/False"
+      },
+      "misconceptions": ["把 dot 算成 elementwise 加總", "把 sigmoid 機率值當分類結果"],
+      "related_node_ids": ["n_L23202_003", "n_L23203_001"],
+      "tags": ["code-trace", "python", "numpy", "邏輯迴歸", "sigmoid"]
+    },
+    {
+      "id": "q_m8_005",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_002",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "下列程式以 eps=0.5、min_pts=4 對 5 個點做 DBSCAN 分類(計鄰居數,並判定 core/border/noise)。每點不含自己,但 core 判定加 1(自身)。請逐行追蹤。",
+      "code_block": "import numpy as np\npoints = np.array([[0.0, 0.0], [0.2, 0.0], [0.0, 0.2], [0.4, 0.4], [10.0, 10.0]])\neps = 0.5\nmin_pts = 4\ncounts = []\nfor i in range(len(points)):\n    c = sum(1 for j in range(len(points)) if i != j and np.linalg.norm(points[i] - points[j]) <= eps)\n    counts.append(c)\nlabels = []\nfor i in range(len(points)):\n    if counts[i] + 1 >= min_pts:\n        labels.append('core')\n    else:\n        is_border = any(i != j and counts[j] + 1 >= min_pts and np.linalg.norm(points[i] - points[j]) <= eps for j in range(len(points)))\n        labels.append('border' if is_border else 'noise')",
+      "trace_steps": [
+        {
+          "after_line": 2,
+          "ask": "points.shape 為何?",
+          "options": [
+            {"text": "(5, 2)", "is_correct": true},
+            {"text": "(2, 5)", "is_correct": false, "trap_type": "誤以為列為維度"},
+            {"text": "(5,)", "is_correct": false, "trap_type": "誤以為 ndarray 不展開二維"},
+            {"text": "(10,)", "is_correct": false, "trap_type": "誤計總元素數"}
+          ]
+        },
+        {
+          "after_line": 9,
+          "ask": "迴圈結束後 counts 為何?",
+          "options": [
+            {"text": "[2, 3, 3, 2, 0]", "is_correct": true},
+            {"text": "[3, 4, 4, 3, 1]", "is_correct": false, "trap_type": "誤把自己也計入"},
+            {"text": "[4, 4, 4, 1, 0]", "is_correct": false, "trap_type": "誤算為距離 <= eps 的數量含自己"},
+            {"text": "[2, 2, 2, 2, 0]", "is_correct": false, "trap_type": "未注意 (0,0.2)、(0.2,0) 也互為鄰居"}
+          ]
+        },
+        {
+          "after_line": 15,
+          "ask": "迴圈結束後 labels 為何?(min_pts=4,核心需 counts+1 ≥ 4)",
+          "options": [
+            {"text": "['border', 'core', 'core', 'border', 'noise']", "is_correct": true},
+            {"text": "['core', 'core', 'core', 'core', 'noise']", "is_correct": false, "trap_type": "誤以為靠近 core 也算 core"},
+            {"text": "['border', 'border', 'border', 'border', 'noise']", "is_correct": false, "trap_type": "誤以為無 core"},
+            {"text": "['noise', 'core', 'core', 'noise', 'noise']", "is_correct": false, "trap_type": "誤以為 border 也算 noise"}
+          ]
+        }
+      ],
+      "options": [
+        {"text": "(全部步驟正確)", "is_correct": true},
+        {"text": "(任一步驟錯誤)", "is_correct": false}
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "DBSCAN 三類點:counts+1 ≥ min_pts 為 core;不是 core 但鄰居中有 core 為 border;否則為 noise。本例 min_pts=4:點 1、2 鄰居數 3+1=4 為 core;點 0、3 鄰居數 2+1=3<4 但鄰近 core 為 border;點 4 距離 10 為 noise。",
+        "wrong": {
+          "(任一步驟錯誤)": "見各 trace_step 的陷阱類型說明。"
+        },
+        "hook": "DBSCAN core+1 (含自身) ≥ min_pts;border 非 core 但靠 core;noise 兩者皆非"
+      },
+      "misconceptions": ["把 border 誤判為 noise", "core 判定誤把自身計入或漏算"],
+      "related_node_ids": ["n_L23202_002", "n_L23202_008"],
+      "tags": ["code-trace", "python", "numpy", "DBSCAN", "聚類"]
+    }
+  ]
+}

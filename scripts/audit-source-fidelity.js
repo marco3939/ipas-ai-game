@@ -18,6 +18,7 @@ const Q_FILES = [
   'questions-batch-n5-deploy.json', 'questions-batch-n6-ml-core.json',
   'questions-batch-n7-dl.json', 'questions-batch-n8-eval-gov.json',
   'questions-confusion-matrix.json',
+  'questions-mode8-trace.json',
 ];
 
 // === 1. 建立 kb 合法集合 ===

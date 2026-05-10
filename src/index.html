@@ -320,6 +320,21 @@
   .sm2-ef { color: var(--fg-dim); font-size: 0.85rem; font-variant-numeric: tabular-nums; }
   .sm2-queue-stem { color: var(--fg-dim); font-size: 0.85rem; margin-top: 4px; padding-left: 30px; }
 
+  /* === Mode 8 Code Trace 道場(spec: docs/spec-code-trace.md §5)=== */
+  .m8-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; margin: 12px 0; }
+  .m8-code { background: #0a0e1a; color: #cdd6f4; padding: 12px 8px; border-radius: var(--radius-sm);
+    font-family: 'Cascadia Code', 'JetBrains Mono', Consolas, monospace; font-size: 0.85rem;
+    line-height: 1.6; border-left: 4px solid var(--primary); overflow-x: auto; min-height: 200px; }
+  .m8-line { display: block; padding: 2px 6px; border-radius: 3px; white-space: pre; }
+  .m8-line-current { background: rgba(250, 204, 21, 0.18);
+    border-left: 3px solid var(--warn); padding-left: 3px;
+    box-shadow: 0 0 8px rgba(250, 204, 21, 0.25); }
+  .m8-lineno { color: var(--fg-mute); font-size: 0.75rem; user-select: none; margin-right: 4px; }
+  .m8-prompt { background: var(--bg-3); border: 2px solid var(--border); border-radius: var(--radius-sm);
+    padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .m8-step-meta { font-size: 0.78rem; color: var(--fg-dim); font-weight: 700; }
+  .m8-ask { font-size: 1rem; font-weight: 600; color: var(--fg); line-height: 1.6; }
+
   /* === 互動混淆矩陣(spec: docs/spec-confusion-matrix.md §5)=== */
   .cm-source { padding: 12px 16px; background: var(--bg-3); border: 2px solid var(--border);
     border-radius: var(--radius-sm); cursor: move; user-select: none; transition: all 0.2s; }
@@ -413,6 +428,12 @@
           <div class="mode-title">🧩 Pipeline 拼圖工坊</div>
           <div class="mode-desc">ML 流程排序與步驟判斷</div>
           <div class="mode-stats">進階 · 流程</div>
+        </button>
+        <button class="mode-card" onclick="enterMode(8)">
+          <div class="mode-num">案 8</div>
+          <div class="mode-title">📝 Code Trace 道場</div>
+          <div class="mode-desc">逐行追蹤 Python 程式變數狀態(中間值不只看最終輸出)</div>
+          <div class="mode-stats">進階 · 程式</div>
         </button>
         <button class="mode-card" onclick="enterMode('review')">
           <div class="mode-num">📝</div>
@@ -869,7 +890,8 @@ async function loadQuestions() {
     'questions-batch-n6-ml-core.json', // 22 ML 基礎 新批
     'questions-batch-n7-dl.json',      // 25 DL+數據準備 新批
     'questions-batch-n8-eval-gov.json', // 25 評估治理 新批
-    'questions-confusion-matrix.json'   // 5 互動混淆矩陣(spec: docs/spec-confusion-matrix.md)
+    'questions-confusion-matrix.json',  // 5 互動混淆矩陣(spec: docs/spec-confusion-matrix.md)
+    'questions-mode8-trace.json'        // 5 Mode 8 Code Trace 道場(spec: docs/spec-code-trace.md)
   ];
   try {
     const results = await Promise.all(
@@ -1605,7 +1627,7 @@ const Player = {
   Progress.init();
   await loadQuestions();
   // 動態載入 mode 模組
-  for (const name of ['mode1', 'mode2', 'mode3', 'mode4', 'mode5', 'mode6', 'mode7']) {
+  for (const name of ['mode1', 'mode2', 'mode3', 'mode4', 'mode5', 'mode6', 'mode7', 'mode8']) {
     await new Promise((res) => {
       const s = document.createElement('script');
       s.src = `modes/${name}.js`;

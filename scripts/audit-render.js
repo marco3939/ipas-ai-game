@@ -20,6 +20,7 @@ const FILES = [
   'questions-batch-n5-deploy.json', 'questions-batch-n6-ml-core.json',
   'questions-batch-n7-dl.json', 'questions-batch-n8-eval-gov.json',
   'questions-confusion-matrix.json',
+  'questions-mode8-trace.json',
 ];
 
 // 模擬 index.html renderQuestion 的 case 替換邏輯
