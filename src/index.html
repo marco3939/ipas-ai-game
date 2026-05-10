@@ -348,6 +348,18 @@
           <div class="mode-desc">12 產業情境決策,扮演企業 AI 顧問</div>
           <div class="mode-stats">情境 · 產業任務</div>
         </button>
+        <button class="mode-card" onclick="enterMode(6)">
+          <div class="mode-num">案 6</div>
+          <div class="mode-title">🃏 卡牌圖鑑大全</div>
+          <div class="mode-desc">87 張 kb 節點圖鑑,封印挑戰解鎖(教學預習段)</div>
+          <div class="mode-stats">圖鑑 · 預習</div>
+        </button>
+        <button class="mode-card" onclick="enterMode(7)">
+          <div class="mode-num">案 7</div>
+          <div class="mode-title">🎭 考古題模考劇場</div>
+          <div class="mode-desc">30 分鐘倒數模考,5 NPC 輪流出場(對標 5/23 真考)</div>
+          <div class="mode-stats">模考 · 臨場</div>
+        </button>
         <button class="mode-card" onclick="enterMode(3)">
           <div class="mode-num">案 3</div>
           <div class="mode-title">🧩 Pipeline 拼圖工坊</div>
@@ -522,7 +534,12 @@ const Mastery = {
       .map(id => ({ id, score: (m[id] && m[id].attempts > 0) ? m[id].score : 50 }))
       .sort((a,b) => a.score - b.score).slice(0, n);
   },
-  countMastered() { const m = this.load(); return Object.values(m).filter(n => n.score >= 90).length; }
+  // 熟練門檻:score >= 60(對應 PlayEngine 連對 3 次 / Mode5 連對 4 次)
+  // 原 >= 90 對應連對 6+ 次,單次戰鬥幾乎無法達成,首頁永遠 0,失去進度回饋
+  // 改 60 後使用者每連對 3 題即看到計數 +1,符合「玩了多場該跳」的預期
+  // 注意:渲染解釋文案 "已熟練(≥90%)" 在 view-stats 行 1040,已同步調整為 ≥60%
+  MASTERY_THRESHOLD: 60,
+  countMastered() { const t = this.MASTERY_THRESHOLD; const m = this.load(); return Object.values(m).filter(n => n.score >= t).length; }
 };
 
 // === Wrongbook 錯題本 ===
@@ -577,8 +594,11 @@ async function loadQuestions() {
     );
     QUESTIONS = results.flatMap(r => r.questions || []);
     window.QUESTIONS = QUESTIONS; // sync to window for dynamically-loaded mode scripts (mode3/mode4 read window.QUESTIONS)
-    document.getElementById('stat-total').textContent = QUESTIONS.length;
-    console.log(`已載入 ${QUESTIONS.length} 題,來自 ${files.length} 個題庫檔`);
+    // 首頁「已熟練 X / Y」分母 = 題庫實際出現的 unique node_id 數(節點數,非題數)
+    // 鐵律 #5:node_id 來源忠實,分母必對齊「分子 countMastered() 也是節點數」的語意
+    const _uniqNodes = new Set(QUESTIONS.map(q => q.node_id).filter(Boolean));
+    document.getElementById('stat-total').textContent = _uniqNodes.size;
+    console.log(`已載入 ${QUESTIONS.length} 題 / ${_uniqNodes.size} 個節點,來自 ${files.length} 個題庫檔`);
     return QUESTIONS;
   } catch (e) {
     showToast('題庫載入失敗,請以 http server 啟動本檔案'); throw e;
@@ -691,16 +711,21 @@ function refreshHome() {
   const cd = document.getElementById('countdown');
   cd.textContent = `D-${d}`;
   if (d <= 7) cd.classList.add('urgent');
-  // 統計
-  document.getElementById('stat-mastered').textContent = Mastery.countMastered();
+  // 統計:分子分母語意必須對齊「節點數」(countMastered 數的是節點,非題目)
+  const masterCount = Mastery.countMastered();
+  const totalNodes = new Set(QUESTIONS.map(q => q.node_id).filter(Boolean)).size;
+  document.getElementById('stat-mastered').textContent = masterCount;
+  // stat-total 也同步覆寫一次,避免 loadQuestions 之前的舊值殘留(防 cache)
+  const totalEl = document.getElementById('stat-total');
+  if (totalEl && totalNodes > 0) totalEl.textContent = totalNodes;
   document.getElementById('stat-wrong').textContent = Wrongbook.count();
   const sess = Storage.get(Storage.K_PROGRESS, {sessions:0}).sessions;
   document.getElementById('stat-sessions').textContent = sess;
-  // 進度條
-  const total = QUESTIONS.length;
-  const masterCount = Mastery.countMastered();
-  const pct = total > 0 ? Math.round(masterCount / total * 100) : 0;
+  // 進度條:用節點數做分母,與 stat-mastered/stat-total 語意一致
+  const pct = totalNodes > 0 ? Math.round(masterCount / totalNodes * 100) : 0;
   document.getElementById('overall-progress').style.width = pct + '%';
+  // DevTools 自驗用 debug log(可在 console 看到每次 refresh 的數據)
+  console.debug('[refreshHome]', { masterCount, totalNodes, pct, masteryKeys: Object.keys(Mastery.load()).length });
   // 弱點
   renderWeakList();
 }
@@ -1025,7 +1050,7 @@ function renderStats() {
   const html = `<div class="card">
     <h2>📊 學習統計</h2>
     <p>已挑戰節點:${attempted.length} / ${allNodes.length}</p>
-    <p>已熟練(≥90%):${Mastery.countMastered()}</p>
+    <p>已熟練(≥${Mastery.MASTERY_THRESHOLD}%):${Mastery.countMastered()}</p>
     <p>錯題本:${Wrongbook.count()} 題待復習</p>
     <p>總場次:${Storage.get(Storage.K_PROGRESS,{sessions:0}).sessions}</p>
     <div class="actions">
@@ -1230,7 +1255,7 @@ const Player = {
   Progress.init();
   await loadQuestions();
   // 動態載入 mode 模組
-  for (const name of ['mode1', 'mode2', 'mode3', 'mode4', 'mode5']) {
+  for (const name of ['mode1', 'mode2', 'mode3', 'mode4', 'mode5', 'mode6', 'mode7']) {
     await new Promise((res) => {
       const s = document.createElement('script');
       s.src = `modes/${name}.js`;

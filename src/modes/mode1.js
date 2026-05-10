@@ -4,6 +4,13 @@
 // ============================================================
 (function () {
 
+  // === 戰鬥平衡常數 ===
+  // 每場 BOSS 戰題數(原 7,2026-05-10 升 20 — 使用者實測抱怨太短 + 題庫已 325 題支撐)
+  const BOSS_QUESTIONS_PER_BATTLE = 20;
+  // BOSS HP 縮放(對應題數 7→20,維持「答對 60~80% 才能勝」的戰鬥節奏)
+  // baseDmg ~ 25(Lv1), 20 題 80% 答對 ≈ 400+ 傷害(含 combo/crit),HP_MULTIPLIER=2.4
+  const BOSS_HP_MULTIPLIER = 2.4;
+
   // === 12 產業 BOSS 配置 ===
   const BOSSES = [
     { key: 'ecommerce', name: '王董(電商集團 CEO)', avatar: '🛒', hp: 120,
@@ -90,15 +97,26 @@
     return s;
   }
 
-  function pickQuestionsForBoss(boss, n = 7) {
+  // 取題:keyword 直配 + subject=1 通用題池擴充
+  // 池擴展策略(2026-05-10 為 20 題場 + 真隨機重做):
+  //  1. keyword 直配池(boss-specific)
+  //  2. 池 < VARIATION_FLOOR 時補 subject=1 通用題,確保 RNG.pickN 有足夠變化空間
+  //     設 floor = 2n(n=20 時 = 40),讓「跨場 Jaccard IoU < 0.5」成立(平均一半題目不同)
+  //  3. 最終池仍 < n 時接受較短戰鬥(showToast 提醒)
+  // ※ 不可造題,僅用 QUESTIONS 內既有(鐵律 #5 來源忠實性)
+  function pickQuestionsForBoss(boss, n = BOSS_QUESTIONS_PER_BATTLE) {
     const matched = QUESTIONS.filter(q => {
       const text = (q.stem || '') + ' ' + (q.tags || []).join(' ');
       return boss.keywords.some(k => text.includes(k));
     });
     let pool = [...new Set(matched)];
-    if (pool.length < n) {
+    // 抽樣空間目標:抽 n 題的 2 倍 = 至少 40 題
+    // 數學:從 pool=2n 抽 n,跨場最小 IoU = (2n-n)/(2n+n) ≈ 0.33,平均 < 0.5 達標
+    const VARIATION_FLOOR = n * 2;
+    if (pool.length < VARIATION_FLOOR) {
       const general = QUESTIONS.filter(q => q.subject === 1 && !pool.includes(q));
-      pool = [...pool, ...RNG.pickN(general, n - pool.length)];
+      // 把缺口補到 floor,一次抽 (floor - pool.length) 題進池
+      pool = [...pool, ...RNG.pickN(general, Math.max(0, VARIATION_FLOOR - pool.length))];
     }
     return RNG.pickN(pool, Math.min(n, pool.length));
   }
@@ -127,7 +145,8 @@
 
     start() {
       this._clearAllTimers();    // QA 修補 A35:回任務地圖前先清掉戰鬥殘留 timer
-      RNG.set(Date.now());
+      // 強化隨機種子:Date.now() 同毫秒重入會抽到同題,加入 Math.random() 高熵尾數
+      RNG.set(Date.now() + Math.floor(Math.random() * 1e5));
       this.renderMap();
     },
 
@@ -190,7 +209,7 @@
                   </div>
                 </div>
                 <div class="mode-desc" style="font-size:0.85rem">${b.desc}</div>
-                <div class="mode-stats">HP ${b.hp}</div>
+                <div class="mode-stats">HP ${Math.round(b.hp * BOSS_HP_MULTIPLIER)} · ${BOSS_QUESTIONS_PER_BATTLE} 題</div>
               </button>`;
             }).join('')}
           </div>
@@ -221,13 +240,19 @@
 
     selectBoss(key) {
       this._clearAllTimers();   // QA 修補 A35:選新 BOSS 前清掉舊計時(避免上一場 gameOver/victory 飄出)
+      // 真隨機:每次進 BOSS 都重新洗種子,確保「同一張地圖連挑同 BOSS」也抽到不同題
+      RNG.set(Date.now() + Math.floor(Math.random() * 1e5));
       const boss = BOSSES.find(b => b.key === key);
       if (!boss) return;
-      const questions = pickQuestionsForBoss(boss, 7);
+      const questions = pickQuestionsForBoss(boss, BOSS_QUESTIONS_PER_BATTLE);
       if (questions.length === 0) { showToast('題庫不足'); return; }
-      if (questions.length < 3) showToast(`⚠️ 此 BOSS 相關題目僅 ${questions.length} 題,挑戰較短`, 2500);
+      if (questions.length < BOSS_QUESTIONS_PER_BATTLE) {
+        showToast(`⚠️ 此 BOSS 題庫僅 ${questions.length} 題,本場較短`, 2500);
+      }
 
-      this.state = { boss, bossHp: boss.hp, bossHpMax: boss.hp,
+      // BOSS HP 縮放(20 題場,baseDmg×0.8 命中率 ≈ 必須拉高 HP 才有戰鬥感)
+      const bossHpScaled = Math.round(boss.hp * BOSS_HP_MULTIPLIER);
+      this.state = { boss, bossHp: bossHpScaled, bossHpMax: bossHpScaled,
         questions, idx: 0, combo: 0, maxCombo: 0,
         correct: 0, wrong: 0, totalDamage: 0,
         doubleNext: false, currentQ: null,
@@ -418,8 +443,9 @@
       if (isCrit) GameFX.confetti({ count: 60, colors: ['#fb923c','#fbbf24'] });
 
       // 答對回血回藍(連擊加成)
-      const hpHeal = 5 + Math.min(this.state.combo, 5);    // 6~10 (combo 1~5+)
-      const mpHeal = 4 + Math.min(this.state.combo, 4);    // 5~8
+      // 2026-05-10:題數 7→20,治療下調(原 6~10/5~8 → 2~5/2~5),避免 20 題後玩家無痛滿血
+      const hpHeal = 2 + Math.min(this.state.combo, 3);    // 3~5 (combo 1~3+)
+      const mpHeal = 2 + Math.min(this.state.combo, 3);    // 3~5
       const beforeHp = p.hp;
       p.hp = Math.min(p.hpMax, p.hp + hpHeal);
       p.mp = Math.min(p.mpMax, p.mp + mpHeal);

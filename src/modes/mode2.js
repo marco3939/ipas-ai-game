@@ -55,15 +55,18 @@
       defeat: ['「pandas 的別名與索引機制...你居然全記得。」']
     },
     {
-      key: 'matplotlib',
-      name: '🎨 Matplotlib 圖譜妖',
-      avatar: '🎨',
-      desc: '格式字串的迷宮:r-- 是紅虛線還是紅實線?',
-      qids: ['q_pa_015'],
-      hp: 70,
-      intro: '「畫一張圖容易,但格式字串能讓你頭暈。-- 跟 : 跟 -. 你分得清嗎?」',
-      attack: ['「線型畫錯了!」','「顏色搞錯了!」'],
-      defeat: ['「dashed 與 dotted 的區別...你銘記在心。」']
+      // 主題重構:原 matplotlib 圖譜妖因 q_pa_015 被刪(語法超 IPAS 中級範圍)而失去題池;
+      // 改為「資料視覺化判讀靈」,題池改用 questions-pb-visual.json 的視覺化判讀題
+      // (參數量表 / 混淆矩陣 / ROC 曲線),題庫忠實、不造題(鐵律 #5)
+      key: 'visualization',
+      name: '📊 資料視覺化判讀靈',
+      avatar: '📊',
+      desc: '參數量表、混淆矩陣、ROC 曲線:讀懂視覺資料才能擊敗他',
+      qids: ['q_pb_001', 'q_pb_007', 'q_pb_009', 'q_pb_010'],
+      hp: 100,
+      intro: '「凡人...VGG16 參數量哪一層最多?F1 不是算術平均、是調和平均;ROC 曲線下面積你會用梯形法則嗎?把這些表讀對,我才認你。」',
+      attack: ['「Accuracy 陷阱!不平衡資料看 F1 啊!」','「ROC 點看歪了吧?」','「FC 跟 Conv 參數量差幾倍?」'],
+      defeat: ['「TP/FP/FN/TN... 你居然全部記得。」','「視覺資料的真相,被你看穿了。」']
     },
     {
       key: 'probability',
