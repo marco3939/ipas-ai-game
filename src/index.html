@@ -305,7 +305,23 @@
   .error-report-form input[type="checkbox"] { transform: scale(1.1); margin-right: 6px; vertical-align: middle; }
   .error-report-form textarea { resize: vertical; min-height: 60px; }
   @media (max-width: 600px) { .error-report-form textarea { font-size: 16px; } }
+
+  /* === SM-2 複習佇列 === */
+  .sm2-review { padding: 16px; }
+  .sm2-queue-list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+  .sm2-queue-item { background: rgba(56,189,248,0.06); border-left: 3px solid var(--primary);
+    border-radius: 6px; padding: 10px 12px; }
+  .sm2-queue-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .sm2-queue-idx { display: inline-block; min-width: 22px; color: var(--fg-dim);
+    font-variant-numeric: tabular-nums; font-weight: 700; }
+  .sm2-due-label { font-size: 0.78rem; padding: 2px 8px; border-radius: 999px; }
+  .sm2-due-label.overdue { background: rgba(248,113,113,0.18); color: #fca5a5; }
+  .sm2-due-label.today { background: rgba(56,189,248,0.18); color: #7dd3fc; }
+  .sm2-ef { color: var(--fg-dim); font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+  .sm2-queue-stem { color: var(--fg-dim); font-size: 0.85rem; margin-top: 4px; padding-left: 30px; }
 </style>
+<!-- 鐵律延伸:SM-2 間隔重複(qid 鍵,Mastery 用 nodeId 鍵,兩者並存) -->
+<script src="sm2.js"></script>
 </head>
 <body>
 
@@ -385,6 +401,15 @@
           <div class="mode-desc">回顧錯題 + 變化型訓練(鐵律 #1)</div>
           <div class="mode-stats">個人化</div>
         </button>
+        <button class="mode-card" onclick="SM2.enterReview()">
+          <div class="mode-num">📅</div>
+          <div class="mode-title">📅 今日複習(SM-2)</div>
+          <div class="mode-desc">
+            <span id="sm2-due-count">0</span> 題到期 ·
+            追蹤 <span id="sm2-tracked">0</span> 題
+          </div>
+          <div class="mode-stats">間隔重複 · 長期記憶</div>
+        </button>
       </div>
     </div>
 
@@ -411,6 +436,9 @@
 
   <!-- Stats -->
   <section id="view-stats" class="view"></section>
+
+  <!-- SM-2 複習佇列 -->
+  <section id="view-sm2-review" class="view"></section>
 </main>
 
 <nav class="bottom-nav">
@@ -950,6 +978,15 @@ function refreshHome() {
   // 錯誤回報相關
   refreshExportButton();
   renderErrorTopList();
+  // SM-2 統計同步
+  if (typeof SM2 !== 'undefined') {
+    const sm2Due = SM2.countDueToday();
+    const sm2Tracked = SM2.totalTracked();
+    const dueEl = document.getElementById('sm2-due-count');
+    const trackedEl = document.getElementById('sm2-tracked');
+    if (dueEl) dueEl.textContent = sm2Due;
+    if (trackedEl) trackedEl.textContent = sm2Tracked;
+  }
 }
 
 function refreshExportButton() {
@@ -1076,6 +1113,7 @@ const PlayEngine = {
     });
     // 更新熟練度 + 錯題本
     if (this.current.node_id) Mastery.update(this.current.node_id, isCorrect);
+    if (typeof SM2 !== 'undefined' && this.current.id) SM2.recordAnswer(this.current.id, isCorrect, false);
     Progress.addAnswer(isCorrect);
     if (!isCorrect) {
       const correctOpt = this.current.options.find(o => o.is_correct);

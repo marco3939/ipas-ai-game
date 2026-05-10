@@ -604,10 +604,12 @@
 
         // 鐵律 #5:答題後共用層更新 mastery / wrongbook(不顯示 explanation)
         if (this.current.node_id) Mastery.update(this.current.node_id, isCorrect);
+        if (typeof SM2 !== 'undefined' && this.current.id && isCorrect) SM2.recordAnswer(this.current.id, true, false);
         Progress.addAnswer(isCorrect);
         if (!isCorrect) {
           const correctOpt = this.current.options.find(o => o.is_correct);
           Wrongbook.add(this.current.id, this.current.node_id, key, correctOpt ? correctOpt.key : '');
+          if (typeof SM2 !== 'undefined' && this.current.id) SM2.recordAnswer(this.current.id, false, false);
         }
 
         // 記錄統計

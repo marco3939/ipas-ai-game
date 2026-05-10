@@ -409,6 +409,7 @@
       });
 
       if (q.node_id) Mastery.update(q.node_id, isCorrect);
+      if (typeof SM2 !== 'undefined' && q.id) SM2.recordAnswer(q.id, isCorrect, false);
       Progress.addAnswer(isCorrect);
       if (!isCorrect) {
         const c = q.options.find(o => o.is_correct);

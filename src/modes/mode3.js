@@ -825,6 +825,7 @@
 
       Player.gainExp(totalExp);
       Mastery.update(s.q.node_id || s.q.id, true);
+      if (typeof SM2 !== 'undefined' && s.q.id) SM2.recordAnswer(s.q.id, true, false);
       Progress.addAnswer(true);
 
       const progress = loadProgress();
@@ -899,6 +900,7 @@
         correctText
       );
       Mastery.update(s.q.node_id || s.q.id, false);
+      if (typeof SM2 !== 'undefined' && s.q.id) SM2.recordAnswer(s.q.id, false, false);
       Progress.addAnswer(false);
 
       const reasonText = reason === 'timeup' ? '⏰ 時間到!Pipeline 部署超時'

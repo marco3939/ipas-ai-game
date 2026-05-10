@@ -459,6 +459,7 @@
       const cardAState = this.state.cards.find(c => c.id === cardA.dataset.id);
       const pairData = cardAState && cardAState.data;
       if (pairData && pairData.nodeId) Mastery.update(pairData.nodeId, true);
+      if (typeof SM2 !== 'undefined' && pairData && pairData.sourceQ && pairData.sourceQ.id) SM2.recordAnswer(pairData.sourceQ.id, true, false);
       Progress.addAnswer(true);
 
       this.updateHud();
@@ -499,6 +500,7 @@
       const pairData = cardAState && cardAState.data;
       const otherData = cardBState && cardBState.data;
       if (pairData && pairData.nodeId) Mastery.update(pairData.nodeId, false);
+      if (typeof SM2 !== 'undefined' && pairData && pairData.sourceQ && pairData.sourceQ.id) SM2.recordAnswer(pairData.sourceQ.id, false, false);
       Progress.addAnswer(false);
       if (pairData && pairData.sourceQ) {
         const correctOpt = (pairData.sourceQ.options || []).find(o => o.is_correct);
