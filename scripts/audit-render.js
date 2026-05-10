@@ -19,6 +19,7 @@ const FILES = [
   'questions-batch-n3-genai.json', 'questions-batch-n4-planning.json',
   'questions-batch-n5-deploy.json', 'questions-batch-n6-ml-core.json',
   'questions-batch-n7-dl.json', 'questions-batch-n8-eval-gov.json',
+  'questions-confusion-matrix.json',
 ];
 
 // 模擬 index.html renderQuestion 的 case 替換邏輯
@@ -32,6 +33,17 @@ function simulateRender(q, caseKey) {
       for (const [k, v] of Object.entries(c)) out = out.replaceAll(`{${k}}`, v);
       return out;
     };
+    // 遞迴替換物件 / 陣列 / 字串(對應 index.html renderQuestion 的 subDeep)
+    const subDeep = (val) => {
+      if (typeof val === 'string') return subAll(val);
+      if (Array.isArray(val)) return val.map(subDeep);
+      if (val && typeof val === 'object') {
+        const out = {};
+        for (const [k, v] of Object.entries(val)) out[k] = subDeep(v);
+        return out;
+      }
+      return val;
+    };
     r.stem = subAll(r.stem);
     r.options = r.options.map(o => ({ ...o, text: subAll(o.text) }));
     if (r.explanation) {
@@ -43,6 +55,10 @@ function simulateRender(q, caseKey) {
         r.explanation.wrong = nw;
       }
     }
+    // 互動題型新欄位(confusion-matrix 等):matrix_data / expected_answer / extra_classes
+    if (r.matrix_data) r.matrix_data = subDeep(r.matrix_data);
+    if (typeof r.expected_answer === 'string') r.expected_answer = subAll(r.expected_answer);
+    if (Array.isArray(r.extra_classes)) r.extra_classes = subDeep(r.extra_classes);
   } else if (q.stem_variables) {
     // single_choice 等帶變數池的題型(stem_variables 是 array 池)
     for (const [k, pool] of Object.entries(q.stem_variables)) {
@@ -63,6 +79,16 @@ function findResidualPlaceholders(rendered) {
     const ms = str.match(PH_RE);
     if (ms) hits.push({ label, residuals: [...new Set(ms)] });
   };
+  // 遞迴掃結構化欄位內所有 string(對應 §14 案例 8:audit 必看 runtime output,不能只看單層)
+  const scanDeep = (label, val) => {
+    if (typeof val === 'string') {
+      scan(label, val);
+    } else if (Array.isArray(val)) {
+      val.forEach((item, i) => scanDeep(`${label}[${i}]`, item));
+    } else if (val && typeof val === 'object') {
+      for (const [k, v] of Object.entries(val)) scanDeep(`${label}.${k}`, v);
+    }
+  };
   scan('stem', rendered.stem);
   (rendered.options || []).forEach((o, i) => scan(`options[${i}].text`, o.text));
   if (rendered.explanation) {
@@ -75,6 +101,10 @@ function findResidualPlaceholders(rendered) {
       });
     }
   }
+  // 互動題型新欄位:matrix_data(含 labels)、expected_answer、extra_classes
+  if (rendered.matrix_data) scanDeep('matrix_data', rendered.matrix_data);
+  if (typeof rendered.expected_answer === 'string') scan('expected_answer', rendered.expected_answer);
+  if (Array.isArray(rendered.extra_classes)) scanDeep('extra_classes', rendered.extra_classes);
   return hits;
 }
 

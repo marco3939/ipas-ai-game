@@ -1,0 +1,241 @@
+{
+  "version": "1.0",
+  "schema_version": "iron-rule-1+2+3+5",
+  "purpose": "互動式混淆矩陣題型(方案 2)— 4 個 L23303 節點覆蓋",
+  "questions": [
+    {
+      "id": "q_cm_001",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_001",
+      "subject": 3,
+      "format": "calculation",
+      "interaction_type": "confusion-matrix",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "醫療診斷模型在 1000 筆測試集上得到下列預測:真陽 {tp} 筆、假陽 {fp} 筆、假陰 {fn} 筆、真陰 {tn} 筆。請完成下方 2×2 配對,並計算 F1-Score(三位小數)。",
+      "matrix_data": {
+        "tp": "{tp}", "fp": "{fp}", "fn": "{fn}", "tn": "{tn}",
+        "labels": {
+          "tp_label": "真實陽 + 預測陽",
+          "fp_label": "真實陰 + 預測陽",
+          "fn_label": "真實陽 + 預測陰",
+          "tn_label": "真實陰 + 預測陰"
+        }
+      },
+      "expected_metric": "f1",
+      "expected_answer": "{answer}",
+      "answer_format": "小數三位",
+      "stem_variables": {
+        "case_a": {"tp": "60", "fp": "20", "fn": "10", "tn": "910", "answer": "0.800", "wrong1": "0.857", "wrong2": "0.667", "wrong3": "0.750"},
+        "case_b": {"tp": "70", "fp": "10", "fn": "20", "tn": "900", "answer": "0.824", "wrong1": "0.778", "wrong2": "0.826", "wrong3": "0.875"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "只算 Recall 之一"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "用算術平均而非調和平均"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "只算 Precision 之一"}
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "Precision = TP/(TP+FP) = {tp}/({tp}+{fp});Recall = TP/(TP+FN) = {tp}/({tp}+{fn});F1 = 2PR/(P+R) ≈ {answer}。F1 對 P 與 R 任一指標趨近 0 都會明顯下降",
+        "wrong": {
+          "{wrong1}": "此值僅是 Recall 單獨計算;F1 必須對 P 與 R 做調和平均",
+          "{wrong2}": "此值是算術平均 (P+R)/2,但 F1 是調和平均 2PR/(P+R)",
+          "{wrong3}": "此值僅是 Precision 單獨計算;F1 必須兩者都計算後合成"
+        },
+        "hook": "F1 = 2PR/(P+R),調和平均對極端值敏感"
+      },
+      "misconceptions": ["把 P 與 R 混用", "F1 用算術平均", "忘記 F1 是 P 與 R 的調和平均"],
+      "related_node_ids": ["n_L23303_002", "n_L23303_006"],
+      "tags": ["confusion-matrix", "F1", "互動", "醫療"]
+    },
+    {
+      "id": "q_cm_002",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_001",
+      "subject": 3,
+      "format": "calculation",
+      "interaction_type": "confusion-matrix",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "詐欺偵測模型在 1000 筆交易上預測:真陽 {tp} 筆、假陽 {fp} 筆、假陰 {fn} 筆、真陰 {tn} 筆(漏抓很多詐欺)。請完成 2×2 配對,並計算 F1-Score(三位小數)。",
+      "matrix_data": {
+        "tp": "{tp}", "fp": "{fp}", "fn": "{fn}", "tn": "{tn}",
+        "labels": {
+          "tp_label": "真實詐欺 + 預測詐欺",
+          "fp_label": "真實正常 + 預測詐欺",
+          "fn_label": "真實詐欺 + 預測正常",
+          "tn_label": "真實正常 + 預測正常"
+        }
+      },
+      "expected_metric": "f1",
+      "expected_answer": "{answer}",
+      "answer_format": "小數三位",
+      "stem_variables": {
+        "case_a": {"tp": "10", "fp": "0", "fn": "90", "tn": "900", "answer": "0.182", "wrong1": "1.000", "wrong2": "0.100", "wrong3": "0.910"},
+        "case_b": {"tp": "5", "fp": "0", "fn": "95", "tn": "900", "answer": "0.095", "wrong1": "1.000", "wrong2": "0.050", "wrong3": "0.905"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "只算 Precision 忽略 Recall 趨近 0"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "只算 Recall 忽略 Precision"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤算 Accuracy"}
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "Precision = {tp}/({tp}+{fp}) = 1.000(沒有假陽);Recall = {tp}/({tp}+{fn}) 極低;F1 = 2PR/(P+R) ≈ {answer}。Recall 趨近 0 時,F1 也趨近 0 — F1 對極端值敏感的關鍵特性",
+        "wrong": {
+          "{wrong1}": "此值是 Precision = 1.000(無假陽),但 Recall 極低,F1 不會接近 1",
+          "{wrong2}": "此值是 Recall 單獨計算,F1 是 P 與 R 的調和平均",
+          "{wrong3}": "此值疑似 Accuracy = (TP+TN)/全體,Accuracy 在類別不平衡時誤導"
+        },
+        "hook": "F1 對極端值敏感:P 或 R 任一趨近 0,F1 也趨近 0"
+      },
+      "misconceptions": ["以為 Precision 高就好", "Accuracy 高 = 模型好", "忽略 Recall 對 F1 的影響"],
+      "related_node_ids": ["n_L23303_004"],
+      "tags": ["confusion-matrix", "F1", "互動", "極端值", "詐欺"]
+    },
+    {
+      "id": "q_cm_003",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_002",
+      "subject": 3,
+      "format": "calculation",
+      "interaction_type": "confusion-matrix",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "電子郵件垃圾分類器在 1000 封郵件上預測:真陽 {tp} 筆、假陽 {fp} 筆、假陰 {fn} 筆、真陰 {tn} 筆。請完成 2×2 配對,並計算 Precision(三位小數)。",
+      "matrix_data": {
+        "tp": "{tp}", "fp": "{fp}", "fn": "{fn}", "tn": "{tn}",
+        "labels": {
+          "tp_label": "真實垃圾 + 預測垃圾",
+          "fp_label": "真實正常 + 預測垃圾",
+          "fn_label": "真實垃圾 + 預測正常",
+          "tn_label": "真實正常 + 預測正常"
+        }
+      },
+      "expected_metric": "precision",
+      "expected_answer": "{answer}",
+      "answer_format": "小數三位",
+      "stem_variables": {
+        "case_a": {"tp": "80", "fp": "20", "fn": "40", "tn": "860", "answer": "0.800", "wrong1": "0.667", "wrong2": "0.940", "wrong3": "0.727"},
+        "case_b": {"tp": "120", "fp": "80", "fn": "30", "tn": "770", "answer": "0.600", "wrong1": "0.800", "wrong2": "0.890", "wrong3": "0.686"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤算為 Recall = TP/(TP+FN)"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤算為 Accuracy"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤算為 F1"}
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "Precision = TP/(TP+FP) = {tp}/({tp}+{fp}) = {answer}。Precision 看「預測為陽的樣本中,真正陽的比例」— 分母是預測陽的總數",
+        "wrong": {
+          "{wrong1}": "此值疑似 Recall = TP/(TP+FN);Recall 看「真陽中被抓出的比例」,分母不同",
+          "{wrong2}": "此值疑似 Accuracy = (TP+TN)/全體;Accuracy 看全體,不只看正類",
+          "{wrong3}": "此值疑似 F1 = 2PR/(P+R);F1 是 P 與 R 的調和平均"
+        },
+        "hook": "Precision 分母是「預測陽的總數」,Recall 分母是「真實陽的總數」"
+      },
+      "misconceptions": ["把 Precision 和 Recall 混用", "分母記錯", "忘記 Precision 看預測層"],
+      "related_node_ids": ["n_L23303_001"],
+      "tags": ["confusion-matrix", "Precision", "互動", "垃圾郵件"]
+    },
+    {
+      "id": "q_cm_004",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_004",
+      "subject": 3,
+      "format": "calculation",
+      "interaction_type": "confusion-matrix",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "罕見疾病篩檢(陽性率僅 3%)模型預測:真陽 {tp} 筆、假陽 {fp} 筆、假陰 {fn} 筆、真陰 {tn} 筆。看似 Accuracy 很高,但對少數類的辨識能力如何?請完成 2×2 配對,並計算 Accuracy(三位小數)。",
+      "matrix_data": {
+        "tp": "{tp}", "fp": "{fp}", "fn": "{fn}", "tn": "{tn}",
+        "labels": {
+          "tp_label": "真實患病 + 預測患病",
+          "fp_label": "真實健康 + 預測患病",
+          "fn_label": "真實患病 + 預測健康",
+          "tn_label": "真實健康 + 預測健康"
+        }
+      },
+      "expected_metric": "accuracy",
+      "expected_answer": "{answer}",
+      "answer_format": "小數三位",
+      "stem_variables": {
+        "case_a": {"tp": "10", "fp": "20", "fn": "20", "tn": "950", "answer": "0.960", "wrong1": "0.333", "wrong2": "0.500", "wrong3": "0.030"},
+        "case_b": {"tp": "5", "fp": "10", "fn": "15", "tn": "970", "answer": "0.975", "wrong1": "0.333", "wrong2": "0.250", "wrong3": "0.020"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤算為 Precision"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤算為 Recall"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤算為陽性比例"}
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "Accuracy = (TP+TN)/全體 = ({tp}+{tn})/1000 = {answer}。但這 96-97% 的 Accuracy 來自於 950+ 筆 TN(因為陽性率本來就低);對少數患病類的 Recall 僅 33% 左右 — Accuracy 在不平衡資料嚴重誤導",
+        "wrong": {
+          "{wrong1}": "此值疑似 Precision = TP/(TP+FP);看似低,反映少數類的預測準確度,跟 Accuracy 完全不同",
+          "{wrong2}": "此值疑似 Recall = TP/(TP+FN);Recall 才是反映「漏診」的指標,Accuracy 看全體不能看",
+          "{wrong3}": "此值是真陽性比例 (TP+FN)/全體,跟 Accuracy 無關"
+        },
+        "hook": "不平衡資料禁用 Accuracy:全部猜陰也能 97% 正確,但根本沒抓到任何病人"
+      },
+      "misconceptions": ["以為 Accuracy 96% 就是好模型", "忽略類別不平衡", "未檢查 Recall / F1"],
+      "related_node_ids": ["n_L23303_001", "n_L23303_002"],
+      "tags": ["confusion-matrix", "Accuracy", "互動", "不平衡", "陷阱"]
+    },
+    {
+      "id": "q_cm_005",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_006",
+      "subject": 3,
+      "format": "calculation",
+      "interaction_type": "confusion-matrix",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "三類別文本分類器,類別 A 的混淆矩陣為:真陽 {tp} 筆、假陽 {fp} 筆、假陰 {fn} 筆、真陰 {tn} 筆。已知類別 B 的 F1 = {b_f1}、類別 C 的 F1 = {c_f1}。請完成 A 類別的 2×2 配對,並計算 macro F1(三位小數)。",
+      "matrix_data": {
+        "tp": "{tp}", "fp": "{fp}", "fn": "{fn}", "tn": "{tn}",
+        "labels": {
+          "tp_label": "真實 A + 預測 A",
+          "fp_label": "真實非 A + 預測 A",
+          "fn_label": "真實 A + 預測非 A",
+          "tn_label": "真實非 A + 預測非 A"
+        }
+      },
+      "expected_metric": "macro_f1",
+      "expected_answer": "{answer}",
+      "answer_format": "小數三位",
+      "extra_classes": [
+        {"name": "類別 B", "f1": "{b_f1}"},
+        {"name": "類別 C", "f1": "{c_f1}"}
+      ],
+      "stem_variables": {
+        "case_a": {"tp": "80", "fp": "20", "fn": "20", "tn": "880", "b_f1": "0.600", "c_f1": "0.400", "answer": "0.600", "wrong1": "0.800", "wrong2": "0.500", "wrong3": "0.700"},
+        "case_b": {"tp": "90", "fp": "10", "fn": "10", "tn": "890", "b_f1": "0.500", "c_f1": "0.300", "answer": "0.567", "wrong1": "0.900", "wrong2": "0.400", "wrong3": "0.733"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "只算類別 A 的 F1"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "用 B 與 C 平均忽略 A"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "用 A 與 B 平均忽略 C"}
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "類別 A 的 F1:P = {tp}/({tp}+{fp})、R = {tp}/({tp}+{fn}),F1_A = 2PR/(P+R)。macro F1 = (F1_A + F1_B + F1_C)/3 = {answer}。macro 平均對所有類別「平等加權」,對少數類嚴格(對比 weighted F1 用樣本數加權)",
+        "wrong": {
+          "{wrong1}": "此值僅是類別 A 的 F1;macro F1 必須涵蓋所有類別並取平均",
+          "{wrong2}": "此值疑似只算 B 與 C,忽略 A 的 F1",
+          "{wrong3}": "此值疑似只算 A 與 B 的平均,未納入類別 C"
+        },
+        "hook": "macro F1 = 各類 F1 的算術平均;對少數類比 weighted F1 嚴格"
+      },
+      "misconceptions": ["把 macro F1 與 weighted F1 混用", "只看 A 的 F1 就當作整體", "忘記 macro F1 對少數類更嚴格"],
+      "related_node_ids": ["n_L23303_001", "n_L23303_002"],
+      "tags": ["confusion-matrix", "macro F1", "互動", "多類別"]
+    }
+  ]
+}

@@ -319,9 +319,28 @@
   .sm2-due-label.today { background: rgba(56,189,248,0.18); color: #7dd3fc; }
   .sm2-ef { color: var(--fg-dim); font-size: 0.85rem; font-variant-numeric: tabular-nums; }
   .sm2-queue-stem { color: var(--fg-dim); font-size: 0.85rem; margin-top: 4px; padding-left: 30px; }
+
+  /* === 互動混淆矩陣(spec: docs/spec-confusion-matrix.md §5)=== */
+  .cm-source { padding: 12px 16px; background: var(--bg-3); border: 2px solid var(--border);
+    border-radius: var(--radius-sm); cursor: move; user-select: none; transition: all 0.2s; }
+  .cm-source:hover { border-color: var(--primary); transform: translateY(-1px); }
+  .cm-source.dragging { opacity: 0.4; }
+  .cm-source.selected { border-color: var(--warn); background: rgba(250,204,21,0.12); }
+  .cm-source.used { opacity: 0.5; cursor: not-allowed; }
+  .cm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .cm-cell { min-height: 80px; padding: 16px; background: var(--bg-2);
+    border: 2px dashed var(--border); border-radius: var(--radius-sm);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; transition: all 0.2s; cursor: pointer; }
+  .cm-cell.drag-over { border-color: var(--primary); background: rgba(56,189,248,0.1); }
+  .cm-cell.has-label { border-style: solid; }
+  .cm-cell.correct-placement { border-color: var(--success); background: rgba(74,222,128,0.1); }
+  .cm-cell.wrong-placement { border-color: var(--danger); background: rgba(248,113,113,0.1); }
 </style>
 <!-- 鐵律延伸:SM-2 間隔重複(qid 鍵,Mastery 用 nodeId 鍵,兩者並存) -->
 <script src="sm2.js"></script>
+<!-- 互動混淆矩陣題型(spec: docs/spec-confusion-matrix.md) -->
+<script src="components/confusion-matrix.js"></script>
 </head>
 <body>
 
@@ -512,6 +531,18 @@ function renderQuestion(q) {
       for (const [k, v] of Object.entries(c)) r = r.replaceAll(`{${k}}`, v);
       return r;
     };
+    // 遞迴替換物件 / 陣列 / 字串內所有 placeholder(不修改 input,回傳新值)
+    // 用於 matrix_data(含巢狀 labels)、extra_classes 等含 placeholder 的結構化欄位
+    const subDeep = (val) => {
+      if (typeof val === 'string') return subAll(val);
+      if (Array.isArray(val)) return val.map(subDeep);
+      if (val && typeof val === 'object') {
+        const out = {};
+        for (const [k, v] of Object.entries(val)) out[k] = subDeep(v);
+        return out;
+      }
+      return val;
+    };
     rendered.stem = subAll(rendered.stem);
     rendered.options = rendered.options.map(o => ({...o, text: subAll(o.text)}));
     if (rendered.explanation) {
@@ -525,6 +556,11 @@ function renderQuestion(q) {
         rendered.explanation.wrong = newWrong;
       }
     }
+    // 互動題型(confusion-matrix 等)新增欄位:matrix_data / expected_answer / extra_classes
+    // 三者內含 {tp}/{answer}/{b_f1} 等 placeholder,必須與 stem 等同步替換,否則 UI 顯示原始字串、Number() = NaN
+    if (rendered.matrix_data) rendered.matrix_data = subDeep(rendered.matrix_data);
+    if (typeof rendered.expected_answer === 'string') rendered.expected_answer = subAll(rendered.expected_answer);
+    if (Array.isArray(rendered.extra_classes)) rendered.extra_classes = subDeep(rendered.extra_classes);
   }
   // 變數池
   rendered.stem = applyVariables(rendered.stem, rendered.stem_variables);
@@ -832,7 +868,8 @@ async function loadQuestions() {
     'questions-batch-n5-deploy.json',  // 25 部署 新批
     'questions-batch-n6-ml-core.json', // 22 ML 基礎 新批
     'questions-batch-n7-dl.json',      // 25 DL+數據準備 新批
-    'questions-batch-n8-eval-gov.json' // 25 評估治理 新批
+    'questions-batch-n8-eval-gov.json', // 25 評估治理 新批
+    'questions-confusion-matrix.json'   // 5 互動混淆矩陣(spec: docs/spec-confusion-matrix.md)
   ];
   try {
     const results = await Promise.all(
@@ -1071,6 +1108,15 @@ const PlayEngine = {
 
   show(question, opts = {}) {
     this.current = renderQuestion(question);
+    // === 分流:互動混淆矩陣題型(spec: docs/spec-confusion-matrix.md §4.2)===
+    if (this.current.interaction_type === 'confusion-matrix' && typeof ConfusionMatrix !== 'undefined') {
+      const view = document.getElementById('view-play');
+      const ctx = opts.contextHTML || '';
+      view.innerHTML = ctx + '<div id="cm-container"></div>';
+      show('view-play');
+      ConfusionMatrix.render(this.current, document.getElementById('cm-container'));
+      return;
+    }
     const view = document.getElementById('view-play');
     const ctx = opts.contextHTML || '';
     const code = this.current.code_block ? `<pre class="code-syntax">${highlightCodeSimple(this.current.code_block)}</pre>` : '';

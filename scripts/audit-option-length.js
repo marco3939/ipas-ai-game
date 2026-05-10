@@ -22,6 +22,7 @@ const FILES = [
   'questions-batch-n6-ml-core.json',
   'questions-batch-n7-dl.json',
   'questions-batch-n8-eval-gov.json',
+  'questions-confusion-matrix.json',
 ];
 
 const stats = {
