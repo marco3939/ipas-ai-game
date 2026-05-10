@@ -661,6 +661,7 @@
           <div class="actions" style="margin-top:14px">
             <button class="btn btn-primary" onclick="Mode5.next()">繼續攻擊 →</button>
             ${!isCorrect ? `<button class="btn btn-warn" onclick="Mode5.drillThis()">🎯 立即下鑽變化型</button>` : ''}
+            ${ErrorReports.renderButton(q.id)}
           </div>
         </div>
       `;

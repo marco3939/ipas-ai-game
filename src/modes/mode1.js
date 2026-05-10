@@ -265,7 +265,7 @@
             <div class="avatar boss" style="font-size:2.5rem">${boss.avatar}</div>
             <div class="bar-info">
               <div class="bar-name">${boss.name}</div>
-              <div class="hp-text">HP ${boss.hp}</div>
+              <div class="hp-text">HP ${Math.round(boss.hp * BOSS_HP_MULTIPLIER)}</div>
             </div>
           </div>
           <div class="dialogue-box">
@@ -551,6 +551,7 @@
           <div class="actions" style="margin-top:14px">
             <button class="btn btn-primary" onclick="Mode1.next()">繼續戰鬥 →</button>
             ${!isCorrect ? `<button class="btn btn-warn" onclick="Mode1.drillThis()">🎯 立即下鑽變化型</button>` : ''}
+            ${ErrorReports.renderButton(q.id)}
           </div>
         </div>
       `;

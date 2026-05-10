@@ -166,6 +166,9 @@
     // 入口:start()
     async start() {
       RNG.set(Date.now()); // 鐵律 #2:每場新 seed
+      // 還原可能殘留的 PlayEngine hook(若上次 challenge 中途離開)
+      if (this._origAnswer) { PlayEngine.answer = this._origAnswer; this._origAnswer = null; }
+      if (this._origOnNext !== undefined && this._origOnNext !== null) { PlayEngine.onNext = this._origOnNext; this._origOnNext = null; }
       try {
         await _loadCodexData();
       } catch (e) {
@@ -520,16 +523,20 @@
         </div>
       </div>`;
 
-      // 攔截 PlayEngine.answer 以追蹤本次挑戰結果
-      // 共用層 PlayEngine.answer 自帶 Mastery.update / Wrongbook.add / Progress.addAnswer
-      // 我們只負責:統計本案 codex 計數 + 設好下一步走向
+      // 攔截 PlayEngine.answer 與 onNext 以追蹤本次挑戰結果並控制下一步
+      // 兩者都須在所有退場路徑(包括 goHome 中途離開)還原 — 避免 Mode6 hook 殘留影響其他 mode(案例 4 教訓)
       const origAnswer = PlayEngine.answer.bind(PlayEngine);
+      const origOnNext = PlayEngine.onNext;  // 可能 undefined,也要保存
       const self = this;
+      // 保存以便外部 cleanup(若 challenge 啟動但使用者中途按 home,start() 下次重置)
+      this._origAnswer = origAnswer;
+      this._origOnNext = origOnNext;
       PlayEngine.answer = function(key) {
         const opt = this.current.options.find(o => o.key === key);
         const isCorrect = !!(opt && opt.is_correct);
-        // 還原(只攔一次)
+        // 還原 answer(只攔一次)
         PlayEngine.answer = origAnswer;
+        self._origAnswer = null;
         // 更新 codex 計數
         const e = _getEntry(nodeId);
         if (isCorrect) {
@@ -548,6 +555,9 @@
 
       // 答完一題後行為:答對 → 回卡片詳情;答錯 → DrillSession 下鑽(鐵律 #1)
       PlayEngine.onNext = () => {
+        // 還原 onNext(只攔一次,避免 hook 殘留)
+        PlayEngine.onNext = origOnNext;
+        self._origOnNext = null;
         // 判斷上一題對錯:從 codex.streak 推(剛才答對 streak ≥ 1,答錯則 = 0 但 challenges 已 +1)
         // 為精確,改用最後一題渲染狀態:Wrongbook.load 看 qid 是否剛被加
         const lastQ = PlayEngine.current;

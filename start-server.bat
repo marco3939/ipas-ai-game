@@ -1,7 +1,7 @@
 @echo off
 chcp 65001 > nul
 title IPAS AI Game - Local Server
-cd /d "%~dp0src"
+cd /d "%~dp0"
 echo.
 echo ==========================================
 echo   IPAS AI Game - Local Server

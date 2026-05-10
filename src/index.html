@@ -296,6 +296,15 @@
   .flash-overlay.correct { background: radial-gradient(ellipse at center, rgba(74,222,128,0.4), transparent 70%); }
   .flash-overlay.wrong { background: radial-gradient(ellipse at center, rgba(248,113,113,0.4), transparent 70%); }
   .flash-overlay.show { opacity: 1; }
+
+  /* === 錯誤回報(草案 1:Inline form 非 modal)=== */
+  .error-report-btn { font-size: 0.875rem; }
+  .error-report-form { font-size: 0.9rem; margin-top: 10px; padding: 12px;
+    background: rgba(250,204,21,0.08); border-left: 4px solid #facc15; border-radius: 6px; }
+  .error-report-form label { user-select: none; }
+  .error-report-form input[type="checkbox"] { transform: scale(1.1); margin-right: 6px; vertical-align: middle; }
+  .error-report-form textarea { resize: vertical; min-height: 60px; }
+  @media (max-width: 600px) { .error-report-form textarea { font-size: 16px; } }
 </style>
 </head>
 <body>
@@ -319,6 +328,10 @@
       <h1>📘 IPAS AI 中級 — 衝刺練習場</h1>
       <p style="color:var(--fg-dim)">考試日:2026-05-23 · 鐵律驅動的個人化學習</p>
       <div class="progress-bar"><div class="progress-fill" id="overall-progress" style="width:0%"></div></div>
+      <div class="actions" id="er-export-actions" style="margin-top:10px;display:none">
+        <button class="btn btn-ghost" id="er-export-btn" onclick="ErrorReports.export()">📤 匯出錯誤回報(0 筆)</button>
+        <button class="btn btn-ghost" onclick="ErrorReports.clear()">🗑️ 清除回報</button>
+      </div>
     </div>
 
     <div class="card">
@@ -351,7 +364,7 @@
         <button class="mode-card" onclick="enterMode(6)">
           <div class="mode-num">案 6</div>
           <div class="mode-title">🃏 卡牌圖鑑大全</div>
-          <div class="mode-desc">87 張 kb 節點圖鑑,封印挑戰解鎖(教學預習段)</div>
+          <div class="mode-desc">94 張 kb 節點圖鑑(87 可挑戰),封印挑戰解鎖(教學預習段)</div>
           <div class="mode-stats">圖鑑 · 預習</div>
         </button>
         <button class="mode-card" onclick="enterMode(7)">
@@ -378,6 +391,12 @@
     <div class="card">
       <h2>📊 弱點 Top 5</h2>
       <div class="weak-list" id="weak-list"><div class="empty">尚無資料,先做題再回來看</div></div>
+    </div>
+
+    <div class="card">
+      <h2>🚨 最常被回報的題目 Top 5</h2>
+      <p style="color:var(--fg-dim);font-size:0.85rem;margin-bottom:8px">綜合錯題次數與回報次數(回報權重較高:wrongCount + reportCount × 2)</p>
+      <div class="weak-list" id="error-top-list"><div class="empty">🎉 目前無異常題目</div></div>
     </div>
   </section>
 
@@ -410,6 +429,7 @@ const Storage = {
   K_PROGRESS: 'ipas_progress_v1',
   K_MASTERY: 'ipas_mastery_v1',
   K_WRONGBOOK: 'ipas_wrongbook_v1',
+  K_ERROR_REPORTS: 'ipas_error_reports_v1',
   K_SETTINGS: 'ipas_settings_v1',
   K_SESSION: 'ipas_session_state_v1',
   get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
@@ -534,9 +554,9 @@ const Mastery = {
       .map(id => ({ id, score: (m[id] && m[id].attempts > 0) ? m[id].score : 50 }))
       .sort((a,b) => a.score - b.score).slice(0, n);
   },
-  // 熟練門檻:score >= 60(對應 PlayEngine 連對 3 次 / Mode5 連對 4 次)
+  // 熟練門檻:score >= 60(對應 PlayEngine 連對 4 次:12→26→42→60 / Mode5 +15 連對 4 次)
   // 原 >= 90 對應連對 6+ 次,單次戰鬥幾乎無法達成,首頁永遠 0,失去進度回饋
-  // 改 60 後使用者每連對 3 題即看到計數 +1,符合「玩了多場該跳」的預期
+  // 改 60 後使用者每連對 4 題即看到計數 +1,符合「玩了多場該跳」的預期
   // 注意:渲染解釋文案 "已熟練(≥90%)" 在 view-stats 行 1040,已同步調整為 ≥60%
   MASTERY_THRESHOLD: 60,
   countMastered() { const t = this.MASTERY_THRESHOLD; const m = this.load(); return Object.values(m).filter(n => n.score >= t).length; }
@@ -563,6 +583,206 @@ const Wrongbook = {
     if (x) { x.mastered = true; this.save(w); }
   },
   count() { return this.load().filter(x => !x.mastered).length; }
+};
+
+// === ErrorReports 錯誤回報(僅本機儲存,不上傳)===
+// 案例 1 教訓:用 const,不掛 window;mode 必須裸名讀(modes 在 IIFE 內讀 global 即可)
+// 案例 4 教訓:不繞過 Storage 自寫 localStorage,全走 Storage.get/set
+const ErrorReports = {
+  TYPES: {
+    stem_options_mismatch: '題目選項與題幹不一致',
+    wrong_answer: '正解錯誤',
+    calc_inconsistent: '計算題 explanation 數字與 stem 對不上',
+    wrong_explanation_wrong: '錯解 explanation 不正確',
+    category_mismatch: '知識點 / 編碼分類錯誤',
+    out_of_scope: '內容超出 IPAS 中級範圍',
+    other: '其他'
+  },
+  // case 8 教訓:任何使用者輸入拼到 HTML 一律 escape
+  _esc(s) {
+    if (s === null || s === undefined) return '';
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  },
+  load() { return Storage.get(Storage.K_ERROR_REPORTS, []); },
+  save(arr) { Storage.set(Storage.K_ERROR_REPORTS, arr); },
+
+  // 同 qid 覆蓋 + 累加 report_count(草案 2)
+  add(qid, types, note, context) {
+    if (!qid) { console.error('ErrorReports.add: qid 為空'); return; }
+    if ((!types || types.length === 0) && !note) {
+      console.error('ErrorReports.add: types 與 note 不能同時為空');
+      return;
+    }
+    const reports = this.load();
+    const existing = reports.find(r => r.qid === qid);
+    const now = Date.now();
+    // 防雙擊:1 秒內視為同一次
+    if (existing && (now - existing.ts) < 1000) return;
+    const finalTypes = (types && types.length > 0) ? types : ['other'];
+    if (existing) {
+      existing.types = finalTypes;
+      existing.note = note || '';
+      existing.context = context || existing.context;
+      existing.ts = now;
+      existing.report_count = (existing.report_count || 1) + 1;
+    } else {
+      reports.push({
+        qid, ts: now,
+        types: finalTypes,
+        note: note || '',
+        context: context || {},
+        report_count: 1
+      });
+    }
+    this.save(reports);
+  },
+
+  get(qid) { return this.load().find(r => r.qid === qid); },
+  list() { return this.load(); },
+  count() { return this.load().length; },
+
+  // Top N by wrongCount + reportCount*2(草案 5)
+  top(n) {
+    n = n || 5;
+    const reports = this.load();
+    const wrongbook = Wrongbook.load();
+    const map = {};
+    reports.forEach(r => {
+      map[r.qid] = map[r.qid] || { qid: r.qid, wrongCount: 0, reportCount: 0, types: [], lastReportTs: 0 };
+      map[r.qid].reportCount = r.report_count || 1;
+      map[r.qid].types = r.types || [];
+      map[r.qid].lastReportTs = r.ts;
+    });
+    wrongbook.forEach(w => {
+      map[w.qid] = map[w.qid] || { qid: w.qid, wrongCount: 0, reportCount: 0, types: [], lastReportTs: 0 };
+      map[w.qid].wrongCount = w.wrongCount || 1;
+    });
+    return Object.values(map)
+      .map(x => Object.assign({}, x, { score: x.wrongCount + x.reportCount * 2 }))
+      .filter(x => x.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, n);
+  },
+
+  // 匯出檔名:ipas-error-reports-<ISO-timestamp>.json(草案 3)
+  export() {
+    const reports = this.load();
+    const data = {
+      version: '1.0',
+      generated_at: Date.now(),
+      device_info: { ua: navigator.userAgent, lang: navigator.language },
+      reports: reports
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const ts = new Date().toISOString().replace(/[:.]/g, '-');
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ipas-error-reports-${ts}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast(`✅ 已匯出 ${reports.length} 筆回報`, 2500);
+  },
+
+  // confirm 後清空(草案 4:不強制匯出)
+  clear() {
+    if (!confirm('確定清除所有錯誤回報?(建議先匯出再清除)')) return;
+    this.save([]);
+    showToast('已清除所有錯誤回報');
+    if (typeof refreshHome === 'function') refreshHome();
+  },
+
+  // === UI helpers:回傳 HTML string,給 mode 嵌入 explanation ===
+  renderButton(qid) {
+    if (!qid) return '';
+    const existing = this.get(qid);
+    const label = existing ? '✅ 已回報(可修改)' : '⚠️ 回報此題有誤';
+    const safeQid = this._esc(qid);
+    return `<button class="btn btn-ghost error-report-btn" onclick="ErrorReports.toggleForm('${safeQid}')" id="er-btn-${safeQid}">${label}</button>
+            <div id="er-form-${safeQid}" class="error-report-form" style="display:none"></div>`;
+  },
+
+  // 展開 / 收回 inline form(草案 1)
+  toggleForm(qid) {
+    const formEl = document.getElementById(`er-form-${qid}`);
+    if (!formEl) return;
+    if (formEl.style.display === 'none') {
+      formEl.innerHTML = this._renderFormHTML(qid);
+      formEl.style.display = 'block';
+    } else {
+      formEl.style.display = 'none';
+    }
+  },
+
+  _renderFormHTML(qid) {
+    const existing = this.get(qid);
+    const checkedTypes = existing ? (existing.types || []) : [];
+    const note = existing ? (existing.note || '') : '';
+    const safeQid = this._esc(qid);
+    const checkboxes = Object.entries(this.TYPES).map(([code, label]) => {
+      const checked = checkedTypes.includes(code) ? 'checked' : '';
+      return `<label style="display:block;margin:4px 0;cursor:pointer">
+        <input type="checkbox" class="er-type-cb" value="${this._esc(code)}" ${checked}/>${this._esc(label)}
+      </label>`;
+    }).join('');
+    return `
+      <div style="font-weight:700;color:#facc15;margin-bottom:8px">⚠️ 回報此題有誤</div>
+      <div style="font-size:0.85rem;color:var(--fg-dim);margin-bottom:6px">請勾選錯誤類型(可複選):</div>
+      ${checkboxes}
+      <div style="margin-top:8px">
+        <label style="display:block;color:var(--fg-dim);font-size:0.85rem;margin-bottom:4px">備註(選填):</label>
+        <textarea id="er-note-${safeQid}" rows="3" style="width:100%;padding:6px;background:rgba(0,0,0,0.3);color:var(--fg);border:1px solid rgba(255,255,255,0.1);border-radius:4px;font-family:inherit">${this._esc(note)}</textarea>
+      </div>
+      <div class="actions" style="margin-top:10px">
+        <button class="btn btn-primary" onclick="ErrorReports._submit('${safeQid}')">✅ 提交回報</button>
+        <button class="btn btn-ghost" onclick="ErrorReports.toggleForm('${safeQid}')">取消</button>
+      </div>
+    `;
+  },
+
+  _submit(qid) {
+    const formEl = document.getElementById(`er-form-${qid}`);
+    if (!formEl) return;
+    const types = Array.from(formEl.querySelectorAll('.er-type-cb:checked')).map(cb => cb.value);
+    const noteEl = document.getElementById(`er-note-${qid}`);
+    const note = (noteEl && noteEl.value || '').trim();
+    if (types.length === 0 && !note) {
+      showToast('⚠️ 請至少勾選一個錯誤類型或填寫備註', 2500);
+      return;
+    }
+    const context = this._buildContext(qid);
+    this.add(qid, types, note, context);
+    formEl.style.display = 'none';
+    const btn = document.getElementById(`er-btn-${qid}`);
+    if (btn) btn.textContent = '✅ 已回報(可修改)';
+    showToast('✅ 已記錄回報,可在首頁匯出', 2500);
+    if (typeof refreshHome === 'function') refreshHome();
+  },
+
+  // 從 PlayEngine.current 取 rendered 狀態;失敗則 fallback 到題庫原題
+  _buildContext(qid) {
+    let cur = null;
+    if (typeof PlayEngine !== 'undefined' && PlayEngine.current && PlayEngine.current.id === qid) {
+      cur = PlayEngine.current;
+    }
+    if (!cur && typeof QUESTIONS !== 'undefined') {
+      cur = QUESTIONS.find(q => q.id === qid) || null;
+    }
+    if (!cur) return { qid };
+    const correctOpt = (cur.options || []).find(o => o.is_correct);
+    return {
+      stem_excerpt: (cur.stem || '').substring(0, 200),
+      knowledge_code: cur.knowledge_code,
+      node_id: cur.node_id,
+      format: cur.format,
+      rendered_options: (cur.options || []).map(o => `${o.key || ''}. ${o.text}`),
+      correct_choice: correctOpt ? (correctOpt.key || null) : null,
+      correct_choice_text: correctOpt ? correctOpt.text : null
+    };
+  }
 };
 
 // === Question Bank Loader(高品質原創題庫,鐵律 #3 全合規)===
@@ -728,6 +948,52 @@ function refreshHome() {
   console.debug('[refreshHome]', { masterCount, totalNodes, pct, masteryKeys: Object.keys(Mastery.load()).length });
   // 弱點
   renderWeakList();
+  // 錯誤回報相關
+  refreshExportButton();
+  renderErrorTopList();
+}
+
+function refreshExportButton() {
+  const btn = document.getElementById('er-export-btn');
+  const wrap = document.getElementById('er-export-actions');
+  if (!btn || !wrap) return;
+  const n = ErrorReports.count();
+  btn.textContent = `📤 匯出錯誤回報(${n} 筆)`;
+  // 草案 6:只首頁顯示;N=0 時整個 actions 區塊隱藏(避免無回報時干擾)
+  wrap.style.display = (n > 0) ? 'flex' : 'none';
+}
+
+function renderErrorTopList() {
+  const el = document.getElementById('error-top-list');
+  if (!el) return;
+  const top = ErrorReports.top(5);
+  if (top.length === 0) {
+    el.innerHTML = '<div class="empty">🎉 目前無異常題目</div>';
+    return;
+  }
+  el.innerHTML = top.map(t => {
+    const q = QUESTIONS.find(qq => qq.id === t.qid);
+    const stemPreview = q
+      ? (q.stem || '').substring(0, 60).replace(/\{[^}]+\}/g, '?')
+      : '(題庫已移除)';
+    const safeStem = ErrorReports._esc(stemPreview);
+    const safeQid = ErrorReports._esc(t.qid);
+    const typeLabels = (t.types || [])
+      .map(c => ErrorReports.TYPES[c] || c)
+      .slice(0, 2)
+      .map(s => ErrorReports._esc(s))
+      .join('、');
+    const cls = t.score >= 5 ? 'low' : t.score >= 3 ? 'mid' : 'high';
+    return `<div class="weak-item">
+      <span style="text-align:left;flex:1">
+        <strong>${safeQid}</strong>
+        <span style="color:var(--fg-dim);font-size:0.85rem"> · 錯 ${t.wrongCount} 次 · 回報 ${t.reportCount} 次</span>
+        <div style="font-size:0.8rem;color:var(--fg-dim);margin-top:2px">${safeStem}...</div>
+        ${typeLabels ? `<div style="font-size:0.75rem;color:#facc15;margin-top:2px">⚠️ ${typeLabels}</div>` : ''}
+      </span>
+      <span class="weak-score ${cls}">優先度 ${t.score}</span>
+    </div>`;
+  }).join('');
 }
 
 function renderWeakList() {
@@ -886,6 +1152,7 @@ const PlayEngine = {
         <div class="actions" style="margin-top:14px">
           <button class="btn btn-primary" onclick="PlayEngine.next()">繼續下一題 →</button>
           ${!isCorrect ? `<button class="btn btn-warn" onclick="PlayEngine.drill()">🎯 立即下鑽變化型</button>` : ''}
+          ${ErrorReports.renderButton(q.id)}
           <button class="btn btn-ghost" onclick="goHome()">回首頁</button>
         </div>
       </div>
