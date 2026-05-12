@@ -208,20 +208,25 @@
       "difficulty": "easy",
       "source_level": "L1",
       "stem": "某學員想用 numpy 驗證 ReLU 激活函數對輸入向量的轉換結果。請問下列程式輸出為何?",
-      "code_block": "import numpy as np\nx = np.array([-2.0, -0.5, 0.0, 0.5, 2.0])\nrelu_out = np.maximum(0, x)\nprint(relu_out.sum())",
+      "code_block": "import numpy as np\nx = np.array([{x1}, {x2}, {x3}, {x4}, {x5}])\nrelu_out = np.maximum(0, x)\nprint(relu_out.sum())",
+      "stem_variables": {
+        "case_a": {"x1": "-2.0", "x2": "-0.5", "x3": "0.0", "x4": "0.5", "x5": "2.0", "answer": "2.5", "wrong1": "0.0", "wrong2": "5.0", "wrong3": "-2.5"},
+        "case_b": {"x1": "-3.0", "x2": "-1.0", "x3": "0.5", "x4": "1.5", "x5": "3.0", "answer": "5.0", "wrong1": "0.0", "wrong2": "9.0", "wrong3": "-4.0"},
+        "case_c": {"x1": "-4.0", "x2": "-0.5", "x3": "0.0", "x4": "1.0", "x5": "2.5", "answer": "3.5", "wrong1": "0.0", "wrong2": "8.0", "wrong3": "-4.5"}
+      },
       "options": [
-        {"text": "2.5(僅保留 0.5 與 2.0 兩個正值的總和)", "is_correct": true},
-        {"text": "0.0(誤以為 ReLU 把所有輸入無論正負皆歸零)", "is_correct": false, "trap_type": "誤以為 ReLU 把所有輸入歸零"},
-        {"text": "5.0(把 ReLU 誤當絕對值函數計算所有值)", "is_correct": false, "trap_type": "誤把絕對值當作 ReLU 結果"},
-        {"text": "-2.5(只把負區間 -2 與 -0.5 加總當輸出)", "is_correct": false, "trap_type": "誤算成負區間總和"}
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為 ReLU 把所有輸入歸零"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤把絕對值當作 ReLU 結果"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤算成負區間總和"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "ReLU(x) = max(0, x) 將負值歸零、正值保留。輸入 [-2.0, -0.5, 0.0, 0.5, 2.0] 經 ReLU 後變為 [0, 0, 0, 0.5, 2.0],總和為 0+0+0+0.5+2.0 = 2.5。np.maximum(0, x) 是元素級別 max 運算,與 max(0, scalar) 不同,可一次處理整個向量。此題驗證 ReLU 的『負區歸零、正區不變』兩個核心特性。",
+        "correct": "ReLU(x) = max(0, x) 將負值歸零、正值保留。輸入 [{x1}, {x2}, {x3}, {x4}, {x5}] 經 ReLU 後僅保留非負部分,總和為 {answer}。np.maximum(0, x) 是元素級別 max 運算,與 max(0, scalar) 不同,可一次處理整個向量。此題驗證 ReLU 的『負區歸零、正區不變』兩個核心特性。",
         "wrong": {
-          "0.0": "ReLU 只把負值歸零,正值會保留。輸入中 0.5 與 2.0 為正,會原樣保留;此選項誤以為 ReLU 把全部輸入都歸零",
-          "5.0": "5.0 是輸入絕對值的總和(2+0.5+0+0.5+2),這是 abs() 的結果而非 ReLU。ReLU 並不取絕對值,負值是直接歸零而非翻正",
-          "-2.5": "-2.5 是負區間元素總和(-2+-0.5),ReLU 會把這些負值歸零而非保留;此選項把 ReLU 與『取負值』混淆"
+          "{wrong1}": "ReLU 只把負值歸零,正值會保留。本輸入中仍有正值,不會全部歸零;此選項誤以為 ReLU 把全部輸入都歸零",
+          "{wrong2}": "此值是輸入絕對值的總和,即 abs() 的結果而非 ReLU。ReLU 並不取絕對值,負值是直接歸零而非翻正",
+          "{wrong3}": "此值是負區間元素總和(負號保留),ReLU 會把這些負值歸零而非保留;此選項把 ReLU 與『取負值』混淆"
         },
         "hook": "ReLU 速記:正則保留、零則保留、負則歸零;numpy 用 np.maximum(0, x) 向量化"
       },
@@ -238,20 +243,25 @@
       "difficulty": "medium",
       "source_level": "L1",
       "stem": "某 AI 學員實作單一神經元的加權求和 + ReLU 計算,程式如下。請問輸出為何?",
-      "code_block": "import numpy as np\nx = np.array([1.0, 2.0, 3.0])\nw = np.array([0.5, -1.0, 0.5])\nb = -0.2\nz = np.dot(w, x) + b\noutput = max(0, z)\nprint(round(output, 2))",
+      "code_block": "import numpy as np\nx = np.array([{x1}, {x2}, {x3}])\nw = np.array([{w1}, {w2}, {w3}])\nb = {b}\nz = np.dot(w, x) + b\noutput = max(0.0, z)\nprint(round(output, 2))",
+      "stem_variables": {
+        "case_a": {"x1": "1.0", "x2": "2.0", "x3": "3.0", "w1": "0.5", "w2": "-1.0", "w3": "0.5", "b": "-0.2", "answer": "0.0", "wrong1": "0.3", "wrong2": "1.0", "wrong3": "1.3"},
+        "case_b": {"x1": "2.0", "x2": "1.0", "x3": "3.0", "w1": "0.3", "w2": "0.4", "w3": "-0.2", "b": "0.1", "answer": "0.5", "wrong1": "0.7", "wrong2": "1.0", "wrong3": "1.1"},
+        "case_c": {"x1": "1.0", "x2": "2.0", "x3": "4.0", "w1": "0.2", "w2": "0.3", "w3": "0.5", "b": "-0.5", "answer": "2.3", "wrong1": "2.8", "wrong2": "1.0", "wrong3": "3.3"}
+      },
       "options": [
-        {"text": "0.0", "is_correct": true},
-        {"text": "0.3", "is_correct": false, "trap_type": "誤把負的 z 直接保留為輸出"},
-        {"text": "1.0", "is_correct": false, "trap_type": "誤以為 ReLU 將任何負值映射到 1"},
-        {"text": "1.3", "is_correct": false, "trap_type": "誤把 b 當加號計算成正值"}
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤把負的 z 直接保留為輸出"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為 ReLU 將任何負值映射到 1"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤把 b 當加號計算成正值"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "先計算加權求和:z = w·x + b = 0.5×1.0 + (-1.0)×2.0 + 0.5×3.0 + (-0.2) = 0.5 - 2.0 + 1.5 - 0.2 = -0.2。z 為負值,經 ReLU(max(0, z)) 後變為 0。最終輸出為 0.0。此題完整演示了單一神經元的兩步驟運算:『加權求和產生 z』 → 『ReLU 激活產生輸出』,且呈現負 z 被歸零的典型情境。",
+        "correct": "先計算加權求和:z = w·x + b = {w1}×{x1} + {w2}×{x2} + {w3}×{x3} + ({b})。經 ReLU(max(0, z)) 後,負值歸零、非負值保留,最終輸出為 {answer}。此題完整演示了單一神經元的兩步驟運算:『加權求和產生 z』 → 『ReLU 激活產生輸出』。",
         "wrong": {
-          "0.3": "0.3 看似是 |z| 的近似值,但 ReLU 對負 z 應歸零而非取絕對值。此外計算 z = -0.2 而非 -0.3,本身數值也不對",
-          "1.0": "ReLU 對負輸入歸零而非映射到 1。1.0 可能是把 ReLU 與 sigmoid 飽和值混淆;Sigmoid 在大正輸入時趨近 1 但 ReLU 對負輸入是 0",
-          "1.3": "1.3 是把偏置項 b=-0.2 誤算成 +0.2 後的結果(0.5-2+1.5+0.2=0.2,再加錯成 1.3)。實際 b 為負,需減去而非加上"
+          "{wrong1}": "此值看似是 |z| 或 z 的近似值,但 ReLU 對負 z 應歸零而非取絕對值;對正 z 應原樣保留而非加減偏置誤差",
+          "{wrong2}": "ReLU 對負輸入歸零而非映射到 1。1.0 可能是把 ReLU 與 sigmoid 飽和值混淆;Sigmoid 在大正輸入時趨近 1 但 ReLU 對負輸入是 0",
+          "{wrong3}": "此值是把偏置項 b 號誤算後再經 ReLU 的結果。實際 b 號需照題目給定,不可自行翻轉"
         },
         "hook": "神經元兩步驟:Step1 z = Σwᵢxᵢ + b;Step2 output = activation(z);ReLU 負則歸零"
       },
@@ -442,20 +452,25 @@
       "difficulty": "medium",
       "source_level": "L1",
       "stem": "某資料分析師用 sklearn 將特徵向量做 Z-score 標準化。請問下列程式輸出最接近哪一組數值?(輸入為 1D 向量需 reshape 後再 fit_transform)",
-      "code_block": "import numpy as np\nfrom sklearn.preprocessing import StandardScaler\nx = np.array([10.0, 20.0, 30.0, 40.0, 50.0]).reshape(-1, 1)\nscaler = StandardScaler()\nz = scaler.fit_transform(x).flatten()\nprint(np.round(z, 3))",
+      "code_block": "import numpy as np\nfrom sklearn.preprocessing import StandardScaler\nx = np.array([{v1}, {v2}, {v3}, {v4}, {v5}]).reshape(-1, 1)\nscaler = StandardScaler()\nz = scaler.fit_transform(x).flatten()\nprint(np.round(z, 3).tolist())",
+      "stem_variables": {
+        "case_a": {"v1": "10.0", "v2": "20.0", "v3": "30.0", "v4": "40.0", "v5": "50.0", "answer": "[-1.414, -0.707, 0.0, 0.707, 1.414]", "wrong1": "[0.0, 0.25, 0.5, 0.75, 1.0]", "wrong2": "[10.0, 20.0, 30.0, 40.0, 50.0]", "wrong3": "[-1.265, -0.632, 0.0, 0.632, 1.265]"},
+        "case_b": {"v1": "10.0", "v2": "15.0", "v3": "30.0", "v4": "45.0", "v5": "50.0", "answer": "[-1.265, -0.949, 0.0, 0.949, 1.265]", "wrong1": "[0.0, 0.125, 0.5, 0.875, 1.0]", "wrong2": "[10.0, 15.0, 30.0, 45.0, 50.0]", "wrong3": "[-1.131, -0.849, 0.0, 0.849, 1.131]"},
+        "case_c": {"v1": "10.0", "v2": "25.0", "v3": "30.0", "v4": "35.0", "v5": "50.0", "answer": "[-1.534, -0.383, 0.0, 0.383, 1.534]", "wrong1": "[0.0, 0.375, 0.5, 0.625, 1.0]", "wrong2": "[10.0, 25.0, 30.0, 35.0, 50.0]", "wrong3": "[-1.372, -0.343, 0.0, 0.343, 1.372]"}
+      },
       "options": [
-        {"text": "[-1.414, -0.707,  0.   ,  0.707,  1.414](Z-score 標準化母體 std)", "is_correct": true},
-        {"text": "[ 0.   ,  0.25 ,  0.5  ,  0.75 ,  1.   ](誤當 MinMaxScaler 壓到 [0,1] 區間)", "is_correct": false, "trap_type": "誤把 StandardScaler 當作 MinMaxScaler 結果"},
-        {"text": "[10.0, 20.0, 30.0, 40.0, 50.0](誤以為 fit_transform 不改值返回)", "is_correct": false, "trap_type": "誤以為 fit_transform 不改值"},
-        {"text": "[-2.0, -1.0,  0.0,  1.0,  2.0](誤用樣本 std n-1 估算結果取整)", "is_correct": false, "trap_type": "誤把總體標準差當作 sample std(n-1)"}
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤把 StandardScaler 當作 MinMaxScaler 結果"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為 fit_transform 不改值"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤把總體標準差當作 sample std(n-1)"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "StandardScaler 採用『母體標準差(分母 n)』計算 Z-score。輸入 [10, 20, 30, 40, 50] 的均值 μ=30,標準差 σ=√(((10-30)²+(20-30)²+(30-30)²+(40-30)²+(50-30)²)/5)=√(1000/5)=√200≈14.142。z=(x-30)/14.142 得到 [-1.414, -0.707, 0, 0.707, 1.414]。注意 sklearn StandardScaler 用『母體 std』而非『樣本 std(n-1)』,這是它與 numpy 預設 std 的細微差異點之一。",
+        "correct": "StandardScaler 採用『母體標準差(分母 n)』計算 Z-score。輸入 [{v1}, {v2}, {v3}, {v4}, {v5}] 的均值 μ={v3},標準差 σ 為 sqrt(各值與 μ 的差平方平均)。z=(x-μ)/σ 得到 {answer}。注意 sklearn StandardScaler 用『母體 std』而非『樣本 std(n-1)』,這是它與 numpy 預設 std 的細微差異點之一。",
         "wrong": {
-          "[ 0.   ,  0.25 ,  0.5  ,  0.75 ,  1.   ]": "這是 MinMaxScaler 將輸入壓到 [0,1] 的結果(每個值減去 min=10 後除以 max-min=40)。StandardScaler 不會壓到 [0,1],兩者結果差異很大,常見混淆陷阱",
-          "[10.0, 20.0, 30.0, 40.0, 50.0]": "fit_transform 一定會做轉換,不會原樣返回。誤以為『未啟用縮放』即原樣是常見錯誤,實際呼叫 fit_transform 即執行縮放",
-          "[-2.0, -1.0,  0.0,  1.0,  2.0]": "若用樣本標準差(分母 n-1=4),σ=√(1000/4)=√250≈15.811,結果接近 [-1.265, -0.632, 0, 0.632, 1.265],仍不是 [-2,-1,0,1,2]。這只是憑直覺認為 5 個等距點對應 ±2σ 但實際計算結果不是"
+          "{wrong1}": "這是 MinMaxScaler 將輸入壓到 [0,1] 的結果(每個值減去 min 後除以 max-min)。StandardScaler 不會壓到 [0,1],兩者結果差異很大,常見混淆陷阱",
+          "{wrong2}": "fit_transform 一定會做轉換,不會原樣返回。誤以為『未啟用縮放』即原樣是常見錯誤,實際呼叫 fit_transform 即執行縮放",
+          "{wrong3}": "若用樣本標準差(分母 n-1=4),σ 變大,結果絕對值比母體 std 結果略小。這是 sklearn 與 numpy 預設 std 差異常見陷阱"
         },
         "hook": "StandardScaler:用母體 std(分母 n),公式 z=(x-μ)/σ;範圍可能超出 [-3,3] 但常見落在此區間"
       },
@@ -560,24 +575,24 @@
       "source_level": "L1",
       "stem": "某資料科學家以 PCA 對 4 維資料降維,計算得到 4 個特徵值依序為 λ₁={l1}、λ₂={l2}、λ₃={l3}、λ₄={l4}。若希望降維後保留至少 80% 的累計變異比例,請問至少要保留前幾個主成分?",
       "stem_variables": {
-        "case_a": {"l1": "8", "l2": "4", "l3": "2", "l4": "1", "answer": "2 個", "wrong1": "1 個", "wrong2": "3 個", "wrong3": "4 個"},
-        "case_b": {"l1": "10", "l2": "5", "l3": "3", "l4": "2", "answer": "3 個", "wrong1": "2 個", "wrong2": "1 個", "wrong3": "4 個"},
-        "case_c": {"l1": "15", "l2": "5", "l3": "3", "l4": "2", "answer": "2 個", "wrong1": "1 個", "wrong2": "3 個", "wrong3": "4 個"},
-        "case_d": {"l1": "6", "l2": "5", "l3": "5", "l4": "4", "answer": "3 個", "wrong1": "2 個", "wrong2": "1 個", "wrong3": "4 個"}
+        "case_a": {"l1": "20", "l2": "2", "l3": "2", "l4": "1", "answer": "1 個", "wrong1": "2 個", "wrong2": "3 個", "wrong3": "4 個"},
+        "case_b": {"l1": "8", "l2": "4", "l3": "2", "l4": "1", "answer": "2 個", "wrong1": "1 個", "wrong2": "3 個", "wrong3": "4 個"},
+        "case_c": {"l1": "10", "l2": "5", "l3": "3", "l4": "2", "answer": "3 個", "wrong1": "1 個", "wrong2": "2 個", "wrong3": "4 個"},
+        "case_d": {"l1": "5", "l2": "5", "l3": "5", "l4": "5", "answer": "4 個", "wrong1": "1 個", "wrong2": "2 個", "wrong3": "3 個"}
       },
       "options": [
-        {"text": "{answer},計算累計變異比例 = 前 k 個 λ 之和 / 全部 λ 總和,逐步累計後取首個達到 ≥ 80% 門檻的 k 即可決定", "is_correct": true},
-        {"text": "{wrong1},直接以最大特徵值單獨解釋的比例為門檻判斷即可,不必累計也不必看其他主成分的貢獻情況比例", "is_correct": false, "trap_type": "PCA 主成分需累計計算,不是單一最大值"},
-        {"text": "{wrong2},以特徵值平均數作為基本門檻,只取大於平均者才算有意義主成分,其餘一律捨棄不予考慮入選", "is_correct": false, "trap_type": "平均門檻是 Kaiser 法則但非變異比例法"},
-        {"text": "{wrong3},應該保留全部主成分,因為任何主成分都帶有資訊不應該丟棄,以避免遺失任何特徵變異訊息", "is_correct": false, "trap_type": "保留全部就失去降維意義,且題目要求最低保留數"}
+        {"text": "{answer},正確算法是把 λ 由大到小逐一累加,直到累計變異比例首次達到 ≥ 80% 門檻時對應的 k,即為應保留之最少主成分數量", "is_correct": true},
+        {"text": "{wrong1},錯把『單一最大特徵值占比 λ_max/Σλ』當作判斷依據,未進行累計只看個別貢獻,結果偏離累計達 80% 之題目要求", "is_correct": false, "trap_type": "PCA 主成分需累計計算,不是單一最大值"},
+        {"text": "{wrong2},混淆 Kaiser 法則(以特徵值大於平均數為主成分篩選門檻)與累計變異比例法,套用了不同的主成分選擇規則因此答案不符題意", "is_correct": false, "trap_type": "平均門檻是 Kaiser 法則但非變異比例法"},
+        {"text": "{wrong3},未實際計算累計比例,僅以直覺判斷『保留越多越安全』或『少一個應該也夠』,忽略題目所指定 80% 之精確累計門檻", "is_correct": false, "trap_type": "未實際計算累計比例,以多保留或少保留直覺取代精確 80% 門檻"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "PCA 累計變異比例公式:cumulative_var(k) = (λ₁+λ₂+...+λ_k) / (λ₁+λ₂+λ₃+λ₄)。代入 λ₁={l1}、λ₂={l2}、λ₃={l3}、λ₄={l4},總和 = {l1}+{l2}+{l3}+{l4};逐一累計 k=1、k=2、k=3,首次累計比例 ≥ 80% 對應的 k 即為答案 → 需保留 {answer}。題型為標準 PCA 題,需先計算總和再逐一累計直到首次達標。",
+        "correct": "PCA 累計變異比例公式:cumulative_var(k) = (λ₁+λ₂+...+λ_k) / (λ₁+λ₂+λ₃+λ₄)。代入 λ₁={l1}、λ₂={l2}、λ₃={l3}、λ₄={l4},總和 = {l1}+{l2}+{l3}+{l4};逐一累計 k=1、k=2、k=3、k=4,首次累計比例 ≥ 80% 對應的 k 即為答案 → 需保留 {answer}。題型為標準 PCA 題,需先計算總和再逐一累計直到首次達標。",
         "wrong": {
-          "{wrong1},直接以最大特徵值單獨解釋的比例為門檻判斷即可,不必累計也不必看其他主成分的貢獻情況比例": "PCA 變異比例必須『累計』k 個最大特徵值的和,而非僅看單一最大特徵值;單一最大值通常不足 80%,需要繼續累計",
-          "{wrong2},以特徵值平均數作為基本門檻,只取大於平均者才算有意義主成分,其餘一律捨棄不予考慮入選": "Kaiser 法則(λ ≥ 平均特徵值)是另一種主成分數量決定法,但題目明確指定『至少 80% 累計變異比例』,兩個法則答案不同",
-          "{wrong3},應該保留全部主成分,因為任何主成分都帶有資訊不應該丟棄,以避免遺失任何特徵變異訊息": "保留全部等同不降維,失去 PCA 目的。且題目問的是『至少要保留前幾個』,答案應為達 80% 累計門檻的最小 k"
+          "{wrong1},錯把『單一最大特徵值占比 λ_max/Σλ』當作判斷依據,未進行累計只看個別貢獻,結果偏離累計達 80% 之題目要求": "PCA 變異比例必須『累計』k 個最大特徵值的和,而非僅看單一最大特徵值;只看 λ_max/Σλ 單一比例會直接漏掉次大主成分的貢獻,在多數情境下單一最大值不足 80% 必須繼續累加",
+          "{wrong2},混淆 Kaiser 法則(以特徵值大於平均數為主成分篩選門檻)與累計變異比例法,套用了不同的主成分選擇規則因此答案不符題意": "Kaiser 法則(λ ≥ 平均特徵值)是另一種主成分數量決定法,但題目明確指定『至少 80% 累計變異比例』,兩個法則屬不同主成分選擇規則,答案通常不同",
+          "{wrong3},未實際計算累計比例,僅以直覺判斷『保留越多越安全』或『少一個應該也夠』,忽略題目所指定 80% 之精確累計門檻": "本題必須實際算出 (λ₁+...+λ_k)/Σλ,依序找到首次 ≥ 80% 的 k;以直覺多保留(如全部)或少保留(如再扣一個)而不計算,皆無法保證符合 80% 累計變異門檻的最小化要求"
         },
         "hook": "PCA 變異比例三公式:單一比例 λ_k/Σλ;累計比例 (Σ前k λ)/Σλ;Kaiser 法則 λ ≥ 平均"
       },

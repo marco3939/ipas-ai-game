@@ -705,18 +705,27 @@
       "format": "code_reading",
       "difficulty": "medium",
       "source_level": "L1",
-      "stem": "考慮擲骰子並用 Monte Carlo 估算條件機率。事件 A:擲出偶數;事件 B:擲出大於 3。下列何者為條件機率 P(A|B) 的**正確程式碼計算**?",
-      "code_block": "n = 100000\nrolls = np.random.randint(1, 7, n)\nA = rolls % 2 == 0\nB = rolls > 3\nA_and_B = A & B\n# P(A|B) = ?",
+      "stem": "考慮擲骰子並用列舉方法計算條件機率。事件 A:擲出某倍數的數字;事件 B:擲出大於某門檻值。下列程式輸出 P(A|B)(四捨五入兩位)為何?",
+      "code_block": "import numpy as np\nrolls = np.arange(1, 7)\nA = rolls % {mod} == 0\nB = rolls > {thresh}\nA_and_B = A & B\nresult = A_and_B.sum() / B.sum()\nprint(round(result, 2))",
+      "stem_variables": {
+        "case_a": {"mod": "2", "thresh": "2", "answer": "0.5", "wrong1": "0.67", "wrong2": "0.29", "wrong3": "0.17"},
+        "case_b": {"mod": "2", "thresh": "1", "answer": "0.6", "wrong1": "1.0", "wrong2": "0.38", "wrong3": "0.2"},
+        "case_c": {"mod": "3", "thresh": "1", "answer": "0.4", "wrong1": "1.0", "wrong2": "0.29", "wrong3": "0.2"}
+      },
       "options": [
-        {"text": "A_and_B.sum() / B.sum()", "is_correct": true},
-        {"text": "A_and_B.sum() / A.sum()", "is_correct": false, "trap_type": "P(B|A) 而非 P(A|B)"},
-        {"text": "A_and_B.sum() / (A.sum() + B.sum())", "is_correct": false, "trap_type": "錯誤公式"},
-        {"text": "A_and_B.sum() / (A.sum() * B.sum())", "is_correct": false, "trap_type": "錯誤公式"}
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤用 P(B|A) 公式"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "分母誤用 A+B 之和"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "分母誤用 A*B 之積"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "P(A|B) = P(A∩B) / P(B);程式上即 (A 且 B 成立的次數) / (B 成立的次數)= A_and_B.sum() / B.sum()",
-        "wrong": {"A_and_B.sum() / A.sum()": "此為 P(B|A)", "A_and_B.sum() / (A.sum() + B.sum())": "錯誤公式"},
+        "correct": "P(A|B) = P(A∩B) / P(B);程式上即 A_and_B.sum() / B.sum()。對 dice [1..6] 列舉,A=偶數、B>{thresh},計算結果 = {answer}。",
+        "wrong": {
+          "{wrong1}": "此值為 P(B|A) = A_and_B.sum() / A.sum(),分母錯成 A 的計數,結果為 B 在 A 中的條件機率,意義相反。",
+          "{wrong2}": "此值來自 A_and_B.sum() / (A.sum() + B.sum()) 錯誤公式,分母不是純粹的 B 計數而是聯集計數,違背條件機率定義。",
+          "{wrong3}": "此值來自 A_and_B.sum() / (A.sum() * B.sum()) 錯誤公式,分母為乘積無機率意義,與獨立性檢定的式子混淆。"
+        },
         "hook": "條件機率 P(A|B) 分母永遠是 B 的計數"
       },
       "misconceptions": ["把 P(A|B) 與 P(B|A) 倒置"],
@@ -852,19 +861,28 @@
       "format": "code_reading",
       "difficulty": "medium",
       "source_level": "L1",
-      "stem": "下列程式碼實現的是哪一種正則化技術?",
-      "code_block": "import torch.nn as nn\nclass Net(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.fc1 = nn.Linear(100, 64)\n        self.dropout = nn.Dropout(p=0.5)\n        self.fc2 = nn.Linear(64, 10)\n    def forward(self, x):\n        x = torch.relu(self.fc1(x))\n        x = self.dropout(x)\n        return self.fc2(x)",
+      "stem": "下列程式碼使用 nn.Dropout 建立正則化層後,印出 net.dropout.p。請問 print 的輸出值為何?",
+      "code_block": "import torch\nimport torch.nn as nn\nclass Net(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.fc1 = nn.Linear({in_dim}, {hidden})\n        self.dropout = nn.Dropout(p={p})\n        self.fc2 = nn.Linear({hidden}, {out_dim})\n    def forward(self, x):\n        x = torch.relu(self.fc1(x))\n        x = self.dropout(x)\n        return self.fc2(x)\nnet = Net()\nprint(net.dropout.p)",
+      "stem_variables": {
+        "case_a": {"in_dim": "100", "hidden": "64", "out_dim": "10", "p": "0.5", "answer": "0.5", "wrong1": "1.0", "wrong2": "0.0", "wrong3": "100"},
+        "case_b": {"in_dim": "200", "hidden": "128", "out_dim": "5", "p": "0.3", "answer": "0.3", "wrong1": "1.0", "wrong2": "0.0", "wrong3": "200"},
+        "case_c": {"in_dim": "150", "hidden": "32", "out_dim": "8", "p": "0.2", "answer": "0.2", "wrong1": "1.0", "wrong2": "0.0", "wrong3": "150"}
+      },
       "options": [
-        {"text": "Dropout", "is_correct": true},
-        {"text": "L1 正則化", "is_correct": false, "trap_type": "L1 在損失函數加 |w|"},
-        {"text": "L2 正則化", "is_correct": false, "trap_type": "L2 透過 weight_decay 設定"},
-        {"text": "Batch Normalization", "is_correct": false, "trap_type": "BN 是 nn.BatchNorm"}
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為 p 是保留率而非丟棄率上限"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為 Dropout 預設不丟棄"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤把輸入維度當 p"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "nn.Dropout(p=0.5) 在訓練時隨機關閉 50% 神經元,防止過度依賴局部特徵",
-        "wrong": {"L2 正則化": "通常透過 optimizer 之 weight_decay 參數,不在 forward 中"},
-        "hook": "Dropout 程式辨識:nn.Dropout 或 torch.nn.functional.dropout"
+        "correct": "nn.Dropout(p={p}) 在訓練時隨機關閉 p={p} 比例的神經元,防止過度依賴局部特徵。net.dropout.p 直接讀取建構時設定的 p 值,輸出為 {answer}。Dropout 是常用的正則化技術,與 L1/L2 在損失函數加懲罰項不同。",
+        "wrong": {
+          "{wrong1}": "1.0 表示丟棄全部神經元,實務上不可能設定如此極端值;此選項把 p 的有效範圍誤以為固定為 1。",
+          "{wrong2}": "0.0 等於不啟用 Dropout,此模型仍會 dropout p={p} 比例,並非 0。",
+          "{wrong3}": "此值是輸入維度 in_features,並非 Dropout 的 p 值。p 為 [0,1] 之間的浮點數,維度數是整數,兩者意義不同。"
+        },
+        "hook": "Dropout 程式辨識:nn.Dropout 或 torch.nn.functional.dropout;net.dropout.p 直接讀 p 值"
       },
       "misconceptions": ["看到 dropout 字眼但不確定為什麼是 Dropout"],
       "related_node_ids": [],
