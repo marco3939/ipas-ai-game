@@ -26,7 +26,8 @@ const FILES = [
 // 模擬 index.html renderQuestion 的 case 替換邏輯
 function simulateRender(q, caseKey) {
   const r = JSON.parse(JSON.stringify(q));
-  if (q.format === 'calculation' && q.stem_variables && q.stem_variables[caseKey]) {
+  // R4C 放寬:任何 format 含 stem_variables 都觸發 case 替換(對應 index.html pickCase 同步)
+  if (q.stem_variables && q.stem_variables[caseKey]) {
     const c = q.stem_variables[caseKey];
     const subAll = (s) => {
       if (typeof s !== 'string') return s;
@@ -60,6 +61,19 @@ function simulateRender(q, caseKey) {
     if (r.matrix_data) r.matrix_data = subDeep(r.matrix_data);
     if (typeof r.expected_answer === 'string') r.expected_answer = subAll(r.expected_answer);
     if (Array.isArray(r.extra_classes)) r.extra_classes = subDeep(r.extra_classes);
+    // 動態 Python 題(R4C):code_block(可能多行)+ trace_steps(每步 ask + options text/trap_type)
+    if (typeof r.code_block === 'string') r.code_block = subAll(r.code_block);
+    if (Array.isArray(r.trace_steps)) {
+      r.trace_steps = r.trace_steps.map(step => ({
+        ...step,
+        ask: typeof step.ask === 'string' ? subAll(step.ask) : step.ask,
+        options: Array.isArray(step.options) ? step.options.map(o => ({
+          ...o,
+          text: typeof o.text === 'string' ? subAll(o.text) : o.text,
+          trap_type: typeof o.trap_type === 'string' ? subAll(o.trap_type) : o.trap_type
+        })) : step.options
+      }));
+    }
   } else if (q.stem_variables) {
     // single_choice 等帶變數池的題型(stem_variables 是 array 池)
     for (const [k, pool] of Object.entries(q.stem_variables)) {
@@ -106,6 +120,9 @@ function findResidualPlaceholders(rendered) {
   if (rendered.matrix_data) scanDeep('matrix_data', rendered.matrix_data);
   if (typeof rendered.expected_answer === 'string') scan('expected_answer', rendered.expected_answer);
   if (Array.isArray(rendered.extra_classes)) scanDeep('extra_classes', rendered.extra_classes);
+  // 動態 Python 題(R4C):code_block(string,可能多行)、trace_steps(陣列,含 ask/options[].text/trap_type)
+  if (typeof rendered.code_block === 'string') scan('code_block', rendered.code_block);
+  if (Array.isArray(rendered.trace_steps)) scanDeep('trace_steps', rendered.trace_steps);
   return hits;
 }
 
@@ -121,13 +138,12 @@ for (const f of FILES) {
 
   list.forEach(q => {
     totalQ++;
-    if (q.format === 'calculation') {
+    // R4C 放寬:任何 format 含 stem_variables.case_* 都跑 case 迭代
+    // (calcQ 計數器保留為向下相容,但意義已擴為「有 case 池的題」)
+    const hasStemCases = q.stem_variables && Object.keys(q.stem_variables).some(k => k.startsWith('case_'));
+    if (hasStemCases) {
       calcQ++;
-      const cases = Object.keys(q.stem_variables || {}).filter(k => k.startsWith('case_'));
-      if (cases.length === 0) {
-        violations.push({ file: f, id: q.id, type: 'NO_CASES', detail: 'calculation 題缺 stem_variables.case_X' });
-        return;
-      }
+      const cases = Object.keys(q.stem_variables).filter(k => k.startsWith('case_'));
       // 對每個 case 都跑一次,確保任何 case 都不會殘留
       cases.forEach(ck => {
         casesChecked++;

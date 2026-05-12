@@ -533,9 +533,12 @@ function applyVariables(stem, variables) {
   return result;
 }
 
-// === 計算題 case 隨機(鐵律 #2)===
+// === case 隨機(鐵律 #2):任何題型含 stem_variables.case_* 都抽 ===
+// 原本限 format === 'calculation';R4C 放寬:code_reading / code_trace 也適用,
+// 因 R4A 與 R4B 將為 Python 題加 stem_variables 動態化(spec-dynamic-python.md)。
+// Mode 8 v0(無 stem_variables)不受影響。
 function pickCase(question) {
-  if (question.format !== 'calculation' || !question.stem_variables) return null;
+  if (!question.stem_variables) return null;
   const cases = Object.entries(question.stem_variables).filter(([k]) => k.startsWith('case_'));
   if (cases.length === 0) return null;
   return RNG.pick(cases)[1];
@@ -582,6 +585,24 @@ function renderQuestion(q) {
     if (rendered.matrix_data) rendered.matrix_data = subDeep(rendered.matrix_data);
     if (typeof rendered.expected_answer === 'string') rendered.expected_answer = subAll(rendered.expected_answer);
     if (Array.isArray(rendered.extra_classes)) rendered.extra_classes = subDeep(rendered.extra_classes);
+    // 動態 Python 題(R4C):code_block 內 {a}/{n}/{batch} 等 placeholder 替換
+    // 注意:code_block 可能含 \n 多行,subAll 對整字串 replaceAll 即可
+    if (typeof rendered.code_block === 'string') {
+      rendered.code_block = subAll(rendered.code_block);
+    }
+    // 動態 code_trace(R4C):trace_steps 內每步 ask + 每個 option text/trap_type 替換
+    // 保留其他欄位(after_line / is_correct 等)不動
+    if (Array.isArray(rendered.trace_steps)) {
+      rendered.trace_steps = rendered.trace_steps.map(step => ({
+        ...step,
+        ask: typeof step.ask === 'string' ? subAll(step.ask) : step.ask,
+        options: Array.isArray(step.options) ? step.options.map(o => ({
+          ...o,
+          text: typeof o.text === 'string' ? subAll(o.text) : o.text,
+          trap_type: typeof o.trap_type === 'string' ? subAll(o.trap_type) : o.trap_type
+        })) : step.options
+      }));
+    }
   }
   // 變數池
   rendered.stem = applyVariables(rendered.stem, rendered.stem_variables);
