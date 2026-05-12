@@ -36,7 +36,9 @@
     },
 
     // === R5 task 1:每題 90s 倒數(覆蓋全題所有 steps,不每步重置)===
+    // 2026-05-11 escape hatch:配合 PlayEngine 全域暫關 timer。移除下一行即可恢復。
     _startTimer: function (seconds) {
+      return;
       this._stopTimer();
       if (!this.state) return;
       const total = (typeof seconds === 'number') ? seconds : 90;

@@ -353,7 +353,11 @@
   .cm-cell.wrong-placement { border-color: var(--danger); background: rgba(248,113,113,0.1); }
 
   /* === 每題 90s 倒數計時器(R5 task 1:exam pressure)=== */
-  .timer-bar { display: flex; align-items: center; gap: 8px;
+  /* 2026-05-11: timer 功能暫停 — 使用者回報切題時誤觸 timeout,靜態分析未找出根因,
+     依使用者授權「如有問題無法修復就關閉」,以 display:none + _startTimer 早 return 雙保險暫關。
+     後續 debug 完只需:(1) 把這條 display:none 移除 (2) PlayEngine._startTimer 移除早 return。 */
+  .timer-bar { display: none !important; }
+  .timer-bar.__keep__ { display: flex; align-items: center; gap: 8px;
     padding: 8px 14px; margin-bottom: 12px;
     background: var(--bg-2); border-radius: var(--radius-sm);
     border-left: 3px solid var(--primary);
@@ -1194,6 +1198,9 @@ const PlayEngine = {
 
   // 啟動計時器(seconds 預設 90)
   _startTimer(seconds = 90) {
+    // 2026-05-11 escape hatch:使用者回報切題時誤觸 timeout,依授權暫關 timer。
+    // 後續 debug 完只需移除這一行(以及 .timer-bar 的 display:none CSS)即可恢復。
+    return;
     this._stopTimer(); // 先清舊
     this._timerDuration = seconds;
     this._timerRemaining = seconds;
