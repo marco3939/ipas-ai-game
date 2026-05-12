@@ -363,6 +363,16 @@
   .timer-bar.critical { border-left-color: var(--danger); color: var(--danger);
     animation: timer-pulse 0.6s infinite alternate; }
   @keyframes timer-pulse { from { opacity: 1; } to { opacity: 0.5; } }
+  /* R5b:timeout 狀態 — 紅閃 + 強制視覺提醒 */
+  .timer-bar.timeout {
+    background: var(--danger);
+    color: white;
+    border-left-color: white;
+    animation: timer-pulse 0.4s infinite alternate;
+  }
+  .option-btn.timeout-locked {
+    opacity: 0.6;
+  }
 </style>
 <!-- 鐵律延伸:SM-2 間隔重複(qid 鍵,Mastery 用 nodeId 鍵,兩者並存) -->
 <script src="sm2.js"></script>
@@ -1223,25 +1233,23 @@ const PlayEngine = {
     }
   },
 
-  // 計時器歸零:鎖選項 + 計為錯誤(寫 Mastery / Wrongbook / SM-2)+ 顯示解析
+  // 計時器歸零:R5b 改為「graceful 鎖定 + 強制使用者點選答案」,不 auto-write Mastery/Wrongbook/SM-2
+  // 原因:Mode 1/2/3/5 自渲染不會設 PlayEngine.current,直接 auto-write 會 NPE。
+  // 新行為:鎖所有 #view-play 內的 .option-btn(灰化,但保留可點;讓使用者選後走各 mode 的 answer 路徑)
+  //         + 改 timer-bar 文案 + 加 .timeout class(紅閃)
   _onTimeout() {
-    if (!this.current) return;
-    const q = this.current;
-    // 鎖所有選項(維持解析中按鈕仍可點下鑽)
-    document.querySelectorAll('#play-options .option-btn').forEach(b => {
-      b.disabled = true;
-      const k = b.dataset.key;
-      const od = q.options.find(o => o.key === k);
-      if (od && od.is_correct) b.classList.add('correct');
+    // 鎖所有 .option-btn(view-play 範圍,涵蓋 Mode 1/2/3/5/6 各自的 options 容器)
+    document.querySelectorAll('#view-play .option-btn').forEach(b => {
+      b.classList.add('timeout-locked');
+      // 不 disable:讓使用者仍可點答案,觸發 mode 的 answer() 路徑(已記入 Wrongbook / Mastery)
     });
-    // 共用層寫入:整題視為答錯(與 PlayEngine.answer 答錯分支等價)
-    if (q.node_id) Mastery.update(q.node_id, false);
-    if (typeof SM2 !== 'undefined' && q.id) SM2.recordAnswer(q.id, false, false);
-    Progress.addAnswer(false);
-    const correctOpt = q.options.find(o => o.is_correct);
-    Wrongbook.add(q.id, q.node_id, '', correctOpt ? correctOpt.key : '');
-    // 顯示解析:opt=null 表示「未作答」,isCorrect=false
-    this.showExplanation(null, false);
+    // 更新 timer-bar:顯示時間到提示 + 紅閃
+    const bar = document.getElementById('play-timer-bar');
+    if (bar) {
+      bar.classList.remove('warn', 'critical');
+      bar.classList.add('timeout');
+      bar.innerHTML = '<span class="timer-icon">⏰</span><span>時間到 — 必選一個答案,將記入錯題本</span>';
+    }
   },
 
   show(question, opts = {}) {

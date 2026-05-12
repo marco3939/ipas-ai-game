@@ -180,6 +180,8 @@
 
     renderStageMenu() {
       // 進入 menu 一定要清掉 timer / ghost / cooldown
+      // R5b:同步停 PlayEngine 計時器(防呆:從異常路徑進入也能歸零)
+      if (typeof PlayEngine !== 'undefined' && PlayEngine._stopTimer) PlayEngine._stopTimer();
       this.stopTimer();
       this._placeCooldown = false;
       this._dragCardId = null;
@@ -306,6 +308,9 @@
 
       this.renderStage();
       this.startTimer();
+      // R5b:同時啟動 PlayEngine 90s timer(視覺一致),Mode 3 自有 m3-timer 平行運作。
+      // 只在 selectStage 啟動一次,renderStage 重繪時不重設(避免每次拖放都重置 90s)
+      if (typeof PlayEngine !== 'undefined' && PlayEngine._startTimer) { PlayEngine._timerDisabled = false; PlayEngine._startTimer(90); }
     },
 
     startTimer() {
@@ -397,6 +402,7 @@
 
       view.innerHTML = `
         <div class="m3-arena">
+          <div class="timer-bar" id="play-timer-bar"><span class="timer-icon">⏱</span><span>剩餘 <span id="play-timer-value">90</span> 秒</span></div>
           <div class="m3-status-row">
             <span style="font-size:1.6rem">${s.meta.avatar}</span>
             <div style="flex:1">
@@ -810,6 +816,8 @@
     // === 結算 ===
     victory() {
       const s = this.state;
+      // R5b:停掉 PlayEngine 計時器(平行運作,需獨立停止)
+      if (typeof PlayEngine !== 'undefined' && PlayEngine._stopTimer) PlayEngine._stopTimer();
       this.stopTimer();
       this._placeCooldown = false;
       this._dragCardId = null;
@@ -885,6 +893,8 @@
     afterFail(reason) {
       const s = this.state;
       if (!s) { this.renderStageMenu(); return; }
+      // R5b:停掉 PlayEngine 計時器
+      if (typeof PlayEngine !== 'undefined' && PlayEngine._stopTimer) PlayEngine._stopTimer();
       this.stopTimer();
       this._placeCooldown = false;
       this._dragCardId = null;
@@ -957,12 +967,16 @@
 
     abandon() {
       if (!confirm('放棄此關回案件選單?')) return;
+      // R5b:停掉 PlayEngine 計時器
+      if (typeof PlayEngine !== 'undefined' && PlayEngine._stopTimer) PlayEngine._stopTimer();
       this.stopTimer();
       if (this.state) this.state.finished = true;
       this.renderStageMenu();
     },
 
     gameOver() {
+      // R5b:停掉 PlayEngine 計時器
+      if (typeof PlayEngine !== 'undefined' && PlayEngine._stopTimer) PlayEngine._stopTimer();
       this.stopTimer();
       this._placeCooldown = false;
       this._dragCardId = null;

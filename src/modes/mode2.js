@@ -384,6 +384,7 @@
       if (!battleQ) return;
       battleQ.innerHTML = `
         <div class="question-card">
+          <div class="timer-bar" id="play-timer-bar"><span class="timer-icon">⏱</span><span>剩餘 <span id="play-timer-value">90</span> 秒</span></div>
           <div class="question-meta">
             <span class="badge">第 ${this.state.idx + 1} / ${this.state.questions.length} 回合</span>
             <span class="badge">${q.knowledge_code}</span>
@@ -400,10 +401,14 @@
           <div id="m2-explanation"></div>
         </div>
       `;
+      // R5b:每題 90s 倒數(Mode 2 自渲染不走 PlayEngine.show,需就地啟動 timer)
+      if (typeof PlayEngine !== 'undefined' && PlayEngine._startTimer) { PlayEngine._timerDisabled = false; PlayEngine._startTimer(90); }
       this.updateSkillTray();
     },
 
     answer(key) {
+      // R5b:第一行先停 timer(使用者已答題,避免 race 後續被 _onTimeout 重複寫入)
+      if (typeof PlayEngine !== 'undefined' && PlayEngine._stopTimer) PlayEngine._stopTimer();
       if (!this.state || !this.state.currentQ) return;
       if (this.state.answered) return; // 已答過,擋快速連點 race
       const q = this.state.currentQ;
