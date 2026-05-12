@@ -35,6 +35,72 @@
       this._timers = [];
     },
 
+    // === R5 task 1:每題 90s 倒數(覆蓋全題所有 steps,不每步重置)===
+    _startTimer: function (seconds) {
+      this._stopTimer();
+      if (!this.state) return;
+      const total = (typeof seconds === 'number') ? seconds : 90;
+      this.state._timerRemaining = total;
+      this.state._timerDuration = total;
+      this._updateTimerDOM();
+      // 環境不支援 setInterval(vm sandbox / Node test runner)→ 跳過 ticker
+      // 共用層寫入仍由 _handleTimeout 走,業務邏輯不受影響(timeout 在這類環境不會被觸發)
+      if (typeof setInterval !== 'function') return;
+      const self = this;
+      this.state._timerId = setInterval(function () {
+        if (!self.state) { self._stopTimer(); return; }
+        self.state._timerRemaining--;
+        if (self.state._timerRemaining <= 0) {
+          self.state._timerRemaining = 0;
+          self._updateTimerDOM();
+          self._stopTimer();
+          self._handleTimeout();
+          return;
+        }
+        self._updateTimerDOM();
+      }, 1000);
+    },
+
+    _stopTimer: function () {
+      if (this.state && this.state._timerId) {
+        if (typeof clearInterval === 'function') clearInterval(this.state._timerId);
+        this.state._timerId = null;
+      }
+    },
+
+    _updateTimerDOM: function () {
+      const bar = document.getElementById('play-timer-bar');
+      const val = document.getElementById('play-timer-value');
+      if (!this.state) return;
+      const rem = Math.max(0, this.state._timerRemaining);
+      if (val) val.textContent = String(rem);
+      if (bar) {
+        bar.classList.remove('warn', 'critical');
+        if (rem < 10) bar.classList.add('critical');
+        else if (rem < 30) bar.classList.add('warn');
+      }
+    },
+
+    // 計時器歸零:整題視為錯誤(等同所有 step 都答錯)→ 立即寫共用層 → 顯示完整解析
+    _handleTimeout: function () {
+      if (!this.state || !this.state.currentQ) return;
+      const q = this.state.currentQ;
+      // 整題視為答錯(allCorrect = false);後續 step 視為未答(stepResults 不變)
+      if (q.node_id) Mastery.update(q.node_id, false);
+      Progress.addAnswer(false);
+      const correctOpt = (q.options || []).find(function (o) { return o.is_correct; });
+      const wrongOpt = (q.options || []).find(function (o) { return !o.is_correct; });
+      Wrongbook.add(
+        q.id,
+        q.node_id,
+        wrongOpt ? wrongOpt.key : 'B',
+        correctOpt ? correctOpt.key : 'A'
+      );
+      if (typeof SM2 !== 'undefined' && q.id) SM2.recordAnswer(q.id, false, false);
+      this.state.answering = true; // 鎖 step 互動
+      this.showFullExplanation(false);
+    },
+
     // === 入口 ===
     start: function () {
       this._clearAllTimers();
@@ -51,7 +117,10 @@
         stepIdx: 0,
         currentQ: null,
         stepResults: [],
-        answering: false
+        answering: false,
+        _timerId: null,
+        _timerRemaining: 0,
+        _timerDuration: 90
       };
       this.showQuestion();
     },
@@ -59,6 +128,8 @@
     // === 切到下一題(從外部 next() 進入)===
     showQuestion: function () {
       if (!this.state) return;
+      // R5 task 1:每進新題先停舊 timer(防上題殘留)
+      this._stopTimer();
       if (this.state.idx >= this.state.questions.length) {
         this.finish();
         return;
@@ -70,6 +141,8 @@
       this.state.stepResults = [];
       this.state.answering = false;
       this.renderTrace();
+      // R5 task 1:渲染完畢後啟動 90s 計時器(整題層級,不每步重置)
+      this._startTimer(90);
     },
 
     // === 渲染當前 trace step(每步重渲)===
@@ -105,8 +178,19 @@
                '</div>';
       }).join('');
 
+      // R5 task 1:每題 90s 計時器(整題層級,跨步驟不重置)
+      // 計時器目前值取 state(若已在跑就接續顯示;showQuestion 啟動時為 90)
+      const remain = (this.state && typeof this.state._timerRemaining === 'number')
+        ? Math.max(0, this.state._timerRemaining) : 90;
+      const timerHTML =
+        '<div class="timer-bar" id="play-timer-bar">' +
+          '<span class="timer-icon">⏱</span>' +
+          '<span>剩餘 <span id="play-timer-value">' + remain + '</span> 秒</span>' +
+        '</div>';
+
       view.innerHTML =
         '<div class="card">' +
+          timerHTML +
           '<div class="question-meta">' +
             '<span class="badge">Code Trace 道場</span>' +
             '<span class="badge">第 ' + (this.state.idx + 1) + '/' + this.state.questions.length + ' 題</span>' +
@@ -130,6 +214,8 @@
           '</div>' +
         '</div>';
       show('view-play');
+      // 重渲後 DOM 換新,立即同步一次顯示(顏色階段)
+      this._updateTimerDOM();
     },
 
     // === 使用者選某 step option ===
@@ -210,6 +296,8 @@
     // === 整題完整解釋(含 Drill 按鈕 v0 為 stub) ===
     showFullExplanation: function (allCorrect) {
       if (!this.state || !this.state.currentQ) return;
+      // R5 task 1:整題結束,停 timer
+      this._stopTimer();
       const q = this.state.currentQ;
       const e = q.explanation || {};
       const view = document.getElementById('view-play');
@@ -272,6 +360,8 @@
     // === 結算 ===
     finish: function () {
       if (!this.state) return;
+      // R5 task 1:結算前停 timer(防殘留)
+      this._stopTimer();
       const view = document.getElementById('view-play');
       if (!view) return;
       view.innerHTML =

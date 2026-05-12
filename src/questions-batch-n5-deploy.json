@@ -530,7 +530,7 @@
         "case_a": {"train_a": "60", "train_b": "40", "cur_a": "50", "cur_b": "50", "answer": "0.041", "wrong1": "0.100", "wrong2": "0.020", "wrong3": "0.083"},
         "case_b": {"train_a": "70", "train_b": "30", "cur_a": "50", "cur_b": "50", "answer": "0.169", "wrong1": "0.200", "wrong2": "0.085", "wrong3": "0.300"},
         "case_c": {"train_a": "80", "train_b": "20", "cur_a": "60", "cur_b": "40", "answer": "0.196", "wrong1": "0.300", "wrong2": "0.098", "wrong3": "0.400"},
-        "case_d": {"train_a": "50", "train_b": "50", "cur_a": "30", "cur_b": "70", "answer": "0.169", "wrong1": "0.250", "wrong2": "0.085", "wrong3": "0.400"}
+        "case_d": {"train_a": "80", "train_b": "20", "cur_a": "50", "cur_b": "50", "answer": "0.416", "wrong1": "0.600", "wrong2": "0.208", "wrong3": "0.562"}
       },
       "options": [
         {"text": "{answer}", "is_correct": true},

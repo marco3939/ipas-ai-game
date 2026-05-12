@@ -356,9 +356,9 @@
       "stem": "某 B2B 媒合平台需對 n 個客戶兩兩比對相似度建立潛在合作網路,演算法為 O(n²) 兩層巢狀比對。當客戶數從 n₁ = {n1} 倍增至 n₂ = {n2} 時,執行時間約成幾倍?(以 n₂² / n₁² 估算)",
       "stem_variables": {
         "case_a": {"n1": "1000", "n2": "10000", "answer": "100", "wrong1": "10", "wrong2": "1024", "wrong3": "33"},
-        "case_b": {"n1": "500", "n2": "5000", "answer": "100", "wrong1": "10", "wrong2": "1024", "wrong3": "33"},
-        "case_c": {"n1": "1000", "n2": "5000", "answer": "25", "wrong1": "5", "wrong2": "32", "wrong3": "12"},
-        "case_d": {"n1": "200", "n2": "1000", "answer": "25", "wrong1": "5", "wrong2": "32", "wrong3": "12"}
+        "case_b": {"n1": "200", "n2": "1200", "answer": "36", "wrong1": "6", "wrong2": "64", "wrong3": "16"},
+        "case_c": {"n1": "500", "n2": "2500", "answer": "25", "wrong1": "5", "wrong2": "32", "wrong3": "12"},
+        "case_d": {"n1": "500", "n2": "1500", "answer": "9", "wrong1": "3", "wrong2": "8", "wrong3": "5"}
       },
       "options": [
         {"text": "{answer}", "is_correct": true},

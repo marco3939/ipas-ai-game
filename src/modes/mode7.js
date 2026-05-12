@@ -571,7 +571,8 @@
 
       this.state.questionStartTs = Date.now();
       // 用 PlayEngine.show 渲染題目;之後我們的 hook 會覆寫 answer
-      PlayEngine.show(q, { contextHTML: ctx });
+      // R5 task 1:Theater 模式已有整場倒數,禁用 PlayEngine 每題 90s 計時器
+      PlayEngine.show(q, { contextHTML: ctx, disableTimer: true });
       this._updateTimerHud();
     },
 
