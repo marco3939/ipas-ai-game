@@ -837,13 +837,13 @@ const Wrongbook = {
   count() { return this.load().filter(x => !x.mastered).length; },
 
   // 案例 10 補:掃描 Mode 7 lineup-key bug 期間污染 entries
-  // 特徵:correctChoice='' (key 沒抓到) + correctText='' (text 也沒抓到)
-  // 攻擊面 / 安全性: dry-run + 必須 user 主動確認才清,絕不靜默 mutate
+  // 特徵:correctChoice 是 '' / null / undefined(key 沒抓到 — 完整 lineup-key bug 症狀)
+  // PR C review 修:原 AND correctText 條件會漏 #16~#21 期間有 correctText 但 correctChoice 失效的 entry
+  // 現在改為「只要 correctChoice 失效就算可疑」(更寬,但安全 — 因為任何正常 caller 都會傳真 key)
   countSuspect() {
     return this.load().filter(x =>
       !x.mastered &&
-      (x.correctChoice === '' || x.correctChoice == null) &&
-      (!x.correctText || x.correctText === '')
+      (x.correctChoice === '' || x.correctChoice == null || x.correctChoice === 'undefined')
     ).length;
   },
   cleanupSuspect() {
@@ -851,11 +851,17 @@ const Wrongbook = {
     const before = w.length;
     const cleaned = w.filter(x =>
       x.mastered ||  // 已 mastered 保留
-      !((x.correctChoice === '' || x.correctChoice == null) && (!x.correctText || x.correctText === ''))
+      !(x.correctChoice === '' || x.correctChoice == null || x.correctChoice === 'undefined')
     );
     const removed = before - cleaned.length;
     this.save(cleaned);
     return removed;
+  },
+  // dry-run:回傳將被清掉的 qid list 給 UI 預覽
+  listSuspectQids() {
+    return this.load()
+      .filter(x => !x.mastered && (x.correctChoice === '' || x.correctChoice == null || x.correctChoice === 'undefined'))
+      .map(x => x.qid);
   }
 };
 
@@ -1308,7 +1314,9 @@ function refreshWrongbookCleanupBanner() {
 function cleanupSuspectWrongbook() {
   const n = Wrongbook.countSuspect();
   if (n === 0) { showToast('沒有可疑資料需清理', 2000); return; }
-  if (!confirm(`即將清理 ${n} 筆可疑錯題(無 correctChoice + 無 correctText)。\n\n建議先「📤 匯出進度」備份。\n\n確定清理?`)) return;
+  const qids = Wrongbook.listSuspectQids();
+  const preview = qids.slice(0, 8).join(', ') + (qids.length > 8 ? ' ...(共 ' + qids.length + ' 筆)' : '');
+  if (!confirm(`即將清理 ${n} 筆可疑錯題(correctChoice 失效 — Mode 7 lineup-key bug 期間寫入)\n\n影響 qid:\n${preview}\n\n建議先「📤 匯出進度」備份(此操作不可逆)。\n\n確定清理?`)) return;
   const removed = Wrongbook.cleanupSuspect();
   showToast(`✅ 已清理 ${removed} 筆可疑錯題`, 2500);
   refreshHome();
@@ -1839,7 +1847,7 @@ function resetAll() {
     'ipas_mode3_progress_v2', 'ipas_mode5_v3_progress',
     'ipas_mode6_codex_v1', 'ipas_mode7_theater_v1', 'ipas_mode7_font_v1', 'ipas_mode8_dojo_v1',
   ];
-  // 也清所有動態 sm2_* key(SM-2 卡片每張一個 key)
+  // 也清所有動態 sm2_* key(目前 SM-2 用單 key 但保險防未來改 per-qid)
   try {
     const dynamicKeys = [];
     for (let i = 0; i < localStorage.length; i++) {
