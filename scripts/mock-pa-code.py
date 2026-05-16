@@ -22,6 +22,13 @@ FILES = [
     'src/questions-pa-code.json',
     'src/questions-batch-n7-dl.json',
     'src/questions.json',
+    # 2026-05-16 iter 5 暫緩:L22 code_reading 3 檔(n22/n23/n24)初試加入 audit 後抓到
+    # 9 題 / 19+ case 真 bug(雙花括號 / ellipsis / 多 print / format / imblearn 缺),
+    # 範圍超出 autonomous polish 工作,撤回 FILES 擴充避免 CI 破裂。
+    # 詳見 docs/needs-review-l22-code.md。後續派 Worker dispatch 處理:
+    # 'src/questions-batch-n22-L22-code-data.json',
+    # 'src/questions-batch-n23-L22-code-ml.json',
+    # 'src/questions-batch-n24-L22-code-gen.json',
 ]
 
 
