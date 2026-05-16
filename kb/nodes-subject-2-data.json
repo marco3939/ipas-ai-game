@@ -1,0 +1,556 @@
+{
+  "version": "1.0",
+  "subject": 2,
+  "schema_version": "1.0-iron-rule",
+  "iron_rule_compliance": "rule #6 — only L22201/L22202/L22203 nodes; v2-released codes limited to concept-level (no tool operation details)",
+  "last_updated": "2026-05-16",
+  "scope_alignment": "L22201 數據收集清理(三方重疊)+ L22202 儲存(v2 解禁概念題)+ L22203 處理(v2 解禁概念題)",
+  "batches_processed": [
+    {"batch": "subject-2-expansion-G2-data", "date": "2026-05-16", "scope": "L22201/L22202/L22203 each 6 nodes (18 total)"}
+  ],
+  "nodes": [
+    {
+      "node_id": "n_L22201_001",
+      "knowledge_code": "L22201",
+      "title": "資料來源類型(結構化 / 半結構化 / 非結構化)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch4.1 數據收集"}],
+      "summary": "依資料 schema 嚴謹程度三分:結構化(關聯表 / 試算表)、半結構化(JSON / XML / 日誌)、非結構化(文字 / 影像 / 音訊)。不同類型決定後續儲存策略、清理工序與分析工具選型",
+      "key_points": [
+        "結構化:預定義 schema、固定欄位、適合 SQL 查詢",
+        "半結構化:有自描述標籤但 schema 可變(JSON / XML / YAML / 日誌)",
+        "非結構化:無 schema(文字、影像、音訊、影片),需先抽取特徵",
+        "三類型佔比經驗法則:企業資料中非結構化約佔 80%"
+      ],
+      "common_misconceptions": [
+        "把 CSV 視為非結構化(實際是結構化,有固定欄位)",
+        "把 JSON 視為結構化(實際是半結構化,允許巢狀與欄位變動)",
+        "誤以為非結構化資料『無法分析』(只是需要特徵抽取)"
+      ],
+      "explanation_hooks": [
+        "口訣:有固定欄位 → 結構化;有標籤但可變 → 半結構化;原始位元 → 非結構化",
+        "電商訂單表(結構化)+ 商品 JSON 屬性(半結構化)+ 商品圖片(非結構化)同時並存",
+        "資料類型決定儲存層:結構化 → Warehouse;半/非結構化 → Lake"
+      ],
+      "variation_seeds": [
+        {"context": "Web 伺服器 access log 屬於?", "answer": "半結構化(有固定格式但欄位非嚴格 schema)"},
+        {"context": "客服通話錄音檔屬於?", "answer": "非結構化"}
+      ],
+      "related_node_ids": ["n_L22201_004", "n_L22201_006"]
+    },
+    {
+      "node_id": "n_L22201_002",
+      "knowledge_code": "L22201",
+      "title": "缺值機制三分類(MCAR / MAR / MNAR)+ 處理策略",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch4.1 缺值處理"}],
+      "summary": "缺值依產生機制分三類:MCAR(完全隨機)、MAR(條件隨機)、MNAR(非隨機)。機制決定處理策略 — MCAR 可安全刪除或填補,MAR 需用其他欄位填補,MNAR 必須建模或標記",
+      "key_points": [
+        "MCAR(Missing Completely At Random):缺失與任何變數無關,刪除不偏",
+        "MAR(Missing At Random):缺失可由其他觀測欄位解釋",
+        "MNAR(Missing Not At Random):缺失本身與該欄位真值相關,屬資訊性缺失",
+        "處理三策略:列刪除(listwise)/ 值填補(imputation)/ 建構 is_missing 旗標"
+      ],
+      "common_misconceptions": [
+        "看到缺值就直接刪列(忽略 MNAR 的資訊性)",
+        "對所有缺值都用 mean 填補(MAR / MNAR 會引入偏誤)",
+        "把『系統未記錄』與『真值為 0』混為一談"
+      ],
+      "explanation_hooks": [
+        "MNAR 範例:高薪者拒答薪資欄 → 缺失本身透露『高薪』訊號",
+        "處理前先看缺值率(>30% 考慮整欄刪除或旗標化)",
+        "保留 is_missing 標記欄常比硬填補更安全(讓模型自己學)"
+      ],
+      "variation_seeds": [
+        {"context": "感測器偶發斷線造成缺值,屬於哪種機制?", "answer": "MCAR(完全隨機)"},
+        {"context": "憂鬱症患者更可能跳過心情評分題,屬於?", "answer": "MNAR(缺失與真值相關)"}
+      ],
+      "related_node_ids": ["n_L22201_003", "n_L22201_004"]
+    },
+    {
+      "node_id": "n_L22201_003",
+      "knowledge_code": "L22201",
+      "title": "重複資料偵測與去重策略(精確匹配 / 模糊匹配)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch4.1 資料清理"}],
+      "summary": "重複資料分『精確重複』(欄位完全相同)與『近似重複』(因拼寫 / 大小寫 / 空白差異)。精確去重用 hash / unique key;近似去重需正規化或模糊比對(編輯距離 / 標準化規則)",
+      "key_points": [
+        "精確重複:可用主鍵或所有欄位 hash 一次比對",
+        "近似重複:常見於姓名 / 地址 / 公司名,需先標準化(小寫、移除空白、統一全半形)",
+        "模糊比對概念:編輯距離(Levenshtein)、Soundex 音相似",
+        "去重前必先決定『保留哪一筆』(最新 / 最完整 / 來源優先)"
+      ],
+      "common_misconceptions": [
+        "以為 SQL DISTINCT 能解決所有重複(只能處理精確重複)",
+        "把『同人不同寫法』直接刪除(可能誤刪正確記錄)",
+        "未保留去重前後 row count 稽核紀錄"
+      ],
+      "explanation_hooks": [
+        "客戶資料整合(CDI / MDM)幾乎都卡在近似重複而非精確重複",
+        "標準化是去重前置:全形→半形、Trim、Upper、移除標點",
+        "保留策略要寫進規格:『保留 updated_at 最新』比『隨便留一筆』可稽核"
+      ],
+      "variation_seeds": [
+        {"context": "『台北市』『臺北市』『台北 市』如何視為同一?", "answer": "先標準化(統一字符 + 移除空白)再比對"},
+        {"context": "去重後應留下哪筆紀錄?", "answer": "依業務規則(最新 / 最完整 / 來源優先)而非隨機"}
+      ],
+      "related_node_ids": ["n_L22201_002", "n_L22201_004"]
+    },
+    {
+      "node_id": "n_L22201_004",
+      "knowledge_code": "L22201",
+      "title": "資料一致性檢查(referential integrity / domain rule)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch4.1 資料品質"}],
+      "summary": "一致性檢查兩大類:參照完整性(foreign key 必對應存在的主鍵)與領域規則(欄位值需符合業務 / 物理範圍)。為資料品質框架中『有效性 / 一致性』兩維度的具體實作",
+      "key_points": [
+        "參照完整性:子表外鍵必對應父表主鍵(訂單必對應存在的客戶)",
+        "領域規則:年齡 ∈ [0, 120]、月份 ∈ [1, 12]、金額 ≥ 0",
+        "跨欄位規則:出生日期 < 簽約日期 < 結案日期",
+        "資料品質六維度概念:完整 / 有效 / 一致 / 唯一 / 及時 / 準確"
+      ],
+      "common_misconceptions": [
+        "以為只要單欄檢查就夠(忽略跨欄位關係)",
+        "把『缺值』和『不一致』混為一談",
+        "誤以為一致性檢查可全交給應用層(資料層也需 constraint)"
+      ],
+      "explanation_hooks": [
+        "資料品質框架 6 維度可作為 audit checklist 起點",
+        "孤兒記錄(orphan):有子無父,典型參照完整性違反",
+        "領域規則可由業務專家提供,寫成 validation rule 自動化檢查"
+      ],
+      "variation_seeds": [
+        {"context": "訂單表的 customer_id 在客戶表找不到,屬於?", "answer": "參照完整性違反(孤兒記錄)"},
+        {"context": "員工年齡欄出現 200,屬於哪類不一致?", "answer": "領域規則(domain rule)違反"}
+      ],
+      "related_node_ids": ["n_L22201_001", "n_L22201_003"]
+    },
+    {
+      "node_id": "n_L22201_005",
+      "knowledge_code": "L22201",
+      "title": "資料標籤化品質(Inter-rater agreement 概念)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch4.1 標籤品質"}],
+      "summary": "監督式學習仰賴標籤品質;多標註者(rater)情境下需衡量標註一致性(inter-rater agreement)。一致性低代表任務定義模糊或標註指引不足,直接影響模型上限",
+      "key_points": [
+        "Inter-rater agreement:多位標註者對同樣本標相同類別的比例 / 一致度",
+        "提升一致性方法:明確標註指引、範例集、scheduled calibration 會議",
+        "黃金標準(gold set):由專家標註的少量高品質樣本,用以評估標註者",
+        "標籤雜訊(label noise)會壓低模型 ceiling,優於模型結構選擇"
+      ],
+      "common_misconceptions": [
+        "誤以為標籤一定『絕對正確』(實務常有 5-15% 標籤雜訊)",
+        "單一標註者完成所有樣本,事後才發現定義不一致",
+        "看到模型表現差先換模型,而非檢查標籤品質"
+      ],
+      "explanation_hooks": [
+        "garbage in garbage out — 標籤錯模型再強都救不回",
+        "情緒分析 / 醫療影像標註尤其需多人交叉確認",
+        "Inter-rater agreement 概念即可,不需記特定統計量公式"
+      ],
+      "variation_seeds": [
+        {"context": "三位標註者對情緒分類分歧大,應先做什麼?", "answer": "釐清標註指引並建立 gold set"},
+        {"context": "模型 accuracy 卡在 70% 上不去,先檢查?", "answer": "標籤品質與一致性"}
+      ],
+      "related_node_ids": ["n_L22201_002", "n_L22201_004"]
+    },
+    {
+      "node_id": "n_L22201_006",
+      "knowledge_code": "L22201",
+      "title": "ETL vs ELT 流程概念",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch4.1 資料收集流程"}],
+      "summary": "ETL:Extract → Transform → Load,傳統 Warehouse 模式,在載入前先清洗;ELT:Extract → Load → Transform,先將原始資料載入儲存層後再轉換,適合 Lake / Lakehouse 與雲端彈性計算",
+      "key_points": [
+        "ETL:轉換發生在 Staging 層,進 Warehouse 即為乾淨資料",
+        "ELT:原始資料先入湖,於分析時再依需求轉換(schema-on-read)",
+        "ETL 適合 schema 穩定、需嚴格治理的場景",
+        "ELT 適合資料量大、用途多元、儲存便宜的雲端場景"
+      ],
+      "common_misconceptions": [
+        "誤以為 ELT 一定『比較新一定比較好』(取決於治理與成本需求)",
+        "把 ETL / ELT 與工具品牌畫等號",
+        "誤以為 ELT 不需資料治理(實際更需要 catalog 與 lineage)"
+      ],
+      "explanation_hooks": [
+        "schema-on-write(ETL)vs schema-on-read(ELT)兩種設計哲學",
+        "雲端儲存便宜推動 ELT 興起 — 先全部存再決定怎麼用",
+        "ELT 不代表不轉換,只是轉換時機後移"
+      ],
+      "variation_seeds": [
+        {"context": "雲端資料湖架構中,轉換邏輯常發生在?", "answer": "Load 之後(ELT)"},
+        {"context": "schema-on-read 屬於哪種流程?", "answer": "ELT"}
+      ],
+      "related_node_ids": ["n_L22201_001", "n_L22201_004"]
+    },
+    {
+      "node_id": "n_L22202_001",
+      "knowledge_code": "L22202",
+      "title": "資料倉儲(Warehouse)vs 資料湖(Lake)vs Lakehouse 概念",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch4.2 資料儲存架構"}],
+      "summary": "三種儲存架構:Warehouse(結構化、schema-on-write、BI 報表)、Lake(多型態原始資料、schema-on-read、ML / 探索)、Lakehouse(融合兩者,Lake 底層 + Warehouse 治理)。本節僅涵蓋概念取捨,不涉及具體產品",
+      "key_points": [
+        "Warehouse:結構化、強 schema、optimized for SQL BI",
+        "Lake:任何格式(結構化 + 半結構化 + 非結構化)、低成本物件儲存",
+        "Lakehouse:在 Lake 上加上 Warehouse 等級治理(ACID、Schema、Index)",
+        "選型依資料型態 + 主要用途 + 治理需求三維度"
+      ],
+      "common_misconceptions": [
+        "誤以為 Lake『取代』Warehouse(實務常並存)",
+        "把 Lake 當『無治理的垃圾場』(沒治理就會變 swamp)",
+        "誤以為 Lakehouse 等同 Warehouse + Lake 簡單堆疊"
+      ],
+      "explanation_hooks": [
+        "Warehouse 像圖書館(分類整理上架);Lake 像倉庫(原箱堆放)",
+        "ML 訓練常需原始資料 → Lake 自然成為 ML 主要來源",
+        "Lakehouse 核心訴求:不複製資料就能做 BI + ML"
+      ],
+      "variation_seeds": [
+        {"context": "需要對原始影像 + 結構化標籤同時分析,選?", "answer": "Lake / Lakehouse"},
+        {"context": "Lake 缺乏治理會變成?", "answer": "Data Swamp(資料沼澤)"}
+      ],
+      "related_node_ids": ["n_L22202_002", "n_L22202_005"]
+    },
+    {
+      "node_id": "n_L22202_002",
+      "knowledge_code": "L22202",
+      "title": "SQL vs NoSQL 四大類選型(KV / Document / Column / Graph)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch4.2 資料庫選型"}],
+      "summary": "SQL(關聯式):強 schema、ACID、適合交易;NoSQL 四大類:Key-Value(快取 / Session)、Document(半結構化、JSON)、Column-family(寬欄高吞吐)、Graph(關係導向)。選型由資料模型與查詢模式決定",
+      "key_points": [
+        "Key-Value:以鍵查值、極快、適合 cache / session",
+        "Document:JSON 文件、欄位靈活、適合內容管理 / 商品目錄",
+        "Column-family:寬欄、橫向擴展、適合時序 / 大寫入",
+        "Graph:節點 + 邊、適合社群網路 / 推薦 / 詐欺偵測"
+      ],
+      "common_misconceptions": [
+        "誤以為 NoSQL 一律比 SQL 快(取決於查詢模式)",
+        "把 NoSQL 當成『不需 schema』(實務仍有隱含 schema)",
+        "用 SQL 硬刻多層巢狀關係(該用 Graph 卻沒用)"
+      ],
+      "explanation_hooks": [
+        "選型口訣:固定 schema + 交易 → SQL;靈活欄位 → Document;查鍵極快 → KV;關係多跳 → Graph",
+        "NoSQL 名字誤導,實際是『Not Only SQL』",
+        "多型態資料庫(Polyglot Persistence):一個系統內並用多種資料庫"
+      ],
+      "variation_seeds": [
+        {"context": "電商 session 快取最適合?", "answer": "Key-Value"},
+        {"context": "好友推薦『朋友的朋友』查詢最適合?", "answer": "Graph"}
+      ],
+      "related_node_ids": ["n_L22202_003", "n_L22202_005"]
+    },
+    {
+      "node_id": "n_L22202_003",
+      "knowledge_code": "L22202",
+      "title": "CAP 定理三選二(Consistency / Availability / Partition tolerance)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch4.2 分散式儲存"}],
+      "summary": "分散式系統三特性:一致性(C)、可用性(A)、分區容忍性(P)無法同時達成,網路分區時必在 C / A 之間取捨。為分散式資料庫選型的基本理論框架",
+      "key_points": [
+        "Consistency:所有節點同一時刻看到相同資料",
+        "Availability:每次請求皆有回應(可能非最新)",
+        "Partition tolerance:節點間網路斷線仍可繼續運作",
+        "現實:P 在分散式幾乎必選,實際是 CP 或 AP 二選一"
+      ],
+      "common_misconceptions": [
+        "以為可同時達到 C + A + P(網路必有分區風險)",
+        "把『一致性』與 ACID 的 C 等同(意義不同)",
+        "誤以為 AP 系統『不一致』(實為最終一致)"
+      ],
+      "explanation_hooks": [
+        "金融轉帳偏 CP(寧可暫停也不能不一致)",
+        "社群 feed 偏 AP(看到舊貼文比 timeout 好)",
+        "CAP 是『分區發生時』的取捨,平時不衝突"
+      ],
+      "variation_seeds": [
+        {"context": "ATM 跨行轉帳應偏向?", "answer": "CP(一致性優先)"},
+        {"context": "全球 CDN 內容分發應偏向?", "answer": "AP(可用性優先)"}
+      ],
+      "related_node_ids": ["n_L22202_002", "n_L22202_004"]
+    },
+    {
+      "node_id": "n_L22202_004",
+      "knowledge_code": "L22202",
+      "title": "ACID vs BASE 一致性模型概念",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch4.2 交易模型"}],
+      "summary": "ACID(原子 / 一致 / 隔離 / 持久):傳統 RDBMS 強一致性模型,適合交易系統;BASE(基本可用 / 軟狀態 / 最終一致):NoSQL 弱一致性模型,以可用性與擴展性為先。兩者反映不同設計哲學",
+      "key_points": [
+        "ACID:Atomicity / Consistency / Isolation / Durability",
+        "BASE:Basically Available / Soft state / Eventually consistent",
+        "ACID 適合金融、訂單、庫存等強一致場景",
+        "BASE 適合社群、推薦、IoT 等高吞吐 / 可短暫不一致場景"
+      ],
+      "common_misconceptions": [
+        "把 ACID 的 C 與 CAP 的 C 視為同義(範圍不同)",
+        "以為 BASE 系統『資料會永遠不一致』(實為最終一致)",
+        "誤以為 NoSQL 完全不支援 ACID(現代多數已部分支援)"
+      ],
+      "explanation_hooks": [
+        "ACID 偏酸(嚴謹);BASE 偏鹼(寬鬆)— 化學取名梗",
+        "Eventually consistent:給足時間最終會收斂到一致",
+        "Lakehouse 強調的『ACID on Lake』即將 ACID 帶回 Lake"
+      ],
+      "variation_seeds": [
+        {"context": "銀行轉帳必須遵守?", "answer": "ACID"},
+        {"context": "全球社群 like 計數短暫差幾秒可接受,屬?", "answer": "BASE(最終一致)"}
+      ],
+      "related_node_ids": ["n_L22202_003", "n_L22202_005"]
+    },
+    {
+      "node_id": "n_L22202_005",
+      "knowledge_code": "L22202",
+      "title": "資料分區(Partition)與索引(Index)目的",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch4.2 儲存效能"}],
+      "summary": "分區:把大表依鍵(時間 / 區域 / hash)切成多塊,讓查詢只掃描相關區塊;索引:額外資料結構加速特定欄位查找。兩者目的均為提升查詢效能,但代價不同(分區改變實體分佈、索引佔額外空間 + 寫入變慢)",
+      "key_points": [
+        "Partition:水平切分大表,查詢可 partition pruning 跳過無關區塊",
+        "常見分區鍵:時間(daily / monthly)、地區、hash(均勻分散)",
+        "Index:對特定欄位建查找結構,加速 WHERE / JOIN",
+        "Index 代價:佔空間 + 寫入時需同步更新"
+      ],
+      "common_misconceptions": [
+        "對所有欄位都建 Index(寫入嚴重變慢)",
+        "誤以為分區後查詢一定更快(若未用分區鍵查仍掃全表)",
+        "把分區與分片(sharding)完全混為一談"
+      ],
+      "explanation_hooks": [
+        "分區像書架分樓層、索引像書末檢索表",
+        "時間序列資料按日期分區最常見",
+        "Index 對低基數欄位(只有男 / 女)幫助有限"
+      ],
+      "variation_seeds": [
+        {"context": "查詢經常以日期範圍過濾,該怎麼分區?", "answer": "按日期(時間分區)"},
+        {"context": "對每個欄位都建 Index 會有什麼問題?", "answer": "寫入變慢 + 儲存膨脹"}
+      ],
+      "related_node_ids": ["n_L22202_001", "n_L22202_006"]
+    },
+    {
+      "node_id": "n_L22202_006",
+      "knowledge_code": "L22202",
+      "title": "儲存階層(Hot / Warm / Cold / Archive)成本效益",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch4.2 儲存成本管理"}],
+      "summary": "依存取頻率分四層:Hot(高頻、低延遲、貴)、Warm(中頻)、Cold(低頻、便宜)、Archive(極少存取、最便宜但取回慢)。透過資料生命週期管理(ILM)自動下沉冷資料以平衡效能與成本",
+      "key_points": [
+        "Hot:即時 / 線上查詢,SSD / 記憶體",
+        "Warm:近一個月、偶爾查詢",
+        "Cold:長期保留、低頻查詢、低成本物件儲存",
+        "Archive:法規保存、極低成本但取回需數小時"
+      ],
+      "common_misconceptions": [
+        "誤以為冷資料『不重要』(實為頻率低但仍需保留)",
+        "Archive 等同刪除(實為可取回但慢且貴)",
+        "未設 ILM 規則導致所有資料都放 Hot 層(成本爆炸)"
+      ],
+      "explanation_hooks": [
+        "成本效益曲線:存取頻率越低 → 儲存單價越低 / 取回成本越高",
+        "ILM(Information Lifecycle Management)自動依規則下沉",
+        "法規常要求保存 7 年 → 多數應放 Archive 而非 Hot"
+      ],
+      "variation_seeds": [
+        {"context": "5 年前的交易紀錄,僅供法規查詢,適合放?", "answer": "Archive 層"},
+        {"context": "即時推薦模型需用的特徵應放?", "answer": "Hot 層"}
+      ],
+      "related_node_ids": ["n_L22202_001", "n_L22202_005"]
+    },
+    {
+      "node_id": "n_L22203_001",
+      "knowledge_code": "L22203",
+      "title": "批次處理 vs 串流處理 vs 微批次選擇情境",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch4.3 處理模式"}],
+      "summary": "三種處理模式:批次(累積大量資料後一次處理,延遲高吞吐高)、串流(資料到達即處理,低延遲)、微批次(小窗口批次模擬串流,折衷方案)。選型依延遲需求 / 吞吐量 / 容錯複雜度三維度",
+      "key_points": [
+        "批次:小時 / 日級延遲,適合報表、訓練資料準備",
+        "串流:秒 / 毫秒級延遲,適合即時警報、線上推薦",
+        "微批次:秒級小窗口,折衷易容錯",
+        "延遲需求越嚴格 → 越偏串流;吞吐量大且非即時 → 偏批次"
+      ],
+      "common_misconceptions": [
+        "誤以為串流『一定取代』批次(實務多並存)",
+        "把『即時』要求過度誇大,結果用串流卻只需小時級",
+        "誤以為微批次等同串流(仍有窗口延遲)"
+      ],
+      "explanation_hooks": [
+        "日報表 → 批次;股價警示 → 串流;近即時儀表板 → 微批次",
+        "批次與串流互補,常用 Lambda / Kappa 架構整合",
+        "延遲與吞吐量常需取捨(latency vs throughput)"
+      ],
+      "variation_seeds": [
+        {"context": "每日銷售總表產生,選?", "answer": "批次處理"},
+        {"context": "信用卡盜刷即時阻擋,選?", "answer": "串流處理"}
+      ],
+      "related_node_ids": ["n_L22203_002", "n_L22203_005"]
+    },
+    {
+      "node_id": "n_L22203_002",
+      "knowledge_code": "L22203",
+      "title": "Lambda 架構 vs Kappa 架構概念對比",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch4.3 資料架構"}],
+      "summary": "Lambda 架構:批次層(準確、慢)+ 串流層(即時、可能粗略),查詢層合併兩者;Kappa 架構:只保留串流層,以重放(replay)歷史事件取代批次層,簡化系統但對串流引擎要求高",
+      "key_points": [
+        "Lambda 三層:Batch Layer + Speed Layer + Serving Layer",
+        "Lambda 痛點:兩套程式碼維護成本(批次與串流邏輯重複)",
+        "Kappa 單層:只用串流,需要歷史資料時重播事件流",
+        "Kappa 前提:事件流可長期保留 + 串流引擎能處理大規模重放"
+      ],
+      "common_misconceptions": [
+        "誤以為 Lambda 過時(實務仍廣泛使用)",
+        "誤以為 Kappa 比 Lambda 一定好(取決於重放可行性)",
+        "把 Lambda 與 AWS Lambda 服務混為一談"
+      ],
+      "explanation_hooks": [
+        "Lambda 痛點催生 Kappa:寫兩次邏輯太累",
+        "Kappa 關鍵:事件來源(Event Sourcing)+ 長期事件保留",
+        "現代 Lakehouse 提供類 Kappa 體驗(同一份資料批流共用)"
+      ],
+      "variation_seeds": [
+        {"context": "需同時提供即時粗估與隔日精確值的架構是?", "answer": "Lambda 架構"},
+        {"context": "只用串流層 + 事件重放的架構是?", "answer": "Kappa 架構"}
+      ],
+      "related_node_ids": ["n_L22203_001", "n_L22203_003"]
+    },
+    {
+      "node_id": "n_L22203_003",
+      "knowledge_code": "L22203",
+      "title": "資料管線(Data Pipeline)六階段",
+      "category": "flow",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch4.3 資料管線設計"}],
+      "summary": "資料管線六大階段:Ingest(收集)→ Store(儲存)→ Process(處理)→ Analyze(分析)→ Visualize(視覺化)→ Govern(治理橫貫所有階段)。為端到端資料工程的整體框架",
+      "key_points": [
+        "Ingest:從來源系統(DB / API / 日誌 / IoT)抽取資料",
+        "Store:落地到 Lake / Warehouse / Lakehouse",
+        "Process:清理、轉換、聚合、特徵化",
+        "Analyze:BI 查詢、統計、ML 模型訓練",
+        "Visualize:Dashboard、報表、視覺化",
+        "Govern:橫貫所有階段的治理(品質 / 安全 / lineage / catalog)"
+      ],
+      "common_misconceptions": [
+        "誤以為治理只在最後階段(實為橫貫六階段)",
+        "跳過視覺化階段,結果分析無人看",
+        "處理階段與儲存階段順序倒置(忽略 ELT 趨勢)"
+      ],
+      "explanation_hooks": [
+        "管線思維:資料如水,有起點(Ingest)有終點(Visualize),沿途需淨化與監測",
+        "治理(Govern)是貫穿所有階段的橫向能力,非單一階段",
+        "六階段任何一環失敗都會阻塞下游"
+      ],
+      "variation_seeds": [
+        {"context": "資料管線中『清理 / 聚合』屬於哪個階段?", "answer": "Process"},
+        {"context": "管線品質監測屬於?", "answer": "Govern(治理)"}
+      ],
+      "related_node_ids": ["n_L22203_001", "n_L22203_006"]
+    },
+    {
+      "node_id": "n_L22203_004",
+      "knowledge_code": "L22203",
+      "title": "分散式處理基本概念(MapReduce 觀念)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch4.3 分散式運算"}],
+      "summary": "分散式處理把大資料切片分送多節點平行運算。MapReduce 為經典範式:Map 階段在各節點獨立處理(切片 + 轉換)→ Shuffle(依鍵分發)→ Reduce 階段聚合。本節只談觀念,不涉及具體框架 API",
+      "key_points": [
+        "Map:把資料切片,各節點獨立執行 key-value 轉換",
+        "Shuffle:依 key 將中間結果分發到對應 Reducer",
+        "Reduce:對同 key 的所有值做聚合",
+        "適用情境:資料可平行切片(embarrassingly parallel)"
+      ],
+      "common_misconceptions": [
+        "誤以為所有任務都能平行化(實際序列相依任務無法 Map)",
+        "把 Shuffle 視為無成本(實為網路 / 磁碟瓶頸最常出現處)",
+        "把分散式運算等同於『機器越多越快』(忽略 overhead 與 Amdahl)"
+      ],
+      "explanation_hooks": [
+        "MapReduce 觀念在現代框架(Spark / Flink)仍存在,只是包裝不同",
+        "Shuffle 是分散式運算最大成本,設計時要盡量減少",
+        "資料局部性(data locality):運算靠近資料節省網路"
+      ],
+      "variation_seeds": [
+        {"context": "MapReduce 中『依 key 將資料分到對應節點』屬於哪階段?", "answer": "Shuffle"},
+        {"context": "分散式運算的網路瓶頸通常出現在?", "answer": "Shuffle 階段"}
+      ],
+      "related_node_ids": ["n_L22203_001", "n_L22203_002"]
+    },
+    {
+      "node_id": "n_L22203_005",
+      "knowledge_code": "L22203",
+      "title": "串流處理事件時間(Event Time)vs 處理時間(Processing Time)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch4.3 串流處理"}],
+      "summary": "串流處理兩種時間軸:Event Time(事件實際發生時間,內含於資料中)、Processing Time(系統處理該事件的時間)。選用 Event Time 才能正確處理遲到 / 亂序事件,但需配合 watermark 概念",
+      "key_points": [
+        "Event Time:事件發生當下的時戳(如使用者點擊瞬間)",
+        "Processing Time:系統實際收到並處理該事件的時間",
+        "網路延遲 / 離線設備會造成 Event Time 與 Processing Time 落差",
+        "Watermark 概念:估計『此時點前的事件大致都到了』,作為窗口關閉判斷"
+      ],
+      "common_misconceptions": [
+        "預設用 Processing Time 結果遲到事件被錯誤聚合到當下窗口",
+        "誤以為事件總是即時到達(實務常有遲到 / 亂序)",
+        "把 Watermark 當成『絕對保證』(實為機率性估計)"
+      ],
+      "explanation_hooks": [
+        "離線手機 App 上線後補傳事件 → Event Time 才能還原使用順序",
+        "Watermark 像潮水線,過了就視為該時段資料齊全",
+        "事件時間處理是『正確性 vs 延遲』的取捨"
+      ],
+      "variation_seeds": [
+        {"context": "IoT 感測器斷線後補傳的資料,應依哪個時間聚合?", "answer": "Event Time"},
+        {"context": "判斷『窗口可以關閉』的概念?", "answer": "Watermark"}
+      ],
+      "related_node_ids": ["n_L22203_001", "n_L22203_006"]
+    },
+    {
+      "node_id": "n_L22203_006",
+      "knowledge_code": "L22203",
+      "title": "資料品質監控與 Data Observability 概念",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch4.3 資料治理"}],
+      "summary": "Data Observability 五大支柱:Freshness(及時性)、Volume(數量)、Schema(結構變動)、Distribution(分佈漂移)、Lineage(血緣)。從『被動發現問題』升級為『主動偵測異常』,為現代資料管線治理基石",
+      "key_points": [
+        "Freshness:資料是否準時到達(SLA 是否達成)",
+        "Volume:行數是否在預期範圍(突然驟降可能是上游故障)",
+        "Schema:欄位 / 型別是否被改動",
+        "Distribution:數值分佈是否異常漂移(資料分佈漂移)",
+        "Lineage:資料從何而來、被誰使用(影響面分析)"
+      ],
+      "common_misconceptions": [
+        "把『資料品質檢查』等同『資料可觀測性』(後者範圍更廣)",
+        "誤以為 Lineage 只是文件(實為自動化追蹤關係)",
+        "只在管線下游監測(實應於各階段監測)"
+      ],
+      "explanation_hooks": [
+        "Observability 借鏡 SRE 的『主動偵測』思維",
+        "Schema 漂移會悄無聲息地破壞下游模型",
+        "Lineage 在事故發生時可一鍵看『影響哪些報表 / 模型』"
+      ],
+      "variation_seeds": [
+        {"context": "上游突然多了一個欄位,屬於哪類 Observability 事件?", "answer": "Schema 變動"},
+        {"context": "資料行數突然驟降 50% 屬?", "answer": "Volume 異常"}
+      ],
+      "related_node_ids": ["n_L22203_003", "n_L22203_005"]
+    }
+  ]
+}
