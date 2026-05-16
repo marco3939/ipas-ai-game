@@ -163,56 +163,56 @@
       "code": "L22202",
       "title": "數據儲存與管理",
       "subject": 2,
-      "category": "boundary_subject_only",
-      "include": false,
-      "exclusion_reason": "純科二:NoSQL、HBase、HDFS、資料倉儲架構,不在科一/科三範圍",
+      "category": "boundary_subject_concept",
+      "include": true,
+      "inclusion_reason": "v2 解禁(2026-05-16):中級層級涵蓋『資料倉儲 vs 資料湖』、『SQL vs NoSQL 適用情境』、『資料分區與索引概念』等概念認知題;不考工具操作細節(HBase shell 指令、HDFS 部署命令、NoSQL 設定參數一律排除)",
       "guideline_chapter": "科二指引 Ch4.2",
       "overlap_with": [],
-      "notes": "標 [L4 範圍外],若題庫題目涉及則剔除"
+      "notes": "v2 解禁;限概念認知題:資料庫類型選型 / 儲存階層 / 一致性模型;禁工具命令操作"
     },
     {
       "code": "L22203",
       "title": "數據處理技術與工具",
       "subject": 2,
-      "category": "boundary_subject_only",
-      "include": false,
-      "exclusion_reason": "純科二:Hadoop、Spark、Flink、批次/串流處理,不在科一/科三範圍",
+      "category": "boundary_subject_concept",
+      "include": true,
+      "inclusion_reason": "v2 解禁(2026-05-16):中級層級涵蓋『批次 vs 串流』、『Lambda 架構』、『資料管線設計』概念;不考 Hadoop / Spark / Flink 工具 API、配置參數、效能調校細節",
       "guideline_chapter": "科二指引 Ch4.3",
       "overlap_with": [],
-      "notes": "標 [L4 範圍外],排除"
+      "notes": "v2 解禁;限概念認知題:批次/串流抉擇 / Lambda vs Kappa 架構;禁 Spark API、Hadoop 配置題"
     },
     {
       "code": "L22301",
       "title": "統計學在大數據中的應用",
       "subject": 2,
-      "category": "boundary_subject_only",
-      "include": false,
-      "exclusion_reason": "純科二:大數據環境下的特徵縮放與分佈調整,概念雖與 L23 重疊但科目歸屬明確",
+      "category": "boundary_subject_concept",
+      "include": true,
+      "inclusion_reason": "v2 解禁(2026-05-16):大數據規模下的取樣策略、近似計算、分散式統計概念,與 L23101 / L23301 形成由總體到 ML 的學習階梯",
       "guideline_chapter": "科二指引 Ch5.1",
       "overlap_with": ["L23101", "L23301"],
-      "notes": "標 [L4 範圍外];若題目以一般 ML 語境出現相關概念,以 L23101/L23301 處理"
+      "notes": "v2 解禁;限概念認知題:大數據取樣設計 / 近似計算(HyperLogLog / Bloom Filter 概念層)/ 分散式統計挑戰;與 L23 重疊主題保持 L22 視角(資料規模)"
     },
     {
       "code": "L22302",
       "title": "常見的大數據分析方法",
       "subject": 2,
-      "category": "boundary_subject_only",
-      "include": false,
-      "exclusion_reason": "純科二:大數據環境演算法應用,與 L23202 ML 演算法概念重疊但科目歸屬明確",
+      "category": "boundary_subject_concept",
+      "include": true,
+      "inclusion_reason": "v2 解禁(2026-05-16):中級層級涵蓋分析方法分類(描述/診斷/預測/規範性分析)概念,與 L23202 ML 演算法形成 BI → ML 學習階梯",
       "guideline_chapter": "科二指引 Ch5.2",
       "overlap_with": ["L23202"],
-      "notes": "標 [L4 範圍外];若題目以一般 ML 語境出現,以 L23202 處理"
+      "notes": "v2 解禁;限概念認知題:分析方法四階(Descriptive/Diagnostic/Predictive/Prescriptive)/ 關聯規則(Apriori 概念)/ 序列分析應用;禁 Spark MLlib API 細節"
     },
     {
       "code": "L22303",
       "title": "數據可視化工具",
       "subject": 2,
-      "category": "boundary_subject_only",
-      "include": false,
-      "exclusion_reason": "純科二:matplotlib/Tableau/Power BI 工具操作,不在科一/科三範圍",
+      "category": "boundary_subject_concept",
+      "include": true,
+      "inclusion_reason": "v2 解禁(2026-05-16):中級層級涵蓋『視覺化圖型對應資料型態』、『誤導性視覺化辨識』、『儀表板資訊架構』概念認知題;不考 matplotlib / Tableau / Power BI 工具具體操作步驟",
       "guideline_chapter": "科二指引 Ch5.3",
       "overlap_with": [],
-      "notes": "標 [L4 範圍外],排除"
+      "notes": "v2 解禁;限概念認知題:圖型選型(箱形/直方/熱圖/桑基)/ 誤導視覺化(Y 軸截斷、3D 餅圖)/ 儀表板層次;禁特定工具 GUI 操作題"
     },
     {
       "code": "L22401",
@@ -418,14 +418,15 @@
   ],
   "summary": {
     "total_codes": 34,
-    "include_count": 29,
-    "exclude_count": 5,
+    "include_count": 34,
+    "exclude_count": 0,
     "by_subject": {
       "subject_1_core": 9,
       "subject_3_core": 12,
-      "subject_2_boundary_include": 8,
-      "subject_2_boundary_exclude": 5
+      "subject_2_boundary_overlap_include": 8,
+      "subject_2_boundary_concept_include": 5
     },
-    "high_priority_errata": 2
+    "high_priority_errata": 2,
+    "v2_changelog": "2026-05-16: L22202/L22203/L22301/L22302/L22303 由 boundary_subject_only(exclude)→ boundary_subject_concept(include),限概念認知題(禁工具操作細節);配合科二題庫補齊任務"
   }
 }

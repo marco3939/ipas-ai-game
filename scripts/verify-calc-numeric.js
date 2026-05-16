@@ -108,6 +108,81 @@ const verifiers = {
     const den = Math.sqrt((tp+fp)*(tp+fn)*(tn+fp)*(tn+fn));
     return num/den;
   },
+  // Sample variance with Bessel's correction (n-1 denominator) — L22101 descriptive stats
+  q_n9_006: (c) => {
+    const xs = [+c.x1, +c.x2, +c.x3, +c.x4, +c.x5];
+    const n = xs.length;
+    const mean = xs.reduce((s,x)=>s+x,0) / n;
+    const ssd = xs.reduce((s,x)=>s+(x-mean)**2, 0);
+    return ssd / (n - 1);
+  },
+  // Upper whisker via 1.5×IQR rule — L22101 outlier detection
+  q_n9_015: (c) => {
+    const q1=+c.q1, q3=+c.q3;
+    const iqr = q3 - q1;
+    return q3 + 1.5 * iqr;
+  },
+  // Z-score — L22102 normal distribution
+  q_n10_006: (c) => {
+    return (+c.x - +c.mu) / +c.sigma;
+  },
+  // Poisson PMF — L22102
+  q_n10_013: (c) => {
+    const lam = +c.lam, k = +c.k;
+    const fact = (n) => n <= 1 ? 1 : n * fact(n - 1);
+    return Math.exp(-lam) * Math.pow(lam, k) / fact(k);
+  },
+  // 95% CI upper bound — L22103
+  q_n11_014: (c) => {
+    return +c.mean + 1.96 * (+c.sigma) / Math.sqrt(+c.n);
+  },
+  // Bonferroni-corrected alpha — L22103 (alpha hard-coded 0.05)
+  q_n11_019: (c) => {
+    return 0.05 / +c.m;
+  },
+  // Missing rate % — L22201 (answer formatted as "NN.NN%")
+  q_n12_007: (c) => {
+    const pct = (+c.M) / (+c.N) * 100;
+    return pct.toFixed(2) + '%';
+  },
+  // Standard error of sample proportion — L22301
+  q_n15_020: (c) => {
+    const p = +c.p, n = +c.n;
+    return Math.sqrt(p * (1 - p) / n);
+  },
+  // Association-rule confidence — L22302
+  q_n16_006: (c) => {
+    return (+c.nAB) / (+c.nA);
+  },
+  // Markov chain 2-state steady-state πA — L22302
+  q_n16_011: (c) => {
+    return (+c.psa) / ((+c.pas) + (+c.psa));
+  },
+  // Inverse-frequency class weight ratio — L22401
+  q_n18_015: (c) => {
+    return (+c.neg) / (+c.pos);
+  },
+  // val count @ 7:1.5:1.5 split — L22401
+  q_n18_019: (c) => {
+    return Math.round((+c.N) * 0.15);
+  },
+  // Precision@K — L22402 (hit / K)
+  q_n19_016: (c) => {
+    return (+c.hit) / (+c.k);
+  },
+  // Majority-class accuracy (predict-all-negative) — L22402
+  q_n19_019: (c) => {
+    const total = +c.total, pos = +c.pos;
+    return (total - pos) / total;
+  },
+  // Token count from GB / bytes-per-token (returns billion-tokens) — L22403
+  q_n20_003: (c) => {
+    return (+c.gb) / (+c.bpt);
+  },
+  // k-anonymity (minimum group size) — L22404
+  q_n21_013: (c) => {
+    return Math.min(+c.x_size, +c.y_size, +c.z_size);
+  },
 };
 
 const questions = [
@@ -130,6 +205,22 @@ const questions = [
   ['questions-pc-modes.json','q_pc_calc_003'],
   ['questions-pg-eval.json','q_pg_007'],
   ['questions.json','q_0006'],
+  ['questions-batch-n9-subject2.json','q_n9_006'],
+  ['questions-batch-n9-subject2.json','q_n9_015'],
+  ['questions-batch-n10-L22102.json','q_n10_006'],
+  ['questions-batch-n10-L22102.json','q_n10_013'],
+  ['questions-batch-n11-L22103.json','q_n11_014'],
+  ['questions-batch-n11-L22103.json','q_n11_019'],
+  ['questions-batch-n12-L22201.json','q_n12_007'],
+  ['questions-batch-n15-L22301.json','q_n15_020'],
+  ['questions-batch-n16-L22302.json','q_n16_006'],
+  ['questions-batch-n16-L22302.json','q_n16_011'],
+  ['questions-batch-n18-L22401.json','q_n18_015'],
+  ['questions-batch-n18-L22401.json','q_n18_019'],
+  ['questions-batch-n19-L22402.json','q_n19_016'],
+  ['questions-batch-n19-L22402.json','q_n19_019'],
+  ['questions-batch-n20-L22403.json','q_n20_003'],
+  ['questions-batch-n21-L22404.json','q_n21_013'],
 ];
 
 const findings = [];

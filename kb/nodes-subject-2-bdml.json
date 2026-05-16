@@ -1,0 +1,735 @@
+{
+  "version": "1.0",
+  "subject": 2,
+  "schema_version": "1.0-iron-rule",
+  "iron_rule_compliance": "rule #6 — only L22401-L22404 nodes; concepts referenced via overlap (L21103/L23202/L23401) but no cross-subject node_id references",
+  "last_updated": "2026-05-16",
+  "scope_alignment": "L22401-L22404 為大數據 × AI 四大主題;聚焦資料側,避免模型側細節",
+  "batches_processed": [
+    {"batch": "subject-2-expansion-G4-bdml", "date": "2026-05-16", "scope": "L22401-L22404 each 6 nodes (24 total)"}
+  ],
+  "nodes": [
+    {
+      "node_id": "n_L22401_001",
+      "knowledge_code": "L22401",
+      "title": "資料規模對 ML 模型的影響(scaling 概念層)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch6.1 大數據與機器學習"}],
+      "summary": "資料量增大通常提升模型表現,但邊際效益遞減;資料、參數、算力三方需平衡。資料品質與多樣性比單純『更多』更關鍵",
+      "key_points": [
+        "資料量 ↑ 通常使測試誤差下降,但呈現邊際遞減",
+        "雜訊資料無限增加不會帶來模型品質提升",
+        "高雜訊 / 重複 / 偏差資料反而可能降低泛化能力",
+        "資料多樣性(coverage)比單純量級更影響模型能力"
+      ],
+      "common_misconceptions": [
+        "誤以為『資料越多模型一定越好』,忽略品質與多樣性",
+        "誤以為增加資料可彌補模型容量不足",
+        "把訓練 loss 持續下降誤認為模型有進步(可能 overfit)"
+      ],
+      "explanation_hooks": [
+        "10× 資料量約帶來個位數百分比的測試誤差下降(概念層)",
+        "資料瓶頸:再加 10 萬筆重複資料 = 沒有效資訊增加",
+        "scaling 三角(資料 × 參數 × 算力)缺一邊就會 plateau"
+      ],
+      "variation_seeds": [
+        {"context": "某公司加倍訓練資料量,模型 AUC 只升 0.5%,最可能原因?", "answer": "資料多樣性飽和 / 邊際遞減"},
+        {"context": "資料量持續增加但驗證集表現不升,先檢查?", "answer": "資料品質與多樣性"}
+      ],
+      "related_node_ids": ["n_L22401_002", "n_L22401_003"]
+    },
+    {
+      "node_id": "n_L22401_002",
+      "knowledge_code": "L22401",
+      "title": "Online Learning vs Batch Learning(大資料流情境選擇)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch6.1 訓練範式"}],
+      "summary": "Batch Learning 一次取得完整訓練集後訓練;Online Learning 逐筆 / 小批次更新模型,適合資料流不斷產生、概念漂移、即時更新的情境",
+      "key_points": [
+        "Batch:訓練完後固定,需 retrain 才更新",
+        "Online:每筆資料即時更新權重,記憶體佔用低",
+        "Mini-batch 折衷:多數深度學習實務採用",
+        "Online 適合『資料量大到放不進記憶體』或『概念會漂移』的情境"
+      ],
+      "common_misconceptions": [
+        "誤以為 Online Learning 一定比 Batch 準確",
+        "把 mini-batch SGD 誤認為是『真正的 Online Learning』",
+        "忽略 Online 對雜訊與順序敏感的問題"
+      ],
+      "explanation_hooks": [
+        "推薦系統 / 廣告 CTR 模型典型用 Online,因偏好會變",
+        "醫療影像分類常用 Batch,因標準改變慢、需嚴謹驗證",
+        "資料流 + 概念漂移 → 必走 Online 或定期 retrain"
+      ],
+      "variation_seeds": [
+        {"context": "電商即時推薦,使用者口味每週變化,適合哪種訓練範式?", "answer": "Online Learning"},
+        {"context": "癌症病理影像分類器,選哪種?", "answer": "Batch(需嚴格驗證)"}
+      ],
+      "related_node_ids": ["n_L22401_001", "n_L22401_003"]
+    },
+    {
+      "node_id": "n_L22401_003",
+      "knowledge_code": "L22401",
+      "title": "分散式訓練概念(資料平行 vs 模型平行)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch6.1 分散式 ML"}],
+      "summary": "資料平行:同一模型副本分布到多 GPU,各自吃不同 mini-batch,梯度聚合;模型平行:單一模型太大切分到多 GPU。大型語言模型常混用兩者",
+      "key_points": [
+        "資料平行(Data Parallel):模型複製、資料分片",
+        "模型平行(Model Parallel):模型切分、資料完整",
+        "資料平行受限於模型本身能放進單卡",
+        "模型平行受限於切點通訊成本"
+      ],
+      "common_misconceptions": [
+        "把『多 GPU 訓練』全部稱為模型平行",
+        "誤以為資料平行可以解決模型放不下的問題",
+        "忽略通訊開銷,以為 GPU 數量翻倍速度也翻倍"
+      ],
+      "explanation_hooks": [
+        "ResNet 訓練多採資料平行(單卡裝得下)",
+        "百億參數 LLM 必走模型平行(單卡裝不下參數)",
+        "通訊瓶頸:GPU 之間頻寬常成為實際的天花板"
+      ],
+      "variation_seeds": [
+        {"context": "中型 CNN 在 8 張 GPU 加速訓練,最常見策略?", "answer": "資料平行"},
+        {"context": "單一模型超過 80GB 無法放進單張 GPU,需採?", "answer": "模型平行"}
+      ],
+      "related_node_ids": ["n_L22401_001", "n_L22401_002"]
+    },
+    {
+      "node_id": "n_L22401_004",
+      "knowledge_code": "L22401",
+      "title": "取樣策略對訓練的影響(均勻 / 加權 / 重要性取樣)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch6.1 取樣策略"}],
+      "summary": "均勻取樣最簡單但可能在不平衡資料下偏向多數類;加權取樣可放大少數類權重;重要性取樣讓難例被更多看到。取樣策略直接影響模型最終偏差",
+      "key_points": [
+        "均勻取樣:每筆機率相等,實作最簡單",
+        "加權取樣:依類別 / 業務重要性給不同權重",
+        "重要性取樣:偏向難例 / 邊界樣本,類似 hard example mining",
+        "取樣偏差會直接傳遞為模型預測偏差"
+      ],
+      "common_misconceptions": [
+        "誤以為隨機取樣『一定公平』",
+        "把加權取樣等同於 SMOTE 過取樣(實際不同層)",
+        "忽略取樣策略在驗證集上不應重複套用"
+      ],
+      "explanation_hooks": [
+        "廣告 CTR 模型常用加權取樣,因正例(點擊)極少",
+        "強化學習用 Prioritized Experience Replay 即重要性取樣",
+        "驗證 / 測試集應保留原始分佈,不應加權"
+      ],
+      "variation_seeds": [
+        {"context": "正例佔 0.1% 的詐欺資料,訓練時的取樣策略?", "answer": "加權 / 過取樣 / 重要性取樣"},
+        {"context": "測試集應該採什麼取樣?", "answer": "保留原始分佈(均勻 / 不調整)"}
+      ],
+      "related_node_ids": ["n_L22401_005", "n_L22401_006"]
+    },
+    {
+      "node_id": "n_L22401_005",
+      "knowledge_code": "L22401",
+      "title": "不平衡資料處理(SMOTE / 欠取樣 / 類別權重)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch6.1 不平衡資料"}],
+      "summary": "極端不平衡資料下三大策略:過取樣(SMOTE 生成合成少數類)、欠取樣(隨機刪多數類)、類別權重(loss 加權)。三者各有風險,常需搭配 F1 / PR-AUC 評估",
+      "key_points": [
+        "SMOTE:在少數類樣本間插值生成新樣本",
+        "欠取樣:資訊損失風險高,適合多數類冗餘大時",
+        "類別權重:不改資料只改 loss,簡單常用",
+        "Accuracy 在極端不平衡下無意義,需用 F1 / PR-AUC / Recall"
+      ],
+      "common_misconceptions": [
+        "把 SMOTE 套到測試集(只能用在訓練集)",
+        "誤以為過取樣後 accuracy 變高代表模型變好",
+        "忽略 SMOTE 對類別重疊區會生出『不存在』的樣本"
+      ],
+      "explanation_hooks": [
+        "詐欺偵測 1:1000 → 不能只看 accuracy(99.9% 永遠猜不是詐欺也對)",
+        "SMOTE 只動訓練集,驗證 / 測試保留原始分佈",
+        "醫療診斷:漏掉真陽性(Recall)代價遠高於誤報"
+      ],
+      "variation_seeds": [
+        {"context": "對 1:99 不平衡資料,用哪個指標最合適?", "answer": "F1 / PR-AUC / Recall"},
+        {"context": "SMOTE 應該在哪個資料集上做?", "answer": "只在訓練集"}
+      ],
+      "related_node_ids": ["n_L22401_004", "n_L22401_006"]
+    },
+    {
+      "node_id": "n_L22401_006",
+      "knowledge_code": "L22401",
+      "title": "大數據下的 train/val/test 切分策略(time-based / group-based)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch6.1 資料切分"}],
+      "summary": "隨機切分在時序、有群組依賴的大數據上會造成資料洩漏。時序資料用 time-based(過去訓練未來測試);使用者 / 客戶資料用 group-based(同 ID 不跨集)",
+      "key_points": [
+        "Random split 適用於 i.i.d. 資料",
+        "Time-based split:訓練集時間 < 驗證集時間 < 測試集時間",
+        "Group-based split:同一使用者 / 客戶 ID 不可跨 train/test",
+        "切分錯誤是大數據 ML 最常見的『假高分』來源"
+      ],
+      "common_misconceptions": [
+        "對所有資料都用 random split",
+        "對時序資料做 random split → 結果看起來很好,上線爆掉",
+        "把同一使用者的不同筆 record 隨機切到 train/test"
+      ],
+      "explanation_hooks": [
+        "股價、銷售預測 → 必走 time-based",
+        "醫療影像:同一病人多張片不能跨 train/test(否則資料洩漏)",
+        "Kaggle 排行榜 shake-up 多半是切分策略錯"
+      ],
+      "variation_seeds": [
+        {"context": "每月銷售預測模型,應如何切分?", "answer": "Time-based(過去訓練未來測試)"},
+        {"context": "病患 X 光分類器,同病人 10 張片應如何切?", "answer": "Group-based(同病人只能在同一集)"}
+      ],
+      "related_node_ids": ["n_L22401_004", "n_L22401_005"]
+    },
+    {
+      "node_id": "n_L22402_001",
+      "knowledge_code": "L22402",
+      "title": "鑑別式 AI 預測任務分類(分類 / 迴歸 / 排序 / 推薦)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch6.2 鑑別式 AI 任務"}],
+      "summary": "鑑別式 AI 對輸入預測標籤或數值。四大任務:分類(離散)、迴歸(連續)、排序(相對順序)、推薦(個性化排序)。任務型態決定資料準備與評估指標選擇",
+      "key_points": [
+        "分類:輸出類別,評估用 Accuracy / F1 / AUC",
+        "迴歸:輸出數值,評估用 MAE / RMSE / R²",
+        "排序(Learning to Rank):評估用 NDCG / MAP",
+        "推薦:結合排序與個性化,評估用 Hit Rate / NDCG@K"
+      ],
+      "common_misconceptions": [
+        "把分數預測任務硬塞成分類(切閾值損失資訊)",
+        "推薦系統用分類 accuracy 評估(無視排序)",
+        "把推薦當成單純的多類分類"
+      ],
+      "explanation_hooks": [
+        "信用評分輸出 0~1000 分 → 迴歸,而非『好客戶 / 壞客戶』分類",
+        "搜尋結果排序最相關第一筆 → Learning to Rank",
+        "Netflix 推薦同時要相關性與多樣性,不是單純分類"
+      ],
+      "variation_seeds": [
+        {"context": "預測房價數值,任務型態?", "answer": "迴歸"},
+        {"context": "Google 搜尋結果排序,任務型態?", "answer": "Learning to Rank"}
+      ],
+      "related_node_ids": ["n_L22402_002", "n_L22402_006"]
+    },
+    {
+      "node_id": "n_L22402_002",
+      "knowledge_code": "L22402",
+      "title": "信用評分情境(特徵 / 標籤 / 評估指標選擇)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch6.2 金融應用"}],
+      "summary": "信用評分:輸入個人 / 企業財務行為特徵,輸出違約機率。標籤需觀察期(如 12 個月);評估常用 KS / AUC / Gini;受個資與公平性法規約束",
+      "key_points": [
+        "特徵:收入、負債、信用歷史長度、還款行為",
+        "標籤:觀察期內是否違約(逾期 90 天為常見定義)",
+        "評估:AUC、KS 統計量、Gini 係數",
+        "公平性:不可直接使用受保護屬性(性別 / 種族)"
+      ],
+      "common_misconceptions": [
+        "把標籤定義為『曾經逾期一天』(過於敏感,雜訊大)",
+        "用 accuracy 評估(信用違約是不平衡問題)",
+        "誤以為只要不放性別欄位就符合公平性(間接特徵仍會洩漏)"
+      ],
+      "explanation_hooks": [
+        "Bank for International Settlements 巴塞爾協定影響特徵與標籤定義",
+        "KS 統計量:好壞客戶累積分佈最大差距,評分卡常用指標",
+        "郵遞區號可能與種族高度相關 → 間接歧視風險"
+      ],
+      "variation_seeds": [
+        {"context": "信用評分標籤『違約』典型如何定義?", "answer": "觀察期內逾期超過 90 天"},
+        {"context": "信用評分模型常用評估指標?", "answer": "AUC / KS / Gini"}
+      ],
+      "related_node_ids": ["n_L22402_001", "n_L22402_003"]
+    },
+    {
+      "node_id": "n_L22402_003",
+      "knowledge_code": "L22402",
+      "title": "詐欺偵測情境(極端不平衡 / 即時推論)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch6.2 風險偵測"}],
+      "summary": "詐欺偵測典型挑戰:正例極少(< 1%)、需即時推論(毫秒級)、攻擊者會適應模型(概念漂移)。評估重 Recall 與成本敏感矩陣",
+      "key_points": [
+        "正例比例典型 0.1%~1%,Accuracy 失去意義",
+        "Recall(找回率)優先,但需與 Precision 取得平衡",
+        "推論延遲常需 < 100ms",
+        "攻擊者學習 → 模型需定期 retrain"
+      ],
+      "common_misconceptions": [
+        "追求 100% Recall(會誤封正常交易)",
+        "把離線高 AUC 直接推論為線上會表現好",
+        "忽略攻擊適應導致的概念漂移"
+      ],
+      "explanation_hooks": [
+        "FN(漏抓詐欺)成本通常遠高於 FP(誤擾正常用戶)",
+        "信用卡公司常用兩階段:即時粗略攔截 + 後台精細審查",
+        "詐欺手法每月演化 → 模型每週 / 每月 retrain"
+      ],
+      "variation_seeds": [
+        {"context": "詐欺偵測中,FN 成本遠高於 FP,優先指標?", "answer": "Recall"},
+        {"context": "詐欺偵測模型每月效果下降的最常見原因?", "answer": "概念漂移(攻擊手法演化)"}
+      ],
+      "related_node_ids": ["n_L22402_002", "n_L22402_004"]
+    },
+    {
+      "node_id": "n_L22402_004",
+      "knowledge_code": "L22402",
+      "title": "預測性維護情境(時序資料 / 警示閾值設計)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch6.2 工業應用"}],
+      "summary": "預測性維護從感測器時序資料預測設備故障。挑戰:故障稀少、提前預測窗口要剛好(太早浪費成本、太晚來不及維護);閾值設計影響運營決策",
+      "key_points": [
+        "輸入:振動、溫度、電流等時序感測器資料",
+        "標籤:未來 N 小時內是否故障(N 由業務定)",
+        "預測窗口太短:來不及反應;太長:預警太頻繁",
+        "需 time-based split,不可隨機切分"
+      ],
+      "common_misconceptions": [
+        "對時序資料做 random split → 嚴重資料洩漏",
+        "把預測窗口設得『越長越好』(過於頻繁誤報)",
+        "只用單一感測器特徵(實際需多感測器融合)"
+      ],
+      "explanation_hooks": [
+        "風力發電機葉片裂痕:提前 24~72 小時預警最具經濟效益",
+        "閾值設計需平衡『誤報維修成本』與『漏報停機成本』",
+        "故障是稀有事件 → 與詐欺偵測在資料分佈上相似"
+      ],
+      "variation_seeds": [
+        {"context": "工廠機台故障預測,資料應如何切分?", "answer": "Time-based(按時間切)"},
+        {"context": "預測窗口設計過長的後果?", "answer": "誤報頻繁、運營疲勞"}
+      ],
+      "related_node_ids": ["n_L22402_003", "n_L22402_005"]
+    },
+    {
+      "node_id": "n_L22402_005",
+      "knowledge_code": "L22402",
+      "title": "推薦系統概念(協同過濾 / 內容過濾基本概念)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch6.2 推薦系統"}],
+      "summary": "推薦系統兩大派典:協同過濾(從使用者—物品互動矩陣找相似行為)、內容過濾(從物品 / 使用者屬性匹配)。冷啟動是兩派典共同挑戰,實務常採混合式",
+      "key_points": [
+        "協同過濾:基於使用者—物品互動,不需理解內容",
+        "內容過濾:基於物品本身屬性,適合新物品上架",
+        "冷啟動:新使用者 / 新物品互動稀少,難推薦",
+        "混合推薦:結合兩者各取所長,工業界常見"
+      ],
+      "common_misconceptions": [
+        "誤以為協同過濾需要物品內容資訊",
+        "誤以為內容過濾不會有冷啟動問題(新使用者仍是)",
+        "把推薦 accuracy 當作主要指標(實際看點擊 / 留存)"
+      ],
+      "explanation_hooks": [
+        "Netflix:看過《盜夢空間》的人也看了《全面啟動》→ 協同過濾",
+        "新使用者剛註冊 → 用人口統計 / 熱門榜當 cold-start",
+        "Spotify 混用:聲音特徵(內容)+ 共同收聽行為(協同)"
+      ],
+      "variation_seeds": [
+        {"context": "新上架的書還沒人買過,如何推薦?", "answer": "內容過濾"},
+        {"context": "看過 A 片的人也看了 B 片,屬於哪種推薦?", "answer": "協同過濾"}
+      ],
+      "related_node_ids": ["n_L22402_001", "n_L22402_006"]
+    },
+    {
+      "node_id": "n_L22402_006",
+      "knowledge_code": "L22402",
+      "title": "鑑別式 AI 評估常見陷阱(資料洩漏 / 時序倒推)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch6.2 評估陷阱"}],
+      "summary": "離線指標亮眼但上線崩盤,多半源於資料洩漏。常見陷阱:特徵時間倒推(用未來資訊預測過去)、target leakage(特徵變相含標籤)、群組跨集",
+      "key_points": [
+        "時間倒推:訓練時用了預測點之後才知道的資訊",
+        "Target leakage:某特徵是標籤的直接結果(如『有否申訴』作為違約特徵)",
+        "群組跨集:同病人 / 同客戶資料散落 train/test",
+        "離線 AUC 0.99 + 上線崩盤 = 資料洩漏的經典症狀"
+      ],
+      "common_misconceptions": [
+        "把離線高分當成可信的上線表現預估",
+        "認為去除標籤欄位即可避免 leakage(忽略間接洩漏)",
+        "用『未來統計特徵』(如月平均)當作當下預測輸入"
+      ],
+      "explanation_hooks": [
+        "客戶流失預測用『取消訂閱日』衍生特徵 → 嚴重 leakage",
+        "醫療影像同病人多張片散落 train/test → 模型記住病人而非疾病",
+        "Kaggle 排行榜大幅 shake-up 多源於 leakage"
+      ],
+      "variation_seeds": [
+        {"context": "信用違約模型加入『催收次數』特徵,問題?", "answer": "Target leakage(催收是違約後才發生)"},
+        {"context": "離線 AUC 0.99 上線跌到 0.6,最可能原因?", "answer": "資料洩漏 / 訓練測試分佈不同"}
+      ],
+      "related_node_ids": ["n_L22402_001", "n_L22402_005"]
+    },
+    {
+      "node_id": "n_L22403_001",
+      "knowledge_code": "L22403",
+      "title": "LLM 預訓練語料規模(token 級資料量)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch6.3 生成式 AI 資料規模"}],
+      "summary": "現代 LLM 預訓練語料以 token 計,常見規模從數百億到數兆 token。語料規模直接影響模型能力上限,但與品質、多樣性、去重後的『有效資料量』更相關",
+      "key_points": [
+        "Token 為 LLM 計量單位(粗略 1 中文字 ≈ 1~2 token,1 英文字 ≈ 1.3 token)",
+        "主流 LLM 預訓練常見規模:數百 B 到數 T tokens",
+        "去重後的有效 token 才是真正的訓練資料量",
+        "資料、參數、算力需匹配(scaling 三方平衡)"
+      ],
+      "common_misconceptions": [
+        "把『網路所有文本』當成可直接使用的訓練資料",
+        "忽略去重對有效資料量的縮減效應",
+        "認為單一語料規模指標就能決定模型能力"
+      ],
+      "explanation_hooks": [
+        "Common Crawl 全量爬蟲多 PB,但有效高品質部分可能僅數%",
+        "去重後可能掉 30~70% token 量",
+        "中文有效高品質語料遠少於英文"
+      ],
+      "variation_seeds": [
+        {"context": "LLM 預訓練資料量典型計量單位?", "answer": "Token"},
+        {"context": "為何 raw 網路文本不能直接拿來訓練?", "answer": "雜訊高、重複、品質參差"}
+      ],
+      "related_node_ids": ["n_L22403_002", "n_L22403_006"]
+    },
+    {
+      "node_id": "n_L22403_002",
+      "knowledge_code": "L22403",
+      "title": "語料品質清洗(去重 / 過濾低品質 / 多樣性平衡)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch6.3 語料清洗"}],
+      "summary": "預訓練語料清洗三大關鍵:去重(同一文本重複會讓模型過擬合)、過濾低品質(垃圾廣告、亂碼)、多樣性平衡(避免單一領域主導)",
+      "key_points": [
+        "近重複(near-duplicate)比完全相同更難偵測但同樣有害",
+        "低品質過濾:統計特徵(困惑度、字元分佈)+ 分類器",
+        "多樣性平衡:領域 / 語言 / 風格比例調整",
+        "清洗不足會放大訓練資料中的偏誤"
+      ],
+      "common_misconceptions": [
+        "認為去重只需『字串完全相同』比對",
+        "誤以為過濾越嚴格越好(會失去長尾多樣性)",
+        "認為清洗只是工程細節,對模型品質影響有限"
+      ],
+      "explanation_hooks": [
+        "MinHash / SimHash 用於近重複偵測",
+        "Wiki 條目重複數百次 → 模型背誦而非泛化",
+        "若體育新聞佔 80%,模型在科學主題表現會偏弱"
+      ],
+      "variation_seeds": [
+        {"context": "預訓練語料中同一篇 Wiki 條目重複 500 次,後果?", "answer": "模型過擬合 / 背誦,泛化下降"},
+        {"context": "近重複偵測常用技術?", "answer": "MinHash / SimHash"}
+      ],
+      "related_node_ids": ["n_L22403_001", "n_L22403_003"]
+    },
+    {
+      "node_id": "n_L22403_003",
+      "knowledge_code": "L22403",
+      "title": "多語料混合策略(語言 / 領域比例)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch6.3 語料混合"}],
+      "summary": "預訓練混合不同領域(Wiki / 書籍 / 程式碼 / 對話)、不同語言比例。比例設計影響模型能力分佈;『資料配方(data mixture)』是現代 LLM 訓練的關鍵設計決策",
+      "key_points": [
+        "領域比例:Wiki(廣度知識)、書籍(長文本)、程式碼(推理)、對話(問答)",
+        "語言比例:英文常占主導,非英文能力與該語言佔比正相關",
+        "程式碼資料對推理 / 邏輯能力有顯著提升效果",
+        "比例可動態調整(訓練後期增加高品質資料)"
+      ],
+      "common_misconceptions": [
+        "認為各領域應均勻分布(實際需依目標能力調比例)",
+        "誤以為中文語料只要『中文』就好(品質、領域同樣重要)",
+        "忽略程式碼資料對非編程任務也有正面影響"
+      ],
+      "explanation_hooks": [
+        "GPT-3 訓練配方:Common Crawl 60% + WebText2 22% + 書籍 16% + Wiki 3%",
+        "加入程式碼資料 → 數學 / 邏輯題表現顯著提升",
+        "中文表現弱常因為中文有效語料只佔個位數百分比"
+      ],
+      "variation_seeds": [
+        {"context": "想讓 LLM 推理能力變強,加哪類資料效果好?", "answer": "程式碼資料"},
+        {"context": "LLM 中文表現比英文弱的最常見原因?", "answer": "中文語料佔比與品質都較少"}
+      ],
+      "related_node_ids": ["n_L22403_002", "n_L22403_006"]
+    },
+    {
+      "node_id": "n_L22403_004",
+      "knowledge_code": "L22403",
+      "title": "生成式 AI 著作權與授權資料來源(CC 授權 / opt-out / 訴訟風險)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch6.3 資料授權"}],
+      "summary": "預訓練資料的著作權狀態直接影響商業使用合法性。CC 授權有不同條款(BY / NC / SA);opt-out 機制(如 robots.txt、ai.txt)使創作者可拒絕被訓練;已有多起訴訟案例",
+      "key_points": [
+        "CC-BY(署名)/ CC-BY-SA(相同方式分享)/ CC-BY-NC(非商業)",
+        "Public Domain(公有領域)無著作權,可自由使用",
+        "Opt-out:創作者可透過 robots.txt / ai.txt 拒絕被訓練",
+        "近年訴訟:紐約時報 vs OpenAI、Getty Images vs Stability AI"
+      ],
+      "common_misconceptions": [
+        "認為『網路可公開瀏覽』= 可拿來訓練",
+        "把所有 CC 授權當成一視同仁(實際差別很大)",
+        "誤以為 fair use(合理使用)在所有國家通用"
+      ],
+      "explanation_hooks": [
+        "CC-BY-NC 不可商業使用 → 商用 LLM 預訓練不適用",
+        "紐約時報 vs OpenAI 是規模化 LLM 訴訟里程碑",
+        "歐盟 AI Act 要求公開預訓練資料摘要"
+      ],
+      "variation_seeds": [
+        {"context": "商用 LLM 預訓練不可使用哪類 CC 授權?", "answer": "CC-BY-NC(非商業)"},
+        {"context": "創作者要表態拒絕被 AI 訓練,常用機制?", "answer": "robots.txt / ai.txt 設定"}
+      ],
+      "related_node_ids": ["n_L22403_005", "n_L22403_006"]
+    },
+    {
+      "node_id": "n_L22403_005",
+      "knowledge_code": "L22403",
+      "title": "合成資料(synthetic data)用於訓練的風險與機會",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch6.3 合成資料"}],
+      "summary": "合成資料機會:補足稀有情境、避開隱私 / 著作權問題;風險:模型崩塌(model collapse)— 用模型生成資料訓練下一代模型,導致多樣性逐代下降",
+      "key_points": [
+        "機會:稀有事件補充、隱私保護、成本降低",
+        "風險:模型崩塌 — 多輪自我合成後分佈坍縮",
+        "高品質合成資料需要『真實資料錨點』",
+        "現代實務常採混合(真實 + 合成)而非純合成"
+      ],
+      "common_misconceptions": [
+        "認為合成資料可無限取代真實資料",
+        "誤以為合成資料完全無隱私風險(可能 leak 訓練資料)",
+        "誤以為合成資料 = 沒有版權問題(若由有版權模型生成仍有爭議)"
+      ],
+      "explanation_hooks": [
+        "醫療稀有疾病:真實案例少,合成資料補足訓練樣本",
+        "Model Collapse:每代用上一代輸出 → 多樣性逐代衰減",
+        "合成資料的『真實錨點』來自高品質人類標註"
+      ],
+      "variation_seeds": [
+        {"context": "用合成資料反覆訓練下一代模型,風險?", "answer": "模型崩塌 / 多樣性下降"},
+        {"context": "醫療稀有疾病訓練資料不足,可用?", "answer": "合成資料補足"}
+      ],
+      "related_node_ids": ["n_L22403_004", "n_L22403_006"]
+    },
+    {
+      "node_id": "n_L22403_006",
+      "knowledge_code": "L22403",
+      "title": "Scaling Laws(資料 × 參數 × 算力)三方平衡概念",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch6.3 Scaling Laws"}],
+      "summary": "現代 LLM 訓練核心經驗法則:模型效能受資料量、參數量、算力三者共同決定;三方需匹配,任一過小都會成為瓶頸。不需記具體公式,理解三方平衡即可",
+      "key_points": [
+        "參數量翻倍,需相應增加資料量與算力",
+        "資料不足:大模型會 overfit、記憶而非泛化",
+        "算力不足:訓練不到 converge,大模型未發揮",
+        "三方平衡 → 給定預算下的最佳組合"
+      ],
+      "common_misconceptions": [
+        "認為『參數越多模型越好』,忽略資料與算力需配合",
+        "認為小資料配大模型即可(實際 underperform 同算力的小模型 + 大資料)",
+        "把 scaling 當成唯一進步來源(忽略架構 / 演算法創新)"
+      ],
+      "explanation_hooks": [
+        "Chinchilla 觀察:同算力下,中等大小模型 + 更多資料 > 超大模型 + 不夠資料",
+        "資料、參數、算力像三角凳子,缺一邊就翻",
+        "資料是現代 LLM 最常見的真正瓶頸"
+      ],
+      "variation_seeds": [
+        {"context": "固定算力預算下,加大模型同時應如何調資料量?", "answer": "相應增加"},
+        {"context": "大模型在小資料上的常見問題?", "answer": "Overfit / 記憶而非泛化"}
+      ],
+      "related_node_ids": ["n_L22403_001", "n_L22403_003"]
+    },
+    {
+      "node_id": "n_L22404_001",
+      "knowledge_code": "L22404",
+      "title": "PDPA 個資法事前告知義務六項(高頻法規考點)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch6.4 個資法"}],
+      "summary": "台灣個資法第 8 條規定蒐集個資時的事前告知義務六大項目。AI 系統蒐集訓練 / 推論資料時須履行;違反可處罰鍰",
+      "key_points": [
+        "1. 公務機關或非公務機關名稱",
+        "2. 蒐集之目的",
+        "3. 個人資料之類別",
+        "4. 個人資料利用之期間、地區、對象及方式",
+        "5. 當事人依第 3 條規定得行使之權利及方式",
+        "6. 當事人得自由選擇提供個資與否,及不提供將對其權益之影響"
+      ],
+      "common_misconceptions": [
+        "把六項簡化成三項(目的 / 期間 / 對象)而忽略其他",
+        "認為線上服務 EULA 自動覆蓋告知義務(實際需明示)",
+        "誤以為使用合法蒐集資料訓練 AI 不需再次告知"
+      ],
+      "explanation_hooks": [
+        "AI 客服蒐集對話紀錄訓練模型 → 屬於新目的,需再告知",
+        "六項記憶口訣:『誰、為何、什麼、怎麼用、有何權利、可否選擇』",
+        "目的外利用需另取同意,是 AI 訓練資料常見爭點"
+      ],
+      "variation_seeds": [
+        {"context": "PDPA 事前告知六項中,讓使用者知道有哪些可行使的選擇?", "answer": "可自由選擇提供與否及不提供之影響"},
+        {"context": "用已蒐集的客服對話訓練 AI,需再次告知嗎?", "answer": "需要(目的變更)"}
+      ],
+      "related_node_ids": ["n_L22404_002", "n_L22404_003"]
+    },
+    {
+      "node_id": "n_L22404_002",
+      "knowledge_code": "L22404",
+      "title": "GDPR 七大原則與資料主體權利",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch6.4 GDPR"}],
+      "summary": "歐盟 GDPR 七大原則為個資處理基準;同時賦予資料主體存取 / 更正 / 刪除 / 可攜 / 反對等權利。違反最高可罰全球營業額 4% 或 2000 萬歐元",
+      "key_points": [
+        "七大原則:合法公平透明、目的限制、資料最小化、正確性、儲存限制、完整保密性、課責",
+        "權利:存取、更正、刪除(被遺忘權)、限制處理、可攜、反對、不受自動化決定拘束",
+        "罰則上限:全球營業額 4% 或 2000 萬歐元(取高者)",
+        "適用範圍:處理歐盟居民資料的全球組織"
+      ],
+      "common_misconceptions": [
+        "認為 GDPR 只適用於歐洲公司(實際依資料主體所在地)",
+        "把七大原則少寫一項(常漏『課責』)",
+        "誤以為刪除權絕對,忽略合法保留例外"
+      ],
+      "explanation_hooks": [
+        "資料最小化:只蒐集達成目的所必要的最少量",
+        "被遺忘權:Google 必須在歐盟提供搜尋結果移除請求機制",
+        "不受自動化決定拘束 → 信用評分等需提供人工複核管道"
+      ],
+      "variation_seeds": [
+        {"context": "GDPR 罰則上限?", "answer": "全球營業額 4% 或 2000 萬歐元(取高)"},
+        {"context": "AI 自動信用決定下,使用者根據 GDPR 可主張?", "answer": "要求人工介入複核(不受自動化決定拘束)"}
+      ],
+      "related_node_ids": ["n_L22404_001", "n_L22404_003"]
+    },
+    {
+      "node_id": "n_L22404_003",
+      "knowledge_code": "L22404",
+      "title": "匿名化 vs 假名化(anonymization vs pseudonymization)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch6.4 匿名化"}],
+      "summary": "匿名化:無法以合理方法還原識別,完全脫離個資法管轄;假名化:用替代識別碼,仍可透過 key 還原,仍屬個資範圍。兩者法律地位完全不同",
+      "key_points": [
+        "匿名化 = 不可逆,脫離個資法 / GDPR 範圍",
+        "假名化 = 可逆,仍受個資法 / GDPR 規範",
+        "假名化是 GDPR 鼓勵的『減害措施』,但不是免責措施",
+        "資料連結攻擊(linkage attack)會讓假名甚至『匿名』資料重識別"
+      ],
+      "common_misconceptions": [
+        "把假名化當成匿名化",
+        "誤以為移除姓名 / 身分證號就等於匿名化",
+        "認為 hash 處理過的身分證即匿名(實際可透過彩虹表還原)"
+      ],
+      "explanation_hooks": [
+        "醫療資料移除姓名但保留生日 + 郵遞區號 → 仍可被三欄交叉重識別",
+        "Netflix Prize 案:匿名評分資料被 IMDb 公開資料連結還原使用者",
+        "GDPR 鼓勵假名化(降低風險)但不等同免責"
+      ],
+      "variation_seeds": [
+        {"context": "把使用者 ID 換成 hash 編碼,但保留對照表,屬?", "answer": "假名化"},
+        {"context": "假名化資料是否仍受 GDPR 規範?", "answer": "是(仍屬個資)"}
+      ],
+      "related_node_ids": ["n_L22404_001", "n_L22404_004"]
+    },
+    {
+      "node_id": "n_L22404_004",
+      "knowledge_code": "L22404",
+      "title": "k-匿名 / l-多樣性 / t-接近性(re-identification 防護)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch6.4 匿名化技術"}],
+      "summary": "三階段去識別化技術:k-匿名(每筆至少 k-1 筆 quasi-identifier 相同)、l-多樣性(敏感屬性至少 l 種)、t-接近性(分佈差距 ≤ t)。逐步補強對重識別與屬性洩漏的防護",
+      "key_points": [
+        "k-匿名:每筆資料的準識別欄位至少與其他 k-1 筆相同",
+        "k-匿名漏洞:敏感屬性同質性攻擊",
+        "l-多樣性:每群中敏感屬性至少 l 種不同值",
+        "t-接近性:敏感屬性分佈與整體分佈差距 ≤ t"
+      ],
+      "common_misconceptions": [
+        "認為 k-匿名就足以防止所有重識別(忽略屬性洩漏)",
+        "把 k 設得越大越好(會嚴重降低資料效用)",
+        "誤以為 l-多樣性能完全防同質性攻擊(實際 t-接近性才補)"
+      ],
+      "explanation_hooks": [
+        "k-匿名 k=5:即使重識別也至少有 5 個候選人",
+        "若群內 5 人全有同一疾病 → 屬性洩漏仍發生(l-多樣性問題)",
+        "防護越強 → 資料效用越低,是隱私 vs 效用的 trade-off"
+      ],
+      "variation_seeds": [
+        {"context": "k-匿名 k=10 但群內所有人都是 HIV 陽性,問題?", "answer": "屬性同質性洩漏(需 l-多樣性)"},
+        {"context": "k 增大對資料效用的影響?", "answer": "效用下降(過度泛化 / 抑制)"}
+      ],
+      "related_node_ids": ["n_L22404_003", "n_L22404_005"]
+    },
+    {
+      "node_id": "n_L22404_005",
+      "knowledge_code": "L22404",
+      "title": "差分隱私概念層(ε 隱私預算 / 加噪機制)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch6.4 差分隱私"}],
+      "summary": "差分隱私(DP)透過對統計結果加入校準雜訊,使單一個體加入或移除資料庫對輸出影響可被控制在 ε 預算內。ε 越小隱私越強、效用越低",
+      "key_points": [
+        "ε(epsilon)為隱私預算,越小隱私越強",
+        "加噪機制典型:Laplace 雜訊、Gaussian 雜訊",
+        "保證即使對手有任意背景知識,也只能在 ε 範圍內推論個人是否在資料中",
+        "隱私 vs 效用 trade-off:強隱私 → 統計結果雜訊大"
+      ],
+      "common_misconceptions": [
+        "認為差分隱私『完全保護』隱私(實際是機率保證,非絕對)",
+        "誤以為 ε 越大越安全(實際是越小越安全)",
+        "把匿名化和差分隱私視為同層次技術(DP 是更嚴格的數學保證)"
+      ],
+      "explanation_hooks": [
+        "美國人口普查 2020 採用差分隱私發布統計",
+        "Apple、Google 在使用者端用 Local DP 收集統計",
+        "ε = 1 通常視為強保護;ε = 10 偏弱"
+      ],
+      "variation_seeds": [
+        {"context": "差分隱私 ε 越小代表?", "answer": "隱私保護越強、效用越低"},
+        {"context": "差分隱私透過什麼方式達成?", "answer": "對查詢結果加入校準雜訊"}
+      ],
+      "related_node_ids": ["n_L22404_004", "n_L22404_006"]
+    },
+    {
+      "node_id": "n_L22404_006",
+      "knowledge_code": "L22404",
+      "title": "聯邦學習概念層(資料不離本地 / 模型聚合)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch6.4 隱私計算"}],
+      "summary": "聯邦學習(Federated Learning):資料留在各端裝置 / 機構,只交換模型更新,由中央伺服器聚合(如 FedAvg)。MPC(多方安全計算)、同態加密(HE)為配套隱私技術",
+      "key_points": [
+        "聯邦學習:本地訓練、中央聚合,資料不出域",
+        "FedAvg 是最基本的模型聚合演算法名稱",
+        "MPC:多方共同計算結果,過程中各方不揭露輸入",
+        "HE:在加密狀態下進行計算,結果解密仍正確"
+      ],
+      "common_misconceptions": [
+        "認為聯邦學習『絕對隱私』(實際模型更新仍可能洩漏資訊)",
+        "把聯邦學習與 MPC / HE 視為同一層技術(實際常組合使用)",
+        "誤以為 FedAvg 可直接套用於非 IID 資料(實務需特別處理)"
+      ],
+      "explanation_hooks": [
+        "Google 鍵盤輸入預測:模型在手機本地訓練,只回傳梯度",
+        "跨醫院共同訓練疾病模型:資料留各醫院,聚合知識",
+        "聯邦學習 + DP + HE 三層組合是現代隱私 ML 的常見堆疊"
+      ],
+      "variation_seeds": [
+        {"context": "多醫院想共訓練模型但資料不能出院,適合用?", "answer": "聯邦學習"},
+        {"context": "聯邦學習中,實際交換的是?", "answer": "模型參數 / 梯度更新(非原始資料)"}
+      ],
+      "related_node_ids": ["n_L22404_005", "n_L22404_004"]
+    }
+  ]
+}

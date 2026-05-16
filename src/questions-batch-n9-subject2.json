@@ -1,0 +1,611 @@
+{
+  "version": "1.0",
+  "schema_version": "iron-rule-1+2+6",
+  "generated_at": "2026-05-16",
+  "batch": "N9 — 科二大數據 L22101 敘述性統計(pilot)",
+  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "iron_rule_compliance": {
+    "rule_1": "every question has explanation.correct + explanation.wrong + explanation.hook + misconceptions",
+    "rule_2": "shuffle_options=true on every item; calculation items carry stem_variables multi-case",
+    "rule_3": "all stems are original cross-industry scenarios",
+    "rule_4": "option length ratio between 0.85 and 1.20",
+    "rule_5": "knowledge_code = L22101; node_id ∈ {n_L22101_001..007} per scripts/kb-allowed-nodes.json",
+    "rule_6": "科目隔離 — 本檔僅 L22101 內容,related_node_ids 不指向 L21/L23 節點,只新建本檔不改任何其他既有檔案"
+  },
+  "distribution": {
+    "L22101_count": 20,
+    "by_node": {"n_L22101_001": 3, "n_L22101_002": 3, "n_L22101_003": 3, "n_L22101_004": 3, "n_L22101_005": 3, "n_L22101_006": 2, "n_L22101_007": 3},
+    "by_format": {"single_choice_text": 15, "single_choice_scenario": 3, "calculation": 2},
+    "by_difficulty": {"easy": 7, "medium": 9, "hard": 4}
+  },
+  "questions": [
+    {
+      "id": "q_n9_001",
+      "knowledge_code": "L22101",
+      "node_id": "n_L22101_001",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某連鎖咖啡品牌調查全台 800 家門市『最受歡迎飲品種類』,資料屬於名目尺度(類別資料)。下列何種集中趨勢量最適合代表此份問卷結果?",
+      "options": [
+        {"text": "眾數(Mode),因為名目尺度資料無法做加總或排序運算,只能統計頻率最高的類別", "is_correct": true},
+        {"text": "算術平均數(Mean),把所有飲品代號加總後除以門市總數即可得最具代表性的數值", "is_correct": false, "trap_type": "對類別資料計算 Mean 無意義"},
+        {"text": "中位數(Median),將飲品依名稱字母排序後取居中位置之品項作為代表類別值", "is_correct": false, "trap_type": "名目尺度無排序意義"},
+        {"text": "幾何平均數(Geometric Mean),適用所有非負資料且能反映乘法關係下之中心趨勢", "is_correct": false, "trap_type": "幾何平均對類別無定義"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "名目尺度(類別資料)只能比較『是否相同』,不能加減或排序,因此唯一可用的集中趨勢量是出現頻率最高的類別,即眾數(Mode)",
+        "wrong": {
+          "算術平均數(Mean),把所有飲品代號加總後除以門市總數即可得最具代表性的數值": "Mean 需要可加性,類別代號相加沒有實質意義(拿鐵+美式÷2 ≠ 卡布)",
+          "中位數(Median),將飲品依名稱字母排序後取居中位置之品項作為代表類別值": "Median 需要可排序的尺度,名目資料沒有大小順序",
+          "幾何平均數(Geometric Mean),適用所有非負資料且能反映乘法關係下之中心趨勢": "幾何平均僅對正數連續變數有意義,類別資料無從定義"
+        },
+        "hook": "尺度決定可用統計量:名目→眾數;順序→眾數+中位數;區間/比率→三者皆可"
+      },
+      "misconceptions": ["把類別代號當數值計算 Mean", "誤以為 Median 對名目資料也適用"],
+      "related_node_ids": ["n_L22101_002"],
+      "tags": ["集中趨勢", "眾數", "尺度"]
+    },
+    {
+      "id": "q_n9_002",
+      "knowledge_code": "L22101",
+      "node_id": "n_L22101_001",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某科技公司公佈全體員工年薪『平均 180 萬』但『中位數僅 95 萬』。對於這份薪資分佈,下列敘述何者最為正確?",
+      "options": [
+        {"text": "分佈呈現右偏(正偏),少數高階主管的高薪將平均拉高,但對中位數影響有限", "is_correct": true},
+        {"text": "分佈呈現左偏(負偏),代表多數員工薪資高於中位數,僅少數低薪人員拉低平均值", "is_correct": false, "trap_type": "左右偏判斷顛倒"},
+        {"text": "分佈為標準常態分佈,因兩數值差距 85 萬皆落在合理樣本誤差範圍內可視為對稱", "is_correct": false, "trap_type": "差距 85 萬不可能是對稱"},
+        {"text": "分佈為雙峰分佈,基層與高階兩極化造成 Mean 與 Median 出現明顯落差現象", "is_correct": false, "trap_type": "雙峰非必然解釋"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Mean > Median 是右偏分佈的典型訊號:少數極大值(高階薪資)把平均往右拉,中位數因穩健性不太被影響",
+        "wrong": {
+          "分佈呈現左偏(負偏),代表多數員工薪資高於中位數,僅少數低薪人員拉低平均值": "左偏會使 Mean < Median,與題目 Mean > Median 相反",
+          "分佈為標準常態分佈,因兩數值差距 85 萬皆落在合理樣本誤差範圍內可視為對稱": "常態分佈 Mean ≈ Median,不可能差到接近兩倍",
+          "分佈為雙峰分佈,基層與高階兩極化造成 Mean 與 Median 出現明顯落差現象": "雙峰可能存在但並非唯一解;單純 Mean > Median 直接判讀為右偏即可"
+        },
+        "hook": "右偏記法:Mean > Median > Mode,長尾在右把平均拉高"
+      },
+      "misconceptions": ["把右偏左偏記反", "看到 Mean ≠ Median 就假設雙峰"],
+      "related_node_ids": ["n_L22101_003"],
+      "tags": ["集中趨勢", "偏態", "薪資"]
+    },
+    {
+      "id": "q_n9_003",
+      "knowledge_code": "L22101",
+      "node_id": "n_L22101_001",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某物流公司分析全國配送時間,資料含 1% 因災害導致的極長配送時間(數天)離群值。資料科學家欲選擇對離群值穩健的集中趨勢與縮放方法,下列組合最為適當?",
+      "options": [
+        {"text": "以中位數作為代表並採用 RobustScaler(分母為 IQR),可避免極端值嚴重扭曲縮放結果", "is_correct": true},
+        {"text": "以算術平均數作為代表並採用 StandardScaler(μ/σ),能充分利用全部資料點訊息進行縮放", "is_correct": false, "trap_type": "極端值會扭曲 Mean 與 Std"},
+        {"text": "以幾何平均數作為代表並採用 MinMaxScaler(Max-Min),可同時兼顧乘法效應與線性縮放", "is_correct": false, "trap_type": "MinMax 對極端值極敏感"},
+        {"text": "以調和平均數作為代表並採用 LogScaler(對數轉換),適合處理任何含正負值的數據", "is_correct": false, "trap_type": "Log 不接受非正數"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "中位數與 IQR 同為穩健統計量,對 1% 極端離群不敏感;RobustScaler = (x - median) / IQR 能避免少數災害延誤把整體分佈尺度拉壞",
+        "wrong": {
+          "以算術平均數作為代表並採用 StandardScaler(μ/σ),能充分利用全部資料點訊息進行縮放": "Mean 與 Std 都會被極端值嚴重抬高,縮放後正常資料會被擠到極小區間",
+          "以幾何平均數作為代表並採用 MinMaxScaler(Max-Min),可同時兼顧乘法效應與線性縮放": "MinMax 以 Max-Min 為分母,單一極端值就會讓多數資料壓縮在接近 0 處",
+          "以調和平均數作為代表並採用 LogScaler(對數轉換),適合處理任何含正負值的數據": "Log 對 0 或負值未定義;且調和平均在此情境並無典型應用理由"
+        },
+        "hook": "穩健配對:median ↔ IQR ↔ RobustScaler;敏感配對:mean ↔ std ↔ StandardScaler"
+      },
+      "misconceptions": ["以為 StandardScaler 對任何分佈都安全", "誤把 MinMax 視為穩健縮放"],
+      "related_node_ids": ["n_L22101_002", "n_L22101_005"]
+    },
+    {
+      "id": "q_n9_004",
+      "knowledge_code": "L22101",
+      "node_id": "n_L22101_002",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某半導體廠商統計晶圓厚度量測值的離散程度時,以 (n-1) 而非 n 作為樣本變異數的分母。此設計的主要統計目的為下列何者?",
+      "options": [
+        {"text": "進行自由度修正(Bessel's correction),作為母體變異數的不偏估計量", "is_correct": true},
+        {"text": "讓樣本變異數的計算與標準差的計算結果剛好相等,便於後續比較不同單位的離散程度", "is_correct": false, "trap_type": "Std = √Var,不會相等"},
+        {"text": "將變異數的數值控制在 0 到 1 之間,使其能作為機率值參與貝氏定理的後續計算", "is_correct": false, "trap_type": "變異數不在 [0,1] 之內"},
+        {"text": "避免分母為零的數學除法錯誤,因為某些情境下樣本數 n 可能會恰好等於零", "is_correct": false, "trap_type": "n=0 為極端例外非主因"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "樣本變異數除以 (n-1) 為 Bessel's correction,用以修正因『以樣本均值取代未知母體均值』造成的低估,讓樣本變異數成為母體變異數的不偏估計量",
+        "wrong": {
+          "讓樣本變異數的計算與標準差的計算結果剛好相等,便於後續比較不同單位的離散程度": "標準差 = √變異數,兩者數量級不同,不會因 (n-1) 而相等",
+          "將變異數的數值控制在 0 到 1 之間,使其能作為機率值參與貝氏定理的後續計算": "變異數可以任意大,無範圍限制,也不等同於機率",
+          "避免分母為零的數學除法錯誤,因為某些情境下樣本數 n 可能會恰好等於零": "n=0 時連樣本本身都不存在,變異數本來就無從計算"
+        },
+        "hook": "自由度 = n-1:因為均值已用掉 1 個自由度,剩下 n-1 個獨立偏差"
+      },
+      "misconceptions": ["把樣本變異數公式分母寫成 n", "誤以為 (n-1) 是為避免除以零"],
+      "related_node_ids": ["n_L22101_001"],
+      "tags": ["變異數", "自由度", "樣本"]
+    },
+    {
+      "id": "q_n9_005",
+      "knowledge_code": "L22101",
+      "node_id": "n_L22101_002",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某風電場感測器 99% 時間讀數穩定在 5.0~6.0 m/s,但每月偶有颱風造成短暫尖峰至 30 m/s。若要描述『多數時間下的離散程度』而不被罕見極端事件主導,下列何項離散指標最為適當?",
+      "options": [
+        {"text": "四分位距 IQR(Q3 - Q1),只看中間 50% 資料區間,對單側少量尖峰值具有穩健性", "is_correct": true},
+        {"text": "全距 Range(Max - Min),能直接反映最大與最小讀數差異,完整呈現所有變動幅度", "is_correct": false, "trap_type": "Range 完全被尖峰主導"},
+        {"text": "變異數 Variance(Σ(x-μ)²/n),平方項能充分放大平均差異提供穩定描述", "is_correct": false, "trap_type": "平方放大極端值影響"},
+        {"text": "標準差 Std(√Variance),與原始單位一致且能完整反映含尖峰之整體分佈", "is_correct": false, "trap_type": "Std 同樣會被尖峰拉大"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "IQR 只計算 Q1 與 Q3 之差,排除上下各 25% 端點,因此颱風尖峰幾乎不影響 IQR,正適合描述多數穩定時間的離散程度",
+        "wrong": {
+          "全距 Range(Max - Min),能直接反映最大與最小讀數差異,完整呈現所有變動幅度": "Range 由兩個極端值決定,1 次颱風尖峰就會把 Range 從 1 m/s 拉成 25 m/s",
+          "變異數 Variance(Σ(x-μ)²/n),平方項能充分放大平均差異提供穩定描述": "平方項把 30 m/s 的偏差放大成 600+,變異數會被尖峰嚴重撐高",
+          "標準差 Std(√Variance),與原始單位一致且能完整反映含尖峰之整體分佈": "Std = √Var,雖開根號縮放但仍被尖峰拉大,並非穩健量"
+        },
+        "hook": "穩健離散量首選 IQR;Range/Variance/Std 皆對極端值敏感"
+      },
+      "misconceptions": ["以為 Std 對所有資料都穩健", "把 Range 當作主要離散描述"],
+      "related_node_ids": ["n_L22101_004", "n_L22101_005"]
+    },
+    {
+      "id": "q_n9_006",
+      "knowledge_code": "L22101",
+      "node_id": "n_L22101_002",
+      "subject": 2,
+      "format": "calculation",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某零售連鎖店蒐集 5 家分店單日營業額(萬元)為 {x1}、{x2}、{x3}、{x4}、{x5}。請計算此 5 筆資料之『樣本變異數』(分母為 n-1,取小數第 2 位)為下列何者?",
+      "stem_variables": {
+        "case_a": {"x1": "10", "x2": "12", "x3": "14", "x4": "16", "x5": "18", "answer": "10.00", "wrong1": "8.00", "wrong2": "3.16", "wrong3": "14.00"},
+        "case_b": {"x1": "15", "x2": "18", "x3": "20", "x4": "22", "x5": "25", "answer": "14.50", "wrong1": "11.60", "wrong2": "3.81", "wrong3": "20.00"},
+        "case_c": {"x1": "5", "x2": "8", "x3": "11", "x4": "14", "x5": "17", "answer": "22.50", "wrong1": "18.00", "wrong2": "4.74", "wrong3": "11.00"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤用母體變異數公式(分母 n)"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "回傳標準差而非變異數"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤回傳平均數"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "先求 Mean = ({x1}+{x2}+{x3}+{x4}+{x5})/5,再求 Σ(xᵢ-Mean)² / (n-1) = Σ(xᵢ-Mean)² / 4 = {answer}",
+        "wrong": {
+          "{wrong1}": "此為以 n 為分母的母體變異數,樣本情境下會低估母體真實變異",
+          "{wrong2}": "此值為標準差(√變異數),題目要求的是變異數本身",
+          "{wrong3}": "此為 5 筆資料的平均數,並非離散程度量"
+        },
+        "hook": "樣本變異數分母為 n-1(Bessel's correction);Std = √Var 單位回到原始尺度"
+      },
+      "misconceptions": ["把樣本變異數分母寫成 n", "把標準差與變異數混淆"],
+      "related_node_ids": ["n_L22101_001"],
+      "tags": ["變異數", "計算", "樣本"]
+    },
+    {
+      "id": "q_n9_007",
+      "knowledge_code": "L22101",
+      "node_id": "n_L22101_003",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某電商分析平台日訂單金額分佈,大多數訂單金額落在 200~800 元,但少數團購大單可達數十萬元。此分佈最可能呈現下列哪一種偏態形態?",
+      "options": [
+        {"text": "右偏(正偏)分佈,長尾出現在右側,Skewness > 0 且 Mean > Median 為典型訊號", "is_correct": true},
+        {"text": "左偏(負偏)分佈,長尾出現在左側,Skewness < 0 且 Mean < Median 為主要訊號", "is_correct": false, "trap_type": "左右偏判反"},
+        {"text": "完全對稱分佈,Skewness 接近 0 且 Mean 與 Median 相等,符合常態的標準形態", "is_correct": false, "trap_type": "極端團購使其不對稱"},
+        {"text": "均勻分佈,各金額區間出現機率相等,Skewness 無明確方向且分佈呈水平形態", "is_correct": false, "trap_type": "並非各區段等頻"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "多數小額訂單集中在低值區間、少數團購大單拖出右側長尾,正是右偏(正偏)分佈的典型樣貌,Skewness > 0",
+        "wrong": {
+          "左偏(負偏)分佈,長尾出現在左側,Skewness < 0 且 Mean < Median 為主要訊號": "左偏應為多數高值、少數極低值,與題目相反",
+          "完全對稱分佈,Skewness 接近 0 且 Mean 與 Median 相等,符合常態的標準形態": "存在數十萬元團購大單,分佈絕不對稱",
+          "均勻分佈,各金額區間出現機率相等,Skewness 無明確方向且分佈呈水平形態": "200~800 元集中、超大訂單罕見,完全不均勻"
+        },
+        "hook": "口訣『偏在尾部』:長尾在右就是右偏,Mean 被尾巴拉高"
+      },
+      "misconceptions": ["誤把右偏的『右』當作高峰位置", "看到少數極端值就以為是雙峰"],
+      "related_node_ids": ["n_L22101_001"],
+      "tags": ["偏度", "右偏", "電商"]
+    },
+    {
+      "id": "q_n9_008",
+      "knowledge_code": "L22101",
+      "node_id": "n_L22101_003",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某避險基金分析股票日報酬率分佈,發現其超額峰度(Excess Kurtosis)約為 +4。下列敘述何者最能描述此分佈特徵與風險意涵?",
+      "options": [
+        {"text": "屬厚尾(Leptokurtic)分佈,極端報酬機率高於常態,以常態假設易低估尾端風險", "is_correct": true},
+        {"text": "屬薄尾(Platykurtic)分佈,極端報酬機率低於常態,可放心使用常態模型估計風險", "is_correct": false, "trap_type": "Excess > 0 為厚尾非薄尾"},
+        {"text": "屬完全對稱常態分佈,峰度恰等於 3 而超額峰度 0,風險評估直接套用常態公式即可", "is_correct": false, "trap_type": "超額峰度 +4 非常態"},
+        {"text": "屬雙峰分佈,有兩個明顯眾數,峰度的高值反映出存在兩個獨立的主要報酬模式", "is_correct": false, "trap_type": "雙峰非由 kurtosis 決定"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Kurtosis 標準常態為 3,超額峰度 = Kurtosis - 3。超額峰度 +4 屬厚尾(Leptokurtic),極端事件機率比常態高,VaR/CVaR 等以常態為基準的風險度量會嚴重低估尾端",
+        "wrong": {
+          "屬薄尾(Platykurtic)分佈,極端報酬機率低於常態,可放心使用常態模型估計風險": "薄尾為超額峰度 < 0,與 +4 相反",
+          "屬完全對稱常態分佈,峰度恰等於 3 而超額峰度 0,風險評估直接套用常態公式即可": "常態的超額峰度為 0,而非 +4",
+          "屬雙峰分佈,有兩個明顯眾數,峰度的高值反映出存在兩個獨立的主要報酬模式": "峰度衡量尾部厚薄而非眾數個數,雙峰需另以分佈視覺判讀"
+        },
+        "hook": "金融厚尾教訓:2008 金融海嘯顯示常態假設嚴重低估尾部風險"
+      },
+      "misconceptions": ["把厚尾誤為整體變異大", "把超額峰度 0 當作非常態"],
+      "related_node_ids": ["n_L22101_005"],
+      "tags": ["峰度", "厚尾", "金融"]
+    },
+    {
+      "id": "q_n9_009",
+      "knowledge_code": "L22101",
+      "node_id": "n_L22101_003",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某教育研究團隊發現學測某科原始分數呈現嚴重右偏(Skewness ≈ +2.5),欲在套入假設常態的線性回歸前先處理偏態。下列轉換方法何者最適合且風險最小?",
+      "options": [
+        {"text": "對原始分數取 log(x+1) 或 Box-Cox 轉換,可壓縮右側長尾使分佈接近常態", "is_correct": true},
+        {"text": "對原始分數直接取平方(x²),可放大高分區間的鑑別度並使分佈尾端較為集中", "is_correct": false, "trap_type": "平方會強化右偏"},
+        {"text": "對原始分數取倒數(1/x),可把長尾值映射到極小值並使分佈左右徹底對稱化", "is_correct": false, "trap_type": "倒數會反轉並產生左偏"},
+        {"text": "刪除所有高於平均加一倍標準差的高分樣本,讓殘餘樣本自然回到常態的對稱分佈狀態", "is_correct": false, "trap_type": "刪除真實資料破壞代表性"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "log 或 Box-Cox 是處理右偏資料的標準做法,壓縮右側長尾、放大左側低值間距,使分佈靠近常態;適合假設常態誤差的線性模型",
+        "wrong": {
+          "對原始分數直接取平方(x²),可放大高分區間的鑑別度並使分佈尾端較為集中": "平方會把大數變更大,反而加劇右偏",
+          "對原始分數取倒數(1/x),可把長尾值映射到極小值並使分佈左右徹底對稱化": "倒數會反轉分佈,可能變成左偏,且 x=0 未定義",
+          "刪除所有高於平均加一倍標準差的高分樣本,讓殘餘樣本自然回到常態的對稱分佈狀態": "刪除真實資料屬於 data snooping,會破壞母體代表性與後續推論效度"
+        },
+        "hook": "右偏 → log/Box-Cox『拉回常態』;左偏 → 平方/exp 反向處理"
+      },
+      "misconceptions": ["以平方處理右偏", "刪除高值樣本來假裝常態"],
+      "related_node_ids": ["n_L22101_001"],
+      "tags": ["偏態", "資料轉換", "log"]
+    },
+    {
+      "id": "q_n9_010",
+      "knowledge_code": "L22101",
+      "node_id": "n_L22101_004",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "在標準箱形圖(Boxplot)中,『盒中那條橫線』代表的統計量為下列何者?",
+      "options": [
+        {"text": "中位數(Median, Q2),亦即將資料由小到大排序後位於第 50 百分位的數值", "is_correct": true},
+        {"text": "算術平均數(Mean),即將所有觀測值加總後再除以樣本總數所得之中心數值", "is_correct": false, "trap_type": "常被誤認為 Mean"},
+        {"text": "眾數(Mode),即此份資料中出現次數最多的觀測值所對應之位置數值", "is_correct": false, "trap_type": "Mode 不在箱形圖標示"},
+        {"text": "全距中點((Max+Min)/2),即取最大值與最小值之算術平均所獲得之中央代表值", "is_correct": false, "trap_type": "為 mid-range,非標準項"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "標準箱形圖盒子中央橫線是中位數(Q2),不是平均數;盒子上下緣為 Q3 與 Q1,鬚為 1.5×IQR 內的最遠點",
+        "wrong": {
+          "算術平均數(Mean),即將所有觀測值加總後再除以樣本總數所得之中心數值": "Mean 在箱形圖中通常不畫,即便顯示也是另外用標記(如三角形)而非中央橫線",
+          "眾數(Mode),即此份資料中出現次數最多的觀測值所對應之位置數值": "Mode 不屬於五數彙整,標準箱形圖不顯示",
+          "全距中點((Max+Min)/2),即取最大值與最小值之算術平均所獲得之中央代表值": "全距中點對極端值敏感,非箱形圖標準元素"
+        },
+        "hook": "箱形圖五條線:Min(鬚下)、Q1、Median、Q3、Max(鬚上)"
+      },
+      "misconceptions": ["把箱內橫線當平均數", "把鬚當作真實 Min/Max"],
+      "related_node_ids": ["n_L22101_002"],
+      "tags": ["箱形圖", "中位數", "EDA"]
+    },
+    {
+      "id": "q_n9_011",
+      "knowledge_code": "L22101",
+      "node_id": "n_L22101_004",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某醫院觀察箱形圖時,發現某項血壓檢驗的盒中『中位線明顯靠近 Q1 (盒子下方)』。此圖最可能反映出該檢驗值的何種分佈特徵?",
+      "options": [
+        {"text": "右偏分佈,Q3 距 Median 比 Median 距 Q1 遠,代表中位數以上的資料較分散", "is_correct": true},
+        {"text": "左偏分佈,Q1 距 Median 比 Median 距 Q3 遠,代表中位數以下的資料較分散", "is_correct": false, "trap_type": "判反左右偏"},
+        {"text": "對稱分佈,Median 應理論上居中,但因樣本變異於是隨機落在盒底位置", "is_correct": false, "trap_type": "對稱時 Median 居中"},
+        {"text": "雙峰分佈,中位線靠近 Q1 暗示存在兩個獨立峰值並造成 Median 偏離盒中央", "is_correct": false, "trap_type": "雙峰需直方圖驗證"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Median 靠近 Q1 表示 Q3-Median 大於 Median-Q1,中位數以上(右側)資料較分散,對應右偏(Positive Skew)",
+        "wrong": {
+          "左偏分佈,Q1 距 Median 比 Median 距 Q3 遠,代表中位數以下的資料較分散": "左偏應為 Median 靠近 Q3(盒子上方),與題目相反",
+          "對稱分佈,Median 應理論上居中,但因樣本變異於是隨機落在盒底位置": "對稱分佈中位數理論上居於盒子中央,『明顯靠近 Q1』非隨機波動可解釋",
+          "雙峰分佈,中位線靠近 Q1 暗示存在兩個獨立峰值並造成 Median 偏離盒中央": "雙峰需配合直方圖或核密度圖判斷,單看 Median 位置不足以判定"
+        },
+        "hook": "Median 偏盒底 → 右偏;偏盒頂 → 左偏(因為長尾把另一側拉開)"
+      },
+      "misconceptions": ["把箱形圖的偏態方向判反", "看到 Median 偏移就立刻認定雙峰"],
+      "related_node_ids": ["n_L22101_003"],
+      "tags": ["箱形圖", "偏態", "醫療"]
+    },
+    {
+      "id": "q_n9_012",
+      "knowledge_code": "L22101",
+      "node_id": "n_L22101_004",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某政府公開資料部門需在同一張圖上比較全國 22 縣市『家戶月用電量』分佈,以快速找出離群縣市與分佈差異。下列視覺化選擇何者最為適當?",
+      "options": [
+        {"text": "並排箱形圖(Side-by-side Boxplot),可同時呈現各縣市中位數、IQR 與離群點", "is_correct": true},
+        {"text": "22 張直方圖以網格排列,每張圖各自設定 bin 寬度與 Y 軸刻度以利精細比對所有細節", "is_correct": false, "trap_type": "22 張直方圖難整體比對"},
+        {"text": "單一張圓餅圖,以 22 個扇形代表各縣市佔全國總用電比例,直接看出縣市分佈差異", "is_correct": false, "trap_type": "圓餅顯示比例非分佈"},
+        {"text": "單一張折線圖,X 軸為縣市名稱、Y 軸為月用電量,用折線連接展示分佈型態變化", "is_correct": false, "trap_type": "折線僅能畫一個代表值"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "並排箱形圖一次呈現多組分佈的五數彙整、IQR 與離群值,適合多組比較且版面緊湊,優於 22 張獨立直方圖",
+        "wrong": {
+          "22 張直方圖以網格排列,每張圖各自設定 bin 寬度與 Y 軸刻度以利精細比對所有細節": "各圖 bin/Y 軸不一致時根本無法跨圖比對,且版面冗長",
+          "單一張圓餅圖,以 22 個扇形代表各縣市佔全國總用電比例,直接看出縣市分佈差異": "圓餅僅顯示比例(總量分配),無法表達各縣市的分佈散度與離群",
+          "單一張折線圖,X 軸為縣市名稱、Y 軸為月用電量,用折線連接展示分佈型態變化": "折線只能呈現單一統計量,無法顯示散度與離群"
+        },
+        "hook": "多組分佈比較首選並排箱形圖;單組分佈細節用直方圖/密度圖"
+      },
+      "misconceptions": ["以為直方圖數量越多比較越清楚", "用圓餅圖表達分佈"],
+      "related_node_ids": ["n_L22101_005"],
+      "tags": ["箱形圖", "視覺化", "EDA"]
+    },
+    {
+      "id": "q_n9_013",
+      "knowledge_code": "L22101",
+      "node_id": "n_L22101_005",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "依 IQR 規則(1.5 倍法),當資料某值滿足下列何種條件時即被視為潛在離群值?",
+      "options": [
+        {"text": "x < Q1 - 1.5×IQR 或 x > Q3 + 1.5×IQR,其中 IQR = Q3 - Q1 為四分位距", "is_correct": true},
+        {"text": "x < Q1 - 3.0×IQR 或 x > Q3 + 3.0×IQR,其中 IQR = Q3 - Q1 為四分位距", "is_correct": false, "trap_type": "3 倍為極端離群非一般"},
+        {"text": "x < Mean - 2×Std 或 x > Mean + 2×Std,其中 Std 為樣本標準差兩倍", "is_correct": false, "trap_type": "為 Z-score |Z|>2 規則"},
+        {"text": "x < Median - 1.5×Std 或 x > Median + 1.5×Std,其中 Std 為樣本標準差", "is_correct": false, "trap_type": "混搭 Median 與 Std 非標準"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Tukey 提出之 1.5×IQR 規則:落在 [Q1 - 1.5×IQR, Q3 + 1.5×IQR] 區間外即視為潛在離群值,此即箱形圖鬚之依據",
+        "wrong": {
+          "x < Q1 - 3.0×IQR 或 x > Q3 + 3.0×IQR,其中 IQR = Q3 - Q1 為四分位距": "3.0×IQR 是『極端離群』(extreme outlier)判準,並非一般離群",
+          "x < Mean - 2×Std 或 x > Mean + 2×Std,其中 Std 為樣本標準差兩倍": "此為 Z-score 法 |Z|>2 的近似版本,並非 IQR 規則",
+          "x < Median - 1.5×Std 或 x > Median + 1.5×Std,其中 Std 為樣本標準差": "混合了 Median 與 Std,非任何標準離群判別規則"
+        },
+        "hook": "1.5×IQR 一般離群、3×IQR 極端離群;箱形圖鬚就是 1.5×IQR"
+      },
+      "misconceptions": ["把 1.5×IQR 寫成 3×IQR", "與 Z-score 規則混淆"],
+      "related_node_ids": ["n_L22101_004"],
+      "tags": ["離群值", "IQR", "規則"]
+    },
+    {
+      "id": "q_n9_014",
+      "knowledge_code": "L22101",
+      "node_id": "n_L22101_005",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某金融科技公司分析跨境匯款金額,資料呈現嚴重右偏與厚尾。下列何項描述最能說明『為何此情境應採 IQR 規則而非 Z-score 規則』偵測離群值?",
+      "options": [
+        {"text": "Z-score 規則假設近常態,厚尾下 σ 被尾部撐大,反而會低估真正的離群點數量", "is_correct": true},
+        {"text": "Z-score 規則需要資料為類別尺度才能計算,連續匯款金額無法套入此規則的公式", "is_correct": false, "trap_type": "Z-score 用於連續資料"},
+        {"text": "IQR 規則計算速度比 Z-score 規則快上千倍,故大數據情境下幾乎都會優先採用", "is_correct": false, "trap_type": "兩者複雜度同級"},
+        {"text": "IQR 規則可以同時偵測離群並做填補處理,Z-score 僅能標註離群無法直接填補", "is_correct": false, "trap_type": "兩者均只負責偵測"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "厚尾資料中極端值會把 σ(標準差)拉大,使 (x-μ)/σ 的分母變大、|Z| 被低估,導致原本應被標為離群的點落在 ±3 內。IQR 屬穩健統計,不受極端值影響",
+        "wrong": {
+          "Z-score 規則需要資料為類別尺度才能計算,連續匯款金額無法套入此規則的公式": "Z-score 正是用於連續數值資料,類別資料才不適用",
+          "IQR 規則計算速度比 Z-score 規則快上千倍,故大數據情境下幾乎都會優先採用": "兩者計算複雜度同級(皆 O(n) 或排序 O(n log n)),選擇依據是穩健性非速度",
+          "IQR 規則可以同時偵測離群並做填補處理,Z-score 僅能標註離群無法直接填補": "兩者皆只負責標註,填補(刪除/winsorize/imputation)是另一階段決策"
+        },
+        "hook": "厚尾/右偏 → 用 IQR;近常態 → Z-score 可用"
+      },
+      "misconceptions": ["以為 Z-score 對任何分佈都適用", "把離群偵測與填補混為一談"],
+      "related_node_ids": ["n_L22101_003"],
+      "tags": ["離群值", "Z-score", "厚尾"]
+    },
+    {
+      "id": "q_n9_015",
+      "knowledge_code": "L22101",
+      "node_id": "n_L22101_005",
+      "subject": 2,
+      "format": "calculation",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某製造業品管在生產線量測產品重量(克),已知此批資料 Q1 = {q1}、Q3 = {q3}。某筆量測值為 {x} 克,依 1.5×IQR 規則判斷,該值落於『上鬚(Q3 + 1.5×IQR)』之上限應為下列何者(取小數第 1 位)?",
+      "stem_variables": {
+        "case_a": {"q1": "10", "q3": "20", "x": "40", "answer": "35.0", "wrong1": "30.0", "wrong2": "45.0", "wrong3": "25.0"},
+        "case_b": {"q1": "50", "q3": "70", "x": "120", "answer": "100.0", "wrong1": "90.0", "wrong2": "110.0", "wrong3": "80.0"},
+        "case_c": {"q1": "100", "q3": "140", "x": "230", "answer": "200.0", "wrong1": "180.0", "wrong2": "220.0", "wrong3": "160.0"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤用 Q3 + IQR(漏 1.5 倍)"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤用 Q3 + 2×IQR"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤算 Q3 + 0.5×IQR"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "IQR = Q3 - Q1 = {q3} - {q1};上鬚上限 = Q3 + 1.5×IQR = {answer},超過此值即為潛在離群",
+        "wrong": {
+          "{wrong1}": "此為 Q3 + 1×IQR,漏乘 1.5 倍係數",
+          "{wrong2}": "此為 Q3 + 2×IQR,係數放大,易把真正離群漏判為正常",
+          "{wrong3}": "此為 Q3 + 0.5×IQR,係數過小,會把過多正常點誤判為離群"
+        },
+        "hook": "1.5×IQR 是 Tukey 慣例;3×IQR 才是極端離群判準"
+      },
+      "misconceptions": ["把 1.5 倍係數記錯", "忘記 IQR 要先算 Q3-Q1"],
+      "related_node_ids": ["n_L22101_004"],
+      "tags": ["離群值", "IQR", "計算"]
+    },
+    {
+      "id": "q_n9_016",
+      "knowledge_code": "L22101",
+      "node_id": "n_L22101_006",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "下列何項統計分析活動屬於『描述性統計』,而非『推論統計』的範疇?",
+      "options": [
+        {"text": "計算本月所有實際成交訂單的平均客單價為 380 元並繪製分佈直方圖加以呈現", "is_correct": true},
+        {"text": "以樣本平均推估全國消費者母體之平均客單價並建構 95% 信賴區間結果範圍", "is_correct": false, "trap_type": "信賴區間屬推論"},
+        {"text": "對新版頁面進行 A/B 測試並以 p-value 檢驗轉換率提升是否達統計上的顯著", "is_correct": false, "trap_type": "假設檢定屬推論"},
+        {"text": "用線性回歸估計母體中價格對需求量之關係並對斜率參數提出顯著性檢定", "is_correct": false, "trap_type": "係數推論屬推論統計"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "描述性統計只摘要『手上這份資料』,不外推母體;計算實際成交資料的平均並畫圖即為描述性",
+        "wrong": {
+          "以樣本平均推估全國消費者母體之平均客單價並建構 95% 信賴區間結果範圍": "信賴區間是『以樣本推估母體』的推論統計工具",
+          "對新版頁面進行 A/B 測試並以 p-value 檢驗轉換率提升是否達統計上的顯著": "p-value 與假設檢定屬於推論統計範疇",
+          "用線性回歸估計母體中價格對需求量之關係並對斜率參數提出顯著性檢定": "對回歸係數做顯著性檢定屬推論;若只算描述性回歸線無 p-value 才屬描述性"
+        },
+        "hook": "口訣『描述看現況、推論看母體/未來』:看到 CI 或 p-value 一定是推論"
+      },
+      "misconceptions": ["看到 Mean 就以為是推論統計", "對描述結果做顯著性檢定"],
+      "related_node_ids": ["n_L22101_001"],
+      "tags": ["描述", "推論", "分界"]
+    },
+    {
+      "id": "q_n9_017",
+      "knowledge_code": "L22101",
+      "node_id": "n_L22101_006",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某網路廣告平台對新版推薦演算法產出『點擊率提升 12%,p-value = 0.02』之分析結論。此陳述最能對應下列何種統計範疇與意涵?",
+      "options": [
+        {"text": "推論統計,在虛無假設下觀測到此結果的機率僅 2%,於常用 5% 顯著水準下視為顯著", "is_correct": true},
+        {"text": "描述性統計,12% 為樣本實際差異而 p-value 則是另一描述指標,兩者皆無推論意涵", "is_correct": false, "trap_type": "p-value 即推論工具"},
+        {"text": "敘述性視覺化,p-value 在此僅是 0~1 的描述指標,並未涉及任何假設檢定與決策", "is_correct": false, "trap_type": "p-value 為檢定統計"},
+        {"text": "資料品質指標,p-value 越低代表資料品質越高,故 0.02 表示資料完整且無缺失", "is_correct": false, "trap_type": "與資料品質無關"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "p-value 為推論統計的核心:在虛無假設(無差異)下,觀測到 ≥ 此差異的機率;p < 0.05 通常拒絕虛無,認定提升統計顯著",
+        "wrong": {
+          "描述性統計,12% 為樣本實際差異而 p-value 則是另一描述指標,兩者皆無推論意涵": "p-value 本身就是檢定母體假設的工具,屬推論統計而非描述",
+          "敘述性視覺化,p-value 在此僅是 0~1 的描述指標,並未涉及任何假設檢定與決策": "0~1 之間並不代表描述指標;p-value 來自假設檢定下的條件機率",
+          "資料品質指標,p-value 越低代表資料品質越高,故 0.02 表示資料完整且無缺失": "p-value 與資料品質(缺值/重複)無關,屬不同維度概念"
+        },
+        "hook": "p-value = 虛無假設下觀測極端結果的條件機率;低 → 拒絕虛無"
+      },
+      "misconceptions": ["把 p-value 當資料品質指標", "把樣本差異等同母體差異"],
+      "related_node_ids": ["n_L22101_001"],
+      "tags": ["推論", "p-value", "AB測試"]
+    },
+    {
+      "id": "q_n9_018",
+      "knowledge_code": "L22101",
+      "node_id": "n_L22101_007",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "在資料品質快照(Data Profiling)階段,通常會優先檢視下列哪一組描述性指標?",
+      "options": [
+        {"text": "缺值率、重複率、欄位型別分佈、目標類別平衡度等四項基本資料品質摘要指標", "is_correct": true},
+        {"text": "模型 ROC 曲線、AUC、F1 分數、Precision-Recall 等四項模型評估常用指標", "is_correct": false, "trap_type": "為模型評估非 profiling"},
+        {"text": "梯度範數、學習率、損失收斂速度、權重初始化分佈等四項模型訓練的監控指標", "is_correct": false, "trap_type": "為訓練監控非 profiling"},
+        {"text": "CPU 使用率、GPU 利用率、記憶體佔用、磁碟 IO 量等四項系統運算層級指標", "is_correct": false, "trap_type": "為系統指標非資料品質"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Data Profiling 首要任務是把手上資料的『缺值』『重複』『型別』『類別平衡度』摘要清楚,作為後續清理與特徵工程的決策依據",
+        "wrong": {
+          "模型 ROC 曲線、AUC、F1 分數、Precision-Recall 等四項模型評估常用指標": "這些是模型表現指標,在 profiling 之後的『模型評估』階段才使用",
+          "梯度範數、學習率、損失收斂速度、權重初始化分佈等四項模型訓練的監控指標": "這些屬訓練監控,與資料品質摘要不同層級",
+          "CPU 使用率、GPU 利用率、記憶體佔用、磁碟 IO 量等四項系統運算層級指標": "這些是系統運維指標,與資料本身內容無關"
+        },
+        "hook": "Profiling 四件套:缺值 / 重複 / 型別 / 平衡度;pandas-profiling 一鍵產出"
+      },
+      "misconceptions": ["把模型評估指標當資料品質", "略過 profiling 直接建模"],
+      "related_node_ids": ["n_L22101_005"],
+      "tags": ["資料品質", "Profiling", "EDA"]
+    },
+    {
+      "id": "q_n9_019",
+      "knowledge_code": "L22101",
+      "node_id": "n_L22101_007",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某銀行詐欺偵測資料集,正:負樣本比約為 1:999(極度不平衡)。若直接以 Accuracy 作為模型主要評估指標,下列風險何者最為關鍵?",
+      "options": [
+        {"text": "模型只要全部預測『非詐欺』即可獲得約 99.9% Accuracy,但真詐欺一案也抓不到", "is_correct": true},
+        {"text": "Accuracy 計算公式分母為樣本數,在大資料集下會因數值溢位而導致準確率失真", "is_correct": false, "trap_type": "溢位非常見問題"},
+        {"text": "Accuracy 對所有模型都偏高估計,需要除以類別數做正規化後才能真實反映表現", "is_correct": false, "trap_type": "杜撰正規化"},
+        {"text": "Accuracy 與資料分佈無關,因此在任何情境下都能可靠衡量分類器的真實能力", "is_correct": false, "trap_type": "與分佈高度相關"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "極度不平衡資料下,『全猜多數類』即可獲得近 99.9% Accuracy 但毫無實用價值;應改用 F1、Precision-Recall AUC 等對少數類敏感的指標",
+        "wrong": {
+          "Accuracy 計算公式分母為樣本數,在大資料集下會因數值溢位而導致準確率失真": "Accuracy 為 0~1 比例值,不會溢位",
+          "Accuracy 對所有模型都偏高估計,需要除以類別數做正規化後才能真實反映表現": "並無此正規化做法,問題本質在於不平衡資料下 Accuracy 失真",
+          "Accuracy 與資料分佈無關,因此在任何情境下都能可靠衡量分類器的真實能力": "Accuracy 對類別不平衡極為敏感,正是本題核心"
+        },
+        "hook": "不平衡資料 → F1、PR-AUC、Recall;Accuracy 會被多數類綁架"
+      },
+      "misconceptions": ["不平衡資料下硬用 Accuracy", "以為高 Accuracy = 好模型"],
+      "related_node_ids": ["n_L22101_005"],
+      "tags": ["不平衡", "Accuracy", "F1"]
+    },
+    {
+      "id": "q_n9_020",
+      "knowledge_code": "L22101",
+      "node_id": "n_L22101_007",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某醫院病歷系統匯入後,profiling 發現某欄位『血糖值』缺值率高達 35%。資料工程師欲決定處理策略,下列哪一個做法最為穩健且兼顧資訊保留?",
+      "options": [
+        {"text": "評估該欄位是否整欄刪除,或新增『is_missing』標記欄並對保留欄做合理填補", "is_correct": true},
+        {"text": "直接刪除所有含此欄位缺值的列,讓剩餘資料完全乾淨後再進入後續建模流程", "is_correct": false, "trap_type": "整列刪除丟失大量資訊"},
+        {"text": "把所有缺值直接以數值 0 填補,使該欄位無缺值即可,直接套入後續任何模型", "is_correct": false, "trap_type": "0 填補造成系統性偏差"},
+        {"text": "略過缺值不處理,讓模型自動學習如何處理,任何主流套件皆能自動容忍缺值", "is_correct": false, "trap_type": "多數模型不容忍 NaN"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "缺值率 35% 屬高,直接整列刪會丟失大量列資訊,直接整欄刪又失去可能訊號。較穩健的折衷是:評估該欄重要性,若保留則建『is_missing』標記欄(讓模型學缺值機制)並對剩餘值做合理填補",
+        "wrong": {
+          "直接刪除所有含此欄位缺值的列,讓剩餘資料完全乾淨後再進入後續建模流程": "35% 缺值意味會刪掉超過 1/3 的列,嚴重損失訓練資料且可能引入選擇偏差",
+          "把所有缺值直接以數值 0 填補,使該欄位無缺值即可,直接套入後續任何模型": "0 與真實血糖值意涵不同,會被模型誤學成『低血糖』訊號造成系統性偏差",
+          "略過缺值不處理,讓模型自動學習如何處理,任何主流套件皆能自動容忍缺值": "多數線性模型、SVM、KNN 皆不接受 NaN;少數樹模型(如 LightGBM)雖容忍但仍建議顯式處理"
+        },
+        "hook": "缺值處理三層思考:1)機制(MCAR/MAR/MNAR) 2)欄位重要性 3)is_missing 標記 + 合理填補"
+      },
+      "misconceptions": ["缺值一律用 0 填補", "缺值列一律直接刪除"],
+      "related_node_ids": ["n_L22101_005"],
+      "tags": ["缺值", "is_missing", "醫療"]
+    }
+  ]
+}

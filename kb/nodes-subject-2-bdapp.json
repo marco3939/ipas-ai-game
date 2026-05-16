@@ -1,0 +1,553 @@
+{
+  "version": "1.0",
+  "subject": 2,
+  "schema_version": "1.0-iron-rule",
+  "iron_rule_compliance": "rule #6 — only L22301/L22302/L22303 nodes; v2-released codes limited to concept-level",
+  "last_updated": "2026-05-16",
+  "scope_alignment": "L22301-L22303 為 v2 解禁的概念層編碼,避免工具操作細節",
+  "batches_processed": [
+    {"batch": "subject-2-expansion-G3-bdapp", "date": "2026-05-16", "scope": "L22301/L22302/L22303 each 6 nodes (18 total)"}
+  ],
+  "nodes": [
+    {
+      "node_id": "n_L22301_001",
+      "knowledge_code": "L22301",
+      "title": "大數據取樣策略(Simple Random / Stratified / Cluster / Reservoir)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch5.1 大數據統計應用"}],
+      "summary": "資料規模超出單機處理時須以取樣縮減運算量。簡單隨機取樣最直觀但對稀有類別易遺漏;分層取樣保留各類別比例;群集取樣以區塊抽以節省 I/O;reservoir 取樣用於串流資料未知總量場景",
+      "key_points": [
+        "Simple Random:每筆等機率,計算簡單但對稀有類別覆蓋差",
+        "Stratified:依類別比例分層抽,保留分佈,適合不平衡資料",
+        "Cluster:整群抽取,節省存取成本但群內相似度高會降低代表性",
+        "Reservoir:串流場景每筆以 k/n 機率替換,單次掃過即得 k 筆均勻樣本"
+      ],
+      "common_misconceptions": [
+        "誤以為樣本越大一定越具代表性(若取樣設計偏誤,大樣本反而放大偏差)",
+        "把分層取樣和群集取樣搞混(前者保比例,後者整群)",
+        "對串流資料硬套簡單隨機取樣(需先知道總量 N)"
+      ],
+      "explanation_hooks": [
+        "Big data 的取樣不是『偷懶』,是『成本決策』",
+        "Reservoir 取樣是 streaming 場景的標配,Twitter / Kafka 都用",
+        "不平衡資料 → stratified 取樣保留正類比例"
+      ],
+      "variation_seeds": [
+        {"context": "詐欺資料正:負 = 1:9999,要從 100 億筆抽 100 萬,適合策略?", "answer": "Stratified(保留稀有類別比例)"},
+        {"context": "Kafka 串流即時抽取 1000 筆代表性樣本,適合策略?", "answer": "Reservoir 取樣"}
+      ],
+      "related_node_ids": ["n_L22301_005"]
+    },
+    {
+      "node_id": "n_L22301_002",
+      "knowledge_code": "L22301",
+      "title": "近似計算概念(HyperLogLog / Bloom Filter / Count-Min Sketch)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch5.1 大數據統計應用"}],
+      "summary": "大數據場景下精確計算耗費過大記憶體,改用機率資料結構以小空間換取可控誤差。HyperLogLog 估算去重數量、Bloom Filter 判斷集合成員、Count-Min Sketch 估算頻率",
+      "key_points": [
+        "HyperLogLog:估算唯一值數量(cardinality),記憶體 KB 級別即可處理億級 distinct count",
+        "Bloom Filter:測試元素是否屬於集合,可能 false positive 但絕無 false negative",
+        "Count-Min Sketch:估算元素出現次數,用於 heavy hitter / top-k",
+        "共同特性:以可控誤差換取極小空間 / 單次掃描完成"
+      ],
+      "common_misconceptions": [
+        "誤以為 Bloom Filter 會出現 false negative(實際只會 false positive)",
+        "把 HyperLogLog 用於精確計數(它本質是估算)",
+        "誤以為近似演算法精度低不可用(實際誤差可控且可調)"
+      ],
+      "explanation_hooks": [
+        "Redis HyperLogLog 12KB 即可估億級 distinct",
+        "瀏覽器 URL 黑名單常用 Bloom Filter 快速攔截",
+        "近似演算法是『大數據時代不得不用』的工程妥協"
+      ],
+      "variation_seeds": [
+        {"context": "估算某 App 月活躍唯一使用者數(億級),選哪種?", "answer": "HyperLogLog"},
+        {"context": "Bloom Filter 回報『不在集合』可信嗎?", "answer": "可信(無 false negative)"}
+      ],
+      "related_node_ids": ["n_L22301_001"]
+    },
+    {
+      "node_id": "n_L22301_003",
+      "knowledge_code": "L22301",
+      "title": "分散式統計挑戰(Partial Stats 合併 / 數值穩定性)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch5.1 大數據統計應用"}],
+      "summary": "分散式運算下每節點算 partial 統計再合併,須注意可結合性(associativity)與數值穩定性。Mean / Variance 須以 Welford 或 pairwise 算法避免浮點累積誤差;Median 不具可結合性需特殊近似",
+      "key_points": [
+        "Sum / Count 可直接相加合併(具結合性)",
+        "Mean = sum/count 須以 partial sum + partial count 合併,不可直接平均",
+        "Variance 須用 Welford / parallel algorithm 合併避免浮點災難",
+        "Median / Quantile 不具結合性,須用 t-digest / GK sketch 近似"
+      ],
+      "common_misconceptions": [
+        "把各節點平均直接平均(忽略各節點樣本數差異)",
+        "誤以為所有統計量都能 partial 合併",
+        "忽視 naïve variance 公式 Σx² - (Σx)²/n 的 catastrophic cancellation 問題"
+      ],
+      "explanation_hooks": [
+        "Spark / Flink 內建 aggregate 函式都用 Welford 算 variance",
+        "中位數無法 partial 合併 → t-digest / Q-digest 是大數據標配",
+        "MapReduce 的 reducer 設計必先問『此統計量可結合嗎?』"
+      ],
+      "variation_seeds": [
+        {"context": "三節點各 100、200、500 筆資料,要算整體平均最正確做法?", "answer": "彙總 sum 與 count 再相除,不可三個平均直接平均"},
+        {"context": "為何不能用 Σx² - (Σx)²/n 算大數據 variance?", "answer": "浮點累積誤差(catastrophic cancellation)"}
+      ],
+      "related_node_ids": ["n_L22301_002"]
+    },
+    {
+      "node_id": "n_L22301_004",
+      "knowledge_code": "L22301",
+      "title": "大數據相關性 vs 因果性(資料規模放大假關聯風險)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch5.1 大數據統計應用"}],
+      "summary": "資料規模越大,任意兩變數出現統計顯著相關的機率越高(spurious correlation),但相關不等於因果。大數據時代更需以實驗設計(A/B test)或因果推論方法確認因果",
+      "key_points": [
+        "相關性僅描述變數共變,因果性需排除共同原因 / 反向因果 / 巧合",
+        "資料維度越多,任意兩欄位『偶然』高相關機率呈組合爆炸",
+        "確認因果三條件:時序、共變、排除其他解釋",
+        "大數據常見手法:A/B test、自然實驗、傾向分數匹配、工具變數"
+      ],
+      "common_misconceptions": [
+        "看到高相關就宣告因果關係",
+        "誤以為大數據自動消除偏誤(實際反而放大假關聯)",
+        "把相關係數 0.9 等同因果強度"
+      ],
+      "explanation_hooks": [
+        "經典笑話:冰淇淋銷量與溺水案高度相關 → 共同因『夏天』",
+        "Tyler Vigen 的 Spurious Correlations 網站收錄上千假關聯",
+        "Big data → many features → 隨機高相關不可避免"
+      ],
+      "variation_seeds": [
+        {"context": "電商發現買尿布的客戶也常買啤酒,可宣稱『買尿布導致買啤酒』嗎?", "answer": "不可,只能說相關;需實驗確認因果"},
+        {"context": "資料維度從 10 增至 10000,假關聯出現機率?", "answer": "大幅增加"}
+      ],
+      "related_node_ids": ["n_L22301_005", "n_L22301_006"]
+    },
+    {
+      "node_id": "n_L22301_005",
+      "knowledge_code": "L22301",
+      "title": "大數據樣本偏差(Survivorship / Selection / Availability Bias)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch5.1 大數據統計應用"}],
+      "summary": "大數據雖大但常非『母體』,而是有偏的便利樣本。Survivorship bias(只看存活者)、Selection bias(取樣機制偏向某群)、Availability bias(只取得容易蒐集的資料)是三大常見偏誤",
+      "key_points": [
+        "Survivorship:只看『存活下來』的樣本,忽略已退出者(如基金績效調查)",
+        "Selection:取樣機制系統性偏向特定群體(如網路問卷只訪到網路使用者)",
+        "Availability:只用容易蒐集的資料(如只看公開推文忽略私訊)",
+        "大數據 ≠ 全母體,『N=All』是工程理想而非事實"
+      ],
+      "common_misconceptions": [
+        "誤以為大數據必然涵蓋全母體",
+        "把『便利樣本』當『隨機樣本』分析",
+        "看到 10 億筆資料就跳過樣本代表性檢驗"
+      ],
+      "explanation_hooks": [
+        "二戰飛機補彈孔經典案例:看返航飛機 → 該補沒彈孔處(已被擊落者無法回來)",
+        "Google Flu Trends 失敗:搜尋資料的取樣偏差導致過度估算",
+        "『大數據能解決所有偏誤』是迷思,設計仍是關鍵"
+      ],
+      "variation_seeds": [
+        {"context": "只調查現存基金的歷史報酬,屬何種偏差?", "answer": "Survivorship bias(倒閉基金被排除)"},
+        {"context": "用 Twitter 推文分析全民情緒,主要偏差?", "answer": "Selection bias(僅 Twitter 使用者)"}
+      ],
+      "related_node_ids": ["n_L22301_001", "n_L22301_004"]
+    },
+    {
+      "node_id": "n_L22301_006",
+      "knowledge_code": "L22301",
+      "title": "大數據時代假設檢定的 p-value 問題",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch5.1 大數據統計應用"}],
+      "summary": "大樣本下幾乎任何微小差異都會達到 p < 0.05,統計顯著失去實務意義。應改看效應量(effect size)、置信區間寬度與業務顯著性,而非單看 p-value",
+      "key_points": [
+        "p-value 受樣本數放大:N 越大,同樣效應量越易顯著",
+        "統計顯著 ≠ 實務顯著(差 0.01% 也可能 p<0.001)",
+        "效應量(Cohen's d / 相對提升率)才是業務決策依據",
+        "大數據建議報告:效應量 + 信賴區間 + 業務意義,而非僅 p-value"
+      ],
+      "common_misconceptions": [
+        "看到 p<0.05 就宣告『有意義的差異』",
+        "誤以為 p-value 越小效應越大(實際 p 受 N 影響極大)",
+        "忽略多重比較校正(Bonferroni / FDR)導致偽陽性爆炸"
+      ],
+      "explanation_hooks": [
+        "電商 A/B 測試 N=百萬,點擊率差 0.01% 即顯著但根本不值得改",
+        "ASA 2016 聲明:不要僅用 p<0.05 做結論",
+        "大數據時代回歸『效應量為王』"
+      ],
+      "variation_seeds": [
+        {"context": "A/B test N=500萬,版本 B 比 A 高 0.02%,p<0.001,該採用嗎?", "answer": "需評估效應量與成本,單看 p-value 易誤判"},
+        {"context": "為何大樣本下 p-value 失效?", "answer": "標準誤縮小,微小差異也顯著"}
+      ],
+      "related_node_ids": ["n_L22301_004"]
+    },
+    {
+      "node_id": "n_L22302_001",
+      "knowledge_code": "L22302",
+      "title": "分析四階層(Descriptive / Diagnostic / Predictive / Prescriptive)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch5.2 大數據分析方法"}],
+      "summary": "Gartner 分析成熟度四階梯:Descriptive(發生了什麼)→ Diagnostic(為什麼發生)→ Predictive(將來會發生什麼)→ Prescriptive(該怎麼做)。價值與技術複雜度同步遞增",
+      "key_points": [
+        "Descriptive:報表 / 儀表板 / 摘要統計,回答『What happened』",
+        "Diagnostic:鑽取 / 切片 / 相關性分析,回答『Why did it happen』",
+        "Predictive:機器學習 / 時序預測,回答『What will happen』",
+        "Prescriptive:最佳化 / 模擬 / 決策建議,回答『What should we do』"
+      ],
+      "common_misconceptions": [
+        "把所有 BI 都當作 Predictive(實際大多停在 Descriptive)",
+        "誤以為 Prescriptive 就是 Predictive 加結論(實際需最佳化引擎)",
+        "略過 Diagnostic 直接從 Descriptive 跳 Predictive"
+      ],
+      "explanation_hooks": [
+        "業績下滑 → Descriptive 看金額、Diagnostic 找原因、Predictive 預估下季、Prescriptive 建議促銷組合",
+        "Prescriptive 通常需結合 Linear Programming 或 Reinforcement Learning",
+        "多數企業卡在 Descriptive→Diagnostic 之間"
+      ],
+      "variation_seeds": [
+        {"context": "報表顯示『本月營收下降 12%』屬哪一階?", "answer": "Descriptive"},
+        {"context": "系統建議『折扣 15% 可最大化利潤』屬哪一階?", "answer": "Prescriptive"}
+      ],
+      "related_node_ids": ["n_L22302_002", "n_L22302_006"]
+    },
+    {
+      "node_id": "n_L22302_002",
+      "knowledge_code": "L22302",
+      "title": "關聯規則(Apriori / FP-Growth 概念,Support / Confidence / Lift)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch5.2 大數據分析方法"}],
+      "summary": "關聯規則用於購物籃分析,找出『買 A 也買 B』模式。三大指標:Support(項集出現比例)、Confidence(條件機率)、Lift(相對基準提升度)。Apriori 用逐層擴展,FP-Growth 用前綴樹避免候選集爆炸",
+      "key_points": [
+        "Support(A∪B) = (A∪B 同時出現的交易數) / 總交易數",
+        "Confidence(A→B) = Support(A∪B) / Support(A)",
+        "Lift(A→B) = Confidence(A→B) / Support(B);> 1 表示正相關",
+        "Apriori 須多輪掃描;FP-Growth 用 FP-tree 一次建構,適合大資料"
+      ],
+      "common_misconceptions": [
+        "把 Confidence 高等同因果(實際只是條件機率)",
+        "忽略 Lift 只看 Confidence(Confidence 高可能僅因 B 本身常見)",
+        "誤以為 Lift = 1 表示無關(實際是基準值,需 > 1 才有提升)"
+      ],
+      "explanation_hooks": [
+        "啤酒 + 尿布的傳奇故事即關聯規則經典應用",
+        "Lift > 1:推薦此組合有實質提升;Lift = 1:獨立;< 1:負相關",
+        "FP-Growth 是 Spark MLlib 推薦的演算法(因記憶體效率)"
+      ],
+      "variation_seeds": [
+        {"context": "1000 筆交易,A 出現 200 次,B 出現 100 次,A∪B 出現 80 次,Confidence(A→B)?", "answer": "80/200 = 0.4"},
+        {"context": "Lift 用來解決什麼問題?", "answer": "排除『B 本身常見導致 Confidence 虛高』"}
+      ],
+      "related_node_ids": ["n_L22302_001", "n_L22302_003"]
+    },
+    {
+      "node_id": "n_L22302_003",
+      "knowledge_code": "L22302",
+      "title": "序列分析(序列模式 / 馬可夫鏈概念)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch5.2 大數據分析方法"}],
+      "summary": "序列分析考量事件先後順序,而非關聯規則的無序集合。序列模式挖掘(如 PrefixSpan)找出『A 後常接 B』模式;馬可夫鏈以『下一狀態僅依當前狀態』假設建模狀態轉移",
+      "key_points": [
+        "序列模式 vs 關聯規則:前者有序、後者無序",
+        "馬可夫性質(Markov property):下一狀態僅依當前狀態,與更早歷史無關",
+        "狀態轉移矩陣描述各狀態 → 下一狀態的機率",
+        "典型應用:網頁瀏覽路徑、客戶旅程、疾病進程"
+      ],
+      "common_misconceptions": [
+        "把序列分析和關聯規則混為一談(忽略順序)",
+        "誤以為馬可夫鏈一定可預測(混亂系統的轉移矩陣仍不穩定)",
+        "把高階馬可夫(依過去 k 步)當成基本馬可夫"
+      ],
+      "explanation_hooks": [
+        "客戶 A→B→C 與 C→B→A 在關聯規則中相同,序列分析中不同",
+        "Google PageRank 早期版本利用馬可夫鏈穩態分佈概念",
+        "簡單馬可夫鏈狀態數少時可手算穩態"
+      ],
+      "variation_seeds": [
+        {"context": "分析網頁瀏覽路徑『首頁→商品頁→購物車』使用?", "answer": "序列模式 / 馬可夫鏈"},
+        {"context": "馬可夫性質的核心假設?", "answer": "下一狀態僅依當前狀態"}
+      ],
+      "related_node_ids": ["n_L22302_002", "n_L22302_006"]
+    },
+    {
+      "node_id": "n_L22302_004",
+      "knowledge_code": "L22302",
+      "title": "文字探勘流程(分詞 / 詞頻 / 主題模型概念)",
+      "category": "flow",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch5.2 大數據分析方法"}],
+      "summary": "文字探勘標準流程:文本清理 → 分詞(Tokenization)→ 停用詞移除 → 詞幹 / 詞形還原 → 向量化(BoW / TF-IDF)→ 下游應用(分類 / 聚類 / 主題模型)。主題模型(如 LDA 概念)從文件集合中挖出潛在主題",
+      "key_points": [
+        "TF(詞頻):詞 t 在文件 d 中出現次數",
+        "IDF(逆文件頻率):log(N / 含 t 的文件數),稀有詞權重高",
+        "TF-IDF = TF × IDF,平衡『常見』與『稀有』",
+        "主題模型概念:每篇文件是多主題混合,每主題是多詞混合"
+      ],
+      "common_misconceptions": [
+        "誤以為 TF 越高一定越重要(常見停用詞 TF 也高)",
+        "略過停用詞移除導致『的 / 是 / 在』權重最高",
+        "把 LDA 主題標籤當監督學習標籤(實際是無監督潛在主題)"
+      ],
+      "explanation_hooks": [
+        "停用詞清單視語言而定,中文分詞挑戰大於英文",
+        "TF-IDF 是搜尋引擎排序的古典基線",
+        "主題模型輸出『主題編號 + 高機率詞』需人工命名主題意義"
+      ],
+      "variation_seeds": [
+        {"context": "為何不直接用 TF 而要乘 IDF?", "answer": "壓低常見詞權重,凸顯區辨性高的稀有詞"},
+        {"context": "主題模型是監督還是非監督?", "answer": "非監督(從文件中挖潛在主題)"}
+      ],
+      "related_node_ids": ["n_L22302_005"]
+    },
+    {
+      "node_id": "n_L22302_005",
+      "knowledge_code": "L22302",
+      "title": "社群網路分析(節點 / 邊 / 中心性指標概念)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch5.2 大數據分析方法"}],
+      "summary": "社群網路分析以圖(graph)建模:節點(個體)與邊(關係)。中心性指標衡量節點重要性:Degree(連結數)、Betweenness(經過該節點的最短路徑數)、Closeness(到其他節點平均距離)、Eigenvector(連到重要節點才算重要)",
+      "key_points": [
+        "Degree centrality:單純看鄰居數量,簡單但忽略全局",
+        "Betweenness centrality:衡量『資訊咽喉』,高者為橋接者",
+        "Closeness centrality:衡量『傳播效率』,高者可快速觸及全網",
+        "Eigenvector centrality:遞迴定義,連到重要節點才重要(PageRank 同源)"
+      ],
+      "common_misconceptions": [
+        "誤以為 Degree 最高即最有影響力(忽略結構性位置)",
+        "把 Betweenness 與 Closeness 混為一談",
+        "認為四種中心性結果一致(實際常排序不同)"
+      ],
+      "explanation_hooks": [
+        "公司關鍵人物常 Betweenness 高(資訊橋樑),Degree 不一定最高",
+        "社群影響者行銷常以 Eigenvector / PageRank 衡量",
+        "圖分析框架:NetworkX / GraphX / Neo4j(概念認知,不考 API)"
+      ],
+      "variation_seeds": [
+        {"context": "找出『資訊橋樑型』關鍵人物用哪個指標?", "answer": "Betweenness centrality"},
+        {"context": "Degree 與 Eigenvector 差異核心?", "answer": "前者看數量,後者看鄰居的重要性"}
+      ],
+      "related_node_ids": ["n_L22302_004"]
+    },
+    {
+      "node_id": "n_L22302_006",
+      "knowledge_code": "L22302",
+      "title": "時間序列分析(趨勢 / 季節性 / 殘差分解概念)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch5.2 大數據分析方法"}],
+      "summary": "時間序列可分解為三成分:趨勢(Trend)+ 季節性(Seasonality)+ 殘差(Residual)。加法模型 Y = T + S + R 適用季節振幅穩定;乘法模型 Y = T × S × R 適用季節振幅隨趨勢放大",
+      "key_points": [
+        "Trend:長期方向(上升 / 下降 / 平穩)",
+        "Seasonality:固定週期的規律波動(日 / 週 / 年)",
+        "Residual:扣除趨勢與季節後剩餘的隨機 / 異常波動",
+        "加法 vs 乘法:看季節振幅是否與水平成比例"
+      ],
+      "common_misconceptions": [
+        "把週期性(cycle,非固定週期)與季節性混為一談",
+        "對振幅放大資料硬套加法模型",
+        "忽略殘差檢查(白噪音假設不成立時模型不可信)"
+      ],
+      "explanation_hooks": [
+        "聖誕節零售額 → 明顯年週期季節性",
+        "經濟景氣循環 → cycle(週期不固定),不算 seasonality",
+        "STL / classical decomposition 是常見分解工具的概念基礎"
+      ],
+      "variation_seeds": [
+        {"context": "電商每月銷售『隨整體業績放大而擴大波動』適用哪種模型?", "answer": "乘法模型"},
+        {"context": "Trend 與 Cycle 差異?", "answer": "Trend 為長期方向,Cycle 為週期不固定的長波動"}
+      ],
+      "related_node_ids": ["n_L22302_001", "n_L22302_003"]
+    },
+    {
+      "node_id": "n_L22303_001",
+      "knowledge_code": "L22303",
+      "title": "圖型選型 — 比較關係(條形圖 / 雷達圖 / 點圖)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch5.3 數據可視化"}],
+      "summary": "比較不同類別 / 對象的數值時:條形圖(bar)為標準首選,項目多用水平條;雷達圖適合多維度同尺度比較(< 8 維);點圖(Cleveland dot plot)在類別多時比條形更清爽",
+      "key_points": [
+        "條形圖:類別不多 / 數值差距明顯時首選,長度易感知",
+        "雷達圖:多維度( 3-7 維 )同尺度比較,如能力雷達",
+        "雷達圖維度過多會難以閱讀,且面積會誇大差異",
+        "點圖(Cleveland):類別多時比條形圖節省墨水"
+      ],
+      "common_misconceptions": [
+        "用圓餅圖比較類別大小(角度比長度難判讀)",
+        "雷達圖維度單位不一致仍硬畫(誤導)",
+        "條形圖 Y 軸不從 0 開始(誇大差距)"
+      ],
+      "explanation_hooks": [
+        "Cleveland 視覺感知排序:位置 > 長度 > 角度 > 面積",
+        "雷達圖『面積看起來大』不代表總分高(維度順序影響面積)",
+        "條形 Y 軸截斷是誤導視覺化的經典手法"
+      ],
+      "variation_seeds": [
+        {"context": "比較 5 名員工三項能力(同尺度 0-100),適合圖型?", "answer": "雷達圖"},
+        {"context": "比較 50 個城市人口(差距大),適合圖型?", "answer": "水平條形圖或點圖"}
+      ],
+      "related_node_ids": ["n_L22303_002", "n_L22303_005"]
+    },
+    {
+      "node_id": "n_L22303_002",
+      "knowledge_code": "L22303",
+      "title": "圖型選型 — 分佈(直方圖 / 箱形圖 / 密度圖 / 小提琴圖)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch5.3 數據可視化"}],
+      "summary": "檢視單變數分佈:直方圖看形狀但組距敏感;密度圖平滑但平滑參數敏感;箱形圖摘要五數簡潔;小提琴圖結合箱形與密度,適合多組分佈比較",
+      "key_points": [
+        "直方圖(Histogram):分組計數,組距(bin width)影響結論",
+        "密度圖(KDE):平滑連續曲線,bandwidth 過小成鋸齒、過大過平",
+        "箱形圖(Boxplot):五數彙整 + 離群點,適合多組比較",
+        "小提琴圖(Violin):密度 + 箱形,看到雙峰等複雜形態"
+      ],
+      "common_misconceptions": [
+        "用直方圖時組距任意而忽略結論隨組距改變",
+        "箱形圖無法呈現雙峰(boxplot 看不出多峰)",
+        "把密度圖 Y 軸當機率(實際為密度,積分為 1)"
+      ],
+      "explanation_hooks": [
+        "雙峰分佈用 boxplot 看不出 → 改用 violin / density",
+        "Sturges / Freedman-Diaconis 是常見組距建議",
+        "比較多組分佈先用 boxplot,複雜形態升級為 violin"
+      ],
+      "variation_seeds": [
+        {"context": "比較 5 個門市每日來客數分佈,首選圖型?", "answer": "箱形圖或小提琴圖"},
+        {"context": "懷疑資料是雙峰,boxplot 看得出來嗎?", "answer": "看不出,需用直方圖 / density / violin"}
+      ],
+      "related_node_ids": ["n_L22303_001", "n_L22303_005"]
+    },
+    {
+      "node_id": "n_L22303_003",
+      "knowledge_code": "L22303",
+      "title": "圖型選型 — 組成關係(堆疊條形 / 樹狀圖 / 桑基圖)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch5.3 數據可視化"}],
+      "summary": "呈現『整體與部分』關係:堆疊條形比較類別內組成 + 跨類別總量;百分比堆疊比較組成比例(犧牲總量);樹狀圖(treemap)用面積呈現多層級組成;桑基圖呈現流量分配",
+      "key_points": [
+        "堆疊條形:看總量與組成,但內部段落起點不對齊難比較",
+        "百分比堆疊:每條總和 100%,專注比例對比",
+        "Treemap:多層級階層 + 面積比例,適合分類預算 / 市佔",
+        "Sankey:來源 → 去向流量分配,寬度代表量"
+      ],
+      "common_misconceptions": [
+        "用圓餅圖呈現 10+ 類別(視覺擁擠)",
+        "堆疊條形比較『中段』類別(起點不對齊難判讀)",
+        "把 Treemap 誤用於數值比較(面積判讀不如長度)"
+      ],
+      "explanation_hooks": [
+        "圓餅圖建議 ≤ 5 類,超過改用條形或 treemap",
+        "Treemap 適合『階層 + 數量』雙重資訊",
+        "Sankey 經典應用:能源流動圖、用戶轉化漏斗"
+      ],
+      "variation_seeds": [
+        {"context": "呈現公司 50 個部門預算占比,適合圖型?", "answer": "Treemap"},
+        {"context": "呈現用戶從頁面 A 流向 B/C/D 的數量,適合圖型?", "answer": "Sankey 桑基圖"}
+      ],
+      "related_node_ids": ["n_L22303_001", "n_L22303_004"]
+    },
+    {
+      "node_id": "n_L22303_004",
+      "knowledge_code": "L22303",
+      "title": "圖型選型 — 流向與關聯(熱圖 / 散佈矩陣 / 弦圖)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch5.3 數據可視化"}],
+      "summary": "呈現變數間關係:散佈圖看兩變數;散佈矩陣(pair plot)看多變數兩兩;熱圖看矩陣 / 相關係數;弦圖(chord)呈現多對多關係",
+      "key_points": [
+        "散佈圖:兩數值變數的關係(正/負/無相關 / 群聚 / 離群)",
+        "散佈矩陣:多變數兩兩散佈圖矩陣,EDA 高效工具",
+        "熱圖:用顏色強度呈現矩陣值,常見於相關係數矩陣",
+        "弦圖:節點繞圓環擺,弦寬代表關係強度,適合多對多流向"
+      ],
+      "common_misconceptions": [
+        "對類別資料硬畫散佈圖(應用 jitter 或 boxplot)",
+        "熱圖配色不對稱(發散資料應用 diverging palette)",
+        "把熱圖直接當相關係數(熱圖泛指矩陣視覺化)"
+      ],
+      "explanation_hooks": [
+        "EDA 第一張圖:小型資料用散佈矩陣一覽相關",
+        "相關係數熱圖配色:[-1, 1] 用紅白藍 diverging,中心 0 為白",
+        "弦圖適合『航線、貿易、轉移』等多對多場景"
+      ],
+      "variation_seeds": [
+        {"context": "20 個變數兩兩相關性,首選圖型?", "answer": "相關係數熱圖"},
+        {"context": "全球 30 國貿易流量,首選圖型?", "answer": "弦圖 chord diagram"}
+      ],
+      "related_node_ids": ["n_L22303_003", "n_L22303_005"]
+    },
+    {
+      "node_id": "n_L22303_005",
+      "knowledge_code": "L22303",
+      "title": "誤導視覺化七大手法",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch5.3 數據可視化"}],
+      "summary": "常見誤導手法:1) 截斷 Y 軸誇大差距 2) 3D 餅圖扭曲角度 3) 操弄類別順序 4) 雙 Y 軸製造假相關 5) 不一致比例尺 6) 選擇性時間範圍(cherry-pick)7) 用面積但標長度",
+      "key_points": [
+        "截斷 Y 軸:Y 不從 0 開始 → 5% 差距看起來像 5 倍",
+        "3D 餅圖:前景切片因透視看起來大於實際",
+        "操弄類別順序:依故事需要排列而非邏輯排列",
+        "雙 Y 軸:兩條曲線比例尺不同卻畫一起製造假相關"
+      ],
+      "common_misconceptions": [
+        "誤以為 3D 圖『比較專業』(實際扭曲視覺感知)",
+        "認為截斷 Y 軸是『放大看細節』而非誤導",
+        "雙 Y 軸視為展示兩變數標準做法(實際應分開或正規化)"
+      ],
+      "explanation_hooks": [
+        "Edward Tufte『Lie Factor』:視覺差距 / 數據差距,應趨近 1",
+        "Fox News 截斷 Y 軸案例是統計教科書常見反例",
+        "雙 Y 軸最易誤導:兩條毫無相關曲線可被『調整刻度』看似同步"
+      ],
+      "variation_seeds": [
+        {"context": "為何避免 3D 餅圖?", "answer": "透視扭曲角度,前景切片視覺放大"},
+        {"context": "雙 Y 軸最大問題?", "answer": "可任意調整比例尺製造假相關"}
+      ],
+      "related_node_ids": ["n_L22303_001", "n_L22303_006"]
+    },
+    {
+      "node_id": "n_L22303_006",
+      "knowledge_code": "L22303",
+      "title": "儀表板資訊架構(KPI 卡 → 趨勢 → 下鑽 三層)",
+      "category": "flow",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch5.3 數據可視化"}],
+      "summary": "有效儀表板採『倒金字塔』資訊架構:頂層 KPI 卡片快速回答『現況如何』、中層趨勢圖看『變化』、底層明細表 / 篩選器供『下鑽探索』。遵循 Schneiderman『Overview first, zoom & filter, details on demand』",
+      "key_points": [
+        "Top:KPI 大數字 + 與目標 / 上期對比",
+        "Middle:時序趨勢 / 分群比較圖",
+        "Bottom:明細表 / 篩選器 / 鑽取入口",
+        "Schneiderman 真言:Overview → Zoom & Filter → Details on demand"
+      ],
+      "common_misconceptions": [
+        "首頁塞滿 20+ 圖表(無重點)",
+        "把所有細節擺最上方而 KPI 在底部",
+        "缺少篩選器迫使每次都看全量"
+      ],
+      "explanation_hooks": [
+        "高層主管 5 秒看頂層 KPI 即可掌握全局",
+        "好儀表板像新聞:標題、摘要、細節三層遞進",
+        "色彩使用節制:KPI 用顏色強調異常,主圖保持中性"
+      ],
+      "variation_seeds": [
+        {"context": "Schneiderman 視覺化真言三步驟?", "answer": "Overview / Zoom & Filter / Details on Demand"},
+        {"context": "儀表板頂層該放?", "answer": "KPI 大數字與目標對比"}
+      ],
+      "related_node_ids": ["n_L22303_005"]
+    }
+  ]
+}

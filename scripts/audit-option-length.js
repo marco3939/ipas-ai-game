@@ -22,6 +22,11 @@ const FILES = [
   'questions-batch-n6-ml-core.json',
   'questions-batch-n7-dl.json',
   'questions-batch-n8-eval-gov.json',
+  'questions-batch-n9-subject2.json',
+  'questions-batch-n10-L22102.json', 'questions-batch-n11-L22103.json',
+  'questions-batch-n12-L22201.json', 'questions-batch-n13-L22202.json', 'questions-batch-n14-L22203.json',
+  'questions-batch-n15-L22301.json', 'questions-batch-n16-L22302.json', 'questions-batch-n17-L22303.json',
+  'questions-batch-n18-L22401.json', 'questions-batch-n19-L22402.json', 'questions-batch-n20-L22403.json', 'questions-batch-n21-L22404.json',
   'questions-confusion-matrix.json',
   'questions-mode8-trace.json',
 ];

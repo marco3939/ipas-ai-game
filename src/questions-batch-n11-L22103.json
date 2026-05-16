@@ -1,0 +1,613 @@
+{
+  "version": "1.0",
+  "schema_version": "iron-rule-1+2+6",
+  "generated_at": "2026-05-16",
+  "batch": "N11 — 科二大數據 L22103 假設檢定與統計推論",
+  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "iron_rule_compliance": {
+    "rule_1": "every question has explanation.correct + explanation.wrong (verbatim wrong-opt keys) + explanation.hook + misconceptions",
+    "rule_2": "shuffle_options=true on every item; 2 calculation items carry stem_variables 3-case with distinct answers",
+    "rule_3": "all stems are original cross-industry scenarios (醫療/金融/電商/教育/能源/物流/製造/農業/運輸), no industry > 6/20",
+    "rule_4": "option length ratio correct/avg(wrong) ∈ [0.85, 1.20]; longest≠correct on ≥ 13 items; no leak words",
+    "rule_5": "knowledge_code = L22103; node_id ∈ {n_L22103_001..006}; 禁用主題完全迴避(DP-SGD/SHAP/LoRA/Cohen Kappa 公式皆未出現)",
+    "rule_6": "科目隔離 — 本檔僅 L22103 內容,related_node_ids 只指向 n_L22103_*,不跨 L21/L23 科;只新建本檔不改任何既有檔案"
+  },
+  "distribution": {
+    "L22103_count": 20,
+    "by_node": {"n_L22103_001": 3, "n_L22103_002": 4, "n_L22103_003": 4, "n_L22103_004": 3, "n_L22103_005": 3, "n_L22103_006": 3},
+    "by_format": {"single_choice_text": 15, "single_choice_scenario": 3, "calculation": 2},
+    "by_difficulty": {"easy": 5, "medium": 11, "hard": 4}
+  },
+  "questions": [
+    {
+      "id": "q_n11_001",
+      "knowledge_code": "L22103",
+      "node_id": "n_L22103_001",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某新藥廠想證明新降血壓藥優於現有藥物。依照假設檢定五步驟,研究者應該如何設定虛無假設 H0?",
+      "options": [
+        {"text": "H0:新藥與現有藥物效果無差異(無效應),研究者需要蒐集足夠證據才能拒絕此保守陳述", "is_correct": true},
+        {"text": "H0:新藥優於現有藥物,因為這是研究者真正想證明的結論應放在虛無假設位置", "is_correct": false, "trap_type": "把研究目標當 H0"},
+        {"text": "H0:新藥可能優於、等於或劣於現有藥物,涵蓋所有可能情境以避免遺漏任何結果", "is_correct": false, "trap_type": "H0 不可包含 H1"},
+        {"text": "H0:新藥療效顯著高於現有藥物且 p-value 必小於 0.05,結合門檻條件以加強嚴謹性", "is_correct": false, "trap_type": "把決策規則塞入 H0"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "假設檢定採『無罪推定』:H0 為『無效應 / 無差異』的保守陳述,研究者要證明的『新藥有效』放在 H1。只有當資料證據夠強(p < α)才能拒絕 H0",
+        "wrong": {
+          "H0:新藥優於現有藥物,因為這是研究者真正想證明的結論應放在虛無假設位置": "研究者想證明的應設為 H1,不是 H0;H0 永遠是反面的保守陳述",
+          "H0:新藥可能優於、等於或劣於現有藥物,涵蓋所有可能情境以避免遺漏任何結果": "H0 與 H1 必須互斥且窮盡,不能讓 H0 涵蓋 H1 的範圍",
+          "H0:新藥療效顯著高於現有藥物且 p-value 必小於 0.05,結合門檻條件以加強嚴謹性": "α 與決策規則是步驟 2、5,不屬於 H0 的內容"
+        },
+        "hook": "口訣『虛對顯統 p 決』:H0 設保守反面(被告無罪),H1 才是研究目標"
+      },
+      "misconceptions": ["把想證明的結論寫成 H0", "在 H0 中夾帶決策規則或 α"],
+      "related_node_ids": ["n_L22103_002"],
+      "tags": ["假設檢定", "H0", "藥廠"]
+    },
+    {
+      "id": "q_n11_002",
+      "knowledge_code": "L22103",
+      "node_id": "n_L22103_001",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某 A/B 測試平台研究員看到資料後,發現 p = 0.06,於是把原本設定的 α = 0.05 改為 α = 0.10 以宣告結果顯著。此作法違反假設檢定哪一項原則?",
+      "options": [
+        {"text": "α 必須在看資料前事先訂定,事後依結果調整門檻屬於 p-hacking 將膨脹真實型一錯誤", "is_correct": true},
+        {"text": "α 必須小於 0.05 才符合學術慣例,任何高於此門檻的水準設定皆不被科學社群接受", "is_correct": false, "trap_type": "α 慣例非鐵則"},
+        {"text": "α 與 p-value 應該完全相等才能拒絕 H0,兩者落差超過 0.01 就應該重新蒐集樣本", "is_correct": false, "trap_type": "決策規則錯解"},
+        {"text": "α 必須由樣本數 n 反推計算所得,若 n 過小則應自動將 α 提高以維持檢定力 Power", "is_correct": false, "trap_type": "α 與 n 關係錯誤"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "α 為型一錯誤上限,必須在看到資料前事先訂好。看到 p 後再回頭調整 α(或挑選對自己有利的子集)稱為 p-hacking,會讓實際的偽陽性率遠超過名目 α",
+        "wrong": {
+          "α 必須小於 0.05 才符合學術慣例,任何高於此門檻的水準設定皆不被科學社群接受": "α 0.01 / 0.05 / 0.10 都有人用,依領域而定;違規處不在數值大小而在事後調整",
+          "α 與 p-value 應該完全相等才能拒絕 H0,兩者落差超過 0.01 就應該重新蒐集樣本": "拒絕條件是 p < α,不需相等;也不該因 p 接近 α 就重抽樣",
+          "α 必須由樣本數 n 反推計算所得,若 n 過小則應自動將 α 提高以維持檢定力 Power": "α 與 n 不是反推關係;提高 n 是同時改善 α、β 的途徑"
+        },
+        "hook": "α 先訂後算 — 看到 p 才改 α 等於把『偽陽性上限』偷偷放寬"
+      },
+      "misconceptions": ["事後調整 α 來宣告顯著", "把 α 與 p 解讀為應該相等"],
+      "related_node_ids": ["n_L22103_002", "n_L22103_003"],
+      "tags": ["假設檢定", "p-hacking", "α"]
+    },
+    {
+      "id": "q_n11_003",
+      "knowledge_code": "L22103",
+      "node_id": "n_L22103_001",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某物流公司比較新舊路線規劃演算法平均配送時間是否有差異,經檢定算出 p = 0.32,α 設為 0.05。下列何者為最正確且嚴謹的結論敘述?",
+      "options": [
+        {"text": "在 α = 0.05 下不拒絕 H0,僅代表現有資料證據不足以宣稱有差異,並非證明兩演算法相等", "is_correct": true},
+        {"text": "接受 H0,可正式宣告新舊兩演算法的平均配送時間在母體層次完全相同,結案不需再驗", "is_correct": false, "trap_type": "把不拒絕誤講成接受 H0"},
+        {"text": "p 過大表示樣本量不足,必須將 α 提高至 0.4 以上後重新計算才能取得顯著差異結論", "is_correct": false, "trap_type": "事後改 α"},
+        {"text": "p = 0.32 等同新舊演算法相等的機率為 32%,因此可有 68% 把握宣告兩者存在實質差異", "is_correct": false, "trap_type": "p 解讀錯誤"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "假設檢定結論只有兩種:『拒絕 H0』或『不拒絕 H0』,沒有『接受 H0』。p > α 只代表證據不足以拒絕,不能反過來證明 H0 為真",
+        "wrong": {
+          "接受 H0,可正式宣告新舊兩演算法的平均配送時間在母體層次完全相同,結案不需再驗": "『不拒絕』不等於『接受』— 缺乏證據反對 ≠ 證明 H0 為真",
+          "p 過大表示樣本量不足,必須將 α 提高至 0.4 以上後重新計算才能取得顯著差異結論": "α 不能因看到 p 後再調整,且 α=0.4 在實務上幾乎無人採用",
+          "p = 0.32 等同新舊演算法相等的機率為 32%,因此可有 68% 把握宣告兩者存在實質差異": "p 不是『H0 為真的機率』,是『假設 H0 為真時觀察到當前或更極端資料的機率』"
+        },
+        "hook": "結論用詞固定:『拒絕 H0』或『不拒絕 H0』,絕不說『接受 H0』"
+      },
+      "misconceptions": ["把不拒絕 H0 講成接受 H0", "把 p 當作 H0 為真的機率"],
+      "related_node_ids": ["n_L22103_003"],
+      "tags": ["假設檢定", "結論", "物流"]
+    },
+    {
+      "id": "q_n11_004",
+      "knowledge_code": "L22103",
+      "node_id": "n_L22103_002",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某保全公司部署 AI 入侵偵測系統,H0 為『無入侵發生』。若系統把『實際沒有入侵』的場景判定為『有入侵』而觸發警報,此種錯誤屬於下列何種型態?",
+      "options": [
+        {"text": "型一錯誤(α),H0 為真卻被拒絕(偽陽性),對應警報誤響擾民與保全人力浪費的成本", "is_correct": true},
+        {"text": "型二錯誤(β),H0 為假卻沒能拒絕(偽陰性),對應真實入侵發生時系統靜默漏報", "is_correct": false, "trap_type": "α/β 角色顛倒"},
+        {"text": "檢定力錯誤(1-β),代表系統無法偵測真實效應,需要提高樣本數 n 才能補強", "is_correct": false, "trap_type": "Power 並非錯誤型態"},
+        {"text": "顯著水準錯誤(α 設定值),代表閾值設得過於寬鬆造成決策邊界失準需重新校正", "is_correct": false, "trap_type": "α 是門檻不是錯誤"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "型一錯誤 = H0 為真卻拒絕,在『無入侵 vs 警報』場景中即偽陽性(false alarm)。代價是擾民與資源浪費",
+        "wrong": {
+          "型二錯誤(β),H0 為假卻沒能拒絕(偽陰性),對應真實入侵發生時系統靜默漏報": "偽陰性是漏掉真實入侵,題目敘述是反過來的『無事誤響』,屬偽陽性",
+          "檢定力錯誤(1-β),代表系統無法偵測真實效應,需要提高樣本數 n 才能補強": "Power = 1-β 是檢出真實效應的能力,並非錯誤型態的名稱",
+          "顯著水準錯誤(α 設定值),代表閾值設得過於寬鬆造成決策邊界失準需重新校正": "α 是事先設定的門檻,本身不是錯誤型態"
+        },
+        "hook": "口訣『真假拒不拒』:H0 真 + 拒 = α(偽陽性);H0 假 + 不拒 = β(偽陰性)"
+      },
+      "misconceptions": ["把 α 與 β 互相搞反", "誤把 Power 當錯誤型態"],
+      "related_node_ids": ["n_L22103_001"],
+      "tags": ["型一錯誤", "偽陽性", "保全"]
+    },
+    {
+      "id": "q_n11_005",
+      "knowledge_code": "L22103",
+      "node_id": "n_L22103_002",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某醫療影像 AI 用於癌症篩檢,H0 為『無癌』。研究團隊擔心錯把真實癌症患者判為無癌(漏診)。若想降低此種錯誤的機率,下列調整方向最為直接且正確?",
+      "options": [
+        {"text": "提高樣本數 n 並適度放寬 α,可同時提升 Power(=1-β)而降低漏診的型二錯誤率", "is_correct": true},
+        {"text": "降低 α 至 0.001 並維持 n 不變,可同步壓縮型一與型二錯誤至最小且不需付出代價", "is_correct": false, "trap_type": "α↓ 會使 β↑"},
+        {"text": "把 H0 與 H1 互換並改設『有癌』為 H0,即可把漏診從型二錯誤改為型一錯誤而解決", "is_correct": false, "trap_type": "改 H0 不解決根本問題"},
+        {"text": "增加重複檢定的次數,只要其中一次顯著就視為陽性,可降低漏診概率而不影響整體 α", "is_correct": false, "trap_type": "多重檢定膨脹 α"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "漏診 = H0 假(有癌)卻不拒絕 = 型二錯誤(β)。提高 n 是同時降 α、β 的少數方法;適度放寬 α 也會直接降 β。Power = 1-β,正是『真有癌時能驗出』的能力",
+        "wrong": {
+          "降低 α 至 0.001 並維持 n 不變,可同步壓縮型一與型二錯誤至最小且不需付出代價": "其他條件不變時 α↓ 會讓 β↑,是權衡關係;不可能同時都最小",
+          "把 H0 與 H1 互換並改設『有癌』為 H0,即可把漏診從型二錯誤改為型一錯誤而解決": "改名稱不改本質,真實漏診風險不會因為換 H0 而消失",
+          "增加重複檢定的次數,只要其中一次顯著就視為陽性,可降低漏診概率而不影響整體 α": "多重檢定不校正會使整體 α(FWER)膨脹,違反假設檢定原則"
+        },
+        "hook": "提高 n 是 α、β 的『免費午餐』;α 與 β 是權衡 — 想降漏診先想 n"
+      },
+      "misconceptions": ["以為 α 與 β 可同時無條件下降", "誤把 Power 當作模型準確率"],
+      "related_node_ids": ["n_L22103_006"],
+      "tags": ["型二錯誤", "Power", "醫療"]
+    },
+    {
+      "id": "q_n11_006",
+      "knowledge_code": "L22103",
+      "node_id": "n_L22103_002",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某金融風控團隊設計信用卡盜刷偵測檢定,設定 α = 0.05、β = 0.20。下列關於 α、β、Power 與檢定設計的敘述,何者最為正確?",
+      "options": [
+        {"text": "Power = 1 − β = 0.80,代表真有盜刷時系統 80% 機率偵測出,α + β 不必為 1", "is_correct": true},
+        {"text": "Power = 1 − α = 0.95,代表系統整體準確率為 95% 且型一錯誤已涵蓋型二錯誤的計算", "is_correct": false, "trap_type": "Power 公式錯誤"},
+        {"text": "α + β = 1 為機率公理必然成立,因此設定 α = 0.05 後 β 必為 0.95 已無調整空間", "is_correct": false, "trap_type": "α+β 加總迷思"},
+        {"text": "α 與 β 是同一機率分配下的互補事件,只要 α 確定後 β 不需再單獨評估與設計", "is_correct": false, "trap_type": "α/β 互補錯誤"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "α 與 β 是兩個不同條件下的條件機率(分別在 H0 真與 H0 假之下),不互補也不必加總為 1。Power = 1 − β,1 − 0.20 = 0.80 是實務常見門檻",
+        "wrong": {
+          "Power = 1 − α = 0.95,代表系統整體準確率為 95% 且型一錯誤已涵蓋型二錯誤的計算": "Power 的定義是 1 − β 不是 1 − α;也與『整體準確率』無關",
+          "α + β = 1 為機率公理必然成立,因此設定 α = 0.05 後 β 必為 0.95 已無調整空間": "α 與 β 分屬不同條件機率,無加總為 1 的限制",
+          "α 與 β 是同一機率分配下的互補事件,只要 α 確定後 β 不需再單獨評估與設計": "兩者來自 H0 真 / H0 假兩個不同分配,必須各自評估"
+        },
+        "hook": "Power = 1 − β(不是 1 − α);α 與 β 是兩條件機率,不加總為 1"
+      },
+      "misconceptions": ["把 Power 寫成 1 − α", "以為 α + β = 1"],
+      "related_node_ids": ["n_L22103_001"],
+      "tags": ["Power", "α", "β"]
+    },
+    {
+      "id": "q_n11_007",
+      "knowledge_code": "L22103",
+      "node_id": "n_L22103_002",
+      "subject": 2,
+      "format": "scenario",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某無人機巡檢系統檢定『輸電線是否有異常』,H0 為『無異常』。工程主管表示『漏判一條真實異常會造成停電』,因此希望大幅提高 Power。下列方案組合何者最能兼顧降低 β、控制 α、避免後續決策偏誤?",
+      "options": [
+        {"text": "增加樣本(更多巡檢影像)以同時降低 α 與 β,並維持 α 在事先約定的水準不在事後變動", "is_correct": true},
+        {"text": "把 α 改為事後依據 p-value 結果動態調整,讓任何 β 都能被名目顯著結果自動覆蓋", "is_correct": false, "trap_type": "事後改 α"},
+        {"text": "改設 H0 為『有異常』可避免漏判風險,因為新的 H0 被拒絕時等同確認無異常已發生", "is_correct": false, "trap_type": "改 H0 不降實際漏判"},
+        {"text": "把多個檢定結果合併取 OR 邏輯,只要任一檢定顯著就觸發警報以追求最大 Power", "is_correct": false, "trap_type": "多重檢定膨脹 α"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "提高 n 是同時降低 α、β(即提高 Power)的根本方法,且維持 α 在事先約定水準。這方案兼顧型一控制與型二降低,並符合 p-hacking 防制",
+        "wrong": {
+          "把 α 改為事後依據 p-value 結果動態調整,讓任何 β 都能被名目顯著結果自動覆蓋": "事後動態調 α 屬 p-hacking,違反假設檢定基本原則",
+          "改設 H0 為『有異常』可避免漏判風險,因為新的 H0 被拒絕時等同確認無異常已發生": "改 H0 標籤不改變真實的漏判機率,等於迴避而非解決問題",
+          "把多個檢定結果合併取 OR 邏輯,只要任一檢定顯著就觸發警報以追求最大 Power": "多檢定不校正會讓 FWER(整體型一錯誤)迅速膨脹"
+        },
+        "hook": "想同時降 α、β:加 n;事先訂 α 後不再回調"
+      },
+      "misconceptions": ["以為事後改 α 是降 β 的捷徑", "以為改 H0 標籤可降漏判"],
+      "related_node_ids": ["n_L22103_006"],
+      "tags": ["Power", "情境", "無人機"]
+    },
+    {
+      "id": "q_n11_008",
+      "knowledge_code": "L22103",
+      "node_id": "n_L22103_003",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某電商平台 A/B 測試比較推薦演算法點擊率差異,得到 p = 0.02。下列何者為對 p-value 最正確的解讀?",
+      "options": [
+        {"text": "若 H0(兩演算法點擊率無差異)為真,觀察到目前或更極端結果的機率為 2%", "is_correct": true},
+        {"text": "H0(兩演算法點擊率無差異)為真的機率為 2%,新演算法正確的機率為 98%", "is_correct": false, "trap_type": "誤把 p 當 P(H0|資料)"},
+        {"text": "新演算法把點擊率提高 2%,效應大小已可確認為實務上極具商業價值的改善", "is_correct": false, "trap_type": "p 當效應大小"},
+        {"text": "重抽樣本 100 次,將有 2 次得到完全相同結果,因此可視結論為高度可重複", "is_correct": false, "trap_type": "可重複性錯誤聯想"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "p-value 的嚴格定義是『假設 H0 為真時,觀察到目前或更極端資料的機率』,即 P(資料|H0 真),不是 P(H0 真|資料)",
+        "wrong": {
+          "H0(兩演算法點擊率無差異)為真的機率為 2%,新演算法正確的機率為 98%": "p 是條件機率,條件在 H0 真;不是『H0 為真的機率』,1 − p 也不是 H1 為真的機率",
+          "新演算法把點擊率提高 2%,效應大小已可確認為實務上極具商業價值的改善": "p 與效應大小是兩件事;p = 0.02 沒告訴你提升幾個百分點,也不代表商業重要",
+          "重抽樣本 100 次,將有 2 次得到完全相同結果,因此可視結論為高度可重複": "p 不是『再抽會得到相同結果的次數』,可重複性需另設計研究"
+        },
+        "hook": "p = P(資料|H0 真),不是 P(H0|資料);p 不等於效應大小"
+      },
+      "misconceptions": ["把 p 當 H0 為真的機率", "把 1 − p 當 H1 為真的機率"],
+      "related_node_ids": ["n_L22103_001", "n_L22103_004"],
+      "tags": ["p-value", "誤解", "電商"]
+    },
+    {
+      "id": "q_n11_009",
+      "knowledge_code": "L22103",
+      "node_id": "n_L22103_003",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某社群平台針對 n = 100 萬使用者測試新版界面,結果停留時間平均增加 1.2 秒,p < 0.0001。產品經理據此宣稱『改版效益極大,應立即全量上線』。從統計與實務角度看,此推論最可能犯下何種誤解?",
+      "options": [
+        {"text": "p 極小只代表統計顯著,並不代表效應大小有實質商業意義,大樣本可讓微小差異也達顯著", "is_correct": true},
+        {"text": "p < 0.0001 違反 α = 0.05 標準上限,應將 α 重新調整至 0.0001 才能合法宣告顯著", "is_correct": false, "trap_type": "α 上限迷思"},
+        {"text": "n = 100 萬已超出常態分佈成立範圍,中央極限定理失效造成所有 p-value 不可採信", "is_correct": false, "trap_type": "CLT 錯誤敘述"},
+        {"text": "停留時間 1.2 秒屬連續變數,不能採用一般檢定,需先做對數轉換才能得到正確的顯著性結論", "is_correct": false, "trap_type": "不必要的轉換"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "p 只回答『差異是否非零』,不回答『差異是否夠大』。大樣本下小效應也可能 p 極小,必須搭配 effect size 與 CI 來判斷實務重要性",
+        "wrong": {
+          "p < 0.0001 違反 α = 0.05 標準上限,應將 α 重新調整至 0.0001 才能合法宣告顯著": "p < α 就拒絕 H0,沒有『α 上限』或要把 α 改為等於 p 的規則",
+          "n = 100 萬已超出常態分佈成立範圍,中央極限定理失效造成所有 p-value 不可採信": "CLT 在 n 大時更穩固而非失效,敘述方向相反",
+          "停留時間 1.2 秒屬連續變數,不能採用一般檢定,需先做對數轉換才能得到正確的顯著性結論": "連續變數本就適用 t/Z 檢定;對數轉換用於右偏資料,不是顯著性正當性前提"
+        },
+        "hook": "大樣本時代:看 effect size 與 CI,不要只看 p"
+      },
+      "misconceptions": ["把 p 小直接等同效應大", "誤以為大 n 會讓 CLT 失效"],
+      "related_node_ids": ["n_L22103_004"],
+      "tags": ["p-value", "效應大小", "社群"]
+    },
+    {
+      "id": "q_n11_010",
+      "knowledge_code": "L22103",
+      "node_id": "n_L22103_003",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某能源公司比較新舊太陽能板平均發電量,得 p = 0.65,α = 0.05。下列對此結果的詮釋,何者最為正確?",
+      "options": [
+        {"text": "p 大代表證據不足以拒絕 H0,但不等於 H0 為真,亦不代表新舊板效能完全相等", "is_correct": true},
+        {"text": "p = 0.65 直接代表新舊板效能相等的機率為 65%,可放心確認兩者無實質差異", "is_correct": false, "trap_type": "p 當 P(H0|資料)"},
+        {"text": "p 大表示效應大小為零,因此可宣告新板無任何實務價值並停止後續產線投資與研究", "is_correct": false, "trap_type": "p 大=效應零"},
+        {"text": "1 − p = 0.35 為 H1 為真的機率,可作為新板優於舊板信念強度的後驗證據解讀", "is_correct": false, "trap_type": "1-p 當 P(H1|資料)"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "p > α 只表示在當前資料證據下不拒絕 H0,並沒有『證明 H0 為真』。可能是真的無差異,也可能是樣本不足、變異過大導致檢出力不足",
+        "wrong": {
+          "p = 0.65 直接代表新舊板效能相等的機率為 65%,可放心確認兩者無實質差異": "p 不是『H0 為真的機率』,這是經典誤解之一",
+          "p 大表示效應大小為零,因此可宣告新板無任何實務價值並停止後續產線投資與研究": "p 大不等於效應為零,可能是樣本太小或變異太大導致 Power 不足",
+          "1 − p = 0.35 為 H1 為真的機率,可作為新板優於舊板信念強度的後驗證據解讀": "1 − p 也不是『H1 為真的機率』,p-value 是條件機率(條件在 H0)"
+        },
+        "hook": "p 大 = 證據不足拒絕 H0,但不證明 H0;p 不是 P(H0|資料)"
+      },
+      "misconceptions": ["把 p 當 P(H0|資料)", "把 1 − p 當 P(H1|資料)"],
+      "related_node_ids": ["n_L22103_001"],
+      "tags": ["p-value", "詮釋", "能源"]
+    },
+    {
+      "id": "q_n11_011",
+      "knowledge_code": "L22103",
+      "node_id": "n_L22103_003",
+      "subject": 2,
+      "format": "scenario",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某教育科技公司對線上學習成效進行 A/B 測試,n = 50 萬,平均成績差異 0.3 分(滿分 100),p < 0.001。投資人質疑『p 已極小,改版必然帶來顯著教育價值』。下列何項說明最能正確反駁此推論?",
+      "options": [
+        {"text": "p 小只說『差異非零』,真正衡量教育價值需看效應大小與信賴區間,0.3 分屬實務微小", "is_correct": true},
+        {"text": "p < 0.001 違反 α 必須等於 0.05 的硬性規定,改版結果在統計上並未真正達到顯著水準", "is_correct": false, "trap_type": "α 鐵則迷思"},
+        {"text": "n = 50 萬以下檢定皆不可信,必須等到 n 達到 1000 萬以上才能視為大數據驗證合格", "is_correct": false, "trap_type": "n 門檻迷思"},
+        {"text": "成績屬序級資料完全不適用任何 t / Z 檢定,所有 p-value 結果在統計上皆無解讀效力", "is_correct": false, "trap_type": "尺度不適用迷思"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "大樣本下任何微小差異都可能 p 極小,但 0.3/100 = 0.3% 的效應大小在教育場景幾乎不可察。應同時報告 effect size(Cohen's d 等)與 CI",
+        "wrong": {
+          "p < 0.001 違反 α 必須等於 0.05 的硬性規定,改版結果在統計上並未真正達到顯著水準": "α = 0.05 只是慣例,p 越小越拒絕 H0,沒有『p 不能更小』的規則",
+          "n = 50 萬以下檢定皆不可信,必須等到 n 達到 1000 萬以上才能視為大數據驗證合格": "並無此門檻;n 50 萬已遠超常規檢定需求",
+          "成績屬序級資料完全不適用任何 t / Z 檢定,所有 p-value 結果在統計上皆無解讀效力": "百分制成績通常以區間或近似連續處理,並非完全不可用 t/Z"
+        },
+        "hook": "大數據陷阱:統計顯著 ≠ 實務重要;報 effect size + CI"
+      },
+      "misconceptions": ["以 p 小直接推論價值高", "用大樣本壓死實務評估"],
+      "related_node_ids": ["n_L22103_004"],
+      "tags": ["p-value", "effect size", "教育"]
+    },
+    {
+      "id": "q_n11_012",
+      "knowledge_code": "L22103",
+      "node_id": "n_L22103_004",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某農業改良場研究新肥料效果,得到平均增產差異的 95% 信賴區間為 [-1.5 kg, 4.0 kg] / 株(H0 設差異 = 0)。在雙尾 α = 0.05 之下,p-value 與 0.05 的大小關係為何?",
+      "options": [
+        {"text": "p > 0.05,因為 95% CI 涵蓋 H0 設定值 0,等同不拒絕 H0", "is_correct": true},
+        {"text": "p < 0.05,因為 CI 同時涵蓋正值 4.0,代表新肥料顯著有效應立即宣告結果顯著", "is_correct": false, "trap_type": "CI 覆蓋正值非顯著條件"},
+        {"text": "p = 0.05,因為信賴水準訂為 95% 時 p 必恰等於 α 不可能有其他大小關係", "is_correct": false, "trap_type": "CI 與 p 必相等迷思"},
+        {"text": "p 無法判斷,需要重新計算 SE 與檢定統計量才能得到顯著性結論而 CI 無對應功能", "is_correct": false, "trap_type": "CI 不能對應 p"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "雙尾檢定下,CI 與 p 對偶:95% CI 涵蓋 H0 設定值 ⇔ p > 0.05(不拒絕);CI 不含 ⇔ p < 0.05(拒絕)。本題 CI 含 0,故 p > 0.05",
+        "wrong": {
+          "p < 0.05,因為 CI 同時涵蓋正值 4.0,代表新肥料顯著有效應立即宣告結果顯著": "判斷顯著看 CI 是否含 H0 值(此為 0),不是看是否含某些正值",
+          "p = 0.05,因為信賴水準訂為 95% 時 p 必恰等於 α 不可能有其他大小關係": "信賴水準對應的是門檻,不是讓 p 自動等於 α",
+          "p 無法判斷,需要重新計算 SE 與檢定統計量才能得到顯著性結論而 CI 無對應功能": "CI 已蘊含足夠資訊對偶 p,實務不必再重算"
+        },
+        "hook": "雙尾對偶:95% CI 含 H0 值 ⇔ p > 0.05;不含 ⇔ p < 0.05"
+      },
+      "misconceptions": ["以為 CI 含正值就代表顯著", "把 CI 與 p 視為毫無對應關係"],
+      "related_node_ids": ["n_L22103_003"],
+      "tags": ["信賴區間", "p-value", "農業"]
+    },
+    {
+      "id": "q_n11_013",
+      "knowledge_code": "L22103",
+      "node_id": "n_L22103_004",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某運輸公司估計新節油裝置平均省油百分比的 95% 信賴區間為 [3.2%, 7.8%]。對於這個 95% 信賴區間,下列敘述何者最為正確?",
+      "options": [
+        {"text": "若重複抽樣並以同一公式反覆重建信賴區間,長期約有 95% 比例的區間會涵蓋母體真實省油百分比", "is_correct": true},
+        {"text": "母體真實省油百分比有 95% 的機率落在 [3.2%, 7.8%] 此單一區間內,可作為機率敘述", "is_correct": false, "trap_type": "對單一 CI 套機率敘述"},
+        {"text": "本研究的樣本中,有 95% 的觀測值落在 [3.2%, 7.8%] 範圍內,反映了個體變異的範圍", "is_correct": false, "trap_type": "CI 當預測區間"},
+        {"text": "信賴區間的寬度越寬代表估計越穩健,因此 [3.2%, 7.8%] 比窄區間更值得作為決策依據", "is_correct": false, "trap_type": "CI 寬窄迷思"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "95% CI 的正確詮釋是『方法層級』:反覆抽樣與重建區間,約 95% 的區間涵蓋真值。母體參數本身是固定的,不是隨機變數",
+        "wrong": {
+          "母體真實省油百分比有 95% 的機率落在 [3.2%, 7.8%] 此單一區間內,可作為機率敘述": "母體參數固定;一旦區間已建好,涵蓋與否是 0/1 事件,不能對單一區間講『95% 機率』",
+          "本研究的樣本中,有 95% 的觀測值落在 [3.2%, 7.8%] 範圍內,反映了個體變異的範圍": "這是『預測區間』的概念,不是『信賴區間』",
+          "信賴區間的寬度越寬代表估計越穩健,因此 [3.2%, 7.8%] 比窄區間更值得作為決策依據": "CI 越窄代表估計越精準;寬反而代表不確定性高"
+        },
+        "hook": "口訣『重覆抽樣 95 次,約 95 次區間蓋到真值』— 方法層級敘述"
+      },
+      "misconceptions": ["對單一 CI 套用機率敘述", "把 CI 當預測區間"],
+      "related_node_ids": ["n_L22103_001"],
+      "tags": ["信賴區間", "詮釋", "運輸"]
+    },
+    {
+      "id": "q_n11_014",
+      "knowledge_code": "L22103",
+      "node_id": "n_L22103_004",
+      "subject": 2,
+      "format": "calculation",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某製造廠抽樣 n = {n} 件產品量測重量,得樣本平均 = {mean} g,母體標準差 σ = {sigma} g。請以 95% 信賴區間公式『mean ± 1.96 × σ/√n』,計算母體平均重量的 95% CI 上限(取小數第 2 位)為下列何者?",
+      "stem_variables": {
+        "case_a": {"n": "100", "mean": "200", "sigma": "10", "answer": "201.96", "wrong1": "203.20", "wrong2": "200.98", "wrong3": "219.60"},
+        "case_b": {"n": "400", "mean": "150", "sigma": "20", "answer": "151.96", "wrong1": "153.92", "wrong2": "150.98", "wrong3": "169.60"},
+        "case_c": {"n": "64", "mean": "80", "sigma": "8", "answer": "81.96", "wrong1": "82.61", "wrong2": "80.98", "wrong3": "95.68"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "忘記除以 √n,直接用 σ 取代 SE"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤用 z = 0.98 或一半 1.96/2"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤把 σ 直接乘 1.96 不除 √n 又用整體值"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "SE = σ/√n;95% CI 上限 = mean + 1.96 × SE = {mean} + 1.96 × {sigma}/√{n} = {answer}",
+        "wrong": {
+          "{wrong1}": "此值疑似忘記除以 √n,直接用 σ 當 SE,造成區間誤放大",
+          "{wrong2}": "此值疑似把 1.96 誤用為 0.98 或除錯倍率,區間僅 mean ± 0.98 × SE",
+          "{wrong3}": "此值疑似直接 mean + 1.96 × σ 不除 √n,造成嚴重高估上限"
+        },
+        "hook": "95% CI = 點估計 ± 1.96 × SE;SE = σ/√n(σ 已知用 Z)"
+      },
+      "misconceptions": ["忘記除以 √n", "把 1.96 寫成 1.0 或 0.98"],
+      "related_node_ids": ["n_L22103_005"],
+      "tags": ["信賴區間", "計算", "製造"]
+    },
+    {
+      "id": "q_n11_015",
+      "knowledge_code": "L22103",
+      "node_id": "n_L22103_005",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某營養師想比較三種不同飲食法對受試者體重平均變化是否有差異(每組 30 人)。最適合採用的統計檢定方法為下列何者?",
+      "options": [
+        {"text": "單因子 ANOVA(F 檢定),H0 為三組平均相等,可避免兩兩 t 檢定累積膨脹 α", "is_correct": true},
+        {"text": "獨立樣本 t 檢定兩兩做共三次,只要其中一次顯著就視為三組整體存在差異即可結案", "is_correct": false, "trap_type": "多次 t 不校正 α"},
+        {"text": "卡方獨立性檢定,因為三種飲食法屬於類別變數應以類別 vs 類別交叉表進行分析", "is_correct": false, "trap_type": "卡方用於類別 vs 類別"},
+        {"text": "Z 檢定取三組合併平均,直接與假設值 0 比較即可不需考慮組間變異與組內變異", "is_correct": false, "trap_type": "Z 不適用三組比較"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "三組(k ≥ 3)平均比較標準作法為 ANOVA F 檢定,H0 為所有組平均相等。可避免反覆做 t 檢定造成型一錯誤累積",
+        "wrong": {
+          "獨立樣本 t 檢定兩兩做共三次,只要其中一次顯著就視為三組整體存在差異即可結案": "三次 t 檢定不校正 α,整體偽陽性會膨脹,正確作法為 ANOVA 或加 Bonferroni 校正",
+          "卡方獨立性檢定,因為三種飲食法屬於類別變數應以類別 vs 類別交叉表進行分析": "依變數體重是連續變數,不是類別變數,卡方獨立性檢定不適用",
+          "Z 檢定取三組合併平均,直接與假設值 0 比較即可不需考慮組間變異與組內變異": "Z 檢定設計給單樣本或兩樣本比較,不能直接做三組比較"
+        },
+        "hook": "口訣『σ 知 Z、σ 不知 t、三組以上 ANOVA』"
+      },
+      "misconceptions": ["三組以上直接做兩兩 t", "誤把連續資料丟卡方"],
+      "related_node_ids": ["n_L22103_006"],
+      "tags": ["ANOVA", "選擇", "營養"]
+    },
+    {
+      "id": "q_n11_016",
+      "knowledge_code": "L22103",
+      "node_id": "n_L22103_005",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某 IC 設計公司抽樣 n = 15 個晶片量測延遲時間,母體標準差 σ 未知,只能用樣本標準差 s 估計。要檢定平均延遲是否等於規格 5 ns,下列檢定方法最為適當?",
+      "options": [
+        {"text": "單樣本 t 檢定(自由度 n − 1 = 14),適合 σ 未知小樣本場景", "is_correct": true},
+        {"text": "單樣本 Z 檢定,雖然 σ 未知但只要 n ≥ 10 即可用樣本 s 代入 Z 公式直接取代", "is_correct": false, "trap_type": "n 小且 σ 未知不該用 Z"},
+        {"text": "雙樣本 t 檢定,比較 15 個樣本兩兩之間的延遲差異是否符合常態分佈規格要求", "is_correct": false, "trap_type": "雙樣本 t 用法錯誤"},
+        {"text": "單因子 ANOVA,把 15 個觀測視為 15 組各 1 點來檢測組間變異是否顯著高於組內", "is_correct": false, "trap_type": "ANOVA 不能 n=1 / 組"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "σ 未知用樣本 s 估計時,檢定統計量服從 t 分配(尤其小樣本)。單樣本 t 用 t = (x̄ − μ₀)/(s/√n),自由度 n − 1 = 14",
+        "wrong": {
+          "單樣本 Z 檢定,雖然 σ 未知但只要 n ≥ 10 即可用樣本 s 代入 Z 公式直接取代": "σ 未知時應用 t;t 與 Z 在 n ≥ 30 才大致收斂,n = 15 仍有明顯差異",
+          "雙樣本 t 檢定,比較 15 個樣本兩兩之間的延遲差異是否符合常態分佈規格要求": "雙樣本 t 用於比較兩組平均,本題只有一組與規格值比較,屬單樣本",
+          "單因子 ANOVA,把 15 個觀測視為 15 組各 1 點來檢測組間變異是否顯著高於組內": "ANOVA 需每組至少數個觀測以估計組內變異,每組 1 點無法分解變異"
+        },
+        "hook": "σ 不知 + 小 n 用 t;單組與規格比較用單樣本 t"
+      },
+      "misconceptions": ["小樣本 σ 未知還用 Z", "把單樣本當雙樣本"],
+      "related_node_ids": ["n_L22103_001"],
+      "tags": ["t 檢定", "選擇", "半導體"]
+    },
+    {
+      "id": "q_n11_017",
+      "knowledge_code": "L22103",
+      "node_id": "n_L22103_005",
+      "subject": 2,
+      "format": "scenario",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某醫院臨床團隊以 ANOVA 比較三種止痛藥的平均止痛時間,得到 F 檢定 p = 0.01,在 α = 0.05 下顯著。團隊主任據此宣告『第一種藥優於第二種藥』。從統計嚴謹角度,此推論最大的問題為何?",
+      "options": [
+        {"text": "ANOVA F 顯著只代表至少一組與其他組不同,須再做事後檢定才能指出具體哪兩組差異", "is_correct": true},
+        {"text": "ANOVA 不適合三組以上,應改用兩兩 Z 檢定才能合法直接比較任意兩個組別的平均", "is_correct": false, "trap_type": "ANOVA 不適用三組以上錯誤"},
+        {"text": "ANOVA 假設母體標準差 σ 已知,當 σ 未知時 F 檢定結果完全失效不可解讀使用", "is_correct": false, "trap_type": "ANOVA 與 σ 已知無關"},
+        {"text": "ANOVA 只在樣本數均相等時才能使用,組間 n 不同會導致 F 統計量自動不可信賴", "is_correct": false, "trap_type": "等樣本不是 ANOVA 必要條件"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "ANOVA F 顯著只意味『至少有一組平均不同於其他組』,沒指出是哪兩組。要點名應做事後檢定(如 Tukey HSD 或 Bonferroni 校正後的兩兩 t)",
+        "wrong": {
+          "ANOVA 不適合三組以上,應改用兩兩 Z 檢定才能合法直接比較任意兩個組別的平均": "ANOVA 正是設計給三組以上;反而兩兩 Z 不校正會膨脹 α",
+          "ANOVA 假設母體標準差 σ 已知,當 σ 未知時 F 檢定結果完全失效不可解讀使用": "ANOVA 不要求 σ 已知,F 檢定本身就用樣本估計變異",
+          "ANOVA 只在樣本數均相等時才能使用,組間 n 不同會導致 F 統計量自動不可信賴": "ANOVA 容許不等樣本(unbalanced design),雖等樣本檢定力較佳"
+        },
+        "hook": "F 顯著後做事後檢定(Tukey HSD / Bonferroni)才能說『哪兩組差』"
+      },
+      "misconceptions": ["F 顯著直接指定兩組差", "ANOVA 必須 σ 已知或等樣本"],
+      "related_node_ids": ["n_L22103_006"],
+      "tags": ["ANOVA", "事後檢定", "臨床"]
+    },
+    {
+      "id": "q_n11_018",
+      "knowledge_code": "L22103",
+      "node_id": "n_L22103_006",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某基因研究團隊同時對 20 個基因做獨立顯著性檢定,每個檢定使用 α = 0.05 且不做任何校正。若所有 H0 皆為真,整體至少出現一次偽陽性的機率(FWER)約為多少?",
+      "options": [
+        {"text": "約 64%,因為 1 − 0.95²⁰ ≈ 0.642,m 大則 FWER 逼近 1", "is_correct": true},
+        {"text": "仍維持在 5%,因為每個檢定的 α 各自獨立設為 0.05 整體不會因為次數增加而膨脹", "is_correct": false, "trap_type": "FWER 不會自動維持 α"},
+        {"text": "等於 100%,因為只要做 20 次以上獨立檢定就必定至少出現一次偽陽性無例外", "is_correct": false, "trap_type": "誤把 FWER 設為 1"},
+        {"text": "約 25%,計算為 0.05 × 20 / 4 = 0.25,直接以乘除粗估即可得到近似實際值結果", "is_correct": false, "trap_type": "錯誤公式"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "FWER = 1 − (1 − α)^m;當 α = 0.05、m = 20 時,1 − 0.95²⁰ ≈ 1 − 0.358 ≈ 0.642,即約 64% 機率至少出現一次偽陽性",
+        "wrong": {
+          "仍維持在 5%,因為每個檢定的 α 各自獨立設為 0.05 整體不會因為次數增加而膨脹": "個別檢定 α 是 5%,但『至少一個偽陽性』的整體機率會隨 m 上升而增加",
+          "等於 100%,因為只要做 20 次以上獨立檢定就必定至少出現一次偽陽性無例外": "FWER 是機率不是必然事件,即使 m = 20 也只有約 64%",
+          "約 25%,計算為 0.05 × 20 / 4 = 0.25,直接以乘除粗估即可得到近似實際值結果": "此公式並非 FWER 的正確算法,正確為 1 − (1 − α)^m"
+        },
+        "hook": "FWER = 1 − (1 − α)^m;m=20、α=0.05 → ≈ 64%"
+      },
+      "misconceptions": ["以為多檢定 α 自動維持", "FWER 公式記錯成簡單乘法"],
+      "related_node_ids": ["n_L22103_002"],
+      "tags": ["多重檢定", "FWER", "基因"]
+    },
+    {
+      "id": "q_n11_019",
+      "knowledge_code": "L22103",
+      "node_id": "n_L22103_006",
+      "subject": 2,
+      "format": "calculation",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某 A/B 測試平台同時比較 {m} 個版本與對照版,整體希望維持 FWER = 0.05。若採 Bonferroni 校正,單一檢定可接受的顯著門檻 α' 應設為下列何者(取小數至題目所需精度)?",
+      "stem_variables": {
+        "case_a": {"m": "10", "answer": "0.005", "wrong1": "0.05", "wrong2": "0.5", "wrong3": "0.01"},
+        "case_b": {"m": "5", "answer": "0.010", "wrong1": "0.05", "wrong2": "0.25", "wrong3": "0.001"},
+        "case_c": {"m": "20", "answer": "0.0025", "wrong1": "0.05", "wrong2": "1.0", "wrong3": "0.001"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "未做任何校正直接用原 α"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤乘 m 而非除 m"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤用其他校正常數"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Bonferroni 校正:α' = α / m = 0.05 / {m} = {answer}。比此值更小的 p 才視為單一檢定的顯著",
+        "wrong": {
+          "{wrong1}": "此為未做任何校正的原始 α = 0.05,會導致 FWER 顯著膨脹",
+          "{wrong2}": "此值疑似把 α 乘以 m 而非除以 m,方向相反",
+          "{wrong3}": "此值疑似套用了其他校正係數,並非 Bonferroni 標準公式"
+        },
+        "hook": "Bonferroni:α' = α / m;多檢定膨脹,門檻必須變嚴"
+      },
+      "misconceptions": ["不校正而沿用原 α", "把除 m 寫成乘 m"],
+      "related_node_ids": ["n_L22103_002"],
+      "tags": ["Bonferroni", "計算", "A/B"]
+    },
+    {
+      "id": "q_n11_020",
+      "knowledge_code": "L22103",
+      "node_id": "n_L22103_006",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某電商行銷團隊同時測試 200 個推薦演算法 micro-feature 的成效。若使用 Bonferroni 校正,團隊發現幾乎所有 p 都無法通過 α' = 0.05/200 = 0.00025 門檻。下列哪一種替代校正方法,可在容許少量偽陽性的前提下保留較高的 Power?",
+      "options": [
+        {"text": "Benjamini-Hochberg(BH)校正,控制 FDR 而非 FWER,適合大量檢定", "is_correct": true},
+        {"text": "再次套用 Bonferroni 並把 α 加倍至 0.10,即可同時放寬門檻並維持 FWER 不變", "is_correct": false, "trap_type": "α 加倍與 FWER 衝突"},
+        {"text": "把 200 個檢定隨機分成 4 組各做 50 個,再對每組各自套用未校正的 α = 0.05 門檻", "is_correct": false, "trap_type": "分組規避校正"},
+        {"text": "只報告 p 最小的 5 個 feature 並對外宣告為顯著結果即可,自然避開多重檢定的所有問題", "is_correct": false, "trap_type": "選擇性報告"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "BH(Benjamini-Hochberg)控制 FDR(錯誤發現比例)而非 FWER,容許少量偽陽性以換取較高 Power,適合 m 很大的探索性場合",
+        "wrong": {
+          "再次套用 Bonferroni 並把 α 加倍至 0.10,即可同時放寬門檻並維持 FWER 不變": "把 α 加倍會讓 FWER 上升而非不變,與目標相反",
+          "把 200 個檢定隨機分成 4 組各做 50 個,再對每組各自套用未校正的 α = 0.05 門檻": "分組規避校正是 p-hacking 變形,整體 FWER 並沒有真正下降",
+          "只報告 p 最小的 5 個 feature 並對外宣告為顯著結果即可,自然避開多重檢定的所有問題": "選擇性報告(cherry-picking)是學術不誠信行為,並非合法校正"
+        },
+        "hook": "BH 控 FDR、Bonferroni 控 FWER;探索性大量檢定首選 BH"
+      },
+      "misconceptions": ["以分組規避校正", "把 α 加倍當放寬"],
+      "related_node_ids": ["n_L22103_005"],
+      "tags": ["FDR", "BH", "電商"]
+    }
+  ]
+}

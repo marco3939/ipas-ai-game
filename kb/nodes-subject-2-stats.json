@@ -1,0 +1,373 @@
+{
+  "version": "1.0",
+  "subject": 2,
+  "schema_version": "1.0-iron-rule",
+  "iron_rule_compliance": "every node has misconceptions, explanation_hooks, variation_seeds; rule #6 — only L22102/L22103 nodes, no cross-subject references",
+  "last_updated": "2026-05-16",
+  "scope_alignment": "L22102 + L22103 — 科二統計類補齊;與 L23101 重疊主題以『大數據規模 / 推論角度』切入避免重複",
+  "batches_processed": [
+    {"batch": "subject-2-expansion-G1-stats", "files": ["科二指引 Ch3.2 / Ch3.3"], "date": "2026-05-16", "scope": "L22102 (6 nodes) + L22103 (6 nodes)"}
+  ],
+  "nodes": [
+    {
+      "node_id": "n_L22102_001",
+      "knowledge_code": "L22102",
+      "title": "連續 vs 離散分佈分類(PDF vs PMF)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch3.2 機率分佈"}],
+      "summary": "離散隨機變數用機率質量函數(PMF),P(X=x) 直接為機率;連續隨機變數用機率密度函數(PDF),單點機率為 0,只能算區間積分。決定 ML 模型分佈假設與 loss 設計(MSE / Cross-Entropy / Poisson loss)",
+      "key_points": [
+        "離散:可數值(0,1,2,...);PMF 滿足 Σ P(X=x) = 1",
+        "連續:不可數(實數區間);PDF f(x) ≥ 0,∫f(x)dx = 1",
+        "連續分佈下 P(X=a) = 0,只能討論 P(a ≤ X ≤ b)",
+        "PMF 縱軸是機率(≤ 1);PDF 縱軸是密度(可 > 1)"
+      ],
+      "common_misconceptions": [
+        "把 PDF 在某點的值當成該點機率",
+        "誤把『離散看起來像連續』(大量整數值)當成連續分佈處理",
+        "誤以為 PDF 必 ≤ 1(實際密度只要積分為 1,某點可 > 1)"
+      ],
+      "explanation_hooks": [
+        "口訣『離散用 P=,連續用 P≤』",
+        "點擊次數、商品銷量、缺陷數 → 離散;身高、溫度、等待秒數 → 連續",
+        "ML 對離散目標用 Cross-Entropy,對連續目標用 MSE,本質就是 PMF/PDF 的負對數"
+      ],
+      "variation_seeds": [
+        {"context": "一天客服來電通數應建模為?", "answer": "離散(Poisson)"},
+        {"context": "為何 PDF 在某點機率為 0?", "answer": "連續變數單點測度為 0,只能取區間積分"}
+      ],
+      "related_node_ids": ["n_L22102_002", "n_L22102_006"]
+    },
+    {
+      "node_id": "n_L22102_002",
+      "knowledge_code": "L22102",
+      "title": "常態分佈與 68-95-99.7 法則(Z 分數)",
+      "category": "formula",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch3.2 常態分佈"}],
+      "summary": "常態分佈 N(μ,σ²) 為對稱鐘形,參數只需平均數與標準差。68-95-99.7 法則:±1σ / ±2σ / ±3σ 覆蓋約 68% / 95% / 99.7% 資料。標準化 Z=(x-μ)/σ 將任意常態變數轉為 N(0,1)",
+      "key_points": [
+        "中央極限定理(CLT):樣本平均近似常態,與母體分佈無關",
+        "Z = (x - μ) / σ,標準常態 N(0,1) 平均 0、標準差 1",
+        "±1σ ≈ 68%、±2σ ≈ 95%、±3σ ≈ 99.7%",
+        "Z = ±1.96 對應雙尾 95%(假設檢定常用)"
+      ],
+      "common_misconceptions": [
+        "把『常態』當成所有資料的預設分佈(實際多數真實資料是偏態)",
+        "誤以為 95% 對應 ±2σ 精確值(實際是 ±1.96σ)",
+        "誤把 Z-score 當機率(它是標準差數,不是 p)"
+      ],
+      "explanation_hooks": [
+        "口訣『六八九十五,九九點七』記住三段覆蓋率",
+        "Z=1.96 是『信賴區間 95%』的由來,考試極高頻",
+        "標準化(StandardScaler)就是套 Z 公式 — ML 與統計同源"
+      ],
+      "variation_seeds": [
+        {"context": "IQ 平均 100、標準差 15,IQ 130 的 Z 分數?", "answer": "Z = (130-100)/15 = 2"},
+        {"context": "雙尾 95% 對應 Z 臨界值?", "answer": "±1.96"}
+      ],
+      "related_node_ids": ["n_L22102_001", "n_L22103_002"]
+    },
+    {
+      "node_id": "n_L22102_003",
+      "knowledge_code": "L22102",
+      "title": "二項分佈與 Bernoulli 試驗",
+      "category": "formula",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch3.2 離散分佈"}],
+      "summary": "Bernoulli 為單次成敗試驗(p 成功 / 1-p 失敗);二項分佈 B(n,p) 為 n 次獨立 Bernoulli 中成功次數。n 大、p 不極端時可用常態近似(np ≥ 5 且 n(1-p) ≥ 5)",
+      "key_points": [
+        "Bernoulli:X ∈ {0,1},E[X]=p,Var[X]=p(1-p)",
+        "二項:X ~ B(n,p),E[X]=np,Var[X]=np(1-p)",
+        "假設:n 固定、各次獨立、每次 p 相同",
+        "常態近似條件:np ≥ 5 且 n(1-p) ≥ 5"
+      ],
+      "common_misconceptions": [
+        "把不獨立的試驗(抽完不放回)套二項公式",
+        "誤以為 p 必為 0.5(實際 p 是成功機率,可任意值)",
+        "把『n 次試驗成功 k 次的機率』與『第 k 次才成功的機率』混淆(後者是幾何分佈)"
+      ],
+      "explanation_hooks": [
+        "Bernoulli 是『一次硬幣』、二項是『n 次硬幣計數』",
+        "邏輯斯迴歸的目標變數正是 Bernoulli — 故用 Bernoulli 對數似然(BCE loss)",
+        "點擊率(CTR)、轉換率、A/B test 都建模在二項分佈"
+      ],
+      "variation_seeds": [
+        {"context": "10 次擲硬幣得 7 正反 3 的期望?", "answer": "E[X] = np = 10×0.5 = 5"},
+        {"context": "BCE loss 的分佈假設?", "answer": "Bernoulli"}
+      ],
+      "related_node_ids": ["n_L22102_001", "n_L22102_004"]
+    },
+    {
+      "node_id": "n_L22102_004",
+      "knowledge_code": "L22102",
+      "title": "Poisson 分佈(罕見事件 / 單位時間發生數)",
+      "category": "formula",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch3.2 離散分佈"}],
+      "summary": "Poisson(λ) 描述單位時間或單位空間內事件發生次數,參數 λ 同時是平均與變異數(E[X]=Var[X]=λ)。為罕見事件(n 大、p 小)的二項極限",
+      "key_points": [
+        "PMF:P(X=k) = e^(-λ) λ^k / k!",
+        "E[X] = Var[X] = λ(均=變異是 Poisson 招牌特徵)",
+        "二項極限:n→∞、p→0、np=λ 固定 → Poisson",
+        "假設:事件獨立、發生率穩定、無同時發生"
+      ],
+      "common_misconceptions": [
+        "把任何計數資料硬套 Poisson(若 Var ≫ Mean 是過離散,需 Negative Binomial)",
+        "誤以為 λ 必為整數(λ 是平均率,可任意正實數)",
+        "把『發生時間間隔』套 Poisson(那是指數分佈)"
+      ],
+      "explanation_hooks": [
+        "Poisson 招牌『均=變異』,若實測 Var/Mean ≫ 1 要警覺",
+        "客服每小時來電數、網站每分鐘錯誤數、每平方公里地震數,典型 Poisson",
+        "Poisson 與指數成對:次數 Poisson、間隔 Exponential"
+      ],
+      "variation_seeds": [
+        {"context": "某網站平均每分鐘 3 次錯誤,5 分鐘期望錯誤數?", "answer": "λ = 3×5 = 15"},
+        {"context": "計數資料的變異遠大於平均,適合的分佈?", "answer": "Negative Binomial(過離散)"}
+      ],
+      "related_node_ids": ["n_L22102_003", "n_L22102_005"]
+    },
+    {
+      "node_id": "n_L22102_005",
+      "knowledge_code": "L22102",
+      "title": "指數分佈與 Weibull(等待時間 / 故障率)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch3.2 連續分佈"}],
+      "summary": "指數分佈描述 Poisson 事件之間的等待時間,具無記憶性(memoryless);Weibull 為其推廣,可建模遞增 / 遞減 / 固定故障率,廣泛用於可靠度分析與生存分析",
+      "key_points": [
+        "指數 PDF:f(x) = λ e^(-λx),x ≥ 0",
+        "指數 E[X] = 1/λ,Var = 1/λ²",
+        "無記憶性:P(X > s+t | X > s) = P(X > t)",
+        "Weibull 形狀參數 k:k<1 遞減故障率(嬰兒期)/ k=1 常數(=指數)/ k>1 遞增(老化)"
+      ],
+      "common_misconceptions": [
+        "把所有等待時間都套指數(實際多數真實系統不是無記憶)",
+        "誤以為『無記憶』指系統無資訊(實際是『過去等多久』不影響未來)",
+        "把 Weibull 與常態混淆(Weibull 偏態、有正向支撐區間)"
+      ],
+      "explanation_hooks": [
+        "Poisson 計數、指數計時,『次數與間隔』成對",
+        "Weibull『浴缸曲線』:k<1 早期故障、k=1 隨機、k>1 老化",
+        "客戶流失分析(survival analysis)常用 Weibull"
+      ],
+      "variation_seeds": [
+        {"context": "燈泡平均壽命 1000 小時,指數分佈下 λ?", "answer": "λ = 1/1000"},
+        {"context": "Weibull k=2.5 形狀代表?", "answer": "遞增故障率(老化型)"}
+      ],
+      "related_node_ids": ["n_L22102_004", "n_L22102_006"]
+    },
+    {
+      "node_id": "n_L22102_006",
+      "knowledge_code": "L22102",
+      "title": "分佈選擇情境抉擇(連續/離散 × 對稱/偏態 × 厚薄尾)",
+      "category": "flow",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch3.2 分佈應用"}],
+      "summary": "依資料三大屬性(連續 vs 離散、對稱 vs 偏態、厚尾 vs 薄尾)選擇分佈,為機器學習特徵工程與 loss 設計的前置決策",
+      "key_points": [
+        "離散計數 + 均=變異 → Poisson;過離散 → Negative Binomial",
+        "連續對稱 + 鐘形 → Normal;厚尾 → Student t",
+        "正向偏態(右偏)等待時間 → Exponential / Weibull / Log-Normal",
+        "成敗試驗 → Bernoulli(單次)/ Binomial(多次)"
+      ],
+      "common_misconceptions": [
+        "把常態當所有資料的預設假設",
+        "對右偏資料不轉換直接套線性模型",
+        "看到計數資料就無條件套 Poisson(忽略過離散)"
+      ],
+      "explanation_hooks": [
+        "決策三問:『可數還連續?對稱還偏?尾巴厚還薄?』",
+        "右偏資料三招:log / Box-Cox / Yeo-Johnson 轉常態",
+        "ML loss 對應:MSE↔Normal、BCE↔Bernoulli、Poisson loss↔Poisson"
+      ],
+      "variation_seeds": [
+        {"context": "電商客單價(右偏厚尾)建議建模?", "answer": "log 轉換後 Normal,或直接 Log-Normal"},
+        {"context": "保險理賠次數(罕見、計數)?", "answer": "Poisson 或 Negative Binomial"}
+      ],
+      "related_node_ids": ["n_L22102_001", "n_L22102_004", "n_L22102_005"]
+    },
+    {
+      "node_id": "n_L22103_001",
+      "knowledge_code": "L22103",
+      "title": "假設檢定五步驟(H0/H1 → α → 統計量 → p → 結論)",
+      "category": "flow",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch3.3 假設檢定"}],
+      "summary": "標準假設檢定流程:(1) 設立虛無 H0 與對立 H1;(2) 訂顯著水準 α(通常 0.05);(3) 算檢定統計量;(4) 算 p-value;(5) p < α 拒絕 H0,反之不拒絕",
+      "key_points": [
+        "H0 通常是『無效應 / 無差異』的保守陳述",
+        "H1 是研究者想證明的假設(對立)",
+        "α 為型一錯誤上限,先訂後算,不可看到 p 才訂",
+        "結論只能『拒絕 H0』或『不拒絕 H0』,不能『接受 H0』"
+      ],
+      "common_misconceptions": [
+        "把『不拒絕 H0』講成『接受 H0』(實際是證據不足,不等於 H0 為真)",
+        "看到 p 後再回頭訂 α(p-hacking)",
+        "把 H0 設為自己想證明的(應該設成反面)"
+      ],
+      "explanation_hooks": [
+        "口訣『虛對顯統 p 決』:H0/H1 → α → 統計量 → p → 決策",
+        "H0 是『被告無罪推定』,證據夠強才能拒絕",
+        "ML 模型 A/B 比較也是同一套流程"
+      ],
+      "variation_seeds": [
+        {"context": "想證明新藥有效,H0 應設為?", "answer": "新藥『無效』(無差異)"},
+        {"context": "p = 0.03、α = 0.05,結論?", "answer": "拒絕 H0(p < α)"}
+      ],
+      "related_node_ids": ["n_L22103_002", "n_L22103_003"]
+    },
+    {
+      "node_id": "n_L22103_002",
+      "knowledge_code": "L22103",
+      "title": "型一錯誤 vs 型二錯誤(α / β / Power)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch3.3 假設檢定錯誤"}],
+      "summary": "型一錯誤(α):H0 為真卻拒絕(偽陽性);型二錯誤(β):H0 為假卻不拒絕(偽陰性)。檢定力 Power = 1-β。樣本數增加可同時降 α 與 β",
+      "key_points": [
+        "Type I = α = P(拒絕 H0 | H0 真),通常設 0.05",
+        "Type II = β = P(不拒絕 H0 | H0 假)",
+        "Power = 1-β,實務常要求 ≥ 0.8",
+        "其他不變時 α↓ 會使 β↑,反之亦然(權衡)"
+      ],
+      "common_misconceptions": [
+        "把 α 和 β 互相搞反",
+        "誤以為 α + β = 1(實際是各自獨立機率)",
+        "把 Power 當作『模型準確率』(其實是檢出真實效應的能力)"
+      ],
+      "explanation_hooks": [
+        "口訣『真假拒不拒』:H0 真+拒=α、H0 假+不拒=β",
+        "醫學切片:偽陽性 = 把健康判病(α)、偽陰性 = 漏判病(β)",
+        "提高 n 是降低兩種錯誤的唯一『免費午餐』"
+      ],
+      "variation_seeds": [
+        {"context": "新冠快篩漏陰性是哪型錯誤?", "answer": "型二錯誤(β)"},
+        {"context": "Power 0.8 代表什麼?", "answer": "真有效應時有 80% 機率能檢出"}
+      ],
+      "related_node_ids": ["n_L22103_001", "n_L22103_003"]
+    },
+    {
+      "node_id": "n_L22103_003",
+      "knowledge_code": "L22103",
+      "title": "p-value 正確解讀(常見三大誤解)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch3.3 p-value"}],
+      "summary": "p-value 是『假設 H0 為真時,觀察到目前或更極端資料的機率』。不是 H0 為真的機率,也不代表效應大小,更不是 1-p = H1 為真的機率",
+      "key_points": [
+        "p = P(資料 | H0 真),不是 P(H0 真 | 資料)",
+        "p 小 → 資料與 H0 不符,證據傾向拒絕",
+        "p 大不代表 H0 為真,只表示證據不足",
+        "效應大小(effect size)與 p 是兩件事 — 大樣本下小效應也可能 p 很小"
+      ],
+      "common_misconceptions": [
+        "誤把 p 當作『H0 為真的機率』",
+        "誤把 1-p 當作『H1 為真的機率』",
+        "把 p < 0.05 等同『效應很大 / 很重要』(實際只是統計顯著)"
+      ],
+      "explanation_hooks": [
+        "口訣『p 是條件機率,條件在 H0 真』",
+        "大數據時代要看 effect size 與 CI,不能只看 p",
+        "ASA 2016 聲明:p 不該被當決策唯一依據"
+      ],
+      "variation_seeds": [
+        {"context": "p = 0.03,正確解讀?", "answer": "若 H0 為真,觀察到目前或更極端結果的機率為 3%"},
+        {"context": "n=100 萬下 p<0.0001 但效應 0.01%,意義?", "answer": "統計顯著但實務不重要"}
+      ],
+      "related_node_ids": ["n_L22103_001", "n_L22103_004"]
+    },
+    {
+      "node_id": "n_L22103_004",
+      "knowledge_code": "L22103",
+      "title": "信賴區間(CI)與 p-value 對應關係",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch3.3 信賴區間"}],
+      "summary": "95% CI 為 1.96σ 構成的區間,反覆抽樣下約 95% 的 CI 會涵蓋真實母體參數。CI 與雙尾 p-value 對偶:若 95% CI 不含 H0 設定值,則 p < 0.05",
+      "key_points": [
+        "95% CI:點估計 ± 1.96 × SE",
+        "CI 越窄代表估計越精準(通常 n 大、變異小)",
+        "CI 涵蓋 H0 值 ⇔ p > α(不拒絕)",
+        "CI 不涵蓋 H0 值 ⇔ p < α(拒絕)"
+      ],
+      "common_misconceptions": [
+        "把 95% CI 解讀成『真實參數有 95% 機率落在這區間』(母體參數是固定值,不是隨機)",
+        "誤以為 CI 越寬代表結果越穩健",
+        "對單次 CI 套用『95% 機率』敘述(只能對方法層級講)"
+      ],
+      "explanation_hooks": [
+        "口訣『重覆抽樣 95 次,約 95 次區間蓋到真值』",
+        "CI 比 p 更有資訊 — 同時給出效應大小與不確定性",
+        "CI 包含 0(差異檢定)= 不顯著;包含 1(比值檢定)= 不顯著"
+      ],
+      "variation_seeds": [
+        {"context": "差異 95% CI = [-2, 5],雙尾 p 與 0.05 關係?", "answer": "p > 0.05(CI 含 0)"},
+        {"context": "勝算比 OR 95% CI = [1.2, 3.5],顯著嗎?", "answer": "顯著(不含 1)"}
+      ],
+      "related_node_ids": ["n_L22103_001", "n_L22103_003"]
+    },
+    {
+      "node_id": "n_L22103_005",
+      "knowledge_code": "L22103",
+      "title": "t 檢定 vs Z 檢定 vs ANOVA 選擇(樣本大小 / 變異已知否 / 組數)",
+      "category": "flow",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch3.3 檢定方法選擇"}],
+      "summary": "母體變異 σ 已知 → Z 檢定;σ 未知用樣本 s 估 → t 檢定(自由度 n-1);三組以上平均比較 → ANOVA(F 檢定),避免重複 t 檢定膨脹 α",
+      "key_points": [
+        "Z 檢定:σ 已知 或 n 很大(近似)",
+        "t 檢定:σ 未知,小樣本特別需要(t 尾巴比 Z 厚)",
+        "單樣本 t、獨立兩樣本 t、配對 t 三種變形",
+        "ANOVA:k 組(k ≥ 3)平均比較,H0 = 所有組平均相等"
+      ],
+      "common_misconceptions": [
+        "小樣本用 Z 檢定(忽略 t 才正確)",
+        "三組以上做兩兩 t 檢定不校正 α(α 累積膨脹)",
+        "把 ANOVA F 顯著當『某兩組差異顯著』(F 顯著只代表至少一組不同,需後續事後檢定)"
+      ],
+      "explanation_hooks": [
+        "口訣『σ 知 Z、σ 不知 t、三組以上 ANOVA』",
+        "n ≥ 30 時 t 近似 Z(t 表大樣本端與 Z 收斂)",
+        "ANOVA 顯著後做 Tukey HSD / Bonferroni 找出哪兩組差"
+      ],
+      "variation_seeds": [
+        {"context": "比較三種教學法平均成績差異?", "answer": "ANOVA(F 檢定)"},
+        {"context": "n=15、σ 未知,比較單樣本均值?", "answer": "單樣本 t 檢定"}
+      ],
+      "related_node_ids": ["n_L22103_001", "n_L22103_006"]
+    },
+    {
+      "node_id": "n_L22103_006",
+      "knowledge_code": "L22103",
+      "title": "多重檢定問題與 Bonferroni 校正概念",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch3.3 多重檢定"}],
+      "summary": "同時做 m 個檢定時,即使每個 α=0.05,整體至少一個偽陽性的機率(FWER)會膨脹。Bonferroni 校正最簡單:把每個檢定的顯著門檻調為 α/m",
+      "key_points": [
+        "FWER = 1 - (1-α)^m,m 大會迅速逼近 1",
+        "Bonferroni:每個檢定用 α' = α/m",
+        "Bonferroni 保守(易型二錯誤),適合 m 小或要求嚴謹場合",
+        "其他方法:Holm(逐步)/ Benjamini-Hochberg(控 FDR 而非 FWER)"
+      ],
+      "common_misconceptions": [
+        "做 20 個 t 檢定不校正,把『至少一個 p < 0.05』當證據",
+        "把 Bonferroni 套到所有情境(過嚴,大幅減低 Power)",
+        "誤以為 FDR 控制與 FWER 控制等價(FDR 容忍部分偽陽性以保 Power)"
+      ],
+      "explanation_hooks": [
+        "口訣『多檢定膨脹,Bonferroni 除以 m』",
+        "20 個獨立檢定 α=0.05,FWER ≈ 1-0.95²⁰ ≈ 64%",
+        "基因表達、A/B test 多指標、ML 多模型比較都會遇到"
+      ],
+      "variation_seeds": [
+        {"context": "做 10 個檢定要保 FWER=0.05,每個門檻?", "answer": "α' = 0.05/10 = 0.005"},
+        {"context": "想接受少量偽陽性換取較高 Power?", "answer": "用 FDR(BH 法)而非 Bonferroni"}
+      ],
+      "related_node_ids": ["n_L22103_001", "n_L22103_005"]
+    }
+  ]
+}
