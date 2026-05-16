@@ -959,7 +959,7 @@
       "difficulty": "medium",
       "source_level": "L1",
       "stem": "連鎖咖啡店以加法模型分解月銷售量(趨勢 + 季節 + 殘差)。下列程式 print 趨勢成分平均與一個週期內季節成分總和的 tuple,結果為何?",
-      "code_block": "import pandas as pd\nimport numpy as np\nfrom statsmodels.tsa.seasonal import seasonal_decompose\nidx = pd.date_range('2024-01-01', periods={n}, freq='M')\nsales = pd.Series([{a}+i + 10*np.sin(i*np.pi/6) for i in range({n})], index=idx)\nresult = seasonal_decompose(sales, model='additive', period=12)\ntrend_mean = round(result.trend.dropna().mean(), 1)\nseason_sum = round(result.seasonal[:12].sum(), 2)\nprint((trend_mean, season_sum))",
+      "code_block": "import pandas as pd\nimport numpy as np\nfrom statsmodels.tsa.seasonal import seasonal_decompose\nidx = pd.date_range('2024-01-01', periods={n}, freq='ME')\nsales = pd.Series([{a}+i + 10*np.sin(i*np.pi/6) for i in range({n})], index=idx)\nresult = seasonal_decompose(sales, model='additive', period=12)\ntrend_mean = round(float(result.trend.dropna().mean()), 1)\nseason_sum = round(float(result.seasonal[:12].sum()), 2)\nprint((trend_mean, season_sum))",
       "stem_variables": {
         "case_a": {
           "a": "100",

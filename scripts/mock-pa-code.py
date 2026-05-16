@@ -19,14 +19,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
 
-# 2026-05-16 iter 6: env-dependent questions skipped (need optional Python packages).
-# Mock records these as SKIPPED (not FAIL) — orchestrator decides whether to install
-# the package or rewrite the question. Format: question_id → reason
-SKIP_IDS = {
-    'q_n23_003': 'needs imbalanced-learn (SMOTE)',
-    'q_n22_011': 'needs statsmodels (ARIMA / seasonal_decompose)',
-    'q_n22_012': 'needs mlxtend (apriori / association_rules)',
-}
+# 2026-05-17 case 11 P1: imbalanced-learn / statsmodels / mlxtend installed on local + CI,
+# all 3 env-dependent skips removed and re-validated. If env breaks again, re-add here.
+SKIP_IDS = {}
 
 FILES = [
     'src/questions-pa-code.json',

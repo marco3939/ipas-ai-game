@@ -390,7 +390,6 @@
       const visualData = renderVisualData(q);
       document.getElementById('battle-question').innerHTML = `
         <div class="question-card">
-          <div class="timer-bar" id="play-timer-bar"><span class="timer-icon">⏱</span><span>剩餘 <span id="play-timer-value">90</span> 秒</span></div>
           <div class="question-meta">
             <span class="badge">第 ${this.state.idx + 1} / ${this.state.questions.length} 回合</span>
             <span class="badge">${q.knowledge_code}</span>

@@ -367,28 +367,9 @@
   .cm-cell.correct-placement { border-color: var(--success); background: rgba(74,222,128,0.1); }
   .cm-cell.wrong-placement { border-color: var(--danger); background: rgba(248,113,113,0.1); }
 
-  /* === 每題 90s 倒數計時器(R5 task 1:exam pressure)=== */
-  /* 2026-05-11: timer 功能暫停 — 使用者回報切題時誤觸 timeout,靜態分析未找出根因,
-     依使用者授權「如有問題無法修復就關閉」,以 display:none + _startTimer 早 return 雙保險暫關。
-     後續 debug 完只需:(1) 把這條 display:none 移除 (2) PlayEngine._startTimer 移除早 return。 */
-  .timer-bar { display: none !important; }
-  .timer-bar.__keep__ { display: flex; align-items: center; gap: 8px;
-    padding: 8px 14px; margin-bottom: 12px;
-    background: var(--bg-2); border-radius: var(--radius-sm);
-    border-left: 3px solid var(--primary);
-    font-weight: 700; font-size: 16px; color: var(--fg); }
-  .timer-bar .timer-icon { font-size: 18px; }
-  .timer-bar.warn { border-left-color: var(--warn); color: var(--warn); }
-  .timer-bar.critical { border-left-color: var(--danger); color: var(--danger);
-    animation: timer-pulse 0.6s infinite alternate; }
-  @keyframes timer-pulse { from { opacity: 1; } to { opacity: 0.5; } }
-  /* R5b:timeout 狀態 — 紅閃 + 強制視覺提醒 */
-  .timer-bar.timeout {
-    background: var(--danger);
-    color: white;
-    border-left-color: white;
-    animation: timer-pulse 0.4s infinite alternate;
-  }
+  /* === 每題 90s 倒數計時器已於 2026-05-17 完整移除(case 11 P1)===
+     原因:使用者回報切題時誤觸 timeout,靜態 + 動態分析仍未確切找出根因。
+     依授權「全移除」徹底拔除整套 timer。Mode 7 有獨立 30 分鐘倒數模考計時器(不影響)。 */
   .option-btn.timeout-locked {
     opacity: 0.6;
   }
@@ -1416,10 +1397,8 @@ function show(viewId) {
 }
 
 function goHome() {
-  // R5 fix:離開答題頁前必須停掉任何進行中的 timer,並清掉 PlayEngine.current,
-  // 否則 90s 後 _onTimeout 仍會 fire,寫入 Mastery/Wrongbook/SM-2 至已棄置題目。
-  if (typeof PlayEngine !== 'undefined' && PlayEngine._stopTimer) {
-    PlayEngine._stopTimer();
+  // case 11 (2026-05-17 P1):90s timer 已完整移除;此處只清 PlayEngine.current 防殘留。
+  if (typeof PlayEngine !== 'undefined') {
     PlayEngine.current = null;
   }
   // Mode 8 同樣有獨立 timer 與 _timers 佇列,需同步清理
@@ -1593,79 +1572,14 @@ function enterMode(mode) {
 const PlayEngine = {
   current: null,
   history: [],
-  // === 每題 90s 計時器狀態(R5 task 1)===
-  _timerId: null,             // setInterval id
-  _timerRemaining: 0,         // seconds left
-  _timerDuration: 90,         // 預設總長(秒)
-  _timerDisabled: false,      // Mode 7 等場景關閉(disableTimer opt)
 
-  // 啟動計時器(seconds 預設 90)
-  _startTimer(seconds = 90) {
-    // 2026-05-11 escape hatch:使用者回報切題時誤觸 timeout,依授權暫關 timer。
-    // 後續 debug 完只需移除這一行(以及 .timer-bar 的 display:none CSS)即可恢復。
-    return;
-    this._stopTimer(); // 先清舊
-    this._timerDuration = seconds;
-    this._timerRemaining = seconds;
-    this._timerDisabled = false;
-    this._updateTimerDOM();
-    const self = this;
-    this._timerId = setInterval(function () {
-      self._timerRemaining--;
-      if (self._timerRemaining <= 0) {
-        self._timerRemaining = 0; // clamp 不顯示負數
-        self._updateTimerDOM();
-        self._stopTimer();
-        self._onTimeout();
-        return;
-      }
-      self._updateTimerDOM();
-    }, 1000);
-  },
-
-  // 停止計時器(在 answer 開頭呼叫;timeout 內部也會呼叫)
-  _stopTimer() {
-    if (this._timerId) {
-      clearInterval(this._timerId);
-      this._timerId = null;
-    }
-  },
-
-  // 更新 DOM(顏色階段 + 數字)
-  _updateTimerDOM() {
-    const bar = document.getElementById('play-timer-bar');
-    const val = document.getElementById('play-timer-value');
-    if (val) val.textContent = String(Math.max(0, this._timerRemaining));
-    if (bar) {
-      bar.classList.remove('warn', 'critical');
-      if (this._timerRemaining < 10) bar.classList.add('critical');
-      else if (this._timerRemaining < 30) bar.classList.add('warn');
-    }
-  },
-
-  // 計時器歸零:R5b 改為「graceful 鎖定 + 強制使用者點選答案」,不 auto-write Mastery/Wrongbook/SM-2
-  // 原因:Mode 1/2/3/5 自渲染不會設 PlayEngine.current,直接 auto-write 會 NPE。
-  // 新行為:鎖所有 #view-play 內的 .option-btn(灰化,但保留可點;讓使用者選後走各 mode 的 answer 路徑)
-  //         + 改 timer-bar 文案 + 加 .timeout class(紅閃)
-  _onTimeout() {
-    // 鎖所有 .option-btn(view-play 範圍,涵蓋 Mode 1/2/3/5/6 各自的 options 容器)
-    document.querySelectorAll('#view-play .option-btn').forEach(b => {
-      b.classList.add('timeout-locked');
-      // 不 disable:讓使用者仍可點答案,觸發 mode 的 answer() 路徑(已記入 Wrongbook / Mastery)
-    });
-    // 更新 timer-bar:顯示時間到提示 + 紅閃
-    const bar = document.getElementById('play-timer-bar');
-    if (bar) {
-      bar.classList.remove('warn', 'critical');
-      bar.classList.add('timeout');
-      bar.innerHTML = '<span class="timer-icon">⏰</span><span>時間到 — 必選一個答案,將記入錯題本</span>';
-    }
-  },
+  // 2026-05-17 case 11 P1:每題 90s 計時器整套移除(原 escape hatch → 全清)
+  // 兼容性 no-op shim:Mode 1/2/3/5 仍呼叫 PlayEngine._stopTimer() / _startTimer(),
+  // 保留空函式避免 typeof undefined 檢查路徑出錯;之後可逐 mode 清乾淨。
+  _stopTimer() {},
+  _startTimer() {},
 
   show(question, opts = {}) {
-    // R5 task 1:每次進新題前先清舊 timer(避免上題遺留)
-    this._stopTimer();
-    this._timerDisabled = !!opts.disableTimer;
     this.current = renderQuestion(question);
     // === 分流:互動混淆矩陣題型(spec: docs/spec-confusion-matrix.md §4.2)===
     if (this.current.interaction_type === 'confusion-matrix' && typeof ConfusionMatrix !== 'undefined') {
@@ -1680,16 +1594,9 @@ const PlayEngine = {
     const ctx = opts.contextHTML || '';
     const code = this.current.code_block ? `<pre class="code-syntax">${highlightCodeSimple(this.current.code_block)}</pre>` : '';
     const visualData = renderVisualData(this.current); // ← 修復:渲染 table_data / chart_data
-    // R5 task 1:計時器 bar(disableTimer 時不渲染)
-    const timerHTML = this._timerDisabled ? '' :
-      '<div class="timer-bar" id="play-timer-bar">' +
-        '<span class="timer-icon">⏱</span>' +
-        '<span>剩餘 <span id="play-timer-value">90</span> 秒</span>' +
-      '</div>';
     view.innerHTML = `
       ${ctx}
       <div class="question-card">
-        ${timerHTML}
         <div class="question-meta">
           <span class="badge">編碼 ${this.current.knowledge_code}</span>
           <span class="badge">${this.current.difficulty}</span>
@@ -1710,13 +1617,9 @@ const PlayEngine = {
       </div>
     `;
     show('view-play');
-    // R5 task 1:innerHTML 寫完後啟動計時器(disableTimer 時跳過)
-    if (!this._timerDisabled) this._startTimer(90);
   },
 
   answer(key) {
-    // R5 task 1:第一行先停 timer(使用者已答題,避免 race 後續被 _onTimeout 重複寫入)
-    this._stopTimer();
     // case 11 (2026-05-17 P0):null guard — 若 current/options 缺或 key 不在 options,
     // 不能直接 throw(會被 inline onclick 吃掉變 silent fail)。
     if (!this.current || !this.current.options) {

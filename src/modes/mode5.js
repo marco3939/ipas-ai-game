@@ -470,7 +470,6 @@
 
       document.getElementById('m5-question').innerHTML = `
         <div class="question-card">
-          <div class="timer-bar" id="play-timer-bar"><span class="timer-icon">⏱</span><span>剩餘 <span id="play-timer-value">90</span> 秒</span></div>
           <div class="question-meta">
             <span class="badge">第 ${s.idx + 1} 回合</span>
             <span class="badge">${q.knowledge_code}</span>

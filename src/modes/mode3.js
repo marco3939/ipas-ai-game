@@ -402,7 +402,6 @@
 
       view.innerHTML = `
         <div class="m3-arena">
-          <div class="timer-bar" id="play-timer-bar"><span class="timer-icon">⏱</span><span>剩餘 <span id="play-timer-value">90</span> 秒</span></div>
           <div class="m3-status-row">
             <span style="font-size:1.6rem">${s.meta.avatar}</span>
             <div style="flex:1">
