@@ -26,6 +26,8 @@ node scripts/audit-source-fidelity.js   # 鐵律 #5
 node scripts/audit-render.js            # 渲染輸出(案例 8 教訓)
 node scripts/audit-calculation.js       # calculation 題 schema
 node scripts/verify-calc-numeric.js     # 數值正確性獨立驗算
+node scripts/audit-mode-flow.js         # mode 流程跑驗 isCorrect/correctKey 非空(案例 10,待寫)
+node scripts/audit-wrongbook-callers.js # Wrongbook.add 跨檔簽名一致性(案例 10,待寫)
 ```
 
 ---
@@ -120,6 +122,50 @@ LoRA / RLHF / DPO / GPTQ / SentencePiece / DAPT / RandAugment / Mixup / CutMix /
 - 根因:Browser / GitHub Pages / CDN cache,不是真 bug
 - 修補:任何「使用者實測 vs 本機確認」不一致時,先驗證部署層 ground truth(raw URL / build status / cache headers)
 - 注意:此模式已建議補進全域 §14(語言無關共通模式)
+
+### 案例 10:Lineup.q.options 無洗牌後 key — 從 PR #5 起埋 13 PR 後爆發(critical)
+- 症狀(2026-05-16 使用者回報):Mode 7 模考送出鎖定後對話框顯示「正解:undefined」,選對的選項被判答錯;歷史回顧紅框失效;Wrongbook userText/correctText 寫空字串;Mastery / SeenCorrect / SM2 / Progress 全部被污染(答對被記答錯)。
+- 根因:`renderQuestion`(index.html:685-689)流程是「先洗牌再指派 A/B/C/D 鍵」,所以原始 QUESTIONS 的 options **沒有 key 欄位**;但 `state.lineup[i].q` 直接持有原版引用,Mode 7 內 9+ 處(submitCurrent / submitMock / _renderLockedFeedback / _commitToSharedLayer / _saveHistory / _renderReviewQuestion / expandAllExplanations / toggleWrongbookFromReview / _timeUp)用 `lineup.q.options.find(o => o.key === userKey)` 永遠找不到 → isCorrect=false / correctKey=''。
+- 為何 13 PR 都沒抓到:PR #5 引入時 `_renderLockedFeedback` 是中性的(只說「結算後可看對錯」),bug 沉默 13 個月;PR #18 加「立即顯示對錯 + 正解」UI 才曝光「正解:undefined」字面;此期間 PR #11/#16/#17 都修「歷史回顧紅框」但因 fullLog snapshot 也用 lineup.q.options 抓 → snapshot 內 keys 全 undefined → 修了像沒修。
+- 修補:render 後 cache 到 `item._rendered`(`_showCurrentQuestion` 第一次渲染後寫入,後續傳 `{...item._rendered, shuffle_options:false}` 跳洗牌);所有讀 `state.lineup[i].q.options` 的地方一律用 `item._rendered.options`;抽 `_getRenderedQ(item)` helper 集中 fallback;**新加 audit-mode-flow.js mock 一場 Mode 7 驗證 isCorrect / correctKey 在所有 commit point 都非空**。
+- 教訓(本案最大收穫):
+  1. **「靜默計分錯誤」型 bug 不會被 syntax check 抓到**,必須 dataflow trace。從這次起任何「user-facing 計分 / 狀態 / 持久化」的改動 merge 前必派 code-review subagent(見 §8 強制流程)。
+  2. **任何 bug 修補後必跨檔 grep 同根因模式**(本案:`q\.options.*find` 在 9 處出現,只修 4 處 = 沒修)。
+  3. **既存程式碼不可信**:做改動前必 dataflow trace,不可假設 PR #5 寫的就對。
+  4. **PR 描述「驗證點」不是驗證**:寫了 checklist 卻沒實際跑,等於沒驗證。
+  5. **連續 3+ PR 動同一檔**:每 3 個 PR 派一次 regression review subagent。
+
+---
+
+## 8. 共用層 / user-facing 改動 必派 code-review subagent(2026-05-16 案例 10 後新增)
+
+> 案例 10 教訓:syntax check 不夠。任何使用者面 critical 流程改動 merge 前必經人工或 subagent 深度檢查。
+
+### 觸發條件(任一即觸發)
+
+- 改 `src/index.html` Storage / PlayEngine / Wrongbook / Mastery / Progress / SeenCorrect / SM2 / ProgressIO 等共用模組
+- 改 `src/modes/modeN.js` 的 submit / answer / lock / state mutation / commit-to-shared 路徑
+- 改 user-facing 計分、UI feedback、持久化(localStorage 寫入)流程
+- 連續 3+ PR 動同一檔(regression risk)
+- 修使用者回報的 bug(可能漏抓同根因)
+
+### 必做的 4 項檢查(subagent 至少做 2 項才能 merge)
+
+1. **Dataflow trace**:列出每個 state mutation 的 input/output type 與不變量(例:`q.options[i].key` 從哪來?是 'A/B/C/D' 還是 undefined?)
+2. **Cross-file caller 一致性**:grep 所有 caller 確認簽名相容(例:`Wrongbook.add(` 全 codebase grep 看 6 個參數是否都正確傳)
+3. **邊界 case + 反例**:空 / undefined / race / 第一次 / 最後一次 / 跨函式呼叫順序
+4. **同根因模式 grep**:剛修的 pattern 整個 codebase 還有沒有其他出現點
+
+### 不接受的 validation
+
+- ❌ `node --check` syntax 為唯一 validation
+- ❌ PR 描述的 markdown「驗證點」清單(若我自己沒實際執行)
+- ❌ 「應該沒問題」/「邏輯看起來對」(必須 trace 證據)
+
+### 失敗示範(歷史紀錄)
+
+- PR #5 引入 lineup.q.options 無 key bug → PR #11 / #16 / #17 / #18 連續 4 個修法都沒抓到根因 → PR #19 還只修 4 處漏 4 處 → 14 個 PR + 5 個 review subagent 才把 bug 全清。
+- 教訓:這 14 個 PR 任何一個若先派 code-review agent dataflow trace,3 PR 內就能抓到。
 
 ---
 
