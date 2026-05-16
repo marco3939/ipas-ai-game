@@ -851,7 +851,8 @@
     },
 
     gameOver() {
-      Player.heal(50);
+      // 2026-05-16: 動態 hpMax/2,對齊「恢復一半 HP」文案
+      const _heal5 = Player.load(); Player.heal(Math.floor(_heal5.hpMax / 2));
       const s = this.state;
       const view = document.getElementById('view-play');
       view.innerHTML = `

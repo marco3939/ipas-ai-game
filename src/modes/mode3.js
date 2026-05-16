@@ -983,7 +983,8 @@
       this._cleanupGhosts();
       if (!this.state) { this.renderStageMenu(); return; }
       this.state.finished = true;
-      Player.heal(50);
+      // 2026-05-16: 動態 hpMax/2,對齊「恢復一半 HP」文案
+      const _heal3 = Player.load(); Player.heal(Math.floor(_heal3.hpMax / 2));
       const s = this.state;
       const view = document.getElementById('view-play');
       view.innerHTML = `

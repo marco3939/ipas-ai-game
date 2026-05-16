@@ -761,7 +761,8 @@
       const bossKeyForRetry = this.state.boss.key;
       const bossNameForRetry = this.state.boss.name;
       const lastAttack = RNG.pick(this.state.boss.attack);
-      Player.heal(50);
+      // 2026-05-16: 動態 hpMax/2,對齊「恢復一半 HP」文案(Lv1=50,升級後可能 60+)
+      const _heal2 = Player.load(); Player.heal(Math.floor(_heal2.hpMax / 2));
       // 清 state(避免 1.5s 內若使用者已退到地圖,殘留 race;且按鈕點 selectBoss 會新開戰)
       this.state = null;
       const view = document.getElementById('view-play');

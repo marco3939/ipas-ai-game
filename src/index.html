@@ -431,7 +431,7 @@
         <button class="mode-card" onclick="enterMode(4)">
           <div class="mode-num">案 4</div>
           <div class="mode-title">⚡ 易混淆配對戰</div>
-          <div class="mode-desc">14 組高頻易混淆對,快速記憶 + 配對挑戰</div>
+          <div class="mode-desc">8 組高頻易混淆對(自題庫篩選),快速記憶 + 配對挑戰</div>
           <div class="mode-stats">入門 · 速戰</div>
         </button>
         <button class="mode-card" onclick="enterMode(2)">
@@ -716,8 +716,8 @@ const Mastery = {
       .map(id => ({ id, score: (m[id] && m[id].attempts > 0) ? m[id].score : 50 }))
       .sort((a,b) => a.score - b.score).slice(0, n);
   },
-  // 註:countMastered 已改用 correct ≥ 3 判定(2026-05-10),此 threshold 保留供他處 score 條件引用
-  MASTERY_THRESHOLD: 60,
+  // 2026-05-16 cleanup: removed legacy MASTERY_THRESHOLD: 60 constant (dead code,
+  // no src/ readers since 2026-05-10 改用 correct >= 3 判定;架構 doc 已更新)
   // 熟練判定:該 node_id 累計答對 ≥ min(3, 該節點題庫題數) 次即 mastered(不看 score,不要求連續)
   // 跨場累積友善:碰過 3 次都答對 → 熟練了。改前用 score >= 60 需「連對 4 次」,單場戰鬥幾乎不可能達成,首頁永遠 0
   // 2026-05-16 H2 fix: per-node threshold — 部分節點題庫只有 1-2 題,固定 correct>=3 永遠無法達標
