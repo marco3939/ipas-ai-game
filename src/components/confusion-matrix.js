@@ -310,8 +310,14 @@ const ConfusionMatrix = {
     if (typeof Mastery !== 'undefined' && q.node_id) Mastery.update(q.node_id, isCorrect);
     if (typeof Progress !== 'undefined') Progress.addAnswer(isCorrect);
     if (!isCorrect && typeof Wrongbook !== 'undefined') {
+      // 2026-05-16 案例 10 補:Wrongbook.add 簽名是 (qid, nodeId, userChoice, correctChoice, userText, correctText)
+      // Confusion-matrix 題型沒有 A/B/C/D key,userInput 是數字字串。文字放對欄位、key 槽留 '?'
       const correctOpt = (q.options || []).find(o => o.is_correct);
-      Wrongbook.add(q.id, q.node_id, userInput, correctOpt ? correctOpt.text : '?');
+      Wrongbook.add(
+        q.id, q.node_id, '?', '?',
+        userInput || '',
+        (correctOpt && correctOpt.text) || ''
+      );
     }
     if (typeof SM2 !== 'undefined' && q.id) SM2.recordAnswer(q.id, isCorrect, false);
 

@@ -507,13 +507,13 @@
       // 若不足,從其他 bucket 補
       const slots = NPCS.map((npc, i) => ({ npc, target: 0 }));
       let remain = want;
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < NPCS.length; i++) {
         const t = Math.min(segSize, remain);
         slots[i].target = t;
         remain -= t;
       }
       // 從 buckets 拉題填 slots(優先匹配 NPC,不足從別的 bucket 借)
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < NPCS.length; i++) {
         const slot = slots[i];
         const ownBucket = buckets[i];
         const filled = [];
@@ -744,9 +744,33 @@
 
     _timeUp() {
       this._stopTimer();
-      // 自動把目前題的剩餘記錄為「未答」(扣未答題)
-      // 已渲染未答的題視為「答錯」(更接近真考)
+      // 案例 10 補:時間到自動交卷時也要把所有 draft 升格為 answers(與 submitMock 一致)
+      // 不然「已選但沒按送出本題」的題在 _commitToSharedLayer 全變未答 → 使用者誤以為自己沒選
+      this._autoLockDrafts();
       this._finalize('time_up');
+    },
+
+    // 抽出 submitMock 內的「自動升格 draft」邏輯,讓 _timeUp 也能呼叫
+    // 案例 10 critical fix:用 _getRendered 才有洗牌後 key
+    _autoLockDrafts() {
+      if (!this.state) return;
+      for (let i = 0; i < this.state.total; i++) {
+        if (this.state.locked.has(i)) continue;
+        const draft = this.state.draft[i];
+        if (!draft || !draft.userKey) continue;
+        const item = this.state.lineup[i];
+        const renderedQ = this._getRendered(item);
+        const rOpts = (renderedQ && renderedQ.options) || [];
+        const opt = rOpts.find(o => o.key === draft.userKey);
+        const isCorrect = !!(opt && opt.is_correct);
+        const correctOpt = rOpts.find(o => o.is_correct);
+        const correctKey = correctOpt ? correctOpt.key : '';
+        this.state.answers[i] = { userKey: draft.userKey, isCorrect, correctKey };
+        this.state.locked.add(i);
+      }
+      // 案例 10 review 補:寫入 answers 後必重算 stats(否則 s.correct/s.wrongs 不更新,
+      // 結算頁分數偏少)。放這裡讓 submitMock + _timeUp 兩條路徑永不分歧。
+      this._recomputeStats();
     },
 
     // ===== 顯示當前題目(用 PlayEngine.show + 包裹 NPC 框)=====
@@ -1110,23 +1134,8 @@
       }
       if (!confirm(msg)) return;
       // 自動把所有 draft 升格為 answers(交卷時送出剩餘草稿)
-      // 案例 10 critical fix:必須用 _getRendered 才有洗牌後 key,否則所有自動升格題
-      // 全被判答錯、correctKey='',進入 fullLog 污染整場結算
-      for (let i = 0; i < this.state.total; i++) {
-        if (this.state.locked.has(i)) continue;
-        const draft = this.state.draft[i];
-        if (!draft || !draft.userKey) continue;
-        const item = this.state.lineup[i];
-        const renderedQ = this._getRendered(item);
-        const rOpts = (renderedQ && renderedQ.options) || [];
-        const opt = rOpts.find(o => o.key === draft.userKey);
-        const isCorrect = !!(opt && opt.is_correct);
-        const correctOpt = rOpts.find(o => o.is_correct);
-        const correctKey = correctOpt ? correctOpt.key : '';
-        this.state.answers[i] = { userKey: draft.userKey, isCorrect, correctKey };
-        this.state.locked.add(i);
-      }
-      this._recomputeStats();
+      // _autoLockDrafts 內已含 _recomputeStats(避免兩條路徑分歧)
+      this._autoLockDrafts();
       this._finalize('submit');
     },
 

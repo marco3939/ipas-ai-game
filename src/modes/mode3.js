@@ -902,12 +902,17 @@
       s.finished = true;
 
       // 加入錯題本(鐵律 #1)
-      const correctText = s.q.options.find(o => o.is_correct)?.text || '';
+      // 2026-05-16 案例 10 補:Wrongbook.add 簽名是 (qid, nodeId, userChoice, correctChoice, userText, correctText)
+      // 原本把長 fail 訊息塞 userChoice、把 correctText 塞 correctChoice,channel 錯位 → Review UI 顯示怪
+      // Mode 3 是 pipeline drag,沒有 A/B/C/D 概念,userChoice/correctChoice 留 '?',文字放對欄位
+      const correctOpt = s.q.options.find(o => o.is_correct);
+      const failMsg = '(Pipeline 拖拉失敗 · 錯放 ' + s.wrongDrops + ' / 完成 ' + s.correctPlacements + '/' + s.steps.length + ')';
       Wrongbook.add(
         s.q.id,
         s.q.node_id || s.q.id,
-        '(Pipeline 拖拉失敗 · 錯放 ' + s.wrongDrops + ' / 完成 ' + s.correctPlacements + '/' + s.steps.length + ')',
-        correctText
+        '?', '?',
+        failMsg,
+        (correctOpt && correctOpt.text) || ''
       );
       Mastery.update(s.q.node_id || s.q.id, false);
       if (typeof SM2 !== 'undefined' && s.q.id) SM2.recordAnswer(s.q.id, false, false);
