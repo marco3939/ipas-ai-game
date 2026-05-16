@@ -517,9 +517,15 @@
       if (isCorrect) {
         this.attack();
       } else {
-        // 寫入 Wrongbook
+        // 寫入 Wrongbook(案例 10 補:加 userText/correctText 對照)
         const correctOpt = q.options.find(o => o.is_correct);
-        Wrongbook.add(q.id, q.node_id || s.boss.nodeId, key, correctOpt ? correctOpt.key : null);
+        const userOpt = q.options.find(o => o.key === key);
+        Wrongbook.add(
+          q.id, q.node_id || s.boss.nodeId,
+          key, correctOpt ? correctOpt.key : null,
+          (userOpt && userOpt.text) || '',
+          (correctOpt && correctOpt.text) || ''
+        );
         this.takeDamage();
       }
 

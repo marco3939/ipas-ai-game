@@ -166,11 +166,13 @@
       Progress.addAnswer(false);
       const correctOpt = (q.options || []).find(function (o) { return o.is_correct; });
       const wrongOpt = (q.options || []).find(function (o) { return !o.is_correct; });
+      // 案例 10 補:傳 userText/correctText(timeout 視為選了某錯解)
       Wrongbook.add(
-        q.id,
-        q.node_id,
+        q.id, q.node_id,
         wrongOpt ? wrongOpt.key : 'B',
-        correctOpt ? correctOpt.key : 'A'
+        correctOpt ? correctOpt.key : 'A',
+        (wrongOpt && wrongOpt.text) || '(時間到未答)',
+        (correctOpt && correctOpt.text) || ''
       );
       if (typeof SM2 !== 'undefined' && q.id) SM2.recordAnswer(q.id, false, false);
       this.state.answering = true; // 鎖 step 互動
@@ -418,11 +420,13 @@
           // 但 renderQuestion 已洗牌 + 加 key,需從實際 q.options 取 key
           const correctOpt = (q.options || []).find(function (o) { return o.is_correct; });
           const wrongOpt = (q.options || []).find(function (o) { return !o.is_correct; });
+          // 案例 10 補:傳 userText/correctText
           Wrongbook.add(
-            q.id,
-            q.node_id,
+            q.id, q.node_id,
             wrongOpt ? wrongOpt.key : 'B',
-            correctOpt ? correctOpt.key : 'A'
+            correctOpt ? correctOpt.key : 'A',
+            (wrongOpt && wrongOpt.text) || '',
+            (correctOpt && correctOpt.text) || ''
           );
         }
         if (typeof SM2 !== 'undefined' && q.id) SM2.recordAnswer(q.id, allCorrect, false);

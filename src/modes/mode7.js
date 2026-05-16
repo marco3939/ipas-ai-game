@@ -1570,6 +1570,11 @@
         const q = item.q;
         const a = s.answers[i];  // {userKey, isCorrect, correctKey} or undefined
         // 案例 10:用 _getRendered 取洗牌後 options(含 key)+ 替換後 stem/code
+        // PR A review 補:若使用者跳題未進過 _showCurrentQuestion(_rendered 未 cache),
+        // 主動跑一次 renderQuestion 取得帶 key 的 snapshot,避免 fullLog 存 key:undefined
+        if (!item._rendered && typeof renderQuestion === 'function') {
+          try { item._rendered = renderQuestion(q); } catch (_) {}
+        }
         const renderedQ = this._getRendered(item) || q;
         const correctOpt = (renderedQ.options || []).find(o => o.is_correct);
         return {

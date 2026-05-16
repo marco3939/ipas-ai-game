@@ -423,6 +423,15 @@
         <button class="btn btn-ghost" id="er-export-btn" onclick="ErrorReports.export()">📤 匯出錯誤回報(0 筆)</button>
         <button class="btn btn-ghost" onclick="ErrorReports.clear()">🗑️ 清除回報</button>
       </div>
+      <!-- 案例 10 補:Mode 7 lineup-key bug 期間污染掃描 -->
+      <div id="wb-cleanup-banner" style="display:none;margin-top:10px;background:rgba(250,204,21,0.12);border:1px solid #facc15;border-radius:6px;padding:10px;font-size:0.85rem">
+        <strong style="color:#facc15">⚠️ 偵測到 <span id="wb-suspect-count">0</span> 筆可疑錯題資料</strong>(2026-05-16 Mode 7 bug 期間,部分答對的題被誤記為答錯)
+        <div style="margin-top:6px;color:var(--fg-dim);font-size:0.78rem">建議先「📤 匯出進度」備份再清理。Mastery / Progress 已聚合無法回復,僅 Wrongbook 可救。</div>
+        <div class="actions" style="margin-top:8px">
+          <button class="btn btn-warn" onclick="cleanupSuspectWrongbook()">🗑️ 一鍵清理</button>
+          <button class="btn btn-ghost" onclick="document.getElementById('wb-cleanup-banner').style.display='none'">暫時隱藏</button>
+        </div>
+      </div>
     </div>
 
     <!-- 暱稱 + 進度匯出匯入(P1 + 18 條威脅完整防禦)-->
@@ -825,7 +834,29 @@ const Wrongbook = {
     const x = w.find(e => e.qid === qid);
     if (x) { x.mastered = true; this.save(w); }
   },
-  count() { return this.load().filter(x => !x.mastered).length; }
+  count() { return this.load().filter(x => !x.mastered).length; },
+
+  // 案例 10 補:掃描 Mode 7 lineup-key bug 期間污染 entries
+  // 特徵:correctChoice='' (key 沒抓到) + correctText='' (text 也沒抓到)
+  // 攻擊面 / 安全性: dry-run + 必須 user 主動確認才清,絕不靜默 mutate
+  countSuspect() {
+    return this.load().filter(x =>
+      !x.mastered &&
+      (x.correctChoice === '' || x.correctChoice == null) &&
+      (!x.correctText || x.correctText === '')
+    ).length;
+  },
+  cleanupSuspect() {
+    const w = this.load();
+    const before = w.length;
+    const cleaned = w.filter(x =>
+      x.mastered ||  // 已 mastered 保留
+      !((x.correctChoice === '' || x.correctChoice == null) && (!x.correctText || x.correctText === ''))
+    );
+    const removed = before - cleaned.length;
+    this.save(cleaned);
+    return removed;
+  }
 };
 
 // === ErrorReports 錯誤回報(僅本機儲存,不上傳)===
@@ -1248,6 +1279,8 @@ function refreshHome() {
   // 錯誤回報相關
   refreshExportButton();
   renderErrorTopList();
+  // 案例 10 Wrongbook 污染掃描
+  refreshWrongbookCleanupBanner();
   // SM-2 統計同步
   if (typeof SM2 !== 'undefined') {
     const sm2Due = SM2.countDueToday();
@@ -1257,6 +1290,28 @@ function refreshHome() {
     if (dueEl) dueEl.textContent = sm2Due;
     if (trackedEl) trackedEl.textContent = sm2Tracked;
   }
+}
+
+// 案例 10 補:檢查 Mode 7 lineup-key bug 污染並提示
+function refreshWrongbookCleanupBanner() {
+  const banner = document.getElementById('wb-cleanup-banner');
+  const countEl = document.getElementById('wb-suspect-count');
+  if (!banner || !countEl) return;
+  const n = (typeof Wrongbook !== 'undefined') ? Wrongbook.countSuspect() : 0;
+  if (n > 0) {
+    countEl.textContent = n;
+    banner.style.display = 'block';
+  } else {
+    banner.style.display = 'none';
+  }
+}
+function cleanupSuspectWrongbook() {
+  const n = Wrongbook.countSuspect();
+  if (n === 0) { showToast('沒有可疑資料需清理', 2000); return; }
+  if (!confirm(`即將清理 ${n} 筆可疑錯題(無 correctChoice + 無 correctText)。\n\n建議先「📤 匯出進度」備份。\n\n確定清理?`)) return;
+  const removed = Wrongbook.cleanupSuspect();
+  showToast(`✅ 已清理 ${removed} 筆可疑錯題`, 2500);
+  refreshHome();
 }
 
 function refreshExportButton() {
@@ -1778,11 +1833,21 @@ function resetAll() {
   const keys = [
     Storage.K_PROGRESS, Storage.K_MASTERY, Storage.K_WRONGBOOK,
     Storage.K_ERROR_REPORTS, Storage.K_SETTINGS, Storage.K_SESSION,
+    Storage.K_SEEN_CORRECT, Storage.K_USER_NICKNAME,   // 案例 10 review 補:原本漏清
     'ipas_player_v1', 'ipas_sm2_v1',
     'ipas_mode1_industries_v1', 'ipas_mode2_bosses_v2',
     'ipas_mode3_progress_v2', 'ipas_mode5_v3_progress',
-    'ipas_mode6_codex_v1', 'ipas_mode7_theater_v1', 'ipas_mode8_dojo_v1',
+    'ipas_mode6_codex_v1', 'ipas_mode7_theater_v1', 'ipas_mode7_font_v1', 'ipas_mode8_dojo_v1',
   ];
+  // 也清所有動態 sm2_* key(SM-2 卡片每張一個 key)
+  try {
+    const dynamicKeys = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith('ipas_sm2_')) dynamicKeys.push(k);
+    }
+    for (const k of dynamicKeys) Storage.del(k);
+  } catch (_) {}
   for (const k of keys) Storage.del(k);
   showToast('已清除所有進度');
   setTimeout(() => location.reload(), 500);

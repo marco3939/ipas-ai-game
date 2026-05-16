@@ -516,8 +516,12 @@
       if (pairData && pairData.sourceQ) {
         const correctOpt = (pairData.sourceQ.options || []).find(o => o.is_correct);
         // userChoice / correctChoice 在配對戰中無 A/B/C/D 概念,故統一用 '?' 紀錄
-        // (避免 substring 截斷後造成錯題本顯示誤導)
-        if (correctOpt) Wrongbook.add(pairData.sourceQ.id, pairData.nodeId, '?', '?');
+        // 案例 10 補:correctText 用正解 text;userText 配對戰無對應選項,用簡述
+        if (correctOpt) Wrongbook.add(
+          pairData.sourceQ.id, pairData.nodeId, '?', '?',
+          '(配對戰錯配)',
+          correctOpt.text || ''
+        );
       }
 
       // 顯示提示框,允許玩家立即下鑽
