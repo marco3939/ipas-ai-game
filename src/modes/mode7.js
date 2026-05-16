@@ -765,7 +765,10 @@
       const isLocked = this.state.locked.has(this.state.idx);
       let answeredHint = '';
       if (isLocked) {
-        answeredHint = `<div class="m7-answered-hint" style="color:#facc15">🔒 本題已送出(${prevAnswer.userKey}),不可修改;結算後可看對錯</div>`;
+        // 2026-05-16:重訪已送出題,直接顯示對錯狀態(學習模式 UX)
+        answeredHint = prevAnswer.isCorrect
+          ? `<div class="m7-answered-hint" style="color:#4ade80">🔒 已送出 <strong>${prevAnswer.userKey}</strong> · ✅ 答對(正解 ${prevAnswer.correctKey})</div>`
+          : `<div class="m7-answered-hint" style="color:#f87171">🔒 已送出 <strong>${prevAnswer.userKey}</strong> · ❌ 答錯 · 正解:<strong style="color:#4ade80">${prevAnswer.correctKey}</strong></div>`;
       } else if (draft && draft.userKey) {
         answeredHint = `<div class="m7-answered-hint" style="color:var(--fg-dim)">📝 已選 <strong>${draft.userKey}</strong> — 點選項可改 / 按「送出本題」鎖定</div>`;
       }
@@ -1326,12 +1329,30 @@
       }
     },
 
-    // 已送出後的中性 NPC 提示(不洩漏對錯,即使本題答對 / 答錯都顯示「已送出」)
+    // 2026-05-16:送出鎖定後立即顯示對錯 + 正解(學習模式 UX,反正鎖了就不能改答案)
     _renderLockedFeedback() {
       const dialogEl = document.querySelector('.m7-npc-line');
-      if (dialogEl) {
-        dialogEl.textContent = `🔒 本題已送出,結算後可看對錯`;
+      if (!dialogEl) return;
+      const idx = this.state.idx;
+      const ans = this.state.answers[idx];
+      if (!ans) {
+        dialogEl.textContent = '🔒 本題已送出';
         dialogEl.style.color = '#facc15';
+        return;
+      }
+      const q = (this.state.lineup[idx] || {}).q || {};
+      const correctOpt = (q.options || []).find(o => o.is_correct);
+      const userOpt = (q.options || []).find(o => o.key === ans.userKey);
+      // escape for innerHTML
+      const esc = (s) => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      const correctTxt = esc((correctOpt && correctOpt.text) || '');
+      const userTxt = esc((userOpt && userOpt.text) || '');
+      if (ans.isCorrect) {
+        dialogEl.innerHTML = `<span style="color:#4ade80;font-weight:700">✅ 答對!</span> 正解 <strong>${esc(ans.correctKey)}. ${correctTxt}</strong>`;
+        dialogEl.style.color = 'var(--fg)';
+      } else {
+        dialogEl.innerHTML = `<span style="color:#f87171;font-weight:700">❌ 答錯</span> · 你選 <span style="color:#f87171">${esc(ans.userKey)}. ${userTxt}</span><br>正解:<strong style="color:#4ade80">${esc(ans.correctKey)}. ${correctTxt}</strong>`;
+        dialogEl.style.color = 'var(--fg)';
       }
     },
 
@@ -1362,14 +1383,14 @@
       this._renderLockedFeedback();
       this._lockOptionButtons();
       this._refreshSubmitButton();
-      // 自動跳下一個未鎖定的題(若沒有則 stay,讓使用者按交卷)
+      // 自動跳下一個未鎖定的題(學習模式 UX:延遲 1500ms 讓使用者看清楚對錯與正解)
       if (idx < this.state.total - 1) {
         setTimeout(() => {
           if (!this.state || this.state.finished) return;
           if (this.state.idx !== idx) return; // 已手動跳走
           this.state.idx = idx + 1;
           this._showCurrentQuestion();
-        }, 350);
+        }, 1500);
       } else {
         if (typeof showToast === 'function') {
           showToast('✅ 已送出最後一題,可按「交卷」結算', 2500);
@@ -1378,11 +1399,24 @@
     },
 
     // 鎖定當前題選項按鈕(送出後 / navigate 進已鎖定題)
+    // 2026-05-16:鎖定後上色 — 正解綠、使用者選的錯解紅、其他灰
     _lockOptionButtons() {
+      const idx = this.state.idx;
+      const ans = this.state.answers[idx];
       document.querySelectorAll('#play-options .option-btn').forEach(b => {
         b.disabled = true;
         b.style.cursor = 'not-allowed';
-        b.style.opacity = '0.7';
+        if (!ans) { b.style.opacity = '0.7'; return; }
+        const key = b.dataset.key || b.getAttribute('data-key');
+        if (key === ans.correctKey) {
+          b.classList.add('correct');
+          b.style.opacity = '1';
+        } else if (key === ans.userKey && !ans.isCorrect) {
+          b.classList.add('wrong');
+          b.style.opacity = '0.95';
+        } else {
+          b.style.opacity = '0.5';
+        }
       });
     },
 
