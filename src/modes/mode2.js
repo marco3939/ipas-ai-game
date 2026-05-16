@@ -484,7 +484,9 @@
       Progress.addAnswer(isCorrect);
       if (!isCorrect) {
         const c = q.options.find(o => o.is_correct);
-        if (c) Wrongbook.add(q.id, q.node_id, key, c.key);
+        const userOpt = q.options.find(o => o.key === key);
+        // 案例 10 補:傳 userText/correctText 讓 Review UI 顯示完整對照
+        if (c) Wrongbook.add(q.id, q.node_id, key, c.key, (userOpt && userOpt.text) || '', c.text || '');
       }
 
       if (isCorrect) this.attack();
