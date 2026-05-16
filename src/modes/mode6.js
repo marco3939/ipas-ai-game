@@ -68,8 +68,13 @@
       // 2) KB 詳情(任一檔失敗不致命,只是該節點不顯示詳細內容)
       const kbFiles = [
         '../kb/nodes-subject-1.json',
-        '../kb/nodes-subject-3.json',
         '../kb/nodes-subject-1-extended.json',
+        '../kb/nodes-subject-2.json',
+        '../kb/nodes-subject-2-stats.json',
+        '../kb/nodes-subject-2-data.json',
+        '../kb/nodes-subject-2-bdapp.json',
+        '../kb/nodes-subject-2-bdml.json',
+        '../kb/nodes-subject-3.json',
         '../kb/nodes-subject-3-extended.json'
       ];
       const kbResults = await Promise.all(kbFiles.map(f =>
@@ -215,6 +220,7 @@
             <select onchange="Mode6.setFilter('subject', this.value)" style="padding:6px 10px;border-radius:6px;background:var(--bg-3);color:var(--fg);border:1px solid var(--border)">
               <option value="all" ${this.state.filters.subject==='all'?'selected':''}>全科目</option>
               <option value="1" ${this.state.filters.subject==='1'?'selected':''}>科一(L21*)</option>
+              <option value="2" ${this.state.filters.subject==='2'?'selected':''}>科二(L22*)</option>
               <option value="3" ${this.state.filters.subject==='3'?'selected':''}>科三(L23*)</option>
             </select>
             <select onchange="Mode6.setFilter('code', this.value)" style="padding:6px 10px;border-radius:6px;background:var(--bg-3);color:var(--fg);border:1px solid var(--border)">

@@ -389,7 +389,7 @@
   <div class="header-inner">
     <div class="countdown" id="countdown">D-?</div>
     <div class="header-stats" id="header-stats">
-      <span class="badge">已熟練 <span id="stat-mastered">0</span> / <span id="stat-total">87</span> 節點(題庫 325 題)</span>
+      <span class="badge">已熟練 <span id="stat-mastered">0</span> / <span id="stat-total">0</span> 節點(題庫 <span id="stat-question-count">0</span> 題)</span>
       <span class="badge">錯題 <span id="stat-wrong">0</span></span>
       <span class="badge">場次 <span id="stat-sessions">0</span></span>
     </div>
@@ -964,6 +964,8 @@ async function loadQuestions() {
     // 鐵律 #5:node_id 來源忠實,分母必對齊「分子 countMastered() 也是節點數」的語意
     const _uniqNodes = new Set(QUESTIONS.map(q => q.node_id).filter(Boolean));
     document.getElementById('stat-total').textContent = _uniqNodes.size;
+    const _qcEl = document.getElementById('stat-question-count');
+    if (_qcEl) _qcEl.textContent = QUESTIONS.length;
     console.log(`已載入 ${QUESTIONS.length} 題 / ${_uniqNodes.size} 個節點,來自 ${files.length} 個題庫檔`);
     return QUESTIONS;
   } catch (e) {
@@ -1100,6 +1102,9 @@ function refreshHome() {
   // stat-total 也同步覆寫一次,避免 loadQuestions 之前的舊值殘留(防 cache)
   const totalEl = document.getElementById('stat-total');
   if (totalEl && totalNodes > 0) totalEl.textContent = totalNodes;
+  // 題庫題數同步覆寫(科二補齊後從 325 → 595,主頁 badge 需即時反映)
+  const qcEl = document.getElementById('stat-question-count');
+  if (qcEl && QUESTIONS.length > 0) qcEl.textContent = QUESTIONS.length;
   document.getElementById('stat-wrong').textContent = Wrongbook.count();
   const sess = Storage.get(Storage.K_PROGRESS, {sessions:0}).sessions;
   document.getElementById('stat-sessions').textContent = sess;
