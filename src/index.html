@@ -425,6 +425,24 @@
       </div>
     </div>
 
+    <!-- 暱稱 + 進度匯出匯入(P1 + 18 條威脅完整防禦)-->
+    <div class="card" id="user-progress-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span style="font-size:1.05rem">👋 嗨,<strong id="user-greeting">玩家</strong>!</span>
+          <button class="btn btn-ghost" style="font-size:0.78rem;padding:4px 10px" onclick="ProgressIO.changeNickname()">✏️ 修改暱稱</button>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn btn-ghost" onclick="ProgressIO.exportProgress()">📤 匯出進度</button>
+          <button class="btn btn-ghost" onclick="ProgressIO.triggerImportPicker()">📥 匯入進度</button>
+        </div>
+      </div>
+      <p style="font-size:0.75rem;color:var(--fg-dim);margin-top:8px;line-height:1.5">
+        💡 換瀏覽器 / 裝置時用「匯出」存成 JSON 檔,在新環境用「匯入」復原。所有資料只存本機,**不上傳任何伺服器**。匯入前會自動下載當前進度備份。
+      </p>
+      <input type="file" id="progressio-file-input" accept="application/json,.json" style="display:none" onchange="ProgressIO.onFileSelected(this)">
+    </div>
+
     <div class="card">
       <h2>🎮 選擇模式</h2>
       <div class="modes-grid">
@@ -542,6 +560,7 @@ const Storage = {
   K_SETTINGS: 'ipas_settings_v1',
   K_SESSION: 'ipas_session_state_v1',
   K_SEEN_CORRECT: 'ipas_seen_correct_v1',  // 跨關卡:已答對過的 qid set(避免重複)
+  K_USER_NICKNAME: 'ipas_user_nickname_v1', // 使用者暱稱(P1 進度匯出匯入)
   get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
   set(k, v) {
     try { localStorage.setItem(k, JSON.stringify(v)); }
@@ -1184,6 +1203,12 @@ function goHome() {
 function goStats() { renderStats(); show('view-stats'); }
 
 function refreshHome() {
+  // 暱稱問候(用 textContent 自動 escape,XSS layer 2 defense in depth)
+  const greetEl = document.getElementById('user-greeting');
+  if (greetEl && typeof ProgressIO !== 'undefined') {
+    const nick = ProgressIO.getNickname();
+    greetEl.textContent = nick || '玩家';
+  }
   // 倒數
   const d = Progress.daysLeft();
   const cd = document.getElementById('countdown');
@@ -1904,6 +1929,276 @@ const Player = {
   reset() { Storage.del('ipas_player_v1'); }
 };
 
+// ============================================================================
+// === ProgressIO — 進度匯出匯入(P1 + 完整資安防禦)
+// ============================================================================
+// 威脅模型 18 項 + 7 階段管線(對話紀錄),純 additive,不動既有 API
+// XSS / prototype pollution / DoS / key 注入 / quota / 配額 / 並發 / tamper
+const ProgressIO = {
+  EXPORT_VERSION: 1,
+  APP_TAG: 'ipas-ai-game',
+  MAX_FILE_SIZE: 2 * 1024 * 1024,      // 2MB 防 DoS
+  MAX_TEXT_LENGTH: 4 * 1024 * 1024,    // 4M chars 二次防 DoS
+  MAX_VALUE_SIZE: 1 * 1024 * 1024,     // 1MB / value 防單欄爆
+  DANGEROUS_KEYS: ['__proto__', 'constructor', 'prototype'],
+  // 白名單前綴 — 任何不在這的 key 都拒絕匯入(防 key 注入)
+  ALLOWED_KEY_PREFIXES: [
+    'ipas_progress_v', 'ipas_mastery_v', 'ipas_wrongbook_v',
+    'ipas_error_reports_v', 'ipas_settings_v', 'ipas_session_state_v',
+    'ipas_seen_correct_v', 'ipas_player_v', 'ipas_user_nickname_v',
+    'ipas_mode7_theater_v', 'ipas_mode7_font_scale', 'ipas_sm2_'
+  ],
+  _busy: false,
+
+  // === 字串安全(防 XSS layer 2 / display defense)===
+  escapeHTML(s) {
+    if (s === null || s === undefined) return '';
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  },
+  // 暱稱 layer 1:白名單字元集 + 長度 + 過濾控制 / 零寬 / RTL override
+  sanitizeNickname(s) {
+    if (typeof s !== 'string') return '';
+    let v = s.trim().substring(0, 20);
+    v = v.replace(/[ --​-‏‪-‮﻿]/g, '');
+    if (!/^[A-Za-z0-9一-鿿぀-ゟ゠-ヿ가-힯 _.\-]+$/.test(v)) return '';
+    return v;
+  },
+  sanitizeForFilename(s) { return String(s).replace(/[^A-Za-z0-9一-鿿]/g, '') || 'anon'; },
+
+  // === Nickname API ===
+  getNickname() {
+    const v = Storage.get(Storage.K_USER_NICKNAME, '');
+    return typeof v === 'string' ? this.sanitizeNickname(v) : '';
+  },
+  setNickname(s) {
+    const clean = this.sanitizeNickname(s);
+    if (!clean) return false;
+    Storage.set(Storage.K_USER_NICKNAME, clean);
+    return true;
+  },
+  promptForNickname(forceChange) {
+    const current = this.getNickname();
+    if (current && !forceChange) return current;
+    let attempts = 0;
+    while (attempts < 3) {
+      const raw = window.prompt(
+        attempts === 0
+          ? '👋 歡迎使用 IPAS AI 中級衝刺場!\n請輸入暱稱(中英數,1-20 字):'
+          : '⚠️ 暱稱不合規(只能用中英數空白與 . _ -,長度 1-20)。請再試一次:',
+        current || ''
+      );
+      if (raw === null) return current || '';   // 取消 → 保留或跳過
+      if (this.setNickname(raw)) return this.getNickname();
+      attempts++;
+    }
+    return current || '';
+  },
+  changeNickname() {
+    const before = this.getNickname();
+    const after = this.promptForNickname(true);
+    if (after && after !== before && typeof refreshHome === 'function') refreshHome();
+  },
+
+  // === SHA-256 checksum(防 tamper detection,advisory)===
+  async _sha256(text) {
+    try {
+      const buf = new TextEncoder().encode(text);
+      const hash = await crypto.subtle.digest('SHA-256', buf);
+      return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+    } catch { return ''; }   // 舊瀏覽器 fail-soft
+  },
+
+  // === JSON reviver(防 prototype pollution)===
+  _secureReviver(key, value) {
+    if (this.DANGEROUS_KEYS.indexOf(key) >= 0) return undefined;
+    return value;
+  },
+
+  _isAllowedKey(key) {
+    if (typeof key !== 'string' || key.length === 0 || key.length > 200) return false;
+    if (!key.startsWith('ipas_')) return false;
+    return this.ALLOWED_KEY_PREFIXES.some(p => key.startsWith(p));
+  },
+  _isValidValue(value) {
+    if (typeof value !== 'string' || value.length === 0 || value.length > this.MAX_VALUE_SIZE) return false;
+    try { JSON.parse(value, this._secureReviver.bind(this)); return true; }
+    catch { return false; }
+  },
+
+  // === EXPORT ===
+  async exportProgress() {
+    if (this._busy) { showToast('⚠️ 進度匯入/出中,請稍候', 2000); return; }
+    this._busy = true;
+    try {
+      const payload = {};
+      let count = 0;
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (!this._isAllowedKey(k)) continue;
+        const v = localStorage.getItem(k);
+        if (v === null || v.length > this.MAX_VALUE_SIZE) continue;
+        payload[k] = v; count++;
+      }
+      const checksum = await this._sha256(JSON.stringify(payload));
+      const envelope = {
+        app: this.APP_TAG, version: this.EXPORT_VERSION,
+        exportedAt: new Date().toISOString(),
+        nickname: this.getNickname(), keyCount: count, checksum, payload
+      };
+      const blob = new Blob([JSON.stringify(envelope, null, 2)], { type: 'application/json' });
+      const nick = this.sanitizeForFilename(this.getNickname() || 'anon');
+      const ts = new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-');
+      const url = URL.createObjectURL(blob);
+      try {
+        const a = document.createElement('a');
+        a.href = url; a.download = `ipas-progress-${nick}-${ts}.json`;
+        document.body.appendChild(a); a.click(); a.remove();
+      } finally { URL.revokeObjectURL(url); }   // 防記憶體洩漏
+      showToast(`✅ 已匯出 ${count} 項進度(${(blob.size / 1024).toFixed(1)} KB)`, 3000);
+    } catch (e) {
+      console.error('exportProgress failed:', e);
+      showToast('❌ 匯出失敗:' + e.message, 3500);
+    } finally { this._busy = false; }
+  },
+
+  // 內部備份版(import 前自動呼叫,無 toast 無 busy 鎖)
+  async _exportInternal(suffix) {
+    const payload = {};
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (!this._isAllowedKey(k)) continue;
+      const v = localStorage.getItem(k);
+      if (v !== null) payload[k] = v;
+    }
+    const checksum = await this._sha256(JSON.stringify(payload));
+    const envelope = {
+      app: this.APP_TAG, version: this.EXPORT_VERSION,
+      exportedAt: new Date().toISOString(), nickname: this.getNickname(),
+      keyCount: Object.keys(payload).length, checksum, payload
+    };
+    const blob = new Blob([JSON.stringify(envelope, null, 2)], { type: 'application/json' });
+    const nick = this.sanitizeForFilename(this.getNickname() || 'anon');
+    const url = URL.createObjectURL(blob);
+    try {
+      const a = document.createElement('a');
+      a.href = url; a.download = `ipas-progress-${nick}-${suffix}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+    } finally { URL.revokeObjectURL(url); }
+  },
+
+  // === IMPORT(7 階段防禦)===
+  async importProgress(file) {
+    if (this._busy) { showToast('⚠️ 進度匯入/出中,請稍候', 2000); return; }
+    if (!(file instanceof File)) { showToast('⚠️ 未選擇檔案', 2000); return; }
+    // 階段 1:檔案大小
+    if (file.size > this.MAX_FILE_SIZE) {
+      showToast(`❌ 檔案過大(${(file.size / 1024 / 1024).toFixed(1)} MB,上限 2 MB)`, 4000); return;
+    }
+    if (file.size === 0) { showToast('❌ 檔案為空', 2500); return; }
+    this._busy = true;
+    try {
+      // 階段 2:讀取 + 文字長度
+      const text = await new Promise((resolve, reject) => {
+        const r = new FileReader();
+        r.onload = () => resolve(r.result);
+        r.onerror = () => reject(new Error('讀取失敗'));
+        r.readAsText(file);
+      });
+      if (typeof text !== 'string' || text.length === 0) throw new Error('檔案內容為空');
+      if (text.length > this.MAX_TEXT_LENGTH) throw new Error('檔案內容過長');
+      // 階段 3:JSON.parse + reviver(擋 prototype pollution)
+      let parsed;
+      try { parsed = JSON.parse(text, this._secureReviver.bind(this)); }
+      catch { throw new Error('JSON 格式錯誤'); }
+      if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('檔案格式不對');
+      // 階段 4:Schema
+      if (parsed.app !== this.APP_TAG) throw new Error('不是 IPAS AI 進度檔(app 標記不符)');
+      if (parsed.version !== this.EXPORT_VERSION) throw new Error(`版本不相容(檔案 v${parsed.version},當前 v${this.EXPORT_VERSION})`);
+      if (!parsed.payload || typeof parsed.payload !== 'object' || Array.isArray(parsed.payload)) {
+        throw new Error('payload 結構錯誤');
+      }
+      let checksumMatch = true;
+      if (typeof parsed.checksum === 'string' && parsed.checksum.length === 64) {
+        const calc = await this._sha256(JSON.stringify(parsed.payload));
+        if (calc && calc !== parsed.checksum) checksumMatch = false;
+      }
+      // 階段 5+6:Key allowlist + Value validation
+      const cleanPayload = {};
+      const rejected = [];
+      for (const k of Object.keys(parsed.payload)) {
+        if (this.DANGEROUS_KEYS.indexOf(k) >= 0) { rejected.push(k + '(危險鍵)'); continue; }
+        if (!this._isAllowedKey(k)) { rejected.push(k + '(不在白名單)'); continue; }
+        const v = parsed.payload[k];
+        if (!this._isValidValue(v)) { rejected.push(k + '(值格式錯)'); continue; }
+        cleanPayload[k] = v;
+      }
+      const acceptCount = Object.keys(cleanPayload).length;
+      if (acceptCount === 0) throw new Error('沒有任何合法的進度資料可匯入');
+      // 階段 7:備份 + confirm + atomic 寫入
+      const currentNick = this.getNickname() || '(尚未設定)';
+      const importNick = this.sanitizeNickname(parsed.nickname || '') || '(未知)';
+      const exportedAt = String(parsed.exportedAt || '').substring(0, 19) || '(未知時間)';
+      const msg = [
+        '即將匯入進度,請確認:',
+        '• 來源:' + importNick + '(' + exportedAt + ')',
+        '• 將覆蓋:' + currentNick + ' 的所有現有進度',
+        '• 將寫入 ' + acceptCount + ' 項資料' + (rejected.length > 0 ? '(已拒絕 ' + rejected.length + ' 項不安全資料)' : ''),
+        checksumMatch ? '' : '⚠️ checksum 不符,檔案可能被修改過',
+        '',
+        '此操作會在覆寫前【自動下載當前進度備份檔】。',
+        '',
+        '確定要匯入?'
+      ].filter(Boolean).join('\n');
+      if (!window.confirm(msg)) { showToast('已取消匯入', 1500); return; }
+      // 自動備份(失敗則再次 confirm)
+      try { await this._exportInternal('backup-before-import-' + Date.now()); }
+      catch (e) {
+        if (!window.confirm('⚠️ 自動備份失敗,仍要繼續匯入嗎?(可能丟失現有進度)')) {
+          showToast('已中止匯入(備份失敗)', 2500); return;
+        }
+      }
+      // Rollback snapshot
+      const rollback = {};
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (this._isAllowedKey(k)) rollback[k] = localStorage.getItem(k);
+      }
+      // 寫入(失敗則 rollback)
+      try {
+        for (const k of Object.keys(rollback)) localStorage.removeItem(k);
+        for (const [k, v] of Object.entries(cleanPayload)) localStorage.setItem(k, v);
+      } catch (writeErr) {
+        console.error('import write failed, rolling back:', writeErr);
+        for (const k of Object.keys(cleanPayload)) {
+          try { localStorage.removeItem(k); } catch (_) {}
+        }
+        for (const [k, v] of Object.entries(rollback)) {
+          try { localStorage.setItem(k, v); } catch (_) {}
+        }
+        throw new Error('寫入失敗(可能 quota 已滿),已還原舊資料');
+      }
+      showToast('✅ 已匯入 ' + acceptCount + ' 項進度,即將重新載入...', 2500);
+      setTimeout(() => location.reload(), 1500);
+    } catch (e) {
+      console.error('importProgress failed:', e);
+      showToast('❌ 匯入失敗:' + e.message, 4500);
+    } finally { this._busy = false; }
+  },
+
+  triggerImportPicker() {
+    const input = document.getElementById('progressio-file-input');
+    if (!input) { showToast('❌ 找不到匯入按鈕', 2000); return; }
+    input.value = '';
+    input.click();
+  },
+  onFileSelected(input) {
+    const file = input.files && input.files[0];
+    if (file) this.importProgress(file);
+    input.value = '';   // 用後清空(防重覆觸發)
+  }
+};
+
 // === 啟動 ===
 (async function() {
   Progress.init();
@@ -1918,6 +2213,10 @@ const Player = {
     });
   }
   refreshHome();
+  // 首次進場詢問暱稱(取消也不擋,refreshHome 已顯示「玩家」預設值)
+  if (typeof ProgressIO !== 'undefined' && !ProgressIO.getNickname()) {
+    setTimeout(() => { ProgressIO.promptForNickname(); refreshHome(); }, 400);
+  }
 })();
 </script>
 </body>
