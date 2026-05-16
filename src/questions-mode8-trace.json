@@ -450,8 +450,8 @@
     },
     {
       "id": "q_m8_006",
-      "knowledge_code": "L23102",
-      "node_id": "n_L23102_004",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_007",
       "subject": 3,
       "format": "code_trace",
       "difficulty": "easy",
@@ -539,13 +539,13 @@
         "hook": "shape (a, b) 經 .T 變 (b, a);reshape 元素總數不變但維度可變"
       },
       "misconceptions": ["把 reshape 當作轉置", "以為 .T 會攤平為一維"],
-      "related_node_ids": ["n_L23102_004", "n_L23102_001"],
+      "related_node_ids": ["n_L23103_007", "n_L23103_005"],
       "tags": ["code-trace", "python", "numpy", "shape", "reshape", "線代"]
     },
     {
       "id": "q_m8_007",
-      "knowledge_code": "L23102",
-      "node_id": "n_L23102_001",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_007",
       "subject": 3,
       "format": "code_trace",
       "difficulty": "medium",
@@ -645,7 +645,7 @@
         "hook": "@ 是矩陣乘法不是 elementwise;broadcasting 對齊最後一軸 — (2,2)+(2,) 視為每列各加同一個向量"
       },
       "misconceptions": ["把 @ 當 elementwise(*)", "broadcasting 把 (2,) 誤視為 column vector"],
-      "related_node_ids": ["n_L23102_001", "n_L23102_004"],
+      "related_node_ids": ["n_L23103_007", "n_L23103_008"],
       "tags": ["code-trace", "python", "numpy", "matmul", "broadcasting", "線代"]
     },
     {
@@ -772,7 +772,7 @@
           "s2_correct": "3", "s2_w1": "4", "s2_w2": "0", "s2_w3": "7",
           "s3_correct": "8", "s3_w1": "6", "s3_w2": "4", "s3_w3": "10",
           "s4_correct": "3", "s4_w1": "8", "s4_w2": "5", "s4_w3": "-1",
-          "trace_summary": "iter1: lo=0,hi=7,mid=3,arr[3]=8=target → result=3(若 case_a 路徑不同此處可變)"
+          "trace_summary": "iter1: lo=0,hi=7,mid=3,arr[3]=8=target → result=3"
         },
         "case_c": {
           "a0": "1", "a1": "3", "a2": "5", "a3": "7", "a4": "9", "a5": "11", "a6": "13", "a7": "15",
@@ -845,7 +845,7 @@
     {
       "id": "q_m8_010",
       "knowledge_code": "L23203",
-      "node_id": "n_L23203_003",
+      "node_id": "n_L23203_001",
       "subject": 3,
       "format": "code_trace",
       "difficulty": "medium",
@@ -933,7 +933,7 @@
         "hook": "Softmax 減 max 不改變結果,只避免 exp 上溢;argmax 對 z 與 softmax(z) 相同"
       },
       "misconceptions": ["以為 softmax 必須直接 exp(z) 才正確", "把 argmax 索引當作機率值"],
-      "related_node_ids": ["n_L23203_003", "n_L23203_001"],
+      "related_node_ids": ["n_L23203_001", "n_L23203_003"],
       "tags": ["code-trace", "python", "numpy", "softmax", "激活函數", "數值穩定"]
     },
     {
@@ -944,73 +944,82 @@
       "format": "code_trace",
       "difficulty": "medium",
       "source_level": "L2",
-      "stem": "下列程式對 4 個訓練點以歐氏距離做 KNN(k=3)分類。請追蹤距離與最終預測。",
-      "code_block": "import numpy as np\ntrain_X = np.array([[1.0, 0.0], [3.0, 1.0], [5.0, 5.0], [4.0, 4.0]])\ntrain_y = np.array([0, 0, 1, 1])\ntest = np.array([{t0}, {t1}])\ndiffs = train_X - test\nsq_dists = (diffs ** 2).sum(axis=1)\ndists = np.sqrt(sq_dists)\nk = 3\nnearest_idx = np.argsort(dists)[:k]\nnearest_labels = train_y[nearest_idx]\nfrom collections import Counter\npred = Counter(nearest_labels.tolist()).most_common(1)[0][0]",
+      "stem": "下列程式執行 K-means 的「指派步驟」(assignment step):對 4 個點各自找最近的群中心(centroid),指派群編號。請追蹤距離與指派結果。",
+      "code_block": "import numpy as np\npoints = np.array([[1.0, 1.0], [2.0, 1.0], [8.0, 8.0], [9.0, 9.0]])\ncentroids = np.array([[{c0x}, {c0y}], [{c1x}, {c1y}]])\ndiffs = points[:, None, :] - centroids[None, :, :]\nsq_dists = (diffs ** 2).sum(axis=2)\nlabels = sq_dists.argmin(axis=1)\nc0_count = int((labels == 0).sum())",
       "stem_variables": {
         "case_a": {
-          "t0": "2.0", "t1": "1.0",
-          "s1_correct": "(4, 2)", "s1_w1": "(2, 4)", "s1_w2": "(4,)", "s1_w3": "(8,)",
-          "s2_correct": "[2.0, 1.0, 25.0, 13.0]", "s2_w1": "[2.0, 1.0, 8.0, 5.0]", "s2_w2": "[1.0, 0.0, 16.0, 9.0]", "s2_w3": "[1.414, 1.0, 5.0, 3.606]",
-          "s3_correct": "[1, 0, 3]", "s3_w1": "[0, 1, 3]", "s3_w2": "[1, 0, 2]", "s3_w3": "[3, 2, 1]",
-          "s4_correct": "0", "s4_w1": "1", "s4_w2": "-1", "s4_w3": "2",
-          "vote_summary": "k=3 鄰居 labels=[0,0,1] → 0 佔多數"
+          "c0x": "0.0", "c0y": "0.0", "c1x": "10.0", "c1y": "10.0",
+          "s1_correct": "(4, 2, 2)", "s1_w1": "(2, 4, 2)", "s1_w2": "(4, 2)", "s1_w3": "(8, 2)",
+          "s2_correct": "[[2.0, 162.0], [5.0, 145.0], [128.0, 8.0], [162.0, 2.0]]",
+          "s2_w1": "[[1.414, 12.728], [2.236, 12.042], [11.314, 2.828], [12.728, 1.414]]",
+          "s2_w2": "[[2.0, 162.0], [5.0, 145.0], [128.0, 8.0]]",
+          "s2_w3": "[2.0, 5.0, 8.0, 2.0]",
+          "s3_correct": "[0, 0, 1, 1]", "s3_w1": "[1, 1, 0, 0]", "s3_w2": "[0, 0, 0, 0]", "s3_w3": "[0, 1, 0, 1]",
+          "s4_correct": "2", "s4_w1": "4", "s4_w2": "0", "s4_w3": "1",
+          "assign_summary": "centroid 0=[0,0]、1=[10,10];點 0/1 靠近 c0(指派 0),點 2/3 靠近 c1(指派 1);cluster 0 共 2 點"
         },
         "case_b": {
-          "t0": "4.0", "t1": "4.0",
-          "s1_correct": "(4, 2)", "s1_w1": "(2, 4)", "s1_w2": "(4,)", "s1_w3": "(8,)",
-          "s2_correct": "[25.0, 10.0, 2.0, 0.0]", "s2_w1": "[5.0, 3.162, 1.414, 0.0]", "s2_w2": "[3.0, 3.0, 1.0, 0.0]", "s2_w3": "[20.0, 5.0, 1.0, 0.0]",
-          "s3_correct": "[3, 2, 1]", "s3_w1": "[0, 1, 2]", "s3_w2": "[3, 2, 0]", "s3_w3": "[1, 2, 3]",
-          "s4_correct": "1", "s4_w1": "0", "s4_w2": "-1", "s4_w3": "2",
-          "vote_summary": "k=3 鄰居 labels=[1,1,0] → 1 佔多數"
+          "c0x": "2.0", "c0y": "1.0", "c1x": "8.0", "c1y": "8.0",
+          "s1_correct": "(4, 2, 2)", "s1_w1": "(2, 4, 2)", "s1_w2": "(4, 2)", "s1_w3": "(8, 2)",
+          "s2_correct": "[[1.0, 98.0], [0.0, 85.0], [85.0, 0.0], [113.0, 2.0]]",
+          "s2_w1": "[[1.0, 9.899], [0.0, 9.220], [9.220, 0.0], [10.630, 1.414]]",
+          "s2_w2": "[[1.0, 98.0], [0.0, 85.0], [85.0, 0.0]]",
+          "s2_w3": "[1.0, 0.0, 0.0, 2.0]",
+          "s3_correct": "[0, 0, 1, 1]", "s3_w1": "[1, 1, 0, 0]", "s3_w2": "[0, 0, 0, 0]", "s3_w3": "[0, 1, 0, 1]",
+          "s4_correct": "2", "s4_w1": "4", "s4_w2": "0", "s4_w3": "1",
+          "assign_summary": "centroid 0=[2,1]、1=[8,8];點 0/1 靠近 c0(指派 0),點 2/3 靠近 c1(指派 1);cluster 0 共 2 點"
         },
         "case_c": {
-          "t0": "3.0", "t1": "3.0",
-          "s1_correct": "(4, 2)", "s1_w1": "(2, 4)", "s1_w2": "(4,)", "s1_w3": "(8,)",
-          "s2_correct": "[13.0, 4.0, 8.0, 2.0]", "s2_w1": "[3.606, 2.0, 2.828, 1.414]", "s2_w2": "[5.0, 2.0, 4.0, 1.0]", "s2_w3": "[4.0, 1.0, 5.0, 2.0]",
-          "s3_correct": "[3, 1, 2]", "s3_w1": "[3, 2, 1]", "s3_w2": "[1, 3, 2]", "s3_w3": "[0, 3, 1]",
-          "s4_correct": "1", "s4_w1": "0", "s4_w2": "-1", "s4_w3": "2",
-          "vote_summary": "k=3 鄰居 labels=[1,0,1] → 1 佔多數"
+          "c0x": "5.0", "c0y": "5.0", "c1x": "0.0", "c1y": "0.0",
+          "s1_correct": "(4, 2, 2)", "s1_w1": "(2, 4, 2)", "s1_w2": "(4, 2)", "s1_w3": "(8, 2)",
+          "s2_correct": "[[32.0, 2.0], [25.0, 5.0], [18.0, 128.0], [32.0, 162.0]]",
+          "s2_w1": "[[5.657, 1.414], [5.0, 2.236], [4.243, 11.314], [5.657, 12.728]]",
+          "s2_w2": "[[32.0, 2.0], [25.0, 5.0], [18.0, 128.0]]",
+          "s2_w3": "[2.0, 5.0, 18.0, 32.0]",
+          "s3_correct": "[1, 1, 0, 0]", "s3_w1": "[0, 0, 1, 1]", "s3_w2": "[1, 1, 1, 1]", "s3_w3": "[0, 1, 0, 1]",
+          "s4_correct": "2", "s4_w1": "4", "s4_w2": "0", "s4_w3": "1",
+          "assign_summary": "centroid 0=[5,5]、1=[0,0];點 0/1 靠近 c1(指派 1),點 2/3 靠近 c0(指派 0);cluster 0 共 2 點"
         }
       },
       "trace_steps": [
         {
-          "after_line": 5,
-          "ask": "diffs.shape 為何?",
+          "after_line": 4,
+          "ask": "diffs.shape 為何?(broadcasting points[:,None,:] vs centroids[None,:,:])",
           "options": [
             {"text": "{s1_correct}", "is_correct": true},
             {"text": "{s1_w1}", "is_correct": false, "trap_type": "誤把列與欄互換"},
-            {"text": "{s1_w2}", "is_correct": false, "trap_type": "誤以為廣播後攤平為一維"},
+            {"text": "{s1_w2}", "is_correct": false, "trap_type": "誤以為 broadcasting 後仍為二維"},
             {"text": "{s1_w3}", "is_correct": false, "trap_type": "誤把 shape 視為元素總數"}
           ]
         },
         {
-          "after_line": 6,
-          "ask": "sq_dists 的內容為何?",
+          "after_line": 5,
+          "ask": "sq_dists 的內容為何?(每點到兩 centroid 的平方距離)",
           "options": [
             {"text": "{s2_correct}", "is_correct": true},
             {"text": "{s2_w1}", "is_correct": false, "trap_type": "誤把 sqrt 結果當 sq_dists"},
-            {"text": "{s2_w2}", "is_correct": false, "trap_type": "誤算 elementwise 差值平方未求和"},
-            {"text": "{s2_w3}", "is_correct": false, "trap_type": "誤把 dists 當 sq_dists"}
+            {"text": "{s2_w2}", "is_correct": false, "trap_type": "誤算為 3 列(漏一點)"},
+            {"text": "{s2_w3}", "is_correct": false, "trap_type": "誤以為結果為一維距離向量"}
           ]
         },
         {
-          "after_line": 9,
-          "ask": "nearest_idx 的內容為何?",
+          "after_line": 6,
+          "ask": "labels 的內容為何?(每點指派到最近 centroid)",
           "options": [
             {"text": "{s3_correct}", "is_correct": true},
-            {"text": "{s3_w1}", "is_correct": false, "trap_type": "誤把訓練點原順序當鄰居順序"},
-            {"text": "{s3_w2}", "is_correct": false, "trap_type": "誤把第 4 近的點包進"},
-            {"text": "{s3_w3}", "is_correct": false, "trap_type": "誤從遠到近排序"}
+            {"text": "{s3_w1}", "is_correct": false, "trap_type": "誤把 argmin 與 argmax 顛倒"},
+            {"text": "{s3_w2}", "is_correct": false, "trap_type": "誤以為所有點都靠近 c0"},
+            {"text": "{s3_w3}", "is_correct": false, "trap_type": "誤算交替指派"}
           ]
         },
         {
-          "after_line": 12,
-          "ask": "pred 的值為何?",
+          "after_line": 7,
+          "ask": "c0_count 的值為何?(cluster 0 的點數)",
           "options": [
             {"text": "{s4_correct}", "is_correct": true},
-            {"text": "{s4_w1}", "is_correct": false, "trap_type": "誤把少數類當預測"},
-            {"text": "{s4_w2}", "is_correct": false, "trap_type": "誤以為找不到回 -1"},
-            {"text": "{s4_w3}", "is_correct": false, "trap_type": "誤把 train_y 全部唯一值當預測"}
+            {"text": "{s4_w1}", "is_correct": false, "trap_type": "誤把總點數當 cluster 0 數"},
+            {"text": "{s4_w2}", "is_correct": false, "trap_type": "誤以為 cluster 0 為空"},
+            {"text": "{s4_w3}", "is_correct": false, "trap_type": "誤算為 1"}
           ]
         }
       ],
@@ -1020,15 +1029,15 @@
       ],
       "shuffle_options": false,
       "explanation": {
-        "correct": "KNN 預測流程:(1) 計算所有訓練點與 test 的歐氏距離;(2) np.argsort 取索引排序(由小到大);(3) 取前 k 個索引,查 label;(4) 多數決定預測。本例:{vote_summary}。距離計算:sq_dist = Σ(x_i - t_i)² → dist = sqrt(sq_dist)。",
+        "correct": "K-means 指派步驟:對每點計算到所有 centroid 的距離,取 argmin 作為群指派。本例:{assign_summary}。距離計算 sq_dist = Σ(p_i - c_i)²(平方距離單調等價歐氏距離,argmin 結果相同)。argmin(axis=1) 沿 centroid 軸取最小索引。",
         "wrong": {
           "(任一步驟錯誤)": "見各 trace_step 的陷阱類型說明。"
         },
-        "hook": "KNN argsort 是「索引排序」不是「值排序」;k 個鄰居 → 多數決;距離小者為近"
+        "hook": "K-means 兩步驟交替:指派(每點選最近 centroid)+ 更新(centroid = 群內 mean);argmin 取索引、不是值"
       },
-      "misconceptions": ["把 argsort 結果當距離值", "k=3 時搞錯鄰居順序"],
+      "misconceptions": ["把 argmin 與 argmax 混淆", "把 K-means 指派誤想成 KNN 多數決(後者是監督分類)"],
       "related_node_ids": ["n_L23202_008", "n_L23202_002"],
-      "tags": ["code-trace", "python", "numpy", "KNN", "distance", "分類"]
+      "tags": ["code-trace", "python", "numpy", "K-means", "assignment", "聚類"]
     },
     {
       "id": "q_m8_012",
@@ -1127,7 +1136,7 @@
     {
       "id": "q_m8_013",
       "knowledge_code": "L22201",
-      "node_id": "n_L22201_001",
+      "node_id": "n_L22201_007",
       "subject": 2,
       "format": "code_trace",
       "difficulty": "easy",
@@ -1218,7 +1227,7 @@
         "hook": "groupby 預設按字典序排序;.sum() 加總、.count() 計數、.mean() 平均"
       },
       "misconceptions": ["把 groupby 結果視為 list 而非 Series", "誤以為 iloc[0] 是第一筆原始 row"],
-      "related_node_ids": ["n_L22201_001"],
+      "related_node_ids": ["n_L22201_007", "n_L22201_001"],
       "tags": ["code-trace", "python", "pandas", "groupby"]
     },
     {
@@ -1318,7 +1327,7 @@
     {
       "id": "q_m8_015",
       "knowledge_code": "L22201",
-      "node_id": "n_L22201_006",
+      "node_id": "n_L22201_007",
       "subject": 2,
       "format": "code_trace",
       "difficulty": "medium",
@@ -1415,7 +1424,7 @@
         "hook": "inner = 交集、left = 保留左全部、right = 保留右全部、outer = 聯集"
       },
       "misconceptions": ["把 inner join 結果視為 left join", "誤以為 merge 預設 how='left'"],
-      "related_node_ids": ["n_L22201_006", "n_L22201_001"],
+      "related_node_ids": ["n_L22201_007", "n_L22201_006"],
       "tags": ["code-trace", "python", "pandas", "merge", "join"]
     }
   ]

@@ -192,13 +192,13 @@
       "stem": "在多維基因表現資料的降維專案中,資料科學家保留若干個主成分。請問下列程式輸出 X_pca 的形狀為何?",
       "code_block": "from sklearn.decomposition import PCA\nimport numpy as np\nnp.random.seed(0)\nX = np.random.rand({n}, {d})\npca = PCA(n_components={k})\nX_pca = pca.fit_transform(X)\nprint(X_pca.shape)",
       "stem_variables": {
-        "case_a": {"n": "120", "d": "5", "k": "2", "answer": "(120, 2)", "wrong1": "(2, 120)", "wrong2": "(120, 5)", "wrong3": "(2, 5)"},
-        "case_b": {"n": "200", "d": "8", "k": "3", "answer": "(200, 3)", "wrong1": "(3, 200)", "wrong2": "(200, 8)", "wrong3": "(3, 8)"},
-        "case_c": {"n": "150", "d": "10", "k": "4", "answer": "(150, 4)", "wrong1": "(4, 150)", "wrong2": "(150, 10)", "wrong3": "(4, 10)"}
+        "case_a": {"n": "120", "d": "5", "k": "2", "answer": "(120, 2)", "wrong1": "(120,)", "wrong2": "(120, 5)", "wrong3": "(2, 5)"},
+        "case_b": {"n": "200", "d": "8", "k": "3", "answer": "(200, 3)", "wrong1": "(200,)", "wrong2": "(200, 8)", "wrong3": "(3, 8)"},
+        "case_c": {"n": "150", "d": "10", "k": "4", "answer": "(150, 4)", "wrong1": "(150,)", "wrong2": "(150, 10)", "wrong3": "(4, 10)"}
       },
       "options": [
         {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "搞反列與欄"},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為 PCA 結果是一維(每筆樣本只剩單一分數)"},
         {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為原維度保留"},
         {"text": "{wrong3}", "is_correct": false, "trap_type": "把 components_ 形狀當成 transform 輸出"}
       ],
@@ -206,7 +206,7 @@
       "explanation": {
         "correct": "fit_transform 同時 fit 且把資料投影到主成分空間。樣本數不變({n}),特徵維度降為 n_components({k}),所以形狀為 {answer}。",
         "wrong": {
-          "{wrong1}": "sklearn 慣例是 (n_samples, n_features),樣本在列、特徵在欄,不會把樣本擺到欄。",
+          "{wrong1}": "此形狀把 PCA 結果誤想成一維陣列(只剩單一主成分分數),但 n_components={k} > 1 時,每筆樣本會有 {k} 個座標,結果必為 2D ({n}, {k})。只有 n_components=1 才會像 (n,) 一維,但若以 fit_transform 傳回仍是 2D ({n},1) 而非 ({n},)。",
           "{wrong2}": "PCA 主目的就是降維,輸出維度為 n_components 不是原 {d} 維。",
           "{wrong3}": "此形狀是 pca.components_ 的形狀(每列是一個主成分向量),不是 fit_transform 結果。"
         },
@@ -224,12 +224,12 @@
       "format": "code_reading",
       "difficulty": "easy",
       "source_level": "L2",
-      "stem": "在電商點擊率預測模型,工程師用 KFold 做交叉驗證。請問下列程式輸出迴圈執行次數與每次測試集大小?",
-      "code_block": "from sklearn.model_selection import KFold\nimport numpy as np\nX = np.arange({n}).reshape(-1, 1)\nkf = KFold(n_splits={k}, shuffle=True, random_state=0)\ncount = 0\ntest_sizes = []\nfor _, test_idx in kf.split(X):\n    count += 1\n    test_sizes.append(len(test_idx))\nprint(count, set(test_sizes))",
+      "stem": "在電商點擊率預測模型,工程師用 KFold 做交叉驗證。下列程式印出『迴圈執行次數、所有測試集大小去重後的個數、第一折的測試集大小』,請問輸出為何?",
+      "code_block": "from sklearn.model_selection import KFold\nimport numpy as np\nX = np.arange({n}).reshape(-1, 1)\nkf = KFold(n_splits={k}, shuffle=True, random_state=0)\ncount = 0\ntest_sizes = []\nfor _, test_idx in kf.split(X):\n    count += 1\n    test_sizes.append(len(test_idx))\nprint(count, len(set(test_sizes)), test_sizes[0])",
       "stem_variables": {
-        "case_a": {"n": "1000", "k": "5", "answer": "5 {200}", "wrong1": "1 {1000}", "wrong2": "5 {800}", "wrong3": "10 {100}"},
-        "case_b": {"n": "1200", "k": "4", "answer": "4 {300}", "wrong1": "1 {1200}", "wrong2": "4 {900}", "wrong3": "8 {150}"},
-        "case_c": {"n": "800", "k": "8", "answer": "8 {100}", "wrong1": "1 {800}", "wrong2": "8 {700}", "wrong3": "16 {50}"}
+        "case_a": {"n": "1000", "k": "5", "answer": "5 1 200", "wrong1": "1 1 1000", "wrong2": "5 1 800", "wrong3": "10 1 100"},
+        "case_b": {"n": "1200", "k": "4", "answer": "4 1 300", "wrong1": "1 1 1200", "wrong2": "4 1 900", "wrong3": "8 1 150"},
+        "case_c": {"n": "800", "k": "8", "answer": "8 1 100", "wrong1": "1 1 800", "wrong2": "8 1 700", "wrong3": "16 1 50"}
       },
       "options": [
         {"text": "{answer}", "is_correct": true},
@@ -239,13 +239,13 @@
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "KFold(n_splits={k}) 把資料切 {k} 等份,迴圈執行 {k} 次。每次以 1/{k} 筆為 test,其餘為 train。set 去重後僅剩單一測試集大小。",
+        "correct": "KFold(n_splits={k}) 把 n={n} 筆資料切 {k} 等份,迴圈執行 {k} 次,故 count={k}。當 n 能被 {k} 整除時每折 test 大小都相同,len(set(test_sizes))=1。第一折 test_idx 長度為 n/{k},即 {answer} 末位值。",
         "wrong": {
           "{wrong1}": "split 是產生 {k} 組 (train_idx, test_idx) 索引,迴圈會跑 {k} 次而非 1 次。",
-          "{wrong2}": "此值為訓練集大小(n-n/k)不是測試集。題目印的是 len(test_idx)。",
-          "{wrong3}": "n_splits={k} 就是 {k} 折,不會翻倍。要 2{k} 折需要設定 n_splits=2*{k}。"
+          "{wrong2}": "末位值為訓練集大小(n-n/k)不是測試集。題目印的是 test_sizes[0] = len(test_idx)。",
+          "{wrong3}": "n_splits={k} 就是 {k} 折,迴圈次數不會翻倍。"
         },
-        "hook": "KFold n_splits = K → 跑 K 次,每次 test = n/K"
+        "hook": "KFold n_splits = K → 跑 K 次,每折 test = n/K"
       },
       "misconceptions": ["搞反訓練/測試比例", "以為 KFold 是隨機抽一次"],
       "related_node_ids": ["n_L23303_005"],
@@ -323,13 +323,13 @@
     },
     {
       "id": "q_pa_010",
-      "knowledge_code": "L23302",
-      "node_id": "n_L23302_001",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_003",
       "subject": 3,
       "format": "code_reading",
       "difficulty": "easy",
       "source_level": "L2",
-      "stem": "在語音辨識前處理,工程師建立全連接層 nn.Linear(in={in_dim}, out={out_dim}),輸入 batch={batch} 的特徵。請問下列程式輸出形狀為何?",
+      "stem": "在語音辨識前處理,工程師用 nn.Linear(in={in_dim}, out={out_dim}) 實作神經元的加權求和公式 y = xW^T + b,輸入 batch={batch} 的特徵。請問下列程式輸出形狀為何?",
       "code_block": "import torch\nimport torch.nn as nn\ntorch.manual_seed(0)\nlayer = nn.Linear({in_dim}, {out_dim})\nx = torch.randn({batch}, {in_dim})\ny = layer(x)\nprint(y.shape)",
       "stem_variables": {
         "case_a": {"in_dim": "64", "out_dim": "16", "batch": "8", "answer": "torch.Size([8, 16])", "wrong1": "torch.Size([8, 64])", "wrong2": "torch.Size([16, 8])", "wrong3": "torch.Size([64, 16])"},
@@ -353,8 +353,8 @@
         "hook": "nn.Linear 只改最後一軸:in→out,batch 不變"
       },
       "misconceptions": ["搞反 weight 與輸出形狀", "以為 Linear 改 batch"],
-      "related_node_ids": ["n_L23302_001"],
-      "tags": ["pytorch", "nn.Linear", "shape"]
+      "related_node_ids": ["n_L23203_003"],
+      "tags": ["pytorch", "nn.Linear", "shape", "加權求和"]
     },
     {
       "id": "q_pa_013",
@@ -362,34 +362,34 @@
       "node_id": "n_L22201_002",
       "subject": 2,
       "format": "code_reading",
-      "difficulty": "easy",
+      "difficulty": "medium",
       "source_level": "L2",
-      "stem": "在保險理賠資料清理中,分析師檢查缺值。請問下列程式中,a 與 b 的關係為何?",
-      "code_block": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'claim': [{x1}, {x2}, {x3}, {x4}]})\na = df['claim'].isna().sum()\nb = df['claim'].isnull().sum()\nprint(a == b, a)",
+      "stem": "保險理賠資料含缺值,分析師比較『刪除缺值列(dropna)』與『以 0 填補(fillna(0))』兩策略對平均的影響。下列程式 `print(round(drop_mean, 1), round(zero_mean, 1))` 的實際輸出為何?",
+      "code_block": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'claim': [{x1}, np.nan, {x2}, np.nan, {x3}]})\ndrop_mean = df['claim'].dropna().mean()     # 策略 A:刪除缺值列\nzero_mean = df['claim'].fillna(0).mean()    # 策略 B:以 0 填補\nprint(round(drop_mean, 1), round(zero_mean, 1))",
       "stem_variables": {
-        "case_a": {"x1": "100", "x2": "np.nan", "x3": "50", "x4": "np.nan", "answer": "True 2", "wrong1": "False 2", "wrong2": "True 4", "wrong3": "False 0"},
-        "case_b": {"x1": "np.nan", "x2": "100", "x3": "np.nan", "x4": "np.nan", "answer": "True 3", "wrong1": "False 3", "wrong2": "True 4", "wrong3": "False 0"},
-        "case_c": {"x1": "100", "x2": "50", "x3": "np.nan", "x4": "200", "answer": "True 1", "wrong1": "False 1", "wrong2": "True 4", "wrong3": "False 0"}
+        "case_a": {"x1": "100", "x2": "50", "x3": "150", "answer": "100.0 60.0", "wrong1": "60.0 100.0", "wrong2": "100.0 100.0", "wrong3": "nan nan"},
+        "case_b": {"x1": "80", "x2": "60", "x3": "100", "answer": "80.0 48.0", "wrong1": "48.0 80.0", "wrong2": "80.0 80.0", "wrong3": "nan nan"},
+        "case_c": {"x1": "200", "x2": "100", "x3": "300", "answer": "200.0 120.0", "wrong1": "120.0 200.0", "wrong2": "200.0 200.0", "wrong3": "nan nan"}
       },
       "options": [
         {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為 isna/isnull 不同"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為計算總列數"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為 NaN 不算缺值"}
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤把策略順序倒置"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為 fillna(0) 不改變平均值"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為 NaN 會污染整個 mean 運算"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "pandas 的 isna() 與 isnull() 是同一個函式的別名,行為完全相同。兩者都把 NaN 視為缺值,故 a == b 為 True。本題資料中 NaN 個數確定,所以 a = b 同值。",
+        "correct": "dropna 後 mean 只算 3 個觀測值 ({x1}+{x2}+{x3})/3 = drop_mean;fillna(0) 把 2 個 NaN 換成 0,然後 mean 仍以 5 筆計算 (drop_mean*3+0+0)/5,因此 zero_mean = drop_mean × 3/5,系統性向下偏移。對保險理賠這類非負數據,0 填補會造成 mean 嚴重低估,違反業務常識,屬於常見的『缺值處理誤用』。應依缺值機制(MCAR/MAR/MNAR)選對應策略:MCAR 可 dropna 或 mean/median imputation;MAR 用條件式填補;MNAR 需另建『is_missing』標記欄。",
         "wrong": {
-          "{wrong1}": "isna 與 isnull 完全等價,不會 False。pandas 為了 R 與 SQL 使用者各取一個別名。",
-          "{wrong2}": "4 是總筆數,但 sum 在布林上計算的是 True 的個數,只有 NaN 處為 True,不是總筆數。",
-          "{wrong3}": "np.nan 在 isna/isnull 都會回傳 True,絕不會視為非缺值。"
+          "{wrong1}": "策略 A(dropna)在前、策略 B(fillna 0)在後,順序倒置會誤判兩策略對 mean 的相對位置;dropna 必 ≥ fillna(0) 因為觀測值非負。",
+          "{wrong2}": "fillna(0) 會把 NaN 變成 0 進入 mean 分子,但分母仍是 5(不像 dropna 縮減為 3),所以 mean 必降低。此選項為對 fillna 機制的根本誤解。",
+          "{wrong3}": "pandas 的 .mean() 預設 skipna=True,NaN 會被跳過而非污染運算;只有當資料全為 NaN 時才會輸出 NaN。"
         },
-        "hook": "isna == isnull(別名);兩個都偵測 NaN"
+        "hook": "口訣『非負數據 fillna(0) 必拉低 mean』:dropna 算 k 筆真實平均;fillna(0) 把 NaN 換 0 但分母還是 n,所以 mean 縮成 k/n 倍。對應 MCAR/MAR/MNAR 機制選不同策略才對"
       },
-      "misconceptions": ["以為 isna 與 isnull 行為不同", "忽略 sum 在布林上的意義"],
+      "misconceptions": ["以為 fillna(0) 不會影響統計量", "忽略缺值機制(MCAR/MAR/MNAR)與處理策略的對應", "以為 dropna 與 fillna 兩策略 mean 必相同"],
       "related_node_ids": ["n_L22201_002"],
-      "tags": ["pandas", "缺值", "isna"]
+      "tags": ["pandas", "缺值處理", "imputation", "MCAR"]
     },
     {
       "id": "q_pa_014",
@@ -399,30 +399,30 @@
       "format": "code_reading",
       "difficulty": "medium",
       "source_level": "L2",
-      "stem": "在零售營收分析中,分析師用 groupby 對地區同時計算兩種統計量。請問下列程式輸出 result 的欄(columns)結構為何?",
+      "stem": "在零售營收分析中,分析師用 groupby 對地區同時計算兩種統計量。請問下列程式 `print(list(result.columns))` 的實際輸出為何?",
       "code_block": "import pandas as pd\ndf = pd.DataFrame({\n    'region': ['N', 'S', 'N', 'S', 'N'],\n    'sales': [100, 80, 120, 90, 110]\n})\nresult = df.groupby('region')['sales'].agg(['{f1}', '{f2}'])\nprint(list(result.columns))",
       "stem_variables": {
-        "case_a": {"f1": "sum", "f2": "mean", "answer": "['sum', 'mean']", "wrong1": "['sales']", "wrong2": "['sales_sum', 'sales_mean']", "wrong3": "['region', 'sum', 'mean']"},
-        "case_b": {"f1": "min", "f2": "max", "answer": "['min', 'max']", "wrong1": "['sales']", "wrong2": "['sales_min', 'sales_max']", "wrong3": "['region', 'min', 'max']"},
-        "case_c": {"f1": "count", "f2": "std", "answer": "['count', 'std']", "wrong1": "['sales']", "wrong2": "['sales_count', 'sales_std']", "wrong3": "['region', 'count', 'std']"}
+        "case_a": {"f1": "sum", "f2": "mean", "answer": "['sum', 'mean']", "wrong1": "['sales']", "wrong2": "['sales_sum', 'sales_mean']", "wrong3": "[('sales', 'sum'), ('sales', 'mean')]"},
+        "case_b": {"f1": "min", "f2": "max", "answer": "['min', 'max']", "wrong1": "['sales']", "wrong2": "['sales_min', 'sales_max']", "wrong3": "[('sales', 'min'), ('sales', 'max')]"},
+        "case_c": {"f1": "count", "f2": "std", "answer": "['count', 'std']", "wrong1": "['sales']", "wrong2": "['sales_count', 'sales_std']", "wrong3": "[('sales', 'count'), ('sales', 'std')]"}
       },
       "options": [
         {"text": "{answer}", "is_correct": true},
         {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為只保留欄名"},
         {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為自動加前綴"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為 region 也是欄"}
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為 MultiIndex(SeriesGroupBy vs DataFrameGroupBy 混淆)"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "對單一 Series 做 agg(list) 時,輸出欄位即為函式名稱,故為 {answer}。region 已成為 index,不在 columns。若要自訂欄名需用 NamedAgg。",
+        "correct": "關鍵在 `['sales']`:它把 `DataFrameGroupBy` 轉成 `SeriesGroupBy`,因此 agg(list) 後 columns 為單層 Index(['{f1}', '{f2}'])。若不加 `['sales']`(直接 `df.groupby('region').agg([...])`),結果才會是 MultiIndex `[('sales','{f1}'), ('sales','{f2}')]`。region 已成為 index,不在 columns。若要自訂欄名需用 NamedAgg。",
         "wrong": {
           "{wrong1}": "agg(list) 會展開成多欄,不會只剩單一 'sales' 欄。",
           "{wrong2}": "pandas 預設不會把欄前綴上原欄名;此格式要傳 dict 或 NamedAgg。",
-          "{wrong3}": "groupby key 默認進入 index,不會出現在 columns(除非 reset_index)。"
+          "{wrong3}": "這是 *DataFrameGroupBy*(不加 `['sales']` 預先選 Series)時的 MultiIndex 結果。本題已用 `['sales']` 把 GroupBy 物件從 DataFrameGroupBy 降為 SeriesGroupBy,輸出 columns 為單層,不會出現 MultiIndex 元組。"
         },
-        "hook": "agg(list) 後欄名 = 函式名;groupby key 預設變 index"
+        "hook": "口訣『先選 Series,後不分層』:`['sales']` 後 agg(list) → 單層 columns;不選則 → MultiIndex"
       },
-      "misconceptions": ["以為 agg 自動帶上原欄名", "以為 groupby key 留在欄"],
+      "misconceptions": ["以為 SeriesGroupBy 與 DataFrameGroupBy 的 agg 輸出 columns 結構相同", "以為 agg 自動帶上原欄名", "以為 groupby key 留在欄"],
       "related_node_ids": ["n_L22201_007", "n_L22201_001"],
       "tags": ["pandas", "groupby", "agg"]
     }

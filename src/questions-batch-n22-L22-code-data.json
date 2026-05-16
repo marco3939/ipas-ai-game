@@ -62,7 +62,7 @@
       "stem_variables": {
         "case_a": {"n1": "'Amy'", "n2": "'Amy'", "n3": "'Bob'", "n4": "'Carl'", "n5": "'Bob'", "p1": "'0911'", "p2": "'0911'", "p3": "'0922'", "p4": "'0933'", "p5": "'0922'", "answer": "3", "wrong1": "5", "wrong2": "1", "wrong3": "4"},
         "case_b": {"n1": "'Amy'", "n2": "'Amy'", "n3": "'Bob'", "n4": "'Amy'", "n5": "'Bob'", "p1": "'0911'", "p2": "'0911'", "p3": "'0922'", "p4": "'0911'", "p5": "'0922'", "answer": "2", "wrong1": "5", "wrong2": "1", "wrong3": "3"},
-        "case_c": {"n1": "'Amy'", "n2": "'Bob'", "n3": "'Carl'", "n4": "'Dan'", "n5": "'Eve'", "p1": "'0911'", "p2": "'0922'", "p3": "'0933'", "p4": "'0944'", "p5": "'0955'", "answer": "5", "wrong1": "1", "wrong2": "3", "wrong3": "4"}
+        "case_c": {"n1": "'Amy'", "n2": "'Bob'", "n3": "'Carl'", "n4": "'Carl'", "n5": "'Eve'", "p1": "'0911'", "p2": "'0922'", "p3": "'0933'", "p4": "'0933'", "p5": "'0955'", "answer": "4", "wrong1": "5", "wrong2": "1", "wrong3": "3"}
       },
       "options": [
         {"text": "{answer}", "is_correct": true},
@@ -72,13 +72,13 @@
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "drop_duplicates(subset=['name','phone']) 只比對 name+phone 兩欄。(Amy,0911) 出現 2 次、(Bob,0922) 出現 2 次,各保留首筆,(Carl,0933) 唯一,共 {answer} 列。email 欄不參與比對。",
+        "correct": "drop_duplicates(subset=['name','phone']) 只比對 name+phone 兩欄,預設 keep='first' 保留首筆。逐列檢視 (name,phone) 組合鍵,凡組合重複者只保留第一筆,結果為 {answer} 列。email 欄不參與比對,即使 email 不同也算同一筆。",
         "wrong": {
-          "{wrong1}": "subset 已限定比對欄位,5 為原始列數而非去重後列數。",
-          "{wrong2}": "drop_duplicates 預設 keep='first',會保留首筆而非僅留 1 列。",
-          "{wrong3}": "若只看 phone 也是 3 筆,但本題以 name+phone 組合判斷,結果剛好也是 {answer},不過題目強調是組合鍵而非單欄。"
+          "{wrong1}": "5 為原始列數,subset 已限定比對欄位,drop_duplicates 必去除組合鍵重複的列。",
+          "{wrong2}": "drop_duplicates 預設 keep='first',會保留每組首筆而非僅留全表唯一 1 列。",
+          "{wrong3}": "此值常見於『只看 phone 單欄』或『只看 name 單欄』的誤算,本題以 (name,phone) 組合鍵判斷才對。"
         },
-        "hook": "drop_duplicates(subset=...) 只比對指定欄位"
+        "hook": "drop_duplicates(subset=...) 只比對指定欄位,keep='first' 保留組合鍵首筆"
       },
       "misconceptions": ["以為 drop_duplicates 永遠看全欄", "忘了 keep='first' 預設"],
       "related_node_ids": ["n_L22201_003", "n_L22201_004"],
@@ -127,32 +127,32 @@
       "format": "code_reading",
       "difficulty": "medium",
       "source_level": "L1",
-      "stem": "保險公司將『要保人主檔』與『理賠紀錄』以 policy_id 合併,以分析每位要保人的理賠次數。請問下列程式 print 的合併後列數為何?",
-      "code_block": "import pandas as pd\nleft = pd.DataFrame({\n    'policy_id': {left_ids},\n    'name': {left_names}\n})\nright = pd.DataFrame({\n    'policy_id': {right_ids},\n    'claim': {right_claims}\n})\nmerged = pd.merge(left, right, on='policy_id', how='{how}')\nprint(len(merged))",
+      "stem": "保險公司將『要保人主檔』與『理賠紀錄』以 policy_id 做 inner join,以分析有理賠紀錄的要保人。請問下列程式 print 的合併後列數為何?",
+      "code_block": "import pandas as pd\nleft = pd.DataFrame({\n    'policy_id': {left_ids},\n    'name': {left_names}\n})\nright = pd.DataFrame({\n    'policy_id': {right_ids},\n    'claim': {right_claims}\n})\nmerged = pd.merge(left, right, on='policy_id', how='inner')\nprint(len(merged))",
       "stem_variables": {
-        "case_a": {"left_ids": "[1, 2, 3, 4]", "left_names": "['A','B','C','D']", "right_ids": "[2, 2, 3, 5]", "right_claims": "[100, 200, 300, 400]", "how": "inner", "answer": "3", "wrong1": "4", "wrong2": "5", "wrong3": "8"},
-        "case_b": {"left_ids": "[1, 2, 3, 4]", "left_names": "['A','B','C','D']", "right_ids": "[2, 2, 3, 5]", "right_claims": "[100, 200, 300, 400]", "how": "left", "answer": "5", "wrong1": "3", "wrong2": "4", "wrong3": "8"},
-        "case_c": {"left_ids": "[1, 2, 3, 4, 6]", "left_names": "['A','B','C','D','E']", "right_ids": "[2, 3, 3, 5]", "right_claims": "[100, 200, 300, 400]", "how": "left", "answer": "6", "wrong1": "4", "wrong2": "5", "wrong3": "9"}
+        "case_a": {"left_ids": "[1, 2, 3, 4]",       "left_names": "['A','B','C','D']",         "right_ids": "[2, 2, 3, 5]",    "right_claims": "[100, 200, 300, 400]",       "answer": "3", "wrong1": "5", "wrong2": "4", "wrong3": "16"},
+        "case_b": {"left_ids": "[1, 2, 3, 4, 5]",    "left_names": "['A','B','C','D','E']",     "right_ids": "[2, 2, 2, 3, 9]", "right_claims": "[100, 200, 300, 400, 500]",  "answer": "4", "wrong1": "7", "wrong2": "5", "wrong3": "25"},
+        "case_c": {"left_ids": "[1, 2, 2, 3, 4]",    "left_names": "['A','B','B','C','D']",     "right_ids": "[2, 2, 3, 5]",    "right_claims": "[100, 200, 300, 400]",       "answer": "5", "wrong1": "7", "wrong2": "6", "wrong3": "20"}
       },
       "options": [
         {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為 inner join 等於 left join"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為 inner join 保留右表全部"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為是笛卡兒乘積"}
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為 inner = left(保留左表全部 key,右表無對應補 NaN)"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為 inner = right(保留右表全部 key)"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為是笛卡兒積(左表列數 × 右表列數)"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "依 how 與兩表 key 配對展開。inner 僅保留兩側 key 皆存在的記錄,left 保留左表全部(右表無對應則為 NaN)。一對多會展開為多列,本題依參數計算結果為 {answer} 列。",
+        "correct": "how='inner' 僅保留兩側 policy_id 皆存在的記錄。重複 key 一對多會展開:左表某 key 出現 m 次、右表同 key 出現 n 次,合併後該 key 產生 m × n 列。本題依資料計算得 {answer} 列;只有兩側皆有的 policy_id 進入結果,單側獨有的 policy_id 全被丟棄。",
         "wrong": {
-          "{wrong1}": "此為若用『其他 how』可能出現的列數,需依題目實際參數 how 判斷。",
-          "{wrong2}": "right join 會保留右表全部 key;left join 保留左表全部 key,兩者不同。",
-          "{wrong3}": "笛卡兒積 (how='cross') 才會把所有左右兩兩相乘;預設 inner 不會。"
+          "{wrong1}": "此為若改用 how='left' 的列數 — left join 會保留左表全部 key,右表無對應補 NaN,故列數 ≥ 左表列數。本題用 inner 不會保留無對應的左表列。",
+          "{wrong2}": "此為若改用 how='right' 的列數 — right join 保留右表全部 key,左表無對應補 NaN。inner 同時要求兩側存在,故通常小於 right。",
+          "{wrong3}": "笛卡兒積 (how='cross') 才會把左右兩兩相乘 = len(left) × len(right);inner 仍以 key 匹配,不會無條件全配。"
         },
-        "hook": "inner = 交集;left = 保留左;一對多展開為多列"
+        "hook": "inner = key 交集;left/right = 保留單側全部;cross = 笛卡兒積"
       },
-      "misconceptions": ["以為 pd.merge 預設 how='left'", "忘記一對多會增列"],
+      "misconceptions": ["以為 pd.merge 預設 how='left'", "忘記同 key 一對多會展開為多列"],
       "related_node_ids": ["n_L22201_004", "n_L22201_001"],
-      "tags": ["pandas", "merge", "join"]
+      "tags": ["pandas", "merge", "inner join"]
     },
     {
       "id": "q_n22_005",
@@ -267,7 +267,7 @@
       "format": "code_reading",
       "difficulty": "medium",
       "source_level": "L1",
-      "stem": "外送平台欲依城市權重對訂單做加權隨機抽樣以估算口味偏好。下列關於此加權抽樣程式的敘述,何者最正確?",
+      "stem": "外送平台欲依城市權重對訂單做加權隨機抽樣以估算口味偏好。下列關於此程式 print 結果與行為的敘述,何者最正確?",
       "code_block": "import numpy as np\nrng = np.random.default_rng(0)\ncities = np.array(['TPE', 'TXG', 'KHH'])\nweights = np.array([0.7, 0.2, 0.1])\nsample = rng.choice(cities, size=4, p=weights)\nprint(list(sample))",
       "options": [
         {"text": "輸出 4 個城市的序列,TPE 出現機率最高(p=0.7),但具體序列仍受亂數決定,並非必為全 TPE", "is_correct": true, "trap_type": "正解:加權影響長期頻率,單次序列仍隨機"},
@@ -347,13 +347,13 @@
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "np.cov 預設 ddof=1(樣本變異數);對角元素 C[0,0]、C[1,1] 分別為 var(x)、var(y);trace 為兩者和,case_a 結果為 {answer}(var(x)=1.67, var(y)=6.67,和=8.33)。",
+        "correct": "np.cov 預設 ddof=1(樣本變異數);輸入 2D 陣列時,對角元素 C[0,0]、C[1,1] 分別為 var(x)、var(y),非對角元素為 cov(x,y)。trace(C) = var(x) + var(y),本題依資料計算為 {answer}。corrcoef 才會把對角強制為 1.0;cov 對角是真實變異數。",
         "wrong": {
-          "{wrong1}": "此為 ddof=0(母體變異數)結果,np.cov 預設使用樣本變異數 ddof=1。",
-          "{wrong2}": "此值疑似把整個矩陣四元素相加(含兩個 cov 項),trace 只取對角。",
-          "{wrong3}": "此值僅為單一對角元素(var(x) 或 var(y)),trace 是兩者和。"
+          "{wrong1}": "此為 ddof=0(母體變異數)的結果,公式分母用 n 而非 n-1;np.cov 預設使用樣本變異數 ddof=1。",
+          "{wrong2}": "此值疑似把整個 2×2 矩陣四元素加總(含兩個對稱的 cov 項),但 trace 只取對角線兩元素。",
+          "{wrong3}": "此值僅為單一對角元素(var(x) 或 var(y) 其中一個),trace 應為兩個對角元素之和。"
         },
-        "hook": "np.cov 對角 = 各變數變異數(預設 ddof=1)"
+        "hook": "np.cov 對角 = 各變數變異數(預設 ddof=1);trace 取兩對角和"
       },
       "misconceptions": ["以為 np.cov 預設 ddof=0", "把 trace 與全矩陣加總混用"],
       "related_node_ids": ["n_L22301_003", "n_L22301_004"],
@@ -367,32 +367,32 @@
       "format": "code_reading",
       "difficulty": "medium",
       "source_level": "L1",
-      "stem": "連鎖咖啡店欲分解每月銷售量為趨勢、季節、殘差三成分,以預測下季備料。下列程式取得的 result.seasonal 物件型別與長度為何?",
-      "code_block": "import pandas as pd\nimport numpy as np\nfrom statsmodels.tsa.seasonal import seasonal_decompose\nidx = pd.date_range('2024-01-01', periods={n}, freq='M')\nsales = pd.Series([{a}+i + 10*np.sin(i*np.pi/6) for i in range({n})], index=idx)\nresult = seasonal_decompose(sales, model='additive', period=12)\nprint(type(result.seasonal).__name__, len(result.seasonal))",
+      "stem": "連鎖咖啡店以加法模型分解月銷售量(趨勢 + 季節 + 殘差)。下列程式 print 趨勢成分平均與一個週期內季節成分總和的 tuple,結果為何?",
+      "code_block": "import pandas as pd\nimport numpy as np\nfrom statsmodels.tsa.seasonal import seasonal_decompose\nidx = pd.date_range('2024-01-01', periods={n}, freq='M')\nsales = pd.Series([{a}+i + 10*np.sin(i*np.pi/6) for i in range({n})], index=idx)\nresult = seasonal_decompose(sales, model='additive', period=12)\ntrend_mean = round(result.trend.dropna().mean(), 1)\nseason_sum = round(result.seasonal[:12].sum(), 2)\nprint((trend_mean, season_sum))",
       "stem_variables": {
-        "case_a": {"a": "100", "n": "24", "answer": "Series 24", "wrong1": "DataFrame 24", "wrong2": "Series 12", "wrong3": "ndarray 24"},
-        "case_b": {"a": "200", "n": "36", "answer": "Series 36", "wrong1": "DataFrame 36", "wrong2": "Series 12", "wrong3": "ndarray 36"},
-        "case_c": {"a": "50", "n": "48", "answer": "Series 48", "wrong1": "DataFrame 48", "wrong2": "Series 12", "wrong3": "ndarray 48"}
+        "case_a": {"a": "100", "n": "24", "answer": "(111.5, 0.0)", "wrong1": "(111.5, 10.0)", "wrong2": "(100.0, 0.0)", "wrong3": "(111.5, 1.0)"},
+        "case_b": {"a": "200", "n": "36", "answer": "(217.5, 0.0)", "wrong1": "(217.5, 10.0)", "wrong2": "(200.0, 0.0)", "wrong3": "(217.5, 1.0)"},
+        "case_c": {"a": "50",  "n": "48", "answer": "(73.5, 0.0)",  "wrong1": "(73.5, 10.0)",  "wrong2": "(50.0, 0.0)",  "wrong3": "(73.5, 1.0)"}
       },
       "options": [
         {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為回傳 DataFrame"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為長度等於 period"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為回傳 ndarray"}
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為加法模型季節總和 = 季節振幅"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為趨勢平均等於初始基線"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為加法模型季節總和近似於 1"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "seasonal_decompose 回傳 DecomposeResult 物件,屬性 trend / seasonal / resid 各為與原序列等長的 pandas Series。本題 seasonal 型別與長度為 {answer}。季節成分『以 period 為週期重複』,但長度仍等於原序列長度。",
+        "correct": "加法模型 Y = T + S + R 中,季節成分『以週期為單位扣除趨勢後的平均』被建構為一個週期內總和為 0,使其不污染趨勢的水平。本題趨勢平均約等於整個序列的均值 = base + (n-1)/2,一個週期(12 個月)的季節成分總和 = 0.0,故輸出 {answer}。",
         "wrong": {
-          "{wrong1}": "result 本身是 DecomposeResult,seasonal 屬性是 Series 而非 DataFrame。",
-          "{wrong2}": "誤以為 seasonal 只存週期內 12 筆;實際是把週期模式 broadcast 回原序列長度。",
-          "{wrong3}": "因輸入是 pd.Series,輸出三成分也都是 Series,可保留時間索引。"
+          "{wrong1}": "季節振幅(此處 sin 振幅 10)是單點最大絕對值,不是一個週期內的總和;加法模型強制週期內總和為 0。",
+          "{wrong2}": "趨勢成分捕捉的是『時變的水平』,本題序列以線性遞增從 base 出發,趨勢平均約為序列均值,而非初始 base。",
+          "{wrong3}": "近似於 1 是『乘法模型』季節成分的特徵(乘法模型強制週期內幾何平均 ≈ 1),加法模型則總和 ≈ 0。"
         },
-        "hook": "seasonal_decompose 三成分皆為與原序列等長的 Series"
+        "hook": "加法 Y=T+S+R:季節週期內總和=0;乘法 Y=T×S×R:季節週期內幾何平均=1"
       },
-      "misconceptions": ["以為 seasonal 長度 = period", "把回傳物件當 DataFrame"],
+      "misconceptions": ["以為季節成分總和等於振幅", "混淆加法與乘法模型的季節歸一化方式"],
       "related_node_ids": ["n_L22302_006"],
-      "tags": ["statsmodels", "seasonal_decompose", "時間序列"]
+      "tags": ["statsmodels", "seasonal_decompose", "加法模型", "時間序列"]
     },
     {
       "id": "q_n22_012",

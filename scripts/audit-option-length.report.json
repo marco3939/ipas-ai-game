@@ -1,11 +1,11 @@
 {
   "summary": {
     "total": 502,
-    "longestPct": "42.4",
+    "longestPct": "42.8",
     "shortestPct": "14.7",
     "avgRatio": "1.04",
-    "acceptablePct": "96.0",
-    "flaggedCount": 1
+    "acceptablePct": "95.4",
+    "flaggedCount": 4
   },
   "flagged": [
     {
@@ -20,6 +20,48 @@
         11,
         11,
         15
+      ]
+    },
+    {
+      "file": "questions-pe-advanced-s1.json",
+      "id": "q_pe_002",
+      "stem": "某法律科技新創要建立『判決書全文摘要與條文比對』系統,單篇輸入長度極大(遠超一般文件)且 GPU 顯存有限。架構師考慮四",
+      "correctText": "選(乙)稀疏注意力:結合 sliding window 局部關注與少量全域 anchor token,計算複雜度由 O(n²) 降為 O(n·w),對長判決書能",
+      "correctLen": 124,
+      "avgWrongLen": "76.0",
+      "ratio": "1.63",
+      "wrongLens": [
+        89,
+        75,
+        64
+      ]
+    },
+    {
+      "file": "questions-pe-advanced-s1.json",
+      "id": "q_pe_012",
+      "stem": "某時尚電商導入對比學習雙編碼器(以英文 alt-text 大規模預訓練)做以文搜圖,在英文資料集召回率(R@1)達 72",
+      "correctText": "三大根因疊加:(1) 編碼器跨模態對齊偏差(原版英文文字編碼器未對齊到中文-影像共享空間)、(2) 預訓練語料偏見(時尚精細品類在原訓練語料稀疏)、(3) 領域",
+      "correctLen": 120,
+      "avgWrongLen": "83.0",
+      "ratio": "1.45",
+      "wrongLens": [
+        62,
+        105,
+        82
+      ]
+    },
+    {
+      "file": "questions-ph-mlops.json",
+      "id": "q_ph_006",
+      "stem": "某銀行欲推出新版反洗錢(AML)模型 v3.0,法遵要求嚴格且模型誤判將觸發人工調查成本。SRE Lead 規劃部署策略",
+      "correctText": "先(甲)流量鏡像(0% 真實決策,僅鏡像比對輸出)→ 再(乙)金絲雀(5→25→50% 漸進)→ 達標後 100% 切換;(丙)A/B 不在前期使用,(丁)Bi",
+      "correctLen": 91,
+      "avgWrongLen": "69.7",
+      "ratio": "1.31",
+      "wrongLens": [
+        75,
+        62,
+        72
       ]
     }
   ]

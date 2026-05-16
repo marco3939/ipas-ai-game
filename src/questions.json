@@ -708,21 +708,21 @@
       "stem": "考慮擲骰子並用列舉方法計算條件機率。事件 A:擲出某倍數的數字;事件 B:擲出大於某門檻值。下列程式輸出 P(A|B)(四捨五入兩位)為何?",
       "code_block": "import numpy as np\nrolls = np.arange(1, 7)\nA = rolls % {mod} == 0\nB = rolls > {thresh}\nA_and_B = A & B\nresult = A_and_B.sum() / B.sum()\nprint(round(result, 2))",
       "stem_variables": {
-        "case_a": {"mod": "2", "thresh": "2", "answer": "0.5", "wrong1": "0.67", "wrong2": "0.29", "wrong3": "0.17"},
-        "case_b": {"mod": "2", "thresh": "1", "answer": "0.6", "wrong1": "1.0", "wrong2": "0.38", "wrong3": "0.2"},
-        "case_c": {"mod": "3", "thresh": "1", "answer": "0.4", "wrong1": "1.0", "wrong2": "0.29", "wrong3": "0.2"}
+        "case_a": {"mod": "2", "thresh": "2", "answer": "0.5", "wrong1": "0.33", "wrong2": "0.29", "wrong3": "0.17"},
+        "case_b": {"mod": "2", "thresh": "1", "answer": "0.6", "wrong1": "0.5", "wrong2": "0.38", "wrong3": "0.2"},
+        "case_c": {"mod": "3", "thresh": "1", "answer": "0.4", "wrong1": "0.33", "wrong2": "0.29", "wrong3": "0.2"}
       },
       "options": [
         {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤用 P(B|A) 公式"},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤用 P(A∩B)/6(無條件聯合機率)取代條件機率"},
         {"text": "{wrong2}", "is_correct": false, "trap_type": "分母誤用 A+B 之和"},
         {"text": "{wrong3}", "is_correct": false, "trap_type": "分母誤用 A*B 之積"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "P(A|B) = P(A∩B) / P(B);程式上即 A_and_B.sum() / B.sum()。對 dice [1..6] 列舉,A=偶數、B>{thresh},計算結果 = {answer}。",
+        "correct": "P(A|B) = P(A∩B) / P(B);程式上即 A_and_B.sum() / B.sum()。對 dice [1..6] 列舉,A=偶數或某倍數、B>{thresh},計算結果 = {answer}。",
         "wrong": {
-          "{wrong1}": "此值為 P(B|A) = A_and_B.sum() / A.sum(),分母錯成 A 的計數,結果為 B 在 A 中的條件機率,意義相反。",
+          "{wrong1}": "此值為 A_and_B.sum() / 6,把分母錯成全部樣本數(無條件聯合機率 P(A∩B)),忽略了「以 B 為條件」的概念;條件機率分母必須是 B 的計數,而非總樣本數。",
           "{wrong2}": "此值來自 A_and_B.sum() / (A.sum() + B.sum()) 錯誤公式,分母不是純粹的 B 計數而是聯集計數,違背條件機率定義。",
           "{wrong3}": "此值來自 A_and_B.sum() / (A.sum() * B.sum()) 錯誤公式,分母為乘積無機率意義,與獨立性檢定的式子混淆。"
         },
@@ -861,33 +861,33 @@
       "format": "code_reading",
       "difficulty": "medium",
       "source_level": "L1",
-      "stem": "下列程式碼使用 nn.Dropout 建立正則化層後,印出 net.dropout.p。請問 print 的輸出值為何?",
-      "code_block": "import torch\nimport torch.nn as nn\nclass Net(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.fc1 = nn.Linear({in_dim}, {hidden})\n        self.dropout = nn.Dropout(p={p})\n        self.fc2 = nn.Linear({hidden}, {out_dim})\n    def forward(self, x):\n        x = torch.relu(self.fc1(x))\n        x = self.dropout(x)\n        return self.fc2(x)\nnet = Net()\nprint(net.dropout.p)",
+      "stem": "下列程式碼以同一個 nn.Dropout 層分別在 train() 與 eval() 兩種模式下對輸入做前向運算,並輸出『訓練模式下被歸零的比例』與『評估模式下全部元素相加後的結果』。請問 print 的輸出最接近下列何者?",
+      "code_block": "import torch\nimport torch.nn as nn\ntorch.manual_seed(42)\ndropout = nn.Dropout(p={p})\nx = torch.ones(1000)\n# 訓練模式下:每個元素以機率 p 被隨機歸零(其餘以 1/(1-p) 縮放)\ndropout.train()\nout_train = dropout(x)\nzero_rate = (out_train == 0).float().mean().item()\n# 評估模式下:dropout 視為 identity,完全透傳\ndropout.eval()\nout_eval = dropout(x)\neval_sum = out_eval.sum().item()\nprint(round(zero_rate, 1), round(eval_sum, 1))",
       "stem_variables": {
-        "case_a": {"in_dim": "100", "hidden": "64", "out_dim": "10", "p": "0.5", "answer": "0.5", "wrong1": "1.0", "wrong2": "0.0", "wrong3": "100"},
-        "case_b": {"in_dim": "200", "hidden": "128", "out_dim": "5", "p": "0.3", "answer": "0.3", "wrong1": "1.0", "wrong2": "0.0", "wrong3": "200"},
-        "case_c": {"in_dim": "150", "hidden": "32", "out_dim": "8", "p": "0.2", "answer": "0.2", "wrong1": "1.0", "wrong2": "0.0", "wrong3": "150"}
+        "case_a": {"p": "0.2", "answer": "0.2 1000.0", "wrong1": "0.8 1000.0", "wrong2": "0.2 800.0", "wrong3": "0.2 1250.0"},
+        "case_b": {"p": "0.5", "answer": "0.5 1000.0", "wrong1": "0.5 500.0", "wrong2": "0.0 1000.0", "wrong3": "0.5 2000.0"},
+        "case_c": {"p": "0.8", "answer": "0.8 1000.0", "wrong1": "0.2 1000.0", "wrong2": "0.8 200.0", "wrong3": "0.8 5000.0"}
       },
       "options": [
         {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為 p 是保留率而非丟棄率上限"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為 Dropout 預設不丟棄"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤把輸入維度當 p"}
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "把 p(丟棄率)與 1-p(保留率)互換"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為 eval 模式仍會把保留元素縮放後再加總、或仍會歸零"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為 eval 模式仍套用 1/(1-p) 的訓練時縮放因子"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "nn.Dropout(p={p}) 在訓練時隨機關閉 p={p} 比例的神經元,防止過度依賴局部特徵。net.dropout.p 直接讀取建構時設定的 p 值,輸出為 {answer}。Dropout 是常用的正則化技術,與 L1/L2 在損失函數加懲罰項不同。",
+        "correct": "Dropout 的核心是『train/eval 兩模式行為不同』。訓練模式(dropout.train())下,每個元素以機率 p={p} 被獨立歸零,其餘元素乘上 1/(1-p) 做 inverted scaling 以維持期望值不變;在 1000 個元素的大樣本下,實際歸零比例會收斂到 p={p},round 到一位小數得 {p}。評估模式(dropout.eval())下,nn.Dropout 退化為恆等映射,完全透傳不歸零也不縮放,因此 1000 個 1.0 相加 = 1000.0,故輸出為 {answer}。注意這個『eval 透傳』是 PyTorch 的標準設計,讓推論期能用乾淨的全網路。",
         "wrong": {
-          "{wrong1}": "1.0 表示丟棄全部神經元,實務上不可能設定如此極端值;此選項把 p 的有效範圍誤以為固定為 1。",
-          "{wrong2}": "0.0 等於不啟用 Dropout,此模型仍會 dropout p={p} 比例,並非 0。",
-          "{wrong3}": "此值是輸入維度 in_features,並非 Dropout 的 p 值。p 為 [0,1] 之間的浮點數,維度數是整數,兩者意義不同。"
+          "{wrong1}": "把 p(丟棄率)與 1-p(保留率)的角色互換;p 是『被歸零』而非『被保留』的機率。",
+          "{wrong2}": "此值假設 eval 模式仍會做歸零或縮放;實際上 nn.Dropout 在 eval() 後是 identity,輸入幾乎原樣傳出,sum 必為輸入元素總和。",
+          "{wrong3}": "此值把 1/(1-p) 訓練時的縮放因子誤套到 eval 模式;eval 模式不做任何縮放,因此 sum 不會被放大。"
         },
-        "hook": "Dropout 程式辨識:nn.Dropout 或 torch.nn.functional.dropout;net.dropout.p 直接讀 p 值"
+        "hook": "Dropout 雙模式口訣:train() 歸零+1/(1-p)縮放;eval() 純透傳"
       },
-      "misconceptions": ["看到 dropout 字眼但不確定為什麼是 Dropout"],
-      "related_node_ids": [],
+      "misconceptions": ["以為 Dropout 在 eval 模式仍會歸零或縮放", "把 p 視為保留率而非丟棄率", "以為 Dropout 訓練與推論行為相同"],
+      "related_node_ids": ["n_L23304_004"],
       "exam_appearance": [{"exam": "114-2", "q": 39, "subject": 3}],
-      "tags": ["程式判讀", "Dropout"]
+      "tags": ["程式判讀", "Dropout", "train", "eval"]
     },
     {
       "id": "q_0030",
