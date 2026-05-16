@@ -1,0 +1,604 @@
+{
+  "version": "1.0",
+  "schema_version": "iron-rule-1+2+6",
+  "generated_at": "2026-05-16",
+  "batch": "N17 — 科二大數據 L22303 數據可視化(v2 解禁概念題)",
+  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "iron_rule_compliance": {
+    "rule_1": "every question has explanation.correct + explanation.wrong + explanation.hook + misconceptions",
+    "rule_2": "shuffle_options=true on every item; calculation 0 題故無 stem_variables",
+    "rule_3": "all stems are original cross-industry scenarios",
+    "rule_4": "option length ratio between 0.85 and 1.20",
+    "rule_5": "knowledge_code = L22303; node_id ∈ {n_L22303_001..006} per kb/nodes-subject-2-bdapp.json",
+    "rule_6": "科目隔離 — 本檔僅 L22303 內容,related_node_ids 不指向其他 L 編碼,只新建本檔不改任何其他既有檔案",
+    "v2_concept_only": "禁工具 GUI 操作 / matplotlib 參數 / Tableau Calc Editor / Power BI DAX;停留在圖型選型 / 誤導視覺化辨識 / 儀表板架構概念層"
+  },
+  "distribution": {
+    "L22303_count": 20,
+    "by_node": {"n_L22303_001": 3, "n_L22303_002": 3, "n_L22303_003": 4, "n_L22303_004": 3, "n_L22303_005": 4, "n_L22303_006": 3},
+    "by_format": {"single_choice_text": 16, "single_choice_scenario": 4, "calculation": 0},
+    "by_difficulty": {"easy": 5, "medium": 12, "hard": 3}
+  },
+  "questions": [
+    {
+      "id": "q_n17_001",
+      "knowledge_code": "L22303",
+      "node_id": "n_L22303_001",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某 HR 部門想呈現 6 名候選人在『溝通、邏輯、領導、抗壓、創意』五項能力(評分皆 0–100)的整體輪廓,以供主管一眼比較強項落點。下列何種圖型最為適合?",
+      "options": [
+        {"text": "雷達圖(Radar),五維同尺度可同時對比每位候選人各能力的相對輪廓", "is_correct": true},
+        {"text": "圓餅圖(Pie),把每位候選人五能力相加得總分,再以扇形角度呈現整體佔比", "is_correct": false, "trap_type": "圓餅圖適合『部分對整體』而非多人多維比較"},
+        {"text": "桑基圖(Sankey),以流量寬度連結候選人與能力節點,呈現分數的方向流動", "is_correct": false, "trap_type": "Sankey 是流量分配不是多維比較"},
+        {"text": "熱圖(Heatmap),用顏色強度表達分數高低,讓視覺直覺看出每個能力的色階", "is_correct": false, "trap_type": "熱圖可用但較難比較『輪廓形狀』"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "雷達圖適合 3-7 維且同尺度的多對象比較,能用『面積形狀』讓主管直接看出輪廓差異;能力評估是教科書級雷達圖使用情境",
+        "wrong": {
+          "圓餅圖(Pie),把每位候選人五能力相加得總分,再以扇形角度呈現整體佔比": "圓餅圖呈現『一個整體裡各部分占比』,不適合『多對象多維度比較』,且角度比長度難判讀",
+          "桑基圖(Sankey),以流量寬度連結候選人與能力節點,呈現分數的方向流動": "Sankey 表達『來源→去向流量』,人與能力之間沒有流動概念,語意不對",
+          "熱圖(Heatmap),用顏色強度表達分數高低,讓視覺直覺看出每個能力的色階": "熱圖可表達矩陣值但主要看數值高低,『輪廓形狀』感知比雷達差"
+        },
+        "hook": "多維同尺度比較 3-7 維 → 雷達;維度過多會難讀,且面積會誇大差異"
+      },
+      "misconceptions": ["用圓餅做多對象比較", "看到多個分數就想到圓餅"],
+      "related_node_ids": ["n_L22303_002"],
+      "tags": ["圖型選型", "雷達圖", "比較"]
+    },
+    {
+      "id": "q_n17_002",
+      "knowledge_code": "L22303",
+      "node_id": "n_L22303_001",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某媒體要呈現全台 50 個鄉鎮『每萬人診所數』,差距從 1.2 到 18.7 不等,且希望讀者能逐項比較名次。下列何種圖型最為清楚有效?",
+      "options": [
+        {"text": "水平條形圖或點圖(Cleveland dot plot),類別多時長條垂直擠壓,水平/點圖能清楚排序", "is_correct": true},
+        {"text": "雷達圖,以 50 個軸放射呈現各鄉鎮數值,輪廓最具整體視覺衝擊感且直觀", "is_correct": false, "trap_type": "雷達維度過多不可讀"},
+        {"text": "3D 直立柱狀圖,前後深度感能加強視覺層次,讓報告更專業並提升閱讀趣味", "is_correct": false, "trap_type": "3D 透視扭曲且難對齊比較"},
+        {"text": "圓餅圖,把 50 個鄉鎮拆成 50 個扇形,以角度大小代表每萬人診所數的高低", "is_correct": false, "trap_type": "圓餅 ≤ 5 類為宜"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "類別多(50 個)時水平條形或 Cleveland 點圖最佳:水平避免直立壓擠標籤;點圖更節省墨水且容易排序判讀名次",
+        "wrong": {
+          "雷達圖,以 50 個軸放射呈現各鄉鎮數值,輪廓最具整體視覺衝擊感且直觀": "雷達超過 8 維就難閱讀,50 個維度完全失去判讀能力",
+          "3D 直立柱狀圖,前後深度感能加強視覺層次,讓報告更專業並提升閱讀趣味": "3D 透視會扭曲長度感知,且前後柱體互相遮擋,違反 Lie Factor 原則",
+          "圓餅圖,把 50 個鄉鎮拆成 50 個扇形,以角度大小代表每萬人診所數的高低": "圓餅圖建議 ≤ 5 類;50 扇形完全無法分辨大小"
+        },
+        "hook": "Cleveland 感知排序:位置 > 長度 > 角度 > 面積;類別多用點圖比條形更清爽"
+      },
+      "misconceptions": ["以為加 3D 比較專業", "類別越多越想用圓餅"],
+      "related_node_ids": ["n_L22303_005"],
+      "tags": ["圖型選型", "比較", "點圖"]
+    },
+    {
+      "id": "q_n17_003",
+      "knowledge_code": "L22303",
+      "node_id": "n_L22303_001",
+      "subject": 2,
+      "format": "single_choice_scenario",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "情境:某行銷分析師要呈現 4 個品牌在『價格、品質、服務、設計、創新』5 個維度(皆 1–10 同尺度問卷分數)的整體形象比較。她考慮用雷達圖,但同事提醒『雷達圖有陷阱』。下列何項陷阱最可能影響此情境的結論?",
+      "options": [
+        {"text": "雷達面積大小受『維度排列順序』影響,調整順序就能讓某品牌看起來總分更高", "is_correct": true},
+        {"text": "雷達圖只能呈現一個對象,要做 4 品牌比較需畫 4 張獨立的雷達圖不能疊圖", "is_correct": false, "trap_type": "雷達可多對象疊圖比較"},
+        {"text": "雷達圖必須要求所有維度為比率尺度才能繪製,問卷分數不可使用無法成立", "is_correct": false, "trap_type": "雷達不限尺度類型"},
+        {"text": "雷達圖在維度低於 8 維時無法呈現,本情境只有 5 維尚未達到可繪製的下限", "is_correct": false, "trap_type": "5 維正好是雷達的甜蜜區"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "雷達『面積』看起來等於『總分』是常見誤讀:面積實際上取決於『相鄰維度的乘積之和』,因此維度排列順序會改變面積。把高分維度相鄰排放,面積會看起來特別大,這是雷達圖的視覺陷阱",
+        "wrong": {
+          "雷達圖只能呈現一個對象,要做 4 品牌比較需畫 4 張獨立的雷達圖不能疊圖": "雷達常用法就是多對象同圖疊放比較輪廓,並非單對象限定",
+          "雷達圖必須要求所有維度為比率尺度才能繪製,問卷分數不可使用無法成立": "雷達常用於同尺度的順序/區間資料,問卷分數(Likert 同尺度)為典型用法",
+          "雷達圖在維度低於 8 維時無法呈現,本情境只有 5 維尚未達到可繪製的下限": "雷達建議 3-7 維,5 維正是甜蜜區;陳述完全相反"
+        },
+        "hook": "雷達『面積看起來大』≠『總分高』;排序維度可操弄面積感知"
+      },
+      "misconceptions": ["以為雷達面積等於總分", "誤以為雷達不能多對象比較"],
+      "related_node_ids": ["n_L22303_005"],
+      "tags": ["雷達圖", "視覺陷阱", "比較"]
+    },
+    {
+      "id": "q_n17_004",
+      "knowledge_code": "L22303",
+      "node_id": "n_L22303_002",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某零售連鎖想比較 8 家門市『每日來客數』分佈(看中位數、四分位、離群值並排觀察),最簡潔且資訊密度高的圖型為?",
+      "options": [
+        {"text": "並列箱形圖(Side-by-side Boxplot),五數彙整加離群點,適合多組分佈快速比較", "is_correct": true},
+        {"text": "並列圓餅圖,以每店一張餅呈現來客時段組成,從扇形大小判讀分佈集中度", "is_correct": false, "trap_type": "圓餅不呈現分佈"},
+        {"text": "並列折線圖,以日期為 X、來客數為 Y 畫八條重疊曲線,觀察分佈交互趨勢", "is_correct": false, "trap_type": "折線是時序不是分佈"},
+        {"text": "並列堆疊條形圖,將八家門市各時段來客數堆疊,以總高度判斷分佈離散度", "is_correct": false, "trap_type": "堆疊條形是組成不是分佈"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "箱形圖以最小值、Q1、中位數、Q3、最大值五數摘要 + 離群點呈現分佈,並列多組箱形是『比較多組分佈』的標準首選圖型",
+        "wrong": {
+          "並列圓餅圖,以每店一張餅呈現來客時段組成,從扇形大小判讀分佈集中度": "圓餅是『部分對整體』,完全不呈現中位數與四分位等分佈摘要",
+          "並列折線圖,以日期為 X、來客數為 Y 畫八條重疊曲線,觀察分佈交互趨勢": "折線圖適合『時間序列』看變化,不是『分佈』看形狀",
+          "並列堆疊條形圖,將八家門市各時段來客數堆疊,以總高度判斷分佈離散度": "堆疊條形是『組成關係』而非分佈描述,看不到四分位或離群點"
+        },
+        "hook": "多組分佈比較:先 boxplot;若懷疑雙峰再升級 violin"
+      },
+      "misconceptions": ["把折線當分佈圖", "把堆疊當分佈圖"],
+      "related_node_ids": ["n_L22303_001"],
+      "tags": ["箱形圖", "分佈", "五數"]
+    },
+    {
+      "id": "q_n17_005",
+      "knowledge_code": "L22303",
+      "node_id": "n_L22303_002",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某資料科學家用箱形圖檢視某 App『每日使用時長』,結果中位數、四分位皆正常,離群點少,推論為單峰分佈。但同事用直方圖卻發現明顯雙峰(上班族 vs 學生)。下列分析何者最為正確?",
+      "options": [
+        {"text": "箱形圖只摘要五數,無法呈現雙峰結構,複雜形態應改用小提琴圖或密度圖", "is_correct": true},
+        {"text": "雙峰一定會反映在箱形圖的『盒子高度』上,本案應為直方圖組距設定錯誤", "is_correct": false, "trap_type": "盒子高度是 IQR 與雙峰無關"},
+        {"text": "箱形圖如出現多個離群點即代表雙峰,本案離群少所以雙峰判讀是過度詮釋", "is_correct": false, "trap_type": "離群點 ≠ 雙峰"},
+        {"text": "雙峰必由『中位數恰位於兩峰間』顯現,本案中位數既正常即可排除雙峰可能", "is_correct": false, "trap_type": "中位數位置不能判定雙峰"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Boxplot 只回報五數摘要(Min/Q1/Median/Q3/Max + 離群點),完全看不出多峰結構;雙峰分佈的五數可能跟單峰分佈幾乎一樣,需用直方圖、密度圖或小提琴圖才能看到形狀",
+        "wrong": {
+          "雙峰一定會反映在箱形圖的『盒子高度』上,本案應為直方圖組距設定錯誤": "盒子高度等於 IQR(Q3-Q1)代表離散程度,跟雙峰無關;雙峰可有任何 IQR",
+          "箱形圖如出現多個離群點即代表雙峰,本案離群少所以雙峰判讀是過度詮釋": "離群點是極端值不是峰;雙峰可能完全沒有任何離群點",
+          "雙峰必由『中位數恰位於兩峰間』顯現,本案中位數既正常即可排除雙峰可能": "中位數位於兩峰間是『可能』而非『必然』,且即使位於兩峰間 boxplot 仍看不出兩峰"
+        },
+        "hook": "Boxplot 看不出多峰 → 改用 violin / density / histogram"
+      },
+      "misconceptions": ["以為 boxplot 能看出雙峰", "用離群點推論峰數"],
+      "related_node_ids": ["n_L22303_005"],
+      "tags": ["箱形圖", "雙峰", "小提琴圖"]
+    },
+    {
+      "id": "q_n17_006",
+      "knowledge_code": "L22303",
+      "node_id": "n_L22303_002",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某分析師用直方圖看某 IoT 感測器讀值,組距(bin width)由 5 調為 50 後,原本看到的三個明顯峰消失成單一鐘形。下列詮釋何者最為正確?",
+      "options": [
+        {"text": "直方圖對組距非常敏感,結論會隨組距改變;應參考 Sturges / Freedman-Diaconis 建議或多組距交叉確認", "is_correct": true},
+        {"text": "感測器讀值的真實分佈會因組距變大而從多峰變為單峰,這是物理量變化的合理結果", "is_correct": false, "trap_type": "資料不會隨組距改變"},
+        {"text": "組距越大代表精度越高,因此 50 比 5 更接近真實分佈,應採信寬組距結果", "is_correct": false, "trap_type": "組距大不等於精度高"},
+        {"text": "直方圖能呈現雙峰但無法呈現三峰,因此原 5 的組距是錯誤組距應該移除三峰假象", "is_correct": false, "trap_type": "直方圖可呈現任意峰數"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "直方圖的結論強烈依賴組距:組距太小成鋸齒、太大過平,常見建議用 Sturges(log2N+1)或 Freedman-Diaconis(2·IQR/N^(1/3))起手,並嘗試多組距驗證",
+        "wrong": {
+          "感測器讀值的真實分佈會因組距變大而從多峰變為單峰,這是物理量變化的合理結果": "資料本身不會因組距改變,改變的只是『繪圖摘要』",
+          "組距越大代表精度越高,因此 50 比 5 更接近真實分佈,應採信寬組距結果": "組距大反而資訊『平均掉』,可能掩蓋真實多峰結構",
+          "直方圖能呈現雙峰但無法呈現三峰,因此原 5 的組距是錯誤組距應該移除三峰假象": "直方圖可呈現任意峰數;以『不能呈現』為由刪除多峰是循環論證"
+        },
+        "hook": "直方圖三項敏感:組距、起點、密度估計參數;結論變化要交叉驗證"
+      },
+      "misconceptions": ["以為組距大精度高", "以為直方峰數是固定事實"],
+      "related_node_ids": ["n_L22303_005"],
+      "tags": ["直方圖", "組距", "Sturges"]
+    },
+    {
+      "id": "q_n17_007",
+      "knowledge_code": "L22303",
+      "node_id": "n_L22303_003",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某科技公司要呈現旗下 6 個事業部、每事業部下 4-8 個產品線的『營收佔比』雙層結構,並強調面積比例。下列何種圖型最為適合?",
+      "options": [
+        {"text": "樹狀圖(Treemap),以巢狀矩形面積呈現多層級階層 + 數量比例最為直觀", "is_correct": true},
+        {"text": "雷達圖(Radar),以事業部為軸並用面積大小代表全公司營收的雙層階層占比", "is_correct": false, "trap_type": "雷達不呈現階層"},
+        {"text": "並列箱形圖(Boxplot),分別呈現每事業部營收的五數摘要與佔比階層", "is_correct": false, "trap_type": "Boxplot 是分佈不是組成"},
+        {"text": "折線圖(Line),以時間為 X 並用顏色階層分組產品線,觀察雙層營收占比", "is_correct": false, "trap_type": "折線是時序不是階層占比"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Treemap(樹狀圖)以巢狀矩形面積呈現多層階層數量,適合『部門/產品線』雙層預算或營收占比;面積比例直接對應數量",
+        "wrong": {
+          "雷達圖(Radar),以事業部為軸並用面積大小代表全公司營收的雙層階層占比": "雷達適合多維比較同尺度,不呈現巢狀階層",
+          "並列箱形圖(Boxplot),分別呈現每事業部營收的五數摘要與佔比階層": "Boxplot 表達分佈摘要,不表達整體 vs 部分的占比",
+          "折線圖(Line),以時間為 X 並用顏色階層分組產品線,觀察雙層營收占比": "折線是時間趨勢,與『面積占比』無關"
+        },
+        "hook": "多層級 + 面積比例 → Treemap;單層 ≤ 5 類可用 Pie"
+      },
+      "misconceptions": ["把雷達當階層", "把折線當占比"],
+      "related_node_ids": ["n_L22303_004"],
+      "tags": ["樹狀圖", "Treemap", "組成"]
+    },
+    {
+      "id": "q_n17_008",
+      "knowledge_code": "L22303",
+      "node_id": "n_L22303_003",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某電商欲呈現使用者『進入首頁 → 三個分類頁 → 五個商品頁 → 結帳/離站』各步驟的流量分配,需強調分流數量並一眼看出流失最大的轉折點。下列何種圖型最為適合?",
+      "options": [
+        {"text": "桑基圖(Sankey),以節點 + 帶寬寬度直接呈現『來源 → 去向』的流量分配", "is_correct": true},
+        {"text": "圓餅圖(Pie),把首頁拆成三個分類後再嵌套圓餅以分層比例呈現整體流量", "is_correct": false, "trap_type": "圓餅不表達流向"},
+        {"text": "散佈圖(Scatter),以 X 為步驟序號、Y 為流量並連線觀察流量隨層次衰減趨勢", "is_correct": false, "trap_type": "散佈不表達節點間流動"},
+        {"text": "熱圖(Heatmap),以行為頁面、列為步驟,顏色強度代表流量並排隊形成流向", "is_correct": false, "trap_type": "熱圖不顯示節點連接關係"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Sankey 桑基圖以『節點 + 帶寬』呈現流量分配,帶寬寬度直接等比例代表流量,適合使用者旅程、能源流動、轉換漏斗等場景,流失最大的轉折點會以最寬的『岔出帶』直接呈現",
+        "wrong": {
+          "圓餅圖(Pie),把首頁拆成三個分類後再嵌套圓餅以分層比例呈現整體流量": "圓餅只能看單層占比,看不出『誰流到誰』的方向關係",
+          "散佈圖(Scatter),以 X 為步驟序號、Y 為流量並連線觀察流量隨層次衰減趨勢": "散佈圖呈現兩變數關係,沒有節點分流概念",
+          "熱圖(Heatmap),以行為頁面、列為步驟,顏色強度代表流量並排隊形成流向": "熱圖呈現矩陣值,但沒有節點之間方向性連接的視覺語意"
+        },
+        "hook": "使用者旅程、能源流、轉換漏斗 → Sankey;寬度即流量"
+      },
+      "misconceptions": ["以為熱圖能呈現流向", "把散佈當分流"],
+      "related_node_ids": ["n_L22303_004"],
+      "tags": ["桑基圖", "Sankey", "流量"]
+    },
+    {
+      "id": "q_n17_009",
+      "knowledge_code": "L22303",
+      "node_id": "n_L22303_003",
+      "subject": 2,
+      "format": "single_choice_scenario",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "情境:某分析師用『堆疊條形圖』呈現 5 個月份每月『A/B/C/D 四類產品』的銷售組成,主管問:『B 類在五個月之間變化趨勢如何?』分析師回答困難。下列何項最能說明這個侷限?",
+      "options": [
+        {"text": "堆疊條形中段類別起點不對齊,跨條比較中段(B)變化不直觀,可改用百分比堆疊或分組條形", "is_correct": true},
+        {"text": "堆疊條形圖只能呈現累加總量無法比較內部組成,B 變化必須另畫圓餅圖才能判讀比較", "is_correct": false, "trap_type": "堆疊也可看組成,只是中段不對齊"},
+        {"text": "堆疊條形圖會把所有類別的起點都設為相同高度,跨條比較任何段落都同樣容易判讀", "is_correct": false, "trap_type": "事實與題目相反"},
+        {"text": "堆疊條形圖內部段落會被自動排序,因此 B 一定排在底部,難以與其他類別共同比較變化", "is_correct": false, "trap_type": "無自動排序"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "堆疊條形圖只有『最底層類別』起點對齊 X 軸,中段類別每條起點不同(取決於下層累加),導致跨條比較中段差異很困難。改善方法:百分比堆疊(看比例變化)或改用分組條形(每類自己一條),或直接畫該類折線",
+        "wrong": {
+          "堆疊條形圖只能呈現累加總量無法比較內部組成,B 變化必須另畫圓餅圖才能判讀比較": "堆疊本意正是『同時看總量與組成』,並非無法呈現組成",
+          "堆疊條形圖會把所有類別的起點都設為相同高度,跨條比較任何段落都同樣容易判讀": "完全與堆疊定義相反;只有底層對齊",
+          "堆疊條形圖內部段落會被自動排序,因此 B 一定排在底部,難以與其他類別共同比較變化": "段落排序由人決定,且即使排到底部也與『跨條變化』判讀無直接因果"
+        },
+        "hook": "堆疊條形『中段難比』是經典侷限 → 百分比堆疊或分組條形可改善"
+      },
+      "misconceptions": ["以為堆疊每段都易比較", "想用圓餅補救"],
+      "related_node_ids": ["n_L22303_001"],
+      "tags": ["堆疊條形", "組成", "侷限"]
+    },
+    {
+      "id": "q_n17_010",
+      "knowledge_code": "L22303",
+      "node_id": "n_L22303_003",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "下列關於『圓餅圖』使用時機的敘述,何者最為適當?",
+      "options": [
+        {"text": "建議類別 ≤ 5 類且需呈現『部分對整體』比例,超過建議改用條形或樹狀圖", "is_correct": true},
+        {"text": "建議類別越多越好,類別越細越能精確展現整體中每一部分的真實佔比情形", "is_correct": false, "trap_type": "類別多反而難判讀"},
+        {"text": "建議用 3D 形式並使用前景突出最大切片,讓最重要資訊立體呈現增加觀眾印象", "is_correct": false, "trap_type": "3D 扭曲視覺感知"},
+        {"text": "建議用於比較兩數值變數的相關性,以扇形角度代表相關係數方向與強度", "is_correct": false, "trap_type": "圓餅與相關係數無關"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "圓餅圖適合『單一整體拆成少數幾個部分』,類別建議 ≤ 5;類別多或需精確比較數值大小時應改用條形圖(長度比角度好判讀)或樹狀圖(多層階層 + 面積)",
+        "wrong": {
+          "建議類別越多越好,類別越細越能精確展現整體中每一部分的真實佔比情形": "類別越多扇形越窄,標籤越擠,反而無法判讀;Cleveland 感知排序中角度判讀本身就比長度差",
+          "建議用 3D 形式並使用前景突出最大切片,讓最重要資訊立體呈現增加觀眾印象": "3D 透視會扭曲角度,前景切片視覺被放大,屬誤導視覺化手法",
+          "建議用於比較兩數值變數的相關性,以扇形角度代表相關係數方向與強度": "圓餅是組成圖,相關性應用散佈圖或熱圖呈現"
+        },
+        "hook": "圓餅 ≤ 5 類;類別多改條形或 treemap;切忌 3D"
+      },
+      "misconceptions": ["類別越多越精確", "3D 比較專業"],
+      "related_node_ids": ["n_L22303_005"],
+      "tags": ["圓餅圖", "組成", "原則"]
+    },
+    {
+      "id": "q_n17_011",
+      "knowledge_code": "L22303",
+      "node_id": "n_L22303_004",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某資料科學家做 EDA,有 15 個數值變數想快速一覽『兩兩之間的關係模式 + 各自分佈』。下列何種圖型最為合適?",
+      "options": [
+        {"text": "散佈矩陣(Scatter / Pair Plot),對角放分佈、非對角放兩兩散佈,EDA 高效一覽", "is_correct": true},
+        {"text": "桑基圖(Sankey),以變數作節點並用流量寬度呈現變數兩兩之間的關係強度", "is_correct": false, "trap_type": "Sankey 是流量不是相關"},
+        {"text": "並列箱形圖,把 15 個變數並列箱形看分佈摘要並用相鄰盒子位置判讀相關性", "is_correct": false, "trap_type": "Boxplot 不呈現兩兩關係"},
+        {"text": "圓餅圖,將 15 個變數依變異數比例做為扇形大小,以呈現兩兩關係的相對重要性", "is_correct": false, "trap_type": "圓餅與兩兩關係無關"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "散佈矩陣(Pair plot)同時呈現:對角為各變數分佈(直方/密度)、非對角為兩兩散佈,EDA 階段一張圖一覽相關 / 群聚 / 離群,效率最高",
+        "wrong": {
+          "桑基圖(Sankey),以變數作節點並用流量寬度呈現變數兩兩之間的關係強度": "Sankey 是流量分配,不適合表達『相關性』",
+          "並列箱形圖,把 15 個變數並列箱形看分佈摘要並用相鄰盒子位置判讀相關性": "Boxplot 只看單變數分佈摘要,看不到兩變數之間的散點模式",
+          "圓餅圖,將 15 個變數依變異數比例做為扇形大小,以呈現兩兩關係的相對重要性": "圓餅與兩兩關係無關,變異數占比也不等於相關性"
+        },
+        "hook": "EDA 第一張圖:小型資料用散佈矩陣;大量變數用相關係數熱圖"
+      },
+      "misconceptions": ["把箱形當相關", "想用圓餅看相關"],
+      "related_node_ids": ["n_L22303_005"],
+      "tags": ["散佈矩陣", "EDA", "關聯"]
+    },
+    {
+      "id": "q_n17_012",
+      "knowledge_code": "L22303",
+      "node_id": "n_L22303_004",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某分析師畫『相關係數矩陣熱圖』時用單色漸層(白 → 深綠),不論係數正負皆以同色階呈現。下列何項是最關鍵的問題?",
+      "options": [
+        {"text": "相關係數值域為 [-1, 1] 為發散資料,應用 diverging palette(如紅白藍),中心 0 為白", "is_correct": true},
+        {"text": "熱圖必須使用灰階以印刷友善,使用任何彩色都是違反資料視覺化的標準規範", "is_correct": false, "trap_type": "灰階非強制要求"},
+        {"text": "熱圖只能呈現正相關,負相關必須另畫散佈圖才能完整描述兩變數彼此之間關係", "is_correct": false, "trap_type": "熱圖可呈現負相關"},
+        {"text": "熱圖配色不影響資訊判讀,單色與雙色相同效果,問題僅在於是否標註數值大小", "is_correct": false, "trap_type": "配色嚴重影響判讀"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "相關係數的『正/負』方向具有相反語意(同向 vs 反向),屬於發散型(diverging)資料,應用『兩端深、中心淡』的雙向配色(常見紅-白-藍),中心 0 為白色;單色漸層會讓 +0.5 與 -0.5 看起來相同強度卻分不出方向",
+        "wrong": {
+          "熱圖必須使用灰階以印刷友善,使用任何彩色都是違反資料視覺化的標準規範": "灰階適合連續值但無『發散』語意;彩色 diverging palette 才是相關矩陣標準",
+          "熱圖只能呈現正相關,負相關必須另畫散佈圖才能完整描述兩變數彼此之間關係": "熱圖可同時呈現正負相關,只要配色能區分方向",
+          "熱圖配色不影響資訊判讀,單色與雙色相同效果,問題僅在於是否標註數值大小": "配色是熱圖最關鍵的設計要素,直接決定能否區分正負與強度"
+        },
+        "hook": "相關係數熱圖配色:[-1, 1] 發散資料 → 紅白藍 diverging,中心 0 白"
+      },
+      "misconceptions": ["以為熱圖只看數值", "忽略發散配色"],
+      "related_node_ids": ["n_L22303_005"],
+      "tags": ["熱圖", "配色", "diverging"]
+    },
+    {
+      "id": "q_n17_013",
+      "knowledge_code": "L22303",
+      "node_id": "n_L22303_004",
+      "subject": 2,
+      "format": "single_choice_scenario",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "情境:某航空業分析師要呈現全球 25 個樞紐城市之間『直航航線旅客流量』的多對多關係,需強調哪些城市對之間流量最大。下列何種圖型最為合適?",
+      "options": [
+        {"text": "弦圖(Chord),節點繞圓環擺,弦寬代表雙向關係強度,適合多對多流向", "is_correct": true},
+        {"text": "並列條形圖,每個城市一條條形以總飛航旅客數代表整體航線流量輻射的強度", "is_correct": false, "trap_type": "條形看不出『城市對之間』關係"},
+        {"text": "雷達圖,以 25 個城市作軸,在每軸放總流量大小並比較不同年度的整體輪廓", "is_correct": false, "trap_type": "雷達不呈現多對多"},
+        {"text": "圓餅圖,以扇形大小代表每對城市之間直航旅客數佔全球航線總流量的比例", "is_correct": false, "trap_type": "圓餅看不出方向關係且扇形過多"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "弦圖(Chord diagram)將節點(城市)排成圓環,以弦的寬度表達兩兩之間的關係強度,經典應用為航線、貿易、人口遷移、轉移矩陣等多對多場景",
+        "wrong": {
+          "並列條形圖,每個城市一條條形以總飛航旅客數代表整體航線流量輻射的強度": "條形只能看每城市總量,看不到『哪兩個城市之間』流量大",
+          "雷達圖,以 25 個城市作軸,在每軸放總流量大小並比較不同年度的整體輪廓": "雷達 25 維已遠超 8 維上限,且不呈現兩兩關係",
+          "圓餅圖,以扇形大小代表每對城市之間直航旅客數佔全球航線總流量的比例": "25 城市兩兩 = 300 對,圓餅完全無法呈現;也看不出方向"
+        },
+        "hook": "多對多流向 / 轉移矩陣 / 航線 / 貿易 → Chord diagram"
+      },
+      "misconceptions": ["把多對多當單向總量", "以為條形能呈現城市對"],
+      "related_node_ids": ["n_L22303_003"],
+      "tags": ["弦圖", "Chord", "多對多"]
+    },
+    {
+      "id": "q_n17_014",
+      "knowledge_code": "L22303",
+      "node_id": "n_L22303_005",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某新聞圖表顯示某政黨支持率『45% → 47%』,Y 軸從 44% 開始至 48% 結束,使第二根長條看起來『約為第一根三倍高』。下列何種誤導視覺化手法最為符合?",
+      "options": [
+        {"text": "截斷 Y 軸(Y-axis truncation),Y 不從 0 開始使小幅差距視覺上被嚴重放大", "is_correct": true},
+        {"text": "雙 Y 軸(Dual Y-axis),用兩條不同比例尺曲線疊圖刻意製造假性同步的相關性", "is_correct": false, "trap_type": "此案只有單一變數,非雙 Y"},
+        {"text": "選擇性時間範圍(Cherry-pick),刻意挑選特定時間區間以呈現支持自己論點的趨勢", "is_correct": false, "trap_type": "未提及時間範圍篩選"},
+        {"text": "3D 透視扭曲(3D perspective),透過前後深度透視刻意放大前景物件的視覺面積", "is_correct": false, "trap_type": "未提及 3D"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Y 軸不從 0 開始(截斷 Y 軸)是經典誤導手法:本案 2% 實際差距因 Y 軸從 44 開始而視覺上放大為 3 倍。Edward Tufte 的『Lie Factor』指出視覺差距 / 數據差距應趨近 1",
+        "wrong": {
+          "雙 Y 軸(Dual Y-axis),用兩條不同比例尺曲線疊圖刻意製造假性同步的相關性": "雙 Y 軸是『兩條曲線』比例尺不同,本題只有單一變數,不適用",
+          "選擇性時間範圍(Cherry-pick),刻意挑選特定時間區間以呈現支持自己論點的趨勢": "Cherry-pick 指挑選時間區間,本題未說明此情況",
+          "3D 透視扭曲(3D perspective),透過前後深度透視刻意放大前景物件的視覺面積": "3D 是另一種誤導,但本題未提及 3D 視覺呈現"
+        },
+        "hook": "Lie Factor = 視覺差距 / 數據差距,應 ≈ 1;Y 軸截斷是經典反例"
+      },
+      "misconceptions": ["以為截斷 Y 軸是『放大細節』", "把所有誤導都歸為 3D"],
+      "related_node_ids": ["n_L22303_001"],
+      "tags": ["誤導視覺化", "Y 軸截斷", "Lie Factor"]
+    },
+    {
+      "id": "q_n17_015",
+      "knowledge_code": "L22303",
+      "node_id": "n_L22303_005",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某市調報告以 3D 立體圓餅圖呈現五品牌市佔率(A 35%、B 25%、C 20%、D 15%、E 5%),且圖例排序非依市佔大小而是依品牌成立年份。下列何者為最關鍵的誤導手法組合?",
+      "options": [
+        {"text": "3D 透視扭曲前景切片視覺面積 + 操弄類別順序破壞由大到小的判讀慣性", "is_correct": true},
+        {"text": "截斷 Y 軸刻意放大差距 + 選擇性時間範圍只挑選符合自己論點的特定資料子集", "is_correct": false, "trap_type": "圓餅無 Y 軸截斷"},
+        {"text": "雙 Y 軸製造假相關 + 用面積標長度刻意誇大差距以誤導讀者高估某品牌實力", "is_correct": false, "trap_type": "圓餅無雙 Y"},
+        {"text": "不一致比例尺切割角度 + 把絕對值與百分比混合呈現以模糊整體市占的判讀基準", "is_correct": false, "trap_type": "並非本題情境"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "3D 圓餅有兩大問題:(1) 透視讓前景切片視覺上比實際角度大;(2) 圖例 / 切片順序若不依數值大小排列,讀者難以判讀名次。兩者疊加會嚴重扭曲市佔感知",
+        "wrong": {
+          "截斷 Y 軸刻意放大差距 + 選擇性時間範圍只挑選符合自己論點的特定資料子集": "圓餅圖本身沒有 Y 軸,Y 軸截斷不適用",
+          "雙 Y 軸製造假相關 + 用面積標長度刻意誇大差距以誤導讀者高估某品牌實力": "圓餅圖沒有雙 Y 軸概念,且本題只有一份占比資料",
+          "不一致比例尺切割角度 + 把絕對值與百分比混合呈現以模糊整體市占的判讀基準": "本題未提及比例尺不一致或絕對值/百分比混用"
+        },
+        "hook": "3D 餅是雙重誤導:透視 + 排序;改用 2D + 依大小排列"
+      },
+      "misconceptions": ["以為 3D 比較專業", "忽略類別排序的影響"],
+      "related_node_ids": ["n_L22303_003"],
+      "tags": ["誤導視覺化", "3D 餅", "排序"]
+    },
+    {
+      "id": "q_n17_016",
+      "knowledge_code": "L22303",
+      "node_id": "n_L22303_005",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某財經報導用雙 Y 軸畫一張圖:左 Y 為公司股價、右 Y 為失業率,兩線在時間軸上『看似同步』。下列分析何者最為正確?",
+      "options": [
+        {"text": "雙 Y 軸兩比例尺可任意調整使任意兩條曲線『看似同步』,應分開或正規化後再比較", "is_correct": true},
+        {"text": "兩線同步即表示股價與失業率高度相關,因此雙 Y 軸是建立兩變數因果關係的有效工具", "is_correct": false, "trap_type": "視覺同步 ≠ 統計相關 ≠ 因果"},
+        {"text": "雙 Y 軸是業界標準畫法,只要兩條曲線單位皆為百分比即可直接判讀相關性而無偏誤", "is_correct": false, "trap_type": "單位同不代表比例尺一致"},
+        {"text": "若把兩 Y 軸的零點對齊,雙 Y 軸圖即可避免所有誤導疑慮並達到完全公允的視覺呈現", "is_correct": false, "trap_type": "零點對齊不解決比例尺問題"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "雙 Y 軸是教科書級的『最易被誤導』手法:作者可任意挑選左 Y 與右 Y 的範圍,讓任意兩條毫不相關的曲線『看起來同步』。建議分成兩個小圖(panel)或將兩變數做 z-score / min-max 正規化後畫在同一軸",
+        "wrong": {
+          "兩線同步即表示股價與失業率高度相關,因此雙 Y 軸是建立兩變數因果關係的有效工具": "視覺同步既非相關性的依據更非因果證據;比例尺一變同步就消失",
+          "雙 Y 軸是業界標準畫法,只要兩條曲線單位皆為百分比即可直接判讀相關性而無偏誤": "單位相同也可有不同範圍,例如 0-5% 與 30-80% 仍可被任意拉伸",
+          "若把兩 Y 軸的零點對齊,雙 Y 軸圖即可避免所有誤導疑慮並達到完全公允的視覺呈現": "零點對齊不能消除比例尺差異;兩個變數可能根本沒有共同零點意義"
+        },
+        "hook": "雙 Y 軸最易誤導 → 分開畫或正規化(z-score / min-max)後同軸比較"
+      },
+      "misconceptions": ["把雙 Y 視為標準", "以為視覺同步就是相關"],
+      "related_node_ids": ["n_L22303_001"],
+      "tags": ["誤導視覺化", "雙 Y 軸", "假相關"]
+    },
+    {
+      "id": "q_n17_017",
+      "knowledge_code": "L22303",
+      "node_id": "n_L22303_005",
+      "subject": 2,
+      "format": "single_choice_scenario",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "情境:某環保 NGO 與某產業協會就『十年溫室氣體排放趨勢』各畫一張圖,雙方圖中數據完全相同卻得到相反結論。下列何種手法組合最可能造成此差異?",
+      "options": [
+        {"text": "選擇性時間範圍(Cherry-pick)+ Y 軸截斷,雙方截取不同年份起點與不同 Y 軸刻度", "is_correct": true},
+        {"text": "雷達面積排序 + 散佈矩陣對角線翻轉,雙方使用相反的維度順序呈現整體輪廓", "is_correct": false, "trap_type": "趨勢圖不會用雷達或散佈矩陣"},
+        {"text": "桑基寬度錯置 + 弦圖節點重排,雙方在多對多關係圖上以視覺寬度進行差異化解讀", "is_correct": false, "trap_type": "趨勢圖不會用 Sankey/Chord"},
+        {"text": "Treemap 面積誇大 + 圓餅切片旋轉,雙方在組成圖上各自旋轉切片以塑造不同印象", "is_correct": false, "trap_type": "趨勢圖不會用 Treemap/Pie"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Cherry-pick(只取特定起訖年份)+ Y 軸截斷(縮放 Y 範圍)是趨勢圖最常見的雙刀誤導:同一份排放資料,若從 2015 高點起算且 Y 從某高基期截斷,看起來是下降;若從 2010 低點起算且 Y 從 0 開始,看起來是上升。兩者並用更具威力",
+        "wrong": {
+          "雷達面積排序 + 散佈矩陣對角線翻轉,雙方使用相反的維度順序呈現整體輪廓": "雷達 / 散佈矩陣不是『時間趨勢』圖型,本情境不適用",
+          "桑基寬度錯置 + 弦圖節點重排,雙方在多對多關係圖上以視覺寬度進行差異化解讀": "Sankey / Chord 是流量 / 關係圖,不呈現時間趨勢",
+          "Treemap 面積誇大 + 圓餅切片旋轉,雙方在組成圖上各自旋轉切片以塑造不同印象": "Treemap / Pie 是組成圖,並非時間趨勢呈現"
+        },
+        "hook": "趨勢誤導二重奏:Cherry-pick 起訖年份 + Y 軸截斷縮放"
+      },
+      "misconceptions": ["以為趨勢只能用一種圖", "忽視起訖年份的選擇"],
+      "related_node_ids": ["n_L22303_006"],
+      "tags": ["誤導視覺化", "Cherry-pick", "趨勢"]
+    },
+    {
+      "id": "q_n17_018",
+      "knowledge_code": "L22303",
+      "node_id": "n_L22303_006",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "Schneiderman 提出的視覺資訊探索『真言』(Visual Information-Seeking Mantra)三步驟為下列何者?",
+      "options": [
+        {"text": "Overview first(總覽)→ Zoom & Filter(縮放篩選)→ Details on demand(按需細節)", "is_correct": true},
+        {"text": "Detail first(細節)→ Aggregate Up(向上彙總)→ Final Overview(最終總覽呈現)", "is_correct": false, "trap_type": "順序相反"},
+        {"text": "Modeling first(建模)→ Evaluation(評估指標)→ Deployment(部署正式服務)", "is_correct": false, "trap_type": "此為 CRISP-DM 而非視覺真言"},
+        {"text": "Data Cleansing(資料清理)→ Feature Engineering(特徵工程)→ Visualization(視覺化)", "is_correct": false, "trap_type": "此為資料前處理流程"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Ben Schneiderman 在 1996 年提出的『Visual Information-Seeking Mantra』:Overview first(先看全貌)、Zoom and filter(縮放與篩選聚焦感興趣區域)、Details on demand(按需提供細節)。此為儀表板資訊架構設計的指導原則",
+        "wrong": {
+          "Detail first(細節)→ Aggregate Up(向上彙總)→ Final Overview(最終總覽呈現)": "Schneiderman 的順序是『先總覽再細節』,此選項完全相反",
+          "Modeling first(建模)→ Evaluation(評估指標)→ Deployment(部署正式服務)": "此為 CRISP-DM 機器學習流程,與視覺真言無關",
+          "Data Cleansing(資料清理)→ Feature Engineering(特徵工程)→ Visualization(視覺化)": "此為資料前處理流程,並非互動視覺化探索的真言"
+        },
+        "hook": "倒金字塔:總覽 → 篩選 → 細節;對應 KPI → 趨勢 → 下鑽三層"
+      },
+      "misconceptions": ["把 CRISP-DM 當視覺真言", "把細節擺在最前"],
+      "related_node_ids": ["n_L22303_005"],
+      "tags": ["Schneiderman", "儀表板", "資訊架構"]
+    },
+    {
+      "id": "q_n17_019",
+      "knowledge_code": "L22303",
+      "node_id": "n_L22303_006",
+      "subject": 2,
+      "format": "single_choice_scenario",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "情境:某 CFO 抱怨『打開儀表板要花 30 秒才知道公司本月營收是否達標』。設計師檢查首頁發現:最上方塞了 8 張不同維度的明細表、KPI 大數字放在頁底、且沒有與目標的對比。下列何項改善優先順序最為適當?",
+      "options": [
+        {"text": "把 KPI 大數字 + 與目標對比放頂層,中層放趨勢、底層改成可篩選的明細表", "is_correct": true},
+        {"text": "把所有明細表都改成 3D 立體柱狀圖,以視覺層次取代資訊架構達到第一眼快速判讀效果", "is_correct": false, "trap_type": "3D 是誤導手法不是解方"},
+        {"text": "把營收 KPI 改成雷達圖呈現多維度,讓 CFO 同時看到所有業務面向後再回頭看整體", "is_correct": false, "trap_type": "雷達不是 KPI 卡的最佳呈現"},
+        {"text": "把明細表全部移除只保留圓餅圖,讓首頁僅以扇形組成呈現營收結構之間相互比例", "is_correct": false, "trap_type": "把細節砍掉但沒回答『是否達標』"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "儀表板倒金字塔架構:頂層 KPI 卡(回答『現況如何 / 是否達標』)→ 中層趨勢圖(回答『變化如何』)→ 底層明細表 / 篩選器(供下鑽探索)。CFO 5 秒看頂就應該知道達標與否,符合 Schneiderman 真言『Overview first』",
+        "wrong": {
+          "把所有明細表都改成 3D 立體柱狀圖,以視覺層次取代資訊架構達到第一眼快速判讀效果": "3D 是誤導視覺化手法不是資訊架構解方;且未解決 KPI 不在頂層的根本問題",
+          "把營收 KPI 改成雷達圖呈現多維度,讓 CFO 同時看到所有業務面向後再回頭看整體": "KPI 卡片用『大數字 + 對比』最快,雷達多維反而拖慢『是否達標』的判讀",
+          "把明細表全部移除只保留圓餅圖,讓首頁僅以扇形組成呈現營收結構之間相互比例": "圓餅看占比但回答不了『是否達標』;且把細節層完全砍掉違反 details on demand"
+        },
+        "hook": "儀表板三層:KPI 卡 → 趨勢 → 下鑽;頂層 5 秒回答現況"
+      },
+      "misconceptions": ["以為儀表板要塞越多越好", "把細節擺最上方"],
+      "related_node_ids": ["n_L22303_005"],
+      "tags": ["儀表板", "倒金字塔", "KPI"]
+    },
+    {
+      "id": "q_n17_020",
+      "knowledge_code": "L22303",
+      "node_id": "n_L22303_006",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "下列關於『儀表板色彩使用』的建議,何者最為符合資訊架構原則?",
+      "options": [
+        {"text": "色彩節制使用,主圖保持中性,KPI 異常值才以強對比顏色(如紅)凸顯", "is_correct": true},
+        {"text": "色彩越鮮豔多元越能吸引注意力,所有圖表都應使用最強對比飽和色提升閱讀興趣", "is_correct": false, "trap_type": "色彩過度造成視覺噪音"},
+        {"text": "色彩應以個人偏好為主,設計師可依品牌色覆蓋全圖達成統一風格美感最大化", "is_correct": false, "trap_type": "色彩有資訊功能不是裝飾"},
+        {"text": "色彩應避免任何用途,全部圖表應採黑白灰階以避免色盲使用者產生任何閱讀障礙", "is_correct": false, "trap_type": "過度極端,色彩有資訊用途"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "好儀表板色彩節制:主要圖表保持中性(避免視覺噪音),色彩留給『異常 / 重要』之強調(如 KPI 紅色警示、未達標時的紅色提示)。色彩是『資訊』不是『裝飾』,過度使用會降低重點訊號",
+        "wrong": {
+          "色彩越鮮豔多元越能吸引注意力,所有圖表都應使用最強對比飽和色提升閱讀興趣": "全圖鮮豔等於沒有重點,任何訊號都會被淹沒",
+          "色彩應以個人偏好為主,設計師可依品牌色覆蓋全圖達成統一風格美感最大化": "儀表板色彩有訊號功能(紅=異常、綠=正常),不可純依個人或品牌偏好",
+          "色彩應避免任何用途,全部圖表應採黑白灰階以避免色盲使用者產生任何閱讀障礙": "考量色盲應選擇 colorblind-safe palette 而非完全放棄色彩;色彩仍是有效訊號工具"
+        },
+        "hook": "儀表板色彩:中性為主,色彩留給異常與強調;遵循『少即是多』"
+      },
+      "misconceptions": ["以為色彩越多越好", "把色彩當裝飾"],
+      "related_node_ids": ["n_L22303_005"],
+      "tags": ["儀表板", "色彩", "資訊設計"]
+    }
+  ]
+}

@@ -1,0 +1,608 @@
+{
+  "version": "1.0",
+  "schema_version": "iron-rule-1+2+6",
+  "generated_at": "2026-05-16",
+  "batch": "N12 — 科二大數據 L22201 數據收集與清理",
+  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "iron_rule_compliance": {
+    "rule_1": "every question has explanation.correct + explanation.wrong (verbatim option key) + explanation.hook + misconceptions ≥ 1",
+    "rule_2": "shuffle_options=true on every item; calculation item carries 3 distinct cases with placeholders aligned",
+    "rule_3": "all stems are original cross-industry scenarios; no industry exceeds 6/20",
+    "rule_4": "option length ratio between 0.85 and 1.20; longest≠correct ≥ 13/20",
+    "rule_5": "knowledge_code = L22201; node_id ∈ {n_L22201_001..006} per scripts/kb-allowed-nodes.json; forbidden topics avoided (no Cohen Kappa formula)",
+    "rule_6": "科目隔離 — 本檔僅 L22201;related_node_ids 全部指向 n_L22201_*;只新建本檔不改任何其他既有檔案"
+  },
+  "distribution": {
+    "L22201_count": 20,
+    "by_node": {"n_L22201_001": 3, "n_L22201_002": 4, "n_L22201_003": 3, "n_L22201_004": 3, "n_L22201_005": 3, "n_L22201_006": 4},
+    "by_format": {"single_choice_text": 16, "single_choice_scenario": 3, "calculation": 1},
+    "by_difficulty": {"easy": 5, "medium": 11, "hard": 4}
+  },
+  "questions": [
+    {
+      "id": "q_n12_001",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_001",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某物流公司每日匯入車隊回傳的 GPS 軌跡 JSON、訂單 CSV 與司機通話錄音檔。資料工程師依資料 schema 嚴謹度將三者分類,下列何項對應最為正確?",
+      "options": [
+        {"text": "GPS JSON 屬半結構化、訂單 CSV 屬結構化、通話錄音檔屬非結構化資料類型", "is_correct": true},
+        {"text": "GPS JSON 屬結構化、訂單 CSV 屬半結構化、通話錄音檔屬結構化資料類型分類", "is_correct": false, "trap_type": "JSON 誤判結構化"},
+        {"text": "GPS JSON 屬非結構化、訂單 CSV 屬半結構化、通話錄音檔屬半結構化資料類型分類", "is_correct": false, "trap_type": "CSV 誤判半結構化"},
+        {"text": "GPS JSON 屬非結構化、訂單 CSV 屬結構化、通話錄音檔屬半結構化資料類型分類", "is_correct": false, "trap_type": "錄音檔誤判半結構化"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "CSV 有預定義欄位屬結構化;JSON 有自描述標籤但 schema 可變屬半結構化;錄音檔為原始位元無 schema 屬非結構化",
+        "wrong": {
+          "GPS JSON 屬結構化、訂單 CSV 屬半結構化、通話錄音檔屬結構化資料類型分類": "JSON 雖有標籤但允許巢狀與欄位變動,屬半結構化而非結構化;CSV 有固定欄位才是結構化",
+          "GPS JSON 屬非結構化、訂單 CSV 屬半結構化、通話錄音檔屬半結構化資料類型分類": "CSV 為典型結構化檔(欄位固定可入 SQL);錄音檔無任何 schema 才是非結構化",
+          "GPS JSON 屬非結構化、訂單 CSV 屬結構化、通話錄音檔屬半結構化資料類型分類": "JSON 有自描述標籤屬半結構化;錄音檔為原始位元無標籤,屬非結構化"
+        },
+        "hook": "口訣:有固定欄位 → 結構化;有標籤但可變 → 半結構化;原始位元 → 非結構化"
+      },
+      "misconceptions": ["把 CSV 誤視為非結構化", "把 JSON 誤視為結構化"],
+      "related_node_ids": ["n_L22201_006"],
+      "tags": ["資料類型", "結構化", "半結構化"]
+    },
+    {
+      "id": "q_n12_002",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_001",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某連鎖飯店資料平台彙整三類資料:住房預訂關聯表、客房感測器溫濕度日誌、以及客訴電話文字逐字稿。架構師依資料類型決定儲存層,下列描述何者最為符合常見做法?",
+      "options": [
+        {"text": "結構化資料適合進 Warehouse;半結構化與非結構化資料適合先進 Lake 再依需求轉換", "is_correct": true},
+        {"text": "結構化資料適合直接存入 Lake;半結構化與非結構化資料應全數進 Warehouse 治理", "is_correct": false, "trap_type": "存儲層配對顛倒"},
+        {"text": "結構化與半結構化資料須同時雙寫進 Warehouse 與 Lake;非結構化資料應直接丟棄", "is_correct": false, "trap_type": "丟棄非結構化錯誤"},
+        {"text": "結構化資料應以 BLOB 方式進 Lake;非結構化資料因量大應全數放入 Warehouse 索引", "is_correct": false, "trap_type": "結構化用 BLOB 不合理"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Warehouse 為 schema-on-write 適合結構化資料的 BI 查詢;Lake 接受任何格式,半 / 非結構化先入 Lake 後再依分析需求轉換,是業界常見分層做法",
+        "wrong": {
+          "結構化資料適合直接存入 Lake;半結構化與非結構化資料應全數進 Warehouse 治理": "Warehouse 需先定 schema,難以承接無 schema 的影音逐字稿;此選項把分層哲學完全顛倒",
+          "結構化與半結構化資料須同時雙寫進 Warehouse 與 Lake;非結構化資料應直接丟棄": "客訴錄音與逐字稿是 NLP 模型重要訓練料,丟棄等同丟掉商業洞察來源",
+          "結構化資料應以 BLOB 方式進 Lake;非結構化資料因量大應全數放入 Warehouse 索引": "結構化資料若以 BLOB 存放會失去欄位查詢能力;Warehouse 並不擅長承接龐大非結構化資料"
+        },
+        "hook": "schema-on-write → Warehouse;schema-on-read → Lake"
+      },
+      "misconceptions": ["以為 Lake 與 Warehouse 角色可互換", "認為非結構化資料無價值"],
+      "related_node_ids": ["n_L22201_006"],
+      "tags": ["資料類型", "Warehouse", "Lake"]
+    },
+    {
+      "id": "q_n12_003",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_001",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某博物館導入觀眾行為分析,蒐集到的資料包含 Web 伺服器 access log(每列含 IP / 時間戳 / URL / status code 等欄)。下列對該 log 資料類型的判斷,何者最為合理?",
+      "options": [
+        {"text": "屬半結構化資料:具一致格式但欄位非嚴格 schema,常需正則解析或自訂 parser", "is_correct": true},
+        {"text": "屬結構化資料:具固定欄位順序故可直接 INSERT 進關聯式資料表進行 SQL 查詢", "is_correct": false, "trap_type": "誤判為結構化"},
+        {"text": "屬非結構化資料:因為內含自由文字字串,需透過特徵抽取才能進行任何分析應用", "is_correct": false, "trap_type": "誤判為非結構化"},
+        {"text": "屬無法分類資料:同時含有 IP 與時間欄,違反三分類互斥原則故不可歸入任一類", "is_correct": false, "trap_type": "互斥原則誤解"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Web log 行格式一致但 user-agent 等欄位允許自由文字,屬典型半結構化;通常以 regex 或 Grok pattern 解析後再入 Warehouse",
+        "wrong": {
+          "屬結構化資料:具固定欄位順序故可直接 INSERT 進關聯式資料表進行 SQL 查詢": "未先解析的 raw log 是一行字串,Warehouse 須先用 regex / parser 拆欄才可入表,故非結構化定義下的結構化",
+          "屬非結構化資料:因為內含自由文字字串,需透過特徵抽取才能進行任何分析應用": "Log 有明確分隔規則與欄位語意,並非毫無 schema 的純文字",
+          "屬無法分類資料:同時含有 IP 與時間欄,違反三分類互斥原則故不可歸入任一類": "三分類本就允許邊界,半結構化即用於涵蓋此類『有格式但不嚴格』的資料"
+        },
+        "hook": "log / JSON / XML / YAML 都屬半結構化:有規則但 schema 可變"
+      },
+      "misconceptions": ["把 log 當完全結構化", "把 log 當純文字非結構化"],
+      "related_node_ids": ["n_L22201_004"],
+      "tags": ["資料類型", "log", "半結構化"]
+    },
+    {
+      "id": "q_n12_004",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_002",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某風電廠運維平台分析每日葉片振動感測資料,工程師發現感測器因傳輸網路偶發故障而產生隨機缺值,且缺失發生與該感測值高低無關。此缺值最可能屬於下列哪一種機制?",
+      "options": [
+        {"text": "MCAR(Missing Completely At Random):缺失與任何變數無關,可採用列刪除而不偏", "is_correct": true},
+        {"text": "MAR(Missing At Random):缺失可由感測器型號或所在區域等其他觀測欄完整解釋", "is_correct": false, "trap_type": "MCAR/MAR 混淆"},
+        {"text": "MNAR(Missing Not At Random):缺失本身與該欄位的真值高度相關屬資訊性缺失", "is_correct": false, "trap_type": "誤判為 MNAR"},
+        {"text": "Imputed Random:缺失出現在已被人工補值的欄位故視為隨機性人工生成缺失", "is_correct": false, "trap_type": "虛構機制"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "網路故障與感測器讀數本身無關,完全隨機發生,符合 MCAR 定義;此情境下列刪除不會引入偏誤",
+        "wrong": {
+          "MAR(Missing At Random):缺失可由感測器型號或所在區域等其他觀測欄完整解釋": "MAR 需找得到其他變數能解釋缺失機率;若缺失純粹來自隨機網路掉包則不需任何條件變數即可解釋",
+          "MNAR(Missing Not At Random):缺失本身與該欄位的真值高度相關屬資訊性缺失": "MNAR 須缺失與該欄位真值相關(如高薪者拒答),感測器隨機掉線不具此性質",
+          "Imputed Random:缺失出現在已被人工補值的欄位故視為隨機性人工生成缺失": "缺值機制三分類僅 MCAR / MAR / MNAR,此名稱為虛構"
+        },
+        "hook": "MCAR:純隨機;MAR:條件隨機(可由其他欄解釋);MNAR:缺失本身有訊號"
+      },
+      "misconceptions": ["把所有隨機缺值都當 MAR", "認為缺值三分類有第四類"],
+      "related_node_ids": ["n_L22201_003"],
+      "tags": ["缺值", "MCAR", "機制"]
+    },
+    {
+      "id": "q_n12_005",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_002",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某心理健康 App 蒐集使用者每日情緒問卷,團隊發現有重度憂鬱傾向的使用者更常跳過『今日心情評分』題,造成情緒分數欄缺失。對此缺值機制與處理策略的描述,下列何者最為合理?",
+      "options": [
+        {"text": "屬 MNAR;直接列刪除會偏向健康樣本,宜保留 is_missing 旗標或建模處理", "is_correct": true},
+        {"text": "屬 MCAR;以全體平均值填補即可,因為缺失與任何使用者特徵都完全無關聯性", "is_correct": false, "trap_type": "誤判 MCAR"},
+        {"text": "屬 MAR;以其他完整觀測欄做迴歸填補即可完全消除潛在偏誤無須額外旗標", "is_correct": false, "trap_type": "MAR 過度樂觀"},
+        {"text": "屬樣本選擇偏差;只能丟棄整批資料另蒐新樣本,無任何統計或建模方式可緩解此偏誤", "is_correct": false, "trap_type": "過度悲觀且非機制分類"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "缺失與該欄真值(情緒分數)直接相關,屬 MNAR;直接刪列會丟掉重度憂鬱樣本造成偏誤,保留 is_missing 旗標讓模型自己學是常見穩健做法",
+        "wrong": {
+          "屬 MCAR;以全體平均值填補即可,因為缺失與任何使用者特徵都完全無關聯性": "缺失明顯與情緒分數真值相關,違反 MCAR 的『與任何變數無關』定義;mean 填補會嚴重稀釋憂鬱訊號",
+          "屬 MAR;以其他完整觀測欄做迴歸填補即可完全消除潛在偏誤無須額外旗標": "MAR 需缺失機率可由觀測欄『完全』解釋,但本題缺失依賴於『心情真值』本身,非任何觀測欄可代理",
+          "屬樣本選擇偏差;只能丟棄整批資料另蒐新樣本,無任何統計或建模方式可緩解此偏誤": "MNAR 雖難以完美還原,但 is_missing 旗標、選擇模型(Heckman)或敏感性分析皆可緩解,並非只能丟棄"
+        },
+        "hook": "MNAR 處理首選:保留 is_missing 旗標讓模型自己學缺失本身的訊號"
+      },
+      "misconceptions": ["把 MNAR 當 MCAR 用 mean 填補", "認為 MNAR 只能放棄資料"],
+      "related_node_ids": ["n_L22201_005"],
+      "tags": ["缺值", "MNAR", "填補"]
+    },
+    {
+      "id": "q_n12_006",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_002",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某銀行客戶資料『年收入』欄缺值率高達 35%,且分析顯示缺失與『婚姻狀態』『年齡分組』有明顯關聯。資料工程師欲決定處理策略,下列考量何者最為適切?",
+      "options": [
+        {"text": "屬 MAR 機制;可用婚姻與年齡分組做條件填補,並同時保留 is_missing 旗標稽核", "is_correct": true},
+        {"text": "屬 MCAR 機制;以年收入欄的全體中位數一次性填補即可,無需保留任何稽核標記欄", "is_correct": false, "trap_type": "MCAR 誤用"},
+        {"text": "屬 MNAR 機制;唯一合理策略為將整批資料刪除並重新蒐集年收入欄全部觀測值樣本", "is_correct": false, "trap_type": "MNAR 過度反應"},
+        {"text": "缺值率 35% 未達門檻;一律忽略不處理可避免因填補導致的虛假關聯與模型偏誤風險", "is_correct": false, "trap_type": "忽略缺值"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "缺失機率可由其他觀測欄(婚姻 / 年齡)解釋屬 MAR;條件填補比 mean 填補更合理,額外保留 is_missing 旗標可同時保留資訊與稽核軌跡",
+        "wrong": {
+          "屬 MCAR 機制;以年收入欄的全體中位數一次性填補即可,無需保留任何稽核標記欄": "MCAR 要求缺失與任何變數無關,但本題明確指出與婚姻 / 年齡相關,不符合 MCAR 條件",
+          "屬 MNAR 機制;唯一合理策略為將整批資料刪除並重新蒐集年收入欄全部觀測值樣本": "MNAR 要求缺失與『年收入真值本身』相關,題目資訊僅顯示與其他欄關聯;且 MNAR 也不必整批丟棄",
+          "缺值率 35% 未達門檻;一律忽略不處理可避免因填補導致的虛假關聯與模型偏誤風險": "35% 缺值率不可能直接忽略;許多模型遇 NaN 直接報錯或剔列,反而造成更嚴重的樣本損失"
+        },
+        "hook": "MAR 的條件填補:用『可解釋缺失機率的觀測欄』做填補比 mean 穩健"
+      },
+      "misconceptions": ["把 MAR 當 MCAR", "看到缺值就整批刪除"],
+      "related_node_ids": ["n_L22201_004"],
+      "tags": ["缺值", "MAR", "條件填補"]
+    },
+    {
+      "id": "q_n12_007",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_002",
+      "subject": 2,
+      "format": "calculation",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某保險公司客戶資料表共 {N} 筆,『投保人年收入』欄共有 {M} 筆缺值。下列何者為該欄缺值率(以 % 表示,取小數第 2 位)?",
+      "stem_variables": {
+        "case_a": {"N": "8000", "M": "1200", "answer": "15.00%", "wrong1": "12.00%", "wrong2": "85.00%", "wrong3": "6.67%"},
+        "case_b": {"N": "5000", "M": "1500", "answer": "30.00%", "wrong1": "33.33%", "wrong2": "70.00%", "wrong3": "3.33%"},
+        "case_c": {"N": "12000", "M": "3000", "answer": "25.00%", "wrong1": "20.00%", "wrong2": "75.00%", "wrong3": "4.00%"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以非缺值筆數為分母"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤計算完整率(1-缺值率)"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤將分子分母對調"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "缺值率 = 缺值筆數 / 總筆數 × 100% = {M} / {N} × 100% = {answer}",
+        "wrong": {
+          "{wrong1}": "此為以『非缺值筆數』(N-M)為分母,誤將分母縮小,常見於排除缺值再算比例的錯誤計算",
+          "{wrong2}": "此為完整率(非缺值率 = 1 - 缺值率),題目要求的是缺值率本身",
+          "{wrong3}": "此為分子分母對調(N/M 反向),數值意義完全不符比例定義"
+        },
+        "hook": "缺值率 = 缺值 / 總筆數;> 30% 應考慮整欄旗標化或刪除"
+      },
+      "misconceptions": ["把缺值率公式分母寫錯", "把完整率當缺值率"],
+      "related_node_ids": ["n_L22201_004"],
+      "tags": ["缺值", "計算", "比例"]
+    },
+    {
+      "id": "q_n12_008",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_003",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某新創 SaaS 公司客戶名單中出現『台北市』『臺北市』『台北 市』『 台北市』等寫法。資料工程師打算先標準化再去重,下列前置處理組合何者最為合適?",
+      "options": [
+        {"text": "統一字元(全形轉半形 + 繁簡轉換)+ Trim 移除空白後再做精確比對", "is_correct": true},
+        {"text": "直接呼叫 SQL DISTINCT 即可,因為 DISTINCT 預設能自動忽略中文字形與所有空白差異", "is_correct": false, "trap_type": "DISTINCT 誤解"},
+        {"text": "直接呼叫 GROUP BY 統計每種寫法的頻次後保留出現次數最多的單一寫法作為唯一值", "is_correct": false, "trap_type": "群組頻次非去重"},
+        {"text": "使用 ROW_NUMBER 視窗函數依字串長度排序後隨機保留第一筆紀錄即可滿足去重需求", "is_correct": false, "trap_type": "隨機保留違反稽核"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "近似重複(因字形 / 空白差異)需先標準化:統一字符(全半形、繁簡)+ Trim 移除空白後即可用精確比對處理,是 MDM 常見前置工序",
+        "wrong": {
+          "直接呼叫 SQL DISTINCT 即可,因為 DISTINCT 預設能自動忽略中文字形與所有空白差異": "DISTINCT 是逐位元組比較,不會忽略全半形、繁簡或空白差異,『台北市』『臺北市』在 DISTINCT 眼中是兩個不同字串",
+          "直接呼叫 GROUP BY 統計每種寫法的頻次後保留出現次數最多的單一寫法作為唯一值": "GROUP BY 只能告訴你『有哪些寫法各幾筆』,並未真正合併成同一個實體,且粗暴保留多數寫法會丟失少數正確紀錄",
+          "使用 ROW_NUMBER 視窗函數依字串長度排序後隨機保留第一筆紀錄即可滿足去重需求": "隨機保留無法稽核,違反『業務規則先行』原則;且字串長度與資料正確性無關"
+        },
+        "hook": "近似重複處理三步:標準化(字形 / 空白)→ 精確比對 → 業務規則決定保留"
+      },
+      "misconceptions": ["以為 DISTINCT 能解決字形差異", "去重沒有保留規則"],
+      "related_node_ids": ["n_L22201_004"],
+      "tags": ["去重", "標準化", "近似"]
+    },
+    {
+      "id": "q_n12_009",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_003",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某醫療研究單位整合多家醫院上傳的病患名單,姓名常因『陳大文 / 陳大 文 / 陳 大文』等空白與寫法差異而難以精確比對。資料治理小組欲導入模糊去重,下列方法最為適合處理此種人名近似重複的選項為?",
+      "options": [
+        {"text": "先標準化(Trim / Upper)再以編輯距離(Levenshtein)門檻判斷為同一人", "is_correct": true},
+        {"text": "對姓名直接套用 MD5 雜湊比對:雜湊相同即同人、不同即不同人不需任何標準化前置", "is_correct": false, "trap_type": "Hash 對字串差異無容錯"},
+        {"text": "依照姓名字串長度排序後將相同長度者一律視為同一人,可大幅提升模糊匹配的執行效率", "is_correct": false, "trap_type": "字串長度非識別"},
+        {"text": "比較姓名第一個字是否相同;只要首字一致即視為同人,不同首字則視為不同個體個案", "is_correct": false, "trap_type": "首字判別過於粗糙"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "編輯距離計算最少編修步數,可容忍空白 / 拼寫差異;先做基本標準化(Trim / 大小寫)再用 Levenshtein 門檻是常見模糊去重組合",
+        "wrong": {
+          "對姓名直接套用 MD5 雜湊比對:雜湊相同即同人、不同即不同人不需任何標準化前置": "MD5 對任何位元差異都會產生完全不同雜湊值,無法處理空白 / 拼寫等近似重複,僅能用於精確重複",
+          "依照姓名字串長度排序後將相同長度者一律視為同一人,可大幅提升模糊匹配的執行效率": "字串長度相同不代表是同一人,『陳大文』『林小華』長度都是 3 字但顯然不同",
+          "比較姓名第一個字是否相同;只要首字一致即視為同人,不同首字則視為不同個體個案": "中文姓氏重疊極多,僅憑首字會大量誤合併,違反醫療資料的精確性要求"
+        },
+        "hook": "精確去重用 Hash;近似去重用編輯距離 / Soundex,且須先標準化"
+      },
+      "misconceptions": ["以為 Hash 可處理近似重複", "用字串長度當去重鍵"],
+      "related_node_ids": ["n_L22201_005"],
+      "tags": ["去重", "模糊", "編輯距離"]
+    },
+    {
+      "id": "q_n12_010",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_003",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某 B2B 廠商在去重後審核時發現,同一公司被去重程式合併為單一筆,但保留下來的紀錄是『最早建檔』那筆,造成最新聯絡電話遺失。對此設計缺失的根因與修補,下列何者最為正確?",
+      "options": [
+        {"text": "去重未先明定『保留哪一筆』規格;應改為依 updated_at 最新或欄位最完整原則保留", "is_correct": true},
+        {"text": "去重程式效能不足;應加大並行度與索引,即可避免聯絡電話被誤刪的此類資料品質問題", "is_correct": false, "trap_type": "效能與資料品質無關"},
+        {"text": "問題出在去重門檻過嚴;應降低相似度門檻使更多寫法被視為同人即可解決電話遺失情況", "is_correct": false, "trap_type": "門檻方向錯誤"},
+        {"text": "問題在原始輸入端;業務應在輸入時就強制檢查全公司資料庫的所有公司名是否已存在", "is_correct": false, "trap_type": "推給輸入端非根因"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "去重前必先決定『保留哪一筆』(最新 / 最完整 / 來源優先);未訂規格而隨機保留是規格缺漏,應改寫保留策略並可稽核",
+        "wrong": {
+          "去重程式效能不足;應加大並行度與索引,即可避免聯絡電話被誤刪的此類資料品質問題": "效能屬執行面議題,與『保留哪筆』的業務規則完全不同維度,加大並行度仍會保留錯筆",
+          "問題出在去重門檻過嚴;應降低相似度門檻使更多寫法被視為同人即可解決電話遺失情況": "降低門檻會合併更多紀錄,反而擴大電話遺失風險;真正缺失在保留規則而非合併門檻",
+          "問題在原始輸入端;業務應在輸入時就強制檢查全公司資料庫的所有公司名是否已存在": "上游檢查是另一層治理,但無法回追既有資料的合併保留問題,根因仍在去重程式的保留策略缺漏"
+        },
+        "hook": "去重三件事:(1) 比對 → (2) 合併 → (3) 保留規則,缺一不可"
+      },
+      "misconceptions": ["以為去重只需比對相似度", "把資料品質問題歸給效能調校"],
+      "related_node_ids": ["n_L22201_004"],
+      "tags": ["去重", "保留策略", "規格"]
+    },
+    {
+      "id": "q_n12_011",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_004",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某電商訂單表的 customer_id 在客戶主檔找不到對應紀錄(俗稱孤兒記錄)。資料品質工程師將此問題對應到資料品質的哪一個維度與檢查類型?",
+      "options": [
+        {"text": "屬一致性 / 參照完整性(referential integrity)違反,foreign key 對不到 primary key", "is_correct": true},
+        {"text": "屬完整性違反(欄位缺值);應對 customer_id 缺值做填補後即可解除此項孤兒記錄問題", "is_correct": false, "trap_type": "完整性與一致性混淆"},
+        {"text": "屬唯一性違反(重複資料);應對 customer_id 進行去重即可消除孤兒紀錄產生原因問題", "is_correct": false, "trap_type": "唯一性無關"},
+        {"text": "屬及時性違反(資料延遲);只要等待批次同步完成即可自動清除這類孤兒紀錄相關問題", "is_correct": false, "trap_type": "及時性錯置"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "孤兒記錄(有子無父)是參照完整性的典型違反案例;屬資料品質六維度中的『一致性 / 有效性』維度,可由 foreign key constraint 在資料層強制",
+        "wrong": {
+          "屬完整性違反(欄位缺值);應對 customer_id 缺值做填補後即可解除此項孤兒記錄問題": "孤兒記錄的 customer_id 欄並非缺值,而是有值但對不到父表,屬不同維度問題",
+          "屬唯一性違反(重複資料);應對 customer_id 進行去重即可消除孤兒紀錄產生原因問題": "唯一性處理重複,孤兒記錄與重複無關,即使去重後孤兒問題依然存在",
+          "屬及時性違反(資料延遲);只要等待批次同步完成即可自動清除這類孤兒紀錄相關問題": "及時性指資料是否反映最新狀態,孤兒記錄屬參照結構性問題,不會因為等同步而自動解決"
+        },
+        "hook": "資料品質 6 維度:完整 / 有效 / 一致 / 唯一 / 及時 / 準確"
+      },
+      "misconceptions": ["把孤兒記錄當缺值", "六維度概念不清"],
+      "related_node_ids": ["n_L22201_001"],
+      "tags": ["一致性", "參照完整性", "六維度"]
+    },
+    {
+      "id": "q_n12_012",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_004",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某航空公司票務系統紀錄出現一筆『出生日期 2010-01-01、簽約日期 2005-06-15』。資料品質審核時將此問題分類,下列敘述何者最為精確?",
+      "options": [
+        {"text": "違反跨欄位領域規則(出生日期應早於簽約日期),屬一致性維度的跨欄位驗證項目", "is_correct": true},
+        {"text": "違反參照完整性(foreign key 對不到 primary key),屬資料表之間結構關聯類型違反", "is_correct": false, "trap_type": "參照完整性誤用"},
+        {"text": "違反完整性(欄位缺值);只要其中一個日期欄位有值,即可視為品質檢查無任何缺漏", "is_correct": false, "trap_type": "完整性誤用"},
+        {"text": "違反唯一性(主鍵重複);兩個日期同時存在時系統會強制將其視為兩筆獨立紀錄處理", "is_correct": false, "trap_type": "唯一性誤用"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "兩欄分別合法但組合不合理(簽約日期早於出生日期不可能)屬跨欄位 domain rule 違反,須以 validation rule(birth_date < contract_date)自動化檢查",
+        "wrong": {
+          "違反參照完整性(foreign key 對不到 primary key),屬資料表之間結構關聯類型違反": "本題缺陷在『同一筆紀錄內欄位間邏輯』,並非跨表 FK ↔ PK 關係問題",
+          "違反完整性(欄位缺值);只要其中一個日期欄位有值,即可視為品質檢查無任何缺漏": "兩欄都有值,問題不在缺值;單欄非空檢查無法發現跨欄位邏輯錯誤",
+          "違反唯一性(主鍵重複);兩個日期同時存在時系統會強制將其視為兩筆獨立紀錄處理": "本筆紀錄唯一性無問題,且日期欄位也不是主鍵成員"
+        },
+        "hook": "跨欄位規則:出生 < 簽約 < 結案;單欄檢查不夠,須加 multi-column validation"
+      },
+      "misconceptions": ["只做單欄驗證", "把跨欄位問題當成缺值"],
+      "related_node_ids": ["n_L22201_002"],
+      "tags": ["一致性", "domain rule", "跨欄位"]
+    },
+    {
+      "id": "q_n12_013",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_004",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某地方政府健保資料庫的『年齡』欄出現 200。資深資料治理顧問建議:『應同時補上資料層約束與應用層驗證,而非僅靠任一方』。下列何者最能解釋此設計建議的核心理由?",
+      "options": [
+        {"text": "資料層約束防止任何來源寫入無效值;應用層驗證提早給出友善錯誤,兩者互補不重複", "is_correct": true},
+        {"text": "應用層驗證效能較好;故只需要應用層即可,資料層 constraint 反而會嚴重拖累寫入效能", "is_correct": false, "trap_type": "效能單一視角"},
+        {"text": "資料層 constraint 已足夠完備;應用層驗證屬於冗餘設計可省略避免雙重維護所帶來成本", "is_correct": false, "trap_type": "忽略 UX 與多寫入路徑"},
+        {"text": "因法規要求兩層驗證;此設計與資料品質本身完全無關純粹為了合規法令所必須執行步驟", "is_correct": false, "trap_type": "歸因法規誤導"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "應用層驗證友善但會被繞過(API / batch 寫入);資料層 constraint 是最後守門,兩層互補才能兼顧 UX 與品質保證",
+        "wrong": {
+          "應用層驗證效能較好;故只需要應用層即可,資料層 constraint 反而會嚴重拖累寫入效能": "效能差異微小,且本題核心是『正確性』而非效能;繞過應用層的任何寫入路徑都會讓品質失守",
+          "資料層 constraint 已足夠完備;應用層驗證屬於冗餘設計可省略避免雙重維護所帶來成本": "雖然資料層能擋寫入,但等到資料層才報錯使用者體驗極差,且無法即時引導修正",
+          "因法規要求兩層驗證;此設計與資料品質本身完全無關純粹為了合規法令所必須執行步驟": "雙層驗證是工程設計原則,並非法規層強制要求;這是『深度防禦』思維"
+        },
+        "hook": "深度防禦:應用層友善 + 資料層守門,兩層互補"
+      },
+      "misconceptions": ["只做應用層驗證", "認為 constraint 是效能負擔"],
+      "related_node_ids": ["n_L22201_001"],
+      "tags": ["一致性", "深度防禦", "validation"]
+    },
+    {
+      "id": "q_n12_014",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_005",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某動物保護組織需建立流浪犬照片『品種 / 年齡分組』分類模型,並請三位志工各自標註相同樣本以衡量標註一致度。下列名詞最能描述此衡量目標的選項為?",
+      "options": [
+        {"text": "Inter-rater agreement(標註者間一致度),用以評估任務定義是否清晰與標籤雜訊水準", "is_correct": true},
+        {"text": "Train-test split(訓練測試切分),用以評估模型推論時泛化能力與避免過度擬合風險", "is_correct": false, "trap_type": "切分與一致度無關"},
+        {"text": "Cross-validation(交叉驗證),用以評估模型訓練超參數對於未見資料的最佳穩健泛化", "is_correct": false, "trap_type": "交叉驗證屬模型評估"},
+        {"text": "Data augmentation(資料擴增),用以擴大訓練樣本量同時降低過擬合並提升標註者一致性", "is_correct": false, "trap_type": "擴增與一致度無關"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "多名 rater 對同樣本標相同類別的程度即 inter-rater agreement;一致度低表示任務定義或指引不足,直接影響模型 ceiling",
+        "wrong": {
+          "Train-test split(訓練測試切分),用以評估模型推論時泛化能力與避免過度擬合風險": "切分是模型評估方法,衡量泛化能力而非標註者之間是否一致",
+          "Cross-validation(交叉驗證),用以評估模型訓練超參數對於未見資料的最佳穩健泛化": "交叉驗證屬模型表現評估,無關標註品質,即使一致度低也仍可做交叉驗證",
+          "Data augmentation(資料擴增),用以擴大訓練樣本量同時降低過擬合並提升標註者一致性": "資料擴增是增加樣本,但不會自動提升不同人對同樣本標籤是否一致的程度"
+        },
+        "hook": "標籤品質檢查:多 rater 同樣本 → 計算一致度 → 找出指引模糊處"
+      },
+      "misconceptions": ["把模型評估混為標註評估", "認為擴增能解決標籤雜訊"],
+      "related_node_ids": ["n_L22201_002"],
+      "tags": ["標籤品質", "inter-rater", "概念"]
+    },
+    {
+      "id": "q_n12_015",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_005",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某客服中心情緒分類模型 accuracy 長期卡在 70% 無法提升。資料科學家檢查三位標註者對同樣本的分類發現分歧極大。下列建議何者最為合理優先順序?",
+      "options": [
+        {"text": "先釐清標註指引並建立 gold set,讓所有標註者校準,再考慮更換模型架構", "is_correct": true},
+        {"text": "直接更換為更大的預訓練語言模型,因為 accuracy 上限主要由模型容量決定其他次要", "is_correct": false, "trap_type": "模型優先思維"},
+        {"text": "立刻擴增 10 倍資料量,因為標註雜訊會隨樣本量增加而被自然稀釋進而消除偏誤影響", "is_correct": false, "trap_type": "量大不解決雜訊"},
+        {"text": "改採無監督學習以避免依賴標籤;只要把標籤完全捨棄即可繞過所有的標註品質困境問題", "is_correct": false, "trap_type": "逃避非解決"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "標籤雜訊壓低模型 ceiling 比模型架構影響更大;『garbage in garbage out』— 先建立 gold set 與一致指引才是正解,模型升級是後手",
+        "wrong": {
+          "直接更換為更大的預訓練語言模型,因為 accuracy 上限主要由模型容量決定其他次要": "若標籤本身分歧,再大的模型也學不出一致決策邊界,accuracy 上限被標籤雜訊壓死",
+          "立刻擴增 10 倍資料量,因為標註雜訊會隨樣本量增加而被自然稀釋進而消除偏誤影響": "錯誤標籤量大不會自動變對;系統性偏誤反而會被擴大",
+          "改採無監督學習以避免依賴標籤;只要把標籤完全捨棄即可繞過所有的標註品質困境問題": "情緒分類本身是監督任務,無監督無法直接產出『正 / 負 / 中』類別輸出"
+        },
+        "hook": "模型表現差先檢查資料 / 標籤,再檢查模型架構"
+      },
+      "misconceptions": ["模型表現差先換模型", "以為量大可洗去標籤雜訊"],
+      "related_node_ids": ["n_L22201_004"],
+      "tags": ["標籤品質", "gold set", "優先序"]
+    },
+    {
+      "id": "q_n12_016",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_005",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某醫學影像 AI 團隊欲對胸部 X 光做病灶分類,三位放射科醫師對同一張片子的標註偶有分歧。下列實務做法何者最能提升標註品質且兼顧可稽核?",
+      "options": [
+        {"text": "建立 gold set 由資深主治專家標註,並定期 calibration 會議檢討分歧個案", "is_correct": true},
+        {"text": "讓三位醫師依照彼此互相投票表決後直接寫死標籤,從此不再保留任何分歧紀錄以節省儲存", "is_correct": false, "trap_type": "丟失稽核紀錄"},
+        {"text": "隨機指派一位醫師標註全部資料,以單一視角降低分歧並提升標註整體一致度與作業效率", "is_correct": false, "trap_type": "單人標註高風險"},
+        {"text": "完全跳過人工標註,改用既有商用 AI 模型自動標註後直接訓練,以節省標註醫師大量時間", "is_correct": false, "trap_type": "弱監督直接代替黃金標籤"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Gold set + 定期 calibration 會議是醫療影像標註的標準做法;能提升一致性、找出指引模糊處,同時保留可稽核軌跡",
+        "wrong": {
+          "讓三位醫師依照彼此互相投票表決後直接寫死標籤,從此不再保留任何分歧紀錄以節省儲存": "投票可作為融合策略,但抹除分歧紀錄會喪失稽核能力,且無法事後重新仲裁",
+          "隨機指派一位醫師標註全部資料,以單一視角降低分歧並提升標註整體一致度與作業效率": "單人標註看似一致但無法評估標籤品質,風險集中於該醫師個人觀點偏誤",
+          "完全跳過人工標註,改用既有商用 AI 模型自動標註後直接訓練,以節省標註醫師大量時間": "弱監督可作輔助但醫療標籤須由臨床專家把關,直接以商用模型為金標會放大其偏誤"
+        },
+        "hook": "醫療標註要 gold set + calibration,絕不依賴單人或商用模型自動標"
+      },
+      "misconceptions": ["以為投票即夠不需稽核", "依賴單一標註者"],
+      "related_node_ids": ["n_L22201_003"],
+      "tags": ["標籤品質", "醫療", "gold set"]
+    },
+    {
+      "id": "q_n12_017",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_006",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某傳統製造業近年導入雲端資料平台,期望先將工廠機台原始 log 全部低成本入湖、再依各分析需求即時轉換。此種設計流程最接近下列何者?",
+      "options": [
+        {"text": "ELT(Extract → Load → Transform):先入儲存層,轉換時機後移到分析時", "is_correct": true},
+        {"text": "ETL(Extract → Transform → Load):進入 Warehouse 之前必先全數完成所有清洗轉換工序", "is_correct": false, "trap_type": "ETL/ELT 順序顛倒"},
+        {"text": "ELT 與 ETL 僅為命名差異無實質差別;轉換時機完全相同只是業界喜好用詞不同而已", "is_correct": false, "trap_type": "誤認為同義詞"},
+        {"text": "Streaming Only(僅串流):此情境不可能批次處理只能採用即時串流處理進行所有運算", "is_correct": false, "trap_type": "與題情境不符"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "ELT 將原始資料先入 Lake / Lakehouse,分析時再依需求轉換(schema-on-read),雲端儲存便宜推動此模式興起",
+        "wrong": {
+          "ETL(Extract → Transform → Load):進入 Warehouse 之前必先全數完成所有清洗轉換工序": "ETL 在進入 Warehouse 前已轉換完畢,適合 schema 穩定場景;但題目明確說『先入湖再依需求轉換』屬 ELT",
+          "ELT 與 ETL 僅為命名差異無實質差別;轉換時機完全相同只是業界喜好用詞不同而已": "兩者轉換時機截然不同:ETL 在 Load 前,ELT 在 Load 後,對應 schema-on-write 與 schema-on-read 兩種哲學",
+          "Streaming Only(僅串流):此情境不可能批次處理只能採用即時串流處理進行所有運算": "ELT 既可批次也可串流;題目情境並未強調即時性,純串流屬另一維度的選型"
+        },
+        "hook": "ETL = Transform 在中間;ELT = Transform 在最後(schema-on-read)"
+      },
+      "misconceptions": ["把 ELT 與 ETL 視為同義詞", "把 ELT 限制於串流"],
+      "related_node_ids": ["n_L22201_001"],
+      "tags": ["ETL", "ELT", "schema-on-read"]
+    },
+    {
+      "id": "q_n12_018",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_006",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某金融機構 schema 嚴格、需遵循法遵稽核且需強治理,主要分析以 BI 報表為主;某網路廣告新創資料型態多元、用途多變且儲存量極大。兩者最適合的設計取捨為?",
+      "options": [
+        {"text": "金融偏 ETL + Warehouse;網路廣告偏 ELT + Lake / Lakehouse,以匹配各自治理與彈性需求", "is_correct": true},
+        {"text": "兩者皆統一採用 ETL + Warehouse 架構,以最大化資料治理嚴謹度並降低未來維運所有風險", "is_correct": false, "trap_type": "過度治理犧牲彈性"},
+        {"text": "兩者皆統一採用 ELT + Lake 架構,以最大化儲存彈性並降低資料工程之初期建置與運作成本", "is_correct": false, "trap_type": "彈性犧牲治理"},
+        {"text": "金融偏 ELT + Lake;網路廣告偏 ETL + Warehouse,因新興產業必須採用較傳統穩定架構", "is_correct": false, "trap_type": "選型完全顛倒"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "ETL + Warehouse 適合 schema 穩定 + 嚴治理(金融);ELT + Lake / Lakehouse 適合資料型態多元 + 用途多變(網路廣告);選型由治理需求與彈性權衡決定",
+        "wrong": {
+          "兩者皆統一採用 ETL + Warehouse 架構,以最大化資料治理嚴謹度並降低未來維運所有風險": "Warehouse 難承接多元非結構化資料,網路廣告大量曝光 log 與圖文素材會撐爆儲存且失去 ML 探索彈性",
+          "兩者皆統一採用 ELT + Lake 架構,以最大化儲存彈性並降低資料工程之初期建置與運作成本": "金融治理需 schema 穩定、可稽核;一律入湖會犧牲必要的治理嚴謹度與法遵能力",
+          "金融偏 ELT + Lake;網路廣告偏 ETL + Warehouse,因新興產業必須採用較傳統穩定架構": "選型應由業務特性決定,不是『新興一定用新』或『傳統一定用舊』;本題的兩者特性與此選項顛倒"
+        },
+        "hook": "ETL ↔ 嚴 schema / 強治理;ELT ↔ 多型態 / 大量探索"
+      },
+      "misconceptions": ["以為 ELT 一律比 ETL 好", "選型不看業務特性"],
+      "related_node_ids": ["n_L22201_004"],
+      "tags": ["ETL", "ELT", "選型"]
+    },
+    {
+      "id": "q_n12_019",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_006",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某新創導入 ELT + Lake 架構半年後,團隊抱怨『要的資料找不到、找到的不敢用』。資深架構師指出『ELT 不代表不需要治理,反而更需要 catalog 與 lineage』。下列敘述何者最能說明此原因?",
+      "options": [
+        {"text": "ELT 將轉換後移使資料多版本並存;若無 catalog 與 lineage 將難以判斷資料可信度", "is_correct": true},
+        {"text": "ELT 比 ETL 速度快;一旦速度提升後就完全無需 catalog 與 lineage,所有版本自動會清楚", "is_correct": false, "trap_type": "速度與治理混淆"},
+        {"text": "ELT 取代 ETL;故傳統的資料治理工具如 catalog 與 lineage 都已被廢除不應再行投資", "is_correct": false, "trap_type": "取代論誤解"},
+        {"text": "ELT 僅適用串流即時情境;批次分析的治理需求並不適用 catalog 與 lineage 等概念工具", "is_correct": false, "trap_type": "範圍誤判"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "ELT 把原始資料先入湖,後續會衍生多個轉換版本(schema-on-read);若無 catalog 標註語意與 lineage 追蹤血緣,使用者無法判斷哪一份『可信、可用』,易淪 data swamp",
+        "wrong": {
+          "ELT 比 ETL 速度快;一旦速度提升後就完全無需 catalog 與 lineage,所有版本自動會清楚": "速度提升不會自動產生 metadata;沒有 catalog 紀錄誰建、何時、何用,版本只會更混亂",
+          "ELT 取代 ETL;故傳統的資料治理工具如 catalog 與 lineage 都已被廢除不應再行投資": "ELT 並未取代 ETL,兩者各有其場景;catalog / lineage 屬治理工具與選擇 ETL / ELT 互相獨立",
+          "ELT 僅適用串流即時情境;批次分析的治理需求並不適用 catalog 與 lineage 等概念工具": "ELT 廣泛用於批次分析,catalog / lineage 對批次與串流同樣重要;『僅適用串流』為錯誤前提"
+        },
+        "hook": "ELT 不是放棄治理,而是把治理重心從 ETL 階段轉移到 catalog / lineage"
+      },
+      "misconceptions": ["把 ELT 當無治理需求", "誤認 ELT 取代 ETL"],
+      "related_node_ids": ["n_L22201_002"],
+      "tags": ["ELT", "catalog", "lineage"]
+    },
+    {
+      "id": "q_n12_020",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_006",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某連鎖餐飲集團規劃同時做『財務月結 BI 報表』與『顧客行為 ML 模型』。資料工程主管思考是否單一架構即可兼顧 BI 與 ML,下列何者最能描述符合 Lakehouse 訴求的整體決策?",
+      "options": [
+        {"text": "Lakehouse 在 Lake 底層加上 Warehouse 等級治理,使單一資料源可同時服務 BI 與 ML", "is_correct": true},
+        {"text": "Lakehouse 等同 Warehouse 與 Lake 兩套系統的簡單堆疊;兩邊資料需重複完整搬遷與全量同步", "is_correct": false, "trap_type": "簡單堆疊誤解"},
+        {"text": "Lakehouse 為過渡產物;最終一定會被 Warehouse 全面取代,因為治理需求總是大於彈性需求", "is_correct": false, "trap_type": "取代論"},
+        {"text": "Lakehouse 僅用於離線批次分析;ML 訓練必須先把資料完整複製到獨立的 ML 專用儲存系統", "is_correct": false, "trap_type": "範圍誤判"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Lakehouse 核心訴求:在低成本 Lake 物件儲存上加 ACID / Schema / Index 等 Warehouse 級治理,使 BI(SQL)與 ML(原始資料訓練)可共享同一份資料,免於複製",
+        "wrong": {
+          "Lakehouse 等同 Warehouse 與 Lake 兩套系統的簡單堆疊;兩邊資料需重複完整搬遷與全量同步": "Lakehouse 反而是為了『不複製資料就能 BI + ML』而生;若還要全量同步等於失去其核心訴求",
+          "Lakehouse 為過渡產物;最終一定會被 Warehouse 全面取代,因為治理需求總是大於彈性需求": "Warehouse 難承接多型態與大量原始資料;Lakehouse 是融合非過渡,且實務上 Lake 與 Warehouse 常並存",
+          "Lakehouse 僅用於離線批次分析;ML 訓練必須先把資料完整複製到獨立的 ML 專用儲存系統": "Lakehouse 設計即為了避免複製,讓 ML 與 BI 在同一份資料上各取所需,而非強制複製"
+        },
+        "hook": "Lakehouse = Lake 彈性 + Warehouse 治理,不複製資料同時服務 BI 與 ML"
+      },
+      "misconceptions": ["把 Lakehouse 當兩系統堆疊", "認為 ML 一定需獨立儲存複本"],
+      "related_node_ids": ["n_L22201_001"],
+      "tags": ["Lakehouse", "BI", "ML"]
+    }
+  ]
+}

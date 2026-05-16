@@ -1,0 +1,614 @@
+{
+  "version": "1.0",
+  "schema_version": "iron-rule-1+2+6",
+  "batch": "N20 — 科二大數據 L22403 生成式 AI 大數據應用",
+  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "generated_at": "2026-05-16",
+  "iron_rule_compliance": {
+    "rule_1": "every question has explanation.correct + explanation.wrong + explanation.hook + misconceptions",
+    "rule_2": "shuffle_options=true on every item; calculation item carries stem_variables multi-case",
+    "rule_3": "all stems are original cross-industry scenarios; no 114-2 reuse",
+    "rule_4": "option length ratio between 0.85 and 1.20; wrong options written with equal professionalism",
+    "rule_5": "knowledge_code = L22403; node_id ∈ {n_L22403_001..006} per scripts/kb-allowed-nodes.json",
+    "rule_6": "科目隔離 — 本檔僅 L22403 內容,related_node_ids 只指向 n_L22403_*;只新建本檔,不改任何既有檔案"
+  },
+  "design_guardrails": {
+    "no_recall_numbers": "GPT-3 60/22/16/3 比例僅作為 scaling-laws 配方範例,不做 recall 考點",
+    "chinchilla_concept_only": "Chinchilla 只當 concept anchor,不出 Hoffmann formula 推導",
+    "banned_topics": ["LoRA", "RLHF", "DPO", "GPTQ", "SentencePiece", "BPE"],
+    "data_side_focus": "聚焦語料 / 清洗 / 混合 / 授權 / 合成 / scaling 三方平衡,不寫模型架構題"
+  },
+  "distribution": {
+    "L22403_count": 20,
+    "by_node": {"n_L22403_001": 3, "n_L22403_002": 4, "n_L22403_003": 3, "n_L22403_004": 4, "n_L22403_005": 3, "n_L22403_006": 3},
+    "by_format": {"single_choice_text": 16, "single_choice_scenario": 3, "calculation": 1},
+    "by_difficulty": {"easy": 5, "medium": 11, "hard": 4}
+  },
+  "questions": [
+    {
+      "id": "q_n20_001",
+      "knowledge_code": "L22403",
+      "node_id": "n_L22403_001",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某新創團隊要訓練自家領域 LLM,在規劃預訓練語料規模時,業界最常用的計量單位為下列何者?",
+      "options": [
+        {"text": "Token(子詞單元),為 LLM 內部實際處理的最小語意單位,可跨語言一致比較規模", "is_correct": true},
+        {"text": "字元數(Character),直接統計檔案文字字元總數即可代表訓練資料的真實規模", "is_correct": false, "trap_type": "字元數與模型實際輸入單位不一致"},
+        {"text": "句子數(Sentences),以斷句後計數可同時反映語料的數量與語意完整性指標", "is_correct": false, "trap_type": "句子定義跨語言不一,粒度過粗"},
+        {"text": "檔案大小 GB,以原始文字檔總容量作為訓練語料規模的標準衡量計算方式", "is_correct": false, "trap_type": "GB 受編碼與雜訊影響,非有效資料量"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "LLM 預訓練資料量以 token(子詞單元)計量,因為 token 是模型實際看到的最小單位,可跨語言一致比較;主流 LLM 規模從數百 B 到數 T tokens",
+        "wrong": {
+          "字元數(Character),直接統計檔案文字字元總數即可代表訓練資料的真實規模": "字元數與 token 數不成定比(英文 1 token ≈ 4 字元、中文 1 字 ≈ 1~2 token),無法直接代表模型訓練量",
+          "句子數(Sentences),以斷句後計數可同時反映語料的數量與語意完整性指標": "句子長度差異極大,且跨語言斷句規則不同,不適合做為標準計量",
+          "檔案大小 GB,以原始文字檔總容量作為訓練語料規模的標準衡量計算方式": "GB 包含 HTML 標記、編碼冗餘與雜訊,不等於有效訓練資料量"
+        },
+        "hook": "Token = LLM 計量單位;GB 是儲存量,token 才是訓練量"
+      },
+      "misconceptions": ["把語料 GB 數當訓練資料量", "認為字元數可直接換算 token"],
+      "related_node_ids": ["n_L22403_002", "n_L22403_006"],
+      "tags": ["token", "預訓練", "規模"]
+    },
+    {
+      "id": "q_n20_002",
+      "knowledge_code": "L22403",
+      "node_id": "n_L22403_001",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某團隊宣稱已蒐集 2T tokens 的網路爬蟲文本作為 LLM 預訓練資料,經去重與低品質過濾後僅剩 0.8T tokens 可用。下列敘述何者最為正確?",
+      "options": [
+        {"text": "0.8T 才是真正的『有效訓練資料量』,raw 規模並不能直接代表模型可學到的內容", "is_correct": true},
+        {"text": "2T tokens 應全部納入訓練以最大化資料量,讓模型有機會學到重複文本的細微差異", "is_correct": false, "trap_type": "重複文本造成過擬合而非學習"},
+        {"text": "去重後僅剩四成代表清洗腳本過於嚴格,應放寬閾值才能維持訓練資料的多樣性", "is_correct": false, "trap_type": "誤把去重當成多樣性破壞"},
+        {"text": "raw 與清洗後規模兩者均應視為相同訓練量,因模型在學習時會自動忽略重複內容", "is_correct": false, "trap_type": "模型不會自動忽略重複"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "raw 爬蟲規模包含大量重複與低品質文本;去重 + 過濾後的『有效 token 量』才是真正的訓練資料量,也是 scaling laws 中的有效輸入",
+        "wrong": {
+          "2T tokens 應全部納入訓練以最大化資料量,讓模型有機會學到重複文本的細微差異": "重複文本會讓模型過擬合於該文本,並非學到差異,反而傷害泛化",
+          "去重後僅剩四成代表清洗腳本過於嚴格,應放寬閾值才能維持訓練資料的多樣性": "業界 raw → 清洗掉 30~70% 屬正常範圍;去重恰恰是維持多樣性的關鍵步驟",
+          "raw 與清洗後規模兩者均應視為相同訓練量,因模型在學習時會自動忽略重複內容": "模型不會自動忽略重複,反而會放大其在分佈中的權重"
+        },
+        "hook": "有效資料量 = raw - 重複 - 低品質;去重 30~70% 屬正常"
+      },
+      "misconceptions": ["把 raw 爬蟲量當有效資料量", "認為去重損害多樣性"],
+      "related_node_ids": ["n_L22403_002"],
+      "tags": ["有效資料量", "去重", "raw"]
+    },
+    {
+      "id": "q_n20_003",
+      "knowledge_code": "L22403",
+      "node_id": "n_L22403_001",
+      "subject": 2,
+      "format": "calculation",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某教育科技公司爬取了 {gb} GB 的純文字語料,平均每 token 約佔 {bpt} bytes。估算此語料約相當於多少 B tokens(10 億 tokens,取小數第 2 位)?",
+      "stem_variables": {
+        "case_a": {"gb": "1000", "bpt": "4", "answer": "250.00", "wrong1": "4000.00", "wrong2": "0.25", "wrong3": "125.00"},
+        "case_b": {"gb": "600", "bpt": "3", "answer": "200.00", "wrong1": "1800.00", "wrong2": "0.20", "wrong3": "100.00"},
+        "case_c": {"gb": "800", "bpt": "5", "answer": "160.00", "wrong1": "4000.00", "wrong2": "0.16", "wrong3": "80.00"}
+      },
+      "options": [
+        {"text": "{answer} B tokens", "is_correct": true},
+        {"text": "{wrong1} B tokens", "is_correct": false, "trap_type": "把 bytes/token 顛倒乘除"},
+        {"text": "{wrong2} B tokens", "is_correct": false, "trap_type": "GB 與 B tokens 單位混淆"},
+        {"text": "{wrong3} B tokens", "is_correct": false, "trap_type": "漏算 1/2 倍"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "tokens = (GB × 10^9 bytes) ÷ (bytes/token) = ({gb} × 10^9) / {bpt} bytes = {answer} × 10^9 tokens = {answer} B tokens",
+        "wrong": {
+          "{wrong1} B tokens": "此為 GB × bytes/token 反向相乘的結果,單位上不成立",
+          "{wrong2} B tokens": "此將 B tokens 與單純 GB 比例混淆,量級錯了 10^9",
+          "{wrong3} B tokens": "此漏算或誤算了 bytes/token 比例,僅取一半值"
+        },
+        "hook": "tokens ≈ bytes / (bytes per token);1 GB = 10^9 bytes,1 B tokens = 10^9 tokens"
+      },
+      "misconceptions": ["把 bytes per token 倒過來除", "GB 與 B tokens 量級混用"],
+      "related_node_ids": ["n_L22403_002", "n_L22403_006"],
+      "tags": ["token", "計算", "規模估算"]
+    },
+    {
+      "id": "q_n20_004",
+      "knowledge_code": "L22403",
+      "node_id": "n_L22403_002",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某 LLM 訓練團隊發現某熱門 Wiki 條目在原始語料中被重複收錄達 500 次。若不做去重處理直接用於預訓練,最可能產生下列何種後果?",
+      "options": [
+        {"text": "模型對該條目產生背誦式過擬合,泛化能力下降而非真正學到通用知識", "is_correct": true},
+        {"text": "因該條目重複出現,模型會自動將其視為高品質範本並提升整體語言流暢度與正確性", "is_correct": false, "trap_type": "重複不會提升流暢度"},
+        {"text": "重複資料可作為 data augmentation 的天然來源,有助於模型強化少樣本場景下的學習表現", "is_correct": false, "trap_type": "把重複誤當資料擴增"},
+        {"text": "重複出現的條目會被預訓練流程內部的損失函數自動降權,實際不會影響最終模型品質", "is_correct": false, "trap_type": "誤以為 loss 會自動降權"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "同一文本重複出現會在訓練分佈中被過度放大,模型傾向背誦該文本而非學到通用模式,泛化下降;這正是去重的核心動機",
+        "wrong": {
+          "因該條目重複出現,模型會自動將其視為高品質範本並提升整體語言流暢度與正確性": "重複 ≠ 高品質;模型只會記住該特定文本,並不會推廣到其他主題",
+          "重複資料可作為 data augmentation 的天然來源,有助於模型強化少樣本場景下的學習表現": "Data augmentation 指『有意義的變形』,單純複製不是擴增也不會增加資訊",
+          "重複出現的條目會被預訓練流程內部的損失函數自動降權,實際不會影響最終模型品質": "標準預訓練 loss 不會自動偵測重複,需仰賴前處理階段顯式去重"
+        },
+        "hook": "重複文本 → 過擬合 + 背誦;近重複比完全相同更難偵測但同樣有害"
+      },
+      "misconceptions": ["把重複當資料擴增", "以為訓練 loss 會自動處理重複"],
+      "related_node_ids": ["n_L22403_001", "n_L22403_003"],
+      "tags": ["去重", "過擬合", "背誦"]
+    },
+    {
+      "id": "q_n20_005",
+      "knowledge_code": "L22403",
+      "node_id": "n_L22403_002",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某資料工程團隊需要偵測 LLM 預訓練語料中『內容相近但字串不完全相同』的近重複(near-duplicate)文件(如同新聞被多家媒體改寫轉載)。下列技術組合最為適當?",
+      "options": [
+        {"text": "以 MinHash 或 SimHash 計算文件指紋並比對相似度,可在大規模語料下高效找出近重複", "is_correct": true},
+        {"text": "以完全相同字串比對(exact string match)為唯一判定方式,簡單可靠且不會產生誤判", "is_correct": false, "trap_type": "exact match 抓不到近重複"},
+        {"text": "以詞頻 TF 直接比較兩文件的高頻詞清單即可判定是否互為改寫,無需任何指紋運算", "is_correct": false, "trap_type": "TF 比對粒度過粗"},
+        {"text": "以人工抽樣審閱整份語料中所有疑似重複片段,可確保偵測的精確度與召回率達到最高", "is_correct": false, "trap_type": "TB 級語料人工不可行"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "MinHash / SimHash 是經典的 locality-sensitive hashing 技術,可在 TB 級語料下以 O(n) 近似比對找出 Jaccard 相似度高的近重複文件",
+        "wrong": {
+          "以完全相同字串比對(exact string match)為唯一判定方式,簡單可靠且不會產生誤判": "exact match 只能抓 100% 相同,無法偵測改寫、轉載等近重複型態",
+          "以詞頻 TF 直接比較兩文件的高頻詞清單即可判定是否互為改寫,無需任何指紋運算": "TF 比對在大規模下計算複雜度高,且高頻詞容易誤判同主題文件為重複",
+          "以人工抽樣審閱整份語料中所有疑似重複片段,可確保偵測的精確度與召回率達到最高": "TB 級語料人工審閱不可行;近重複偵測必須自動化"
+        },
+        "hook": "近重複偵測標準技術:MinHash(Jaccard 近似)/ SimHash(Hamming 距離)"
+      },
+      "misconceptions": ["只用 exact match 去重", "認為人工抽樣可處理 TB 語料"],
+      "related_node_ids": ["n_L22403_001"],
+      "tags": ["近重複", "MinHash", "SimHash"]
+    },
+    {
+      "id": "q_n20_006",
+      "knowledge_code": "L22403",
+      "node_id": "n_L22403_002",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某新聞媒體擬用其 20 年新聞檔案訓練專屬 LLM,內部審議發現體育新聞占 78%、政治次之、其他領域比例極低。直接以此語料訓練最可能造成下列何種問題?",
+      "options": [
+        {"text": "模型在體育主題表現過強而在科學、財經等領域偏弱,呈現顯著的領域分佈偏誤", "is_correct": true},
+        {"text": "因語料主題集中,模型訓練速度會大幅加快並讓所有領域的表現整體呈現均衡提升", "is_correct": false, "trap_type": "誤以為集中=均衡提升"},
+        {"text": "新聞語料天然具備多領域覆蓋,無需做任何比例調整即能滿足通用 LLM 的訓練需求", "is_correct": false, "trap_type": "忽略實際分佈失衡"},
+        {"text": "由於同一機構出版,語料風格一致可有效降低訓練雜訊,模型在所有題目都會更精確", "is_correct": false, "trap_type": "風格一致 ≠ 領域覆蓋"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "語料領域分佈嚴重失衡會直接反映在模型能力分佈上:體育領域強,其他領域弱;這就是『data mixture』需要刻意設計而非全用 raw 比例的原因",
+        "wrong": {
+          "因語料主題集中,模型訓練速度會大幅加快並讓所有領域的表現整體呈現均衡提升": "訓練速度與資料規模相關,與主題集中度無直接關係;集中只會讓表現偏向該主題",
+          "新聞語料天然具備多領域覆蓋,無需做任何比例調整即能滿足通用 LLM 的訓練需求": "78% 體育代表分佈極不均,『新聞 = 多領域』是迷思",
+          "由於同一機構出版,語料風格一致可有效降低訓練雜訊,模型在所有題目都會更精確": "風格一致與領域多樣性無關;單一風格反而可能讓模型在其他文體表現劣化"
+        },
+        "hook": "多樣性 ≠ 同來源;領域比例需主動設計,raw 分佈不一定合適"
+      },
+      "misconceptions": ["假設『多文件 = 多領域』", "忽略 raw 分佈失衡需主動調整"],
+      "related_node_ids": ["n_L22403_003"],
+      "tags": ["多樣性", "領域偏誤", "語料"]
+    },
+    {
+      "id": "q_n20_007",
+      "knowledge_code": "L22403",
+      "node_id": "n_L22403_002",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某 LLM 預訓練團隊為移除低品質文本,將過濾閾值設定得極為嚴格(僅保留困惑度極低、字元分佈高度規整的文本)。結果在內部測試發現模型對口語化、方言、論壇用語等場景表現顯著劣化。最合理的根因解讀為下列何者?",
+      "options": [
+        {"text": "過嚴的過濾把長尾但合法的語言變體一併濾掉,導致模型失去對多樣表達形式的覆蓋", "is_correct": true},
+        {"text": "困惑度低代表資料品質高,口語表現變差只能透過增大模型參數量解決而非調整資料", "is_correct": false, "trap_type": "把過濾後果歸咎模型大小"},
+        {"text": "論壇與方言文本本質無法被任何 LLM 學習,因其偏離書面語規範屬於不可訓練樣本", "is_correct": false, "trap_type": "錯誤地否定方言可學習性"},
+        {"text": "過濾閾值與模型表現完全無關,口語表現差是因為 tokenizer 不支援該類語言的編碼", "is_correct": false, "trap_type": "把問題誤歸 tokenizer"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "過嚴過濾會把『長尾但合法』的語言變體(口語、方言、論壇用語)一併移除,模型因此失去對應分佈的覆蓋;低品質過濾需平衡品質與多樣性",
+        "wrong": {
+          "困惑度低代表資料品質高,口語表現變差只能透過增大模型參數量解決而非調整資料": "資料側問題不能單靠擴大模型解決;若分佈缺失,再大的模型也學不到",
+          "論壇與方言文本本質無法被任何 LLM 學習,因其偏離書面語規範屬於不可訓練樣本": "口語與方言完全可學,只要在訓練語料中有適當代表",
+          "過濾閾值與模型表現完全無關,口語表現差是因為 tokenizer 不支援該類語言的編碼": "過濾閾值直接決定模型看到的分佈,與 tokenizer 是不同層的問題"
+        },
+        "hook": "過濾不是越嚴越好;失去長尾 = 失去多樣性"
+      },
+      "misconceptions": ["把過濾越嚴等同於品質越高", "認為長尾語言不可學"],
+      "related_node_ids": ["n_L22403_003"],
+      "tags": ["過濾", "多樣性", "長尾"]
+    },
+    {
+      "id": "q_n20_008",
+      "knowledge_code": "L22403",
+      "node_id": "n_L22403_003",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某團隊希望提升 LLM 在『邏輯推理與多步數學題』的表現,在預訓練資料配方中考慮加入下列何類資料最具經驗證據支持的提升效果?",
+      "options": [
+        {"text": "高品質程式碼資料(如開源專案),經驗顯示對邏輯推理與多步推導具有明顯遷移效益", "is_correct": true},
+        {"text": "純社群媒體短文與評論,可訓練模型即時對話能力同時間接提升其多步推理思考的能力", "is_correct": false, "trap_type": "短文與推理無遷移"},
+        {"text": "純圖片描述文字資料(image caption),可大幅強化邏輯能力同時兼顧視覺與多步推理表現", "is_correct": false, "trap_type": "caption 與推理無直接關聯"},
+        {"text": "純新聞標題語料,因簡潔具邏輯結構可同時提升摘要與多步推導等高階推理綜合表現", "is_correct": false, "trap_type": "標題過短,不訓練長推理"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "程式碼資料具備明確邏輯結構與多步推導痕跡,訓練後對非編程的推理 / 數學題也有顯著遷移效益,是現代 LLM 配方常見設計",
+        "wrong": {
+          "純社群媒體短文與評論,可訓練模型即時對話能力同時間接提升其多步推理思考的能力": "短文資料缺乏多步推理結構,主要提升對話風格而非推理深度",
+          "純圖片描述文字資料(image caption),可大幅強化邏輯能力同時兼顧視覺與多步推理表現": "Caption 描述視覺場景,與邏輯推理任務的遷移有限",
+          "純新聞標題語料,因簡潔具邏輯結構可同時提升摘要與多步推導等高階推理綜合表現": "標題過短,模型學不到多步推理需要的長依賴結構"
+        },
+        "hook": "推理能力與程式碼資料相關性高;邏輯結構 → 跨任務遷移"
+      },
+      "misconceptions": ["以為短文社群資料能提升推理", "忽略程式碼對非編程任務的助益"],
+      "related_node_ids": ["n_L22403_002", "n_L22403_006"],
+      "tags": ["資料配方", "推理", "程式碼"]
+    },
+    {
+      "id": "q_n20_009",
+      "knowledge_code": "L22403",
+      "node_id": "n_L22403_003",
+      "subject": 2,
+      "format": "single_choice_scenario",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某台灣金融科技公司預訓練自家中文 LLM,內部觀察到模型『中文表現明顯不如英文』。資料團隊統計現有語料分佈:英文 88%、中文 6%、其他語言 6%,且中文部分多為廣告與低品質網頁內容。下列改善方向最為對症?",
+      "options": [
+        {"text": "提升中文語料的『數量 + 品質』雙軸,同步擴充繁體中文書籍與專業文章並做語料清洗", "is_correct": true},
+        {"text": "僅增加英文語料總量並同步擴大模型參數規模,讓中文表現透過跨語言泛化能力自然提升", "is_correct": false, "trap_type": "加英文不會提升中文"},
+        {"text": "降低中文語料品質要求,將所有中文網頁內容無篩選地納入訓練以快速擴張中文資料量", "is_correct": false, "trap_type": "拉低品質會傷害模型"},
+        {"text": "保持現有比例不變但僅延長中文資料訓練步數,讓模型對中文內容重複多輪學習以加強表現", "is_correct": false, "trap_type": "對小品質池反覆訓練 = 過擬合"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "中文表現弱通常雙因素:(1) 佔比低 (2) 品質低;改善需同時擴量(專業文章 / 書籍)+ 清洗(去廣告 / 低品質頁面),而非單軸",
+        "wrong": {
+          "僅增加英文語料總量並同步擴大模型參數規模,讓中文表現透過跨語言泛化能力自然提升": "跨語言遷移有限,且模型核心能力分佈與訓練語料佔比正相關;加英文無法直接救中文",
+          "降低中文語料品質要求,將所有中文網頁內容無篩選地納入訓練以快速擴張中文資料量": "拉低品質會引入更多廣告 / 雜訊,讓中文表現更差",
+          "保持現有比例不變但僅延長中文資料訓練步數,讓模型對中文內容重複多輪學習以加強表現": "對同一小池子重複訓練會過擬合;品質與數量問題未解決"
+        },
+        "hook": "中文表現弱 = 量少 + 質差;雙軸同時補,而非單軸"
+      },
+      "misconceptions": ["以為跨語言遷移能補語料失衡", "用重複訓練彌補資料不足"],
+      "related_node_ids": ["n_L22403_002"],
+      "tags": ["語料配方", "中文", "情境"]
+    },
+    {
+      "id": "q_n20_010",
+      "knowledge_code": "L22403",
+      "node_id": "n_L22403_003",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某團隊規劃 LLM 訓練後期『動態調整 data mixture』(從通用網頁逐漸切換到高品質書籍與專業文章)。下列關於此策略的敘述何者最為正確?",
+      "options": [
+        {"text": "後期切換到高品質資料可在模型能力已建立後再進行知識精煉,屬於常見的『退火式』訓練設計", "is_correct": true},
+        {"text": "data mixture 一旦在訓練初期決定就必須完全固定到訓練結束,中途任何切換都會直接造成模型參數崩潰", "is_correct": false, "trap_type": "誤以為配方不可動態"},
+        {"text": "後期切換只能用降低 learning rate 達成,改變資料分佈與模型最終能力分佈完全沒有任何關聯", "is_correct": false, "trap_type": "把資料與 lr 等同"},
+        {"text": "後期使用高品質資料反而會傷害模型在低品質網路文本上的下游表現,因而業界完全不採用此設計", "is_correct": false, "trap_type": "業界實際採用此設計"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "業界常見做法:前期用廣覆蓋的通用網頁建立泛化基礎,後期『退火』切換到高品質書籍與專業內容做知識精煉,屬合理的動態配方設計",
+        "wrong": {
+          "data mixture 一旦在訓練初期決定就必須完全固定到訓練結束,中途任何切換都會直接造成模型參數崩潰": "配方完全可動態調整,實務上常做階段性切換,不會直接導致崩潰",
+          "後期切換只能用降低 learning rate 達成,改變資料分佈與模型最終能力分佈完全沒有任何關聯": "learning rate 與資料分佈是兩個獨立軸;資料分佈直接影響模型能力分佈",
+          "後期使用高品質資料反而會傷害模型在低品質網路文本上的下游表現,因而業界完全不採用此設計": "後期切高品質是業界普遍採用的『退火』式設計,並未被普遍否定"
+        },
+        "hook": "Data mixture 可動態:前期廣覆蓋、後期精煉"
+      },
+      "misconceptions": ["認為配方一旦定就不能變", "把資料軸與超參軸混淆"],
+      "related_node_ids": ["n_L22403_006"],
+      "tags": ["data mixture", "退火", "動態配方"]
+    },
+    {
+      "id": "q_n20_011",
+      "knowledge_code": "L22403",
+      "node_id": "n_L22403_004",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某商業 LLM 服務商在規劃預訓練語料時,法務團隊提醒下列哪一種 CC 授權『不可』被納入商用模型訓練資料?",
+      "options": [
+        {"text": "CC-BY-NC(姓名標示─非商業性),其授權條款明確禁止商業性質的後續利用", "is_correct": true},
+        {"text": "CC-BY(姓名標示),只需在使用時署名原作者,允許包含商業性質在內的廣泛利用", "is_correct": false, "trap_type": "CC-BY 可商用"},
+        {"text": "CC-BY-SA(姓名標示─相同方式分享),允許商業利用但要求衍生作品採用相同授權方式", "is_correct": false, "trap_type": "SA 可商用,僅限相同授權"},
+        {"text": "Public Domain(公有領域),其著作財產權已消滅或被作者放棄,可被任何人自由使用", "is_correct": false, "trap_type": "PD 完全自由"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "CC-BY-NC 中的 NC = Non-Commercial,明確禁止商業性使用,商用 LLM 預訓練不適用;其餘 CC-BY / CC-BY-SA / Public Domain 在商用上皆可(但條款不同)",
+        "wrong": {
+          "CC-BY(姓名標示),只需在使用時署名原作者,允許包含商業性質在內的廣泛利用": "CC-BY 允許商用,只要求署名",
+          "CC-BY-SA(姓名標示─相同方式分享),允許商業利用但要求衍生作品採用相同授權方式": "CC-BY-SA 允許商用,但 SA 條款對 LLM 衍生作品歸屬有額外考量",
+          "Public Domain(公有領域),其著作財產權已消滅或被作者放棄,可被任何人自由使用": "Public Domain 無著作權限制,可自由使用"
+        },
+        "hook": "CC 條款記憶:NC = 不可商用;SA = 衍生需相同;BY = 署名"
+      },
+      "misconceptions": ["把所有 CC 條款視為一致", "忽略 NC 對商用的限制"],
+      "related_node_ids": ["n_L22403_005"],
+      "tags": ["著作權", "CC 授權", "商用"]
+    },
+    {
+      "id": "q_n20_012",
+      "knowledge_code": "L22403",
+      "node_id": "n_L22403_004",
+      "subject": 2,
+      "format": "single_choice_scenario",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某新聞媒體在其網站根目錄發佈 `ai.txt` 與 `robots.txt`,明示『禁止任何 AI 訓練爬蟲擷取本站內容』。某 LLM 公司仍以爬蟲擷取該媒體新聞用於訓練。下列敘述何者最為對齊『目前產業實務與訴訟風險評估』?",
+      "options": [
+        {"text": "已有指標性訴訟(如紐約時報 vs OpenAI)挑戰未經授權之擷取,合規風險與品牌風險均顯著升高", "is_correct": true},
+        {"text": "由於 robots.txt 屬於非強制性網路慣例,即便被忽略也不會對 AI 公司產生任何商業或法律風險", "is_correct": false, "trap_type": "忽略訴訟案例"},
+        {"text": "全球目前對於 AI 訓練資料合法性已有明確一致之國際標準,商用模型只需聲明用途即可豁免責任", "is_correct": false, "trap_type": "目前無一致國際標準"},
+        {"text": "只要爬蟲存取的網頁屬於公開可瀏覽範圍,所有可被瀏覽的內容皆等同於可被任意拿來訓練", "is_correct": false, "trap_type": "公開可看 ≠ 可訓練"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "紐約時報 vs OpenAI、Getty Images vs Stability AI 等指標訴訟,讓未經授權擷取的合規風險與品牌風險都顯著升高;robots.txt / ai.txt 雖非強制,但已成為 opt-out 主流訊號",
+        "wrong": {
+          "由於 robots.txt 屬於非強制性網路慣例,即便被忽略也不會對 AI 公司產生任何商業或法律風險": "雖非強制協議,但已有訴訟援引;忽略仍會產生法律與品牌風險",
+          "全球目前對於 AI 訓練資料合法性已有明確一致之國際標準,商用模型只需聲明用途即可豁免責任": "目前各國對 AI 訓練合法性立場不同,沒有單一豁免機制",
+          "只要爬蟲存取的網頁屬於公開可瀏覽範圍,所有可被瀏覽的內容皆等同於可被任意拿來訓練": "公開可瀏覽 ≠ 著作權放棄;這是訴訟中的核心爭議點"
+        },
+        "hook": "Opt-out 訊號(robots.txt / ai.txt)+ 指標訴訟 = 商業與品牌雙重風險"
+      },
+      "misconceptions": ["把『可公開瀏覽』等同『可訓練』", "忽略指標訴訟先例"],
+      "related_node_ids": ["n_L22403_005"],
+      "tags": ["訴訟", "opt-out", "情境"]
+    },
+    {
+      "id": "q_n20_013",
+      "knowledge_code": "L22403",
+      "node_id": "n_L22403_004",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "歐盟 AI Act 對通用型 AI(GPAI)模型提供者的義務之一,與『預訓練資料』直接相關的要求為下列何者?",
+      "options": [
+        {"text": "需提供預訓練資料『摘要(summary)』讓著作權人可確認是否被使用並主張權利", "is_correct": true},
+        {"text": "模型提供者必須將其完整預訓練資料原始檔上傳至歐盟雲端供主管機關進行全面內容稽核", "is_correct": false, "trap_type": "並非要求上傳完整原始檔"},
+        {"text": "禁止使用任何來自網路爬蟲所取得的文字內容於訓練資料,僅允許採用人工撰寫之素材建構語料", "is_correct": false, "trap_type": "並未一概禁止網路爬蟲"},
+        {"text": "要求預訓練資料需先付費取得歐盟主管機關事前核發之資料使用許可證才可進行模型訓練", "is_correct": false, "trap_type": "並無付費許可制"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "歐盟 AI Act 對 GPAI 模型提供者要求公開預訓練資料摘要,目的是讓著作權人可知悉並主張權利,這是『透明性』而非『完整公開原始資料』",
+        "wrong": {
+          "模型提供者必須將其完整預訓練資料原始檔上傳至歐盟雲端供主管機關進行全面內容稽核": "AI Act 要求的是摘要而非完整原始檔上傳",
+          "禁止使用任何來自網路爬蟲所取得的文字內容於訓練資料,僅允許採用人工撰寫之素材建構語料": "AI Act 並未全面禁止網路爬蟲;爭議聚焦在合法性與 opt-out 尊重",
+          "要求預訓練資料需先付費取得歐盟主管機關事前核發之資料使用許可證才可進行模型訓練": "AI Act 無此事前許可制度"
+        },
+        "hook": "EU AI Act 對 GPAI:資料摘要透明性 + 對 opt-out 尊重"
+      },
+      "misconceptions": ["把『摘要義務』誤解為『完整公開』", "認為 AI Act 全面禁網路爬蟲"],
+      "related_node_ids": ["n_L22403_005"],
+      "tags": ["AI Act", "GPAI", "合規"]
+    },
+    {
+      "id": "q_n20_014",
+      "knowledge_code": "L22403",
+      "node_id": "n_L22403_004",
+      "subject": 2,
+      "format": "single_choice_scenario",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某線上百科平台採 CC-BY-SA 授權釋出全部條目。某 LLM 商用公司想將該百科納入預訓練。法務應特別評估的『主要』風險點為下列何者?",
+      "options": [
+        {"text": "SA(相同方式分享)條款對模型輸出 / 衍生作品的授權繼承界線,目前在 LLM 場景仍屬法律灰色地帶", "is_correct": true},
+        {"text": "CC-BY-SA 等同 CC-BY-NC,完全禁止商業利用,因此無法被任何商用模型作為訓練資料來源使用", "is_correct": false, "trap_type": "把 SA 混淆為 NC"},
+        {"text": "CC-BY-SA 屬於公有領域分支,所有衍生模型輸出皆無任何著作權限制,可被自由再授權使用", "is_correct": false, "trap_type": "把 SA 視為 PD"},
+        {"text": "CC-BY-SA 在所有 LLM 應用情境下皆完全等同 Public Domain,法務無須做任何額外的進階評估", "is_correct": false, "trap_type": "把 SA 等同 PD"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "CC-BY-SA 允許商用,但 SA(相同方式分享)要求衍生作品採同樣授權;LLM 輸出是否構成衍生作品、是否需繼承 SA,目前在法律上仍屬灰色地帶,為主要評估點",
+        "wrong": {
+          "CC-BY-SA 等同 CC-BY-NC,完全禁止商業利用,因此無法被任何商用模型作為訓練資料來源使用": "SA 不等於 NC;SA 允許商用,只要求相同方式分享",
+          "CC-BY-SA 屬於公有領域分支,所有衍生模型輸出皆無任何著作權限制,可被自由再授權使用": "CC-BY-SA 仍受著作權保護,並非公有領域",
+          "CC-BY-SA 在所有 LLM 應用情境下皆完全等同 Public Domain,法務無須做任何額外的進階評估": "兩者法律地位完全不同,SA 條款對衍生作品的繼承要求需謹慎評估"
+        },
+        "hook": "CC-BY-SA 商用可,但 SA 對 LLM 輸出繼承授權是法律灰色地帶"
+      },
+      "misconceptions": ["把 SA 與 NC 混淆", "把 SA 視為公有領域"],
+      "related_node_ids": ["n_L22403_005"],
+      "tags": ["CC-BY-SA", "衍生作品", "情境"]
+    },
+    {
+      "id": "q_n20_015",
+      "knowledge_code": "L22403",
+      "node_id": "n_L22403_005",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某 AI 實驗室嘗試用上一代模型生成的文本訓練下一代模型,並逐代重複此流程。經過 5 代後觀察到生成的文本『多樣性顯著下降、罕見詞彙幾乎消失』。此現象最符合下列哪一概念?",
+      "options": [
+        {"text": "模型崩塌(Model Collapse),多輪自我合成後分佈坍縮、長尾資訊逐代流失", "is_correct": true},
+        {"text": "資料漂移(Data Drift),因外部資料分佈變動而導致模型表現逐漸劣化,屬於外部成因", "is_correct": false, "trap_type": "Data drift 是外部變動"},
+        {"text": "災難性遺忘(Catastrophic Forgetting),指模型在持續學習新任務時遺忘舊任務的能力", "is_correct": false, "trap_type": "災難性遺忘是另一概念"},
+        {"text": "過擬合(Overfitting),指模型在訓練集表現極佳但測試集表現劣化的泛化問題", "is_correct": false, "trap_type": "Overfitting 是另一概念"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Model Collapse 描述:用模型生成資料訓練下一代,多代之後分佈逐漸坍縮,稀有事件與長尾資訊逐代流失,正是題目描述的現象",
+        "wrong": {
+          "資料漂移(Data Drift),因外部資料分佈變動而導致模型表現逐漸劣化,屬於外部成因": "Data drift 源自外部資料分佈隨時間改變,與『內部自我合成迴圈』不同",
+          "災難性遺忘(Catastrophic Forgetting),指模型在持續學習新任務時遺忘舊任務的能力": "Catastrophic forgetting 是學新任務時遺忘舊任務,與多代自我合成無直接關係",
+          "過擬合(Overfitting),指模型在訓練集表現極佳但測試集表現劣化的泛化問題": "Overfitting 描述泛化問題,非多代分佈坍縮現象"
+        },
+        "hook": "Model Collapse 關鍵字:多代自我合成 → 分佈坍縮 + 長尾流失"
+      },
+      "misconceptions": ["把 model collapse 與 overfitting 混淆", "把多代自我合成等同 data drift"],
+      "related_node_ids": ["n_L22403_006"],
+      "tags": ["合成資料", "model collapse", "多樣性"]
+    },
+    {
+      "id": "q_n20_016",
+      "knowledge_code": "L22403",
+      "node_id": "n_L22403_005",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某醫療 AI 團隊欲訓練罕見疾病影像分類模型,真實資料僅約 200 例。考慮用『合成資料』補足樣本,下列實務做法最為健康?",
+      "options": [
+        {"text": "以高品質真實資料作為錨點,生成有限比例合成資料補強,並持續監控合成 / 真實效果差距", "is_correct": true},
+        {"text": "直接以合成資料完全取代真實樣本訓練,因為合成資料的量可以無限產生且零標註成本支出", "is_correct": false, "trap_type": "純合成無真實錨點"},
+        {"text": "用同一生成模型反覆迭代產生更多合成樣本訓練主模型,此做法可確保合成樣本的多樣性持續放大", "is_correct": false, "trap_type": "反覆迭代會 model collapse"},
+        {"text": "將原始 200 例完全捨棄,因為樣本過少對模型訓練毫無價值,僅以合成資料建立訓練集即可", "is_correct": false, "trap_type": "捨棄真實資料是反實務"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "合成資料健康用法:真實資料當錨點 + 有限比例合成補強 + 持續監控差距;這既避免 model collapse,也保留真實分佈特性",
+        "wrong": {
+          "直接以合成資料完全取代真實樣本訓練,因為合成資料的量可以無限產生且零標註成本支出": "缺少真實錨點時合成資料容易偏離真實分佈,且醫療場景的後果嚴重",
+          "用同一生成模型反覆迭代產生更多合成樣本訓練主模型,此做法可確保合成樣本的多樣性持續放大": "反覆自我迭代正是 model collapse 觸發條件,多樣性會下降而非上升",
+          "將原始 200 例完全捨棄,因為樣本過少對模型訓練毫無價值,僅以合成資料建立訓練集即可": "200 例稀有真實樣本極為珍貴,是合成資料的錨點,絕不應捨棄"
+        },
+        "hook": "合成資料 = 補充而非取代;真實資料是錨點"
+      },
+      "misconceptions": ["以為合成可無限取代真實", "忽略反覆迭代的 collapse 風險"],
+      "related_node_ids": ["n_L22403_004", "n_L22403_006"],
+      "tags": ["合成資料", "醫療", "錨點"]
+    },
+    {
+      "id": "q_n20_017",
+      "knowledge_code": "L22403",
+      "node_id": "n_L22403_005",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某團隊以 LLM 生成『合成個資資料』(姓名、地址虛擬化)用於下游模型訓練,並宣稱『因屬合成資料故無任何隱私與版權風險』。下列敘述何者最為正確?",
+      "options": [
+        {"text": "合成資料仍可能洩漏訓練資料(memorization),且來源模型本身的版權爭議會延伸至下游使用", "is_correct": true},
+        {"text": "合成資料因為來自模型生成而非真實人物,完全免除任何個資法義務及著作權方面之風險評估", "is_correct": false, "trap_type": "免除說法太絕對"},
+        {"text": "合成資料無法保留任何來源資料的特徵,因此用於下游訓練必定無效且無法達到實用任務表現", "is_correct": false, "trap_type": "合成資料並非無效"},
+        {"text": "合成資料的隱私風險完全等同經匿名化處理過後的真實資料,任何下游模型都可放心將其直接使用", "is_correct": false, "trap_type": "兩者隱私風險不同"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "合成資料的兩大隱形風險:(1) memorization 洩漏訓練資料中的真實個資 (2) 來源模型本身的版權狀態會延伸到下游;『合成 = 完全無風險』是危險迷思",
+        "wrong": {
+          "合成資料因為來自模型生成而非真實人物,完全免除任何個資法義務及著作權方面之風險評估": "memorization 與版權延伸都讓『完全免除』說法不成立",
+          "合成資料無法保留任何來源資料的特徵,因此用於下游訓練必定無效且無法達到實用任務表現": "合成資料在許多場景證實有效;『必定無效』為過度斷言",
+          "合成資料的隱私風險完全等同經匿名化處理過後的真實資料,任何下游模型都可放心將其直接使用": "兩者風險型態不同;合成資料的 memorization 風險為獨有"
+        },
+        "hook": "合成 ≠ 零風險:memorization + 版權延伸"
+      },
+      "misconceptions": ["把合成資料當零風險", "忽略 memorization 洩漏"],
+      "related_node_ids": ["n_L22403_004"],
+      "tags": ["合成資料", "隱私", "版權"]
+    },
+    {
+      "id": "q_n20_018",
+      "knowledge_code": "L22403",
+      "node_id": "n_L22403_006",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "現代 LLM 訓練的『scaling 三方平衡』指的是下列哪三者需同時匹配?",
+      "options": [
+        {"text": "資料量、模型參數量、訓練算力(三者缺一邊都會成為瓶頸)", "is_correct": true},
+        {"text": "詞彙表大小、上下文長度、batch size(三者構成模型主要超參數設計三角)", "is_correct": false, "trap_type": "這些是不同層的設計變數"},
+        {"text": "GPU 數量、儲存空間、網路頻寬(硬體層三者構成基礎建設規模考量的核心)", "is_correct": false, "trap_type": "屬硬體層不對應 scaling"},
+        {"text": "Tokenizer 種類、語言數量、領域數量(屬於資料前處理層的配置而非 scaling)", "is_correct": false, "trap_type": "屬資料前處理層,不對應 scaling laws"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Scaling laws 核心:資料量、參數量、算力三者需同時匹配;任一過小都會成為瓶頸,這是現代 LLM 訓練的基本經驗法則",
+        "wrong": {
+          "詞彙表大小、上下文長度、batch size(三者構成模型主要超參數設計三角)": "這些屬模型超參數設計,並非 scaling laws 的三方平衡",
+          "GPU 數量、儲存空間、網路頻寬(硬體層三者構成基礎建設規模考量的核心)": "這些屬硬體基礎建設,雖影響算力但不是 scaling 概念本身",
+          "Tokenizer 種類、語言數量、領域數量(屬於資料前處理層的配置而非 scaling)": "這些屬資料前處理選擇,與 scaling laws 三方平衡概念不同層"
+        },
+        "hook": "Scaling 三角:資料 × 參數 × 算力(像三腳凳,缺一就翻)"
+      },
+      "misconceptions": ["把硬體規模當 scaling laws", "把超參數三角誤認 scaling 三方"],
+      "related_node_ids": ["n_L22403_001"],
+      "tags": ["scaling laws", "三方平衡", "概念"]
+    },
+    {
+      "id": "q_n20_019",
+      "knowledge_code": "L22403",
+      "node_id": "n_L22403_006",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某團隊在固定算力預算下,有兩個方案:A. 大模型 + 較少資料;B. 中等模型 + 較多資料。Chinchilla 觀察的『概念性結論』最接近下列何者?",
+      "options": [
+        {"text": "B 較佳:同算力下,中等模型 + 較多資料常優於超大模型 + 不夠資料的組合", "is_correct": true},
+        {"text": "A 較佳:模型參數越多能力一定越強,資料量在算力固定下並非決定能力的關鍵因子", "is_correct": false, "trap_type": "參數越多越好是迷思"},
+        {"text": "兩者表現完全相同:在算力固定下,參數與資料的選擇對最終模型表現皆完全無影響", "is_correct": false, "trap_type": "選擇有顯著影響"},
+        {"text": "無法判斷:scaling laws 不存在任何可用之普適規律,需完全依案例個別實驗才可得知", "is_correct": false, "trap_type": "Scaling laws 有經驗規律"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Chinchilla 觀察的概念性結論:在固定算力預算下,中等大小模型搭配足量資料,常優於『超大模型 + 資料不足』的組合;意思是『資料是常被忽略的瓶頸』",
+        "wrong": {
+          "A 較佳:模型參數越多能力一定越強,資料量在算力固定下並非決定能力的關鍵因子": "『參數越多越好』正是 Chinchilla 觀察打破的迷思",
+          "兩者表現完全相同:在算力固定下,參數與資料的選擇對最終模型表現皆完全無影響": "選擇有顯著差異,並非完全相同",
+          "無法判斷:scaling laws 不存在任何可用之普適規律,需完全依案例個別實驗才可得知": "Scaling laws 提供可指導性的經驗規律,並非無從判斷"
+        },
+        "hook": "Chinchilla 概念:資料是常被忽略的瓶頸;同算力下,中模型 + 多資料 > 大模型 + 少資料"
+      },
+      "misconceptions": ["以為參數越多模型越好", "忽略資料才是常見瓶頸"],
+      "related_node_ids": ["n_L22403_001", "n_L22403_003"],
+      "tags": ["Chinchilla", "scaling laws", "資料瓶頸"]
+    },
+    {
+      "id": "q_n20_020",
+      "knowledge_code": "L22403",
+      "node_id": "n_L22403_006",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某 AI 部門主管打算把預算全壓在『擴大模型參數量』以期單一指標突破,並認為『算力與資料相對充足』。下列哪一項是 scaling 三方平衡角度最值得提醒的風險?",
+      "options": [
+        {"text": "若資料 / 算力未同步配套擴張,大模型會 underperform 同算力下『中等模型 + 較多資料』的組合", "is_correct": true},
+        {"text": "大模型可獨立於資料與算力之外運作,因此只要參數變大就一定可以單軸換取效能線性提升", "is_correct": false, "trap_type": "單軸換效能是迷思"},
+        {"text": "資料與算力的影響可被模型架構創新完全取代,在 scaling 上不需要任何資源層面的同步配套", "is_correct": false, "trap_type": "架構不能完全取代資料/算力"},
+        {"text": "Scaling laws 對所有任務皆已過時失效,當前 LLM 訓練核心優化在於完全聚焦於資料品質提升", "is_correct": false, "trap_type": "Scaling laws 並未過時"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Scaling laws 核心:三方平衡,任一短缺都成為瓶頸;單軸擴大參數而資料 / 算力未配套,常見後果是大模型 underperform 同算力下『中模型 + 多資料』的組合",
+        "wrong": {
+          "大模型可獨立於資料與算力之外運作,因此只要參數變大就一定可以單軸換取效能線性提升": "三方平衡明確否定單軸擴張可線性換效能",
+          "資料與算力的影響可被模型架構創新完全取代,在 scaling 上不需要任何資源層面的同步配套": "架構創新有助益但不能完全取代資料 / 算力的擴張",
+          "Scaling laws 對所有任務皆已過時失效,當前 LLM 訓練核心優化在於完全聚焦於資料品質提升": "資料品質確實重要,但 scaling laws 並未過時"
+        },
+        "hook": "三方平衡:單軸擴張 = 瓶頸轉移;預算需同步配套"
+      },
+      "misconceptions": ["單軸擴參數換效能", "把 scaling laws 視為過時"],
+      "related_node_ids": ["n_L22403_001", "n_L22403_003"],
+      "tags": ["scaling laws", "預算配置", "瓶頸"]
+    }
+  ]
+}

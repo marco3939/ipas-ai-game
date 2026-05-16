@@ -1,0 +1,614 @@
+{
+  "version": "1.0",
+  "schema_version": "iron-rule-1+2+6",
+  "generated_at": "2026-05-16",
+  "batch": "N16 — 科二大數據 L22302 常見的大數據分析方法",
+  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "iron_rule_compliance": {
+    "rule_1": "every question has explanation.correct + explanation.wrong + explanation.hook + misconceptions",
+    "rule_2": "shuffle_options=true on every item; calculation items carry stem_variables multi-case",
+    "rule_3": "all stems are original cross-industry scenarios",
+    "rule_4": "option length ratio between 0.85 and 1.20",
+    "rule_5": "knowledge_code = L22302; node_id ∈ {n_L22302_001..006} per scripts/kb-allowed-nodes.json",
+    "rule_6": "科目隔離 — 本檔僅 L22302 內容,related_node_ids 不指向 L21/L23 節點;只新建本檔,不修改任何其他既有檔案",
+    "v2_concept_only": "停留在分析方法選型與名詞辨認層次;不出 Spark MLlib API、LDA Dirichlet/Gibbs 推導、HMM Baum-Welch、PageRank eigenvector 數學推導"
+  },
+  "distribution": {
+    "L22302_count": 20,
+    "by_node": {"n_L22302_001": 4, "n_L22302_002": 4, "n_L22302_003": 3, "n_L22302_004": 3, "n_L22302_005": 3, "n_L22302_006": 3},
+    "by_format": {"single_choice_text": 15, "single_choice_scenario": 3, "calculation": 2},
+    "by_difficulty": {"easy": 5, "medium": 11, "hard": 4}
+  },
+  "questions": [
+    {
+      "id": "q_n16_001",
+      "knowledge_code": "L22302",
+      "node_id": "n_L22302_001",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某連鎖健身房總部以 BI 儀表板呈現『上週各分店會員到館人次與環比變化』。依 Gartner 分析成熟度四階層,此份報表屬於下列哪一階?",
+      "options": [
+        {"text": "Descriptive analytics(描述性分析),回答『過去發生了什麼』,以指標彙整為主要產出", "is_correct": true},
+        {"text": "Diagnostic analytics(診斷性分析),回答『為何會發生』,須結合切片鑽取定位原因變數", "is_correct": false, "trap_type": "報表單純彙整非診斷"},
+        {"text": "Predictive analytics(預測性分析),回答『將來會發生什麼』,須建立機器學習或時序模型", "is_correct": false, "trap_type": "報表不含預測模型"},
+        {"text": "Prescriptive analytics(處方性分析),回答『該採取什麼行動』,須結合最佳化或模擬引擎", "is_correct": false, "trap_type": "未給出建議行動"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "BI 儀表板呈現過往事實與變化率屬 Descriptive,僅回答 What happened;尚未進入 Why、What will、What should 的層次",
+        "wrong": {
+          "Diagnostic analytics(診斷性分析),回答『為何會發生』,須結合切片鑽取定位原因變數": "Diagnostic 須進一步鑽取找原因,單純彙整不算",
+          "Predictive analytics(預測性分析),回答『將來會發生什麼』,須建立機器學習或時序模型": "Predictive 需建立預測模型,題目僅呈現過去資料",
+          "Prescriptive analytics(處方性分析),回答『該採取什麼行動』,須結合最佳化或模擬引擎": "Prescriptive 必須輸出最佳化建議,題目並未提供"
+        },
+        "hook": "四階梯:What happened → Why → What will → What should"
+      },
+      "misconceptions": ["把所有 BI 都當 Predictive", "忽略 Descriptive 是基礎階段"],
+      "related_node_ids": ["n_L22302_002"],
+      "tags": ["分析成熟度", "Descriptive", "BI"]
+    },
+    {
+      "id": "q_n16_002",
+      "knowledge_code": "L22302",
+      "node_id": "n_L22302_001",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某物流公司導入演算法,系統能根據未來七日訂單預測自動建議『派車路徑與司機輪班』以最小化油耗。此功能在分析四階層屬於下列何者?",
+      "options": [
+        {"text": "Prescriptive analytics(處方性分析),結合預測結果與最佳化引擎輸出具體決策建議", "is_correct": true},
+        {"text": "Descriptive analytics(描述性分析),以摘要報表呈現過去七日油耗紀錄供管理者人工判讀", "is_correct": false, "trap_type": "建議行動非單純報表"},
+        {"text": "Diagnostic analytics(診斷性分析),用相關性分析找出影響油耗高低的主要原因變數", "is_correct": false, "trap_type": "未提及找原因"},
+        {"text": "Predictive analytics(預測性分析),用機器學習預測未來油耗趨勢但不主動產生建議行動", "is_correct": false, "trap_type": "停留在預測,未到建議行動"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "輸出『該怎麼做』(派車路徑、輪班)且結合最佳化引擎是 Prescriptive 的標誌;單純預測未來不算,必須給出可執行建議",
+        "wrong": {
+          "Descriptive analytics(描述性分析),以摘要報表呈現過去七日油耗紀錄供管理者人工判讀": "Descriptive 僅回答 What happened,題目產生建議已超出此層",
+          "Diagnostic analytics(診斷性分析),用相關性分析找出影響油耗高低的主要原因變數": "Diagnostic 是找原因,題目並未強調歸因",
+          "Predictive analytics(預測性分析),用機器學習預測未來油耗趨勢但不主動產生建議行動": "Predictive 只預測未來,題目進一步輸出建議屬下一階"
+        },
+        "hook": "Prescriptive = Predictive + 最佳化 + 行動建議"
+      },
+      "misconceptions": ["把 Prescriptive 當 Predictive 加結論", "忽略最佳化引擎為 Prescriptive 必要元素"],
+      "related_node_ids": ["n_L22302_006"],
+      "tags": ["Prescriptive", "最佳化", "路徑"]
+    },
+    {
+      "id": "q_n16_003",
+      "knowledge_code": "L22302",
+      "node_id": "n_L22302_001",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某飲料品牌發現本季營收較去年衰退 12%,數據團隊以切片分析比較通路、品項、地區後鎖定『便利商店通路的氣泡水品項』為主要拖累。此項工作對應分析四階層的哪一階?",
+      "options": [
+        {"text": "Diagnostic analytics(診斷性分析),透過鑽取與切片定位異常背後的原因變數", "is_correct": true},
+        {"text": "Descriptive analytics(描述性分析),呈現總體營收變化的彙整數字而不深入歸因", "is_correct": false, "trap_type": "已超出單純彙整層次"},
+        {"text": "Predictive analytics(預測性分析),建立模型推估下一季的氣泡水營收走勢", "is_correct": false, "trap_type": "未涉及預測"},
+        {"text": "Prescriptive analytics(處方性分析),最佳化下季促銷預算分配以最大化利潤", "is_correct": false, "trap_type": "未提出建議行動"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "切片與鑽取找出『為什麼下滑』是 Diagnostic 的典型;若僅看總體營收彙整為 Descriptive,若進一步預測為 Predictive,若給出促銷建議才是 Prescriptive",
+        "wrong": {
+          "Descriptive analytics(描述性分析),呈現總體營收變化的彙整數字而不深入歸因": "本題已進行歸因鑽取,超出 Descriptive 範圍",
+          "Predictive analytics(預測性分析),建立模型推估下一季的氣泡水營收走勢": "Predictive 須涉及未來,題目分析的是已發生的衰退",
+          "Prescriptive analytics(處方性分析),最佳化下季促銷預算分配以最大化利潤": "Prescriptive 需給出最佳化建議,題目尚未到此階段"
+        },
+        "hook": "Diagnostic 招式:drill-down / slice / dice / 相關分析"
+      },
+      "misconceptions": ["把 Diagnostic 跳過直接做 Predictive", "認為切片鑽取仍是 Descriptive"],
+      "related_node_ids": ["n_L22302_002"],
+      "tags": ["Diagnostic", "鑽取", "歸因"]
+    },
+    {
+      "id": "q_n16_004",
+      "knowledge_code": "L22302",
+      "node_id": "n_L22302_001",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "下列關於分析四階層『價值』與『技術複雜度』的敘述,何者最為正確?",
+      "options": [
+        {"text": "從 Descriptive 到 Prescriptive,業務價值與技術複雜度同步遞增,Prescriptive 通常需結合最佳化或強化學習", "is_correct": true},
+        {"text": "Predictive 技術複雜度最高,因為模型訓練成本遠超過任何最佳化引擎的計算成本", "is_correct": false, "trap_type": "Prescriptive 通常較 Predictive 高"},
+        {"text": "Descriptive 價值最低且技術門檻最高,因為儀表板須處理即時資料整合與多源 ETL 同步", "is_correct": false, "trap_type": "Descriptive 技術門檻相對最低"},
+        {"text": "Diagnostic 與 Prescriptive 價值大致相同,差別僅在前者人工分析、後者由演算法自動進行", "is_correct": false, "trap_type": "兩者價值與層級皆不同"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Gartner 模型:Descriptive→Diagnostic→Predictive→Prescriptive 沿同一條曲線價值與複雜度同步上升;Prescriptive 須結合 LP / RL 等最佳化技術,通常最複雜",
+        "wrong": {
+          "Predictive 技術複雜度最高,因為模型訓練成本遠超過任何最佳化引擎的計算成本": "Predictive 是 Prescriptive 的輸入,Prescriptive 額外需最佳化引擎,複雜度更高",
+          "Descriptive 價值最低且技術門檻最高,因為儀表板須處理即時資料整合與多源 ETL 同步": "Descriptive 是入門層,即使涉及 ETL 仍屬基礎,技術門檻相對最低",
+          "Diagnostic 與 Prescriptive 價值大致相同,差別僅在前者人工分析、後者由演算法自動進行": "兩者分屬不同階,Prescriptive 涉及行動建議,價值較 Diagnostic 高"
+        },
+        "hook": "難度與價值同向遞增是四階梯的核心命題"
+      },
+      "misconceptions": ["把 Predictive 當作最複雜階段", "把 Diagnostic 與 Prescriptive 視為同等"],
+      "related_node_ids": ["n_L22302_006"],
+      "tags": ["四階梯", "價值", "複雜度"]
+    },
+    {
+      "id": "q_n16_005",
+      "knowledge_code": "L22302",
+      "node_id": "n_L22302_002",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某線上書店分析購物籃,想找出『買 A 也常買 B』的規則。下列何項指標衡量『規則 A→B 相對於 B 本身基準頻率的提升程度』?",
+      "options": [
+        {"text": "Lift,定義為 Confidence(A→B) 除以 Support(B),數值越高表示提升越大", "is_correct": true},
+        {"text": "Support,定義為 A 與 B 同時出現的交易數除以總交易數,反映規則的普及度", "is_correct": false, "trap_type": "Support 是普及度而非提升"},
+        {"text": "Confidence,定義為 A 與 B 同時出現的交易數除以含 A 的交易數,等同條件機率", "is_correct": false, "trap_type": "Confidence 未排除 B 自身基準"},
+        {"text": "Coverage,定義為含 A 的交易數除以總交易數,反映規則前項的覆蓋範圍", "is_correct": false, "trap_type": "Coverage 與提升無關"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Lift = Conf(A→B) / Support(B),把 B 本身的基準機率扣掉後才能看出『買 A』有沒有真的提高買 B 的機率;Lift > 1 為正相關,= 1 為獨立,< 1 為負相關",
+        "wrong": {
+          "Support,定義為 A 與 B 同時出現的交易數除以總交易數,反映規則的普及度": "Support 衡量規則出現的頻繁度,不涉及『提升程度』",
+          "Confidence,定義為 A 與 B 同時出現的交易數除以含 A 的交易數,等同條件機率": "Confidence 是 P(B|A);若 B 本身極常見會虛高,無法反映真正提升",
+          "Coverage,定義為含 A 的交易數除以總交易數,反映規則前項的覆蓋範圍": "Coverage 描述前項覆蓋率,與提升無關"
+        },
+        "hook": "三大指標分工:Support 看普及、Confidence 看條件機率、Lift 看提升"
+      },
+      "misconceptions": ["以 Confidence 高就宣告強關聯", "把 Lift = 1 誤認無關需更小"],
+      "related_node_ids": ["n_L22302_003"],
+      "tags": ["關聯規則", "Lift", "Confidence"]
+    },
+    {
+      "id": "q_n16_006",
+      "knowledge_code": "L22302",
+      "node_id": "n_L22302_002",
+      "subject": 2,
+      "format": "calculation",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某超市分析 {N} 筆交易紀錄,商品 A 出現於 {nA} 筆、商品 B 出現於 {nB} 筆、A 與 B 同時出現於 {nAB} 筆。請計算規則 A→B 的 Confidence(取小數第 2 位)為下列何者?",
+      "stem_variables": {
+        "case_a": {"N": "1000", "nA": "200", "nB": "300", "nAB": "80", "answer": "0.40", "wrong1": "0.27", "wrong2": "0.08", "wrong3": "1.33"},
+        "case_b": {"N": "2000", "nA": "500", "nB": "400", "nAB": "150", "answer": "0.30", "wrong1": "0.38", "wrong2": "0.08", "wrong3": "1.50"},
+        "case_c": {"N": "5000", "nA": "1000", "nB": "800", "nAB": "250", "answer": "0.25", "wrong1": "0.31", "wrong2": "0.05", "wrong3": "1.56"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤把分母用 nB(計算 P(A|B) 而非 P(B|A))"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "回傳 Support(A∪B) = nAB/N 而非 Confidence"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "回傳 Lift 值而非 Confidence"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Confidence(A→B) = Support(A∪B) / Support(A) = (nAB/N) / (nA/N) = nAB / nA = {answer}",
+        "wrong": {
+          "{wrong1}": "此值為 nAB/nB,等同於 Confidence(B→A) 而非題目要的 A→B 方向",
+          "{wrong2}": "此值為 Support(A∪B) = nAB/N,描述普及度而非條件機率",
+          "{wrong3}": "此值為 Lift = Confidence / Support(B),已扣除 B 本身基準屬另一指標"
+        },
+        "hook": "Confidence(A→B) 分母是 A 的交易數,分子是 A 與 B 共現的交易數"
+      },
+      "misconceptions": ["分母誤用總交易數而非含 A 的交易數", "把 Confidence 與 Lift 混為一談"],
+      "related_node_ids": ["n_L22302_001"],
+      "tags": ["關聯規則", "Confidence", "計算"]
+    },
+    {
+      "id": "q_n16_007",
+      "knowledge_code": "L22302",
+      "node_id": "n_L22302_002",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某影音平台分析觀看紀錄,發現規則『看戲劇 A→看廣告 B』Confidence 高達 0.85,但 Lift 僅 0.95。如何正確解讀此結果?",
+      "options": [
+        {"text": "Lift < 1 表示『看戲劇 A』反而稍微降低觀看廣告 B 的機率,Confidence 高是因為 B 本身就極為普及", "is_correct": true},
+        {"text": "Lift 接近 1 但 Confidence 高,代表此規則具強因果關係,可作為精準投放廣告 B 的主要依據", "is_correct": false, "trap_type": "Lift<1 已暗示負相關"},
+        {"text": "Confidence 0.85 已高於 0.5 門檻,Lift 數值大小不影響規則品質,可直接用於推薦演算法的核心", "is_correct": false, "trap_type": "Confidence 高不保證提升"},
+        {"text": "Lift < 1 應立刻被視為錯誤資料,Confidence 應為信賴度,兩者不可能同時出現此種組合", "is_correct": false, "trap_type": "兩者完全可以同時出現"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Confidence = P(B|A) 高可能僅因 P(B) 本身極高;Lift = Conf/P(B) < 1 才是真正的訊號 — 看戲劇 A 的人觀看 B 的機率比隨機觀眾還低,代表負相關",
+        "wrong": {
+          "Lift 接近 1 但 Confidence 高,代表此規則具強因果關係,可作為精準投放廣告 B 的主要依據": "Lift 接近 1 表示獨立,< 1 表示負相關,不是強因果關係",
+          "Confidence 0.85 已高於 0.5 門檻,Lift 數值大小不影響規則品質,可直接用於推薦演算法的核心": "Confidence 不檢驗 B 自身基準,常見項導致 Confidence 虛高,須以 Lift 校正",
+          "Lift < 1 應立刻被視為錯誤資料,Confidence 應為信賴度,兩者不可能同時出現此種組合": "當 B 極為常見時,Confidence 高與 Lift < 1 同時出現是合理現象"
+        },
+        "hook": "Lift 是 Confidence 的『去基準化校正』:同時看才不會被熱門品項誤導"
+      },
+      "misconceptions": ["只看 Confidence 忽略 Lift", "把 Lift 接近 1 當強規則"],
+      "related_node_ids": ["n_L22302_001"],
+      "tags": ["Lift", "Confidence", "解讀"]
+    },
+    {
+      "id": "q_n16_008",
+      "knowledge_code": "L22302",
+      "node_id": "n_L22302_002",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "關於 Apriori 與 FP-Growth 兩種關聯規則挖掘演算法的比較,下列敘述何者最為正確?",
+      "options": [
+        {"text": "Apriori 須對資料庫多次掃描以逐層擴展候選集;FP-Growth 以 FP-tree 一次建構後再挖掘,適合大資料規模", "is_correct": true},
+        {"text": "Apriori 採用前綴樹結構,適合處理稀疏交易資料;FP-Growth 採用候選集擴展,適合稠密資料", "is_correct": false, "trap_type": "兩者結構描述顛倒"},
+        {"text": "FP-Growth 比 Apriori 慢但更精確;Apriori 為近似演算法,容易在大資料下產生假規則", "is_correct": false, "trap_type": "兩者都是精確,非近似"},
+        {"text": "Apriori 與 FP-Growth 演算結果完全不同;通常須兩者並行比對才能確認規則品質的可靠度", "is_correct": false, "trap_type": "兩者輸出相同規則"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Apriori 逐層產生候選並多次掃資料庫,候選集易爆炸;FP-Growth 用 FP-tree 將交易壓縮一次,再以分治挖掘,記憶體與 I/O 效率較佳,適合大資料",
+        "wrong": {
+          "Apriori 採用前綴樹結構,適合處理稀疏交易資料;FP-Growth 採用候選集擴展,適合稠密資料": "FP-Growth 才用前綴樹(FP-tree),Apriori 為候選集擴展",
+          "FP-Growth 比 Apriori 慢但更精確;Apriori 為近似演算法,容易在大資料下產生假規則": "兩者都是精確演算法,並無近似與精確之別",
+          "Apriori 與 FP-Growth 演算結果完全不同;通常須兩者並行比對才能確認規則品質的可靠度": "兩者輸出相同的頻繁項集,差別只在效率"
+        },
+        "hook": "Apriori 多輪掃描成本高,FP-Growth 一次建樹是大資料首選"
+      },
+      "misconceptions": ["把 Apriori 當 FP-tree 演算法", "誤以為兩者結果不同"],
+      "related_node_ids": ["n_L22302_001"],
+      "tags": ["Apriori", "FP-Growth", "演算法"]
+    },
+    {
+      "id": "q_n16_009",
+      "knowledge_code": "L22302",
+      "node_id": "n_L22302_003",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某電商分析顧客瀏覽路徑時發現『首頁→商品頁→購物車』與『購物車→商品頁→首頁』在分析時應視為不同模式。下列何項分析方法最能反映『順序差異』的特性?",
+      "options": [
+        {"text": "序列模式挖掘,考慮事件先後順序,把 A→B 與 B→A 視為不同模式並分別計算頻繁度", "is_correct": true},
+        {"text": "關聯規則挖掘,將 A→B 與 B→A 視為相同項集,只計算共同出現比例而忽略順序差異", "is_correct": false, "trap_type": "關聯規則無序"},
+        {"text": "聚類分析,將相似瀏覽路徑歸成同群,以群中心代表型代表整體路徑而不保留順序", "is_correct": false, "trap_type": "聚類不專責順序"},
+        {"text": "主成分分析,將多步驟路徑壓縮為主要成分後比較相似度,適合處理具方向性資料", "is_correct": false, "trap_type": "PCA 無序"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "序列模式挖掘明確考慮事件順序,A→B 與 B→A 是不同模式;關聯規則只看共現項集,A 與 B 一起出現即可,無順序",
+        "wrong": {
+          "關聯規則挖掘,將 A→B 與 B→A 視為相同項集,只計算共同出現比例而忽略順序差異": "正是因關聯規則無序才不適合本題,題目強調順序差異",
+          "聚類分析,將相似瀏覽路徑歸成同群,以群中心代表型代表整體路徑而不保留順序": "聚類僅分群,不專責挖掘順序型態",
+          "主成分分析,將多步驟路徑壓縮為主要成分後比較相似度,適合處理具方向性資料": "PCA 是降維工具,不處理事件順序"
+        },
+        "hook": "有序事件 → 序列模式;無序共現 → 關聯規則"
+      },
+      "misconceptions": ["把序列分析與關聯規則混為一談", "用聚類處理順序型態"],
+      "related_node_ids": ["n_L22302_002"],
+      "tags": ["序列分析", "順序", "路徑"]
+    },
+    {
+      "id": "q_n16_010",
+      "knowledge_code": "L22302",
+      "node_id": "n_L22302_003",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某保險公司以馬可夫鏈建模『客戶風險等級狀態轉移』。下列關於馬可夫鏈核心假設(Markov property)的敘述,何者最為正確?",
+      "options": [
+        {"text": "下一狀態的機率僅依當前狀態,與更早的歷史路徑無關,此即所謂的『無記憶性』假設", "is_correct": true},
+        {"text": "下一狀態的機率須同時參考過去所有歷史紀錄;歷史越長預測越準,計算成本與準確度同步成長", "is_correct": false, "trap_type": "馬可夫性質正是不依賴歷史"},
+        {"text": "下一狀態的機率均勻分佈於所有可能狀態;無論當前處於何處皆有相同機率走向任一狀態", "is_correct": false, "trap_type": "均勻分佈非馬可夫定義"},
+        {"text": "下一狀態必為當前狀態的下一個編號;狀態轉移按固定順序執行而非依機率隨機選取", "is_correct": false, "trap_type": "馬可夫鏈為機率轉移"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "馬可夫性質(memoryless):P(X_{t+1} | X_t, X_{t-1}, ...) = P(X_{t+1} | X_t),下一步只看當下狀態,過往路徑可忽略",
+        "wrong": {
+          "下一狀態的機率須同時參考過去所有歷史紀錄;歷史越長預測越準,計算成本與準確度同步成長": "需要全部歷史的反而是高階馬可夫或非馬可夫過程,違反基本馬可夫假設",
+          "下一狀態的機率均勻分佈於所有可能狀態;無論當前處於何處皆有相同機率走向任一狀態": "均勻分佈是極特例,馬可夫鏈的精髓在『不同當前狀態有不同轉移機率』",
+          "下一狀態必為當前狀態的下一個編號;狀態轉移按固定順序執行而非依機率隨機選取": "馬可夫鏈是機率轉移,不是確定性序列"
+        },
+        "hook": "Markov property 一句話:Future ⊥ Past | Present"
+      },
+      "misconceptions": ["把馬可夫鏈當需要全部歷史", "把它當確定性轉移"],
+      "related_node_ids": ["n_L22302_006"],
+      "tags": ["馬可夫鏈", "無記憶性"]
+    },
+    {
+      "id": "q_n16_011",
+      "knowledge_code": "L22302",
+      "node_id": "n_L22302_003",
+      "subject": 2,
+      "format": "calculation",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某串流平台將觀眾分為『活躍 A』與『沉睡 S』兩狀態,每月轉移機率:P(A→A) = {paa}、P(A→S) = {pas}、P(S→A) = {psa}、P(S→S) = {pss}。請求此馬可夫鏈長期穩態下『處於活躍 A 狀態』的機率(取小數第 2 位)為下列何者?",
+      "stem_variables": {
+        "case_a": {"paa": "0.8", "pas": "0.2", "psa": "0.4", "pss": "0.6", "answer": "0.67", "wrong1": "0.33", "wrong2": "0.50", "wrong3": "0.80"},
+        "case_b": {"paa": "0.9", "pas": "0.1", "psa": "0.3", "pss": "0.7", "answer": "0.75", "wrong1": "0.25", "wrong2": "0.50", "wrong3": "0.90"},
+        "case_c": {"paa": "0.7", "pas": "0.3", "psa": "0.6", "pss": "0.4", "answer": "0.67", "wrong1": "0.33", "wrong2": "0.50", "wrong3": "0.70"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "回傳沉睡 S 穩態機率(1 - 正解)"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為穩態必為均勻 0.5"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "直接讀 P(A→A) 當穩態機率"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "設穩態 (πA, πS) 滿足 πA = πA·paa + πS·psa 與 πA + πS = 1,解得 πA = psa / (pas + psa) = {answer}",
+        "wrong": {
+          "{wrong1}": "此值為 πS = 1 - πA = pas / (pas + psa),是沉睡狀態的穩態機率",
+          "{wrong2}": "穩態未必均勻;均勻僅在 pas = psa 時才成立",
+          "{wrong3}": "直接讀 P(A→A) 是『下一步仍是 A』,不等於長期穩態下處於 A 的比例"
+        },
+        "hook": "2 狀態穩態通式:πA = psa / (pas + psa)、πS = pas / (pas + psa)"
+      },
+      "misconceptions": ["把單步轉移當穩態", "誤以為穩態恆為均勻分佈"],
+      "related_node_ids": ["n_L22302_002"],
+      "tags": ["馬可夫鏈", "穩態", "計算"]
+    },
+    {
+      "id": "q_n16_012",
+      "knowledge_code": "L22302",
+      "node_id": "n_L22302_004",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某新聞網站要從萬篇文章中找出『區辨各篇主題的關鍵詞』,但發現只用詞頻(TF)會讓『的、是、在』排名最高。下列哪項做法最能解決此問題?",
+      "options": [
+        {"text": "改用 TF-IDF,將詞頻乘以逆文件頻率以壓低常見詞權重,凸顯區辨性高的稀有詞", "is_correct": true},
+        {"text": "改用詞長度作為權重,將短詞權重壓低、長詞權重抬升以避開常見虛詞的影響", "is_correct": false, "trap_type": "詞長度與區辨性無關"},
+        {"text": "改用詞向量內積總和作為權重,把詞嵌入相似度高的詞自動合併以降低虛詞排名", "is_correct": false, "trap_type": "嵌入內積不解決虛詞問題"},
+        {"text": "改用文件長度倒數作為權重,把詞頻除以文件總詞數即可避免常見停用詞排名過高", "is_correct": false, "trap_type": "正規化長度仍無法壓制虛詞"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "TF-IDF = TF × log(N / df_t):IDF 對在大多數文件都出現的虛詞(如『的、是』)給極低權重,讓區辨性高的稀有詞自然浮上來",
+        "wrong": {
+          "改用詞長度作為權重,將短詞權重壓低、長詞權重抬升以避開常見虛詞的影響": "詞長度與資訊量無必然關係,長詞也可能是停用詞",
+          "改用詞向量內積總和作為權重,把詞嵌入相似度高的詞自動合併以降低虛詞排名": "詞嵌入相似度與虛詞普及度無關,無法解決問題",
+          "改用文件長度倒數作為權重,把詞頻除以文件總詞數即可避免常見停用詞排名過高": "正規化只改變相對比例,虛詞仍會在每篇排名居高"
+        },
+        "hook": "TF-IDF = 區辨性權重;停用詞清單 + IDF 是處理虛詞的雙保險"
+      },
+      "misconceptions": ["以為 TF 越高一定越重要", "忽略 IDF 是區辨性的關鍵"],
+      "related_node_ids": ["n_L22302_005"],
+      "tags": ["TF-IDF", "文字探勘", "區辨性"]
+    },
+    {
+      "id": "q_n16_013",
+      "knowledge_code": "L22302",
+      "node_id": "n_L22302_004",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某出版社想對 5 萬篇文章自動發掘『潛在主題結構』,並讓每篇文章可同時屬於多個主題。下列關於主題模型(如 LDA)的描述,何者最為正確?",
+      "options": [
+        {"text": "主題模型是非監督學習,輸出『主題編號 + 高機率詞清單』,主題的實際意義須由人工解讀命名", "is_correct": true},
+        {"text": "主題模型是監督學習,須先標註每篇文章的主題標籤,再以此訓練模型自動分類後續未標註文件", "is_correct": false, "trap_type": "主題模型本質為非監督"},
+        {"text": "主題模型會自動輸出每個主題的精確中文名稱與概念定義,無須人工任何後處理即可使用", "is_correct": false, "trap_type": "主題標籤需人工命名"},
+        {"text": "主題模型限制每篇文章只能屬於單一主題,因此可直接用作多元分類器替代 SVM 等模型", "is_correct": false, "trap_type": "LDA 是混合而非單一主題"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "LDA 概念上假設『每篇文件是多主題混合、每主題是多詞混合』,屬於非監督學習;輸出主題之高機率詞清單,主題名稱由人類根據詞表解讀",
+        "wrong": {
+          "主題模型是監督學習,須先標註每篇文章的主題標籤,再以此訓練模型自動分類後續未標註文件": "主題模型不需要主題標註,正是它與監督文本分類的核心差異",
+          "主題模型會自動輸出每個主題的精確中文名稱與概念定義,無須人工任何後處理即可使用": "模型僅輸出詞分佈,主題語意需人工命名",
+          "主題模型限制每篇文章只能屬於單一主題,因此可直接用作多元分類器替代 SVM 等模型": "LDA 是混合模型,每篇文件可同時屬多個主題比例"
+        },
+        "hook": "主題模型 = 非監督 + 混合成員 + 人工命名主題"
+      },
+      "misconceptions": ["把 LDA 當監督分類", "誤以為文件只能屬單一主題"],
+      "related_node_ids": ["n_L22302_005"],
+      "tags": ["主題模型", "LDA", "非監督"]
+    },
+    {
+      "id": "q_n16_014",
+      "knowledge_code": "L22302",
+      "node_id": "n_L22302_004",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某客服中心要分析 30 萬則中文客訴文本。下列關於文字探勘標準流程的敘述,何者順序最為合理?",
+      "options": [
+        {"text": "文本清理 → 分詞 → 停用詞移除 → 向量化(BoW / TF-IDF)→ 下游分析(分類 / 聚類 / 主題模型)", "is_correct": true},
+        {"text": "向量化 → 分詞 → 停用詞移除 → 文本清理 → 下游分析,先將原文編成數字以利後續演算法處理", "is_correct": false, "trap_type": "順序顛倒"},
+        {"text": "下游分析 → 文本清理 → 分詞 → 向量化 → 停用詞移除,以業務需求倒推所需的前處理深度", "is_correct": false, "trap_type": "下游分析不應在最前"},
+        {"text": "分詞 → 文本清理 → 向量化 → 下游分析 → 停用詞移除,於最後階段再過濾停用詞以保留語境", "is_correct": false, "trap_type": "停用詞應在向量化前"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "標準流程是先清理(去 HTML / 特殊符號 / 大小寫)、再分詞、移停用詞、可選詞幹/詞形還原、向量化(BoW / TF-IDF / 詞嵌入),最後送入分類 / 聚類 / 主題模型等下游任務",
+        "wrong": {
+          "向量化 → 分詞 → 停用詞移除 → 文本清理 → 下游分析,先將原文編成數字以利後續演算法處理": "未分詞與清理就向量化會帶入大量雜訊,順序錯誤",
+          "下游分析 → 文本清理 → 分詞 → 向量化 → 停用詞移除,以業務需求倒推所需的前處理深度": "下游分析需要乾淨向量為輸入,不可置於最前",
+          "分詞 → 文本清理 → 向量化 → 下游分析 → 停用詞移除,於最後階段再過濾停用詞以保留語境": "停用詞若不在向量化前移除,將大量稀釋特徵空間"
+        },
+        "hook": "前處理鐵則:清理 → 分詞 → 停用詞 → 向量化 → 任務"
+      },
+      "misconceptions": ["順序混亂導致雜訊大", "把停用詞移除放在向量化之後"],
+      "related_node_ids": ["n_L22302_005"],
+      "tags": ["文字探勘", "流程", "前處理"]
+    },
+    {
+      "id": "q_n16_015",
+      "knowledge_code": "L22302",
+      "node_id": "n_L22302_005",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某社群平台分析使用者人際網路,將每位使用者視為節點、好友關係視為邊。下列關於社群網路分析(SNA)基本元素的敘述,何者最為正確?",
+      "options": [
+        {"text": "節點代表個體、邊代表個體間關係;有向圖區分關係方向,無向圖視為對稱關係", "is_correct": true},
+        {"text": "節點代表事件、邊代表時間戳記;社群網路本質為時序資料而非靜態圖結構,故無方向之分", "is_correct": false, "trap_type": "節點不是事件"},
+        {"text": "節點代表貼文、邊代表互動次數;SNA 主要分析內容語意而非個體間的拓樸結構關係", "is_correct": false, "trap_type": "SNA 主軸為結構"},
+        {"text": "節點代表中心性指標、邊代表平均距離;圖中只有度量數值而無實體個體可被分析或視覺化", "is_correct": false, "trap_type": "節點不是指標"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "SNA 以圖(graph)為核心:節點(vertex)代表個體、邊(edge)代表關係;Twitter 追蹤關係用有向圖、Facebook 好友用無向圖",
+        "wrong": {
+          "節點代表事件、邊代表時間戳記;社群網路本質為時序資料而非靜態圖結構,故無方向之分": "事件序列是時序分析,非 SNA;SNA 是圖結構分析",
+          "節點代表貼文、邊代表互動次數;SNA 主要分析內容語意而非個體間的拓樸結構關係": "SNA 重點在結構與中心性,內容語意屬文字探勘",
+          "節點代表中心性指標、邊代表平均距離;圖中只有度量數值而無實體個體可被分析或視覺化": "中心性是節點的『屬性』而非節點本身"
+        },
+        "hook": "Graph = (Node, Edge);有向 vs 無向取決於關係是否對稱"
+      },
+      "misconceptions": ["把節點誤當作事件或指標", "忽略有向 / 無向圖差異"],
+      "related_node_ids": ["n_L22302_004"],
+      "tags": ["SNA", "節點", "邊"]
+    },
+    {
+      "id": "q_n16_016",
+      "knowledge_code": "L22302",
+      "node_id": "n_L22302_005",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某顧問公司想找出組織內『資訊橋樑型』關鍵人物 — 雖朋友不多,卻位於多條溝通路徑交會點。下列何項中心性指標最適合此任務?",
+      "options": [
+        {"text": "Betweenness centrality,衡量該節點落在其他節點間最短路徑上的頻率,高者為咽喉橋樑", "is_correct": true},
+        {"text": "Degree centrality,單純計算節點鄰居數量;鄰居越多代表越像跨部門間的資訊橋樑", "is_correct": false, "trap_type": "Degree 看數量不看橋樑"},
+        {"text": "Closeness centrality,衡量到其他所有節點的平均距離;距離越短代表越接近溝通橋樑", "is_correct": false, "trap_type": "Closeness 看擴散非橋樑"},
+        {"text": "Clustering coefficient,衡量節點鄰居間彼此相連的緊密度;越緊密代表越具橋樑特徵", "is_correct": false, "trap_type": "Clustering 反而是抱團指標"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Betweenness 計算『有多少最短路徑經過該節點』,高值即為連接不同子社群的橋樑;朋友不多但位於關鍵路徑上的『資訊咽喉』典型有高 Betweenness",
+        "wrong": {
+          "Degree centrality,單純計算節點鄰居數量;鄰居越多代表越像跨部門間的資訊橋樑": "Degree 只看數量,鄰居多的人可能僅在同部門集中,不一定是跨群橋樑",
+          "Closeness centrality,衡量到其他所有節點的平均距離;距離越短代表越接近溝通橋樑": "Closeness 衡量擴散效率(誰能快速觸及全網),與橋樑角色不同",
+          "Clustering coefficient,衡量節點鄰居間彼此相連的緊密度;越緊密代表越具橋樑特徵": "高 Clustering 代表鄰居間互相認識(抱團),反而不是橋樑特徵"
+        },
+        "hook": "Betweenness = 資訊咽喉;Degree = 朋友多;Closeness = 傳得快"
+      },
+      "misconceptions": ["把 Degree 當橋樑指標", "把 Betweenness 與 Closeness 混為一談"],
+      "related_node_ids": ["n_L22302_004"],
+      "tags": ["Betweenness", "中心性", "橋樑"]
+    },
+    {
+      "id": "q_n16_017",
+      "knowledge_code": "L22302",
+      "node_id": "n_L22302_005",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某行銷團隊想評估社群影響者,有人提議『直接看追蹤者數量最多者(Degree)即可』。從中心性指標選型的角度,下列何項評論最為適當?",
+      "options": [
+        {"text": "Degree 易被『大量假帳號追蹤者』灌水;Eigenvector centrality 考慮鄰居本身的重要性,較能反映實質影響力", "is_correct": true},
+        {"text": "Degree 已涵蓋所有影響力面向;若搭配 Closeness 反而易使指標重疊,造成決策依據過度複雜化", "is_correct": false, "trap_type": "Degree 不涵蓋鄰居品質"},
+        {"text": "Betweenness 與 Degree 在大型社群網路中數值高度相關,故結果差異有限,挑哪個皆可", "is_correct": false, "trap_type": "兩者常排序不同"},
+        {"text": "中心性指標彼此完全等價;只要選一個照排序前 10 名挑選影響者即能涵蓋所有面向", "is_correct": false, "trap_type": "四種指標不等價"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Eigenvector centrality 採『連到重要節點才算重要』的遞迴定義,可降低假帳號或灌水追蹤者的影響;PageRank 即同源思想,適合衡量真實影響力",
+        "wrong": {
+          "Degree 已涵蓋所有影響力面向;若搭配 Closeness 反而易使指標重疊,造成決策依據過度複雜化": "Degree 無法反映鄰居品質,經常導致選錯影響者",
+          "Betweenness 與 Degree 在大型社群網路中數值高度相關,故結果差異有限,挑哪個皆可": "兩種指標常排序不同;橋樑型節點可能 Degree 低但 Betweenness 高",
+          "中心性指標彼此完全等價;只要選一個照排序前 10 名挑選影響者即能涵蓋所有面向": "四種中心性各有偏好結構位置,通常結果不同需綜合判讀"
+        },
+        "hook": "Eigenvector / PageRank 看『朋友的重要性』,適合對抗假帳號灌水"
+      },
+      "misconceptions": ["以 Degree 直接挑影響者", "視四種中心性等價"],
+      "related_node_ids": ["n_L22302_004"],
+      "tags": ["Eigenvector", "影響者", "中心性"]
+    },
+    {
+      "id": "q_n16_018",
+      "knowledge_code": "L22302",
+      "node_id": "n_L22302_006",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某連鎖超市每年聖誕節前後零售額皆固定大幅上升,平日則維持穩定基準。此種型態在時間序列分解中對應下列何項成分?",
+      "options": [
+        {"text": "Seasonality 季節性成分,在固定週期(如年週期)內呈現規律性波動的部份", "is_correct": true},
+        {"text": "Trend 趨勢成分,代表長期向上或向下的方向,聖誕高峰屬於不可逆的長期成長部份", "is_correct": false, "trap_type": "Trend 不是週期性"},
+        {"text": "Residual 殘差成分,代表去除其他成分後剩餘的隨機白噪聲,聖誕高峰屬於模型無法解釋的部份", "is_correct": false, "trap_type": "聖誕高峰可解釋,非殘差"},
+        {"text": "Cycle 週期成分,代表景氣循環等不固定週期的長波動,聖誕零售屬於景氣循環的一環", "is_correct": false, "trap_type": "聖誕固定週期非 Cycle"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Seasonality 的定義是『固定週期內的規律波動』(日 / 週 / 年皆可);聖誕節是年週期,完全符合 Seasonality",
+        "wrong": {
+          "Trend 趨勢成分,代表長期向上或向下的方向,聖誕高峰屬於不可逆的長期成長部份": "Trend 是長期方向,週期性回升不算 Trend",
+          "Residual 殘差成分,代表去除其他成分後剩餘的隨機白噪聲,聖誕高峰屬於模型無法解釋的部份": "聖誕高峰是可預期的規律波動,屬季節而非殘差",
+          "Cycle 週期成分,代表景氣循環等不固定週期的長波動,聖誕零售屬於景氣循環的一環": "Cycle 週期不固定(如景氣循環);聖誕固定一年一次,屬 Seasonality"
+        },
+        "hook": "固定週期 → Seasonality;不固定週期 → Cycle"
+      },
+      "misconceptions": ["把 Seasonality 與 Cycle 混為一談", "把規律高峰歸為殘差"],
+      "related_node_ids": ["n_L22302_001"],
+      "tags": ["時間序列", "Seasonality", "聖誕"]
+    },
+    {
+      "id": "q_n16_019",
+      "knowledge_code": "L22302",
+      "node_id": "n_L22302_006",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某電商每月銷售額隨『整體業績放大而季節波動幅度同步擴大』。下列關於加法模型 Y = T + S + R 與乘法模型 Y = T × S × R 的選擇,何者最為適當?",
+      "options": [
+        {"text": "選乘法模型,因為季節振幅隨水平等比例放大;乘法模型可同時反映成長與按比例擴大的波動", "is_correct": true},
+        {"text": "選加法模型,因為加法計算最為直觀;對任何時間序列皆可直接套用無須額外資料前處理", "is_correct": false, "trap_type": "振幅放大時加法不適用"},
+        {"text": "選加法模型,因為振幅放大代表殘差變異增大,加法可吸收殘差變異後直接報告長期趨勢", "is_correct": false, "trap_type": "誤把振幅當殘差"},
+        {"text": "選乘法模型,因為任何時間序列分解皆優先使用乘法;加法僅用於季節因素為零或可被忽略時", "is_correct": false, "trap_type": "並非任何序列都選乘法"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "若季節振幅與序列水平成比例(zoom in/out 模式),用乘法模型 Y = T × S × R 較合適;若振幅穩定獨立於水平,則用加法模型 Y = T + S + R",
+        "wrong": {
+          "選加法模型,因為加法計算最為直觀;對任何時間序列皆可直接套用無須額外資料前處理": "加法假設振幅穩定,本題振幅隨水平放大,加法會留下系統性殘差",
+          "選加法模型,因為振幅放大代表殘差變異增大,加法可吸收殘差變異後直接報告長期趨勢": "把振幅變化丟給殘差是誤用,違反白噪音假設",
+          "選乘法模型,因為任何時間序列分解皆優先使用乘法;加法僅用於季節因素為零或可被忽略時": "加乘法選擇取決於振幅是否與水平成比例,並非乘法為預設"
+        },
+        "hook": "振幅穩定 → 加法;振幅隨水平等比放大 → 乘法"
+      },
+      "misconceptions": ["不分情境一律用加法", "誤以為乘法是預設選擇"],
+      "related_node_ids": ["n_L22302_003"],
+      "tags": ["時間序列", "加法", "乘法"]
+    },
+    {
+      "id": "q_n16_020",
+      "knowledge_code": "L22302",
+      "node_id": "n_L22302_006",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某能源公司分析全球油價走勢,發現油價長期呈緩升趨勢、無固定週期但每數年出現一次景氣相關的長波動。下列關於『Trend 與 Cycle 區分』的敘述,何者最為正確?",
+      "options": [
+        {"text": "Trend 是長期方向(上升 / 下降 / 平穩),Cycle 是週期不固定的長波動(如景氣循環);兩者皆非 Seasonality", "is_correct": true},
+        {"text": "Trend 與 Cycle 兩者皆為固定週期波動,差別僅在 Trend 週期較短、Cycle 週期較長,可互換使用", "is_correct": false, "trap_type": "Trend 非週期"},
+        {"text": "Trend 是隨機波動,Cycle 是趨勢的反向修正,兩者合起來等同於 Seasonality 的固定週期型態", "is_correct": false, "trap_type": "Trend 不是隨機"},
+        {"text": "Trend 是短期波動,Cycle 是日週期波動,兩者皆屬於 Seasonality 子類別需用同一模型處理", "is_correct": false, "trap_type": "三者性質完全不同"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Trend 代表長期方向(無固定週期),Seasonality 代表固定週期波動(日/週/年),Cycle 代表不固定週期的長波動(常與景氣相關);三者性質不同,分解時需分開處理",
+        "wrong": {
+          "Trend 與 Cycle 兩者皆為固定週期波動,差別僅在 Trend 週期較短、Cycle 週期較長,可互換使用": "Trend 不是週期成分,Cycle 也不固定週期,兩者不可互換",
+          "Trend 是隨機波動,Cycle 是趨勢的反向修正,兩者合起來等同於 Seasonality 的固定週期型態": "Trend 是長期方向非隨機,Cycle 不是趨勢反向修正",
+          "Trend 是短期波動,Cycle 是日週期波動,兩者皆屬於 Seasonality 子類別需用同一模型處理": "三者是分解的不同成分,不應歸為 Seasonality 子類別"
+        },
+        "hook": "Trend 看方向、Seasonality 固定週期、Cycle 不固定週期"
+      },
+      "misconceptions": ["把 Cycle 等同 Seasonality", "把 Trend 視為週期成分"],
+      "related_node_ids": ["n_L22302_001"],
+      "tags": ["時間序列", "Trend", "Cycle"]
+    }
+  ]
+}

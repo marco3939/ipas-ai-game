@@ -1,0 +1,604 @@
+{
+  "version": "1.0",
+  "schema_version": "iron-rule-1+2+6",
+  "generated_at": "2026-05-16",
+  "batch": "N14 — 科二大數據 L22203 數據處理技術與工具(v2 解禁概念題)",
+  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "iron_rule_compliance": {
+    "rule_1": "every question has explanation.correct + explanation.wrong + explanation.hook + misconceptions",
+    "rule_2": "shuffle_options=true on every item; L22203 純概念,本批不寫 calculation 題",
+    "rule_3": "all stems are original cross-industry scenarios (IoT 工廠、金融風控、推薦系統、日誌分析、媒體串流、智慧城市等)",
+    "rule_4": "option length ratio between 0.85 and 1.20; longest != correct on ≥ 13/20 items",
+    "rule_5": "knowledge_code = L22203; node_id ∈ {n_L22203_001..006} per scripts/kb-allowed-nodes.json",
+    "rule_6": "科目隔離 — 本檔僅 L22203 內容,related_node_ids 不指向 L21/L23/L22201/L22202 節點,只新建本檔不改任何其他既有檔案",
+    "v2_concept_only": "全部題目僅涵蓋 v2 解禁的概念取捨層次(批次/串流選型、Lambda/Kappa 對比、管線六階段、MapReduce 觀念、Event/Processing Time 概念、Data Observability 五支柱),不涉及任何 Hadoop CLI、Spark RDD API、Flink checkpoint 參數、Kafka consumer group config 等工具操作細節"
+  },
+  "distribution": {
+    "L22203_count": 20,
+    "by_node": {"n_L22203_001": 4, "n_L22203_002": 3, "n_L22203_003": 3, "n_L22203_004": 3, "n_L22203_005": 4, "n_L22203_006": 3},
+    "by_format": {"single_choice_text": 16, "single_choice_scenario": 4, "calculation": 0},
+    "by_difficulty": {"easy": 5, "medium": 12, "hard": 3}
+  },
+  "questions": [
+    {
+      "id": "q_n14_001",
+      "knowledge_code": "L22203",
+      "node_id": "n_L22203_001",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某連鎖超市每天打烊後產生『當日全店銷售總表』供經營層次日決策使用,資料量大但對延遲不敏感(隔日早上看得到即可)。此情境最適合採用何種資料處理模式?",
+      "options": [
+        {"text": "批次處理(Batch Processing),累積整日交易後一次性處理,吞吐量高且容錯設計相對單純", "is_correct": true},
+        {"text": "串流處理(Stream Processing),每筆交易即時計算累計總額,確保任何瞬間的全店數字皆為最新", "is_correct": false, "trap_type": "對延遲不敏感場景過度使用串流"},
+        {"text": "微批次處理(Micro-batch),以五秒小窗口持續產出近即時的店面銷售估計值供決策層參考", "is_correct": false, "trap_type": "近即時需求不存在"},
+        {"text": "事件驅動處理(Event-driven),每筆 POS 交易立刻觸發告警函式並向總部回報所有銷售明細", "is_correct": false, "trap_type": "把告警與報表混淆"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "日報表屬於累積大量資料後一次處理、對延遲不敏感(隔日看到即可)的典型情境;批次處理在吞吐量、容錯與成本上皆優於串流",
+        "wrong": {
+          "串流處理(Stream Processing),每筆交易即時計算累計總額,確保任何瞬間的全店數字皆為最新": "串流適合秒/毫秒級延遲需求(警報、推薦);日報表用串流是過度設計,增加複雜度而無業務收益",
+          "微批次處理(Micro-batch),以五秒小窗口持續產出近即時的店面銷售估計值供決策層參考": "近即時是『分鐘級延遲』情境,日報表不需要;微批次同樣是過度設計",
+          "事件驅動處理(Event-driven),每筆 POS 交易立刻觸發告警函式並向總部回報所有銷售明細": "事件驅動用於即時告警/反應,與『日總表』需求不符"
+        },
+        "hook": "選型口訣:日/小時級延遲 → 批次;分鐘級近即時 → 微批次;秒/毫秒級即時 → 串流"
+      },
+      "misconceptions": ["誤以為串流一定取代批次", "把『最新』需求過度誇大"],
+      "related_node_ids": ["n_L22203_002"],
+      "tags": ["批次處理", "處理模式選型", "延遲需求"]
+    },
+    {
+      "id": "q_n14_002",
+      "knowledge_code": "L22203",
+      "node_id": "n_L22203_001",
+      "subject": 2,
+      "format": "single_choice_scenario",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某物聯網工廠生產線需每秒接收 1 萬筆感測器讀數,需在 1 秒內偵測異常溫度並觸發告警避免設備受損;同時也需要產出月度的設備運轉統計報表。下列處理架構選擇何者最為合適?",
+      "options": [
+        {"text": "即時警報採串流處理(毫秒級延遲),月報採批次處理(高吞吐),兩者並存互補形成混合架構", "is_correct": true},
+        {"text": "全部採用批次處理,每小時匯總一次溫度資料,可同時兼顧即時告警與月度報表生成需求", "is_correct": false, "trap_type": "批次無法滿足 1 秒告警"},
+        {"text": "全部採用串流處理,每筆事件即時計算當月累計值,可直接從串流引擎導出月度報表毋須批次", "is_correct": false, "trap_type": "用串流硬做月報成本高且不必要"},
+        {"text": "全部採用微批次(秒級窗口),既比批次即時又比串流穩定,可單一架構滿足所有業務需求面向", "is_correct": false, "trap_type": "微批次秒級窗口仍無法滿足毫秒告警"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "兩種需求延遲量級不同:告警需毫秒級(串流)、月報屬日/月級(批次)。讓兩種架構各司其職是最務實的設計,也是 Lambda 架構的核心思想",
+        "wrong": {
+          "全部採用批次處理,每小時匯總一次溫度資料,可同時兼顧即時告警與月度報表生成需求": "批次小時級延遲完全無法滿足 1 秒告警需求,設備可能已受損",
+          "全部採用串流處理,每筆事件即時計算當月累計值,可直接從串流引擎導出月度報表毋須批次": "用串流硬做月報雖技術可行,但運算/儲存成本遠高於批次,且狀態管理複雜",
+          "全部採用微批次(秒級窗口),既比批次即時又比串流穩定,可單一架構滿足所有業務需求面向": "微批次仍有秒級窗口延遲,無法達到毫秒級告警;且對月報而言過度即時"
+        },
+        "hook": "不同延遲需求並存時,批次 + 串流互補(Lambda 思維)優於強迫單一模式"
+      },
+      "misconceptions": ["以為單一處理模式可解決所有需求", "把『即時』與『近即時』混為一談"],
+      "related_node_ids": ["n_L22203_002", "n_L22203_005"],
+      "tags": ["IoT", "混合架構", "處理模式選型"]
+    },
+    {
+      "id": "q_n14_003",
+      "knowledge_code": "L22203",
+      "node_id": "n_L22203_001",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某新聞網站想提供『近即時熱門文章排行榜』,可接受 30 秒至 1 分鐘的延遲,但需在吞吐量極大時仍維持穩定。下列處理模式中,何者在容錯與延遲之間取得最佳折衷?",
+      "options": [
+        {"text": "微批次處理(Micro-batch),以小窗口聚合事件,延遲秒級但容錯機制相對單純可靠", "is_correct": true},
+        {"text": "純批次處理(Pure Batch),累積一小時資料後集中產出排行,可確保最高吞吐且邏輯最簡單", "is_correct": false, "trap_type": "純批次延遲超出可接受範圍"},
+        {"text": "純串流逐筆處理,每篇文章瀏覽即更新全站排行,可達毫秒級延遲且系統設計最為簡潔", "is_correct": false, "trap_type": "逐筆處理在高吞吐下狀態管理複雜"},
+        {"text": "事件源直接寫入靜態檔案,由前端 JavaScript 每分鐘讀檔重新排序,徹底繞過處理層複雜性", "is_correct": false, "trap_type": "繞過處理層不適合大流量"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "30 秒至 1 分鐘屬於『近即時』需求,微批次以秒級小窗口聚合事件,延遲與容錯都比純串流容易管理;同時吞吐量遠優於每筆單獨處理",
+        "wrong": {
+          "純批次處理(Pure Batch),累積一小時資料後集中產出排行,可確保最高吞吐且邏輯最簡單": "純批次延遲一小時,超出 30 秒~1 分鐘的可接受範圍",
+          "純串流逐筆處理,每篇文章瀏覽即更新全站排行,可達毫秒級延遲且系統設計最為簡潔": "純串流在極大吞吐下狀態管理與容錯都比微批次複雜,且本題不需要毫秒級",
+          "事件源直接寫入靜態檔案,由前端 JavaScript 每分鐘讀檔重新排序,徹底繞過處理層複雜性": "在大流量下檔案 I/O 與前端排序皆無法擴展,根本不是穩定方案"
+        },
+        "hook": "近即時(秒~分鐘級)→ 微批次甜蜜點;極即時(毫秒)→ 串流;非即時(小時/日)→ 批次"
+      },
+      "misconceptions": ["把『近即時』與『即時』畫等號", "誤以為微批次就是串流"],
+      "related_node_ids": ["n_L22203_002"],
+      "tags": ["微批次", "處理模式選型", "新聞網站"]
+    },
+    {
+      "id": "q_n14_004",
+      "knowledge_code": "L22203",
+      "node_id": "n_L22203_001",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "下列何者是『串流處理』相較於『批次處理』的主要特性?",
+      "options": [
+        {"text": "資料一到達即進行處理,延遲低但對狀態管理與容錯設計要求較高", "is_correct": true},
+        {"text": "累積資料後一次處理,吞吐量高且容錯邏輯較單純但延遲較大難達即時", "is_correct": false, "trap_type": "把批次特性誤標為串流"},
+        {"text": "以固定大小磁碟區塊讀取資料,完全依賴本地儲存而非透過網路傳輸事件流", "is_correct": false, "trap_type": "錯誤的技術描述"},
+        {"text": "處理前需先將所有資料載入記憶體,記憶體不足時自動分批執行而非即時處理", "is_correct": false, "trap_type": "誤以為串流必先載入記憶體"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "串流處理的核心特性是『資料到達即處理』,延遲低(秒/毫秒級)但需要處理亂序、狀態管理、exactly-once 等容錯議題",
+        "wrong": {
+          "累積資料後一次處理,吞吐量高且容錯邏輯較單純但延遲較大難達即時": "這描述的是批次處理而非串流",
+          "以固定大小磁碟區塊讀取資料,完全依賴本地儲存而非透過網路傳輸事件流": "串流並非依磁碟區塊讀取,而是事件到達即處理",
+          "處理前需先將所有資料載入記憶體,記憶體不足時自動分批執行而非即時處理": "串流不需先載入全部資料,而是逐事件或微窗口處理"
+        },
+        "hook": "串流 = 資料到達即處理;批次 = 累積後一次處理"
+      },
+      "misconceptions": ["把批次與串流的特性記反", "以為串流必須一次載入全部資料"],
+      "related_node_ids": ["n_L22203_005"],
+      "tags": ["串流處理", "基本特性"]
+    },
+    {
+      "id": "q_n14_005",
+      "knowledge_code": "L22203",
+      "node_id": "n_L22203_002",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某金融科技平台採用 Lambda 架構提供風控服務,即時層提供毫秒級的詐欺粗判,批次層每日重算精確分數覆蓋。此架構最常被詬病的痛點為何?",
+      "options": [
+        {"text": "批次與串流需維護兩套程式邏輯,同一業務規則改動需在兩處同步,造成程式碼重複與不一致風險", "is_correct": true},
+        {"text": "Lambda 架構不支援即時告警,所有計算都需等批次層完成才能回饋給前端業務系統使用", "is_correct": false, "trap_type": "誤解 Lambda 缺少即時層"},
+        {"text": "Lambda 架構必須將所有資料儲存在 AWS Lambda 雲端服務上,造成資料主權與成本控制困難", "is_correct": false, "trap_type": "把 Lambda 架構與 AWS Lambda 混淆"},
+        {"text": "Lambda 架構強制要求批次與串流共用同一處理引擎,實務上難找到能勝任兩種模式的工具", "is_correct": false, "trap_type": "Lambda 反而是分離兩層"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Lambda 架構的批次層與速度層採用不同處理模式,需分別維護兩套程式邏輯;業務規則一旦改動就需在兩處同步,容易產生不一致 — 這也是 Kappa 架構被提出的主因",
+        "wrong": {
+          "Lambda 架構不支援即時告警,所有計算都需等批次層完成才能回饋給前端業務系統使用": "Lambda 的 Speed Layer 正是用來提供即時粗估,並非沒有即時能力",
+          "Lambda 架構必須將所有資料儲存在 AWS Lambda 雲端服務上,造成資料主權與成本控制困難": "Lambda 架構是設計思想,與 AWS Lambda 雲端函式服務無關",
+          "Lambda 架構強制要求批次與串流共用同一處理引擎,實務上難找到能勝任兩種模式的工具": "Lambda 反而把兩層分開設計,各用適合的引擎"
+        },
+        "hook": "Lambda 痛點 = 寫兩次邏輯;Kappa 為簡化此痛點而生"
+      },
+      "misconceptions": ["把 Lambda 架構與 AWS Lambda 服務混為一談", "誤解 Lambda 缺少即時層"],
+      "related_node_ids": ["n_L22203_001"],
+      "tags": ["Lambda 架構", "金融風控"]
+    },
+    {
+      "id": "q_n14_006",
+      "knowledge_code": "L22203",
+      "node_id": "n_L22203_002",
+      "subject": 2,
+      "format": "single_choice_scenario",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某線上廣告平台希望簡化 Lambda 雙寫邏輯改採 Kappa 架構。下列哪一個前提條件,對於 Kappa 架構能否落地最為關鍵?",
+      "options": [
+        {"text": "事件流需可長期保留並支援重放,串流引擎需具備處理大規模歷史重放的吞吐能力", "is_correct": true},
+        {"text": "必須先將所有歷史資料轉換為關聯式資料表,以利串流引擎建立穩固的批次計算來源", "is_correct": false, "trap_type": "Kappa 不依賴關聯式表"},
+        {"text": "需要在批次層額外建一份冷備份,確保事件重放失敗時可從備份還原業務歷史資料完整性", "is_correct": false, "trap_type": "保留批次層即非 Kappa"},
+        {"text": "團隊必須完全停用所有批次處理工具,只保留串流引擎用以執行所有報表與分析運算工作", "is_correct": false, "trap_type": "過度絕對化"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Kappa 架構以『重放事件流』取代批次層,因此必須能長期保留事件、可隨時從任意位置重放,且串流引擎能勝任大規模回放;這兩條件成立才能真正去除批次層",
+        "wrong": {
+          "必須先將所有歷史資料轉換為關聯式資料表,以利串流引擎建立穩固的批次計算來源": "Kappa 強調事件流為單一真相來源,並不需要先轉成關聯式表",
+          "需要在批次層額外建一份冷備份,確保事件重放失敗時可從備份還原業務歷史資料完整性": "保留批次層就不是 Kappa,本身與題目目標矛盾",
+          "團隊必須完全停用所有批次處理工具,只保留串流引擎用以執行所有報表與分析運算工作": "Kappa 是架構選擇,並非禁止使用任何批次工具;焦點是『同一份事件流支撐兩種需求』"
+        },
+        "hook": "Kappa = 串流為主 + 事件重放;能不能重放是落地關鍵"
+      },
+      "misconceptions": ["誤以為 Kappa 直接『刪掉批次層』就好", "忽略事件保留期限的成本"],
+      "related_node_ids": ["n_L22203_005"],
+      "tags": ["Kappa 架構", "事件重放"]
+    },
+    {
+      "id": "q_n14_007",
+      "knowledge_code": "L22203",
+      "node_id": "n_L22203_002",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "Lambda 架構的『Speed Layer』與『Batch Layer』分別扮演何種角色?",
+      "options": [
+        {"text": "Speed Layer 提供低延遲粗估;Batch Layer 提供高準確度的完整重算,兩者結果於 Serving Layer 整合", "is_correct": true},
+        {"text": "Speed Layer 處理小資料量、Batch Layer 處理大資料量,兩者依資料量大小自動切換不重疊", "is_correct": false, "trap_type": "切換邏輯非依資料量"},
+        {"text": "Speed Layer 負責資料清理、Batch Layer 負責資料儲存,兩層工作職責互不相關獨立運作", "is_correct": false, "trap_type": "誤把 Lambda 當管線六階段"},
+        {"text": "Speed Layer 處理結構化資料、Batch Layer 處理非結構化資料,依資料型態自動分流到對應層", "is_correct": false, "trap_type": "錯誤的職責劃分"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Lambda 雙層職責:Speed Layer 換取低延遲(可能粗略),Batch Layer 換取準確度(延遲較高);Serving Layer 在查詢時合併兩者結果",
+        "wrong": {
+          "Speed Layer 處理小資料量、Batch Layer 處理大資料量,兩者依資料量大小自動切換不重疊": "兩層的劃分依據是延遲與準確度需求,非資料量",
+          "Speed Layer 負責資料清理、Batch Layer 負責資料儲存,兩層工作職責互不相關獨立運作": "Lambda 兩層都做計算,且結果需在 Serving 層合併,並非互不相關",
+          "Speed Layer 處理結構化資料、Batch Layer 處理非結構化資料,依資料型態自動分流到對應層": "Lambda 兩層處理同一份事件,只是延遲/準確度取捨不同,非依資料型態分流"
+        },
+        "hook": "Lambda 三層:Batch(準) + Speed(快) + Serving(合)"
+      },
+      "misconceptions": ["把 Lambda 兩層想成完全獨立業務", "誤以為兩層處理不同資料"],
+      "related_node_ids": ["n_L22203_001"],
+      "tags": ["Lambda 架構", "Speed Layer", "Batch Layer"]
+    },
+    {
+      "id": "q_n14_008",
+      "knowledge_code": "L22203",
+      "node_id": "n_L22203_003",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "資料管線六階段(Ingest / Store / Process / Analyze / Visualize / Govern)中,『清理、轉換、聚合、特徵化』屬於哪一個階段?",
+      "options": [
+        {"text": "Process(處理),負責把原始資料整理為下游可用的清乾淨、結構化、可分析的資料集", "is_correct": true},
+        {"text": "Ingest(收集),負責從來源系統依排程或事件抽取原始資料並寫入下一階段的儲存層", "is_correct": false, "trap_type": "把 Process 誤標為 Ingest"},
+        {"text": "Analyze(分析),負責用統計或 ML 技術從處理後的特徵中產生洞察與報表結果", "is_correct": false, "trap_type": "把 Process 誤標為 Analyze"},
+        {"text": "Govern(治理),負責統籌品質監控、安全控管、血緣管理等橫貫管線的治理活動", "is_correct": false, "trap_type": "Govern 是橫貫不是單一階段"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Process(處理)階段做的就是清理、轉換、聚合、特徵化;它是 Ingest 之後、Analyze 之前的核心加工步驟",
+        "wrong": {
+          "Ingest(收集),負責從來源系統依排程或事件抽取原始資料並寫入下一階段的儲存層": "Ingest 是『把原料運進來』,還未做清理轉換",
+          "Analyze(分析),負責用統計或 ML 技術從處理後的特徵中產生洞察與報表結果": "Analyze 是基於 Process 結果做統計/建模,不再做基礎清理",
+          "Govern(治理),負責統籌品質監控、安全控管、血緣管理等橫貫管線的治理活動": "Govern 是橫貫所有階段的治理能力,並非單一階段任務"
+        },
+        "hook": "Ingest 進貨 → Store 入庫 → Process 加工 → Analyze 看 → Visualize 秀 → Govern 全程把關"
+      },
+      "misconceptions": ["把 Process 與 Ingest 混淆", "把 Govern 當單一階段"],
+      "related_node_ids": ["n_L22203_006"],
+      "tags": ["資料管線", "Process 階段"]
+    },
+    {
+      "id": "q_n14_009",
+      "knowledge_code": "L22203",
+      "node_id": "n_L22203_003",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "下列關於資料管線『Govern(治理)』階段的敘述,何者最為正確?",
+      "options": [
+        {"text": "Govern 是橫貫所有階段的能力,涵蓋品質、安全、血緣、目錄,各階段都需具備治理觀點", "is_correct": true},
+        {"text": "Govern 只發生在管線最後階段,在資料抵達 BI 工具前進行最後一次品質檢核即完成治理", "is_correct": false, "trap_type": "把 Govern 視為單一階段"},
+        {"text": "Govern 是 Ingest 的子任務,只在資料剛入庫時做一次性檢核就可確保下游資料一致無誤", "is_correct": false, "trap_type": "錯誤的階段歸屬"},
+        {"text": "Govern 等同 Analyze 階段中的探索性分析,屬於資料科學家發掘資料品質問題的工作項目", "is_correct": false, "trap_type": "把 Govern 與 EDA 混淆"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Govern 屬於橫貫所有階段的橫向能力,在 Ingest / Store / Process / Analyze / Visualize 每一階段都需要套用治理機制(品質、安全、血緣、目錄)",
+        "wrong": {
+          "Govern 只發生在管線最後階段,在資料抵達 BI 工具前進行最後一次品質檢核即完成治理": "若只在最後做治理,前面階段的問題已造成下游影響,治理失效",
+          "Govern 是 Ingest 的子任務,只在資料剛入庫時做一次性檢核就可確保下游資料一致無誤": "管線後續加工/聚合也會引入新的品質問題,僅入口檢核遠遠不夠",
+          "Govern 等同 Analyze 階段中的探索性分析,屬於資料科學家發掘資料品質問題的工作項目": "EDA 是分析手段,Govern 是組織級的治理框架,層次與職責皆不同"
+        },
+        "hook": "Govern 橫貫六階段:左右(Ingest~Visualize)畫橫向長條,涵蓋全程"
+      },
+      "misconceptions": ["以為治理只是『最後檢核』", "把治理當資料科學家個人任務"],
+      "related_node_ids": ["n_L22203_006"],
+      "tags": ["資料管線", "Govern", "治理"]
+    },
+    {
+      "id": "q_n14_010",
+      "knowledge_code": "L22203",
+      "node_id": "n_L22203_003",
+      "subject": 2,
+      "format": "single_choice_scenario",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某媒體串流平台抱怨管線上產出的『熱門節目排行 Dashboard』雖然漂亮卻被觀眾編輯部反映數字常與直覺不符。資料工程師發現:Ingest 與 Process 皆正常,但 Visualize 的彙整邏輯與 Analyze 階段定義的指標不一致。下列改善方向何者最為正確?",
+      "options": [
+        {"text": "在管線各階段建立指標契約與資料血緣(Lineage),讓 Visualize 直接消費 Analyze 已驗證的指標表", "is_correct": true},
+        {"text": "把 Visualize 提前到 Ingest 之前進行,讓 Dashboard 直接消費來源系統避開中間階段干擾", "is_correct": false, "trap_type": "顛倒六階段順序"},
+        {"text": "刪除 Process 階段,讓 Visualize 直接從原始事件即時計算指標,可徹底消除階段間定義落差", "is_correct": false, "trap_type": "繞過 Process 反而失控"},
+        {"text": "讓 Analyze 與 Visualize 各自獨立計算指標,以雙重計算避免單一階段邏輯錯誤造成的偏差", "is_correct": false, "trap_type": "雙重計算反而加重不一致"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Visualize 與 Analyze 數字不一致的根因是『各自定義指標』。正確做法是在管線中建立指標契約(同一份語意層)與血緣追蹤,Visualize 直接消費 Analyze 已驗證的指標,而非各自重算",
+        "wrong": {
+          "把 Visualize 提前到 Ingest 之前進行,讓 Dashboard 直接消費來源系統避開中間階段干擾": "顛倒了六階段順序;直接消費原始事件反而失去清理與聚合的品質保證",
+          "刪除 Process 階段,讓 Visualize 直接從原始事件即時計算指標,可徹底消除階段間定義落差": "Process 是清理與標準化的核心,刪除會讓品質失控,且不解決指標定義一致性問題",
+          "讓 Analyze 與 Visualize 各自獨立計算指標,以雙重計算避免單一階段邏輯錯誤造成的偏差": "雙重計算反而會擴大不一致;統一語意層才是治本之道"
+        },
+        "hook": "下游消費上游已驗證的資料(語意層 / 指標契約),避免各階段重算"
+      },
+      "misconceptions": ["以為下游可以自由重算指標", "把『繞過階段』當作解決方案"],
+      "related_node_ids": ["n_L22203_006"],
+      "tags": ["資料管線", "指標一致性", "媒體串流"]
+    },
+    {
+      "id": "q_n14_011",
+      "knowledge_code": "L22203",
+      "node_id": "n_L22203_004",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "MapReduce 觀念中,『把同一個 key 的所有中間值分發到對應節點』屬於哪個階段?",
+      "options": [
+        {"text": "Shuffle 階段,負責依 key 將 Map 輸出重新分組分發到後續 Reduce 節點", "is_correct": true},
+        {"text": "Map 階段,負責對每筆原始資料做切片與獨立的 key-value 轉換工作", "is_correct": false, "trap_type": "把 Shuffle 誤為 Map"},
+        {"text": "Reduce 階段,負責對已分組好的 key-value 做最終聚合運算並輸出結果", "is_correct": false, "trap_type": "把 Shuffle 誤為 Reduce"},
+        {"text": "Combine 階段,負責在 Map 端先做本地預聚合以減少 Map 階段輸出體積大小", "is_correct": false, "trap_type": "Combine 是預聚合非分發"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Shuffle 是 Map 與 Reduce 之間的中間階段,負責把同一 key 的中間結果分發到對應 Reducer;它通常是分散式運算中網路 / 磁碟成本最高的地方",
+        "wrong": {
+          "Map 階段,負責對每筆原始資料做切片與獨立的 key-value 轉換工作": "Map 只做本地切片與轉換,不涉及跨節點分發",
+          "Reduce 階段,負責對已分組好的 key-value 做最終聚合運算並輸出結果": "Reduce 是接收已分發好的資料做聚合,不是分發本身",
+          "Combine 階段,負責在 Map 端先做本地預聚合以減少 Map 階段輸出體積大小": "Combine 是 Map 端的本地預聚合(可選),不是跨節點分發"
+        },
+        "hook": "Map(切+轉)→ Shuffle(依 key 分發)→ Reduce(聚)"
+      },
+      "misconceptions": ["把 Shuffle 與 Map / Reduce 邊界混淆", "誤以為 Shuffle 是 Reduce 的一部分"],
+      "related_node_ids": ["n_L22203_001"],
+      "tags": ["MapReduce", "Shuffle"]
+    },
+    {
+      "id": "q_n14_012",
+      "knowledge_code": "L22203",
+      "node_id": "n_L22203_004",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "下列關於『分散式運算瓶頸』的觀念,何者最為正確?",
+      "options": [
+        {"text": "Shuffle 因為涉及跨節點網路傳輸與磁碟 I/O,通常是分散式運算最大成本所在", "is_correct": true},
+        {"text": "Map 因為要對每筆資料做轉換,通常會是分散式運算中最耗時最佔總執行時間的階段", "is_correct": false, "trap_type": "Map 可平行,瓶頸常不在此"},
+        {"text": "Reduce 一定比 Shuffle 慢,因為要把所有節點結果再做一次最終聚合與排序輸出", "is_correct": false, "trap_type": "Reduce 非必然最慢"},
+        {"text": "分散式運算的瓶頸幾乎都來自磁碟容量不足,擴充磁碟便可顯著提升整體執行效能", "is_correct": false, "trap_type": "把磁碟容量當效能瓶頸"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Shuffle 涉及『跨節點』搬移中間結果,需走網路 + 磁碟,通常比本地 Map / Reduce 慢一個數量級,是分散式運算最常見的瓶頸",
+        "wrong": {
+          "Map 因為要對每筆資料做轉換,通常會是分散式運算中最耗時最佔總執行時間的階段": "Map 可完全平行化,投足夠資源時間會縮短;瓶頸通常不在 Map",
+          "Reduce 一定比 Shuffle 慢,因為要把所有節點結果再做一次最終聚合與排序輸出": "Reduce 在收到資料後本地聚合,通常比 Shuffle 快;且依任務性質可能不需排序",
+          "分散式運算的瓶頸幾乎都來自磁碟容量不足,擴充磁碟便可顯著提升整體執行效能": "磁碟容量是儲存議題,效能瓶頸常是『網路頻寬』與『資料移動量』"
+        },
+        "hook": "分散式優化第一個檢查點:能不能減少 Shuffle"
+      },
+      "misconceptions": ["以為加機器一定變快", "忽略 Shuffle 成本"],
+      "related_node_ids": ["n_L22203_001"],
+      "tags": ["分散式運算", "Shuffle", "效能瓶頸"]
+    },
+    {
+      "id": "q_n14_013",
+      "knowledge_code": "L22203",
+      "node_id": "n_L22203_004",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "下列任務中,哪一個最不適合用 MapReduce 範式平行處理?",
+      "options": [
+        {"text": "迭代式相依任務(後一步必須等前一步結果),如必須前後依序的物理時間步進模擬", "is_correct": true},
+        {"text": "對 10 億筆 Web 日誌統計每個 URL 的點擊次數,各筆紀錄之間無前後相依關係", "is_correct": false, "trap_type": "WordCount 類典型 MapReduce 任務"},
+        {"text": "對全球氣象站每日溫度求平均值,各站點計算彼此獨立可分配到不同節點上執行", "is_correct": false, "trap_type": "平行聚合典型適用"},
+        {"text": "從千萬筆社群貼文中過濾出含特定關鍵字的內容,每篇貼文獨立可平行篩選", "is_correct": false, "trap_type": "過濾類典型適用"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "MapReduce 假設『資料可平行切片』(embarrassingly parallel)。迭代相依任務後一步需等前一步結果,無法平行,Map 階段失去意義",
+        "wrong": {
+          "對 10 億筆 Web 日誌統計每個 URL 的點擊次數,各筆紀錄之間無前後相依關係": "經典 WordCount 場景,各筆獨立,MapReduce 最適合",
+          "對全球氣象站每日溫度求平均值,各站點計算彼此獨立可分配到不同節點上執行": "平行聚合場景,各分組獨立,適合 MapReduce",
+          "從千萬筆社群貼文中過濾出含特定關鍵字的內容,每篇貼文獨立可平行篩選": "過濾類無相依,適合 MapReduce"
+        },
+        "hook": "MapReduce 適用條件:資料可切 + 切後彼此獨立(embarrassingly parallel)"
+      },
+      "misconceptions": ["以為所有任務都能平行化", "忽略相依性對平行化的限制"],
+      "related_node_ids": ["n_L22203_001"],
+      "tags": ["MapReduce", "平行化限制"]
+    },
+    {
+      "id": "q_n14_014",
+      "knowledge_code": "L22203",
+      "node_id": "n_L22203_005",
+      "subject": 2,
+      "format": "single_choice_scenario",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某行動 App 因部分使用者離線使用,事件常延遲數小時後重新上線才補傳。資料工程師想要正確統計『每小時使用者活躍數』,應採用哪一種時間語義?",
+      "options": [
+        {"text": "Event Time(事件時間),依事件實際發生時戳分桶,可正確還原使用者離線時段的真實活躍", "is_correct": true},
+        {"text": "Processing Time(處理時間),依事件抵達伺服器時間分桶,可確保系統永遠用最即時的時鐘運算", "is_correct": false, "trap_type": "對遲到事件 PT 會錯桶"},
+        {"text": "Ingestion Time(攝入時間),依資料入庫時間分桶,可避免來源時鐘不同步造成的分桶誤差問題", "is_correct": false, "trap_type": "IT 與 PT 同樣不解決離線補傳"},
+        {"text": "Wall Clock Time(牆鐘時間),依管線運行所在主機的當下時間分桶,可保證時間軸連續性與單調性", "is_correct": false, "trap_type": "等同 PT 的別稱"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "離線後補傳的事件實際發生於離線當下,只有依 Event Time 分桶才能還原『真實活躍時段』。若用 Processing Time,補傳事件會錯誤地累積到補傳當下的桶",
+        "wrong": {
+          "Processing Time(處理時間),依事件抵達伺服器時間分桶,可確保系統永遠用最即時的時鐘運算": "PT 把離線數小時補傳的事件全算到補傳當下,完全失真",
+          "Ingestion Time(攝入時間),依資料入庫時間分桶,可避免來源時鐘不同步造成的分桶誤差問題": "IT 與 PT 性質相近,都無法還原事件實際發生時間",
+          "Wall Clock Time(牆鐘時間),依管線運行所在主機的當下時間分桶,可保證時間軸連續性與單調性": "等同 PT,對遲到/離線事件同樣失準"
+        },
+        "hook": "想還原『何時真的發生』→ Event Time;想知道『何時被處理』→ Processing Time"
+      },
+      "misconceptions": ["預設用 PT 而不察覺遲到事件失真", "把所有時間語義視為等價"],
+      "related_node_ids": ["n_L22203_001"],
+      "tags": ["Event Time", "離線事件", "行動 App"]
+    },
+    {
+      "id": "q_n14_015",
+      "knowledge_code": "L22203",
+      "node_id": "n_L22203_005",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "在串流處理中,『Watermark』的主要功能為何?",
+      "options": [
+        {"text": "估計『此時點之前的事件大致都到了』,作為窗口可關閉並輸出結果的判斷依據", "is_correct": true},
+        {"text": "強制保證『此時點之後不會再有任何事件到達』,任何遲到事件一律捨棄不再參與運算", "is_correct": false, "trap_type": "Watermark 是機率非強制"},
+        {"text": "把所有事件依 Processing Time 重新排序,確保 Reduce 階段收到嚴格時間順序資料", "is_correct": false, "trap_type": "Watermark 不是排序工具"},
+        {"text": "對串流資料做加密水印標記,防止下游節點偽造或竄改原始事件流的內容真實性", "is_correct": false, "trap_type": "把 Watermark 誤解為資安術語"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Watermark 是『此時點之前事件大致都到了』的機率性估計,讓串流引擎可決定何時關閉窗口輸出結果;它不是絕對保證,仍可能有遲到事件需另行處理",
+        "wrong": {
+          "強制保證『此時點之後不會再有任何事件到達』,任何遲到事件一律捨棄不再參與運算": "Watermark 是估計而非保證;對遲到事件應提供 allowed lateness 等處理機制",
+          "把所有事件依 Processing Time 重新排序,確保 Reduce 階段收到嚴格時間順序資料": "Watermark 是窗口關閉訊號,不負責排序",
+          "對串流資料做加密水印標記,防止下游節點偽造或竄改原始事件流的內容真實性": "這是資安概念,與串流處理 Watermark 無關"
+        },
+        "hook": "Watermark 像潮水線:過了就視為窗口資料『差不多齊了』,但不是絕對保證"
+      },
+      "misconceptions": ["把 Watermark 當絕對保證", "把 Watermark 與資安水印混淆"],
+      "related_node_ids": ["n_L22203_001"],
+      "tags": ["Watermark", "窗口關閉"]
+    },
+    {
+      "id": "q_n14_016",
+      "knowledge_code": "L22203",
+      "node_id": "n_L22203_005",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "下列關於『Event Time vs Processing Time』的敘述,何者正確?",
+      "options": [
+        {"text": "Event Time 為事件實際發生的時戳;Processing Time 為系統處理該事件的時間,兩者間常存在延遲落差", "is_correct": true},
+        {"text": "Event Time 與 Processing Time 是完全相同的概念,只是不同框架使用不同名稱來描述同一時點", "is_correct": false, "trap_type": "兩者並不等價"},
+        {"text": "Event Time 由系統當下時鐘決定;Processing Time 由事件本身攜帶時戳決定兩者意義恰好相反顛倒", "is_correct": false, "trap_type": "把兩者定義顛倒"},
+        {"text": "Event Time 只在批次處理中使用;Processing Time 只在串流處理中使用,兩者不可同時出現於系統", "is_correct": false, "trap_type": "錯誤的使用場景劃分"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Event Time = 事件實際發生的時間(資料中內含的時戳);Processing Time = 系統實際處理該事件的時間。網路延遲、離線等因素使兩者常有落差",
+        "wrong": {
+          "Event Time 與 Processing Time 是完全相同的概念,只是不同框架使用不同名稱來描述同一時點": "兩者意義完全不同,離線補傳時可差數小時甚至數天",
+          "Event Time 由系統當下時鐘決定;Processing Time 由事件本身攜帶時戳決定兩者意義恰好相反顛倒": "把兩者定義顛倒,Event 才是事件本身的時間",
+          "Event Time 只在批次處理中使用;Processing Time 只在串流處理中使用,兩者不可同時出現於系統": "串流場景反而最需要區分 Event vs Processing Time"
+        },
+        "hook": "Event = 事件發生當下(資料攜帶);Processing = 系統處理當下"
+      },
+      "misconceptions": ["把兩種時間語義混為一談", "搞反兩者定義"],
+      "related_node_ids": ["n_L22203_001"],
+      "tags": ["Event Time", "Processing Time", "基本概念"]
+    },
+    {
+      "id": "q_n14_017",
+      "knowledge_code": "L22203",
+      "node_id": "n_L22203_006",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "Data Observability 五大支柱(Freshness / Volume / Schema / Distribution / Lineage)中,『資料行數突然驟降 50%』屬於哪一個支柱所偵測的異常?",
+      "options": [
+        {"text": "Volume(數量),監控資料量是否符合預期區間,大幅驟降通常是上游故障或漏接訊號", "is_correct": true},
+        {"text": "Freshness(及時性),監控資料是否準時抵達,延遲未準時常為上游排程錯誤所造成", "is_correct": false, "trap_type": "Volume 與 Freshness 不同維度"},
+        {"text": "Schema(結構),監控欄位與型別是否被改動,新增或刪除欄位常會造成下游程式中斷", "is_correct": false, "trap_type": "Volume 非 Schema 議題"},
+        {"text": "Distribution(分佈),監控數值分佈是否漂移,平均或分位數變化常為資料源變動的早期訊號", "is_correct": false, "trap_type": "行數異常非分佈漂移"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Volume(數量)支柱監控行數是否落在預期範圍;驟降 50% 是典型的 Volume 異常,常見原因是上游 ingest 故障或排程未跑",
+        "wrong": {
+          "Freshness(及時性),監控資料是否準時抵達,延遲未準時常為上游排程錯誤所造成": "Freshness 關注『有沒有準時到』,Volume 關注『到了多少筆』,維度不同",
+          "Schema(結構),監控欄位與型別是否被改動,新增或刪除欄位常會造成下游程式中斷": "Schema 處理欄位/型別變動,與行數無關",
+          "Distribution(分佈),監控數值分佈是否漂移,平均或分位數變化常為資料源變動的早期訊號": "Distribution 關注數值統計變化,行數異常另屬 Volume"
+        },
+        "hook": "五支柱記法:來得快不快(Freshness)/ 多不多(Volume)/ 長相對不對(Schema)/ 統計對不對(Distribution)/ 從哪來給誰(Lineage)"
+      },
+      "misconceptions": ["把 Volume 與 Freshness 混淆", "以為品質檢查就涵蓋全部 Observability"],
+      "related_node_ids": ["n_L22203_003"],
+      "tags": ["Data Observability", "Volume"]
+    },
+    {
+      "id": "q_n14_018",
+      "knowledge_code": "L22203",
+      "node_id": "n_L22203_006",
+      "subject": 2,
+      "format": "single_choice_scenario",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某智慧城市資料平台早上發現『空氣品質儀表板』數值異常偏低,負責工程師希望快速判斷『此次事件會影響哪些下游報表與模型』。下列 Data Observability 支柱中,哪一個最能直接協助此目標?",
+      "options": [
+        {"text": "Lineage(血緣),追蹤資料從來源到下游所有消費者的關係,可一鍵看出影響範圍", "is_correct": true},
+        {"text": "Freshness(及時性),監控資料是否準時到達,可幫助快速判斷異常是否來自上游延遲", "is_correct": false, "trap_type": "Freshness 無法答出影響範圍"},
+        {"text": "Distribution(分佈),監控數值分佈是否漂移,可協助判斷異常本身是否真實存在於資料", "is_correct": false, "trap_type": "Distribution 偵測異常非追蹤影響"},
+        {"text": "Schema(結構),監控欄位與型別是否被改動,可協助判斷異常是否來自欄位結構的變動", "is_correct": false, "trap_type": "Schema 用於結構變動非影響範圍"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "『影響哪些下游』屬於血緣(Lineage)的核心能力 — 它記錄上下游資料關係,可一鍵列出本份資料被哪些報表/模型消費",
+        "wrong": {
+          "Freshness(及時性),監控資料是否準時到達,可幫助快速判斷異常是否來自上游延遲": "Freshness 只能告訴你『晚了』或『沒到』,無法列出影響範圍",
+          "Distribution(分佈),監控數值分佈是否漂移,可協助判斷異常本身是否真實存在於資料": "Distribution 偵測異常的『發生』,不負責列出『影響誰』",
+          "Schema(結構),監控欄位與型別是否被改動,可協助判斷異常是否來自欄位結構的變動": "Schema 關注欄位變動,與『下游影響範圍』不同"
+        },
+        "hook": "出事問『誰受影響』→ 直接看 Lineage;出事問『為什麼變這樣』→ Distribution / Schema / Freshness"
+      },
+      "misconceptions": ["把 Lineage 視為文件而非自動化追蹤", "把所有 Observability 支柱當同義詞"],
+      "related_node_ids": ["n_L22203_003"],
+      "tags": ["Data Observability", "Lineage", "智慧城市"]
+    },
+    {
+      "id": "q_n14_019",
+      "knowledge_code": "L22203",
+      "node_id": "n_L22203_006",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "下列關於『資料品質檢查』與『資料可觀測性(Data Observability)』的關係,何者最為正確?",
+      "options": [
+        {"text": "資料可觀測性範圍較廣,含 Freshness / Volume / Schema / Distribution / Lineage 五支柱,品質檢查為其子集", "is_correct": true},
+        {"text": "兩者完全等價,只是不同年代的不同稱呼,實務上可隨意互換使用任一名稱描述同一活動", "is_correct": false, "trap_type": "把兩者等同"},
+        {"text": "資料品質檢查範圍較廣,涵蓋可觀測性 + ETL 邏輯 + 模型結果驗證,Observability 只是其中工具", "is_correct": false, "trap_type": "範圍關係顛倒"},
+        {"text": "資料可觀測性僅指 BI 工具的儀表板可視化能力,與資料品質檢查毫不相關屬不同領域議題", "is_correct": false, "trap_type": "誤把 Observability 當 BI 視覺化"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Data Observability 借鏡 SRE 思維,範圍涵蓋資料『生產 + 流通 + 消費』全鏈;傳統品質檢查(如 null / 範圍 / 一致性)只是其中一個面向",
+        "wrong": {
+          "兩者完全等價,只是不同年代的不同稱呼,實務上可隨意互換使用任一名稱描述同一活動": "Observability 概念更廣,還包括 Lineage、主動異常偵測等品質檢查不涵蓋的維度",
+          "資料品質檢查範圍較廣,涵蓋可觀測性 + ETL 邏輯 + 模型結果驗證,Observability 只是其中工具": "範圍關係顛倒;Observability 是上位概念",
+          "資料可觀測性僅指 BI 工具的儀表板可視化能力,與資料品質檢查毫不相關屬不同領域議題": "Observability 與 BI 視覺化是完全不同概念"
+        },
+        "hook": "可觀測性 ⊃ 品質檢查 + 血緣 + 主動偵測;品質檢查只是其中一支柱"
+      },
+      "misconceptions": ["把 Observability 等同品質檢查", "誤把 Observability 視為 BI 視覺化"],
+      "related_node_ids": ["n_L22203_003"],
+      "tags": ["Data Observability", "資料品質"]
+    },
+    {
+      "id": "q_n14_020",
+      "knowledge_code": "L22203",
+      "node_id": "n_L22203_005",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "下列關於『窗口運算 + Watermark + 遲到事件』的設計觀念,何者最為正確?",
+      "options": [
+        {"text": "Watermark 為窗口關閉的機率性判斷,實務上仍需配合 allowed lateness 處理遲到事件以兼顧正確性與延遲", "is_correct": true},
+        {"text": "Watermark 一旦發出窗口便不可再接收任何事件,所有遲到事件一律捨棄以維持窗口輸出結果的單調性", "is_correct": false, "trap_type": "把 Watermark 當絕對保證"},
+        {"text": "Watermark 與遲到事件無關,只是用來指示資料延遲統計指標供工程師監控用,並不影響運算邏輯本身", "is_correct": false, "trap_type": "誤把 Watermark 視為純監控指標"},
+        {"text": "遲到事件越多代表 Watermark 設得越保守,應減少 Watermark 與最新事件時戳間的時間落差以避免遲到", "is_correct": false, "trap_type": "把因果顛倒"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Watermark 是『資料大致都到了』的估計,並非絕對保證。實務上需設定 allowed lateness 容忍小幅遲到,並對嚴重遲到資料另作補償(side output / 重算)以平衡正確性與延遲",
+        "wrong": {
+          "Watermark 一旦發出窗口便不可再接收任何事件,所有遲到事件一律捨棄以維持窗口輸出結果的單調性": "Watermark 是機率性估計而非絕對線;捨棄所有遲到事件會犧牲正確性",
+          "Watermark 與遲到事件無關,只是用來指示資料延遲統計指標供工程師監控用,並不影響運算邏輯本身": "Watermark 直接影響『窗口何時關閉』,與運算邏輯密切相關",
+          "遲到事件越多代表 Watermark 設得越保守,應減少 Watermark 與最新事件時戳間的時間落差以避免遲到": "因果顛倒;遲到本是事件特性,Watermark 收得越緊反而會誤判更多事件為遲到"
+        },
+        "hook": "Watermark = 估計;遲到處理 = 配套(allowed lateness + side output);兩者搭配才完整"
+      },
+      "misconceptions": ["把 Watermark 視為絕對門檻", "忽略遲到事件需另作處理"],
+      "related_node_ids": ["n_L22203_001"],
+      "tags": ["Watermark", "遲到事件", "窗口運算"]
+    }
+  ]
+}
