@@ -573,8 +573,11 @@
       const isNpcSwitch = prevNpc !== npcIdx;
       this.state.currentNpcIdx = npcIdx;
 
-      // UX 計算:目前得分 (按 IPAS 中級 100 分制:每題 2 分) + 進度比
+      // UX 計算:目前得分 + 進度比
+      // 2026-05-16:max 動態化(每題 2 分,真考標準),20題→40 / 25→50 / 30→60 / 50→100
+      // 舊「/100」字面在 20/25/30 題場是錯的(可選 max 上限非 100)
       const score = this.state.correct * 2;
+      const maxScore = this.state.total * 2;
       const progPct = this.state.total > 0 ? (this.state.idx / this.state.total) * 100 : 0;
 
       // 字級按鈕 group
@@ -600,7 +603,7 @@
             <div class="m7-font-size-group">${fontBtns}</div>
           </div>
           <div class="m7-toolbar-right">
-            <span class="m7-toolbar-score">📊 得分 <strong>${score}</strong> / 100</span>
+            <span class="m7-toolbar-score">📊 得分 <strong>${score}</strong> / ${maxScore}</span>
           </div>
         </div>
 

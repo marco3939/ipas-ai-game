@@ -1124,6 +1124,14 @@ function goHome() {
     if (Mode8._clearAllTimers) Mode8._clearAllTimers();
     Mode8.state = null;
   }
+  // 2026-05-16 fix:Mode 7 中途離場 timer + PlayEngine.answer hook + font-scale CSS var 殘留
+  // Mode 7 自有 cleanup() 已正確處理上述,goHome 在此引用即可
+  if (typeof Mode7 !== 'undefined' && Mode7.cleanup) {
+    Mode7.cleanup();
+  }
+  // 2026-05-16 fix:Mode 1 / 2 各自有 _clearAllTimers(setTimeout animation 殘留會綜合影響其他 view)
+  if (typeof Mode1 !== 'undefined' && Mode1._clearAllTimers) Mode1._clearAllTimers();
+  if (typeof Mode2 !== 'undefined' && Mode2._clearAllTimers) Mode2._clearAllTimers();
   refreshHome();
   show('view-home');
 }
