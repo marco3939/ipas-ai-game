@@ -1,6 +1,6 @@
 # Stem-Explanation 一致性稽核報告
 
-產生時間:2026-05-16T02:52:31.738Z
+產生時間:2026-05-16T05:04:21.073Z
 
 ## 任務背景
 
@@ -12,10 +12,10 @@ q_0025 PCA 題曾被疑似「stem(λ=10/5/3/2)與 explanation(case_a 8+4+2+1=15)
 
 ## 摘要
 
-- 總題數:345
-- calculation 題:21
-- single_choice 含具體數字題:67
-- 可獨立計算驗證的題目:19 題(覆蓋 19/21 = 90% 計算題)
+- 總題數:585
+- calculation 題:35
+- single_choice 含具體數字題:116
+- 可獨立計算驗證的題目:19 題(覆蓋 19/35 = 54% 計算題)
 
 ### 不一致統計
 - **P0**(數值錯算,要修):0 件
@@ -60,7 +60,7 @@ q_0025 PCA 題曾被疑似「stem(λ=10/5/3/2)與 explanation(case_a 8+4+2+1=15)
 
 ## 結論
 
-全部 21 題 calculation(19 題 100% 覆蓋)的 answer 數值通過獨立計算驗證;explanation 已清除所有「以 case_X 為例」硬編碼數字洩漏。剩餘 7 件 P2 為 trap_type 標籤精度問題,不影響使用者體驗(answer 正確、distractor 合理),建議於後續 review 統一。
+全部 35 題 calculation(19 題 100% 覆蓋)的 answer 數值通過獨立計算驗證;explanation 已清除所有「以 case_X 為例」硬編碼數字洩漏。剩餘 7 件 P2 為 trap_type 標籤精度問題,不影響使用者體驗(answer 正確、distractor 合理),建議於後續 review 統一。
 
 ## 已驗證的題目(verifier coverage)
 
