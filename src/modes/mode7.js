@@ -674,7 +674,13 @@
         Progress.addAnswer(a.isCorrect);
         if (typeof SM2 !== 'undefined' && q.id) SM2.recordAnswer(q.id, a.isCorrect, false);
         if (!a.isCorrect) {
-          Wrongbook.add(q.id, q.node_id, a.userKey, a.correctKey);
+          const userOpt = (q.options || []).find(o => o.key === a.userKey);
+          const correctOpt = (q.options || []).find(o => o.is_correct);
+          Wrongbook.add(
+            q.id, q.node_id, a.userKey, a.correctKey,
+            (userOpt && userOpt.text) || '',
+            (correctOpt && correctOpt.text) || ''
+          );
         }
       }
     },
@@ -1493,7 +1499,15 @@
           isCorrect: a ? a.isCorrect : false,
           correctKey: a ? a.correctKey : (correctOpt ? correctOpt.key : ''),
           answered: !!a,
-          marked: s.markedIds && s.markedIds.has(q.id)
+          marked: s.markedIds && s.markedIds.has(q.id),
+          // 2026-05-16 加 rendered snapshot:洗牌後 options + 替換 variables 後的 stem/code
+          // 修 bug:reviewHistorySession 用 QUESTIONS 原版時,options 沒 key 對應(renderQuestion 在
+          // 洗牌後才指派 A/B/C/D),導致使用者紅框沒顯示
+          stem: q.stem || '',
+          code_block: q.code_block || '',
+          options: (q.options || []).map(o => ({
+            key: o.key, text: o.text || '', is_correct: !!o.is_correct
+          }))
         };
       });
       data.history.push({
@@ -1862,13 +1876,31 @@
       const answers = {};
       const markedIds = new Set();
       fullLog.forEach((e, i) => {
-        const q = allQ.find(x => x.id === e.qid);
-        if (q) {
-          lineup.push({ q, npcIdx: e.npcIdx || 0 });
+        const baseQ = allQ.find(x => x.id === e.qid);
+        // 優先用 fullLog 儲存的洗牌後 options 與替換後 stem/code(才能正確對齊 userKey)
+        const hasSnapshot = Array.isArray(e.options) && e.options.length > 0;
+        if (baseQ) {
+          if (hasSnapshot) {
+            // spread 原 q 取得 explanation/node_id/difficulty 等,以 snapshot 覆蓋 stem/code/options
+            lineup.push({
+              q: Object.assign({}, baseQ, {
+                stem: e.stem || baseQ.stem,
+                code_block: e.code_block || baseQ.code_block,
+                options: e.options
+              }),
+              npcIdx: e.npcIdx || 0
+            });
+          } else {
+            // 舊紀錄無 snapshot → 用原版 (使用者紅框可能對不上,但不會 crash)
+            lineup.push({ q: baseQ, npcIdx: e.npcIdx || 0 });
+          }
         } else {
           // 題目已從題庫移除 → 顯示 placeholder,讓使用者知道
+          // 但若有 snapshot,仍用 snapshot 顯示
           lineup.push({
-            q: { id: e.qid, stem: '⚠️ 此題已從題庫移除,無法顯示題幹', options: [], knowledge_code: e.kc || '', difficulty: '?', explanation: { correct: '此題已不在當前題庫,無解析可看。' } },
+            q: hasSnapshot
+              ? { id: e.qid, stem: e.stem || '(無題幹)', code_block: e.code_block || '', options: e.options, knowledge_code: e.kc || '', difficulty: '?', explanation: { correct: '⚠️ 此題已從題庫移除,只能看當時的選項。' } }
+              : { id: e.qid, stem: '⚠️ 此題已從題庫移除,無法顯示題幹', options: [], knowledge_code: e.kc || '', difficulty: '?', explanation: { correct: '此題已不在當前題庫,無解析可看。' } },
             npcIdx: e.npcIdx || 0
           });
         }
@@ -1907,7 +1939,12 @@
         const correctOpt = (q.options || []).find(o => o.is_correct);
         const correctKey = correctOpt ? correctOpt.key : '';
         const userKey = userAns ? userAns.userKey : '';
-        Wrongbook.add(q.id, q.node_id, userKey, correctKey);
+        const userOpt = (q.options || []).find(o => o.key === userKey);
+        Wrongbook.add(
+          q.id, q.node_id, userKey, correctKey,
+          (userOpt && userOpt.text) || '',
+          (correctOpt && correctOpt.text) || ''
+        );
         showToast('🔖 已加入錯題本', 1500);
       }
       // 重渲染當前題(更新按鈕狀態)

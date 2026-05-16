@@ -795,17 +795,28 @@ const SeenCorrect = {
 window.SeenCorrect = SeenCorrect;
 
 // === Wrongbook 錯題本 ===
+// 2026-05-16:add() 簽名向後擴充加 userText/correctText,讓 Review UI 可直接顯示
+// 「你選 X. xxx vs 正解 Y. yyy」對照(舊紀錄無 text 時顯示 '?')
 const Wrongbook = {
   load() { return Storage.get(Storage.K_WRONGBOOK, []); },
   save(w) { Storage.set(Storage.K_WRONGBOOK, w); },
-  add(qid, nodeId, userChoice, correctChoice) {
+  add(qid, nodeId, userChoice, correctChoice, userText, correctText) {
     const w = this.load();
     const existing = w.find(x => x.qid === qid);
     if (existing) {
       existing.wrongCount = (existing.wrongCount||1) + 1;
       existing.lastWrong = Date.now();
+      // 若舊紀錄沒 text 而本次傳了,補上(向後相容遷移)
+      if (!existing.userText && userText) existing.userText = userText;
+      if (!existing.correctText && correctText) existing.correctText = correctText;
+      // 也更新最後一次選的(若有變)
+      if (userChoice) existing.userChoice = userChoice;
     } else {
-      w.push({ qid, nodeId, userChoice, correctChoice, wrongCount: 1, addedAt: Date.now(), lastWrong: Date.now(), mastered: false, drillCount: 0 });
+      w.push({
+        qid, nodeId, userChoice, correctChoice,
+        userText: userText || '', correctText: correctText || '',
+        wrongCount: 1, addedAt: Date.now(), lastWrong: Date.now(), mastered: false, drillCount: 0
+      });
     }
     this.save(w);
   },
@@ -1468,7 +1479,12 @@ const PlayEngine = {
     if (isCorrect && this.current.id) SeenCorrect.mark(this.current.id);
     if (!isCorrect) {
       const correctOpt = this.current.options.find(o => o.is_correct);
-      Wrongbook.add(this.current.id, this.current.node_id, key, correctOpt.key);
+      const userOpt = this.current.options.find(o => o.key === key);
+      Wrongbook.add(
+        this.current.id, this.current.node_id, key, correctOpt && correctOpt.key,
+        (userOpt && userOpt.text) || '',
+        (correctOpt && correctOpt.text) || ''
+      );
     }
     // 顯示解釋
     this.showExplanation(opt, isCorrect);
@@ -1666,15 +1682,41 @@ const Review = {
       document.getElementById('view-review').innerHTML = '<div class="card"><div class="empty">🎉 沒有未復習的錯題,做題後再來</div><div style="text-align:center"><button class="btn btn-primary" onclick="goHome()">回首頁</button></div></div>';
       show('view-review'); return;
     }
+    // 用 ErrorReports._esc 做 HTML escape 防 XSS(stem/text 可能含 < > 等)
+    const esc = (s) => (typeof ErrorReports !== 'undefined' && ErrorReports._esc) ? ErrorReports._esc(s) : String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     const html = `<div class="card"><h2>📝 錯題本(${w.length} 題待復習)</h2>
-      <p style="color:var(--fg-dim);margin-bottom:12px">點擊任一題進入下鑽訓練(鐵律 #1)</p>
-      <div class="weak-list">${w.map(x => {
+      <p style="color:var(--fg-dim);margin-bottom:12px">每題顯示你選的 vs 正解,可對照為何錯;點「進下鑽」進入訓練(鐵律 #1)</p>
+      <div style="display:flex;flex-direction:column;gap:10px">${w.map(x => {
         const q = QUESTIONS.find(qq => qq.id === x.qid);
         if (!q) return '';
-        return `<button class="weak-item" style="cursor:pointer" onclick="Review.drillItem('${x.qid}')">
-          <span style="text-align:left;flex:1">${q.stem.substring(0,60).replace(/\\{[^}]+\\}/g,'')}...</span>
-          <span class="weak-score low">錯 ${x.wrongCount} 次</span>
-        </button>`;
+        const stemPrev = esc((q.stem || '').substring(0,80).replace(/\{[^}]+\}/g,''));
+        // 顯示對照:userText/correctText 是 2026-05-16 後新加,舊紀錄無 → 顯示 '?'
+        const userBlock = x.userText
+          ? `<div style="background:rgba(220,38,38,0.12);border-left:3px solid #dc2626;padding:6px 10px;border-radius:4px;font-size:0.85rem;margin-top:4px">
+              <span style="color:#f87171;font-weight:700">✗ 你選:</span> ${esc(x.userChoice||'?')}. ${esc(x.userText)}
+            </div>`
+          : `<div style="background:rgba(220,38,38,0.08);border-left:3px solid #dc2626;padding:6px 10px;border-radius:4px;font-size:0.82rem;margin-top:4px;color:var(--fg-dim)">
+              <span style="color:#f87171;font-weight:700">✗ 你選:</span> ${esc(x.userChoice||'?')}(舊紀錄無文字)
+            </div>`;
+        const correctBlock = x.correctText
+          ? `<div style="background:rgba(22,163,74,0.12);border-left:3px solid #16a34a;padding:6px 10px;border-radius:4px;font-size:0.85rem;margin-top:4px">
+              <span style="color:#4ade80;font-weight:700">✓ 正解:</span> ${esc(x.correctChoice||'?')}. ${esc(x.correctText)}
+            </div>`
+          : `<div style="background:rgba(22,163,74,0.08);border-left:3px solid #16a34a;padding:6px 10px;border-radius:4px;font-size:0.82rem;margin-top:4px;color:var(--fg-dim)">
+              <span style="color:#4ade80;font-weight:700">✓ 正解:</span> ${esc(x.correctChoice||'?')}(舊紀錄無文字)
+            </div>`;
+        return `<div style="padding:10px;background:var(--bg-2);border:1px solid var(--bg-3);border-radius:6px">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+            <span style="font-size:0.85rem;color:var(--fg-dim)">[${esc(q.knowledge_code||'')}] ${esc(x.qid)}</span>
+            <div style="display:flex;gap:6px;align-items:center">
+              <span style="font-size:0.78rem;color:#f87171">錯 ${x.wrongCount} 次</span>
+              <button class="btn btn-warn" style="font-size:0.78rem;padding:4px 12px" onclick="Review.drillItem('${esc(x.qid)}')">🎯 進下鑽</button>
+            </div>
+          </div>
+          <div style="margin-top:6px;font-size:0.92rem;line-height:1.5">${stemPrev}…</div>
+          ${userBlock}
+          ${correctBlock}
+        </div>`;
       }).join('')}</div>
       <div class="actions" style="margin-top:12px">
         <button class="btn btn-primary" onclick="Review.drillAll()">🎯 全部下鑽訓練</button>
