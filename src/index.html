@@ -2026,6 +2026,91 @@ const ProgressIO = {
     catch { return false; }
   },
 
+  // === Strict per-key 資料 schema validators ===
+  // all-or-nothing:任一 key 的 parsed value 不符 → 整檔拒,絕不 partial accept
+  ALLOWED_ENVELOPE_KEYS: ['app', 'version', 'exportedAt', 'nickname', 'keyCount', 'checksum', 'payload'],
+  _isObj(v) { return typeof v === 'object' && v !== null && !Array.isArray(v); },
+  _isNum(v) { return typeof v === 'number' && Number.isFinite(v); },
+  _isNonNegNum(v) { return this._isNum(v) && v >= 0; },
+  _isPositiveNum(v) { return this._isNum(v) && v > 0; },
+
+  // 每 key 對應一個 validator(回傳 boolean),沒對應的 key 直接拒
+  // _initValidators() 在第一次 import 時 lazy init(避免 module 載入時 this 還沒 bind)
+  KEY_VALIDATORS: null,
+  KEY_VALIDATORS_PREFIX: null,
+  _initValidators() {
+    if (this.KEY_VALIDATORS) return;   // idempotent
+    const that = this;
+    this.KEY_VALIDATORS = {
+      'ipas_progress_v1': (v) => that._isObj(v) &&
+        (v.started === undefined || that._isPositiveNum(v.started)) &&
+        (v.sessions === undefined || that._isNonNegNum(v.sessions)) &&
+        (v.totalAnswered === undefined || that._isNonNegNum(v.totalAnswered)) &&
+        (v.totalCorrect === undefined || that._isNonNegNum(v.totalCorrect)),
+      'ipas_mastery_v1': (v) => {
+        if (!that._isObj(v)) return false;
+        for (const k of Object.keys(v)) {
+          if (that.DANGEROUS_KEYS.indexOf(k) >= 0) return false;
+          if (typeof k !== 'string' || k.length === 0 || k.length > 100) return false;
+          const e = v[k];
+          if (!that._isObj(e)) return false;
+          if (e.attempts !== undefined && !that._isNonNegNum(e.attempts)) return false;
+          if (e.correct !== undefined && !that._isNonNegNum(e.correct)) return false;
+          if (e.score !== undefined && (!that._isNum(e.score) || e.score < -1000 || e.score > 10000)) return false;
+          if (e.streak !== undefined && !that._isNonNegNum(e.streak)) return false;
+        }
+        return true;
+      },
+      'ipas_wrongbook_v1': (v) => {
+        if (!Array.isArray(v)) return false;
+        if (v.length > 10000) return false;
+        for (const e of v) {
+          if (!that._isObj(e)) return false;
+          if (typeof e.qid !== 'string' || e.qid.length === 0 || e.qid.length > 100) return false;
+          if (e.nodeId !== undefined && e.nodeId !== null && (typeof e.nodeId !== 'string' || e.nodeId.length > 100)) return false;
+          if (e.wrongCount !== undefined && !that._isNonNegNum(e.wrongCount)) return false;
+          if (e.drillCount !== undefined && !that._isNonNegNum(e.drillCount)) return false;
+          if (e.mastered !== undefined && typeof e.mastered !== 'boolean') return false;
+        }
+        return true;
+      },
+      'ipas_error_reports_v1': (v) => {
+        if (!Array.isArray(v)) return false;
+        if (v.length > 10000) return false;
+        return v.every(e => that._isObj(e) && typeof e.qid === 'string' && e.qid.length > 0 && e.qid.length <= 100);
+      },
+      'ipas_settings_v1': (v) => that._isObj(v),
+      'ipas_session_state_v1': (v) => that._isObj(v),
+      'ipas_seen_correct_v1': (v) => Array.isArray(v) && v.length <= 100000 &&
+        v.every(x => typeof x === 'string' && x.length > 0 && x.length <= 100),
+      'ipas_player_v1': (v) => {
+        if (!that._isObj(v)) return false;
+        for (const k of ['hp', 'mp', 'level', 'xp', 'maxHp', 'maxMp']) {
+          if (v[k] !== undefined && (!that._isNum(v[k]) || v[k] < -10000 || v[k] > 100000)) return false;
+        }
+        return true;
+      },
+      'ipas_user_nickname_v1': (v) => typeof v === 'string' && v.length > 0 && v.length <= 20 && that.sanitizeNickname(v) === v,
+      'ipas_mode7_theater_v1': (v) => that._isObj(v) &&
+        (v.version === undefined || that._isNum(v.version)) &&
+        Array.isArray(v.history) && v.history.length <= 100 &&
+        v.history.every(h => that._isObj(h) && that._isNum(h.ts)),
+      'ipas_mode7_font_scale': (v) => typeof v === 'string' && v.length > 0 && v.length <= 10
+    };
+    // 模糊匹配(對應 ipas_sm2_* 等動態前綴)
+    this.KEY_VALIDATORS_PREFIX = {
+      'ipas_sm2_': (v) => v !== undefined   // 內容彈性,只要過 JSON.parse 即可
+    };
+  },
+  _getValidator(key) {
+    this._initValidators();
+    if (this.KEY_VALIDATORS[key]) return this.KEY_VALIDATORS[key];
+    for (const prefix of Object.keys(this.KEY_VALIDATORS_PREFIX)) {
+      if (key.startsWith(prefix)) return this.KEY_VALIDATORS_PREFIX[prefix];
+    }
+    return null;
+  },
+
   // === EXPORT ===
   async exportProgress() {
     if (this._busy) { showToast('⚠️ 進度匯入/出中,請稍候', 2000); return; }
@@ -2112,39 +2197,74 @@ const ProgressIO = {
       try { parsed = JSON.parse(text, this._secureReviver.bind(this)); }
       catch { throw new Error('JSON 格式錯誤'); }
       if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('檔案格式不對');
-      // 階段 4:Schema
+      // 階段 4:Strict envelope schema
       if (parsed.app !== this.APP_TAG) throw new Error('不是 IPAS AI 進度檔(app 標記不符)');
       if (parsed.version !== this.EXPORT_VERSION) throw new Error(`版本不相容(檔案 v${parsed.version},當前 v${this.EXPORT_VERSION})`);
-      if (!parsed.payload || typeof parsed.payload !== 'object' || Array.isArray(parsed.payload)) {
-        throw new Error('payload 結構錯誤');
+      if (!this._isObj(parsed.payload)) throw new Error('payload 結構錯誤(必須是 object)');
+      // envelope 不可有未知欄位(strict allowlist top-level keys)
+      const allowedTop = this.ALLOWED_ENVELOPE_KEYS;
+      for (const k of Object.keys(parsed)) {
+        if (allowedTop.indexOf(k) < 0) throw new Error(`envelope 含未知欄位「${k}」(strict 拒)`);
       }
-      let checksumMatch = true;
-      if (typeof parsed.checksum === 'string' && parsed.checksum.length === 64) {
-        const calc = await this._sha256(JSON.stringify(parsed.payload));
-        if (calc && calc !== parsed.checksum) checksumMatch = false;
+      // exportedAt 必須是合法 ISO 8601 + 不能是未來時間 + 不能過早
+      if (typeof parsed.exportedAt !== 'string') throw new Error('exportedAt 不是字串');
+      const expTime = Date.parse(parsed.exportedAt);
+      if (!Number.isFinite(expTime)) throw new Error('exportedAt 不是合法 ISO 日期');
+      const nowMs = Date.now();
+      if (expTime > nowMs + 5 * 60 * 1000) throw new Error('exportedAt 是未來時間(strict 拒,可能被竄改)');
+      if (expTime < Date.parse('2025-01-01')) throw new Error('exportedAt 早於最早合法日期 2025-01-01');
+      // nickname 若有,必須通過 sanitize
+      if (parsed.nickname !== undefined && parsed.nickname !== '') {
+        if (typeof parsed.nickname !== 'string') throw new Error('nickname 不是字串');
+        if (parsed.nickname.length > 20) throw new Error('nickname 過長');
+        if (this.sanitizeNickname(parsed.nickname) !== parsed.nickname) throw new Error('nickname 含不允許字元');
       }
-      // 階段 5+6:Key allowlist + Value validation
+      // keyCount(若有)必須與實際相符
+      const actualKeyCount = Object.keys(parsed.payload).length;
+      if (parsed.keyCount !== undefined && parsed.keyCount !== actualKeyCount) {
+        throw new Error(`keyCount 不符(宣稱 ${parsed.keyCount},實際 ${actualKeyCount})`);
+      }
+      if (actualKeyCount === 0) throw new Error('payload 為空');
+
+      // 階段 5:Checksum 硬拒(strict,不再 advisory)
+      if (typeof parsed.checksum !== 'string' || parsed.checksum.length !== 64 || !/^[0-9a-f]+$/.test(parsed.checksum)) {
+        throw new Error('檔案缺少 checksum 或格式錯,strict 拒(可能被竄改)');
+      }
+      const calc = await this._sha256(JSON.stringify(parsed.payload));
+      if (!calc) {
+        // SubtleCrypto 真的不可用(極舊瀏覽器 / 非 HTTPS),警告但放行(線上 GitHub Pages 都 https,實際不會走到這)
+        console.warn('SubtleCrypto unavailable, checksum bypass');
+      } else if (calc !== parsed.checksum) {
+        throw new Error('SHA-256 checksum 不符,檔案已被竄改(strict 拒)');
+      }
+
+      // 階段 6:Strict per-key + per-value validation(any fail → 整檔拒)
       const cleanPayload = {};
-      const rejected = [];
       for (const k of Object.keys(parsed.payload)) {
-        if (this.DANGEROUS_KEYS.indexOf(k) >= 0) { rejected.push(k + '(危險鍵)'); continue; }
-        if (!this._isAllowedKey(k)) { rejected.push(k + '(不在白名單)'); continue; }
-        const v = parsed.payload[k];
-        if (!this._isValidValue(v)) { rejected.push(k + '(值格式錯)'); continue; }
-        cleanPayload[k] = v;
+        if (this.DANGEROUS_KEYS.indexOf(k) >= 0) throw new Error(`payload 含危險 key「${k}」`);
+        if (!this._isAllowedKey(k)) throw new Error(`payload 含不允許的 key「${k}」(不在白名單)`);
+        const rawValue = parsed.payload[k];
+        if (typeof rawValue !== 'string') throw new Error(`key「${k}」的值不是字串`);
+        if (rawValue.length === 0) throw new Error(`key「${k}」的值為空`);
+        if (rawValue.length > this.MAX_VALUE_SIZE) throw new Error(`key「${k}」的值超過大小上限`);
+        let parsedValue;
+        try { parsedValue = JSON.parse(rawValue, this._secureReviver.bind(this)); }
+        catch (e) { throw new Error(`key「${k}」的值無法 parse 為 JSON`); }
+        const validator = this._getValidator(k);
+        if (!validator) throw new Error(`key「${k}」無對應 schema validator(未知 key)`);
+        if (!validator(parsedValue)) throw new Error(`key「${k}」資料 schema 不符,內容可能被竄改`);
+        cleanPayload[k] = rawValue;
       }
       const acceptCount = Object.keys(cleanPayload).length;
-      if (acceptCount === 0) throw new Error('沒有任何合法的進度資料可匯入');
       // 階段 7:備份 + confirm + atomic 寫入
       const currentNick = this.getNickname() || '(尚未設定)';
       const importNick = this.sanitizeNickname(parsed.nickname || '') || '(未知)';
       const exportedAt = String(parsed.exportedAt || '').substring(0, 19) || '(未知時間)';
       const msg = [
-        '即將匯入進度,請確認:',
+        '✅ 所有 strict 驗證通過。即將匯入進度:',
         '• 來源:' + importNick + '(' + exportedAt + ')',
         '• 將覆蓋:' + currentNick + ' 的所有現有進度',
-        '• 將寫入 ' + acceptCount + ' 項資料' + (rejected.length > 0 ? '(已拒絕 ' + rejected.length + ' 項不安全資料)' : ''),
-        checksumMatch ? '' : '⚠️ checksum 不符,檔案可能被修改過',
+        '• 將寫入 ' + acceptCount + ' 項資料(全部通過 schema + checksum 驗證)',
         '',
         '此操作會在覆寫前【自動下載當前進度備份檔】。',
         '',
