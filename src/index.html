@@ -419,6 +419,9 @@
       <h1>📘 IPAS AI 中級 — 衝刺練習場</h1>
       <p style="color:var(--fg-dim)">考試日:2026-05-23 · 鐵律驅動的個人化學習</p>
       <div class="progress-bar"><div class="progress-fill" id="overall-progress" style="width:0%"></div></div>
+      <div class="actions" style="margin-top:10px">
+        <button class="btn btn-primary" onclick="show('view-rules')">📖 遊戲規則 / 操作指南</button>
+      </div>
       <div class="actions" id="er-export-actions" style="margin-top:10px;display:none">
         <button class="btn btn-ghost" id="er-export-btn" onclick="ErrorReports.export()">📤 匯出錯誤回報(0 筆)</button>
         <button class="btn btn-ghost" onclick="ErrorReports.clear()">🗑️ 清除回報</button>
@@ -547,6 +550,184 @@
 
   <!-- SM-2 複習佇列 -->
   <section id="view-sm2-review" class="view"></section>
+
+  <!-- 遊戲規則 / 操作指南(靜態頁) -->
+  <section id="view-rules" class="view">
+    <div class="card">
+      <h1>📖 遊戲規則 / 操作指南</h1>
+      <p style="color:var(--fg-dim)">2026-05-23 IPAS AI 應用規劃師中級考試衝刺 · 鐵律驅動的個人化學習場</p>
+      <div class="actions">
+        <button class="btn btn-ghost" onclick="goHome()">← 回首頁</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🎯 任務目標</h2>
+      <p>2026-05-23 IPAS AI 應用規劃師中級考試合格(70 分)。本場練習場依五大鐵律設計,專治「題目都背過但考試還是不會」「都做一樣的題目」「會做但講不出來」。</p>
+      <ul style="line-height:1.9;margin-left:20px">
+        <li><strong>真考標準</strong>:50 題 90 分鐘(模考用此節奏,Mode 7)</li>
+        <li><strong>核心策略</strong>:錯題下鑽 + 動態題庫(同題不同變數)+ 熟練度追蹤</li>
+        <li><strong>進度儲存</strong>:全部存在瀏覽器 localStorage,清資料 = 重置;換瀏覽器 / 重灌系統不會同步</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>⚔️ 角色狀態(HP / MP / EXP / Level)</h2>
+      <p>戰鬥模式有 RPG 三條值:</p>
+      <ul style="line-height:1.9;margin-left:20px">
+        <li><strong>HP(血量)</strong>:初始 100/100。答錯扣血(各 mode 8~12 + boss HP 加成)。歸 0 → 戰鬥失敗,可重來,不會永久死亡。</li>
+        <li><strong>MP(法力)</strong>:初始 50/50。用來發動技能(提示、消除錯選項、雙倍傷害等)。</li>
+        <li><strong>EXP(經驗)</strong>:答對累積,局末結算發放。</li>
+        <li><strong>Level(等級)</strong>:從 1 開始。升級條件:EXP ≥ expMax(初 100,每升 ×1.5 → 150 / 225 / 337…)。</li>
+      </ul>
+      <p style="margin-top:12px"><strong>升級獎勵</strong>:HP 上限 +20、MP 上限 +10、HP/MP 補滿、技能點 +1。</p>
+    </div>
+
+    <div class="card">
+      <h2>📈 EXP 怎麼賺</h2>
+      <ul style="line-height:1.9;margin-left:20px">
+        <li>答對題目 → 局末一次性結算(每模式公式不同,大致 10~30 EXP/題,難度與 combo 加乘)</li>
+        <li>BOSS 戰擊殺 → 額外 bonus EXP</li>
+        <li>下鑽變化型答對 → 同題加成(鐵律 #1)</li>
+        <li><strong>注意</strong>:EXP 不是即時加,要打完一整局才給;中途離場可能損失</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>✨ MP 怎麼賺 / 怎麼花</h2>
+      <h3 style="color:var(--success)">增加(只有 3 條路徑,沒有自然回復)</h3>
+      <table style="width:100%;border-collapse:collapse;margin:8px 0">
+        <thead><tr style="background:var(--bg-3)"><th style="padding:8px;text-align:left">模式</th><th style="padding:8px;text-align:left">答對回 MP</th><th style="padding:8px;text-align:left">最大連擊加成</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)">案 1 BOSS</td><td style="padding:8px;border-top:1px solid var(--border)">2 + min(combo, 3)</td><td style="padding:8px;border-top:1px solid var(--border)">+3 ~ +5</td></tr>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)">案 2 程式偵探</td><td style="padding:8px;border-top:1px solid var(--border)">4 + min(combo, 4)</td><td style="padding:8px;border-top:1px solid var(--border)">+5 ~ +8 ⚡ 最快</td></tr>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)">案 3 Pipeline</td><td style="padding:8px;border-top:1px solid var(--border)">2 + min(combo, 4)</td><td style="padding:8px;border-top:1px solid var(--border)">+3 ~ +6</td></tr>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)">案 4 配對戰</td><td style="padding:8px;border-top:1px solid var(--border)">5 + min(combo, 4)</td><td style="padding:8px;border-top:1px solid var(--border)">+5 ~ +9</td></tr>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)">案 5 弱點獵人</td><td style="padding:8px;border-top:1px solid var(--border)">5 + min(combo, 3)</td><td style="padding:8px;border-top:1px solid var(--border)">+6 ~ +8 ⚡ 最快</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:8px"><strong>另兩條路徑</strong>:</p>
+      <ul style="line-height:1.9;margin-left:20px">
+        <li><strong>升級補滿</strong>:升 1 級 → mpMax+10、MP 直接補到上限</li>
+        <li><strong>初始值</strong>:新角色 50/50,不需賺(只有清資料才會回此值)</li>
+      </ul>
+      <p style="margin-top:12px;color:var(--warn)">⚠️ <strong>沒有自然回復、沒有道具、沒有商店</strong>。MP 耗盡 → 技能 disabled。要回血只能找回題目答對。</p>
+
+      <h3 style="color:var(--danger);margin-top:16px">消耗(各模式技能對照表)</h3>
+      <table style="width:100%;border-collapse:collapse;margin:8px 0">
+        <thead><tr style="background:var(--bg-3)"><th style="padding:8px;text-align:left">模式</th><th style="padding:8px;text-align:left">技能</th><th style="padding:8px;text-align:left">效果</th><th style="padding:8px;text-align:left">MP</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)" rowspan="3">案 1 BOSS</td><td style="padding:8px;border-top:1px solid var(--border)">💡 提示</td><td style="padding:8px;border-top:1px solid var(--border)">看 hook(口訣)</td><td style="padding:8px;border-top:1px solid var(--border)">10</td></tr>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)">❌ 消除 2 項</td><td style="padding:8px;border-top:1px solid var(--border)">去掉 2 個錯選項</td><td style="padding:8px;border-top:1px solid var(--border)">15</td></tr>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)">⚡ 雙倍</td><td style="padding:8px;border-top:1px solid var(--border)">下題答對傷害 ×2</td><td style="padding:8px;border-top:1px solid var(--border)">20</td></tr>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)" rowspan="3">案 2 程式偵探</td><td style="padding:8px;border-top:1px solid var(--border)">🔍 靜態分析</td><td style="padding:8px;border-top:1px solid var(--border)">看記憶口訣</td><td style="padding:8px;border-top:1px solid var(--border)">8</td></tr>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)">⚡ 執行模擬</td><td style="padding:8px;border-top:1px solid var(--border)">消除一個錯選項</td><td style="padding:8px;border-top:1px solid var(--border)">14</td></tr>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)">📋 Code Review</td><td style="padding:8px;border-top:1px solid var(--border)">看 misconceptions + 陷阱</td><td style="padding:8px;border-top:1px solid var(--border)">18</td></tr>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)" rowspan="2">案 3 Pipeline</td><td style="padding:8px;border-top:1px solid var(--border)">✨ 自動定位</td><td style="padding:8px;border-top:1px solid var(--border)">自動放對 1 格</td><td style="padding:8px;border-top:1px solid var(--border)">10</td></tr>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)">💡 顯示口訣</td><td style="padding:8px;border-top:1px solid var(--border)">看 hook</td><td style="padding:8px;border-top:1px solid var(--border)">8</td></tr>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)" rowspan="3">案 4 配對戰</td><td style="padding:8px;border-top:1px solid var(--border)">🔍 揭露一對</td><td style="padding:8px;border-top:1px solid var(--border)">秀出一組配對</td><td style="padding:8px;border-top:1px solid var(--border)">12</td></tr>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)">❄️ 凍結時間 5s</td><td style="padding:8px;border-top:1px solid var(--border)">倒數凍結 5 秒</td><td style="padding:8px;border-top:1px solid var(--border)">18</td></tr>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)">🔀 重排棋盤</td><td style="padding:8px;border-top:1px solid var(--border)">洗牌一次</td><td style="padding:8px;border-top:1px solid var(--border)">8</td></tr>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)" rowspan="3">案 5 弱點獵人</td><td style="padding:8px;border-top:1px solid var(--border)">🔍 弱點分析</td><td style="padding:8px;border-top:1px solid var(--border)">消除 2 個錯選項</td><td style="padding:8px;border-top:1px solid var(--border)">12</td></tr>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)">🧠 強化記憶</td><td style="padding:8px;border-top:1px solid var(--border)">該節點熟練度 +0.10</td><td style="padding:8px;border-top:1px solid var(--border)">18</td></tr>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)">🎯 下鑽訓練</td><td style="padding:8px;border-top:1px solid var(--border)">進變化型(免費)</td><td style="padding:8px;border-top:1px solid var(--border)">0</td></tr>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)">案 6 卡牌圖鑑</td><td style="padding:8px;border-top:1px solid var(--border)">⚔️ 挑戰節點</td><td style="padding:8px;border-top:1px solid var(--border)">解封節點挑戰題</td><td style="padding:8px;border-top:1px solid var(--border)">5</td></tr>
+        </tbody>
+      </table>
+      <p style="color:var(--fg-dim);font-size:0.9rem;margin-top:8px">📌 MP 規劃:Mode 2 / Mode 5 連對最賺 MP;Mode 1 BOSS 戰回 MP 最少,要省著用技能。</p>
+    </div>
+
+    <div class="card">
+      <h2>🔥 Combo 連擊機制</h2>
+      <ul style="line-height:1.9;margin-left:20px">
+        <li>連續答對 → Combo +1;答錯 / 超時 → 歸 0</li>
+        <li>Combo 越高,HP / MP 回越多(各 mode 公式不同,封頂約 3~5 連)</li>
+        <li>5 連擊 → 🎉 confetti 特效 + 強化視覺回饋</li>
+        <li>暴擊機率隨 Combo 上升(Mode 1/5 戰鬥模式)</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>🎮 八個模式總覽</h2>
+      <table style="width:100%;border-collapse:collapse;margin:8px 0;font-size:0.92rem">
+        <thead><tr style="background:var(--bg-3)"><th style="padding:8px;text-align:left">模式</th><th style="padding:8px;text-align:left">玩法</th><th style="padding:8px;text-align:left">推薦時機</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)"><strong>案 1 BOSS 戰</strong></td><td style="padding:8px;border-top:1px solid var(--border)">12 產業情境,扮演 AI 顧問破關</td><td style="padding:8px;border-top:1px solid var(--border)">情境決策訓練、跨領域應用</td></tr>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)"><strong>案 2 程式偵探</strong></td><td style="padding:8px;border-top:1px solid var(--border)">numpy / sklearn / PyTorch 程式判讀</td><td style="padding:8px;border-top:1px solid var(--border)">複習程式碼題、衝 MP 升級</td></tr>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)"><strong>案 3 Pipeline 拼圖</strong></td><td style="padding:8px;border-top:1px solid var(--border)">ML 流程步驟排序</td><td style="padding:8px;border-top:1px solid var(--border)">流程整體觀念複習</td></tr>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)"><strong>案 4 配對戰</strong></td><td style="padding:8px;border-top:1px solid var(--border)">8 組易混淆對拖拉配對</td><td style="padding:8px;border-top:1px solid var(--border)">入門 / 速戰 / 快速暖身</td></tr>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)"><strong>案 5 弱點獵人</strong></td><td style="padding:8px;border-top:1px solid var(--border)">系統追熟練度自動針對弱點下鑽</td><td style="padding:8px;border-top:1px solid var(--border)">自適應主力訓練</td></tr>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)"><strong>案 6 卡牌圖鑑</strong></td><td style="padding:8px;border-top:1px solid var(--border)">94 張節點卡(灰 → 半透 → 彩 → 金)</td><td style="padding:8px;border-top:1px solid var(--border)">教學預習段、查節點知識</td></tr>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)"><strong>案 7 模考劇場</strong></td><td style="padding:8px;border-top:1px solid var(--border)">真考節奏(50 題 90 分鐘)</td><td style="padding:8px;border-top:1px solid var(--border)">5/23 前實戰演練,臨場感</td></tr>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)"><strong>案 8 Code Trace</strong></td><td style="padding:8px;border-top:1px solid var(--border)">逐行追 Python 變數狀態</td><td style="padding:8px;border-top:1px solid var(--border)">解 code reading 深層題</td></tr>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)"><strong>📝 錯題本</strong></td><td style="padding:8px;border-top:1px solid var(--border)">回顧錯題 + 變化型訓練</td><td style="padding:8px;border-top:1px solid var(--border)">鐵律 #1 治本</td></tr>
+          <tr><td style="padding:8px;border-top:1px solid var(--border)"><strong>📅 今日複習(SM-2)</strong></td><td style="padding:8px;border-top:1px solid var(--border)">間隔重複演算法排程</td><td style="padding:8px;border-top:1px solid var(--border)">每日 5 分鐘長期記憶</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>📅 SM-2 間隔重複系統</h2>
+      <p>每題依答題表現,系統自動排下次該複習日:</p>
+      <ul style="line-height:1.9;margin-left:20px">
+        <li><strong>答對 + 流暢</strong>(高 EF):間隔變長(1 → 6 → 15 → 35 天遞增)</li>
+        <li><strong>答對 + 卡頓</strong>:間隔小幅延長</li>
+        <li><strong>答錯</strong>:重置,明天再考</li>
+        <li><strong>首頁「📅 今日複習」</strong>會顯示到期題數,清空就過關</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>📝 錯題本(鐵律 #1 治本)</h2>
+      <ul style="line-height:1.9;margin-left:20px">
+        <li>每答錯一題自動入冊</li>
+        <li>連續答對 3 次 → 從錯題本移除(視為熟練)</li>
+        <li>錯題本內每題都有變化型訓練(case_a/b/c 動態出題)</li>
+        <li>進入錯題本 → 重做錯題 + 變化型,跨場累積熟練度</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>📜 五大鐵律(出題與機制原則)</h2>
+      <ol style="line-height:1.9;margin-left:20px">
+        <li><strong>錯題下鑽</strong> — 答錯一題 = 看見一個知識盲點,系統強制針對同節點生成變化型再考,不讓你跳過</li>
+        <li><strong>動態題庫(case_a/b/c)</strong> — 同題不同變數,治「都背過題目了還是不會」</li>
+        <li><strong>不抄考古題</strong> — 不直接搬 114-2 真題,自製改寫保留原概念但變題型</li>
+        <li><strong>選項等長</strong> — 消除「選最長那個就對」的作弊路徑(IPAS 真考也遵守)</li>
+        <li><strong>來源忠實</strong> — 所有節點 / 題目都對應官方 KB 白名單,不憑空造</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h2>🖥️ 介面元素說明</h2>
+      <ul style="line-height:1.9;margin-left:20px">
+        <li><strong>D-X 倒數</strong>(頂部紅字)— 距 2026-05-23 還幾天,≤ 7 天會閃動警示</li>
+        <li><strong>「✅ 已熟練 X / Y」</strong>— 分子分母都是「節點數」(不是題數)。Y = 題庫實際出現的 unique node_id 總數</li>
+        <li><strong>「📤 匯出錯誤回報」</strong>— 玩到題目印錯 / 選項重複時點題目下方「🚨 回報問題」,首頁可匯出 JSON 給作者</li>
+        <li><strong>🏠 首頁 / 📝 錯題 / 📊 統計</strong>(底部)— 手機版置底固定 nav</li>
+        <li><strong>戰鬥畫面</strong>:HP/MP 條 + 等級 + 連擊浮動數字 + 傷害特效</li>
+        <li><strong>結算頁</strong>:該局正確率 / EXP 取得 / 升級提示 / 錯題自動入冊提示</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>⚙️ 使用守則 / 進階小撇步</h2>
+      <ul style="line-height:1.9;margin-left:20px">
+        <li><strong>清資料 = 重置整個角色</strong>:DevTools → Application → localStorage → 清除,所有進度 / SM-2 / 錯題本一起歸零</li>
+        <li><strong>跨瀏覽器無同步</strong>:Chrome 與 Edge 各自獨立進度,刻意換瀏覽器 = 從 0 開始</li>
+        <li><strong>離開戰鬥</strong>:點 🏠 首頁會中止當前戰鬥,該局 EXP 不結算;Mode 7 模考中途離場會清掉模考狀態</li>
+        <li><strong>計時器</strong>:目前已關閉(2026-05-11 因切題時誤觸 false-timeout,escape hatch 暫停),不會被超時逼答</li>
+        <li><strong>每日節奏建議</strong>:① 先清 📅 今日複習(5 分鐘)→ ② 案 5 弱點獵人(20 分鐘)→ ③ 案 7 一局模考(週末)</li>
+        <li><strong>真考前一週</strong>:每天一局案 7(對標 90 分鐘)+ 錯題本回顧,不要再吃新題</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="actions">
+        <button class="btn btn-primary" onclick="goHome()">← 回首頁開始練習</button>
+      </div>
+    </div>
+  </section>
 </main>
 
 <nav class="bottom-nav">

@@ -49,3 +49,6 @@ desktop.ini
 *.key
 *.pem
 *-credentials.json
+
+# Ad-hoc mock script outputs
+scripts/_mock_*.txt
