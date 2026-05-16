@@ -200,9 +200,9 @@
       "stem": "客服意圖分類模型輸出三類(查詢 / 投訴 / 取消),樣本嚴重不平衡。下列程式以 average='weighted' 計算 precision,輸出最接近?",
       "code_block": "import numpy as np\nfrom sklearn.metrics import precision_score\n\ny_true = np.array([0]*{n0} + [1]*{n1} + [2]*{n2})\ny_pred = np.array(\n    [0]*{tp0} + [1]*({n0}-{tp0}) +\n    [1]*{tp1} + [0]*({n1}-{tp1}) +\n    [2]*{tp2} + [0]*({n2}-{tp2}))\n\nprint(round(precision_score(y_true, y_pred, average='weighted'), 3))",
       "stem_variables": {
-        "case_a": {"n0": "700", "n1": "200", "n2": "100", "tp0": "630", "tp1": "150", "tp2": "60", "answer": "0.725", "wrong1": "0.69", "wrong2": "0.84", "wrong3": "1.0"},
-        "case_b": {"n0": "600", "n1": "300", "n2": "100", "tp0": "540", "tp1": "240", "tp2": "70", "answer": "0.7",   "wrong1": "0.68", "wrong2": "0.85", "wrong3": "1.0"},
-        "case_c": {"n0": "800", "n1": "150", "n2": "50",  "tp0": "720", "tp1": "120", "tp2": "30", "answer": "0.756", "wrong1": "0.72", "wrong2": "0.87", "wrong3": "1.0"}
+        "case_a": {"n0": "700", "n1": "200", "n2": "100", "tp0": "630", "tp1": "150", "tp2": "60", "answer": "0.849", "wrong1": "0.69", "wrong2": "0.84", "wrong3": "1.0"},
+        "case_b": {"n0": "600", "n1": "300", "n2": "100", "tp0": "540", "tp1": "240", "tp2": "70", "answer": "0.854", "wrong1": "0.68", "wrong2": "0.83", "wrong3": "1.0"},
+        "case_c": {"n0": "800", "n1": "150", "n2": "50",  "tp0": "720", "tp1": "120", "tp2": "30", "answer": "0.888", "wrong1": "0.72", "wrong2": "0.87", "wrong3": "1.0"}
       },
       "options": [
         {"text": "{answer}", "is_correct": true, "trap_type": "正解:各類 precision 以該類『真實樣本數』加權平均"},
@@ -335,7 +335,7 @@
       "stem": "影音推薦系統評估 Top-{k} 結果。實際相關影片集合為 relevant,模型排序前 {k} 名為 top_k。下列程式 Precision@K 輸出最接近?",
       "code_block": "import numpy as np\n\nrelevant = np.array({relevant})\ntop_k    = np.array({topk})\nK = {k}\n\nhits = np.sum(np.isin(top_k, relevant))\nprecision_at_k = hits / K\nprint(round(precision_at_k, 3))",
       "stem_variables": {
-        "case_a": {"k": "10", "relevant": "[1,5,7,9,12,15,18,20,25,30,33,40,50]",  "topk": "[1,2,5,7,9,11,12,15,16,18]", "answer": "0.8",   "wrong1": "0.615", "wrong2": "1.0", "wrong3": "0.5"},
+        "case_a": {"k": "10", "relevant": "[1,5,7,9,12,15,18,20,25,30,33,40,50]",  "topk": "[1,2,5,7,9,11,12,15,16,18]", "answer": "0.7",   "wrong1": "0.538", "wrong2": "1.0", "wrong3": "0.5"},
         "case_b": {"k": "5",  "relevant": "[2,4,6,8,10,12,14,16,18,20]",            "topk": "[1,2,3,4,6]",                "answer": "0.6",   "wrong1": "0.3",   "wrong2": "1.0", "wrong3": "0.4"},
         "case_c": {"k": "8",  "relevant": "[3,7,11,15,19,23,27,31,35,39,43]",       "topk": "[3,7,9,11,13,15,17,19]",     "answer": "0.625", "wrong1": "0.455", "wrong2": "1.0", "wrong3": "0.5"}
       },

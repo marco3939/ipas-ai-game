@@ -1,8 +1,8 @@
 {
   "summary": {
     "totalQ": 630,
-    "calcQ": 96,
-    "casesChecked": 300,
+    "calcQ": 95,
+    "casesChecked": 297,
     "violations": 0
   },
   "violations": []

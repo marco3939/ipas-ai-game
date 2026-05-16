@@ -267,28 +267,23 @@
       "format": "code_reading",
       "difficulty": "medium",
       "source_level": "L1",
-      "stem": "外送平台欲依城市權重對訂單做加權隨機抽樣以估算口味偏好。固定亂數種子下,下列程式輸出的樣本陣列為何?",
-      "code_block": "import numpy as np\nrng = np.random.default_rng({seed})\ncities = np.array(['TPE', 'TXG', 'KHH'])\nweights = np.array([{w1}, {w2}, {w3}])\nsample = rng.choice(cities, size=4, p=weights)\nprint(list(sample))",
-      "stem_variables": {
-        "case_a": {"seed": "0", "w1": "0.7", "w2": "0.2", "w3": "0.1", "answer": "依機率傾向 TPE 較多,但需實際執行確認具體序列", "wrong1": "[TPE, TPE, TPE, TPE]", "wrong2": "[KHH, KHH, KHH, KHH]", "wrong3": "報錯:size 必須等於 cities 長度"},
-        "case_b": {"seed": "1", "w1": "0.1", "w2": "0.2", "w3": "0.7", "answer": "依機率傾向 KHH 較多,但需實際執行確認具體序列", "wrong1": "[KHH, KHH, KHH, KHH]", "wrong2": "[TPE, TPE, TPE, TPE]", "wrong3": "報錯:size 必須等於 cities 長度"},
-        "case_c": {"seed": "2", "w1": "0.33", "w2": "0.34", "w3": "0.33", "answer": "近似均勻抽樣,各城出現機率約等", "wrong1": "[TPE, TPE, TPE, TPE]", "wrong2": "[TXG, TXG, TXG, TXG]", "wrong3": "報錯:p 必須加總為 1"}
-      },
+      "stem": "外送平台欲依城市權重對訂單做加權隨機抽樣以估算口味偏好。下列關於此加權抽樣程式的敘述,何者最正確?",
+      "code_block": "import numpy as np\nrng = np.random.default_rng(0)\ncities = np.array(['TPE', 'TXG', 'KHH'])\nweights = np.array([0.7, 0.2, 0.1])\nsample = rng.choice(cities, size=4, p=weights)\nprint(list(sample))",
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為最高權重 100% 中選"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為最低權重 100% 中選"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為 size / p 維度限制"}
+        {"text": "輸出 4 個城市的序列,TPE 出現機率最高(p=0.7),但具體序列仍受亂數決定,並非必為全 TPE", "is_correct": true, "trap_type": "正解:加權影響長期頻率,單次序列仍隨機"},
+        {"text": "輸出必為 ['TPE','TPE','TPE','TPE'],因 weights[0]=0.7 > 0.5 為主導機率", "is_correct": false, "trap_type": "誤以為最高機率即必選"},
+        {"text": "輸出必為 ['KHH','KHH','KHH','KHH'],因 KHH 為陣列最後一項作為預設", "is_correct": false, "trap_type": "誤以為輸出與順序相關"},
+        {"text": "報錯:size=4 必須等於 cities 的長度(3),不符會丟出 ValueError", "is_correct": false, "trap_type": "誤以為 size 與 cities 維度需相等"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "rng.choice(a, size, p) 為加權隨機抽樣,各元素被抽到的機率正比於 p。size=4 表抽 4 次(可重複),機率向量需加總為 1。輸出非單一固定字母,而是依權重分佈的機率序列。",
+        "correct": "rng.choice(a, size, p) 為加權隨機抽樣,各元素被抽到的機率正比於 p。size=4 表抽 4 次(可重複,with replacement),機率向量需加總為 1。輸出非固定值,而是依權重分佈的機率序列;TPE 出現次數平均較多但任何單次抽樣的具體序列受亂數種子決定。",
         "wrong": {
-          "{wrong1}": "權重高不代表 100% 中選,只是出現機率較高;仍可能抽到其他城市。",
-          "{wrong2}": "與權重高 100% 中選同理錯誤。",
-          "{wrong3}": "size 不需等於 a 長度,p 長度才需等於 a 長度且加總為 1;本題 p 已正規化。"
+          "輸出必為 ['TPE','TPE','TPE','TPE'],因 weights[0]=0.7 > 0.5 為主導機率": "權重高不代表 100% 中選,只是出現機率較高;0.7 機率仍允許 30% 為其他城市。",
+          "輸出必為 ['KHH','KHH','KHH','KHH'],因 KHH 為陣列最後一項作為預設": "rng.choice 不會偏好陣列尾端;順序與抽樣機率無關。",
+          "報錯:size=4 必須等於 cities 的長度(3),不符會丟出 ValueError": "size 是抽樣次數,可大於、小於或等於 cities 長度;rng.choice 預設 with replacement 允許 size > len(a)。p 長度才需等於 a 長度且加總為 1。"
         },
-        "hook": "rng.choice(p=weights) 加權抽樣,權重高的機率高但非確定"
+        "hook": "rng.choice(p=weights) 加權抽樣 — 權重高的長期頻率高,但單次序列仍隨機"
       },
       "misconceptions": ["以為高權重 = 必中", "把 size 與 p 維度限制混淆"],
       "related_node_ids": ["n_L22301_001"],
@@ -410,7 +405,7 @@
       "stem": "便利商店分析師欲用 apriori 找出最小支持度 0.5 的頻繁項集。請問下列程式 print 的『頻繁項集數量』為何?(資料如下)",
       "code_block": "import pandas as pd\nfrom mlxtend.frequent_patterns import apriori\n# 4 筆交易 × 3 商品 one-hot\ndf = pd.DataFrame({\n    'A': [{a1},{a2},{a3},{a4}],\n    'B': [{b1},{b2},{b3},{b4}],\n    'C': [{c1},{c2},{c3},{c4}]\n}).astype(bool)\nfreq = apriori(df, min_support={ms}, use_colnames=True)\nprint(len(freq))",
       "stem_variables": {
-        "case_a": {"a1": "1", "a2": "1", "a3": "1", "a4": "0", "b1": "1", "b2": "1", "b3": "0", "b4": "1", "c1": "0", "c2": "1", "c3": "0", "c4": "0", "ms": "0.5", "answer": "4", "wrong1": "3", "wrong2": "7", "wrong3": "1"},
+        "case_a": {"a1": "1", "a2": "1", "a3": "1", "a4": "0", "b1": "1", "b2": "1", "b3": "0", "b4": "0", "c1": "0", "c2": "0", "c3": "1", "c4": "1", "ms": "0.5", "answer": "4", "wrong1": "3", "wrong2": "7", "wrong3": "1"},
         "case_b": {"a1": "1", "a2": "1", "a3": "0", "a4": "1", "b1": "1", "b2": "0", "b3": "1", "b4": "1", "c1": "1", "c2": "1", "c3": "0", "c4": "0", "ms": "0.5", "answer": "5", "wrong1": "3", "wrong2": "6", "wrong3": "1"},
         "case_c": {"a1": "1", "a2": "1", "a3": "1", "a4": "1", "b1": "1", "b2": "1", "b3": "1", "b4": "1", "c1": "0", "c2": "0", "c3": "0", "c4": "0", "ms": "0.5", "answer": "3", "wrong1": "7", "wrong2": "1", "wrong3": "4"}
       },

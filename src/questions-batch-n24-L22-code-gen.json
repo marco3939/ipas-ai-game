@@ -29,9 +29,9 @@
       "stem": "社群輿情團隊想統計一段中文貼文的『詞數』與『token 數』差異(中文 token 通常比詞多)。下列程式輸出為何?",
       "code_block": "text = '{text}'\nword_count = len(text.split())\n# 模擬 tokenizer:每個非空白字元算 1 token\ntoken_count = len([c for c in text if not c.isspace()])\nprint(word_count, token_count)",
       "stem_variables": {
-        "case_a": {"text": "生成式 AI 改變產業", "answer": "4 9", "wrong1": "9 9", "wrong2": "4 4", "wrong3": "5 10"},
-        "case_b": {"text": "大型 語言 模型", "answer": "3 7", "wrong1": "7 7", "wrong2": "3 3", "wrong3": "4 8"},
-        "case_c": {"text": "資料 驅動 決策 流程", "answer": "4 10", "wrong1": "10 10", "wrong2": "4 4", "wrong3": "5 11"}
+        "case_a": {"text": "生成式 AI 改變產業", "answer": "3 9", "wrong1": "9 9", "wrong2": "3 3", "wrong3": "4 10"},
+        "case_b": {"text": "大型 語言 模型", "answer": "3 6", "wrong1": "6 6", "wrong2": "3 3", "wrong3": "4 7"},
+        "case_c": {"text": "資料 驅動 決策 流程", "answer": "4 8", "wrong1": "8 8", "wrong2": "4 4", "wrong3": "5 9"}
       },
       "options": [
         {"text": "{answer}", "is_correct": true},
