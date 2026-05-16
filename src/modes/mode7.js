@@ -461,7 +461,11 @@
         // - locked: 已送出本題 — 答案進入 state.answers,UI 禁用選項,不可改
         // 此設計對齊真考:答題期 hide 對錯,送出鎖定;結算才揭曉
         draft: {},                  // {idx: {userKey}} — 草稿選擇,未送出
-        locked: new Set()           // 已送出本題的 idx 集合(送出後 options 鎖定)
+        locked: new Set(),          // 已送出本題的 idx 集合(送出後 options 鎖定)
+        // 2026-05-16 結算後逐題回顧 mode(使用者要求:考完可逐題 review 確認看完才能離開)
+        reviewMode: false,          // 是否進入結算後 review 模式
+        reviewIdx: 0,               // review 當前題目索引
+        reviewedSet: new Set()      // 已檢視過的題目 idx(進 review 即標記)
       };
 
       // 套用字級設定(從 localStorage 載入)
@@ -1403,8 +1407,10 @@
                          reason === 'submit' ? '📤 已交卷' :
                          '✅ 全部完成';
 
-      // 儲存結算用的 lineup(供 _renderAllExplanations 使用)
+      // 儲存結算用的 lineup(供 _renderAllExplanations + reviewMode 使用)
       this._lastResultLineup = result.lineup || [];
+      this._lastResult = result;
+      this._lastResultReason = reason;
 
       // Pace Heatmap
       const heatmap = this._buildHeatmapHTML(result);
@@ -1524,11 +1530,15 @@
         ${markedBlock}
 
         <div class="card">
+          <p style="font-size:0.85rem;color:var(--fg-dim);margin-bottom:8px;text-align:center">
+            💡 建議先「📚 逐題回顧」確認每題都看過(每題可加入錯題本),再離開模考結果
+          </p>
           <div class="actions" style="justify-content:center;flex-wrap:wrap">
-            <button class="btn btn-primary" onclick="Mode7.start()">🔁 再來一場</button>
+            <button class="btn btn-primary" onclick="Mode7.startReview()">📚 逐題回顧 <span id="m7-review-progress-badge" style="font-size:0.85rem;opacity:0.85">(${this.state.reviewedSet ? this.state.reviewedSet.size : 0}/${result.total} 已看)</span></button>
             <button class="btn btn-warn" onclick="Mode7.drillAllWrong()" ${result.topWrong.length === 0 ? 'disabled' : ''}>🎯 全部錯題下鑽</button>
             <button class="btn btn-ghost" onclick="Mode7.expandAllExplanations()">📖 展開所有解析</button>
-            <button class="btn btn-ghost" onclick="goHome()">🏠 回首頁</button>
+            <button class="btn btn-ghost" onclick="Mode7.start()">🔁 再來一場</button>
+            <button class="btn btn-ghost" onclick="Mode7._confirmExitFromResult()">🏠 回首頁</button>
           </div>
         </div>
 
@@ -1544,6 +1554,199 @@
       if (overallPct >= 80) GameFX.bigConfetti();
       else if (overallPct >= 60) GameFX.confetti({ count: 60 });
       show('view-play');
+    },
+
+    // ===== 2026-05-16 結算後逐題回顧 mode =====
+    // 需求:考完可進 review 模式逐題確認,每題可手動加入錯題本,看完才能離開
+    startReview() {
+      if (!this.state || !this._lastResultLineup) return;
+      this.state.reviewMode = true;
+      this.state.reviewIdx = 0;
+      // 已看過的不重置(支持回首頁前的多次進出)
+      if (!this.state.reviewedSet) this.state.reviewedSet = new Set();
+      this._renderReviewQuestion(0);
+    },
+
+    _renderReviewQuestion(idx) {
+      const lineup = this._lastResultLineup || [];
+      const total = lineup.length;
+      if (total === 0) { showToast('無題目可回顧', 1500); return; }
+      idx = Math.max(0, Math.min(total - 1, idx));
+      this.state.reviewIdx = idx;
+      this.state.reviewedSet.add(idx);
+
+      const item = lineup[idx];
+      const q = item.q;
+      const npc = NPCS[item.npcIdx] || NPCS[0];
+      const userAns = this.state.answers[idx];                // {userKey, isCorrect, correctKey} or undefined
+      const correctOpt = (q.options || []).find(o => o.is_correct);
+      const correctKey = correctOpt ? correctOpt.key : '';
+      const userKey = userAns ? userAns.userKey : '';
+      const isCorrect = userAns ? userAns.isCorrect : false;
+      const unanswered = !userAns;
+
+      // 狀態 badge
+      let statusBadge;
+      if (unanswered) statusBadge = '<span style="background:#475569;color:#fff;padding:3px 10px;border-radius:4px;font-size:0.8rem">⊘ 未答</span>';
+      else if (isCorrect) statusBadge = '<span style="background:#16a34a;color:#fff;padding:3px 10px;border-radius:4px;font-size:0.8rem">✓ 答對</span>';
+      else statusBadge = '<span style="background:#dc2626;color:#fff;padding:3px 10px;border-radius:4px;font-size:0.8rem">✗ 答錯</span>';
+
+      // 選項列(高亮使用者選的 + 正解)
+      const optsHtml = (q.options || []).map(o => {
+        const isUser = o.key === userKey;
+        const isAns = !!o.is_correct;
+        let bg = 'rgba(255,255,255,0.04)', border = '1px solid var(--bg-3)', tag = '';
+        if (isAns && isUser) { bg = 'rgba(22,163,74,0.18)'; border = '2px solid #16a34a'; tag = '<span style="color:#16a34a;font-weight:700;margin-left:8px">✓ 你選的 = 正解</span>'; }
+        else if (isAns) { bg = 'rgba(22,163,74,0.12)'; border = '2px solid #16a34a'; tag = '<span style="color:#16a34a;font-weight:700;margin-left:8px">✓ 正解</span>'; }
+        else if (isUser) { bg = 'rgba(220,38,38,0.14)'; border = '2px solid #dc2626'; tag = '<span style="color:#f87171;font-weight:700;margin-left:8px">✗ 你選的</span>'; }
+        return `<div style="padding:8px 12px;margin:4px 0;background:${bg};border:${border};border-radius:6px;font-size:0.95rem">
+          <strong>${o.key || ''}.</strong> ${o.text || ''}${tag}
+        </div>`;
+      }).join('');
+
+      // explanation
+      const explCorrect = (q.explanation && q.explanation.correct) || '(此題未提供詳細解釋)';
+      const hook = (q.explanation && q.explanation.hook) || '';
+      const wrongOpts = (q.options || []).filter(o => !o.is_correct);
+      const wrongAnalysis = wrongOpts.map(o => {
+        let exp = '';
+        if (q.explanation && q.explanation.wrong && typeof q.explanation.wrong === 'object') {
+          exp = q.explanation.wrong[o.text] || '';
+          if (!exp) {
+            for (const k of Object.keys(q.explanation.wrong)) {
+              if (k && (k.includes((o.text || '').substring(0, 8)) || (o.text || '').includes(k.substring(0, 8)))) {
+                exp = q.explanation.wrong[k]; break;
+              }
+            }
+          }
+        }
+        if (!exp) exp = o.trap_type ? `陷阱類型:${o.trap_type}` : '此選項不正確';
+        return `<div style="padding:6px 10px;margin:4px 0;background:rgba(255,255,255,0.04);border-radius:4px;border-left:3px solid #94a3b8">
+          <div style="color:#cbd5e1;font-weight:600;font-size:0.85rem">${o.key || ''}. ${o.text || ''}</div>
+          <div style="color:var(--fg-dim);font-size:0.8rem;margin-top:2px">└ ${exp}</div>
+        </div>`;
+      }).join('');
+
+      // 錯題本狀態
+      const wbList = Wrongbook.load();
+      const wbEntry = wbList.find(x => x.qid === q.id && !x.mastered);
+      const wbBtn = wbEntry
+        ? `<button class="btn btn-ghost" onclick="Mode7.toggleWrongbookFromReview('${q.id}')" style="background:rgba(250,204,21,0.15);border:1px solid #facc15;color:#facc15">✅ 已在錯題本(點此移出)</button>`
+        : `<button class="btn btn-warn" onclick="Mode7.toggleWrongbookFromReview('${q.id}')">🔖 加入錯題本</button>`;
+
+      // 進度
+      const reviewed = this.state.reviewedSet.size;
+      const progPct = total > 0 ? Math.round(reviewed / total * 100) : 0;
+
+      // code_block(若有)
+      const codeBlock = q.code_block
+        ? `<pre style="background:#0f172a;color:#e2e8f0;padding:10px;border-radius:6px;font-size:0.85rem;overflow-x:auto;margin:8px 0"><code>${q.code_block.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</code></pre>`
+        : '';
+
+      const view = document.getElementById('view-play');
+      view.innerHTML = `
+        <div class="m7-mock-view">
+          <div class="card" style="position:sticky;top:0;z-index:10;background:var(--bg-2);border-bottom:2px solid var(--accent)">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+              <div>
+                <strong style="font-size:1.1rem">📚 逐題回顧 — 第 ${idx + 1} / ${total} 題</strong>
+                <span style="margin-left:10px">${statusBadge}</span>
+              </div>
+              <div style="font-size:0.85rem;color:var(--fg-dim)">
+                已檢視 <strong style="color:var(--success)">${reviewed}</strong> / ${total}(${progPct}%)
+              </div>
+            </div>
+            <div style="background:var(--bg-3);height:6px;border-radius:3px;margin-top:8px;overflow:hidden">
+              <div style="background:linear-gradient(90deg,#16a34a,#facc15);height:100%;width:${progPct}%;transition:width 0.3s"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div style="font-size:0.8rem;color:var(--fg-dim);margin-bottom:6px">
+              ${npc.avatar} ${npc.name} · ${q.knowledge_code || ''} · ${q.difficulty || ''}
+            </div>
+            <div style="font-size:1rem;line-height:1.6;margin-bottom:10px">${q.stem || ''}</div>
+            ${codeBlock}
+            ${optsHtml}
+          </div>
+
+          <div class="card">
+            <h3 style="color:#4ade80;margin-bottom:8px">📖 正解詳解</h3>
+            <div style="font-size:0.9rem;line-height:1.6;color:var(--fg);padding:8px;background:rgba(22,163,74,0.08);border-left:3px solid #16a34a;border-radius:4px">${explCorrect}</div>
+            ${hook ? `<div style="margin-top:8px;padding:8px;background:rgba(250,204,21,0.08);border-left:3px solid #facc15;border-radius:4px;font-size:0.85rem">💡 <strong>口訣 / Hook:</strong> ${hook}</div>` : ''}
+
+            ${wrongAnalysis ? `<h4 style="margin-top:14px;color:#cbd5e1;font-size:0.95rem">其他選項陷阱分析</h4>${wrongAnalysis}` : ''}
+          </div>
+
+          <div class="card" style="position:sticky;bottom:0;z-index:10;background:var(--bg-2);border-top:2px solid var(--accent)">
+            <div class="actions" style="justify-content:space-between;flex-wrap:wrap;gap:6px">
+              <button class="btn btn-ghost" onclick="Mode7.reviewPrev()" ${idx === 0 ? 'disabled' : ''}>⬅️ 上一題</button>
+              ${wbBtn}
+              <button class="btn btn-ghost" onclick="Mode7.exitReviewToResult()">📋 回結算頁</button>
+              <button class="btn btn-primary" onclick="Mode7.reviewNext()" ${idx === total - 1 ? 'disabled' : ''}>下一題 ➡️</button>
+            </div>
+          </div>
+        </div>
+        ${this._renderMode7Styles()}
+      `;
+      this._applyFontScale(this._currentFontKey || this._loadFontScale());
+      show('view-play');
+      // 捲到頂
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+
+    reviewPrev() {
+      if (!this.state || !this.state.reviewMode) return;
+      this._renderReviewQuestion(Math.max(0, this.state.reviewIdx - 1));
+    },
+    reviewNext() {
+      if (!this.state || !this.state.reviewMode) return;
+      const total = (this._lastResultLineup || []).length;
+      this._renderReviewQuestion(Math.min(total - 1, this.state.reviewIdx + 1));
+    },
+    exitReviewToResult() {
+      if (!this.state) return;
+      this.state.reviewMode = false;
+      // 重渲染結算頁(順便更新「已看」徽章)
+      const result = this._lastResult;
+      if (result) this._renderResult(result, this._lastResultReason || 'submit');
+    },
+    toggleWrongbookFromReview(qid) {
+      const wbList = Wrongbook.load();
+      const wbEntry = wbList.find(x => x.qid === qid && !x.mastered);
+      if (wbEntry) {
+        // 從錯題本移出 → mark mastered
+        Wrongbook.markMastered(qid);
+        showToast('已從錯題本移除', 1500);
+      } else {
+        // 加入錯題本(從 lineup 找出 nodeId + 用戶答案)
+        const lineup = this._lastResultLineup || [];
+        const idx = lineup.findIndex(it => it.q.id === qid);
+        if (idx < 0) { showToast('找不到題目資料', 1500); return; }
+        const item = lineup[idx];
+        const q = item.q;
+        const userAns = this.state.answers[idx];
+        const correctOpt = (q.options || []).find(o => o.is_correct);
+        const correctKey = correctOpt ? correctOpt.key : '';
+        const userKey = userAns ? userAns.userKey : '';
+        Wrongbook.add(q.id, q.node_id, userKey, correctKey);
+        showToast('🔖 已加入錯題本', 1500);
+      }
+      // 重渲染當前題(更新按鈕狀態)
+      this._renderReviewQuestion(this.state.reviewIdx);
+      // 同步首頁錯題數
+      try { document.getElementById('stat-wrong').textContent = Wrongbook.count(); } catch (e) {}
+    },
+
+    // 從結算頁的「🏠 回首頁」呼叫 — 若還沒看完所有題目,警示
+    _confirmExitFromResult() {
+      const total = (this._lastResultLineup || []).length;
+      const reviewed = this.state && this.state.reviewedSet ? this.state.reviewedSet.size : 0;
+      if (total > 0 && reviewed < total) {
+        const unreviewed = total - reviewed;
+        if (!confirm(`你還有 ${unreviewed} 題未逐題回顧。\n\n離開後此次模考結果無法回到此頁。\n\n建議先點「📚 逐題回顧」把每題看過(可加入錯題本),再離開。\n\n仍要離開?`)) return;
+      }
+      goHome();
     },
 
     // ===== UX #6 展開所有解析(結算頁)=====
