@@ -88,7 +88,16 @@
       const q = QUESTIONS.find(x => x.id === id);
       if (q) list.push(q);
     }
-    // 隨機洗牌(不超過 boss.qids 數量)
+    // 跨關卡排除已答對(SeenCorrect):filter 後若不足 1 題則 fallback 回原 list
+    // (BOSS qids 池小,fallback 很常見;此模式以「全 BOSS 池打完才完全切換」為設計)
+    if (typeof SeenCorrect !== 'undefined' && list.length > 0) {
+      const fr = SeenCorrect.filterForBattle(list, 1);
+      if (fr.fallback) showToast(`「${boss.name||'本 BOSS'}」全題已答對過,允許重複再戰`);
+      else if (fr.pool.length < list.length) {
+        // 部分排除成功
+        return RNG.shuffle(fr.pool);
+      }
+    }
     return RNG.shuffle(list);
   }
 

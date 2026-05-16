@@ -79,7 +79,18 @@
       else if (pairs.length >= 6) { boardSize = 4; pairCount = 6; }   // 4x3 = 12 卡(6 對)
       else                        { boardSize = 4; pairCount = 4; }   // 4x2 = 8 卡(4 對)
 
-      const chosen = RNG.pickN(pairs, pairCount);
+      // 跨關卡排除已答對(SeenCorrect):filter 已答對的配對,fallback 允許重複
+      let availablePairs = pairs;
+      if (typeof SeenCorrect !== 'undefined') {
+        const fr = SeenCorrect.filterForBattle(pairs.map(p => ({id: p.pairId})), pairCount);
+        if (fr.fallback) {
+          if (typeof showToast === 'function') showToast('配對池可用新題不足,允許重複出已答對的配對');
+        } else {
+          const unseenIds = new Set(fr.pool.map(x => x.id));
+          availablePairs = pairs.filter(p => unseenIds.has(p.pairId));
+        }
+      }
+      const chosen = RNG.pickN(availablePairs, pairCount);
 
       // 把每對拆成 2 張卡(concept 卡 + description 卡)
       const cards = [];

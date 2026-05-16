@@ -541,6 +541,7 @@ const Storage = {
   K_ERROR_REPORTS: 'ipas_error_reports_v1',
   K_SETTINGS: 'ipas_settings_v1',
   K_SESSION: 'ipas_session_state_v1',
+  K_SEEN_CORRECT: 'ipas_seen_correct_v1',  // 跨關卡:已答對過的 qid set(避免重複)
   get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
   set(k, v) {
     try { localStorage.setItem(k, JSON.stringify(v)); }
@@ -731,6 +732,48 @@ const Mastery = {
     }).length;
   }
 };
+
+// === SeenCorrect 跨關卡「已答對」追蹤(避免戰鬥模式重複題)===
+// 規則:
+//   - PlayEngine.answer 答對時 mark(qid)
+//   - Mode 1/2/3/4/8 戰鬥模式抽題時 filter(已答對的不再出)
+//   - Mode 5 弱點獵人(本來就要重複弱點)、Mode 6 索引、Mode 7 考古題模考 不套此機制
+//   - Fallback:若 filter 後池 < 需求量,showToast 提醒並允許重複
+const SeenCorrect = {
+  _cache: null,
+  _load() {
+    if (this._cache) return this._cache;
+    this._cache = new Set(Storage.get(Storage.K_SEEN_CORRECT, []));
+    return this._cache;
+  },
+  mark(qid) {
+    if (!qid) return;
+    this._load();
+    if (this._cache.has(qid)) return;
+    this._cache.add(qid);
+    Storage.set(Storage.K_SEEN_CORRECT, Array.from(this._cache));
+  },
+  has(qid) {
+    this._load();
+    return this._cache.has(qid);
+  },
+  size() {
+    this._load();
+    return this._cache.size;
+  },
+  reset() {
+    this._cache = new Set();
+    Storage.set(Storage.K_SEEN_CORRECT, []);
+  },
+  // Battle-mode picker helper:filter 出未答對的,若不足 minNeeded 則回原池並標 fallback
+  filterForBattle(pool, minNeeded = 1) {
+    this._load();
+    const filtered = pool.filter(q => !this._cache.has(q.id));
+    if (filtered.length >= minNeeded) return { pool: filtered, fallback: false };
+    return { pool, fallback: true, fallbackReason: `已答對 ${this._cache.size}/${pool.length} 題,本場池可用題不足需求 ${minNeeded},允許重複` };
+  }
+};
+window.SeenCorrect = SeenCorrect;
 
 // === Wrongbook 錯題本 ===
 const Wrongbook = {
@@ -1394,6 +1437,7 @@ const PlayEngine = {
     if (this.current.node_id) Mastery.update(this.current.node_id, isCorrect);
     if (typeof SM2 !== 'undefined' && this.current.id) SM2.recordAnswer(this.current.id, isCorrect, false);
     Progress.addAnswer(isCorrect);
+    if (isCorrect && this.current.id) SeenCorrect.mark(this.current.id);
     if (!isCorrect) {
       const correctOpt = this.current.options.find(o => o.is_correct);
       Wrongbook.add(this.current.id, this.current.node_id, key, correctOpt.key);

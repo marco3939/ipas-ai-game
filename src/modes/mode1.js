@@ -123,6 +123,13 @@
       // 把缺口補到 floor,一次抽 (floor - pool.length) 題進池
       pool = [...pool, ...RNG.pickN(general, Math.max(0, VARIATION_FLOOR - pool.length))];
     }
+    // 跨關卡排除已答對(SeenCorrect):戰鬥模式不重複出已掌握題
+    // 若 filter 後池 < n,fallback 回原池 + showToast 提醒
+    if (typeof SeenCorrect !== 'undefined') {
+      const fr = SeenCorrect.filterForBattle(pool, n);
+      if (fr.fallback) showToast('本 BOSS 可用新題不足,允許重複出已答對的舊題');
+      else pool = fr.pool;
+    }
     return RNG.pickN(pool, Math.min(n, pool.length));
   }
 
