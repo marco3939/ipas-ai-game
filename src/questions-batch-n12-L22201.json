@@ -324,7 +324,7 @@
       "source_level": "L1",
       "stem": "某電商訂單表的 customer_id 在客戶主檔找不到對應紀錄(俗稱孤兒記錄)。資料品質工程師將此問題對應到資料品質的哪一個維度與檢查類型?",
       "options": [
-        {"text": "屬一致性 / 參照完整性(referential integrity)違反,foreign key 對不到 primary key", "is_correct": true},
+        {"text": "屬一致性 / 參照完整性違反,foreign key 對不到 primary key", "is_correct": true},
         {"text": "屬完整性違反(欄位缺值);應對 customer_id 缺值做填補後即可解除此項孤兒記錄問題", "is_correct": false, "trap_type": "完整性與一致性混淆"},
         {"text": "屬唯一性違反(重複資料);應對 customer_id 進行去重即可消除孤兒紀錄產生原因問題", "is_correct": false, "trap_type": "唯一性無關"},
         {"text": "屬及時性違反(資料延遲);只要等待批次同步完成即可自動清除這類孤兒紀錄相關問題", "is_correct": false, "trap_type": "及時性錯置"}

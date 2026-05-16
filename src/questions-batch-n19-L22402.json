@@ -116,7 +116,7 @@
       "source_level": "L1",
       "stem": "某影音平台想預測使用者『接下來最可能觀看的 10 部影片』,並依個人喜好排出順序。下列何種任務型態與評估指標組合最為適當?",
       "options": [
-        {"text": "推薦任務,以 Hit Rate@K 與 NDCG@K 評估『前 K 名相關性』與『個人化排序品質』", "is_correct": true},
+        {"text": "推薦任務,以 Hit Rate@K 與 NDCG@K 評估前 K 名相關性與排序品質", "is_correct": true},
         {"text": "二元分類,以 Accuracy 評估『使用者是否會看任何影片』之整體準確度", "is_correct": false, "trap_type": "推薦用 accuracy 無視排序"},
         {"text": "迴歸,以 RMSE 評估『預測觀看時長』與真實觀看時長之間的平均誤差大小", "is_correct": false, "trap_type": "問題是清單推薦非時長預測"},
         {"text": "群集分析,以輪廓係數(Silhouette)評估『影片自然分群』之內聚與分離程度", "is_correct": false, "trap_type": "推薦非群集"}
@@ -203,7 +203,7 @@
       "source_level": "L1",
       "stem": "某銀行為符合公平性原則,在信用評分模型中『移除性別欄位』,但稽核仍發現男女客戶通過率差距顯著。下列何種解釋最為合理?",
       "options": [
-        {"text": "其他特徵(如職業、郵遞區號)與性別高度相關,造成間接歧視(Proxy Discrimination)", "is_correct": true},
+        {"text": "其他特徵與性別高度相關,造成間接歧視(Proxy Discrimination)", "is_correct": true},
         {"text": "性別本來就不會影響任何信用模型結果,該差距純屬抽樣造成的統計誤差影響", "is_correct": false, "trap_type": "差距顯著非隨機誤差"},
         {"text": "稽核計算時誤用了測試集而非訓練集,只要改用訓練集差距就會完全消失", "is_correct": false, "trap_type": "拿訓練集當稽核更糟糕"},
         {"text": "移除欄位後模型 AUC 必然下降至 0.5,使任何輸出皆等於隨機猜測之結果", "is_correct": false, "trap_type": "AUC 不會直接降到 0.5"}
@@ -498,7 +498,7 @@
       "source_level": "L1",
       "stem": "某影音平台採『協同過濾 + 內容過濾』混合推薦,A/B test 發現點擊率上升但留存率反而下降。下列哪一項解釋與調整方向最為合理?",
       "options": [
-        {"text": "推薦過度同質化使內容多樣性不足,需加入 diversity / serendipity 機制平衡長期留存", "is_correct": true},
+        {"text": "推薦過度同質化使多樣性不足,需加入 diversity 機制平衡留存", "is_correct": true},
         {"text": "點擊率與留存率毫無關係,可直接忽略留存指標,以點擊率單一指標作為唯一驗收標準", "is_correct": false, "trap_type": "留存是核心業務指標"},
         {"text": "由於混合推薦演算法太過複雜,需立即退回單一純協同過濾架構即可解決所有問題", "is_correct": false, "trap_type": "退回單一非合理對策"},
         {"text": "把內容過濾權重設為 0、完全只看協同過濾結果即可,系統會自動修復留存率的下降趨勢", "is_correct": false, "trap_type": "去掉內容過濾不解決同質化"}

@@ -327,7 +327,7 @@
       "source_level": "L1",
       "stem": "某團隊在分散式 IoT 感測平台計算大規模溫度變異數時,沿用課本『Σx² - (Σx)²/n 後除以 n-1』公式,結果在數值非常大且彼此接近時出現負變異數。此現象的根因最可能為下列何者?",
       "options": [
-        {"text": "浮點災難性抵銷(catastrophic cancellation):兩個極接近的大數相減喪失有效位元而誤差爆炸", "is_correct": true},
+        {"text": "浮點災難性抵銷:兩個極接近的大數相減喪失有效位元而誤差爆炸", "is_correct": true},
         {"text": "資料中存在負值溫度紀錄,經平方累加後抵銷正值平方項導致最後結果出現負變異數現象", "is_correct": false, "trap_type": "平方項恆為非負"},
         {"text": "n-1 自由度修正不適用於分散式合併情境,應改採 n 為分母方能得到合理之非負估計值", "is_correct": false, "trap_type": "自由度與正負無關"},
         {"text": "感測器讀數本身具有量測噪音,造成標準誤過大進而導致變異數估計值落於統計合理負區間", "is_correct": false, "trap_type": "變異數定義上非負"}
@@ -590,7 +590,7 @@
       "stem_variables": {
         "case_a": {"p": "0.2", "n": "10000", "answer": "0.0040", "wrong1": "0.0016", "wrong2": "0.0400", "wrong3": "0.0028"},
         "case_b": {"p": "0.5", "n": "2500", "answer": "0.0100", "wrong1": "0.0001", "wrong2": "0.1000", "wrong3": "0.0050"},
-        "case_c": {"p": "0.1", "n": "900", "answer": "0.0100", "wrong1": "0.0001", "wrong2": "0.1000", "wrong3": "0.0067"}
+        "case_c": {"p": "0.5", "n": "625", "answer": "0.0200", "wrong1": "0.0004", "wrong2": "0.5000", "wrong3": "0.0008"}
       },
       "options": [
         {"text": "{answer}", "is_correct": true},

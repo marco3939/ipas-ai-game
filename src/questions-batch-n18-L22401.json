@@ -319,7 +319,7 @@
       "source_level": "L1",
       "stem": "某物流業者訓練包裹延遲預測模型,發現少數『暴雨天』樣本特別難學但對業務決策最重要。團隊想加強模型對這類困難樣本的關注。下列何種取樣策略最為合適?",
       "options": [
-        {"text": "重要性取樣(Importance Sampling),依樣本困難度動態調整被抽中的機率以放大邊界樣本", "is_correct": true},
+        {"text": "重要性取樣,依樣本困難度動態調整抽中機率以放大邊界樣本", "is_correct": true},
         {"text": "把所有暴雨天樣本從訓練集移除,讓模型專注學習晴天的主流情境再外推到暴雨", "is_correct": false, "trap_type": "移除困難樣本反而學不到"},
         {"text": "對所有樣本以均勻隨機取樣,讓模型自動發現暴雨樣本的特殊性後再對其加強訓練", "is_correct": false, "trap_type": "均勻取樣無法強調少數類"},
         {"text": "對驗證集加倍取樣暴雨資料,以便最佳化驗證指標來推動模型對暴雨情境的學習能力", "is_correct": false, "trap_type": "不應改驗證集分佈"}
@@ -527,7 +527,7 @@
       "source_level": "L1",
       "stem": "某眼科 AI 團隊建置眼底影像疾病分類器,平均每位病人有 8 張眼底片。若採用 random split 將所有影像 70/15/15 切分,測試集 AUC 高達 0.97,但模型部署到新醫院後表現顯著下降。下列何者最可能是主因?",
       "options": [
-        {"text": "Random split 把同一病人的多張影像同時切到 train 與 test,造成 group-level 資料洩漏", "is_correct": true},
+        {"text": "Random split 把同病人影像切到 train 與 test 造成資料洩漏", "is_correct": true},
         {"text": "模型參數過少導致泛化能力不足,把參數量翻倍後即可直接解決新醫院的部署問題", "is_correct": false, "trap_type": "切分問題不是容量"},
         {"text": "新醫院影像數量少於訓練集,只要把新醫院影像加倍取樣即可線上達到原本的 AUC", "is_correct": false, "trap_type": "未解決洩漏根本"},
         {"text": "AUC 本身為不穩定指標,改用 accuracy 才能反映模型在新醫院真實的部署表現", "is_correct": false, "trap_type": "切分錯換指標也救不了"}

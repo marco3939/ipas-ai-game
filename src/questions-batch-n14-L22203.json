@@ -552,7 +552,7 @@
       "source_level": "L1",
       "stem": "下列關於『資料品質檢查』與『資料可觀測性(Data Observability)』的關係,何者最為正確?",
       "options": [
-        {"text": "資料可觀測性範圍較廣,含 Freshness / Volume / Schema / Distribution / Lineage 五支柱,品質檢查為其子集", "is_correct": true},
+        {"text": "資料可觀測性範圍較廣,含五支柱,品質檢查為其子集", "is_correct": true},
         {"text": "兩者完全等價,只是不同年代的不同稱呼,實務上可隨意互換使用任一名稱描述同一活動", "is_correct": false, "trap_type": "把兩者等同"},
         {"text": "資料品質檢查範圍較廣,涵蓋可觀測性 + ETL 邏輯 + 模型結果驗證,Observability 只是其中工具", "is_correct": false, "trap_type": "範圍關係顛倒"},
         {"text": "資料可觀測性僅指 BI 工具的儀表板可視化能力,與資料品質檢查毫不相關屬不同領域議題", "is_correct": false, "trap_type": "誤把 Observability 當 BI 視覺化"}

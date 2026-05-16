@@ -59,7 +59,7 @@
       "source_level": "L1",
       "stem": "某媒體要呈現全台 50 個鄉鎮『每萬人診所數』,差距從 1.2 到 18.7 不等,且希望讀者能逐項比較名次。下列何種圖型最為清楚有效?",
       "options": [
-        {"text": "水平條形圖或點圖(Cleveland dot plot),類別多時長條垂直擠壓,水平/點圖能清楚排序", "is_correct": true},
+        {"text": "水平條形圖或點圖,類別多時水平/點圖能清楚排序", "is_correct": true},
         {"text": "雷達圖,以 50 個軸放射呈現各鄉鎮數值,輪廓最具整體視覺衝擊感且直觀", "is_correct": false, "trap_type": "雷達維度過多不可讀"},
         {"text": "3D 直立柱狀圖,前後深度感能加強視覺層次,讓報告更專業並提升閱讀趣味", "is_correct": false, "trap_type": "3D 透視扭曲且難對齊比較"},
         {"text": "圓餅圖,把 50 個鄉鎮拆成 50 個扇形,以角度大小代表每萬人診所數的高低", "is_correct": false, "trap_type": "圓餅 ≤ 5 類為宜"}
@@ -117,7 +117,7 @@
       "source_level": "L1",
       "stem": "某零售連鎖想比較 8 家門市『每日來客數』分佈(看中位數、四分位、離群值並排觀察),最簡潔且資訊密度高的圖型為?",
       "options": [
-        {"text": "並列箱形圖(Side-by-side Boxplot),五數彙整加離群點,適合多組分佈快速比較", "is_correct": true},
+        {"text": "並列箱形圖,五數彙整加離群點,適合多組分佈快速比較", "is_correct": true},
         {"text": "並列圓餅圖,以每店一張餅呈現來客時段組成,從扇形大小判讀分佈集中度", "is_correct": false, "trap_type": "圓餅不呈現分佈"},
         {"text": "並列折線圖,以日期為 X、來客數為 Y 畫八條重疊曲線,觀察分佈交互趨勢", "is_correct": false, "trap_type": "折線是時序不是分佈"},
         {"text": "並列堆疊條形圖,將八家門市各時段來客數堆疊,以總高度判斷分佈離散度", "is_correct": false, "trap_type": "堆疊條形是組成不是分佈"}
@@ -175,7 +175,7 @@
       "source_level": "L1",
       "stem": "某分析師用直方圖看某 IoT 感測器讀值,組距(bin width)由 5 調為 50 後,原本看到的三個明顯峰消失成單一鐘形。下列詮釋何者最為正確?",
       "options": [
-        {"text": "直方圖對組距非常敏感,結論會隨組距改變;應參考 Sturges / Freedman-Diaconis 建議或多組距交叉確認", "is_correct": true},
+        {"text": "直方圖對組距敏感,應參考 Sturges 建議或多組距交叉確認", "is_correct": true},
         {"text": "感測器讀值的真實分佈會因組距變大而從多峰變為單峰,這是物理量變化的合理結果", "is_correct": false, "trap_type": "資料不會隨組距改變"},
         {"text": "組距越大代表精度越高,因此 50 比 5 更接近真實分佈,應採信寬組距結果", "is_correct": false, "trap_type": "組距大不等於精度高"},
         {"text": "直方圖能呈現雙峰但無法呈現三峰,因此原 5 的組距是錯誤組距應該移除三峰假象", "is_correct": false, "trap_type": "直方圖可呈現任意峰數"}
@@ -320,7 +320,7 @@
       "source_level": "L1",
       "stem": "某資料科學家做 EDA,有 15 個數值變數想快速一覽『兩兩之間的關係模式 + 各自分佈』。下列何種圖型最為合適?",
       "options": [
-        {"text": "散佈矩陣(Scatter / Pair Plot),對角放分佈、非對角放兩兩散佈,EDA 高效一覽", "is_correct": true},
+        {"text": "散佈矩陣,對角放分佈、非對角放兩兩散佈,EDA 高效一覽", "is_correct": true},
         {"text": "桑基圖(Sankey),以變數作節點並用流量寬度呈現變數兩兩之間的關係強度", "is_correct": false, "trap_type": "Sankey 是流量不是相關"},
         {"text": "並列箱形圖,把 15 個變數並列箱形看分佈摘要並用相鄰盒子位置判讀相關性", "is_correct": false, "trap_type": "Boxplot 不呈現兩兩關係"},
         {"text": "圓餅圖,將 15 個變數依變異數比例做為扇形大小,以呈現兩兩關係的相對重要性", "is_correct": false, "trap_type": "圓餅與兩兩關係無關"}
@@ -349,7 +349,7 @@
       "source_level": "L1",
       "stem": "某分析師畫『相關係數矩陣熱圖』時用單色漸層(白 → 深綠),不論係數正負皆以同色階呈現。下列何項是最關鍵的問題?",
       "options": [
-        {"text": "相關係數值域為 [-1, 1] 為發散資料,應用 diverging palette(如紅白藍),中心 0 為白", "is_correct": true},
+        {"text": "係數有正負方向屬發散資料,應用 diverging palette 雙向配色", "is_correct": true},
         {"text": "熱圖必須使用灰階以印刷友善,使用任何彩色都是違反資料視覺化的標準規範", "is_correct": false, "trap_type": "灰階非強制要求"},
         {"text": "熱圖只能呈現正相關,負相關必須另畫散佈圖才能完整描述兩變數彼此之間關係", "is_correct": false, "trap_type": "熱圖可呈現負相關"},
         {"text": "熱圖配色不影響資訊判讀,單色與雙色相同效果,問題僅在於是否標註數值大小", "is_correct": false, "trap_type": "配色嚴重影響判讀"}

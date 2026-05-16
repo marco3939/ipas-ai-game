@@ -117,7 +117,7 @@
       "source_level": "L1",
       "stem": "下列關於分析四階層『價值』與『技術複雜度』的敘述,何者最為正確?",
       "options": [
-        {"text": "從 Descriptive 到 Prescriptive,業務價值與技術複雜度同步遞增,Prescriptive 通常需結合最佳化或強化學習", "is_correct": true},
+        {"text": "從 Descriptive 到 Prescriptive,業務價值與技術複雜度同步遞增", "is_correct": true},
         {"text": "Predictive 技術複雜度最高,因為模型訓練成本遠超過任何最佳化引擎的計算成本", "is_correct": false, "trap_type": "Prescriptive 通常較 Predictive 高"},
         {"text": "Descriptive 價值最低且技術門檻最高,因為儀表板須處理即時資料整合與多源 ETL 同步", "is_correct": false, "trap_type": "Descriptive 技術門檻相對最低"},
         {"text": "Diagnostic 與 Prescriptive 價值大致相同,差別僅在前者人工分析、後者由演算法自動進行", "is_correct": false, "trap_type": "兩者價值與層級皆不同"}
@@ -327,7 +327,7 @@
       "stem_variables": {
         "case_a": {"paa": "0.8", "pas": "0.2", "psa": "0.4", "pss": "0.6", "answer": "0.67", "wrong1": "0.33", "wrong2": "0.50", "wrong3": "0.80"},
         "case_b": {"paa": "0.9", "pas": "0.1", "psa": "0.3", "pss": "0.7", "answer": "0.75", "wrong1": "0.25", "wrong2": "0.50", "wrong3": "0.90"},
-        "case_c": {"paa": "0.7", "pas": "0.3", "psa": "0.6", "pss": "0.4", "answer": "0.67", "wrong1": "0.33", "wrong2": "0.50", "wrong3": "0.70"}
+        "case_c": {"paa": "0.9", "pas": "0.1", "psa": "0.5", "pss": "0.5", "answer": "0.83", "wrong1": "0.17", "wrong2": "0.50", "wrong3": "0.90"}
       },
       "options": [
         {"text": "{answer}", "is_correct": true},
@@ -504,7 +504,7 @@
       "source_level": "L1",
       "stem": "某行銷團隊想評估社群影響者,有人提議『直接看追蹤者數量最多者(Degree)即可』。從中心性指標選型的角度,下列何項評論最為適當?",
       "options": [
-        {"text": "Degree 易被『大量假帳號追蹤者』灌水;Eigenvector centrality 考慮鄰居本身的重要性,較能反映實質影響力", "is_correct": true},
+        {"text": "Degree 易被假帳號灌水;Eigenvector 考慮鄰居的重要性,較能反映實質影響力", "is_correct": true},
         {"text": "Degree 已涵蓋所有影響力面向;若搭配 Closeness 反而易使指標重疊,造成決策依據過度複雜化", "is_correct": false, "trap_type": "Degree 不涵蓋鄰居品質"},
         {"text": "Betweenness 與 Degree 在大型社群網路中數值高度相關,故結果差異有限,挑哪個皆可", "is_correct": false, "trap_type": "兩者常排序不同"},
         {"text": "中心性指標彼此完全等價;只要選一個照排序前 10 名挑選影響者即能涵蓋所有面向", "is_correct": false, "trap_type": "四種指標不等價"}

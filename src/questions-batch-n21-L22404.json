@@ -482,7 +482,7 @@
       "source_level": "L1",
       "stem": "某科技公司在收集使用者匿名統計時,於『查詢結果端』加入校準雜訊以達成差分隱私。下列何種雜訊分布為差分隱私文獻中最常被引用的兩種加噪機制名稱?",
       "options": [
-        {"text": "Laplace 雜訊與 Gaussian 雜訊,分別對應 ε-DP 與 (ε, δ)-DP 的典型實作方式", "is_correct": true},
+        {"text": "Laplace 雜訊與 Gaussian 雜訊,分別對應 ε-DP 與 (ε, δ)-DP", "is_correct": true},
         {"text": "Binomial 雜訊與 Poisson 雜訊,分別對應離散事件與連續事件之差分隱私統計實作", "is_correct": false, "trap_type": "非 DP 主流機制"},
         {"text": "均勻雜訊與三角雜訊,因為兩者數值範圍有限可確保隱私預算永遠不會被耗盡風險", "is_correct": false, "trap_type": "非 DP 標準機制"},
         {"text": "白噪音與粉紅噪音,均源於訊號處理領域並可直接應用於差分隱私的查詢加噪流程", "is_correct": false, "trap_type": "為訊號處理術語非 DP 名稱"}
