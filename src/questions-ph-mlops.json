@@ -17,26 +17,26 @@
       "format": "single_choice",
       "difficulty": "hard",
       "source_level": "L2",
-      "stem": "某金融科技新創團隊只有 4 位 ML 工程師,需在 6 個月內建立完整 MLOps 平台,要求(1)實驗追蹤與模型版本控制、(2)避免雲端鎖定以利日後遷移、(3)能與既有 Kubernetes 叢集整合、(4)預算極有限不能採用每月數萬美元的企業級 SaaS。CTO 比較 MLflow、Weights & Biases、Vertex AI、SageMaker 四個方案。下列何者為最適合本案的選型分析?",
+      "stem": "某金融科技新創團隊只有 4 位 ML 工程師,需在 6 個月內建立完整 MLOps 平台,要求(1)實驗追蹤與模型版本控制、(2)避免雲端鎖定以利日後遷移、(3)能與既有 Kubernetes 叢集整合、(4)預算極有限不能採用每月數萬美元的企業級 SaaS。CTO 比較四類方案:(甲)開源自架實驗追蹤與模型登錄平台;(乙)專注實驗追蹤體驗的商用 SaaS(企業版採席位訂閱);(丙)公有雲 A 的一站式 ML 平台(整合 AutoML/Pipeline/Feature Store);(丁)公有雲 B 的一站式 ML 平台(Notebook/Training/Endpoint 用量計費)。下列何者為最適合本案的選型分析?",
       "options": [
-        {"text": "選 MLflow,Apache 2.0 開源、可自架於 K8s、提供 Tracking/Registry/Projects/Models 四大組件,符合低預算與無雲端鎖定需求,但需自管 HA", "is_correct": true},
-        {"text": "選 Vertex AI,Google 提供完整 AutoML、Pipeline 與 Feature Store 整合,跨雲 Artefact 可直接搬遷無鎖定,按用量計費對小團隊壓力有限可優先採用", "is_correct": false, "trap_type": "Vertex AI 為 GCP 專屬 SaaS,模型 Registry 與 Pipeline 元資料皆綁定 GCP,日後遷移成本高,且按用量計費對小團隊預算壓力大"},
-        {"text": "選 W&B 企業版,UI 與實驗追蹤功能業界最強,席位費可議,實驗 metadata 採開放格式儲存,後續可任意匯出至自架後端,小團隊應追求開發體驗", "is_correct": false, "trap_type": "W&B 雖體驗佳,但企業版為 SaaS 訂閱制(每席位月費),資料儲存於其雲端,屬於供應商鎖定;社群版有資料量上限"},
-        {"text": "選 SageMaker,可與任意 K8s 原生整合且不收平台費,只付實際運算用量,Endpoint 與 Notebook 計費單純透明,適合預算受限的小團隊起步", "is_correct": false, "trap_type": "SageMaker 為 AWS 專屬服務,並非與任意 K8s 原生整合(需特定 EKS 設置),且 Notebook/Training/Endpoint 用量費並不便宜,亦造成 AWS 鎖定"}
+        {"text": "選(甲)開源自架平台:Apache 類開源授權、可自架於 K8s、提供實驗追蹤、模型登錄、可重現專案、統一模型格式等組件,符合低預算與無雲端鎖定需求,代價是需自管高可用性與備份", "is_correct": true},
+        {"text": "選(丙)公有雲 A 一站式平台:提供完整 AutoML、Pipeline 與 Feature Store 整合,跨雲產物可直接搬遷無鎖定,按用量計費對小團隊壓力有限可優先採用", "is_correct": false, "trap_type": "公有雲一站式平台的模型登錄、Pipeline 與 Feature Store 皆綁定該雲專屬服務,日後遷移成本高,且按用量計費對小團隊預算壓力大"},
+        {"text": "選(乙)專注實驗追蹤體驗的商用 SaaS 企業版:UI 與實驗追蹤功能業界最強,席位費可議,實驗中繼資料採開放格式儲存,後續可任意匯出至自架後端,小團隊應追求開發體驗", "is_correct": false, "trap_type": "商用 SaaS 雖體驗佳,但企業版採訂閱制(每席位月費),資料儲存於其雲端,屬於供應商鎖定;免費版有資料量與專案數上限"},
+        {"text": "選(丁)公有雲 B 一站式平台:可與任意 K8s 原生整合且不收平台費,只付實際運算用量,Endpoint 與 Notebook 計費單純透明,適合預算受限的小團隊起步", "is_correct": false, "trap_type": "公有雲一站式平台並非與任意 K8s 原生整合(需特定託管 K8s 設置),且 Notebook/Training/Endpoint 用量費累計並不便宜,亦造成該雲鎖定"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "MLflow 由 Databricks 開源(Apache 2.0)且為 Linux Foundation AI 託管專案。提供 Tracking(實驗紀錄)、Model Registry(版本控管+階段標籤 Staging/Production/Archived)、Projects(可重現的封裝)、Models(統一模型格式)四大組件。可自架於 K8s 後端搭配 PostgreSQL+S3 相容物件儲存,符合『無雲端鎖定』與『低預算』條件,且能與 Kubeflow/Argo Workflow 整合。代價是需自行負責 HA、備份與權限管理。",
+        "correct": "開源自架實驗追蹤與模型登錄平台採 Apache 類開源授權,提供實驗紀錄(Tracking)、模型登錄(Model Registry,含版本控管 + 階段標籤 Staging/Production/Archived)、可重現專案封裝、統一模型格式等核心組件。可自架於 K8s 後端搭配關聯式資料庫與物件儲存,符合『無雲端鎖定』與『低預算』條件,並能與 K8s 工作流引擎整合。代價是需自行負責高可用性、備份與權限管理。",
         "wrong": {
-          "選 Vertex AI,Google 提供完整 AutoML、Pipeline 與 Feature Store 整合,跨雲 Artefact 可直接搬遷無鎖定,按用量計費對小團隊壓力有限可優先採用": "Vertex AI 雖整合度極高,但模型成品、Pipeline 定義、Feature Store 與 Metadata 皆儲存於 GCP 專屬服務,遷出時需大量重寫,屬於明顯供應商鎖定,違反限制條件 (2)",
-          "選 W&B 企業版,UI 與實驗追蹤功能業界最強,席位費可議,實驗 metadata 採開放格式儲存,後續可任意匯出至自架後端,小團隊應追求開發體驗": "W&B 企業版採訂閱制,席位費對小團隊造成預算壓力;且實驗 metadata 儲存於其雲端,日後遷移需匯出格式不通用,亦屬於資料層鎖定",
-          "選 SageMaker,可與任意 K8s 原生整合且不收平台費,只付實際運算用量,Endpoint 與 Notebook 計費單純透明,適合預算受限的小團隊起步": "SageMaker 並非任意 K8s 原生整合,且 Endpoint Hours、Notebook Hours、Training Hours 累計費用對小團隊不友善;模型 Artefact 與 Pipeline 綁定 AWS 服務,屬 AWS 鎖定"
+          "選(丙)公有雲 A 一站式平台:提供完整 AutoML、Pipeline 與 Feature Store 整合,跨雲產物可直接搬遷無鎖定,按用量計費對小團隊壓力有限可優先採用": "公有雲一站式平台整合度極高,但模型成品、Pipeline 定義、Feature Store 與中繼資料皆儲存於該雲專屬服務,遷出時需大量重寫,屬於明顯供應商鎖定,違反限制條件 (2)",
+          "選(乙)專注實驗追蹤體驗的商用 SaaS 企業版:UI 與實驗追蹤功能業界最強,席位費可議,實驗中繼資料採開放格式儲存,後續可任意匯出至自架後端,小團隊應追求開發體驗": "商用 SaaS 企業版採訂閱制,席位費對小團隊造成預算壓力;且實驗中繼資料儲存於其雲端,日後遷移需匯出格式不通用,亦屬於資料層鎖定",
+          "選(丁)公有雲 B 一站式平台:可與任意 K8s 原生整合且不收平台費,只付實際運算用量,Endpoint 與 Notebook 計費單純透明,適合預算受限的小團隊起步": "公有雲一站式平台並非與任意 K8s 原生整合,且 Endpoint Hours、Notebook Hours、Training Hours 累計費用對小團隊不友善;模型產物與 Pipeline 綁定該雲服務,屬該雲鎖定"
         },
-        "hook": "MLOps 平台選型口訣:開源自管→MLflow/Kubeflow;純體驗追蹤→W&B;一站式雲服務→Vertex AI/SageMaker(代價:鎖定+用量費)"
+        "hook": "MLOps 平台選型口訣:開源自管→自架(無鎖定但要自管 HA);純體驗追蹤→商用 SaaS(訂閱費+資料鎖定);一站式雲服務→公有雲平台(代價:鎖定+用量費)"
       },
-      "misconceptions": ["把企業版 W&B 當作免費社群版", "認為雲端 ML 平台沒有鎖定問題", "誤以為 SageMaker 可隨意搬到任何 K8s"],
+      "misconceptions": ["把商用 SaaS 企業版當作免費社群版", "認為公有雲一站式平台沒有鎖定問題", "誤以為一站式雲平台可隨意搬到任何 K8s"],
       "related_node_ids": ["n_L21302_001", "n_L21302_004", "n_L21302_007"],
-      "tags": ["MLOps平台", "MLflow", "供應商鎖定", "選型決策"]
+      "tags": ["MLOps平台", "ModelRegistry", "供應商鎖定", "選型決策"]
     },
     {
       "id": "q_ph_003",
@@ -75,26 +75,26 @@
       "format": "single_choice",
       "difficulty": "hard",
       "source_level": "L2",
-      "stem": "某銀行欲推出新版反洗錢(AML)模型 v3.0,法遵要求嚴格且模型誤判將觸發人工調查成本。SRE Lead 規劃部署策略:(1)新模型尚未驗證業務正確性、(2)需先觀察與舊版差異不影響任何客戶、(3)驗證通過後逐步切流量、(4)最終完全替換。下列何者為最合理的『部署模式組合』?",
+      "stem": "某銀行欲推出新版反洗錢(AML)模型 v3.0,法遵要求嚴格且模型誤判將觸發人工調查成本。SRE Lead 規劃部署策略:(1)新模型尚未驗證業務正確性、(2)需先觀察與舊版差異不影響任何客戶、(3)驗證通過後逐步切流量、(4)最終完全替換。可用模式:(甲)流量鏡像(將生產流量複製給新模型推論但不採用結果,僅比對輸出 log)、(乙)金絲雀部署(Canary,小流量先行 5→25→100%)、(丙)A/B 測試(同時跑兩版本以業務指標對照驗證)、(丁)直接全量切換(Big Bang)。下列何者為最合理的『部署模式組合』?",
       "options": [
-        {"text": "先 Shadow(0% 流量,僅 mirror 比對輸出)→ Canary(5→25→50% 漸進)→ 達標後 100% 切換;A/B 不在前期使用", "is_correct": true},
-        {"text": "Day 1 起直接 A/B Testing 50/50 分流並計算統計顯著性,A/B 為實證金標準,Shadow 與 Canary 都是過度設計的流程冗餘可省略", "is_correct": false, "trap_type": "A/B 分流意味 50% 客戶會直接被新模型決策,違反『不影響任何客戶』的限制(1)(2)"},
-        {"text": "直接 100% 切換到 v3.0(Big Bang),v2.0 已過時且 v3.0 訓練資料更新,只要保留 rollback 按鈕在手即可即時承擔任何風險", "is_correct": false, "trap_type": "AML 場景中錯誤決策可能造成法遵風險與真實客戶損害,Big Bang 部署違反所有限制條件"},
-        {"text": "從 Canary 5% 流量先導開始,Shadow 為流量重複的冗餘步驟可省略,A/B 在 AML 場景毋須使用,僅 Canary 即足以漸進控管風險", "is_correct": false, "trap_type": "Canary 5% 仍代表 5% 真實客戶被新模型決策,違反『先觀察不影響任何客戶』(2);Shadow 並非冗餘,正是『驗證不影響客戶』的最佳模式"}
+        {"text": "先(甲)流量鏡像(0% 真實決策,僅鏡像比對輸出)→ 再(乙)金絲雀(5→25→50% 漸進)→ 達標後 100% 切換;(丙)A/B 不在前期使用,(丁)Big Bang 絕不採用", "is_correct": true},
+        {"text": "Day 1 起直接(丙)A/B 測試 50/50 分流並計算統計顯著性,A/B 為實證金標準,(甲)流量鏡像與(乙)金絲雀都是過度設計的流程冗餘可省略", "is_correct": false, "trap_type": "A/B 50/50 分流意味 50% 客戶會直接被新模型決策,違反『不影響任何客戶』的限制(1)(2)"},
+        {"text": "直接(丁)100% 切換到 v3.0,舊版已過時且新版訓練資料更新,只要保留 rollback 按鈕在手即可即時承擔任何風險", "is_correct": false, "trap_type": "AML 場景中錯誤決策可能造成法遵風險與真實客戶損害,Big Bang 部署違反所有限制條件"},
+        {"text": "從(乙)金絲雀 5% 流量先導開始,(甲)流量鏡像為流量重複的冗餘步驟可省略,(丙)A/B 在 AML 場景毋須使用,僅金絲雀即足以漸進控管風險", "is_correct": false, "trap_type": "金絲雀 5% 仍代表 5% 真實客戶被新模型決策,違反『先觀察不影響任何客戶』(2);流量鏡像並非冗餘,正是『驗證不影響客戶』的最佳模式"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "三模式各有適用情境:Shadow Deployment 將生產流量複製給新模型推論但不採用其結果(只比對 log),用於『驗證新模型在真實流量分布上的行為』而完全不影響客戶,適合 AML 等高風險場景的早期驗證。Canary Deployment 將少量真實流量(5%→25%→...)導向新模型,用於『漸進式風險控制』,可即時監測異常並回滾。A/B Testing 用於『有業務假設要對照驗證』(例如新模型是否提升留存率),需要統計顯著性檢定。本案順序:Shadow(零風險觀察)→Canary(漸進切流)→100%。",
+        "correct": "三模式各有適用情境:流量鏡像(影子流量)將生產流量複製給新模型推論但不採用其結果(只比對 log),用於『驗證新模型在真實流量分布上的行為』而完全不影響客戶,適合 AML 等高風險場景的早期驗證。金絲雀部署(Canary)將少量真實流量(5%→25%→...)導向新模型,用於『漸進式風險控制』,可即時監測異常並回滾。A/B 測試用於『有業務假設要對照驗證』(例如新模型是否提升留存率),需要統計顯著性檢定。本案順序:流量鏡像(零風險觀察)→ 金絲雀(漸進切流)→ 100%。",
         "wrong": {
-          "Day 1 起直接 A/B Testing 50/50 分流並計算統計顯著性,A/B 為實證金標準,Shadow 與 Canary 都是過度設計的流程冗餘可省略": "A/B 50/50 等於讓 50% 客戶被未驗證的新模型決策,違反『先觀察不影響』限制;且 A/B 設計目的是『驗證假設』,不適用於『先確認不出錯』階段",
-          "直接 100% 切換到 v3.0(Big Bang),v2.0 已過時且 v3.0 訓練資料更新,只要保留 rollback 按鈕在手即可即時承擔任何風險": "AML 模型誤判會觸發人工調查與法遵通報,Big Bang 部署將所有客戶暴露於未驗證模型;『回滾』通常已是事故發生後,造成的客戶與品牌損害無法挽回",
-          "從 Canary 5% 流量先導開始,Shadow 為流量重複的冗餘步驟可省略,A/B 在 AML 場景毋須使用,僅 Canary 即足以漸進控管風險": "Canary 5% 仍意味 5% 客戶承擔風險,在 AML 嚴格場景中前期應先 Shadow(零風險);Shadow 提供『真實流量上模型行為』的驗證,絕非冗餘"
+          "Day 1 起直接(丙)A/B 測試 50/50 分流並計算統計顯著性,A/B 為實證金標準,(甲)流量鏡像與(乙)金絲雀都是過度設計的流程冗餘可省略": "A/B 50/50 等於讓 50% 客戶被未驗證的新模型決策,違反『先觀察不影響』限制;且 A/B 設計目的是『驗證假設』,不適用於『先確認不出錯』階段",
+          "直接(丁)100% 切換到 v3.0,舊版已過時且新版訓練資料更新,只要保留 rollback 按鈕在手即可即時承擔任何風險": "AML 模型誤判會觸發人工調查與法遵通報,直接全量切換將所有客戶暴露於未驗證模型;『回滾』通常已是事故發生後,造成的客戶與品牌損害無法挽回",
+          "從(乙)金絲雀 5% 流量先導開始,(甲)流量鏡像為流量重複的冗餘步驟可省略,(丙)A/B 在 AML 場景毋須使用,僅金絲雀即足以漸進控管風險": "金絲雀 5% 仍意味 5% 客戶承擔風險,在 AML 嚴格場景中前期應先做流量鏡像(零風險);流量鏡像提供『真實流量上模型行為』的驗證,絕非冗餘"
         },
-        "hook": "部署模式光譜:Shadow(0% 風險,先觀察)→Canary(漸進風險,可回滾)→A/B(對照驗證,統計顯著);AML 高風險場景應全用"
+        "hook": "部署模式光譜:流量鏡像(0% 風險,先觀察)→ 金絲雀(漸進風險,可回滾)→ A/B 測試(對照驗證,統計顯著);AML 高風險場景應全用"
       },
-      "misconceptions": ["把 Shadow 當作冗餘步驟", "誤以為 A/B Testing 可取代 Canary", "忽略 AML 等高風險場景的部署門檻"],
+      "misconceptions": ["把流量鏡像當作冗餘步驟", "誤以為 A/B 測試可取代金絲雀", "忽略 AML 等高風險場景的部署門檻"],
       "related_node_ids": ["n_L21302_002", "n_L21302_005", "n_L21202_001"],
-      "tags": ["部署策略", "Shadow", "Canary", "ABTesting", "AML"]
+      "tags": ["部署策略", "流量鏡像", "Canary", "ABTesting", "AML"]
     },
     {
       "id": "q_ph_007",
@@ -104,26 +104,26 @@
       "format": "single_choice",
       "difficulty": "hard",
       "source_level": "L2",
-      "stem": "某客服 AI 平台需監控三類資料漂移:(A) 客戶基本資料 (age, income — 數值);(B) 商品類別 (category id — 類別);(C) 客服對話文本(由 BERT 取出 768 維 embedding)。MLOps 評估 Evidently AI、Whylogs、Arize 三套漂移偵測工具。下列何者為最合理的選型考量?",
+      "stem": "某客服 AI 平台需監控三類資料漂移:(A) 客戶基本資料(age, income — 數值);(B) 商品類別(category id — 類別);(C) 客服對話文本(由 BERT 取出 768 維 embedding)。MLOps 評估三類漂移偵測工具:(甲)開源表格報表型(主力為數值用 KS/Wasserstein、類別用 Chi²/PSI,輸出 HTML 報表);(乙)開源輕量統計剖面型(將資料集統計剖面序列化後寫入資料湖比對,適合大規模串流);(丙)商用 ML 可觀察性平台(具 embedding 與 LLM 監控專用模組,如降維視覺化、cluster drift)。下列何者為最合理的選型考量?",
       "options": [
-        {"text": "Evidently 適合表格(A)(B)的 Report;Whylogs 強於大規模 profile 串流;Arize 有 embedding/LLM 專用模組適合(C);三者互補非單選", "is_correct": true},
-        {"text": "三類資料一律使用 Evidently 即可,其支援所有資料型態且開源免費,內建 UMAP 與 LLM-specific 模組,毋須再引入 Whylogs 或 Arize 增加維運與授權成本", "is_correct": false, "trap_type": "Evidently 對 768 維 embedding drift 雖能算 cosine 距離,但缺 UMAP/cluster 視覺化與 LLM-specific metric;對大規模串流亦不及 Whylogs"},
-        {"text": "Evidently 專為影像分布監控設計、Whylogs 僅支援文本資料 logging、Arize 僅處理表格特徵,三者按資料型態嚴格分工互不重疊不可混用", "is_correct": false, "trap_type": "三者實際支援多種資料型態,並非分工專一;Evidently 主力為表格,Arize 主力為 embedding/LLM,並非絕對分工"},
-        {"text": "embedding 為連續高維向量無離散分布概念,因此 drift 偵測在數學上不成立,(C) 毋須監控工具,只需聚焦 (A)(B) 表格資料的傳統指標即可", "is_correct": false, "trap_type": "embedding 是高維連續向量,有分布概念;業界用 KS test on PCA、cosine 距離分布、UMAP cluster shift、MMD 等方法偵測 embedding drift"}
+        {"text": "(甲)表格報表型適合(A)(B)的標準漂移報表;(乙)輕量統計剖面型強於大規模 profile 串流;(丙)可觀察性平台有 embedding 專用模組適合(C);三者互補非單選", "is_correct": true},
+        {"text": "三類資料一律使用(甲)表格報表型即可,其支援所有資料型態且開源免費,內建降維與 LLM-specific 模組,毋須再引入(乙)(丙)增加維運與授權成本", "is_correct": false, "trap_type": "表格報表型工具對 768 維 embedding drift 雖能算 cosine 距離,但缺降維/cluster 視覺化與 LLM 專用指標;對大規模串流亦不及輕量統計剖面型"},
+        {"text": "(甲)專為影像分布監控設計、(乙)僅支援文本資料 logging、(丙)僅處理表格特徵,三者按資料型態嚴格分工互不重疊不可混用", "is_correct": false, "trap_type": "三者實際皆為通用 ML 監控工具,並非按資料型態嚴格分工;主力不同但範圍重疊"},
+        {"text": "embedding 為連續高維向量無離散分布概念,因此 drift 偵測在數學上不成立,(C) 毋須監控工具,只需聚焦 (A)(B) 表格資料的傳統指標即可", "is_correct": false, "trap_type": "embedding 是高維連續向量,有分布概念;業界用 PCA 後 KS 檢定、cosine 距離分布、降維 cluster shift、MMD 等方法偵測 embedding drift"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "三套工具定位不同:Evidently AI(開源)強項為表格資料的 Report Suite(數值-KS test/Wasserstein,類別-Chi²/PSI),內建 HTML 報表方便分享。Whylogs(WhyLabs 開源)強項為輕量 statistical profile(可序列化的 dataset profile),適合大規模串流寫入 data lake 後比對。Arize(商用)為 ML observability 平台,對 embedding 與 LLM 監控有專門模組(UMAP 視覺化、cluster drift、prompt-completion drift)。本案表格(A)(B)優先 Evidently,大規模 logging 用 Whylogs,embedding(C)用 Arize 或 Evidently 進階模組。",
+        "correct": "三類工具定位不同:開源表格報表型強項為表格資料的報表套件(數值用 KS/Wasserstein,類別用 Chi²/PSI),內建 HTML 報表方便分享,適合(A)(B)。開源輕量統計剖面型強項為輕量統計剖面(可序列化的資料集 profile),適合大規模串流寫入資料湖後比對。商用 ML 可觀察性平台對 embedding 與 LLM 監控有專門模組(降維視覺化、cluster drift、提示-回應 drift)。本案表格(A)(B)優先報表型,大規模 logging 用統計剖面型,embedding(C)用可觀察性平台或報表型的進階模組。",
         "wrong": {
-          "三類資料一律使用 Evidently 即可,其支援所有資料型態且開源免費,內建 UMAP 與 LLM-specific 模組,毋須再引入 Whylogs 或 Arize 增加維運與授權成本": "Evidently 雖支援多型態,但 768 維 embedding 視覺化與 LLM 專用指標較弱;大規模串流場景 Whylogs profile 序列化更高效",
-          "Evidently 專為影像分布監控設計、Whylogs 僅支援文本資料 logging、Arize 僅處理表格特徵,三者按資料型態嚴格分工互不重疊不可混用": "三者皆為通用 ML 監控工具,並非按資料型態分工;此選項陳述完全錯誤",
-          "embedding 為連續高維向量無離散分布概念,因此 drift 偵測在數學上不成立,(C) 毋須監控工具,只需聚焦 (A)(B) 表格資料的傳統指標即可": "embedding 為高維連續向量,可透過 PCA/UMAP 降維、cosine 距離分布、MMD、cluster drift 偵測分布變化;業界廣泛監控"
+          "三類資料一律使用(甲)表格報表型即可,其支援所有資料型態且開源免費,內建降維與 LLM-specific 模組,毋須再引入(乙)(丙)增加維運與授權成本": "表格報表型雖支援多型態,但 768 維 embedding 視覺化與 LLM 專用指標較弱;大規模串流場景輕量統計剖面型的序列化 profile 更高效",
+          "(甲)專為影像分布監控設計、(乙)僅支援文本資料 logging、(丙)僅處理表格特徵,三者按資料型態嚴格分工互不重疊不可混用": "三者皆為通用 ML 監控工具,並非按資料型態分工;此選項陳述完全錯誤",
+          "embedding 為連續高維向量無離散分布概念,因此 drift 偵測在數學上不成立,(C) 毋須監控工具,只需聚焦 (A)(B) 表格資料的傳統指標即可": "embedding 為高維連續向量,可透過 PCA/降維、cosine 距離分布、MMD、cluster drift 偵測分布變化;業界廣泛監控"
         },
-        "hook": "Drift 偵測工具定位:Evidently(表格 Report)/Whylogs(輕量 Profile 大規模)/Arize(embedding+LLM observability)"
+        "hook": "Drift 偵測工具定位:表格報表型(報表分享)/ 輕量統計剖面型(大規模串流)/ 可觀察性平台(embedding + LLM 觀察)"
       },
       "misconceptions": ["以為 embedding 不會 drift", "認為一套工具通吃所有監控需求", "把工具與資料型態作絕對分工"],
       "related_node_ids": ["n_L21302_002", "n_L21302_001", "n_L21104_001"],
-      "tags": ["DriftDetection", "Evidently", "Whylogs", "Arize", "embedding監控"]
+      "tags": ["DriftDetection", "PSI", "Wasserstein", "embedding監控", "工具選型"]
     },
     {
       "id": "q_ph_008",

@@ -11,8 +11,8 @@
   "questions": [
     {
       "id": "q_m8_001",
-      "knowledge_code": "L23102",
-      "node_id": "n_L23102_005",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_006",
       "subject": 3,
       "format": "code_trace",
       "difficulty": "easy",
@@ -100,7 +100,7 @@
         "hook": "L2 norm = sqrt(平方和);沒開根號就停在 {sum_val},不是 {norm_val}"
       },
       "misconceptions": ["誤以為 ndarray 一維 shape 是 (n,1)", "L2 norm 忘記開根號"],
-      "related_node_ids": ["n_L23102_005", "n_L23102_001"],
+      "related_node_ids": ["n_L23103_006", "n_L23103_005"],
       "tags": ["code-trace", "python", "numpy", "L2-norm", "降維"]
     },
     {

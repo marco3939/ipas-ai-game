@@ -88,6 +88,130 @@
       "related_node_ids": [], "exam_appearance": [{"exam": "114-2", "question_no": 33, "subject": 3}]
     },
     {
+      "node_id": "n_L23103_005", "knowledge_code": "L23103", "title": "NumPy 線代核心 — 反矩陣 / 跡 / 特徵值 / 行列式",
+      "category": "formula", "source_level": "L1",
+      "source_refs": [{"file": "NumPy 官方文件", "section": "numpy.linalg API"}, {"verified_by": "scripts/_temp_verify_kb.py"}],
+      "summary": "NumPy 線性代數 API 四件套:`np.linalg.inv` 反矩陣、`np.trace` 對角元素之和、`np.linalg.det` 行列式、`np.linalg.eig` 特徵分解;**對角矩陣反矩陣 = 各對角元素取倒數**;**特徵值乘積 = 行列式**;**特徵值總和 = 跡**",
+      "key_points": [
+        "對角矩陣 diag(a,b) 的反矩陣 = diag(1/a, 1/b)(僅須對角元素皆非零)",
+        "`np.trace(A)` 取對角線元素之和,等同特徵值總和(任何方陣)",
+        "`np.linalg.det(A)` 等於所有特徵值的乘積(對 2x2 對稱方陣 [[a,b],[b,a]],eigvals = a+b 與 a-b,乘積 = a²-b²)",
+        "`np.linalg.inv` 對奇異矩陣(det=0)會丟出 LinAlgError",
+        "`np.linalg.eig` 回傳 (eigvals, eigvecs) 二元 tuple,而非單一陣列"
+      ],
+      "common_misconceptions": [
+        "把跡(對角和)與行列式(特徵值乘積)混淆 — 兩者只在特殊情況巧合相等",
+        "誤以為對角矩陣不可逆 — 只要對角元素皆非零即可逆",
+        "誤算反矩陣的跡為 1/(對角元素乘積),正確為 1/a + 1/b",
+        "把 `eig` 回傳值當單一陣列直接用,沒解包 (eigvals, eigvecs)"
+      ],
+      "explanation_hooks": [
+        "口訣:跡是『加』,行列式是『乘』;對角反 = 倒數",
+        "對稱方陣 [[a,b],[b,a]] 特徵值必為 a+b 與 a-b(可驗:trace=2a=sum, det=a²-b²=prod)",
+        "白化(whitening)前處理常用:Σ^(-1/2),由 eig 分解得到"
+      ],
+      "variation_seeds": [
+        {"context": "diag(2,4) 的反矩陣 trace 為何?", "answer": "0.75 = 1/2 + 1/4"},
+        {"context": "特徵值乘積對應什麼?", "answer": "行列式 det"},
+        {"context": "特徵值總和對應什麼?", "answer": "跡 trace"}
+      ],
+      "related_node_ids": ["n_L23102_001", "n_L23102_003", "n_L23102_004"]
+    },
+    {
+      "node_id": "n_L23103_006", "knowledge_code": "L23103", "title": "NumPy 向量範數 — `np.linalg.norm` 預設與 ord 參數",
+      "category": "formula", "source_level": "L1",
+      "source_refs": [{"file": "NumPy 官方文件", "section": "numpy.linalg.norm"}, {"verified_by": "scripts/_temp_verify_kb.py"}],
+      "summary": "`np.linalg.norm` 對 **1D 向量** 預設為 **L2 範數**(平方和開根號);對 **2D 矩陣** 預設為 **Frobenius 範數**(數值上等同 reshape 為 1D 後的 L2);ord 參數可切換:`ord=1` 為 L1(絕對值和)、`ord=np.inf` 為 L∞(最大絕對值);**常用於正規化、距離計算與梯度裁剪**",
+      "key_points": [
+        "L2(預設):`sqrt(Σ|xᵢ|²)`,如 [3,4,0,0] → sqrt(9+16) = 5",
+        "L1(`ord=1`,1D 向量):`Σ|xᵢ|`,如 [3,4,0,0] → 7",
+        "L∞(`ord=np.inf`,1D 向量):`max|xᵢ|`,如 [3,4,0,0] → 4",
+        "2D 矩陣的 `ord=1` 意義不同:為 max 列加總(operator norm);要對所有元素 L1 需先 ravel",
+        "向量正規化:`v / np.linalg.norm(v)` 得單位向量",
+        "**注意**:對 2D 矩陣不寫 ord 時得到的是 Frobenius,不是 L2 operator norm"
+      ],
+      "common_misconceptions": [
+        "誤以為 `np.linalg.norm` 預設是 L1(實際是 L2 / Frobenius)",
+        "計算 L2 範數時忘記開根號(只算到平方和)",
+        "誤把 L∞(最大絕對值)當成 L1(絕對值總和)",
+        "對 2D 矩陣不寫 ord,以為等同 L2 — 實際是 Frobenius(對所有元素開根)"
+      ],
+      "explanation_hooks": [
+        "口訣:L1=加絕對、L2=平方加再開根、L∞=取最大",
+        "歐氏距離 = 兩向量差的 L2 範數",
+        "推薦系統 / Embedding 比對先正規化為單位向量,讓內積即為 cosine 相似度"
+      ],
+      "variation_seeds": [
+        {"context": "[3,4,0,0] 的 L2 範數?", "answer": "5"},
+        {"context": "[3,4,0,0] 的 L1 範數?", "answer": "7"},
+        {"context": "[3,4,0,0] 的 L∞ 範數?", "answer": "4"}
+      ],
+      "related_node_ids": ["n_L23102_001", "n_L23103_005"]
+    },
+    {
+      "node_id": "n_L23103_007", "knowledge_code": "L23103", "title": "NumPy `np.dot` vs `*` — 內積 vs 逐元素",
+      "category": "concept", "source_level": "L1",
+      "source_refs": [{"file": "NumPy 官方文件", "section": "numpy.dot / array ufunc"}, {"verified_by": "scripts/_temp_verify_kb.py"}],
+      "summary": "`np.dot(a, b)` 隨輸入維度動態切換語意:**兩 1D → 內積純量**(shape=())、**兩 2D → 矩陣乘**、混合則對應廣播規則;`*` 為 **逐元素(elementwise)乘法**,保留輸入 shape;**1D dot 1D 回傳純量、1D * 1D 回傳同 shape 的向量**",
+      "key_points": [
+        "1D dot 1D:`np.dot([1,2,3],[4,5,6])` = 32(純量,shape=())",
+        "1D `*` 1D:`[1,2,3] * [4,5,6]` = [4,10,18](shape=(3,))",
+        "2D dot 2D:標準矩陣乘法,(m,k) · (k,n) = (m,n)",
+        "2D `*` 2D:逐元素乘,需 shape 相符或可廣播",
+        "`np.matmul` 與 `@` 運算子 = 嚴格矩陣乘(不允許純量),建議在 2D 場景使用以避免語意混淆",
+        "**純量的 shape 是 `()` 空 tuple,不是 `(1,)`**"
+      ],
+      "common_misconceptions": [
+        "誤以為 `np.dot` 對 1D 也回傳向量(實際回傳純量)",
+        "誤以為純量 shape 是 `(1,)`(實際是 `()`)",
+        "把 dot 與 `*` 互換 — 神經網路權重更新會算錯結果",
+        "對 1D 用 `np.matmul` 期待得到矩陣(實際 matmul 1D vs 1D 也是純量)"
+      ],
+      "explanation_hooks": [
+        "口訣:dot 是『內積/矩陣乘』、`*` 是『逐元素』",
+        "判斷小撇步:若希望結果保留輸入維度 → 用 `*`;若希望降維(求 sum) → 用 dot",
+        "建議在現代程式碼用 `@`(matmul)取代 dot,語意更明確"
+      ],
+      "variation_seeds": [
+        {"context": "1D np.dot 1D 的 shape?", "answer": "() 純量"},
+        {"context": "1D `*` 1D 的 shape?", "answer": "(n,) 與輸入同形"},
+        {"context": "2D `@` 2D 的 shape (m,k) (k,n)?", "answer": "(m,n)"}
+      ],
+      "related_node_ids": ["n_L23103_005", "n_L23103_008"]
+    },
+    {
+      "node_id": "n_L23103_008", "knowledge_code": "L23103", "title": "NumPy `einsum` 縮並規則 — Einstein summation 表示式",
+      "category": "formula", "source_level": "L1",
+      "source_refs": [{"file": "NumPy 官方文件", "section": "numpy.einsum"}, {"verified_by": "scripts/_temp_verify_kb.py"}],
+      "summary": "`np.einsum('subscripts->output', operands)` 以字母標註各軸;**規則**:左側相同字母的軸 broadcast / 縮並,右側未出現的字母 = 被縮並消去;**經典用法**:`'ij,jk->ik'` 矩陣乘、`'bid,bjd->bij'` batch attention scores、`'ii->'` 跡、`'ij->ji'` 轉置",
+      "key_points": [
+        "右側未出現的字母 = 被 sum 縮並消去(隱式求和)",
+        "兩側都出現的字母 = 保留(共享軸,如 batch 維)",
+        "`'ij,jk->ik'`:j 被縮並 → 矩陣乘 (m,k)·(k,n) = (m,n)",
+        "`'bid,bjd->bij'`:d 被縮並 → batch attention,(B,L,D)·(B,L,D) = (B,L,L)",
+        "`'ii->'`:重複 i 即取對角後求和 → 跡 trace",
+        "`'ij->ji'`:純改字母順序 → 轉置",
+        "效能:現代 BLAS 後端常與 matmul 速度相當且記憶體可控"
+      ],
+      "common_misconceptions": [
+        "忘記右側未出現的字母會被縮並,結果 shape 算錯",
+        "誤以為 einsum 一定比 matmul 慢(實際在複雜場景常更快、記憶體更省)",
+        "重複字母在同一 operand 內代表取對角(如 `'ii->'`),而非乘法 — 易與兩 operand 共用字母混淆",
+        "把 batch 維(共享)寫成被縮並的字母,導致整個 batch 被求和"
+      ],
+      "explanation_hooks": [
+        "口訣:左側出現右側沒出現 → 縮並;左右都有 → 保留",
+        "Transformer Q·Kᵀ:`einsum('bid,bjd->bij', Q, K)` 一行寫完 batch attention scores",
+        "判斷輸出 shape 小技巧:把箭頭右側字母依序對應到輸入軸長度"
+      ],
+      "variation_seeds": [
+        {"context": "`einsum('bid,bjd->bij', Q[2,4,8], K[2,4,8])` shape?", "answer": "(2,4,4) — d 被縮並"},
+        {"context": "`einsum('ij,jk->ik', A[3,4], B[4,5])` shape?", "answer": "(3,5) — 矩陣乘"},
+        {"context": "`einsum('ii->', A[3,3])`?", "answer": "純量,等同 trace(A)"}
+      ],
+      "related_node_ids": ["n_L23103_007", "n_L23203_001"]
+    },
+    {
       "node_id": "n_L23202_002", "knowledge_code": "L23202", "title": "DBSCAN 三類點(Core / Border / Noise)",
       "category": "concept", "source_level": "L1",
       "source_refs": [{"file": "衝刺主檔", "section": "2.4-10"}, {"exam": "114-2 科三 Q4", "exam2": "114-2 科一 Q11,Q48"}],
@@ -265,6 +389,40 @@
       "explanation_hooks": ["模型選擇是『架構』決策;調校是『參數』決策"],
       "variation_seeds": [{"context": "ReLU 推薦的權重初始化?", "answer": "He Initialization"}],
       "related_node_ids": []
+    },
+    {
+      "node_id": "n_L23302_002", "knowledge_code": "L23302", "title": "AutoML 標準流程八階段",
+      "category": "flow", "source_level": "L1",
+      "source_refs": [{"file": "AutoGluon / Auto-Keras / Google Vertex AI AutoML 業界白皮書"}, {"file": "衝刺主檔", "section": "5.3 模型自動化"}],
+      "summary": "AutoML 標準八階段:**(1)問題定義 → (2)EDA → (3)特徵工程 → (4)NAS/HPO 自動搜尋 → (5)候選模型對比 → (6)校準與微調 → (7)部署 → (8)持續學習(retrain)**;前置三步是人工為主、4-6 是 AutoML 引擎自動、7-8 為 MLOps 範疇;**AutoML 不取代 EDA 與基本特徵工程**",
+      "key_points": [
+        "(1)問題定義:確定任務型態(分類/迴歸/排序)、主指標(F1/AUC/MAPE)、業務約束",
+        "(2)EDA:看缺值率、分布、目標分布、相關性,提供特徵工程依據",
+        "(3)特徵工程:類別編碼、缺值填補、標準化、衍生特徵 — 在 AutoML 引擎啟動前完成",
+        "(4)NAS + HPO:Neural Architecture Search 找最佳結構 + Hyperparameter Optimization 找最佳超參(Bayesian / Hyperband / Random Search)",
+        "(5)候選模型對比:在 hold-out 集對比 accuracy、推論延遲、模型大小",
+        "(6)校準與微調:門檻校準、機率校準(Platt scaling / Isotonic regression)",
+        "(7)部署:封裝 API / 容器化 / A/B test 流量切分",
+        "(8)持續學習:監控漂移(data drift / concept drift)、定期重訓觸發"
+      ],
+      "common_misconceptions": [
+        "誤以為 AutoML 可跳過 EDA 與特徵工程(實際依然必要)",
+        "把『模型部署』放在『對比與微調』之前(順序錯誤)",
+        "未做機率校準就用 AutoML 輸出機率做業務決策(預設模型機率未必校準良好)",
+        "把 NAS 與 HPO 混為一談 — NAS 是結構搜索,HPO 是超參搜索",
+        "誤以為 AutoML 是『按一鍵全自動』(實際前置 1-3 步仍需領域知識)"
+      ],
+      "explanation_hooks": [
+        "口訣:『定探特搜對調署續』 — 定問題→探資料→特徵→搜索→對比→微調→部署→持續",
+        "AutoML 的『自動』集中在第 4-6 步;第 1-3 與第 7-8 仍需工程師主導",
+        "持續學習(第 8 步)是 MLOps 與 AutoML 的交叉點 — 觸發條件:漂移閾值、定期時間、業務指標下降"
+      ],
+      "variation_seeds": [
+        {"context": "AutoML 八階段第 1 步是?", "answer": "問題定義與主指標"},
+        {"context": "NAS 與 HPO 各搜什麼?", "answer": "NAS 搜結構、HPO 搜超參"},
+        {"context": "為何要做機率校準?", "answer": "AutoML 預設輸出機率未必校準,需 Platt / Isotonic"}
+      ],
+      "related_node_ids": ["n_L23302_001", "n_L23303_001"]
     },
     {
       "node_id": "n_L23303_001", "knowledge_code": "L23303", "title": "F1 分數計算(必考公式)",
@@ -489,20 +647,21 @@
     }
   ],
   "summary": {
-    "total_nodes": 32,
+    "total_nodes": 37,
     "by_code": {
       "L23101_ProbStat": 3,
-      "L23103_NumOpt": 4,
+      "L23103_NumOpt": 8,
       "L23202_Algorithms": 8,
       "L23203_DeepLearning": 3,
       "L23301_DataPrep": 3,
-      "L23302_ModelSelect": 1,
+      "L23302_ModelSelect": 2,
       "L23303_EvalValid": 8,
       "L23401_Privacy": 3,
       "L23402_Fairness": 3
     },
-    "by_source_level": {"L1": 32, "L2": 0, "L3": 0, "L4": 0},
-    "iron_rule_compliance_check": "all 32 nodes have misconceptions, explanation_hooks, variation_seeds",
-    "errata_critical_count": 2
+    "by_source_level": {"L1": 37, "L2": 0, "L3": 0, "L4": 0},
+    "iron_rule_compliance_check": "all 37 nodes have misconceptions, explanation_hooks, variation_seeds",
+    "errata_critical_count": 2,
+    "extension_2026-05-16": "Added 4 L23103 (numpy core) + 1 L23302 (AutoML pipeline) = 5 nodes for deferred questions (q_pa_001/002/003/004/005, q_m8_001, q_pc_seq_004) — Agent 1A scope"
   }
 }

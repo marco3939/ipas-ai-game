@@ -319,6 +319,22 @@
     {
       "id": "n_L23103_004",
       "title": "時間複雜度 O(n²) — 兩兩比對"
+    },
+    {
+      "id": "n_L23103_005",
+      "title": "NumPy 線代核心 — 反矩陣 / 跡 / 特徵值 / 行列式"
+    },
+    {
+      "id": "n_L23103_006",
+      "title": "NumPy 向量範數 — np.linalg.norm 預設與 ord 參數"
+    },
+    {
+      "id": "n_L23103_007",
+      "title": "NumPy np.dot vs * — 內積 vs 逐元素"
+    },
+    {
+      "id": "n_L23103_008",
+      "title": "NumPy einsum 縮並規則 — Einstein summation 表示式"
     }
   ],
   "L23203": [
@@ -353,6 +369,10 @@
     {
       "id": "n_L23302_001",
       "title": "模型架構選擇與超參數初始化"
+    },
+    {
+      "id": "n_L23302_002",
+      "title": "AutoML 標準流程八階段"
     }
   ],
   "L23303": [
@@ -523,6 +543,10 @@
     {
       "id": "n_L22201_006",
       "title": "ETL vs ELT 流程概念"
+    },
+    {
+      "id": "n_L22201_007",
+      "title": "pandas groupby + agg 輸出欄結構 — Series vs DataFrame 差異"
     }
   ],
   "L22202": [

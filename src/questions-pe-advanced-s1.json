@@ -14,26 +14,26 @@
       "format": "single_choice",
       "difficulty": "hard",
       "source_level": "L2",
-      "stem": "某法律科技新創要建立『判決書全文摘要與條文比對』系統,單篇輸入可達 32K tokens,GPU 預算僅有 4 張 A10(24GB)。架構師在 Multi-Head Attention、Sparse Attention(Longformer)、Linear Attention(Performer)、Grouped-Query Attention(GQA)中尋找最適配的注意力變形。請問下列何者最為正確?",
+      "stem": "某法律科技新創要建立『判決書全文摘要與條文比對』系統,單篇輸入長度極大(遠超一般文件)且 GPU 顯存有限。架構師考慮四個注意力設計方向:(甲)標準多頭自注意力、(乙)稀疏注意力(局部 sliding window 結合少量全域 anchor token)、(丙)線性注意力(用核函數近似將複雜度降為 O(n))、(丁)減少 KV head 數以節省推論記憶體。請問下列何者最為正確?",
       "options": [
-        {"text": "Sparse Attention(Longformer)最適合:結合 sliding window 與 global tokens,計算複雜度由 O(n²) 降為 O(n·w),對長判決書能保留局部上下文與少數全域 anchor token,32K 輸入仍可在 24GB 顯存內運作", "is_correct": true},
-        {"text": "標準 Multi-Head Attention 即可,只要把 batch size 設為 1、開啟 gradient checkpointing 並使用 mixed precision FP16,32K × 32K 注意力矩陣對 A10 24GB 顯存綽綽有餘,推論時 KV cache 也可動態釋放", "is_correct": false, "trap_type": "32K² × 4 bytes ≈ 4GB 僅單頭單層,實際多頭多層會爆顯存,且推論時 KV cache 也巨大"},
-        {"text": "Linear Attention(Performer)是唯一選擇,O(n) 複雜度可任意擴張到百萬 tokens,品質與 full attention 完全相同無差異,實務在判決條文比對等精細語意任務上甚至更佳", "is_correct": false, "trap_type": "Performer 的隨機特徵近似在長距語意比對任務上會有精度損失,且實證在多數 NLU 任務略遜於稀疏注意力"},
-        {"text": "Grouped-Query Attention(GQA)能直接降低長文 attention 的計算複雜度,把 query head 數除以 4 後 32K 輸入即可立即使用,無須其他注意力結構改動,適合長判決書全文一次性編碼", "is_correct": false, "trap_type": "GQA 是降低 KV head 數以減少『推論時 KV cache 記憶體』,並未改變 attention 對序列長度的 O(n²) 複雜度"}
+        {"text": "選(乙)稀疏注意力:結合 sliding window 局部關注與少量全域 anchor token,計算複雜度由 O(n²) 降為 O(n·w),對長判決書能保留局部上下文與少數全域引用,顯存可控且符合判決書『局部依賴強 + 少量跨段引用』的特性", "is_correct": true},
+        {"text": "選(甲)標準多頭自注意力即可:只要把 batch size 設為 1、開啟梯度檢查點並使用混合精度,n×n 注意力矩陣對 24GB 顯存綽綽有餘,推論時也可動態釋放快取,無須變形", "is_correct": false, "trap_type": "n² 注意力矩陣對每個 head 每層都需獨立儲存,實際多頭多層會爆顯存,標準自注意力對極長序列不可行"},
+        {"text": "選(丙)線性注意力是唯一選擇:O(n) 複雜度可任意擴張,品質與 full attention 完全相同無差異,在判決條文比對等精細語意任務上甚至更佳", "is_correct": false, "trap_type": "線性注意力的核函數近似在長距語意比對任務上有精度損失,實證在多數理解任務略遜於稀疏注意力"},
+        {"text": "選(丁)減少 KV head 數:能直接降低長文 attention 的計算複雜度,無須其他結構改動,適合長判決書全文一次性編碼", "is_correct": false, "trap_type": "減少 KV head 是降低『推論時 KV 快取記憶體』,並未改變 attention 對序列長度的 O(n²) 複雜度"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "Longformer 的 Sparse Attention 結合『sliding window(局部關注)』與『global attention(少量全域 token,如 [CLS])』,把 self-attention 的 O(n²) 降為 O(n·w),其中 w 為窗口大小。對 32K 長度的判決書,只要 w 設為 512,計算量約等同 32K × 512 而非 32K × 32K,顯存與時間都可控。判決書摘要任務本就具『局部依賴強 + 少量跨段引用』特性,符合稀疏注意力的歸納偏差。",
+        "correct": "稀疏注意力結合『sliding window(局部關注)』與『global attention(少量全域 token,如 [CLS])』,把 self-attention 的 O(n²) 降為 O(n·w),其中 w 為窗口大小。對極長序列只要 w 為固定數百,計算量約等同 n × w 而非 n × n,顯存與時間都可控。判決書摘要任務本就具『局部依賴強 + 少量跨段引用』特性,符合稀疏注意力的歸納偏差。",
         "wrong": {
-          "標準 Multi-Head Attention 即可,只要把 batch size 設為 1、開啟 gradient checkpointing 並使用 mixed precision FP16,32K × 32K 注意力矩陣對 A10 24GB 顯存綽綽有餘,推論時 KV cache 也可動態釋放": "32K² 注意力矩陣對每個 head 每層都需獨立儲存,假設 16 heads × 24 layers × FP16,中間值已超過 12GB,加上參數、梯度、activation 必然爆顯存",
-          "Linear Attention(Performer)是唯一選擇,O(n) 複雜度可任意擴張到百萬 tokens,品質與 full attention 完全相同無差異,實務在判決條文比對等精細語意任務上甚至更佳": "Performer 用 random feature map 近似 softmax 核,理論複雜度 O(n) 但近似誤差會在需要精確語意比對(如判決對應條文)的任務上造成可觀精度下降",
-          "Grouped-Query Attention(GQA)能直接降低長文 attention 的計算複雜度,把 query head 數除以 4 後 32K 輸入即可立即使用,無須其他注意力結構改動,適合長判決書全文一次性編碼": "GQA(LLaMA-2/3、Mistral 採用)是把多個 query head 共享同一組 KV head,目的是降低『推論時 KV cache』與『記憶體頻寬』,attention 對序列長度仍是 O(n²)"
+          "選(甲)標準多頭自注意力即可:只要把 batch size 設為 1、開啟梯度檢查點並使用混合精度,n×n 注意力矩陣對 24GB 顯存綽綽有餘,推論時也可動態釋放快取,無須變形": "n² 注意力矩陣對每個 head 每層都需獨立儲存,假設多頭多層,中間值會迅速超過顯存容量,加上參數、梯度、activation 必然爆顯存",
+          "選(丙)線性注意力是唯一選擇:O(n) 複雜度可任意擴張,品質與 full attention 完全相同無差異,在判決條文比對等精細語意任務上甚至更佳": "線性注意力用核函數近似 softmax,理論複雜度 O(n) 但近似誤差會在需要精確語意比對(如判決對應條文)的任務上造成可觀精度下降",
+          "選(丁)減少 KV head 數:能直接降低長文 attention 的計算複雜度,無須其他結構改動,適合長判決書全文一次性編碼": "減少 KV head(讓多個 query head 共享同一組 KV head)目的是降低『推論時 KV 快取』與『記憶體頻寬』,attention 對序列長度仍是 O(n²),不解決長序列計算複雜度問題"
         },
-        "hook": "長文選 Sparse(局部+全域 anchor);GQA 是省『KV cache』不是省序列長度;Linear/Performer 速度快但品質會掉"
+        "hook": "長文選稀疏注意力(局部+全域 anchor);減少 KV head 是省『推論快取』不是省序列長度;線性近似速度快但品質會掉"
       },
-      "misconceptions": ["把 GQA 誤認為解決長序列複雜度的方案", "以為 Linear Attention 在所有任務都等價於 full attention", "低估 32K² attention matrix 的實際顯存占用"],
+      "misconceptions": ["把 KV head 縮減誤認為解決長序列複雜度的方案", "以為線性注意力在所有任務都等價於 full attention", "低估 n² 注意力矩陣的實際顯存占用"],
       "related_node_ids": ["n_L21101_002", "n_L21101_006", "n_L21101_001"],
-      "tags": ["Attention", "Longformer", "Performer", "GQA", "長文處理", "進階NLP"]
+      "tags": ["Attention", "稀疏注意力", "線性注意力", "長文處理", "進階NLP"]
     },
     {
       "id": "q_pe_005",
@@ -43,26 +43,26 @@
       "format": "single_choice",
       "difficulty": "hard",
       "source_level": "L2",
-      "stem": "某智慧工廠 AGV 自走車上要部署『障礙物即時偵測』模型,規格為:邊緣 GPU(Jetson Orin NX、20W 功耗)、需 30 FPS 以上、每幀 1080p、要偵測小物件(掉落螺絲)。工程師在 YOLOv8、Faster R-CNN、DETR、RT-DETR 之間選型。請問下列何者最為正確?",
+      "stem": "某智慧工廠 AGV 自走車上要部署『障礙物即時偵測』模型,規格為:邊緣裝置(低功耗 GPU)、需高 FPS 即時推論、要偵測小物件(掉落螺絲)。工程師在四類物件偵測架構之間選型:(甲)一階段偵測器(YOLO 系列代表,單次前向)、(乙)兩階段偵測器(Faster R-CNN 系,候選區域 + 分類迴歸兩階段)、(丙)Transformer 端到端偵測器(以 object query 直接輸出框集,無需 NMS)、(丁)雲端大型架構。請問下列何者最為正確?",
       "options": [
-        {"text": "選 YOLOv8(s/m 版本):一階段、anchor-free、CSPDarknet backbone,在 Jetson Orin NX 經 TensorRT FP16/INT8 量化後可達 30+ FPS,小物件可用 P2 feature 與 mosaic 增強,符合即時與功耗約束", "is_correct": true},
-        {"text": "選 Faster R-CNN(ResNet-50 backbone),兩階段精度最高,小物件靠 RoI Align 對齊最強,Jetson Orin NX FP16 推論可輕鬆達 30 FPS,且 RPN 區域提案能精準鎖定螺絲級小物件,工業 AGV 場景表現最穩", "is_correct": false, "trap_type": "Faster R-CNN 兩階段在邊緣裝置常僅 5-10 FPS,RPN+RCNN 雙網路計算量大,難達即時"},
-        {"text": "選 DETR(原版),Transformer 端到端設計、無需 NMS 後處理、訓練收斂快、object query 機制使邊緣 FPS 高,即時偵測與螺絲級小物件場景均最優,1080p 30 FPS 在 Jetson 上可輕鬆達標", "is_correct": false, "trap_type": "原版 DETR 收斂極慢(500 epochs)、推論 FPS 低(<10 on edge)、且小物件偵測弱"},
-        {"text": "選 RT-DETR,雖名為 Real-Time,但其 backbone 採用大型 ViT 結構,Jetson 邊緣端 FPS 顯著低於 YOLO 系列,僅適合資料中心級雲端 GPU 上線,且小物件偵測能力明顯遜於 YOLO 多尺度設計", "is_correct": false, "trap_type": "RT-DETR 採用 hybrid encoder 與 IoU-aware query,實測在中階邊緣 GPU 已可接近 YOLOv8;但其優勢相較『要不要 NMS、是否可端到端』,本題小物件+極端邊緣功耗 YOLOv8 仍更穩"}
+        {"text": "選(甲)一階段偵測器(YOLO 系列):anchor-free、單次前向、可量化為低精度推論,邊緣裝置可達高 FPS;小物件可用多尺度特徵金字塔與資料增強強化,符合即時與功耗約束", "is_correct": true},
+        {"text": "選(乙)兩階段偵測器(Faster R-CNN 系),精度最高,小物件靠 RoI 對齊最強,邊緣裝置可輕鬆達即時 FPS,且區域提案網路能精準鎖定螺絲級小物件,工業場景表現最穩", "is_correct": false, "trap_type": "兩階段架構在邊緣裝置 FPS 通常不足,候選區域+分類迴歸雙網路計算量大,難達即時"},
+        {"text": "選(丙)Transformer 端到端偵測器,無需 NMS 後處理、訓練收斂快、object query 機制使邊緣 FPS 高,即時偵測與螺絲級小物件場景均最優", "is_correct": false, "trap_type": "原版 Transformer 端到端架構訓練收斂慢、邊緣推論 FPS 低、且 object query 機制對小物件學習弱,需後續改進版才補強"},
+        {"text": "選(丁)雲端大型架構透過網路傳影像至資料中心推論,雖延遲增加但精度最高、無邊緣硬體限制、便於統一維運,適合工業 AGV 即時偵測場景", "is_correct": false, "trap_type": "工業 AGV 需要本地即時決策(網路延遲不可接受),且網路斷線即停機,違反邊緣即時偵測的核心需求"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "邊緣即時偵測的決策邏輯:功耗與 FPS 約束 → 一階段優於兩階段;小物件 → 需高解析特徵金字塔(P2/P3)與多尺度增強。YOLOv8 為一階段、anchor-free、整合 task aligned assigner 與 distribution focal loss,在 TensorRT FP16/INT8 量化後 Jetson Orin NX 可穩定 30-60 FPS。對小物件可採用 P2 head、mosaic+mixup、提高輸入解析度(如 1280×1280)。Faster R-CNN/DETR 在邊緣裝置 FPS 不足;RT-DETR 雖名為即時但對邊緣端來說仍較吃力,且小物件偵測 YOLOv8 配合多尺度仍是工程實務最穩選擇。",
+        "correct": "邊緣即時偵測的決策邏輯:功耗與 FPS 約束 → 一階段優於兩階段;小物件 → 需高解析特徵金字塔與多尺度增強。一階段偵測器(YOLO 系列)以單次前向、anchor-free、整合任務對齊指派與分布損失等改良,經低精度量化後可在邊緣裝置穩定達到即時 FPS。對小物件可採用高解析特徵 head、多尺度資料增強、提高輸入解析度等策略。兩階段架構與 Transformer 端到端架構在邊緣裝置 FPS 通常不足;雲端推論又違反 AGV 本地決策需求。",
         "wrong": {
-          "選 Faster R-CNN(ResNet-50 backbone),兩階段精度最高,小物件靠 RoI Align 對齊最強,Jetson Orin NX FP16 推論可輕鬆達 30 FPS,且 RPN 區域提案能精準鎖定螺絲級小物件,工業 AGV 場景表現最穩": "Faster R-CNN 由 RPN(候選區域)+ Fast R-CNN(分類迴歸)兩階段組成,計算量約是同等大小一階段模型的 2-3 倍;Jetson Orin NX 上 ResNet-50 版實測約 5-10 FPS,遠低於即時要求",
-          "選 DETR(原版),Transformer 端到端設計、無需 NMS 後處理、訓練收斂快、object query 機制使邊緣 FPS 高,即時偵測與螺絲級小物件場景均最優,1080p 30 FPS 在 Jetson 上可輕鬆達標": "原版 DETR 出名的問題:訓練收斂需 500 epochs(後續 Deformable DETR 才改善)、推論在邊緣端 FPS 通常 <10、且 object query 機制對小物件學習特別弱(Deformable/DINO 才補強)",
-          "選 RT-DETR,雖名為 Real-Time,但其 backbone 採用大型 ViT 結構,Jetson 邊緣端 FPS 顯著低於 YOLO 系列,僅適合資料中心級雲端 GPU 上線,且小物件偵測能力明顯遜於 YOLO 多尺度設計": "RT-DETR 用的是 CNN+hybrid encoder 而非純大型 ViT,在 T4/A10 等雲端 GPU 已超越 YOLO;但本題情境是 20W 功耗的邊緣裝置 + 螺絲級小物件,YOLOv8 多尺度配置工程上仍更穩;此選項『只能用雲端 GPU』描述過度絕對化,但本題情境下 YOLOv8 仍是最佳"
+          "選(乙)兩階段偵測器(Faster R-CNN 系),精度最高,小物件靠 RoI 對齊最強,邊緣裝置可輕鬆達即時 FPS,且區域提案網路能精準鎖定螺絲級小物件,工業場景表現最穩": "兩階段架構由候選區域提案 + 分類迴歸兩階段組成,計算量約是同等大小一階段模型的數倍;在邊緣裝置實測 FPS 遠低於即時要求",
+          "選(丙)Transformer 端到端偵測器,無需 NMS 後處理、訓練收斂快、object query 機制使邊緣 FPS 高,即時偵測與螺絲級小物件場景均最優": "原版 Transformer 端到端架構出名的問題:訓練收斂緩慢、推論在邊緣端 FPS 不足、且 object query 機制對小物件學習特別弱(需後續改進版才補強);無法直接滿足邊緣即時 + 小物件雙重要求",
+          "選(丁)雲端大型架構透過網路傳影像至資料中心推論,雖延遲增加但精度最高、無邊緣硬體限制、便於統一維運,適合工業 AGV 即時偵測場景": "工業 AGV 需要本地即時決策(障礙物偵測延遲超過數十毫秒即可能造成碰撞),網路傳輸 RTT 不可接受;網路斷線即停機,違反邊緣即時偵測的核心需求"
         },
-        "hook": "邊緣即時 + 小物件 → YOLO 一階段 + 多尺度 + TRT INT8;兩階段、原版 DETR 邊緣端 FPS 不足"
+        "hook": "邊緣即時 + 小物件 → 一階段偵測器 + 多尺度特徵 + 低精度量化;兩階段、Transformer 端到端在邊緣 FPS 不足;雲端推論違反本地即時需求"
       },
-      "misconceptions": ["以為精度最高的兩階段一定最佳", "把『即時』命名等同於邊緣可用", "忽略 small object detection 需專屬 feature pyramid 設計"],
+      "misconceptions": ["以為精度最高的兩階段一定最佳", "把『即時』命名等同於邊緣可用", "忽略小物件偵測需專屬多尺度特徵設計"],
       "related_node_ids": ["n_L21102_002", "n_L21102_004", "n_L21102_001"],
-      "tags": ["YOLO", "Faster R-CNN", "DETR", "RT-DETR", "邊緣推論", "進階CV"]
+      "tags": ["YOLO", "Faster R-CNN", "邊緣推論", "進階CV"]
     },
     {
       "id": "q_pe_006",
@@ -72,26 +72,26 @@
       "format": "single_choice",
       "difficulty": "hard",
       "source_level": "L2",
-      "stem": "某醫學影像新創接到三個專案:(A) 醫療顯微鏡細胞核分割(高精度、樣本少、像素級邊界要嚴謹)、(B) 衛星影像建築物實例分割(每張影像多達數百個物件、需區分個別建築)、(C) 通用社群圖片產品標註工具(任意物體、零樣本、由使用者點擊提示)。資深 CV 工程師要分別選 U-Net、Mask R-CNN、SAM 中最合適的模型。請問下列何者最為正確?",
+      "stem": "某醫學影像新創接到三個專案:(A) 醫療顯微鏡細胞核分割(高精度、樣本少、像素級邊界要嚴謹)、(B) 衛星影像建築物實例分割(每張影像多達數百個物件、需區分個別建築)、(C) 通用社群圖片產品標註工具(任意物體、零樣本、由使用者點擊提示)。資深 CV 工程師要分別在『語意分割專用網路(編碼-解碼+跳接架構)』、『實例分割兩階段網路(候選區域提案 + ROI 對齊 + 平行 mask head)』、『大型可提示通用分割基礎模型(以海量遮罩預訓練、支援點擊提示零樣本)』中選最合適的對應。請問下列何者最為正確?",
       "options": [
-        {"text": "(A) U-Net、(B) Mask R-CNN、(C) SAM:U-Net encoder-decoder + skip connection 對小資料醫療最強;Mask R-CNN 兩階段 + RoIAlign 適合多實例分割;SAM 預訓練 11M 影像 + 1B masks,具零樣本提示能力", "is_correct": true},
-        {"text": "(A) Mask R-CNN、(B) U-Net、(C) SAM:Mask R-CNN 兩階段加 RoIAlign 像素級最精準適合醫療顯微鏡;U-Net encoder-decoder 對大物件衛星建築較好;SAM 仍負責零樣本通用點擊提示", "is_correct": false, "trap_type": "U-Net 對小資料醫療影像才是經典最佳,Mask R-CNN 是實例分割且訓練需大量標註"},
-        {"text": "(A) SAM、(B) Mask R-CNN、(C) U-Net:SAM 零樣本能力可大幅省下醫療顯微鏡標註成本,直接點擊細胞核即可生成精準像素 mask;U-Net 的 encoder-decoder 結構反而最適合通用零樣本任意物體分割任務,可由使用者點擊提示", "is_correct": false, "trap_type": "SAM 在醫療影像零樣本表現不穩(domain gap);U-Net 不具零樣本提示能力,無法直接用於通用任意物體"},
-        {"text": "三者全選 SAM 即可,SAM 預訓練資料涵蓋醫療顯微鏡、衛星俯視、通用社群三大領域,所有 semantic 與 instance 分割任務零樣本均能超越領域專屬模型,不再需要 U-Net 或 Mask R-CNN,工程實作可大幅簡化部署成本與標註成本", "is_correct": false, "trap_type": "SAM 在醫療(顯微鏡、CT/MRI)與衛星(俯視角)領域 zero-shot 效果普遍不如領域訓練專屬模型,須做 SAM-Med、SAM-Sat 之類微調"}
+        {"text": "(A) 語意分割專用網路、(B) 實例分割兩階段網路、(C) 大型可提示通用基礎模型:編碼-解碼+跳接對小資料醫療最強;兩階段+ROI 對齊適合多實例分割;通用基礎模型具零樣本提示能力", "is_correct": true},
+        {"text": "(A) 實例分割兩階段網路、(B) 語意分割專用網路、(C) 大型可提示通用基礎模型:兩階段+ROI 對齊像素級最精準適合醫療顯微鏡;語意分割編碼-解碼對大物件衛星建築較好;通用基礎模型仍負責零樣本通用點擊提示", "is_correct": false, "trap_type": "編碼-解碼+跳接的語意分割網路對小資料醫療影像才是經典最佳,實例分割兩階段需大量標註"},
+        {"text": "(A) 大型可提示通用基礎模型、(B) 實例分割兩階段網路、(C) 語意分割專用網路:通用基礎模型零樣本能力可大幅省下醫療顯微鏡標註成本;語意分割編碼-解碼結構反而最適合通用零樣本任意物體分割,可由使用者點擊提示", "is_correct": false, "trap_type": "通用基礎模型在醫療影像零樣本表現不穩(領域差距大);語意分割專用網路不具零樣本提示能力,無法直接用於通用任意物體"},
+        {"text": "三者全選大型可提示通用基礎模型即可,海量遮罩預訓練涵蓋醫療顯微鏡、衛星俯視、通用社群三大領域,所有語意與實例分割任務零樣本均能超越領域專屬模型,不再需要其他架構,工程實作可大幅簡化部署成本與標註成本", "is_correct": false, "trap_type": "大型通用基礎模型訓練資料以自然影像為主,在醫療顯微鏡與衛星俯視等與訓練分布差異大的領域,zero-shot 效果常不如領域訓練專屬模型,須做領域微調"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "三模型的歸納偏差(inductive bias)各不相同:U-Net 的 encoder-decoder + skip connection 在小樣本醫療影像保留高頻邊界資訊最強(原論文即為細胞分割設計);Mask R-CNN 是 instance segmentation 範式,RPN 找候選 + RoIAlign 對齊 + 平行 mask head,適合『需要區分個別物件』的衛星建築場景;SAM(Segment Anything Model)以 11M 影像 + 10 億 masks 預訓練,核心是『可提示(promptable)』分割,使用者點擊/框選即可零樣本生成 mask,適合通用工具型應用。但 SAM 在醫療、衛星等與訓練分布差異大的領域常需做 SAM-Med/SAM-Sat 等領域微調。",
+        "correct": "三類模型的歸納偏差(inductive bias)各不相同:編碼-解碼+跳接的語意分割專用網路在小樣本醫療影像保留高頻邊界資訊最強(此類架構原本即為醫療顯微鏡細胞分割設計);實例分割兩階段網路以候選區域提案 + ROI 對齊 + 平行 mask head 構成,適合『需要區分個別物件』的衛星建築場景;大型可提示通用分割基礎模型以海量遮罩預訓練,核心是『可提示(promptable)』分割,使用者點擊或框選即可零樣本生成 mask,適合通用工具型應用。但通用基礎模型在醫療、衛星等與訓練分布差異大的領域常需做領域微調。",
         "wrong": {
-          "(A) Mask R-CNN、(B) U-Net、(C) SAM:Mask R-CNN 兩階段加 RoIAlign 像素級最精準適合醫療顯微鏡;U-Net encoder-decoder 對大物件衛星建築較好;SAM 仍負責零樣本通用點擊提示": "Mask R-CNN 雖然 mask head 可像素級,但需大量標註的 instance 級資料才能收斂良好;醫療顯微鏡常面臨小資料集挑戰,U-Net 對此最穩。U-Net 反而對需區分個別實例的衛星建築不擅長",
-          "(A) SAM、(B) Mask R-CNN、(C) U-Net:SAM 零樣本能力可大幅省下醫療顯微鏡標註成本,直接點擊細胞核即可生成精準像素 mask;U-Net 的 encoder-decoder 結構反而最適合通用零樣本任意物體分割任務,可由使用者點擊提示": "SAM 在醫療影像領域 zero-shot 表現不穩(顯微鏡、放射科風格與自然影像差異大),需 SAM-Med 等微調;U-Net 不具備『提示式』與『任意類別』能力,不適合通用零樣本工具",
-          "三者全選 SAM 即可,SAM 預訓練資料涵蓋醫療顯微鏡、衛星俯視、通用社群三大領域,所有 semantic 與 instance 分割任務零樣本均能超越領域專屬模型,不再需要 U-Net 或 Mask R-CNN,工程實作可大幅簡化部署成本與標註成本": "SAM 訓練資料以自然影像為主,醫療(顯微鏡、CT/MRI)、衛星俯視角等領域 domain gap 大,zero-shot 常輸給專屬模型;且 SAM 是『提示分割』,沒有自動分類標籤"
+          "(A) 實例分割兩階段網路、(B) 語意分割專用網路、(C) 大型可提示通用基礎模型:兩階段+ROI 對齊像素級最精準適合醫療顯微鏡;語意分割編碼-解碼對大物件衛星建築較好;通用基礎模型仍負責零樣本通用點擊提示": "實例分割兩階段網路 mask head 雖可像素級,但需大量標註的 instance 級資料才能收斂良好;醫療顯微鏡常面臨小資料集挑戰,編碼-解碼+跳接的語意分割專用網路對此最穩。語意分割專用網路反而對需區分個別實例的衛星建築不擅長",
+          "(A) 大型可提示通用基礎模型、(B) 實例分割兩階段網路、(C) 語意分割專用網路:通用基礎模型零樣本能力可大幅省下醫療顯微鏡標註成本;語意分割編碼-解碼結構反而最適合通用零樣本任意物體分割,可由使用者點擊提示": "通用基礎模型在醫療影像領域 zero-shot 表現不穩(顯微鏡、放射科風格與自然影像差異大),需領域微調才能達標;語意分割專用網路不具備『提示式』與『任意類別』能力,不適合通用零樣本工具",
+          "三者全選大型可提示通用基礎模型即可,海量遮罩預訓練涵蓋醫療顯微鏡、衛星俯視、通用社群三大領域,所有語意與實例分割任務零樣本均能超越領域專屬模型,不再需要其他架構,工程實作可大幅簡化部署成本與標註成本": "大型通用分割基礎模型訓練資料以自然影像為主,醫療(顯微鏡、放射科)、衛星俯視角等領域 domain gap 大,zero-shot 常輸給專屬模型;且這類基礎模型是『提示分割』,沒有自動分類標籤"
         },
-        "hook": "醫療小樣本 → U-Net;多實例個別物件 → Mask R-CNN;零樣本提示通用 → SAM(但領域差距大時要微調)"
+        "hook": "醫療小樣本 → 編碼-解碼+跳接(語意分割專用);多實例個別物件 → 實例分割兩階段;零樣本提示通用 → 大型可提示基礎模型(但領域差距大時要微調)"
       },
-      "misconceptions": ["把 SAM 當作所有分割任務的萬靈丹", "混淆 semantic 與 instance segmentation 的需求", "忽略 domain gap 對 SAM zero-shot 的影響"],
+      "misconceptions": ["把可提示通用分割基礎模型當作所有分割任務的萬靈丹", "混淆語意與實例分割的需求", "忽略 domain gap 對通用基礎模型 zero-shot 的影響"],
       "related_node_ids": ["n_L21102_001", "n_L21102_002", "n_L21102_004"],
-      "tags": ["U-Net", "Mask R-CNN", "SAM", "分割架構", "醫療影像", "進階CV"]
+      "tags": ["語意分割", "實例分割", "可提示分割基礎模型", "分割架構", "醫療影像", "進階CV"]
     },
     {
       "id": "q_pe_011",
@@ -101,26 +101,26 @@
       "format": "single_choice",
       "difficulty": "hard",
       "source_level": "L2",
-      "stem": "某科技公司同時開發三個多模態應用:(A) 電商以圖搜圖/以文搜圖檢索 200 萬商品庫、(B) 視覺對話助理(使用者上傳圖+問問題,模型回答)、(C) 自動為盲人朗讀社群圖片內容(影像描述生成)。產品經理在 CLIP、BLIP-2、Flamingo、LLaVA 中分別選最佳模型。請問下列何者最為正確?",
+      "stem": "某科技公司同時開發三個多模態應用:(A) 電商以圖搜圖/以文搜圖檢索 200 萬商品庫、(B) 視覺對話助理(使用者上傳圖+問問題,模型回答)、(C) 自動為盲人朗讀社群圖片內容(影像描述生成)。產品經理需在三類多模態架構中選擇:(甲)雙編碼器對比學習(影像/文字各自編碼至共享空間,以餘弦相似度比對,如 CLIP 類);(乙)視覺特徵橋接大型語言模型(影像特徵經 projector/查詢轉接器送入 LLM,可生成回應);(丙)交錯式圖文上下文模型(在凍結 LLM 中插入跨模態注意力)。請問下列何者最為正確?",
       "options": [
-        {"text": "(A) CLIP(對比學習雙編碼器,推論時可預先索引)、(B) LLaVA 或 BLIP-2(視覺特徵透過 projector/Q-Former 對接 LLM,擅長多輪對話)、(C) BLIP-2 或 Flamingo(具描述生成能力,Flamingo 還支援少樣本上下文)", "is_correct": true},
-        {"text": "(A) BLIP-2、(B) CLIP、(C) Flamingo:BLIP-2 的 Q-Former 雙編碼設計推論最快適合大規模檢索;CLIP 雙塔對齊機制對多輪對話延遲最低;Flamingo 的 cross-attention 對影像描述生成最佳", "is_correct": false, "trap_type": "CLIP 是雙編碼可預索引適合檢索;BLIP-2 是 frozen LLM + Q-Former 不適合大規模索引;CLIP 沒有生成能力無法做對話"},
-        {"text": "(A) Flamingo、(B) Flamingo、(C) Flamingo,Flamingo 是 DeepMind 最新最強的通用多模態模型,所有檢索、對話、描述任務都最佳,且 few-shot 圖文交錯上下文能力可省下大量微調成本,完全可開源直接部署到 200 萬商品庫", "is_correct": false, "trap_type": "Flamingo 是 DeepMind 內部模型未開源,且大模型推論成本對 200 萬商品檢索完全不切實際"},
-        {"text": "(A) LLaVA、(B) CLIP、(C) LLaVA:LLaVA 對 200 萬庫檢索最佳因含 LLM 語意理解;CLIP 雙塔結構延遲低最適合多輪對話即時回覆;LLaVA 對盲人朗讀的影像描述生成最佳", "is_correct": false, "trap_type": "LLaVA 推論需走整個 LLM forward,200 萬庫檢索成本爆炸;CLIP 不能對話"}
+        {"text": "(A) 雙編碼器對比學習(可預索引、毫秒級檢索)、(B) 視覺特徵橋接 LLM(可多輪生成式對話)、(C) 視覺特徵橋接 LLM 或交錯式圖文上下文模型(具生成能力、後者還支援少樣本範例)", "is_correct": true},
+        {"text": "(A) 視覺特徵橋接 LLM 適合大規模檢索;(B) 雙編碼器對比學習延遲最低適合多輪對話;(C) 交錯式圖文上下文模型對影像描述生成最佳", "is_correct": false, "trap_type": "視覺特徵橋接 LLM 含完整 LLM 前向不適合大庫預索引;雙編碼器只做 embedding 比對沒有生成能力無法對話"},
+        {"text": "三者全選交錯式圖文上下文模型即可,此類為最新最強通用多模態模型,所有檢索、對話、描述任務都最佳,且少樣本能力可省下大量微調成本,完全可直接部署到 200 萬商品庫", "is_correct": false, "trap_type": "大型生成式模型對 200 萬商品檢索成本爆炸,需可預索引的雙編碼器架構;且這類模型多為私有未開源"},
+        {"text": "(A) 視覺特徵橋接 LLM 對 200 萬庫檢索最佳因含 LLM 語意理解;(B) 雙編碼器對比學習結構延遲低最適合多輪對話即時回覆;(C) 視覺特徵橋接 LLM 對盲人朗讀的影像描述生成最佳", "is_correct": false, "trap_type": "視覺特徵橋接 LLM 推論需走整個 LLM 前向,200 萬庫檢索成本不可行;雙編碼器不能對話"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "多模態模型架構各有強項:CLIP 採『雙編碼器(image encoder + text encoder)+ 對比學習』,推論時 image embedding 可預計算入向量資料庫,text query 即時編碼後做 cosine 相似度,毫秒級檢索 200 萬商品。BLIP-2 用 Q-Former 把 image feature 抽成 32 個 query 接到 frozen LLM,具備生成與推理能力,適合對話與描述。LLaVA 把 CLIP-ViT 經 MLP projector 接 Vicuna,instruction-tuned 後對話表現強。Flamingo 在 frozen LLM 中插入 perceiver resampler 與 cross-attention,並支援『few-shot in-context』圖文交錯,但未開源。檢索 → CLIP 雙編碼;對話 → LLaVA/BLIP-2;描述 → BLIP-2/Flamingo。",
+        "correct": "多模態模型架構各有強項:雙編碼器對比學習(CLIP 類)以影像編碼器 + 文字編碼器分別將兩模態投影到共享空間,以對比學習對齊配對;推論時影像 embedding 可預計算入向量資料庫,文字 query 即時編碼後做餘弦相似度,毫秒級檢索大規模商品庫。視覺特徵橋接 LLM(以 projector/查詢轉接器把影像特徵接到凍結 LLM)具備生成與推理能力,適合多輪對話與影像描述。交錯式圖文上下文模型在凍結 LLM 中插入跨模態注意力與少樣本上下文,描述生成能力強。檢索 → 雙編碼器對比學習;對話/描述 → 視覺特徵橋接 LLM 或交錯式圖文上下文模型。",
         "wrong": {
-          "(A) BLIP-2、(B) CLIP、(C) Flamingo:BLIP-2 的 Q-Former 雙編碼設計推論最快適合大規模檢索;CLIP 雙塔對齊機制對多輪對話延遲最低;Flamingo 的 cross-attention 對影像描述生成最佳": "BLIP-2 不是純雙編碼器(包含 Q-Former+LLM),不適合大庫檢索預索引;CLIP 只做 embedding 比對沒有生成能力,不能對話",
-          "(A) Flamingo、(B) Flamingo、(C) Flamingo,Flamingo 是 DeepMind 最新最強的通用多模態模型,所有檢索、對話、描述任務都最佳,且 few-shot 圖文交錯上下文能力可省下大量微調成本,完全可開源直接部署到 200 萬商品庫": "Flamingo 是 DeepMind 私有模型未開源,實務無法直接使用;且檢索 200 萬商品需要可預索引的雙編碼器,大型生成式模型逐一打分計算成本爆炸",
-          "(A) LLaVA、(B) CLIP、(C) LLaVA:LLaVA 對 200 萬庫檢索最佳因含 LLM 語意理解;CLIP 雙塔結構延遲低最適合多輪對話即時回覆;LLaVA 對盲人朗讀的影像描述生成最佳": "LLaVA 是 LLM-based 多模態問答模型,每次推論需跑完整 LLM forward,2M 商品檢索完全不可行;CLIP 是 embedding 模型沒有生成能力無法回答多輪對話"
+          "(A) 視覺特徵橋接 LLM 適合大規模檢索;(B) 雙編碼器對比學習延遲最低適合多輪對話;(C) 交錯式圖文上下文模型對影像描述生成最佳": "視覺特徵橋接 LLM 含完整 LLM 前向計算,逐一打分對 200 萬商品成本爆炸,不適合大庫預索引;雙編碼器對比學習只做 embedding 比對沒有生成能力,不能回答多輪對話",
+          "三者全選交錯式圖文上下文模型即可,此類為最新最強通用多模態模型,所有檢索、對話、描述任務都最佳,且少樣本能力可省下大量微調成本,完全可直接部署到 200 萬商品庫": "大型生成式多模態模型推論成本對 200 萬商品檢索完全不切實際(需逐一前向打分);且這類模型多為私有閉源,實務無法直接使用",
+          "(A) 視覺特徵橋接 LLM 對 200 萬庫檢索最佳因含 LLM 語意理解;(B) 雙編碼器對比學習結構延遲低最適合多輪對話即時回覆;(C) 視覺特徵橋接 LLM 對盲人朗讀的影像描述生成最佳": "視覺特徵橋接 LLM 每次推論需走完整 LLM 前向,200 萬庫檢索成本不可行;雙編碼器是 embedding 模型沒有生成能力,無法回答多輪對話"
         },
-        "hook": "雙編碼可索引 → CLIP(檢索);Q-Former/Projector 接 LLM → BLIP-2/LLaVA(對話/描述);Flamingo 強但未開源"
+        "hook": "雙編碼可索引 → 對比學習雙編碼器(檢索);橋接 LLM → 視覺特徵橋接 LLM(對話/描述);交錯式圖文上下文模型描述能力強但成本高、多為閉源"
       },
-      "misconceptions": ["以為 CLIP 能做生成對話", "把 LLaVA/BLIP-2 用於大庫檢索", "把『最新模型』與『最佳選擇』直覺等號"],
+      "misconceptions": ["以為對比學習雙編碼器能做生成對話", "把橋接 LLM 的多模態模型用於大庫檢索", "把『最新模型』與『最佳選擇』直覺等號"],
       "related_node_ids": ["n_L21104_001", "n_L21104_002", "n_L21101_006"],
-      "tags": ["CLIP", "BLIP-2", "Flamingo", "LLaVA", "多模態架構", "進階多模態"]
+      "tags": ["CLIP", "對比學習雙編碼器", "視覺特徵橋接LLM", "多模態架構", "進階多模態"]
     },
     {
       "id": "q_pe_012",
@@ -130,26 +130,26 @@
       "format": "single_choice",
       "difficulty": "hard",
       "source_level": "L2",
-      "stem": "某時尚電商導入 CLIP 做以文搜圖,在英文資料集 R@1 = 72%,但中文時尚情境(如『高領毛衣搭配格紋裙』)零樣本檢索 R@1 僅 18%。資深 ML 工程師要系統性診斷『跨模態檢索失準』根因。請問下列何者**最完整正確**?",
+      "stem": "某時尚電商導入對比學習雙編碼器(以英文 alt-text 大規模預訓練)做以文搜圖,在英文資料集召回率(R@1)達 72%,但中文時尚情境(如『高領毛衣搭配格紋裙』)零樣本檢索 R@1 僅 18%。資深 ML 工程師要系統性診斷『跨模態檢索失準』根因。請問下列何者**最完整正確**?",
       "options": [
-        {"text": "三大根因疊加:(1) 編碼器跨模態對齊偏差(中文編碼器未對齊影像空間)、(2) 預訓練語料偏見(時尚品類在 LAION 稀疏)、(3) 領域差距(電商商品圖 vs web 自然圖);需 Chinese-CLIP 重訓 + 領域微調 + 困難負樣本", "is_correct": true},
-        {"text": "唯一根因是『索引向量資料庫(FAISS/Milvus)的近似最近鄰演算法精度問題』,只要把 IVF 索引結構改為 HNSW、提高 nprobe 與 efSearch 參數或改用精確暴力查詢即可恢復至原英文水準", "is_correct": false, "trap_type": "ANN 精度差距通常 1-3%,無法解釋 72% → 18% 的差距;且 18% 的低召回不是 ANN 近似誤差層級"},
-        {"text": "唯一根因是『中文 query 太短不利雙塔對比學習』,只要在所有中文 query 前自動加入『請尋找一張:』『時尚穿搭情境是』等通用提示詞做 prompt ensemble 並重新加權,即可恢復原英文水準的檢索效能,無需更換模型", "is_correct": false, "trap_type": "Prompt engineering 對 CLIP 雙塔有限助益(數個百分點),無法解釋 54 個百分點的落差"},
-        {"text": "唯一根因是『影像 encoder 解析度太低』,只要把 ViT-B/32 直接換成 ViT-L/14 並提高輸入解析度至 336 px,搭配多 crop 推論策略,中文檢索效能即可立刻恢復至英文水準,與語言端對齊完全無關", "is_correct": false, "trap_type": "影像 encoder 升級提升通常 3-7%,且本題核心在語言端與領域差距,非影像端解析度"}
+        {"text": "三大根因疊加:(1) 編碼器跨模態對齊偏差(原版英文文字編碼器未對齊到中文-影像共享空間)、(2) 預訓練語料偏見(時尚精細品類在原訓練語料稀疏)、(3) 領域差距(電商商品圖 vs 網路自然圖);需中文版重訓 + 領域微調 + 困難負樣本", "is_correct": true},
+        {"text": "唯一根因是『索引向量資料庫的近似最近鄰演算法精度問題』,只要改變索引結構、提高搜尋參數或改用精確暴力查詢即可恢復至原英文水準", "is_correct": false, "trap_type": "近似最近鄰精度差距通常 1-3%,無法解釋 72% → 18% 的差距;且 18% 的低召回不是近似誤差層級"},
+        {"text": "唯一根因是『中文 query 太短不利雙塔對比學習』,只要在所有中文 query 前自動加入『請尋找一張:』等通用提示詞做 prompt ensemble 並重新加權,即可恢復原英文水準的檢索效能,無需更換模型", "is_correct": false, "trap_type": "Prompt engineering 對雙塔有限助益(數個百分點),無法解釋 54 個百分點的落差"},
+        {"text": "唯一根因是『影像編碼器解析度太低』,只要升級到更大型影像編碼器並提高輸入解析度,搭配多 crop 推論策略,中文檢索效能即可立刻恢復至英文水準,與語言端對齊完全無關", "is_correct": false, "trap_type": "影像編碼器升級提升通常 3-7%,且本題核心在語言端與領域差距,非影像端解析度"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "跨模態零樣本檢索失準需從三個層面系統診斷:(1)『編碼器對齊』— CLIP 原版以 4 億英文 alt-text 對訓練,文字編碼器對中文處理弱,即便有多語言版本,中英對齊空間仍非等價,跨語言檢索 gap 巨大;(2)『預訓練語料偏見』— LAION/WIT 等網路語料中,時尚精細品類(如『高領毛衣』『格紋』)分布稀疏,CLIP 對這些細粒度概念表徵不足;(3)『領域差距』— 電商商品圖通常為純色背景、置中、單一商品,與 web 自然圖差異大,encoder feature 分布偏移。系統性對策:Chinese-CLIP/CN-CLIP 模型替換、用電商標題-商品圖對做領域微調、引入 hard negative mining 強化細粒度分辨。",
+        "correct": "跨模態零樣本檢索失準需從三個層面系統診斷:(1)『編碼器對齊』— 原版對比學習雙編碼器以英文圖文對訓練,文字編碼器對中文處理弱,即便有多語言版本,中英對齊空間仍非等價,跨語言檢索落差巨大;(2)『預訓練語料偏見』— 大型網路語料中,時尚精細品類(如『高領毛衣』『格紋』)分布稀疏,模型對這些細粒度概念表徵不足;(3)『領域差距』— 電商商品圖通常為純色背景、置中、單一商品,與網路自然圖差異大,編碼器特徵分布偏移。系統性對策:中文版模型替換、用電商標題-商品圖對做領域微調、引入困難負樣本挖掘強化細粒度分辨。",
         "wrong": {
-          "唯一根因是『索引向量資料庫(FAISS/Milvus)的近似最近鄰演算法精度問題』,只要把 IVF 索引結構改為 HNSW、提高 nprobe 與 efSearch 參數或改用精確暴力查詢即可恢復至原英文水準": "ANN(IVF/HNSW)的 recall@1 與精確查詢相比通常差距僅 1-3%(可調 nprobe/efSearch 控制),無法解釋 72% → 18% 的 54% 落差;且本題還報告英文集仍 72%,顯示 ANN 並非瓶頸",
-          "唯一根因是『中文 query 太短不利雙塔對比學習』,只要在所有中文 query 前自動加入『請尋找一張:』『時尚穿搭情境是』等通用提示詞做 prompt ensemble 並重新加權,即可恢復原英文水準的檢索效能,無需更換模型": "Prompt engineering(如 OpenCLIP 的 prompt ensemble)對零樣本分類有 3-5% 助益,但無法跨越語言與領域 gap 的根本問題",
-          "唯一根因是『影像 encoder 解析度太低』,只要把 ViT-B/32 直接換成 ViT-L/14 並提高輸入解析度至 336 px,搭配多 crop 推論策略,中文檢索效能即可立刻恢復至英文水準,與語言端對齊完全無關": "影像 encoder 升級(B/32 → L/14)通常提升 3-7%,但本題瓶頸在文字端與領域差距,單純升級影像 encoder 無法跨越語言不對齊的核心問題"
+          "唯一根因是『索引向量資料庫的近似最近鄰演算法精度問題』,只要改變索引結構、提高搜尋參數或改用精確暴力查詢即可恢復至原英文水準": "近似最近鄰索引的 recall@1 與精確查詢相比通常差距僅 1-3%(可調搜尋參數控制),無法解釋 72% → 18% 的 54% 落差;且本題還報告英文集仍 72%,顯示索引並非瓶頸",
+          "唯一根因是『中文 query 太短不利雙塔對比學習』,只要在所有中文 query 前自動加入『請尋找一張:』等通用提示詞做 prompt ensemble 並重新加權,即可恢復原英文水準的檢索效能,無需更換模型": "Prompt engineering(prompt ensemble)對零樣本分類有 3-5% 助益,但無法跨越語言與領域差距的根本問題",
+          "唯一根因是『影像編碼器解析度太低』,只要升級到更大型影像編碼器並提高輸入解析度,搭配多 crop 推論策略,中文檢索效能即可立刻恢復至英文水準,與語言端對齊完全無關": "影像編碼器升級通常提升 3-7%,但本題瓶頸在文字端與領域差距,單純升級影像編碼器無法跨越語言不對齊的核心問題"
         },
-        "hook": "跨模態檢索失準三診斷:對齊偏差(語言)+ 語料偏見(細粒度)+ 領域差距(商品 vs web)"
+        "hook": "跨模態檢索失準三診斷:對齊偏差(語言)+ 語料偏見(細粒度)+ 領域差距(商品 vs 網路)"
       },
-      "misconceptions": ["把 ANN 索引精度當成主要原因", "以為 prompt engineering 可彌補語言對齊缺失", "忽略電商商品圖與訓練語料的領域差距"],
+      "misconceptions": ["把近似最近鄰索引精度當成主要原因", "以為 prompt engineering 可彌補語言對齊缺失", "忽略電商商品圖與訓練語料的領域差距"],
       "related_node_ids": ["n_L21104_001", "n_L21104_002", "n_L21101_005"],
-      "tags": ["CLIP", "跨模態檢索", "失準診斷", "Chinese-CLIP", "領域差距", "進階多模態"]
+      "tags": ["CLIP", "跨模態檢索", "失準診斷", "多語言對齊", "領域差距", "進階多模態"]
     }
   ]
 }

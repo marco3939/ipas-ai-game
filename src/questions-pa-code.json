@@ -8,8 +8,8 @@
   "questions": [
     {
       "id": "q_pa_001",
-      "knowledge_code": "L23102",
-      "node_id": "n_L23102_001",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_005",
       "subject": 3,
       "format": "code_reading",
       "difficulty": "easy",
@@ -38,13 +38,13 @@
         "hook": "對角反矩陣 = 每個對角元素取倒數;跡是對角加總"
       },
       "misconceptions": ["把跡與行列式混淆", "以為對角矩陣不可逆"],
-      "related_node_ids": ["n_L23102_001", "n_L23102_002"],
+      "related_node_ids": ["n_L23103_005", "n_L23102_001"],
       "tags": ["numpy", "線性代數", "反矩陣"]
     },
     {
       "id": "q_pa_002",
-      "knowledge_code": "L23102",
-      "node_id": "n_L23102_003",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_005",
       "subject": 3,
       "format": "code_reading",
       "difficulty": "medium",
@@ -73,13 +73,13 @@
         "hook": "特徵值乘積 = 行列式;特徵值總和 = 跡"
       },
       "misconceptions": ["以為對角元素積就是行列式", "把和與積混用"],
-      "related_node_ids": ["n_L23102_001", "n_L23102_003"],
+      "related_node_ids": ["n_L23103_005", "n_L23102_001"],
       "tags": ["numpy", "特徵值", "行列式"]
     },
     {
       "id": "q_pa_003",
-      "knowledge_code": "L23102",
-      "node_id": "n_L23102_005",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_006",
       "subject": 3,
       "format": "code_reading",
       "difficulty": "easy",
@@ -108,13 +108,13 @@
         "hook": "linalg.norm 預設 L2 = 平方和開根號"
       },
       "misconceptions": ["以為 norm 預設是 L1", "忘記 L2 要開根號"],
-      "related_node_ids": ["n_L23102_005"],
+      "related_node_ids": ["n_L23103_006", "n_L23103_005"],
       "tags": ["numpy", "範數", "正規化"]
     },
     {
       "id": "q_pa_004",
-      "knowledge_code": "L23102",
-      "node_id": "n_L23102_006",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_007",
       "subject": 3,
       "format": "code_reading",
       "difficulty": "medium",
@@ -143,13 +143,13 @@
         "hook": "1D dot 1D = 純量(shape=());* 是逐元素保形狀"
       },
       "misconceptions": ["把 dot 與 * 混用", "以為純量 shape 是 (1,)"],
-      "related_node_ids": ["n_L23102_006"],
+      "related_node_ids": ["n_L23103_007", "n_L23103_008"],
       "tags": ["numpy", "內積", "shape"]
     },
     {
       "id": "q_pa_005",
-      "knowledge_code": "L23102",
-      "node_id": "n_L23102_007",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_008",
       "subject": 3,
       "format": "code_reading",
       "difficulty": "hard",
@@ -178,7 +178,7 @@
         "hook": "einsum 右側沒出現的字母 = 被縮並(消去);共享字母 = 保留"
       },
       "misconceptions": ["不熟 einsum 字母對應", "忽略左右側差異判斷縮並維"],
-      "related_node_ids": ["n_L23102_007"],
+      "related_node_ids": ["n_L23103_008", "n_L23103_007"],
       "tags": ["numpy", "einsum", "矩陣縮並"]
     },
     {
@@ -393,9 +393,9 @@
     },
     {
       "id": "q_pa_014",
-      "knowledge_code": "L23402",
-      "node_id": "n_L23402_003",
-      "subject": 3,
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_007",
+      "subject": 2,
       "format": "code_reading",
       "difficulty": "medium",
       "source_level": "L2",
@@ -423,7 +423,7 @@
         "hook": "agg(list) 後欄名 = 函式名;groupby key 預設變 index"
       },
       "misconceptions": ["以為 agg 自動帶上原欄名", "以為 groupby key 留在欄"],
-      "related_node_ids": ["n_L23402_003"],
+      "related_node_ids": ["n_L22201_007", "n_L22201_001"],
       "tags": ["pandas", "groupby", "agg"]
     }
   ]

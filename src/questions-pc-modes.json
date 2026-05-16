@@ -330,8 +330,8 @@
     },
     {
       "id": "q_pc_seq_004",
-      "knowledge_code": "L23304",
-      "node_id": "n_L23304_005",
+      "knowledge_code": "L23302",
+      "node_id": "n_L23302_002",
       "subject": 3,
       "format": "sequence",
       "difficulty": "medium",
@@ -354,7 +354,7 @@
         "hook": "口訣:『定探特搜對調署續』 — 定問題→探資料→特徵→搜索→對比→微調→部署→持續"
       },
       "misconceptions": ["以為 AutoML 不需要特徵工程", "把模型部署放在對比/微調之前", "未做機率校準就用 AutoML 模型輸出機率做業務決策"],
-      "related_node_ids": ["n_L23304_001", "n_L23304_003"],
+      "related_node_ids": ["n_L23302_002", "n_L23302_001"],
       "tags": ["sequence", "AutoML", "ML pipeline", "模型選擇"]
     },
     {

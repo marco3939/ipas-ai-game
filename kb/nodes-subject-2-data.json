@@ -190,6 +190,40 @@
       "related_node_ids": ["n_L22201_001", "n_L22201_004"]
     },
     {
+      "node_id": "n_L22201_007",
+      "knowledge_code": "L22201",
+      "title": "pandas `groupby` + `agg` 輸出欄結構 — Series vs DataFrame 差異",
+      "category": "formula",
+      "source_level": "L1",
+      "source_refs": [{"file": "pandas 官方文件", "section": "DataFrame.groupby + SeriesGroupBy.agg / DataFrameGroupBy.agg"}, {"verified_by": "scripts/_temp_verify_kb.py"}],
+      "summary": "`groupby` 後做 `agg(['fn1','fn2'])`,輸出 columns 結構依『對 Series 還是 DataFrame』而異:**SeriesGroupBy.agg(list) → columns = 函式名稱**(無前綴);**DataFrameGroupBy.agg(list) → columns = MultiIndex (原欄, 函式名)**;**groupby key 預設變 index**(可用 `as_index=False` 留在欄);**自訂欄名需用 `NamedAgg`**",
+      "key_points": [
+        "`df.groupby('region')['sales'].agg(['sum','mean'])` → columns = `['sum', 'mean']`(SeriesGroupBy,單欄無前綴)",
+        "`df.groupby('region').agg(['sum','mean'])` → columns = `[('sales','sum'), ('sales','mean')]`(DataFrameGroupBy,MultiIndex)",
+        "`df.groupby('region', as_index=False)['sales'].agg(['sum','mean'])` → groupby key 留在欄,columns 含 'region'",
+        "自訂欄名:`agg(total=NamedAgg(column='sales', aggfunc='sum'), avg=NamedAgg(...))` → columns = `['total', 'avg']`",
+        "傳 dict 形式:`agg({'sales': ['sum','mean']})` → MultiIndex 與 list 形式相同",
+        "**groupby key 預設變 index**(需 `reset_index()` 或 `as_index=False` 才會出現在 columns)"
+      ],
+      "common_misconceptions": [
+        "誤以為 SeriesGroupBy.agg(list) 會自動把欄名前綴成 'sales_sum'(實際無前綴)",
+        "誤以為 groupby key 留在 columns(實際預設變 index)",
+        "把 SeriesGroupBy 與 DataFrameGroupBy 輸出 schema 混為一談(前者 1 層 columns、後者 MultiIndex)",
+        "想自訂欄名時用『先 agg 後 rename』而非直接用 `NamedAgg`(後者語意更清晰)"
+      ],
+      "explanation_hooks": [
+        "口訣:對 Series 做 agg → 函式名變欄;對 DataFrame 做 agg → MultiIndex (原欄, 函式名)",
+        "看 columns 結構先問:groupby 之後是先選欄(SeriesGroupBy)還是直接 agg(DataFrameGroupBy)?",
+        "需要自訂欄名 → `NamedAgg`;需要保留 key 在欄 → `as_index=False` 或 `reset_index()`"
+      ],
+      "variation_seeds": [
+        {"context": "`groupby('region')['sales'].agg(['sum','mean'])` 的 columns?", "answer": "`['sum', 'mean']`"},
+        {"context": "想讓 groupby key 留在欄怎麼做?", "answer": "`as_index=False` 或事後 `reset_index()`"},
+        {"context": "想自訂彙總欄名最佳做法?", "answer": "`NamedAgg(column=..., aggfunc=...)`"}
+      ],
+      "related_node_ids": ["n_L22201_001", "n_L22201_002"]
+    },
+    {
       "node_id": "n_L22202_001",
       "knowledge_code": "L22202",
       "title": "資料倉儲(Warehouse)vs 資料湖(Lake)vs Lakehouse 概念",
