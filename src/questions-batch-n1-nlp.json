@@ -477,7 +477,7 @@
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "FastText 將每個詞表示為其子詞 n-gram 之和(如 'where' → '<wh', 'whe', 'her', 'ere', 're>'),即使整詞未登錄,仍可由子詞片段組合出向量,因此對 OOV、拼字錯誤、形態豐富語言特別有效。",
+        "correct": "FastText 將每個詞表示為其子詞 n-gram 之和(如 'where' → '&lt;wh', 'whe', 'her', 'ere', 're&gt;'),即使整詞未登錄,仍可由子詞片段組合出向量,因此對 OOV、拼字錯誤、形態豐富語言特別有效。",
         "wrong": {
           "GloVe 透過全域共現矩陣分解,於計算過程中會自動為訓練未見的新詞補上零向量,確保下游分類任務的穩定性": "GloVe 對未登錄詞無法產生有效向量,通常以 UNK 或零向量代替但無語意",
           "Word2Vec CBOW 模式由於訓練目標為周圍詞平均,自動具備拼字模糊比對校正能力,可在推論階段消除多數 OOV 問題": "Word2Vec 不具拼字校正能力,且訓練後 OOV 詞無向量",

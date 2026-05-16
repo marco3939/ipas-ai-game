@@ -22,6 +22,8 @@ const ROOT = path.join(__dirname, '..');
 const SRC = path.join(ROOT, 'src');
 const DOCS = path.join(ROOT, 'docs');
 
+// 2026-05-16 M1 fix: 補上 questions-confusion-matrix.json + questions-mode8-trace.json,
+// 與 audit-render.js FILES 同步;避免 10 題(5 confusion-matrix + 5 mode8-trace)未受稽核覆蓋
 const FILES = [
   'questions.json', 'questions-pa-code.json', 'questions-pb-visual.json',
   'questions-pc-modes.json', 'questions-pd-scenario.json',
@@ -37,6 +39,8 @@ const FILES = [
   'questions-batch-n15-L22301.json', 'questions-batch-n16-L22302.json', 'questions-batch-n17-L22303.json',
   'questions-batch-n18-L22401.json', 'questions-batch-n19-L22402.json', 'questions-batch-n20-L22403.json', 'questions-batch-n21-L22404.json',
   'questions-batch-n22-L22-code-data.json', 'questions-batch-n23-L22-code-ml.json', 'questions-batch-n24-L22-code-gen.json',
+  'questions-confusion-matrix.json',
+  'questions-mode8-trace.json',
 ];
 
 // =============================================================================

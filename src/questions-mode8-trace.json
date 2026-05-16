@@ -111,7 +111,7 @@
       "format": "code_trace",
       "difficulty": "easy",
       "source_level": "L2",
-      "stem": "下列程式以雙層迴圈計算陣列的逆序對(inversion pair)數量。逆序對定義:i<j 但 arr[i]>arr[j]。請追蹤迴圈執行後的變數。",
+      "stem": "下列程式以雙層迴圈計算陣列的逆序對(inversion pair)數量。逆序對定義:i&lt;j 但 arr[i]&gt;arr[j]。請追蹤迴圈執行後的變數。",
       "code_block": "arr = [{a0}, {a1}, {a2}, {a3}, {a4}]\ncount = 0\nfor i in range(len(arr)):\n    for j in range(i + 1, len(arr)):\n        if arr[i] > arr[j]:\n            count += 1\nprint(count)",
       "stem_variables": {
         "case_a": {
@@ -174,11 +174,11 @@
       ],
       "shuffle_options": false,
       "explanation": {
-        "correct": "雙層迴圈走訪所有 i<j 的配對,共 C(5,2)=10 對。逆序對(arr[i]>arr[j]):{inv_list} — 共 {inv_count} 對。雙層迴圈時間複雜度 O(n²)。",
+        "correct": "雙層迴圈走訪所有 i&lt;j 的配對,共 C(5,2)=10 對。逆序對(arr[i]&gt;arr[j]):{inv_list} — 共 {inv_count} 對。雙層迴圈時間複雜度 O(n²)。",
         "wrong": {
           "(任一步驟錯誤)": "見各 trace_step 的陷阱類型說明。"
         },
-        "hook": "兩兩比對 → C(n,2) 對 → O(n²);逆序對只計 i<j 且 arr[i]>arr[j]"
+        "hook": "兩兩比對 → C(n,2) 對 → O(n²);逆序對只計 i&lt;j 且 arr[i]&gt;arr[j]"
       },
       "misconceptions": ["把順序對誤視為逆序對", "誤把全部對數當逆序對數"],
       "related_node_ids": ["n_L23103_004"],

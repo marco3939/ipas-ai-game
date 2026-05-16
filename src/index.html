@@ -527,7 +527,21 @@ const Storage = {
   K_SETTINGS: 'ipas_settings_v1',
   K_SESSION: 'ipas_session_state_v1',
   get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
-  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) { console.warn('storage full:', e); } },
+  set(k, v) {
+    try { localStorage.setItem(k, JSON.stringify(v)); }
+    catch(e) {
+      console.warn('storage full:', e);
+      // 2026-05-16 H3 fix: 不再靜默失敗 — 進度寫入失敗(quota / 私密模式)直接 toast 警示,
+      // 避免使用者誤以為進度已存。5 秒節流避免 toast 連發。
+      const now = Date.now();
+      if (!Storage._lastToastAt || now - Storage._lastToastAt > 5000) {
+        Storage._lastToastAt = now;
+        if (typeof showToast === 'function') {
+          showToast('⚠️ 進度儲存失敗(可能 quota 已滿或私密模式),請考慮匯出錯題本備份', 4500);
+        }
+      }
+    }
+  },
   del(k) { localStorage.removeItem(k); }
 };
 
@@ -688,9 +702,19 @@ const Mastery = {
   },
   // 註:countMastered 已改用 correct ≥ 3 判定(2026-05-10),此 threshold 保留供他處 score 條件引用
   MASTERY_THRESHOLD: 60,
-  // 熟練判定:該 node_id 累計答對 ≥ 3 次即 mastered(不看 score,不要求連續)
+  // 熟練判定:該 node_id 累計答對 ≥ min(3, 該節點題庫題數) 次即 mastered(不看 score,不要求連續)
   // 跨場累積友善:碰過 3 次都答對 → 熟練了。改前用 score >= 60 需「連對 4 次」,單場戰鬥幾乎不可能達成,首頁永遠 0
-  countMastered() { const m = this.load(); return Object.values(m).filter(n => (n.correct || 0) >= 3).length; }
+  // 2026-05-16 H2 fix: per-node threshold — 部分節點題庫只有 1-2 題,固定 correct>=3 永遠無法達標
+  // (僅 1 題可重複答 但 streak 隨機 RNG.pickN 不保證重複),導致這些節點永遠不算熟練。
+  countMastered() {
+    const m = this.load();
+    const qPerNode = {};
+    for (const q of QUESTIONS) if (q.node_id) qPerNode[q.node_id] = (qPerNode[q.node_id] || 0) + 1;
+    return Object.entries(m).filter(([nodeId, n]) => {
+      const required = Math.min(3, qPerNode[nodeId] || 3);
+      return (n.correct || 0) >= required;
+    }).length;
+  }
 };
 
 // === Wrongbook 錯題本 ===
@@ -1602,10 +1626,27 @@ function renderStats() {
 }
 
 function resetAll() {
-  Storage.del(Storage.K_PROGRESS);
-  Storage.del(Storage.K_MASTERY);
-  Storage.del(Storage.K_WRONGBOOK);
-  Storage.del(Storage.K_SESSION);
+  // 2026-05-16 M2 fix: 列出所有已知 storage key,避免「清除進度」實際只清部分 → 使用者誤以為已歸零
+  // 鍵位來源:
+  //   - Storage.K_* (index.html line 521-528):progress / mastery / wrongbook / errorReports / settings / session
+  //   - Player(index.html:1773-1793): ipas_player_v1
+  //   - SM-2(sm2.js:12): ipas_sm2_v1
+  //   - Mode 1 industries(mode1.js:155): ipas_mode1_industries_v1
+  //   - Mode 2 bosses(mode2.js:125): ipas_mode2_bosses_v2
+  //   - Mode 3 pipeline(mode3.js:10): ipas_mode3_progress_v2
+  //   - Mode 5(mode5.js:158): ipas_mode5_v3_progress
+  //   - Mode 6 codex(mode6.js:25): ipas_mode6_codex_v1
+  //   - Mode 7 theater(mode7.js:20): ipas_mode7_theater_v1
+  //   - Mode 8 dojo(mode8.js:8): ipas_mode8_dojo_v1
+  const keys = [
+    Storage.K_PROGRESS, Storage.K_MASTERY, Storage.K_WRONGBOOK,
+    Storage.K_ERROR_REPORTS, Storage.K_SETTINGS, Storage.K_SESSION,
+    'ipas_player_v1', 'ipas_sm2_v1',
+    'ipas_mode1_industries_v1', 'ipas_mode2_bosses_v2',
+    'ipas_mode3_progress_v2', 'ipas_mode5_v3_progress',
+    'ipas_mode6_codex_v1', 'ipas_mode7_theater_v1', 'ipas_mode8_dojo_v1',
+  ];
+  for (const k of keys) Storage.del(k);
   showToast('已清除所有進度');
   setTimeout(() => location.reload(), 500);
 }

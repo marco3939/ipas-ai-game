@@ -116,7 +116,10 @@
     // 數學:從 pool=2n 抽 n,跨場最小 IoU = (2n-n)/(2n+n) ≈ 0.33,平均 < 0.5 達標
     const VARIATION_FLOOR = n * 2;
     if (pool.length < VARIATION_FLOOR) {
-      const general = QUESTIONS.filter(q => q.subject === 1 && !pool.includes(q));
+      // 2026-05-16 H1 fix: subject 2 (L22 大數據) 與商業/產業 BOSS 主題天然相關
+      // (資料工程、隱私、生成式 AI 應用等);擴大 filler pool 涵蓋三科,
+      // 避免 L22 題目在 keyword pool 不足時被排除。
+      const general = QUESTIONS.filter(q => [1, 2, 3].includes(q.subject) && !pool.includes(q));
       // 把缺口補到 floor,一次抽 (floor - pool.length) 題進池
       pool = [...pool, ...RNG.pickN(general, Math.max(0, VARIATION_FLOOR - pool.length))];
     }

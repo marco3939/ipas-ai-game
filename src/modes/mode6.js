@@ -537,9 +537,16 @@
       // 保存以便外部 cleanup(若 challenge 啟動但使用者中途按 home,start() 下次重置)
       this._origAnswer = origAnswer;
       this._origOnNext = origOnNext;
+      // 2026-05-16 M3 fix: 改用顯式 flag,不再用 Wrongbook 時戳當對錯判定 proxy。
+      // 舊版用 Date.now() - x.lastWrong < 5000;若使用者讀解析 > 5 秒,onNext 會誤判為「答對」,
+      // 跳過 DrillSession 直接回卡片(鐵律 #1 下鑽失效)。改用 challenge 內 closure 變數 wasWrong,
+      // answer hook 設值、onNext hook 讀值,完全去除時序競爭。
+      let wasWrong = false;
       PlayEngine.answer = function(key) {
         const opt = this.current.options.find(o => o.key === key);
         const isCorrect = !!(opt && opt.is_correct);
+        // M3 fix: 顯式記錄本次挑戰結果(closure 捕獲,供 onNext 使用)
+        wasWrong = !isCorrect;
         // 還原 answer(只攔一次)
         PlayEngine.answer = origAnswer;
         self._origAnswer = null;
@@ -564,11 +571,9 @@
         // 還原 onNext(只攔一次,避免 hook 殘留)
         PlayEngine.onNext = origOnNext;
         self._origOnNext = null;
-        // 判斷上一題對錯:從 codex.streak 推(剛才答對 streak ≥ 1,答錯則 = 0 但 challenges 已 +1)
-        // 為精確,改用最後一題渲染狀態:Wrongbook.load 看 qid 是否剛被加
+        // 2026-05-16 M3 fix: 用 answer hook 捕獲的 wasWrong 旗標,不再爆 Wrongbook 時戳
         const lastQ = PlayEngine.current;
-        const wb = Wrongbook.load();
-        const isWrongLast = lastQ && wb.some(x => x.qid === lastQ.id && Math.abs(Date.now() - x.lastWrong) < 5000);
+        const isWrongLast = wasWrong;
         if (isWrongLast) {
           // 鐵律 #1:答錯走 DrillSession,完成後回卡片詳情
           const variations = generateVariation(lastQ, 3);
