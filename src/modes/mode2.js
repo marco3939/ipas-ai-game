@@ -6,11 +6,13 @@
 (function () {
   'use strict';
 
-  // === 8 個程式判讀 BOSS(主題分組,題目來自題庫,絕不造題)===
+  // === 9 個程式判讀 BOSS(主題分組,題目來自題庫,絕不造題)===
   // 分組依據:tags / knowledge_code(L23102=numpy / L23202=sklearn / L23302=pytorch /
   // L23402=pandas / L23502=matplotlib / L23101=機率)
-  // 2026-05-16 新增 2 個 L22 大數據 BOSS:資料管線靈(L22201/301/302)、大數據×AI 靈(L22401-404)
-  // 對應 questions-batch-n22/n23/n24-L22-code-*.json 共 35 題新 code_reading 接入 Mode 2
+  // 2026-05-16 新增 3 個 L22 大數據 BOSS(全 35 題 L22 code_reading 接入,1:1 對應 batch 檔):
+  //  - 資料管線靈(15 q from n22):L22201 清理 / L22301 統計 / L22302 分析方法
+  //  - 大數據鑑別 AI 靈(10 q from n23):L22401 大數據 ML / L22402 鑑別式 AI
+  //  - 生成式 AI + 隱私靈(10 q from n24):L22403 生成式 AI / L22404 隱私合規
   const BOSSES = [
     {
       key: 'numpy',
@@ -81,28 +83,44 @@
       attack: ['「條件反了!」','「貝氏定理不會用?」'],
       defeat: ['「機率程式的本質...你看穿了。」']
     },
-    // 2026-05-16 新增 L22 大數據工程 BOSS(科二 code_reading 整合)
+    // 2026-05-16 全 35 題 L22 code_reading 接入 Mode 2(3 主題 BOSS 取代原 2 BOSS)
+    // 對應 questions-batch-n22/n23/n24-L22-code-*.json 三批,每 BOSS 對應一個 batch 檔
     {
       key: 'l22_pipeline',
       name: '🗄️ 資料管線靈',
       avatar: '🗄️',
-      desc: 'pandas/numpy/statsmodels:清理、IQR、merge、時序分解、Markov',
-      qids: ['q_n22_001', 'q_n22_003', 'q_n22_004', 'q_n22_006', 'q_n22_009', 'q_n22_011', 'q_n22_014'],
-      hp: 180,
-      intro: '「dropna 後幾筆?merge inner vs left 差多少?加法分解季節成分總和是?7 道資料管線題,挑戰你能不能扛得起 ETL pipeline。」',
-      attack: ['「fillna(0) 把 mean 拉低了!」','「inner join 列數又算錯!」','「Markov 穩態算不出?」'],
-      defeat: ['「資料管線靈的精髓...你掌握了。」','「ETL 流程清晰,可獨當一面。」']
+      desc: 'pandas/numpy/statsmodels 全題:清理、IQR、merge、加法分解、Markov、Apriori、time series',
+      qids: ['q_n22_001','q_n22_002','q_n22_003','q_n22_004','q_n22_005',
+             'q_n22_006','q_n22_007','q_n22_008','q_n22_009','q_n22_010',
+             'q_n22_011','q_n22_012','q_n22_013','q_n22_014','q_n22_015'],
+      hp: 375,
+      intro: '「ETL 大數據管線 15 道題,從 dropna 到 Markov 穩態,從加法分解到 Apriori 頻繁項集 — 一個 axis 寫錯,整批資料就毀了。」',
+      attack: ['「fillna(0) 把 mean 拉低了!」','「inner join 列數又算錯!」','「Apriori 頻繁項集數弄錯!」'],
+      defeat: ['「資料管線靈的精髓...你掌握了。」','「ETL pipeline 全流程清晰,可獨當一面。」']
     },
     {
-      key: 'l22_bigdata_ai',
-      name: '🤖 大數據 × AI 靈',
+      key: 'l22_discriminative_ai',
+      name: '🤖 大數據鑑別 AI 靈',
       avatar: '🤖',
-      desc: 'sklearn 不平衡 / 評估指標 / 隱私 / 生成式 AI 資料治理',
-      qids: ['q_n23_001', 'q_n23_002', 'q_n23_006', 'q_n23_010', 'q_n24_005', 'q_n24_006', 'q_n24_007'],
-      hp: 180,
-      intro: '「stratify 不平衡資料、weighted precision 計算、Precision@K、data contamination 防護、k-匿名與差分隱私 — 大數據 + AI 的合規與評估,通通給我答對。」',
-      attack: ['「class_weight balanced 公式錯了!」','「k-匿名最小群你看走眼!」','「DP 的 ε 方向反了!」'],
-      defeat: ['「大數據 × AI 的整合思維...你看穿了。」','「合規 + 評估雙線並進,跨團隊溝通沒問題。」']
+      desc: 'sklearn 全 10 題:不平衡切分、SMOTE、weighted/macro precision、AUC、Precision@K',
+      qids: ['q_n23_001','q_n23_002','q_n23_003','q_n23_004','q_n23_005',
+             'q_n23_006','q_n23_007','q_n23_008','q_n23_009','q_n23_010'],
+      hp: 250,
+      intro: '「stratify、class_weight、SMOTE、weighted precision、ROC AUC、Precision@K — 10 道大數據×鑑別式 AI 評估題,搞錯一個指標模型就誤導決策。」',
+      attack: ['「class_weight balanced 公式錯了!」','「multi_class AUC 形狀錯了!」','「P@K 分母搞錯了!」'],
+      defeat: ['「鑑別式 AI 評估指標...你全掌握了。」','「不平衡資料思維清晰,模型上線無懼。」']
+    },
+    {
+      key: 'l22_generative_privacy',
+      name: '🔐 生成式 AI + 隱私靈',
+      avatar: '🔐',
+      desc: 'tokenization / corpus 去重 / TfidfVectorizer / k-匿名 / 差分隱私 / GDPR 抹除',
+      qids: ['q_n24_001','q_n24_002','q_n24_003','q_n24_004','q_n24_005',
+             'q_n24_006','q_n24_007','q_n24_008','q_n24_009','q_n24_010'],
+      hp: 250,
+      intro: '「LLM 預訓練語料、去重、Tfidf、k-匿名、Laplace DP 加噪、GDPR 抹除 — 10 道生成式 AI + 隱私合規題。一個 ε 寫錯就違反 GDPR。」',
+      attack: ['「k-匿名最小群你看走眼!」','「DP 的 ε 方向反了!」','「sha256 假名化長度算錯!」'],
+      defeat: ['「生成式 AI 資料治理 + 隱私合規...你看穿了。」','「跨國法務團隊都會聽你的判斷。」']
     }
   ];
 
@@ -168,7 +186,7 @@
       view.innerHTML = `
         <div class="card">
           <h1>💻 程式判讀道場 — Bug 獵人</h1>
-          <p style="color:var(--fg-dim)">你是資料科學偵探,要在 8 個程式語意惡魔的領域中找出陷阱(含 2 個科二大數據主題)。答對攻擊 BOSS,答錯被反擊並進入下鑽訓練。</p>
+          <p style="color:var(--fg-dim)">你是資料科學偵探,要在 9 個程式語意惡魔的領域中找出陷阱(含 3 個科二大數據主題,共 35 題 L22 code)。答對攻擊 BOSS,答錯被反擊並進入下鑽訓練。</p>
         </div>
 
         <div class="battle-arena" style="padding:16px">
