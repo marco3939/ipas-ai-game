@@ -98,8 +98,8 @@
     },
     {
       "id": "q_pc_match_004",
-      "knowledge_code": "L23303",
-      "node_id": "n_L23303_005",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_001",
       "subject": 3,
       "format": "matching",
       "difficulty": "easy",
@@ -122,14 +122,14 @@
         "hook": "Bagging 平行降變異(獨立模型);Boosting 串行降偏差(序列加權);Stacking 元學習組合"
       },
       "misconceptions": ["把 Bagging 與 Boosting 的並行/序列性質互換", "以為 Random Forest 是 Boosting"],
-      "related_node_ids": ["n_L23303_004", "n_L23303_005"],
+      "related_node_ids": ["n_L23202_001", "n_L23202_006"],
       "tags": ["matching", "集成學習", "Bagging", "Boosting"]
     },
     {
       "id": "q_pc_match_005",
-      "knowledge_code": "L23303",
-      "node_id": "n_L23303_007",
-      "subject": 3,
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_003",
+      "subject": 1,
       "format": "matching",
       "difficulty": "medium",
       "source_level": "L2",
@@ -151,7 +151,7 @@
         "hook": "Data Drift = 輸入變(P(X) 變);Concept Drift = 關係變(P(Y|X) 變);Label Drift = 標籤先驗變(P(Y) 變)"
       },
       "misconceptions": ["把 Data Drift 與 Concept Drift 混為一談", "認為只要重訓就能解 Concept Drift"],
-      "related_node_ids": ["n_L23303_007", "n_L23303_008"],
+      "related_node_ids": ["n_L21302_003", "n_L21302_002"],
       "tags": ["matching", "MLOps", "資料漂移", "監控"]
     },
     {
@@ -185,9 +185,9 @@
     },
     {
       "id": "q_pc_match_007",
-      "knowledge_code": "L23303",
-      "node_id": "n_L23303_002",
-      "subject": 3,
+      "knowledge_code": "L22103",
+      "node_id": "n_L22103_002",
+      "subject": 2,
       "format": "matching",
       "difficulty": "medium",
       "source_level": "L2",
@@ -209,13 +209,13 @@
         "hook": "Type I 誤拒(α=False Positive,沒病判有病);Type II 漏判(β=False Negative,有病判沒病);1-β=檢定力"
       },
       "misconceptions": ["把 α 與 β 互換", "認為 α 越小越好(忽略相對 β 增大)"],
-      "related_node_ids": ["n_L23303_001", "n_L23303_002"],
+      "related_node_ids": ["n_L22103_001", "n_L22103_002"],
       "tags": ["matching", "統計檢定", "Type I/II", "假設檢定"]
     },
     {
       "id": "q_pc_match_008",
       "knowledge_code": "L23303",
-      "node_id": "n_L23303_003",
+      "node_id": "n_L23303_006",
       "subject": 3,
       "format": "matching",
       "difficulty": "medium",
@@ -238,7 +238,7 @@
         "hook": "Macro=類別平等(每類同權);Micro=樣本平等(每筆同權);Weighted=按類大小加權"
       },
       "misconceptions": ["在不平衡資料下用 Micro F1 而誤判模型很好", "誤認 Macro F1 = Balanced Accuracy"],
-      "related_node_ids": ["n_L23303_002", "n_L23303_003"],
+      "related_node_ids": ["n_L23303_006", "n_L23303_001"],
       "tags": ["matching", "評估指標", "F1", "不平衡資料"]
     },
     {
@@ -301,9 +301,9 @@
     },
     {
       "id": "q_pc_seq_003",
-      "knowledge_code": "L21203",
-      "node_id": "n_L21203_005",
-      "subject": 1,
+      "knowledge_code": "L22404",
+      "node_id": "n_L22404_002",
+      "subject": 2,
       "format": "sequence",
       "difficulty": "hard",
       "source_level": "L2",
@@ -325,7 +325,7 @@
         "hook": "口訣:『盤基同安權跨D監』 — 盤點→法律基礎→同意/通知→安全→權利→跨境→DPIA→監督"
       },
       "misconceptions": ["把『同意』當作唯一合法依據", "DPIA 在事後做(GDPR 要求事前)", "忘記跨境傳輸需獨立評估"],
-      "related_node_ids": ["n_L21203_004", "n_L21203_005"],
+      "related_node_ids": ["n_L22404_002", "n_L22404_001"],
       "tags": ["sequence", "法規", "GDPR", "合規"]
     },
     {

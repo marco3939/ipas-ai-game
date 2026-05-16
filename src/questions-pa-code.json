@@ -183,8 +183,8 @@
     },
     {
       "id": "q_pa_006",
-      "knowledge_code": "L23202",
-      "node_id": "n_L23202_001",
+      "knowledge_code": "L23102",
+      "node_id": "n_L23102_001",
       "subject": 3,
       "format": "code_reading",
       "difficulty": "medium",
@@ -213,13 +213,13 @@
         "hook": "fit_transform 後形狀 = (樣本數, n_components)"
       },
       "misconceptions": ["把 components_ 與 transform 結果混淆", "搞反 sklearn 的列欄慣例"],
-      "related_node_ids": ["n_L23202_001"],
+      "related_node_ids": ["n_L23102_001"],
       "tags": ["sklearn", "PCA", "降維"]
     },
     {
       "id": "q_pa_007",
-      "knowledge_code": "L23202",
-      "node_id": "n_L23202_002",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_005",
       "subject": 3,
       "format": "code_reading",
       "difficulty": "easy",
@@ -248,13 +248,13 @@
         "hook": "KFold n_splits = K → 跑 K 次,每次 test = n/K"
       },
       "misconceptions": ["搞反訓練/測試比例", "以為 KFold 是隨機抽一次"],
-      "related_node_ids": ["n_L23202_002"],
+      "related_node_ids": ["n_L23303_005"],
       "tags": ["sklearn", "交叉驗證", "KFold"]
     },
     {
       "id": "q_pa_008",
-      "knowledge_code": "L23202",
-      "node_id": "n_L23202_004",
+      "knowledge_code": "L23301",
+      "node_id": "n_L23301_001",
       "subject": 3,
       "format": "code_reading",
       "difficulty": "medium",
@@ -283,13 +283,13 @@
         "hook": "ss.mean_ = 原始資料平均;ss.scale_ = 原始資料標準差;transform 後資料平均 = 0、標準差 = 1"
       },
       "misconceptions": ["分不清 ss.mean_ 與 transform 後資料的均值", "把 ss.scale_ 當成 ss.mean_"],
-      "related_node_ids": ["n_L23202_004"],
+      "related_node_ids": ["n_L23301_001"],
       "tags": ["sklearn", "標準化", "StandardScaler"]
     },
     {
       "id": "q_pa_009",
       "knowledge_code": "L23202",
-      "node_id": "n_L23202_006",
+      "node_id": "n_L23202_003",
       "subject": 3,
       "format": "code_reading",
       "difficulty": "hard",
@@ -318,7 +318,7 @@
         "hook": "coef_ 永遠 2D:(類別數或1, 特徵數)"
       },
       "misconceptions": ["以為 coef_ 是 1D", "搞反軸的順序"],
-      "related_node_ids": ["n_L23202_006"],
+      "related_node_ids": ["n_L23202_003"],
       "tags": ["sklearn", "邏輯回歸", "係數"]
     },
     {
@@ -358,9 +358,9 @@
     },
     {
       "id": "q_pa_013",
-      "knowledge_code": "L23402",
-      "node_id": "n_L23402_001",
-      "subject": 3,
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_002",
+      "subject": 2,
       "format": "code_reading",
       "difficulty": "easy",
       "source_level": "L2",
@@ -388,7 +388,7 @@
         "hook": "isna == isnull(別名);兩個都偵測 NaN"
       },
       "misconceptions": ["以為 isna 與 isnull 行為不同", "忽略 sum 在布林上的意義"],
-      "related_node_ids": ["n_L23402_001"],
+      "related_node_ids": ["n_L22201_002"],
       "tags": ["pandas", "缺值", "isna"]
     },
     {
