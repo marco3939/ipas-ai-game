@@ -108,6 +108,20 @@ const verifiers = {
     const den = Math.sqrt((tp+fp)*(tp+fn)*(tn+fp)*(tn+fn));
     return num/den;
   },
+  // Sample variance with Bessel's correction (n-1 denominator) — L22101 descriptive stats
+  q_n9_006: (c) => {
+    const xs = [+c.x1, +c.x2, +c.x3, +c.x4, +c.x5];
+    const n = xs.length;
+    const mean = xs.reduce((s,x)=>s+x,0) / n;
+    const ssd = xs.reduce((s,x)=>s+(x-mean)**2, 0);
+    return ssd / (n - 1);
+  },
+  // Upper whisker via 1.5×IQR rule — L22101 outlier detection
+  q_n9_015: (c) => {
+    const q1=+c.q1, q3=+c.q3;
+    const iqr = q3 - q1;
+    return q3 + 1.5 * iqr;
+  },
 };
 
 const questions = [
@@ -130,6 +144,8 @@ const questions = [
   ['questions-pc-modes.json','q_pc_calc_003'],
   ['questions-pg-eval.json','q_pg_007'],
   ['questions.json','q_0006'],
+  ['questions-batch-n9-subject2.json','q_n9_006'],
+  ['questions-batch-n9-subject2.json','q_n9_015'],
 ];
 
 const findings = [];
