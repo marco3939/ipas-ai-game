@@ -447,6 +447,976 @@
       "misconceptions": ["把 border 誤判為 noise", "core 判定誤把自身計入或漏算"],
       "related_node_ids": ["n_L23202_002", "n_L23202_008"],
       "tags": ["code-trace", "python", "numpy", "DBSCAN", "聚類"]
+    },
+    {
+      "id": "q_m8_006",
+      "knowledge_code": "L23102",
+      "node_id": "n_L23102_004",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "下列程式對一維陣列 reshape 為二維後做轉置與重塑。請追蹤 shape 與最終 sum。",
+      "code_block": "import numpy as np\na = np.arange({n}).reshape({d1}, {d2})\nt = a.T\nb = a.reshape({r1}, {r2})\ntotal = b.sum()",
+      "stem_variables": {
+        "case_a": {
+          "n": "12", "d1": "3", "d2": "4", "r1": "2", "r2": "6",
+          "s1_correct": "(3, 4)", "s1_w1": "(4, 3)", "s1_w2": "(12,)", "s1_w3": "(3, 4, 1)",
+          "s2_correct": "(4, 3)", "s2_w1": "(3, 4)", "s2_w2": "(12,)", "s2_w3": "(1, 12)",
+          "s3_correct": "(2, 6)", "s3_w1": "(6, 2)", "s3_w2": "(2, 6, 1)", "s3_w3": "(12,)",
+          "s4_correct": "66", "s4_w1": "78", "s4_w2": "55", "s4_w3": "60",
+          "arange_max": "11", "sum_formula": "0+1+...+11 = 66"
+        },
+        "case_b": {
+          "n": "8", "d1": "2", "d2": "4", "r1": "4", "r2": "2",
+          "s1_correct": "(2, 4)", "s1_w1": "(4, 2)", "s1_w2": "(8,)", "s1_w3": "(2, 4, 1)",
+          "s2_correct": "(4, 2)", "s2_w1": "(2, 4)", "s2_w2": "(8,)", "s2_w3": "(1, 8)",
+          "s3_correct": "(4, 2)", "s3_w1": "(2, 4)", "s3_w2": "(4, 2, 1)", "s3_w3": "(8,)",
+          "s4_correct": "28", "s4_w1": "36", "s4_w2": "21", "s4_w3": "24",
+          "arange_max": "7", "sum_formula": "0+1+...+7 = 28"
+        },
+        "case_c": {
+          "n": "6", "d1": "2", "d2": "3", "r1": "3", "r2": "2",
+          "s1_correct": "(2, 3)", "s1_w1": "(3, 2)", "s1_w2": "(6,)", "s1_w3": "(2, 3, 1)",
+          "s2_correct": "(3, 2)", "s2_w1": "(2, 3)", "s2_w2": "(6,)", "s2_w3": "(1, 6)",
+          "s3_correct": "(3, 2)", "s3_w1": "(2, 3)", "s3_w2": "(3, 2, 1)", "s3_w3": "(6,)",
+          "s4_correct": "15", "s4_w1": "21", "s4_w2": "10", "s4_w3": "12",
+          "arange_max": "5", "sum_formula": "0+1+...+5 = 15"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 2,
+          "ask": "a.shape 為何?",
+          "options": [
+            {"text": "{s1_correct}", "is_correct": true},
+            {"text": "{s1_w1}", "is_correct": false, "trap_type": "誤把列數與欄數互換"},
+            {"text": "{s1_w2}", "is_correct": false, "trap_type": "誤以為 reshape 沒生效仍是一維"},
+            {"text": "{s1_w3}", "is_correct": false, "trap_type": "誤多一維 (1)"}
+          ]
+        },
+        {
+          "after_line": 3,
+          "ask": "t.shape 為何?",
+          "options": [
+            {"text": "{s2_correct}", "is_correct": true},
+            {"text": "{s2_w1}", "is_correct": false, "trap_type": "誤以為 .T 不改變 shape"},
+            {"text": "{s2_w2}", "is_correct": false, "trap_type": "誤以為 .T 攤平為一維"},
+            {"text": "{s2_w3}", "is_correct": false, "trap_type": "誤把 .T 視為加一維"}
+          ]
+        },
+        {
+          "after_line": 4,
+          "ask": "b.shape 為何?",
+          "options": [
+            {"text": "{s3_correct}", "is_correct": true},
+            {"text": "{s3_w1}", "is_correct": false, "trap_type": "誤以為 reshape 自動轉置"},
+            {"text": "{s3_w2}", "is_correct": false, "trap_type": "誤以為 reshape 加維度"},
+            {"text": "{s3_w3}", "is_correct": false, "trap_type": "誤以為 reshape 攤平回一維"}
+          ]
+        },
+        {
+          "after_line": 5,
+          "ask": "total 的值為何?",
+          "options": [
+            {"text": "{s4_correct}", "is_correct": true},
+            {"text": "{s4_w1}", "is_correct": false, "trap_type": "誤把 sum 起點當 1 而非 0"},
+            {"text": "{s4_w2}", "is_correct": false, "trap_type": "誤算 0+1+...+(n-2)"},
+            {"text": "{s4_w3}", "is_correct": false, "trap_type": "誤用 prod 或 mean"}
+          ]
+        }
+      ],
+      "options": [
+        {"text": "(全部步驟正確)", "is_correct": true},
+        {"text": "(任一步驟錯誤)", "is_correct": false}
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "np.arange({n}) 產生 0..{arange_max} 一維陣列 → reshape({d1},{d2}) 變 ({d1},{d2});.T 軸對調為 ({d2},{d1});再 reshape({r1},{r2}) 變 ({r1},{r2})。reshape 不改變元素內容也不轉置,只重排 layout。sum 公式:{sum_formula}。",
+        "wrong": {
+          "(任一步驟錯誤)": "見各 trace_step 的陷阱類型說明。"
+        },
+        "hook": "shape (a, b) 經 .T 變 (b, a);reshape 元素總數不變但維度可變"
+      },
+      "misconceptions": ["把 reshape 當作轉置", "以為 .T 會攤平為一維"],
+      "related_node_ids": ["n_L23102_004", "n_L23102_001"],
+      "tags": ["code-trace", "python", "numpy", "shape", "reshape", "線代"]
+    },
+    {
+      "id": "q_m8_007",
+      "knowledge_code": "L23102",
+      "node_id": "n_L23102_001",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "下列程式做矩陣乘法(@)與向量 broadcasting 加法。請追蹤每步結果。",
+      "code_block": "import numpy as np\nA = np.array([[{a00}, {a01}], [{a10}, {a11}]])\nB = np.array([[{b00}, {b01}], [{b10}, {b11}]])\nC = A @ B\nv = np.array([{v0}, {v1}])\nD = A + v",
+      "stem_variables": {
+        "case_a": {
+          "a00": "1.0", "a01": "2.0", "a10": "3.0", "a11": "4.0",
+          "b00": "5.0", "b01": "6.0", "b10": "7.0", "b11": "8.0",
+          "v0": "10.0", "v1": "20.0",
+          "s1_correct": "(2, 2)", "s1_w1": "(2,)", "s1_w2": "(4,)", "s1_w3": "(2, 2, 1)",
+          "s2_correct": "19.0", "s2_w1": "5.0", "s2_w2": "26.0", "s2_w3": "12.0",
+          "s3_correct": "(2, 2)", "s3_w1": "(2,)", "s3_w2": "shape mismatch", "s3_w3": "(2, 1)",
+          "s4_correct": "11.0", "s4_w1": "21.0", "s4_w2": "10.0", "s4_w3": "31.0",
+          "c_calc": "C[0][0] = 1*5 + 2*7 = 19",
+          "d_calc": "D[0][0] = 1 + 10 = 11",
+          "c_full": "[[19,22],[43,50]]"
+        },
+        "case_b": {
+          "a00": "2.0", "a01": "0.0", "a10": "1.0", "a11": "3.0",
+          "b00": "1.0", "b01": "2.0", "b10": "3.0", "b11": "4.0",
+          "v0": "10.0", "v1": "20.0",
+          "s1_correct": "(2, 2)", "s1_w1": "(2,)", "s1_w2": "(4,)", "s1_w3": "(2, 2, 1)",
+          "s2_correct": "2.0", "s2_w1": "1.0", "s2_w2": "3.0", "s2_w3": "0.0",
+          "s3_correct": "(2, 2)", "s3_w1": "(2,)", "s3_w2": "shape mismatch", "s3_w3": "(2, 1)",
+          "s4_correct": "12.0", "s4_w1": "22.0", "s4_w2": "10.0", "s4_w3": "32.0",
+          "c_calc": "C[0][0] = 2*1 + 0*3 = 2",
+          "d_calc": "D[0][0] = 2 + 10 = 12",
+          "c_full": "[[2,4],[10,14]]"
+        },
+        "case_c": {
+          "a00": "1.0", "a01": "1.0", "a10": "0.0", "a11": "1.0",
+          "b00": "2.0", "b01": "3.0", "b10": "4.0", "b11": "5.0",
+          "v0": "10.0", "v1": "20.0",
+          "s1_correct": "(2, 2)", "s1_w1": "(2,)", "s1_w2": "(4,)", "s1_w3": "(2, 2, 1)",
+          "s2_correct": "6.0", "s2_w1": "2.0", "s2_w2": "4.0", "s2_w3": "5.0",
+          "s3_correct": "(2, 2)", "s3_w1": "(2,)", "s3_w2": "shape mismatch", "s3_w3": "(2, 1)",
+          "s4_correct": "11.0", "s4_w1": "21.0", "s4_w2": "10.0", "s4_w3": "31.0",
+          "c_calc": "C[0][0] = 1*2 + 1*4 = 6",
+          "d_calc": "D[0][0] = 1 + 10 = 11",
+          "c_full": "[[6,8],[4,5]]"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 2,
+          "ask": "A.shape 為何?",
+          "options": [
+            {"text": "{s1_correct}", "is_correct": true},
+            {"text": "{s1_w1}", "is_correct": false, "trap_type": "誤以為二維 list 是一維"},
+            {"text": "{s1_w2}", "is_correct": false, "trap_type": "誤把元素總數當 shape"},
+            {"text": "{s1_w3}", "is_correct": false, "trap_type": "誤多一維"}
+          ]
+        },
+        {
+          "after_line": 4,
+          "ask": "C[0][0] 的值為何?({c_calc})",
+          "options": [
+            {"text": "{s2_correct}", "is_correct": true},
+            {"text": "{s2_w1}", "is_correct": false, "trap_type": "誤以為 @ 是 elementwise(只取 A[0][0]*B[0][0])"},
+            {"text": "{s2_w2}", "is_correct": false, "trap_type": "誤把 A[0] · B[1] 算成第 0 列乘第 1 列"},
+            {"text": "{s2_w3}", "is_correct": false, "trap_type": "誤把矩陣乘法當加法或誤算欄位"}
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "D = A + v 的 D.shape 為何?(broadcasting)",
+          "options": [
+            {"text": "{s3_correct}", "is_correct": true},
+            {"text": "{s3_w1}", "is_correct": false, "trap_type": "誤以為 v 攤平 A"},
+            {"text": "{s3_w2}", "is_correct": false, "trap_type": "誤以為 shape 必須完全相同才能相加"},
+            {"text": "{s3_w3}", "is_correct": false, "trap_type": "誤把 v 視為直行向量"}
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "D[0][0] 的值為何?({d_calc})",
+          "options": [
+            {"text": "{s4_correct}", "is_correct": true},
+            {"text": "{s4_w1}", "is_correct": false, "trap_type": "誤把 v 視為 column 加到第 0 欄"},
+            {"text": "{s4_w2}", "is_correct": false, "trap_type": "誤把 A[0][0] 忽略只回 v[0]"},
+            {"text": "{s4_w3}", "is_correct": false, "trap_type": "誤加 v[0]+v[1] 之和"}
+          ]
+        }
+      ],
+      "options": [
+        {"text": "(全部步驟正確)", "is_correct": true},
+        {"text": "(任一步驟錯誤)", "is_correct": false}
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "A @ B = 矩陣乘法,C[i][j] = Σ A[i][k]*B[k][j];本例 C={c_full}。Broadcasting:v shape (2,) 對應到 A 的最後一軸,自動視為列向量加到每一列,D shape 與 A 相同 (2,2)。",
+        "wrong": {
+          "(任一步驟錯誤)": "見各 trace_step 的陷阱類型說明。"
+        },
+        "hook": "@ 是矩陣乘法不是 elementwise;broadcasting 對齊最後一軸 — (2,2)+(2,) 視為每列各加同一個向量"
+      },
+      "misconceptions": ["把 @ 當 elementwise(*)", "broadcasting 把 (2,) 誤視為 column vector"],
+      "related_node_ids": ["n_L23102_001", "n_L23102_004"],
+      "tags": ["code-trace", "python", "numpy", "matmul", "broadcasting", "線代"]
+    },
+    {
+      "id": "q_m8_008",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_004",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "下列程式以迭代法計算第 n 個 Fibonacci 數。請追蹤迴圈執行後的變數狀態。",
+      "code_block": "n = {n_val}\na = 0\nb = 1\nfor i in range(n):\n    a, b = b, a + b\nresult = a",
+      "stem_variables": {
+        "case_a": {
+          "n_val": "5",
+          "s1_correct": "0", "s1_w1": "1", "s1_w2": "5", "s1_w3": "None",
+          "s2_correct": "1", "s2_w1": "0", "s2_w2": "2", "s2_w3": "5",
+          "s3_correct": "1", "s3_w1": "2", "s3_w2": "0", "s3_w3": "3",
+          "s4_correct": "5", "s4_w1": "8", "s4_w2": "3", "s4_w3": "13",
+          "trace_table": "iter1:(1,1) iter2:(1,2) iter3:(2,3) iter4:(3,5) iter5:(5,8)",
+          "final_pair": "(5, 8)"
+        },
+        "case_b": {
+          "n_val": "7",
+          "s1_correct": "0", "s1_w1": "1", "s1_w2": "7", "s1_w3": "None",
+          "s2_correct": "1", "s2_w1": "0", "s2_w2": "2", "s2_w3": "7",
+          "s3_correct": "1", "s3_w1": "2", "s3_w2": "0", "s3_w3": "3",
+          "s4_correct": "13", "s4_w1": "21", "s4_w2": "8", "s4_w3": "34",
+          "trace_table": "iter1:(1,1) iter2:(1,2) iter3:(2,3) iter4:(3,5) iter5:(5,8) iter6:(8,13) iter7:(13,21)",
+          "final_pair": "(13, 21)"
+        },
+        "case_c": {
+          "n_val": "6",
+          "s1_correct": "0", "s1_w1": "1", "s1_w2": "6", "s1_w3": "None",
+          "s2_correct": "1", "s2_w1": "0", "s2_w2": "2", "s2_w3": "6",
+          "s3_correct": "1", "s3_w1": "2", "s3_w2": "0", "s3_w3": "3",
+          "s4_correct": "8", "s4_w1": "13", "s4_w2": "5", "s4_w3": "21",
+          "trace_table": "iter1:(1,1) iter2:(1,2) iter3:(2,3) iter4:(3,5) iter5:(5,8) iter6:(8,13)",
+          "final_pair": "(8, 13)"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 2,
+          "ask": "a 的初始值為何?",
+          "options": [
+            {"text": "{s1_correct}", "is_correct": true},
+            {"text": "{s1_w1}", "is_correct": false, "trap_type": "誤把起始值當 1"},
+            {"text": "{s1_w2}", "is_correct": false, "trap_type": "誤把 n 當作 a"},
+            {"text": "{s1_w3}", "is_correct": false, "trap_type": "誤以為未指派時值為 None"}
+          ]
+        },
+        {
+          "after_line": 3,
+          "ask": "b 的初始值為何?",
+          "options": [
+            {"text": "{s2_correct}", "is_correct": true},
+            {"text": "{s2_w1}", "is_correct": false, "trap_type": "誤把 b 起始與 a 相同"},
+            {"text": "{s2_w2}", "is_correct": false, "trap_type": "誤把 b 起始當 2(序列第三項)"},
+            {"text": "{s2_w3}", "is_correct": false, "trap_type": "誤把 b 起始值當 n"}
+          ]
+        },
+        {
+          "after_line": 5,
+          "ask": "第 1 次迴圈執行後 a 的值為何?(同時更新 a,b = b, a+b)",
+          "options": [
+            {"text": "{s3_correct}", "is_correct": true},
+            {"text": "{s3_w1}", "is_correct": false, "trap_type": "誤把先更新 b 再算 a(順序錯)"},
+            {"text": "{s3_w2}", "is_correct": false, "trap_type": "誤以為 a 不變(忽略 tuple unpack)"},
+            {"text": "{s3_w3}", "is_correct": false, "trap_type": "誤跳兩步"}
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "result 的最終值為何?(迴圈執行 n={n_val} 次)",
+          "options": [
+            {"text": "{s4_correct}", "is_correct": true},
+            {"text": "{s4_w1}", "is_correct": false, "trap_type": "誤把第 n+1 項當答案(超前一步)"},
+            {"text": "{s4_w2}", "is_correct": false, "trap_type": "誤把第 n-1 項當答案(落後一步)"},
+            {"text": "{s4_w3}", "is_correct": false, "trap_type": "誤把第 n+2 項當答案"}
+          ]
+        }
+      ],
+      "options": [
+        {"text": "(全部步驟正確)", "is_correct": true},
+        {"text": "(任一步驟錯誤)", "is_correct": false}
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "Tuple unpacking a,b = b,a+b 是同時賦值:右側先全部算完(用舊 a,b),再一次性賦值到左側。所以迴圈每次同時前進兩個 Fibonacci 項。n={n_val} 軌跡:{trace_table};最後 (a,b) = {final_pair} → result = {s4_correct}。",
+        "wrong": {
+          "(任一步驟錯誤)": "見各 trace_step 的陷阱類型說明。"
+        },
+        "hook": "Python tuple unpacking 是同時賦值,不是循序賦值;迭代版 fib 為 O(n),遞迴版未記憶化為 O(2^n)"
+      },
+      "misconceptions": ["把 a,b = b,a+b 視為循序賦值(寫成兩行)導致錯誤", "Fibonacci 起點搞錯 (0,1) vs (1,1)"],
+      "related_node_ids": ["n_L23103_004", "n_L23103_002"],
+      "tags": ["code-trace", "python", "演算法", "Fibonacci", "迴圈", "tuple-unpacking"]
+    },
+    {
+      "id": "q_m8_009",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_004",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "下列程式對排序陣列做二分搜尋。請追蹤關鍵變數與最終結果。",
+      "code_block": "def binary_search(arr, target):\n    lo = 0\n    hi = len(arr) - 1\n    result = -1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return result\narr = [{a0}, {a1}, {a2}, {a3}, {a4}, {a5}, {a6}, {a7}]\ntarget = {t}\nhi_init = len(arr) - 1\nfirst_mid = (0 + hi_init) // 2\nfirst_val = arr[first_mid]\nresult = binary_search(arr, target)",
+      "stem_variables": {
+        "case_a": {
+          "a0": "1", "a1": "3", "a2": "5", "a3": "7", "a4": "9", "a5": "11", "a6": "13", "a7": "15",
+          "t": "11",
+          "s1_correct": "7", "s1_w1": "8", "s1_w2": "6", "s1_w3": "-1",
+          "s2_correct": "3", "s2_w1": "4", "s2_w2": "0", "s2_w3": "7",
+          "s3_correct": "7", "s3_w1": "11", "s3_w2": "3", "s3_w3": "9",
+          "s4_correct": "5", "s4_w1": "3", "s4_w2": "11", "s4_w3": "-1",
+          "trace_summary": "iter1: lo=0,hi=7,mid=3,arr[3]=7<11 → lo=4; iter2: lo=4,hi=7,mid=5,arr[5]=11=target → result=5"
+        },
+        "case_b": {
+          "a0": "2", "a1": "4", "a2": "6", "a3": "8", "a4": "10", "a5": "12", "a6": "14", "a7": "16",
+          "t": "8",
+          "s1_correct": "7", "s1_w1": "8", "s1_w2": "6", "s1_w3": "-1",
+          "s2_correct": "3", "s2_w1": "4", "s2_w2": "0", "s2_w3": "7",
+          "s3_correct": "8", "s3_w1": "6", "s3_w2": "4", "s3_w3": "10",
+          "s4_correct": "3", "s4_w1": "8", "s4_w2": "5", "s4_w3": "-1",
+          "trace_summary": "iter1: lo=0,hi=7,mid=3,arr[3]=8=target → result=3(若 case_a 路徑不同此處可變)"
+        },
+        "case_c": {
+          "a0": "1", "a1": "3", "a2": "5", "a3": "7", "a4": "9", "a5": "11", "a6": "13", "a7": "15",
+          "t": "3",
+          "s1_correct": "7", "s1_w1": "8", "s1_w2": "6", "s1_w3": "-1",
+          "s2_correct": "3", "s2_w1": "4", "s2_w2": "0", "s2_w3": "7",
+          "s3_correct": "7", "s3_w1": "3", "s3_w2": "11", "s3_w3": "5",
+          "s4_correct": "1", "s4_w1": "3", "s4_w2": "0", "s4_w3": "-1",
+          "trace_summary": "iter1: lo=0,hi=7,mid=3,arr[3]=7>3 → hi=2; iter2: lo=0,hi=2,mid=1,arr[1]=3=target → result=1"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 16,
+          "ask": "hi_init 的值為何?",
+          "options": [
+            {"text": "{s1_correct}", "is_correct": true},
+            {"text": "{s1_w1}", "is_correct": false, "trap_type": "誤以為 hi=len(arr) 而非 len(arr)-1"},
+            {"text": "{s1_w2}", "is_correct": false, "trap_type": "誤以為 hi 從 0 起算"},
+            {"text": "{s1_w3}", "is_correct": false, "trap_type": "誤把 hi 與 result 混淆"}
+          ]
+        },
+        {
+          "after_line": 17,
+          "ask": "first_mid 的值為何?(lo=0, hi=hi_init={s1_correct})",
+          "options": [
+            {"text": "{s2_correct}", "is_correct": true},
+            {"text": "{s2_w1}", "is_correct": false, "trap_type": "誤用 (lo+hi+1)//2"},
+            {"text": "{s2_w2}", "is_correct": false, "trap_type": "誤以為 mid 從 lo 起算"},
+            {"text": "{s2_w3}", "is_correct": false, "trap_type": "誤把 mid 設為 hi"}
+          ]
+        },
+        {
+          "after_line": 18,
+          "ask": "first_val(即 arr[first_mid])的值為何?",
+          "options": [
+            {"text": "{s3_correct}", "is_correct": true},
+            {"text": "{s3_w1}", "is_correct": false, "trap_type": "誤把 target 當 arr[first_mid]"},
+            {"text": "{s3_w2}", "is_correct": false, "trap_type": "誤算 mid 索引"},
+            {"text": "{s3_w3}", "is_correct": false, "trap_type": "誤抓相鄰索引值"}
+          ]
+        },
+        {
+          "after_line": 19,
+          "ask": "result 的最終值為何?",
+          "options": [
+            {"text": "{s4_correct}", "is_correct": true},
+            {"text": "{s4_w1}", "is_correct": false, "trap_type": "誤回傳 target 而非 index"},
+            {"text": "{s4_w2}", "is_correct": false, "trap_type": "誤算為其他 index"},
+            {"text": "{s4_w3}", "is_correct": false, "trap_type": "誤以為找不到回 -1"}
+          ]
+        }
+      ],
+      "options": [
+        {"text": "(全部步驟正確)", "is_correct": true},
+        {"text": "(任一步驟錯誤)", "is_correct": false}
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "二分搜尋每次取 mid = (lo+hi)//2;若 arr[mid]==target 找到回傳;若 arr[mid]<target 向右半邊(lo=mid+1);否則向左半邊(hi=mid-1)。{trace_summary}。整體複雜度 O(log n)。",
+        "wrong": {
+          "(任一步驟錯誤)": "見各 trace_step 的陷阱類型說明。"
+        },
+        "hook": "二分搜尋:lo=0、hi=len-1、mid=(lo+hi)//2;每次砍半 → O(log n)。回傳是 index 不是 value"
+      },
+      "misconceptions": ["回傳 target 而非 index", "hi 設為 len(arr) 導致 off-by-one"],
+      "related_node_ids": ["n_L23103_004"],
+      "tags": ["code-trace", "python", "演算法", "二分搜尋", "時間複雜度"]
+    },
+    {
+      "id": "q_m8_010",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_003",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "下列程式以數值穩定的方式(減去最大值)計算 softmax。請追蹤每步變數。",
+      "code_block": "import numpy as np\nz = np.array([{z0}, {z1}, {z2}])\nz_max = z.max()\nz_shift = z - z_max\ne = np.exp(z_shift)\np = e / e.sum()\nargmax = int(p.argmax())",
+      "stem_variables": {
+        "case_a": {
+          "z0": "2.0", "z1": "1.0", "z2": "0.1",
+          "s1_correct": "2.0", "s1_w1": "1.0", "s1_w2": "3.1", "s1_w3": "0.1",
+          "s2_correct": "[0.0, -1.0, -1.9]", "s2_w1": "[2.0, 1.0, 0.1]", "s2_w2": "[-2.0, -1.0, -0.1]", "s2_w3": "[0.0, 1.0, 1.9]",
+          "s3_correct": "1.5174", "s3_w1": "1.0", "s3_w2": "3.1", "s3_w3": "10.388",
+          "s4_correct": "0", "s4_w1": "1", "s4_w2": "2", "s4_w3": "-1",
+          "p_max": "0.659", "stable_reason": "減 z_max 後最大項變 0,exp(0)=1 避免上溢"
+        },
+        "case_b": {
+          "z0": "3.0", "z1": "1.0", "z2": "0.0",
+          "s1_correct": "3.0", "s1_w1": "1.0", "s1_w2": "4.0", "s1_w3": "0.0",
+          "s2_correct": "[0.0, -2.0, -3.0]", "s2_w1": "[3.0, 1.0, 0.0]", "s2_w2": "[-3.0, -1.0, 0.0]", "s2_w3": "[0.0, 2.0, 3.0]",
+          "s3_correct": "1.1851", "s3_w1": "1.0", "s3_w2": "4.0", "s3_w3": "20.171",
+          "s4_correct": "0", "s4_w1": "1", "s4_w2": "2", "s4_w3": "-1",
+          "p_max": "0.844", "stable_reason": "減 z_max 後最大項變 0,exp(0)=1 避免上溢"
+        },
+        "case_c": {
+          "z0": "1.0", "z1": "2.0", "z2": "3.0",
+          "s1_correct": "3.0", "s1_w1": "1.0", "s1_w2": "6.0", "s1_w3": "0.0",
+          "s2_correct": "[-2.0, -1.0, 0.0]", "s2_w1": "[1.0, 2.0, 3.0]", "s2_w2": "[2.0, 1.0, 0.0]", "s2_w3": "[0.0, -1.0, -2.0]",
+          "s3_correct": "1.5032", "s3_w1": "1.0", "s3_w2": "6.0", "s3_w3": "30.193",
+          "s4_correct": "2", "s4_w1": "0", "s4_w2": "1", "s4_w3": "-1",
+          "p_max": "0.665", "stable_reason": "減 z_max 後最大項變 0,exp(0)=1 避免上溢"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 3,
+          "ask": "z_max 的值為何?",
+          "options": [
+            {"text": "{s1_correct}", "is_correct": true},
+            {"text": "{s1_w1}", "is_correct": false, "trap_type": "誤把 z[1] 當最大值"},
+            {"text": "{s1_w2}", "is_correct": false, "trap_type": "誤算為 z 的 sum"},
+            {"text": "{s1_w3}", "is_correct": false, "trap_type": "誤把 min 當 max"}
+          ]
+        },
+        {
+          "after_line": 4,
+          "ask": "z_shift 的值為何?",
+          "options": [
+            {"text": "{s2_correct}", "is_correct": true},
+            {"text": "{s2_w1}", "is_correct": false, "trap_type": "誤以為減 z_max 不變"},
+            {"text": "{s2_w2}", "is_correct": false, "trap_type": "誤把 z_max - z(符號顛倒)"},
+            {"text": "{s2_w3}", "is_correct": false, "trap_type": "誤加 z_max 而非減"}
+          ]
+        },
+        {
+          "after_line": 5,
+          "ask": "e.sum() 四捨五入到四位小數為何?",
+          "options": [
+            {"text": "{s3_correct}", "is_correct": true},
+            {"text": "{s3_w1}", "is_correct": false, "trap_type": "誤以為只算最大項 e=1"},
+            {"text": "{s3_w2}", "is_correct": false, "trap_type": "誤把 z.sum() 當 e.sum()"},
+            {"text": "{s3_w3}", "is_correct": false, "trap_type": "誤算 e^z 沒做 shift(上溢風險)"}
+          ]
+        },
+        {
+          "after_line": 7,
+          "ask": "argmax 的值為何?(p 中最大值對應的索引)",
+          "options": [
+            {"text": "{s4_correct}", "is_correct": true},
+            {"text": "{s4_w1}", "is_correct": false, "trap_type": "誤把 argmin 當 argmax"},
+            {"text": "{s4_w2}", "is_correct": false, "trap_type": "誤抓中間索引"},
+            {"text": "{s4_w3}", "is_correct": false, "trap_type": "誤回 -1(未找到)"}
+          ]
+        }
+      ],
+      "options": [
+        {"text": "(全部步驟正確)", "is_correct": true},
+        {"text": "(任一步驟錯誤)", "is_correct": false}
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "Softmax 數值穩定:p_i = exp(z_i - max(z)) / Σ exp(z_j - max(z))。減 z_max 後最大項變 0、其餘為負,exp() 結果在 (0, 1] 區間,避免上溢。{stable_reason}。argmax 與未減版本一致,但前者數值穩定。本例 p 最大值 ≈ {p_max}。",
+        "wrong": {
+          "(任一步驟錯誤)": "見各 trace_step 的陷阱類型說明。"
+        },
+        "hook": "Softmax 減 max 不改變結果,只避免 exp 上溢;argmax 對 z 與 softmax(z) 相同"
+      },
+      "misconceptions": ["以為 softmax 必須直接 exp(z) 才正確", "把 argmax 索引當作機率值"],
+      "related_node_ids": ["n_L23203_003", "n_L23203_001"],
+      "tags": ["code-trace", "python", "numpy", "softmax", "激活函數", "數值穩定"]
+    },
+    {
+      "id": "q_m8_011",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_008",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "下列程式對 4 個訓練點以歐氏距離做 KNN(k=3)分類。請追蹤距離與最終預測。",
+      "code_block": "import numpy as np\ntrain_X = np.array([[1.0, 0.0], [3.0, 1.0], [5.0, 5.0], [4.0, 4.0]])\ntrain_y = np.array([0, 0, 1, 1])\ntest = np.array([{t0}, {t1}])\ndiffs = train_X - test\nsq_dists = (diffs ** 2).sum(axis=1)\ndists = np.sqrt(sq_dists)\nk = 3\nnearest_idx = np.argsort(dists)[:k]\nnearest_labels = train_y[nearest_idx]\nfrom collections import Counter\npred = Counter(nearest_labels.tolist()).most_common(1)[0][0]",
+      "stem_variables": {
+        "case_a": {
+          "t0": "2.0", "t1": "1.0",
+          "s1_correct": "(4, 2)", "s1_w1": "(2, 4)", "s1_w2": "(4,)", "s1_w3": "(8,)",
+          "s2_correct": "[2.0, 1.0, 25.0, 13.0]", "s2_w1": "[2.0, 1.0, 8.0, 5.0]", "s2_w2": "[1.0, 0.0, 16.0, 9.0]", "s2_w3": "[1.414, 1.0, 5.0, 3.606]",
+          "s3_correct": "[1, 0, 3]", "s3_w1": "[0, 1, 3]", "s3_w2": "[1, 0, 2]", "s3_w3": "[3, 2, 1]",
+          "s4_correct": "0", "s4_w1": "1", "s4_w2": "-1", "s4_w3": "2",
+          "vote_summary": "k=3 鄰居 labels=[0,0,1] → 0 佔多數"
+        },
+        "case_b": {
+          "t0": "4.0", "t1": "4.0",
+          "s1_correct": "(4, 2)", "s1_w1": "(2, 4)", "s1_w2": "(4,)", "s1_w3": "(8,)",
+          "s2_correct": "[25.0, 10.0, 2.0, 0.0]", "s2_w1": "[5.0, 3.162, 1.414, 0.0]", "s2_w2": "[3.0, 3.0, 1.0, 0.0]", "s2_w3": "[20.0, 5.0, 1.0, 0.0]",
+          "s3_correct": "[3, 2, 1]", "s3_w1": "[0, 1, 2]", "s3_w2": "[3, 2, 0]", "s3_w3": "[1, 2, 3]",
+          "s4_correct": "1", "s4_w1": "0", "s4_w2": "-1", "s4_w3": "2",
+          "vote_summary": "k=3 鄰居 labels=[1,1,0] → 1 佔多數"
+        },
+        "case_c": {
+          "t0": "3.0", "t1": "3.0",
+          "s1_correct": "(4, 2)", "s1_w1": "(2, 4)", "s1_w2": "(4,)", "s1_w3": "(8,)",
+          "s2_correct": "[13.0, 4.0, 8.0, 2.0]", "s2_w1": "[3.606, 2.0, 2.828, 1.414]", "s2_w2": "[5.0, 2.0, 4.0, 1.0]", "s2_w3": "[4.0, 1.0, 5.0, 2.0]",
+          "s3_correct": "[3, 1, 2]", "s3_w1": "[3, 2, 1]", "s3_w2": "[1, 3, 2]", "s3_w3": "[0, 3, 1]",
+          "s4_correct": "1", "s4_w1": "0", "s4_w2": "-1", "s4_w3": "2",
+          "vote_summary": "k=3 鄰居 labels=[1,0,1] → 1 佔多數"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 5,
+          "ask": "diffs.shape 為何?",
+          "options": [
+            {"text": "{s1_correct}", "is_correct": true},
+            {"text": "{s1_w1}", "is_correct": false, "trap_type": "誤把列與欄互換"},
+            {"text": "{s1_w2}", "is_correct": false, "trap_type": "誤以為廣播後攤平為一維"},
+            {"text": "{s1_w3}", "is_correct": false, "trap_type": "誤把 shape 視為元素總數"}
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "sq_dists 的內容為何?",
+          "options": [
+            {"text": "{s2_correct}", "is_correct": true},
+            {"text": "{s2_w1}", "is_correct": false, "trap_type": "誤把 sqrt 結果當 sq_dists"},
+            {"text": "{s2_w2}", "is_correct": false, "trap_type": "誤算 elementwise 差值平方未求和"},
+            {"text": "{s2_w3}", "is_correct": false, "trap_type": "誤把 dists 當 sq_dists"}
+          ]
+        },
+        {
+          "after_line": 9,
+          "ask": "nearest_idx 的內容為何?",
+          "options": [
+            {"text": "{s3_correct}", "is_correct": true},
+            {"text": "{s3_w1}", "is_correct": false, "trap_type": "誤把訓練點原順序當鄰居順序"},
+            {"text": "{s3_w2}", "is_correct": false, "trap_type": "誤把第 4 近的點包進"},
+            {"text": "{s3_w3}", "is_correct": false, "trap_type": "誤從遠到近排序"}
+          ]
+        },
+        {
+          "after_line": 12,
+          "ask": "pred 的值為何?",
+          "options": [
+            {"text": "{s4_correct}", "is_correct": true},
+            {"text": "{s4_w1}", "is_correct": false, "trap_type": "誤把少數類當預測"},
+            {"text": "{s4_w2}", "is_correct": false, "trap_type": "誤以為找不到回 -1"},
+            {"text": "{s4_w3}", "is_correct": false, "trap_type": "誤把 train_y 全部唯一值當預測"}
+          ]
+        }
+      ],
+      "options": [
+        {"text": "(全部步驟正確)", "is_correct": true},
+        {"text": "(任一步驟錯誤)", "is_correct": false}
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "KNN 預測流程:(1) 計算所有訓練點與 test 的歐氏距離;(2) np.argsort 取索引排序(由小到大);(3) 取前 k 個索引,查 label;(4) 多數決定預測。本例:{vote_summary}。距離計算:sq_dist = Σ(x_i - t_i)² → dist = sqrt(sq_dist)。",
+        "wrong": {
+          "(任一步驟錯誤)": "見各 trace_step 的陷阱類型說明。"
+        },
+        "hook": "KNN argsort 是「索引排序」不是「值排序」;k 個鄰居 → 多數決;距離小者為近"
+      },
+      "misconceptions": ["把 argsort 結果當距離值", "k=3 時搞錯鄰居順序"],
+      "related_node_ids": ["n_L23202_008", "n_L23202_002"],
+      "tags": ["code-trace", "python", "numpy", "KNN", "distance", "分類"]
+    },
+    {
+      "id": "q_m8_012",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_008",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "下列程式對 5 個點與初始 cluster assignment 計算 k-means 中心點更新。請追蹤每群點與新中心。",
+      "code_block": "import numpy as np\npoints = np.array([[1.0, 1.0], [2.0, 1.0], [1.5, 2.0], [8.0, 8.0], [9.0, 8.0]])\nlabels = np.array([{L0}, {L1}, {L2}, {L3}, {L4}])\nc0_pts = points[labels == 0]\nc1_pts = points[labels == 1]\nnew_c0 = c0_pts.mean(axis=0)\nnew_c1 = c1_pts.mean(axis=0)",
+      "stem_variables": {
+        "case_a": {
+          "L0": "0", "L1": "0", "L2": "0", "L3": "1", "L4": "1",
+          "s1_correct": "3", "s1_w1": "2", "s1_w2": "5", "s1_w3": "1",
+          "s2_correct": "2", "s2_w1": "3", "s2_w2": "5", "s2_w3": "1",
+          "s3_correct": "[1.5, 1.333]", "s3_w1": "[1.5, 1.0]", "s3_w2": "[1.0, 1.0]", "s3_w3": "[8.5, 8.0]",
+          "s4_correct": "[8.5, 8.0]", "s4_w1": "[8.0, 8.0]", "s4_w2": "[1.5, 1.333]", "s4_w3": "[6.167, 6.0]",
+          "groups_summary": "c0={(1,1),(2,1),(1.5,2)} c1={(8,8),(9,8)}"
+        },
+        "case_b": {
+          "L0": "0", "L1": "0", "L2": "1", "L3": "1", "L4": "1",
+          "s1_correct": "2", "s1_w1": "3", "s1_w2": "5", "s1_w3": "1",
+          "s2_correct": "3", "s2_w1": "2", "s2_w2": "5", "s2_w3": "1",
+          "s3_correct": "[1.5, 1.0]", "s3_w1": "[1.5, 1.333]", "s3_w2": "[1.0, 1.0]", "s3_w3": "[8.5, 8.0]",
+          "s4_correct": "[6.167, 6.0]", "s4_w1": "[8.5, 8.0]", "s4_w2": "[1.5, 1.333]", "s4_w3": "[1.5, 1.0]",
+          "groups_summary": "c0={(1,1),(2,1)} c1={(1.5,2),(8,8),(9,8)}"
+        },
+        "case_c": {
+          "L0": "0", "L1": "1", "L2": "1", "L3": "1", "L4": "0",
+          "s1_correct": "2", "s1_w1": "3", "s1_w2": "5", "s1_w3": "1",
+          "s2_correct": "3", "s2_w1": "2", "s2_w2": "5", "s2_w3": "1",
+          "s3_correct": "[5.0, 4.5]", "s3_w1": "[1.5, 1.333]", "s3_w2": "[8.5, 8.0]", "s3_w3": "[1.0, 1.0]",
+          "s4_correct": "[3.833, 3.667]", "s4_w1": "[8.5, 8.0]", "s4_w2": "[1.5, 1.333]", "s4_w3": "[5.0, 4.5]",
+          "groups_summary": "c0={(1,1),(9,8)} c1={(2,1),(1.5,2),(8,8)}"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 4,
+          "ask": "c0_pts 的列數(即 cluster 0 的點數)為何?",
+          "options": [
+            {"text": "{s1_correct}", "is_correct": true},
+            {"text": "{s1_w1}", "is_correct": false, "trap_type": "誤把 cluster 1 點數當 cluster 0"},
+            {"text": "{s1_w2}", "is_correct": false, "trap_type": "誤以為所有點都在 cluster 0"},
+            {"text": "{s1_w3}", "is_correct": false, "trap_type": "誤算缺少點"}
+          ]
+        },
+        {
+          "after_line": 5,
+          "ask": "c1_pts 的列數(即 cluster 1 的點數)為何?",
+          "options": [
+            {"text": "{s2_correct}", "is_correct": true},
+            {"text": "{s2_w1}", "is_correct": false, "trap_type": "誤把 cluster 0 點數當 cluster 1"},
+            {"text": "{s2_w2}", "is_correct": false, "trap_type": "誤以為所有點都在 cluster 1"},
+            {"text": "{s2_w3}", "is_correct": false, "trap_type": "誤算缺少點"}
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "new_c0(四捨五入到三位小數)為何?",
+          "options": [
+            {"text": "{s3_correct}", "is_correct": true},
+            {"text": "{s3_w1}", "is_correct": false, "trap_type": "誤把 new_c1 當 new_c0"},
+            {"text": "{s3_w2}", "is_correct": false, "trap_type": "誤把單點當中心(漏點)"},
+            {"text": "{s3_w3}", "is_correct": false, "trap_type": "誤把全部點 mean 當中心"}
+          ]
+        },
+        {
+          "after_line": 7,
+          "ask": "new_c1(四捨五入到三位小數)為何?",
+          "options": [
+            {"text": "{s4_correct}", "is_correct": true},
+            {"text": "{s4_w1}", "is_correct": false, "trap_type": "誤把 new_c0 當 new_c1"},
+            {"text": "{s4_w2}", "is_correct": false, "trap_type": "誤把單點當中心(漏點)"},
+            {"text": "{s4_w3}", "is_correct": false, "trap_type": "誤把全部點 mean 當中心"}
+          ]
+        }
+      ],
+      "options": [
+        {"text": "(全部步驟正確)", "is_correct": true},
+        {"text": "(任一步驟錯誤)", "is_correct": false}
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "K-means 中心點更新 = 該群所有點的 mean(axis=0,逐維平均)。本例 labels={L0},{L1},{L2},{L3},{L4}:{groups_summary}。new_c0={s3_correct},new_c1={s4_correct}。K-means 對初始 labels 敏感,不同初始值可能收斂到不同 local optimum。",
+        "wrong": {
+          "(任一步驟錯誤)": "見各 trace_step 的陷阱類型說明。"
+        },
+        "hook": "K-means 中心 = 群內點的 mean(axis=0);與 DBSCAN 不同 — K-means 預設 k,DBSCAN 自動由密度推群數"
+      },
+      "misconceptions": ["把中心當作群內最近的點而非平均", "誤以為 K-means 結果與初始 labels 無關"],
+      "related_node_ids": ["n_L23202_008", "n_L23202_002"],
+      "tags": ["code-trace", "python", "numpy", "K-means", "聚類"]
+    },
+    {
+      "id": "q_m8_013",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_001",
+      "subject": 2,
+      "format": "code_trace",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "下列程式以 pandas groupby 對團隊分組計算 sum / count。請追蹤每步聚合結果。",
+      "code_block": "import pandas as pd\ndf = pd.DataFrame({'team': [{tm0}, {tm1}, {tm2}, {tm3}, {tm4}], 'score': [{s0}, {s1}, {s2}, {s3}, {s4}]})\nshape = df.shape\ng_sum = df.groupby('team')['score'].sum()\ng_count = df.groupby('team')['score'].count()\nsum_g0 = g_sum.iloc[0]",
+      "stem_variables": {
+        "case_a": {
+          "tm0": "'A'", "tm1": "'B'", "tm2": "'A'", "tm3": "'B'", "tm4": "'A'",
+          "s0": "10", "s1": "20", "s2": "30", "s3": "40", "s4": "50",
+          "s1_correct": "(5, 2)", "s1_w1": "(2, 5)", "s1_w2": "(5,)", "s1_w3": "(10,)",
+          "s2_correct": "{'A': 90, 'B': 60}", "s2_w1": "{'A': 60, 'B': 90}", "s2_w2": "{'A': 30, 'B': 30}", "s2_w3": "{'A': 150}",
+          "s3_correct": "{'A': 3, 'B': 2}", "s3_w1": "{'A': 2, 'B': 3}", "s3_w2": "{'A': 5}", "s3_w3": "{'A': 1, 'B': 1}",
+          "s4_correct": "90", "s4_w1": "60", "s4_w2": "30", "s4_w3": "150",
+          "agg_desc": "team A 出現 3 次:10+30+50=90;team B 出現 2 次:20+40=60"
+        },
+        "case_b": {
+          "tm0": "'X'", "tm1": "'Y'", "tm2": "'X'", "tm3": "'Y'", "tm4": "'Y'",
+          "s0": "10", "s1": "30", "s2": "20", "s3": "40", "s4": "60",
+          "s1_correct": "(5, 2)", "s1_w1": "(2, 5)", "s1_w2": "(5,)", "s1_w3": "(10,)",
+          "s2_correct": "{'X': 30, 'Y': 130}", "s2_w1": "{'X': 130, 'Y': 30}", "s2_w2": "{'X': 25, 'Y': 25}", "s2_w3": "{'X': 160}",
+          "s3_correct": "{'X': 2, 'Y': 3}", "s3_w1": "{'X': 3, 'Y': 2}", "s3_w2": "{'X': 5}", "s3_w3": "{'X': 1, 'Y': 1}",
+          "s4_correct": "30", "s4_w1": "130", "s4_w2": "25", "s4_w3": "160",
+          "agg_desc": "team X 出現 2 次:10+20=30;team Y 出現 3 次:30+40+60=130"
+        },
+        "case_c": {
+          "tm0": "'P'", "tm1": "'Q'", "tm2": "'Q'", "tm3": "'P'", "tm4": "'Q'",
+          "s0": "100", "s1": "50", "s2": "80", "s3": "200", "s4": "40",
+          "s1_correct": "(5, 2)", "s1_w1": "(2, 5)", "s1_w2": "(5,)", "s1_w3": "(10,)",
+          "s2_correct": "{'P': 300, 'Q': 170}", "s2_w1": "{'P': 170, 'Q': 300}", "s2_w2": "{'P': 150, 'Q': 56.667}", "s2_w3": "{'P': 470}",
+          "s3_correct": "{'P': 2, 'Q': 3}", "s3_w1": "{'P': 3, 'Q': 2}", "s3_w2": "{'P': 5}", "s3_w3": "{'P': 1, 'Q': 1}",
+          "s4_correct": "300", "s4_w1": "170", "s4_w2": "150", "s4_w3": "470",
+          "agg_desc": "team P 出現 2 次:100+200=300;team Q 出現 3 次:50+80+40=170"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 3,
+          "ask": "shape 的值為何?(列數, 欄數)",
+          "options": [
+            {"text": "{s1_correct}", "is_correct": true},
+            {"text": "{s1_w1}", "is_correct": false, "trap_type": "誤把列與欄互換"},
+            {"text": "{s1_w2}", "is_correct": false, "trap_type": "誤以為 shape 只有列數"},
+            {"text": "{s1_w3}", "is_correct": false, "trap_type": "誤把元素總數當 shape"}
+          ]
+        },
+        {
+          "after_line": 4,
+          "ask": "g_sum 的值(轉成 dict)為何?",
+          "options": [
+            {"text": "{s2_correct}", "is_correct": true},
+            {"text": "{s2_w1}", "is_correct": false, "trap_type": "誤把兩團隊的 sum 互換"},
+            {"text": "{s2_w2}", "is_correct": false, "trap_type": "誤用 mean 而非 sum"},
+            {"text": "{s2_w3}", "is_correct": false, "trap_type": "誤把全部 score 加起來不分組"}
+          ]
+        },
+        {
+          "after_line": 5,
+          "ask": "g_count 的值(轉成 dict)為何?",
+          "options": [
+            {"text": "{s3_correct}", "is_correct": true},
+            {"text": "{s3_w1}", "is_correct": false, "trap_type": "誤把兩團隊的 count 互換"},
+            {"text": "{s3_w2}", "is_correct": false, "trap_type": "誤把全部列數當 count(不分組)"},
+            {"text": "{s3_w3}", "is_correct": false, "trap_type": "誤算每群都只 1 筆"}
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "sum_g0 的值為何?(預設按 group key 字典序排序)",
+          "options": [
+            {"text": "{s4_correct}", "is_correct": true},
+            {"text": "{s4_w1}", "is_correct": false, "trap_type": "誤把第 2 個 group 當第 1 個"},
+            {"text": "{s4_w2}", "is_correct": false, "trap_type": "誤算為平均值"},
+            {"text": "{s4_w3}", "is_correct": false, "trap_type": "誤把全部 score 之和當 sum_g0"}
+          ]
+        }
+      ],
+      "options": [
+        {"text": "(全部步驟正確)", "is_correct": true},
+        {"text": "(任一步驟錯誤)", "is_correct": false}
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "pandas groupby 流程:(1) 對 'team' 分組;(2) 對 'score' 套用 sum / count。{agg_desc}。groupby 預設按 group key 字典序排序(可用 sort=False 取消)。iloc[0] 取第 1 個 group 的聚合值。",
+        "wrong": {
+          "(任一步驟錯誤)": "見各 trace_step 的陷阱類型說明。"
+        },
+        "hook": "groupby 預設按字典序排序;.sum() 加總、.count() 計數、.mean() 平均"
+      },
+      "misconceptions": ["把 groupby 結果視為 list 而非 Series", "誤以為 iloc[0] 是第一筆原始 row"],
+      "related_node_ids": ["n_L22201_001"],
+      "tags": ["code-trace", "python", "pandas", "groupby"]
+    },
+    {
+      "id": "q_m8_014",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_002",
+      "subject": 2,
+      "format": "code_trace",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "下列程式對缺值欄位以 mean 填補。請追蹤缺值數、平均值、填補結果。",
+      "code_block": "import pandas as pd\nimport numpy as np\ns = pd.Series([{v0}, {v1}, {v2}, {v3}, {v4}])\nnulls_before = s.isnull().sum()\nmean = s.mean()\nfilled = s.fillna(mean)\ntotal = filled.sum()",
+      "stem_variables": {
+        "case_a": {
+          "v0": "10.0", "v1": "np.nan", "v2": "30.0", "v3": "np.nan", "v4": "50.0",
+          "s1_correct": "2", "s1_w1": "5", "s1_w2": "3", "s1_w3": "0",
+          "s2_correct": "30.0", "s2_w1": "18.0", "s2_w2": "90.0", "s2_w3": "10.0",
+          "s3_correct": "[10.0, 30.0, 30.0, 30.0, 50.0]", "s3_w1": "[10.0, 0.0, 30.0, 0.0, 50.0]", "s3_w2": "[10.0, nan, 30.0, nan, 50.0]", "s3_w3": "[10.0, 18.0, 30.0, 18.0, 50.0]",
+          "s4_correct": "150.0", "s4_w1": "90.0", "s4_w2": "120.0", "s4_w3": "60.0",
+          "mean_calc": "非缺值 [10,30,50] mean = 30.0;填補後總和 = 10+30+30+30+50 = 150"
+        },
+        "case_b": {
+          "v0": "4.0", "v1": "8.0", "v2": "np.nan", "v3": "12.0", "v4": "np.nan",
+          "s1_correct": "2", "s1_w1": "5", "s1_w2": "3", "s1_w3": "0",
+          "s2_correct": "8.0", "s2_w1": "4.8", "s2_w2": "24.0", "s2_w3": "4.0",
+          "s3_correct": "[4.0, 8.0, 8.0, 12.0, 8.0]", "s3_w1": "[4.0, 8.0, 0.0, 12.0, 0.0]", "s3_w2": "[4.0, 8.0, nan, 12.0, nan]", "s3_w3": "[4.0, 8.0, 4.8, 12.0, 4.8]",
+          "s4_correct": "40.0", "s4_w1": "24.0", "s4_w2": "33.6", "s4_w3": "16.0",
+          "mean_calc": "非缺值 [4,8,12] mean = 8.0;填補後總和 = 4+8+8+12+8 = 40"
+        },
+        "case_c": {
+          "v0": "np.nan", "v1": "20.0", "v2": "40.0", "v3": "np.nan", "v4": "60.0",
+          "s1_correct": "2", "s1_w1": "5", "s1_w2": "3", "s1_w3": "0",
+          "s2_correct": "40.0", "s2_w1": "24.0", "s2_w2": "120.0", "s2_w3": "20.0",
+          "s3_correct": "[40.0, 20.0, 40.0, 40.0, 60.0]", "s3_w1": "[0.0, 20.0, 40.0, 0.0, 60.0]", "s3_w2": "[nan, 20.0, 40.0, nan, 60.0]", "s3_w3": "[24.0, 20.0, 40.0, 24.0, 60.0]",
+          "s4_correct": "200.0", "s4_w1": "120.0", "s4_w2": "168.0", "s4_w3": "80.0",
+          "mean_calc": "非缺值 [20,40,60] mean = 40.0;填補後總和 = 40+20+40+40+60 = 200"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 4,
+          "ask": "nulls_before 的值為何?",
+          "options": [
+            {"text": "{s1_correct}", "is_correct": true},
+            {"text": "{s1_w1}", "is_correct": false, "trap_type": "誤把 series 長度當缺值數"},
+            {"text": "{s1_w2}", "is_correct": false, "trap_type": "誤算非缺值數"},
+            {"text": "{s1_w3}", "is_correct": false, "trap_type": "誤以為 0 / NaN 都不算缺值"}
+          ]
+        },
+        {
+          "after_line": 5,
+          "ask": "mean 的值為何?(pandas .mean() 預設 skipna=True)",
+          "options": [
+            {"text": "{s2_correct}", "is_correct": true},
+            {"text": "{s2_w1}", "is_correct": false, "trap_type": "誤以為 mean 把 nan 視為 0"},
+            {"text": "{s2_w2}", "is_correct": false, "trap_type": "誤用 sum 當 mean"},
+            {"text": "{s2_w3}", "is_correct": false, "trap_type": "誤只取第一個非缺值當 mean"}
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "filled 的內容為何?",
+          "options": [
+            {"text": "{s3_correct}", "is_correct": true},
+            {"text": "{s3_w1}", "is_correct": false, "trap_type": "誤以為 fillna 不指定值就填 0"},
+            {"text": "{s3_w2}", "is_correct": false, "trap_type": "誤以為 fillna 沒生效仍含 nan"},
+            {"text": "{s3_w3}", "is_correct": false, "trap_type": "誤把 nan 當 0 計算 mean"}
+          ]
+        },
+        {
+          "after_line": 7,
+          "ask": "total 的值為何?",
+          "options": [
+            {"text": "{s4_correct}", "is_correct": true},
+            {"text": "{s4_w1}", "is_correct": false, "trap_type": "誤把缺值仍視為 nan 漏算"},
+            {"text": "{s4_w2}", "is_correct": false, "trap_type": "誤把 nan 視為 0 不填補"},
+            {"text": "{s4_w3}", "is_correct": false, "trap_type": "誤算為非缺值之和不含填補"}
+          ]
+        }
+      ],
+      "options": [
+        {"text": "(全部步驟正確)", "is_correct": true},
+        {"text": "(任一步驟錯誤)", "is_correct": false}
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "pandas .mean() 預設 skipna=True,只對非 nan 取平均。{mean_calc}。fillna(value) 將所有 nan 替換為 value,不改原 series(回傳新 series)。鐵律:mean 填補對 MCAR 適用,對 MNAR 會偏誤。",
+        "wrong": {
+          "(任一步驟錯誤)": "見各 trace_step 的陷阱類型說明。"
+        },
+        "hook": "pandas mean 預設跳 nan;fillna 回傳新 series,原本不改"
+      },
+      "misconceptions": ["以為 mean 計算把 nan 視為 0", "把 fillna 視為 in-place 操作"],
+      "related_node_ids": ["n_L22201_002", "n_L22201_001"],
+      "tags": ["code-trace", "python", "pandas", "fillna", "缺值"]
+    },
+    {
+      "id": "q_m8_015",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_006",
+      "subject": 2,
+      "format": "code_trace",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "下列程式對兩個 DataFrame 做 inner join 與 left join。請追蹤結果 shape 與內容。",
+      "code_block": "import pandas as pd\nleft = pd.DataFrame({'id': [{l0}, {l1}, {l2}, {l3}], 'name': [{n0}, {n1}, {n2}, {n3}]})\nright = pd.DataFrame({'id': [{r0}, {r1}, {r2}], 'score': [{s0}, {s1}, {s2}]})\ninner = pd.merge(left, right, on='id', how='inner')\nleft_join = pd.merge(left, right, on='id', how='left')\ninner_rows = inner.shape[0]",
+      "stem_variables": {
+        "case_a": {
+          "l0": "1", "l1": "2", "l2": "3", "l3": "4",
+          "n0": "'A'", "n1": "'B'", "n2": "'C'", "n3": "'D'",
+          "r0": "2", "r1": "3", "r2": "5",
+          "s0": "80", "s1": "90", "s2": "70",
+          "s1_correct": "(2, 3)", "s1_w1": "(3, 3)", "s1_w2": "(4, 3)", "s1_w3": "(5, 3)",
+          "s2_correct": "[2, 3]", "s2_w1": "[1, 2, 3, 4]", "s2_w2": "[2, 3, 5]", "s2_w3": "[1, 2, 3, 4, 5]",
+          "s3_correct": "(4, 3)", "s3_w1": "(2, 3)", "s3_w2": "(5, 3)", "s3_w3": "(3, 3)",
+          "s4_correct": "2", "s4_w1": "4", "s4_w2": "3", "s4_w3": "5",
+          "join_desc": "left.id=[1,2,3,4] right.id=[2,3,5] → inner 取交集 {2,3} 共 2 列;left join 保留 left 全部 4 列,缺值填 NaN"
+        },
+        "case_b": {
+          "l0": "10", "l1": "20", "l2": "30", "l3": "10",
+          "n0": "'X'", "n1": "'Y'", "n2": "'Z'", "n3": "'W'",
+          "r0": "20", "r1": "30", "r2": "40",
+          "s0": "100", "s1": "55", "s2": "77",
+          "s1_correct": "(2, 3)", "s1_w1": "(3, 3)", "s1_w2": "(4, 3)", "s1_w3": "(5, 3)",
+          "s2_correct": "[20, 30]", "s2_w1": "[10, 20, 30]", "s2_w2": "[20, 30, 40]", "s2_w3": "[10, 10, 20, 30]",
+          "s3_correct": "(4, 3)", "s3_w1": "(2, 3)", "s3_w2": "(3, 3)", "s3_w3": "(7, 3)",
+          "s4_correct": "2", "s4_w1": "3", "s4_w2": "4", "s4_w3": "5",
+          "join_desc": "left.id=[10,20,30,10] right.id=[20,30,40] → inner 取交集 {20,30} 共 2 列;left join 保留 left 全部 4 列(含重複 10),缺值填 NaN"
+        },
+        "case_c": {
+          "l0": "1", "l1": "2", "l2": "3", "l3": "4",
+          "n0": "'P'", "n1": "'Q'", "n2": "'R'", "n3": "'S'",
+          "r0": "1", "r1": "3", "r2": "5",
+          "s0": "60", "s1": "75", "s2": "85",
+          "s1_correct": "(2, 3)", "s1_w1": "(3, 3)", "s1_w2": "(4, 3)", "s1_w3": "(5, 3)",
+          "s2_correct": "[1, 3]", "s2_w1": "[1, 2, 3, 4]", "s2_w2": "[1, 3, 5]", "s2_w3": "[2, 4]",
+          "s3_correct": "(4, 3)", "s3_w1": "(2, 3)", "s3_w2": "(3, 3)", "s3_w3": "(5, 3)",
+          "s4_correct": "2", "s4_w1": "3", "s4_w2": "4", "s4_w3": "5",
+          "join_desc": "left.id=[1,2,3,4] right.id=[1,3,5] → inner 取交集 {1,3} 共 2 列;left join 保留 left 全部 4 列,缺值填 NaN"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 4,
+          "ask": "inner.shape 為何?",
+          "options": [
+            {"text": "{s1_correct}", "is_correct": true},
+            {"text": "{s1_w1}", "is_correct": false, "trap_type": "誤以為取聯集而非交集"},
+            {"text": "{s1_w2}", "is_correct": false, "trap_type": "誤把 left 全部視為 inner"},
+            {"text": "{s1_w3}", "is_correct": false, "trap_type": "誤把 left+right 全部視為 inner"}
+          ]
+        },
+        {
+          "after_line": 4,
+          "ask": "inner['id'] 的內容為何?",
+          "options": [
+            {"text": "{s2_correct}", "is_correct": true},
+            {"text": "{s2_w1}", "is_correct": false, "trap_type": "誤把 left id 全部視為 inner"},
+            {"text": "{s2_w2}", "is_correct": false, "trap_type": "誤把 right id 全部視為 inner"},
+            {"text": "{s2_w3}", "is_correct": false, "trap_type": "誤把聯集當交集"}
+          ]
+        },
+        {
+          "after_line": 5,
+          "ask": "left_join.shape 為何?",
+          "options": [
+            {"text": "{s3_correct}", "is_correct": true},
+            {"text": "{s3_w1}", "is_correct": false, "trap_type": "誤把 left join 當 inner join"},
+            {"text": "{s3_w2}", "is_correct": false, "trap_type": "誤把 right 列數視為 left join 結果"},
+            {"text": "{s3_w3}", "is_correct": false, "trap_type": "誤把 left+right 全部視為 left join"}
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "inner_rows 的值為何?",
+          "options": [
+            {"text": "{s4_correct}", "is_correct": true},
+            {"text": "{s4_w1}", "is_correct": false, "trap_type": "誤把 left.shape[0] 當 inner_rows"},
+            {"text": "{s4_w2}", "is_correct": false, "trap_type": "誤把 right.shape[0] 當 inner_rows"},
+            {"text": "{s4_w3}", "is_correct": false, "trap_type": "誤把欄數當列數"}
+          ]
+        }
+      ],
+      "options": [
+        {"text": "(全部步驟正確)", "is_correct": true},
+        {"text": "(任一步驟錯誤)", "is_correct": false}
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "{join_desc}。Inner join 只保留兩邊 key 都存在的列;Left join 保留 left 全部列,右側缺值補 NaN。shape[0] 是列數、shape[1] 是欄數。merge 預設 on 同名欄、how='inner'。",
+        "wrong": {
+          "(任一步驟錯誤)": "見各 trace_step 的陷阱類型說明。"
+        },
+        "hook": "inner = 交集、left = 保留左全部、right = 保留右全部、outer = 聯集"
+      },
+      "misconceptions": ["把 inner join 結果視為 left join", "誤以為 merge 預設 how='left'"],
+      "related_node_ids": ["n_L22201_006", "n_L22201_001"],
+      "tags": ["code-trace", "python", "pandas", "merge", "join"]
     }
   ]
 }

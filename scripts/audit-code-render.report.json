@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-05-16T05:39:36.525Z",
+  "generated_at": "2026-05-16T07:05:40.391Z",
   "summary": {
     "fns_audited": [
       "index.html:highlightCodeSimple",
       "mode1.js:highlightCode",
       "mode5.js:highlightCode"
     ],
-    "codeBlocksScanned": 57,
-    "totalRuns": 171,
+    "codeBlocksScanned": 67,
+    "totalRuns": 201,
     "violations": 0
   },
   "violations": []

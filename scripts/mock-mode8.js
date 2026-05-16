@@ -146,7 +146,8 @@ let pass = 0;
 let fail = 0;
 const errors = [];
 
-// 第 1 步:start() 應抽到 5 題(因為池只有 5,Math.min(5,5)=5)
+// 第 1 步(R5 expansion):start() 進入 category picker,state 初始 questions=[];
+//   呼叫 startCategory('all') 才會抽 5 題進 trace
 try {
   Mode8.start();
 } catch (e) {
@@ -157,11 +158,35 @@ try {
 if (!Mode8.state) {
   errors.push('Mode8.state is null after start()');
   fail++;
+} else if (Mode8.state.questions.length !== 0) {
+  errors.push(`After start() expected state.questions.length=0 (picker phase), got ${Mode8.state.questions.length}`);
+  fail++;
+} else if (Mode8.state.category !== null) {
+  errors.push(`After start() expected state.category=null (picker phase), got ${Mode8.state.category}`);
+  fail++;
+} else {
+  pass++;
+}
+
+// 第 1.5 步:呼叫 startCategory('all') 真正抽 5 題
+try {
+  Mode8.startCategory('all');
+} catch (e) {
+  console.error('Mode8.startCategory(\'all\') raised:', e.message, e.stack);
+  process.exit(2);
+}
+
+if (!Mode8.state) {
+  errors.push('Mode8.state is null after startCategory(all)');
+  fail++;
 } else if (Mode8.state.questions.length !== 5) {
-  errors.push(`Mode8.state.questions.length = ${Mode8.state.questions.length}, expected 5`);
+  errors.push(`Mode8.state.questions.length = ${Mode8.state.questions.length}, expected 5 after startCategory(all)`);
   fail++;
 } else if (Mode8.state.idx !== 0) {
-  errors.push(`Mode8.state.idx = ${Mode8.state.idx} after start, expected 0`);
+  errors.push(`Mode8.state.idx = ${Mode8.state.idx} after startCategory, expected 0`);
+  fail++;
+} else if (Mode8.state.category !== 'all') {
+  errors.push(`Mode8.state.category = ${Mode8.state.category}, expected 'all'`);
   fail++;
 } else {
   pass++;

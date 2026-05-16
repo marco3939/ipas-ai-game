@@ -8,10 +8,65 @@
   const STORAGE_KEY = 'ipas_mode8_dojo_v1';
   const QUESTIONS_PER_GAME = 5;
 
-  // 從題庫挑出 code_trace 題型;v0 池 = 5 題,故 pickN(pool, 5) = 全抽
+  // R5 expansion:程式類別 picker(spec - 入口分離 picker / trace 兩階段)
+  // 篩選邏輯:題目屬於 category 若 tags 與 category.tags 有重疊 OR knowledge_code 在 kbCodes 內
+  // category.key === 'all' 表示不篩(全 code_trace 池)
+  // 設計原則(2026-05-16 R5):tags 用「該類別才會出現的窄詞」,不用泛用詞(避免廣譜誤命中)
+  //   - 「numpy」是 numpy_la 以外的題型也常用(ReLU/DBSCAN/KNN)→ 不放 numpy_la tags
+  //   - 「python」更泛 → 不放任何 category tags
+  //   - 篩選邏輯:tags 重疊 OR knowledge_code 在 kbCodes;類別專屬窄詞優先,kbCodes 為次要兜底
+  const CATEGORIES = [
+    { key: 'numpy_la', label: '🔢 NumPy 線代', desc: 'matrix / shape / broadcasting / 降維', kbCodes: ['L23102'], tags: ['線代', 'shape', 'reshape', 'matmul', 'broadcasting', 'L2-norm', '降維'] },
+    { key: 'algo', label: '⚙️ Python 演算法', desc: '迴圈 / 複雜度 / 條件', kbCodes: null, tags: ['演算法', '時間複雜度', '雙層迴圈', 'Fibonacci', '二分搜尋', 'tuple-unpacking'] },
+    { key: 'activation', label: '🎯 激活函數', desc: 'ReLU / sigmoid / tanh / softmax', kbCodes: ['L23203'], tags: ['激活函數', 'ReLU', 'sigmoid', 'softmax', '數值穩定'] },
+    { key: 'ml_model', label: '🤖 ML 模型', desc: 'LR / KNN / 聚類', kbCodes: ['L23202'], tags: ['邏輯迴歸', 'KNN', '聚類', 'DBSCAN', 'K-means', 'distance', '分類'] },
+    { key: 'pandas', label: '📊 pandas 資料', desc: 'groupby / fillna / merge / pivot', kbCodes: ['L22201', 'L23402'], tags: ['pandas', 'groupby', 'fillna', 'merge', 'join', '缺值'] },
+    { key: 'all', label: '🌐 全類別混合', desc: '隨機抽 5 題,類別不限', kbCodes: null, tags: null }
+  ];
+
+  // 從題庫挑出 code_trace 題型(底層池)
+  function tracePool() {
+    return QUESTIONS.filter(function (q) { return q.format === 'code_trace'; });
+  }
+
+  // 判斷 q 是否屬於 category(tags 重疊 OR knowledge_code 在 kbCodes)
+  function questionMatchesCategory(q, cat) {
+    if (cat.key === 'all' || (!cat.kbCodes && !cat.tags)) return true;
+    if (cat.kbCodes && q.knowledge_code && cat.kbCodes.indexOf(q.knowledge_code) >= 0) return true;
+    if (cat.tags && Array.isArray(q.tags)) {
+      for (var i = 0; i < q.tags.length; i++) {
+        if (cat.tags.indexOf(q.tags[i]) >= 0) return true;
+      }
+    }
+    return false;
+  }
+
+  // 篩 category 對應的題池(用於 picker 顯示題數 + startCategory 抽題)
+  function poolForCategory(catKey) {
+    var cat = CATEGORIES.find(function (c) { return c.key === catKey; });
+    if (!cat) return [];
+    var pool = tracePool();
+    if (cat.key === 'all') return pool;
+    return pool.filter(function (q) { return questionMatchesCategory(q, cat); });
+  }
+
+  // 從 category 對應池中抽 n 題(若池 < n,toast 提示並回傳全部可用)
+  function pickQuestionsForCategory(catKey, n) {
+    var pool = poolForCategory(catKey);
+    if (pool.length === 0) return [];
+    if (pool.length < n) {
+      if (typeof showToast === 'function') {
+        showToast('此類題目不足 ' + n + ' 題,僅抽 ' + pool.length + ' 題', 2500);
+      }
+    }
+    return RNG.pickN(pool, Math.min(n, pool.length));
+  }
+
+  // 從題庫挑出 code_trace 題型(舊行為:全池抽 5 題)
+  // 保留作為 fallback / 向下相容(mock-mode8.js 若無 picker 直接 startCategory('all') 即得相同效果)
   // 鐵律 #5:不造題,僅用既有題庫(QUESTIONS 已含 questions-mode8-trace.json)
   function pickQuestions(n) {
-    const pool = QUESTIONS.filter(function (q) { return q.format === 'code_trace'; });
+    var pool = tracePool();
     return RNG.pickN(pool, Math.min(n, pool.length));
   }
 
@@ -103,18 +158,21 @@
       this.showFullExplanation(false);
     },
 
-    // === 入口 ===
+    // === 入口(R5 expansion):進入 Mode 8 → 顯示「程式類別 picker」(不直接抽題)===
+    // 入口分離兩階段:start() 設 RNG + 顯示 picker;startCategory(catKey) 才抽題進 trace
     start: function () {
       this._clearAllTimers();
       RNG.set(Date.now() + Math.floor(Math.random() * 1e5));
-      const questions = pickQuestions(QUESTIONS_PER_GAME);
-      if (questions.length === 0) {
+      var pool = tracePool();
+      if (pool.length === 0) {
         showToast('Mode 8 題庫尚未載入或為空', 2500);
         goHome();
         return;
       }
+      // Init state(category 尚未選定,questions 為空)
       this.state = {
-        questions: questions,
+        category: null,
+        questions: [],
         idx: 0,
         stepIdx: 0,
         currentQ: null,
@@ -124,6 +182,66 @@
         _timerRemaining: 0,
         _timerDuration: 90
       };
+      this.renderCategoryPicker();
+    },
+
+    // === Category picker(R5 expansion):顯示 6 個類別卡 + 題數 ===
+    renderCategoryPicker: function () {
+      var view = document.getElementById('view-play');
+      if (!view) return;
+      var cardsHTML = CATEGORIES.map(function (c) {
+        var pool = poolForCategory(c.key);
+        var n = pool.length;
+        var insufficient = n < 3;
+        var warningTag = insufficient
+          ? '<span class="m8-cat-warn">(題數 ' + n + ',略少)</span>'
+          : '';
+        var insufficientClass = insufficient ? ' m8-cat-card-warn' : '';
+        var disabledAttr = n === 0 ? ' disabled' : '';
+        return (
+          '<button class="m8-cat-card' + insufficientClass + '" ' +
+            'onclick="Mode8.startCategory(\'' + c.key + '\')"' + disabledAttr + '>' +
+            '<div class="m8-cat-label">' + c.label + ' ' + warningTag + '</div>' +
+            '<div class="m8-cat-desc">' + escapeHTML(c.desc) + '</div>' +
+            '<div class="m8-cat-meta">題數 ' + n + '</div>' +
+          '</button>'
+        );
+      }).join('');
+      view.innerHTML =
+        '<div class="card">' +
+          '<h2>📝 Code Trace 道場 — 選擇程式類別</h2>' +
+          '<p style="color:var(--fg-dim)">依目前題庫 ' + tracePool().length + ' 題分類;每場抽 ' + QUESTIONS_PER_GAME + ' 題</p>' +
+          '<div class="m8-cat-grid">' + cardsHTML + '</div>' +
+          '<div class="actions" style="margin-top:14px">' +
+            '<button class="btn btn-ghost" onclick="goHome()">回首頁</button>' +
+          '</div>' +
+        '</div>';
+      show('view-play');
+    },
+
+    // === 選擇 category 後抽題進 trace(R5 expansion)===
+    startCategory: function (catKey) {
+      this._clearAllTimers();
+      if (!this.state) {
+        // 防禦性:若 state 不存在(直接呼叫),先建一份
+        this.state = {
+          category: null, questions: [], idx: 0, stepIdx: 0, currentQ: null,
+          stepResults: [], answering: false,
+          _timerId: null, _timerRemaining: 0, _timerDuration: 90
+        };
+      }
+      var questions = pickQuestionsForCategory(catKey, QUESTIONS_PER_GAME);
+      if (questions.length === 0) {
+        if (typeof showToast === 'function') showToast('此類別無可用題目', 2500);
+        return;
+      }
+      this.state.category = catKey;
+      this.state.questions = questions;
+      this.state.idx = 0;
+      this.state.stepIdx = 0;
+      this.state.currentQ = null;
+      this.state.stepResults = [];
+      this.state.answering = false;
       this.showQuestion();
     },
 
@@ -366,12 +484,19 @@
       this._stopTimer();
       const view = document.getElementById('view-play');
       if (!view) return;
+      var doneCount = this.state.questions.length;
+      var catKey = this.state.category;
+      var catLabel = '';
+      if (catKey) {
+        var cat = CATEGORIES.find(function (c) { return c.key === catKey; });
+        if (cat) catLabel = ' · ' + cat.label;
+      }
       view.innerHTML =
         '<div class="card">' +
-          '<h2>📝 Code Trace 道場結束</h2>' +
-          '<p>本場完成 ' + this.state.questions.length + ' 題</p>' +
+          '<h2>📝 Code Trace 道場結束' + catLabel + '</h2>' +
+          '<p>本場完成 ' + doneCount + ' 題</p>' +
           '<div class="actions">' +
-            '<button class="btn btn-primary" onclick="Mode8.start()">再來一場</button>' +
+            '<button class="btn btn-primary" onclick="Mode8.start()">換個類別 / 再來一場</button>' +
             '<button class="btn btn-ghost" onclick="goHome()">回首頁</button>' +
           '</div>' +
         '</div>';

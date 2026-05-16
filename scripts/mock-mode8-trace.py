@@ -166,12 +166,220 @@ def verify_q_m8_005(env_after, step_idx, expected):
         return str(env_after['labels']) == expected
     return False
 
+# === q_m8_006..q_m8_015(R5 expansion):每題 4 trace_steps ===
+
+def verify_q_m8_006(env_after, step_idx, expected):
+    """reshape + transpose:
+       after_line=2 → a.shape (e.g. "(3, 4)")
+       after_line=3 → t.shape (e.g. "(4, 3)")
+       after_line=4 → b.shape
+       after_line=5 → total (int)
+    """
+    if step_idx == 2:
+        return str(tuple(env_after['a'].shape)) == expected
+    if step_idx == 3:
+        return str(tuple(env_after['t'].shape)) == expected
+    if step_idx == 4:
+        return str(tuple(env_after['b'].shape)) == expected
+    if step_idx == 5:
+        return str(int(env_after['total'])) == expected
+    return False
+
+def verify_q_m8_007(env_after, step_idx, expected):
+    """matmul + broadcasting:
+       after_line=2 → A.shape "(2, 2)"
+       after_line=4 → C[0][0] (float)
+       after_line=6 (step3) → D.shape
+       after_line=6 (step4) → D[0][0]
+    """
+    if step_idx == 2:
+        return str(tuple(env_after['A'].shape)) == expected
+    if step_idx == 4:
+        return str(float(env_after['C'][0][0])) == expected
+    if step_idx == 6:
+        # 兩步都在 after_line=6,試 D.shape 與 D[0][0] 兩種比對
+        shape_str = str(tuple(env_after['D'].shape))
+        d00_str = str(float(env_after['D'][0][0]))
+        return expected == shape_str or expected == d00_str
+    return False
+
+def verify_q_m8_008(env_after, step_idx, expected):
+    """Fibonacci iterative:
+       after_line=2 → a 初始值 (0)
+       after_line=3 → b 初始值 (1)
+       after_line=5 → 第 1 次迴圈後 a — 此步需執行至迴圈第一輪
+                       但 exec 整段(after_line=5 = for 迴圈頭那行)是空迴圈未進入
+                       因此改採:after_line=6 後 a 為 result(整迴圈走完)
+                       但 ask 是「第 1 次迴圈執行後 a」→ 我們手動跑一次
+       after_line=6 → result(最終答案)
+    """
+    if step_idx == 2:
+        return str(env_after['a']) == expected
+    if step_idx == 3:
+        return str(env_after['b']) == expected
+    if step_idx == 5:
+        # after_line=5 是 for 迴圈標頭那行(含縮排內 body)— exec 已執行整個 for 迴圈
+        # 「第 1 次迴圈後 a」必須手動重算
+        n_val = env_after['n']
+        a, b = 0, 1
+        if n_val >= 1:
+            a, b = b, a + b  # 第 1 次迴圈
+        return str(a) == expected
+    if step_idx == 6:
+        return str(env_after['a']) == expected  # result = a 在第 6 行才設,我們驗 a
+    return False
+
+def verify_q_m8_009(env_after, step_idx, expected):
+    """Binary search(改寫為 function + helper 變數,避免 exec 截斷 while-loop 造成無限迴圈):
+       after_line=16 → hi_init(len(arr)-1)
+       after_line=17 → first_mid((0+hi_init)//2)
+       after_line=18 → first_val(arr[first_mid])
+       after_line=19 → result(binary_search 結果)
+    """
+    if step_idx == 16:
+        return str(env_after['hi_init']) == expected
+    if step_idx == 17:
+        return str(env_after['first_mid']) == expected
+    if step_idx == 18:
+        return str(env_after['first_val']) == expected
+    if step_idx == 19:
+        return str(env_after['result']) == expected
+    return False
+
+def verify_q_m8_010(env_after, step_idx, expected):
+    """Softmax stable:
+       after_line=3 → z_max (float)
+       after_line=4 → z_shift (list)
+       after_line=5 → e.sum() rounded to 4 decimal
+       after_line=7 → argmax (int)
+    """
+    if step_idx == 3:
+        return str(float(env_after['z_max'])) == expected
+    if step_idx == 4:
+        actual = '[' + ', '.join(str(float(x)) for x in env_after['z_shift']) + ']'
+        return actual == expected
+    if step_idx == 5:
+        actual = round(float(env_after['e'].sum()), 4)
+        try:
+            exp = float(expected)
+        except ValueError:
+            return False
+        return abs(actual - exp) < 1e-3
+    if step_idx == 7:
+        return str(int(env_after['argmax'])) == expected
+    return False
+
+def verify_q_m8_011(env_after, step_idx, expected):
+    """KNN:
+       after_line=5 → diffs.shape
+       after_line=6 → sq_dists (list of floats)
+       after_line=9 → nearest_idx (list)
+       after_line=12 → pred (int)
+    """
+    if step_idx == 5:
+        return str(tuple(env_after['diffs'].shape)) == expected
+    if step_idx == 6:
+        actual = '[' + ', '.join(str(float(x)) for x in env_after['sq_dists']) + ']'
+        return actual == expected
+    if step_idx == 9:
+        actual = str(env_after['nearest_idx'].tolist())
+        return actual == expected
+    if step_idx == 12:
+        return str(env_after['pred']) == expected
+    return False
+
+def verify_q_m8_012(env_after, step_idx, expected):
+    """k-means centroid:
+       after_line=4 → c0_pts.shape[0] (number of c0 points)
+       after_line=5 → c1_pts.shape[0]
+       after_line=6 → new_c0 rounded to 3 decimal as list-like "[x.xxx, y.yyy]"
+       after_line=7 → new_c1 rounded to 3 decimal
+    """
+    if step_idx == 4:
+        return str(env_after['c0_pts'].shape[0]) == expected
+    if step_idx == 5:
+        return str(env_after['c1_pts'].shape[0]) == expected
+    if step_idx == 6:
+        v = env_after['new_c0']
+        actual = '[' + ', '.join(str(round(float(x), 3)) for x in v) + ']'
+        return actual == expected
+    if step_idx == 7:
+        v = env_after['new_c1']
+        actual = '[' + ', '.join(str(round(float(x), 3)) for x in v) + ']'
+        return actual == expected
+    return False
+
+def verify_q_m8_013(env_after, step_idx, expected):
+    """pandas groupby:
+       after_line=3 → df.shape
+       after_line=4 → g_sum.to_dict()
+       after_line=5 → g_count.to_dict()
+       after_line=6 → sum_g0 (int)
+    """
+    if step_idx == 3:
+        return str(tuple(env_after['shape'])) == expected
+    if step_idx == 4:
+        actual = str(env_after['g_sum'].to_dict())
+        return actual == expected
+    if step_idx == 5:
+        actual = str(env_after['g_count'].to_dict())
+        return actual == expected
+    if step_idx == 6:
+        return str(int(env_after['sum_g0'])) == expected
+    return False
+
+def verify_q_m8_014(env_after, step_idx, expected):
+    """fillna mean:
+       after_line=4 → nulls_before (int)
+       after_line=5 → mean (float)
+       after_line=6 → filled (list of floats)
+       after_line=7 → total (float)
+    """
+    if step_idx == 4:
+        return str(int(env_after['nulls_before'])) == expected
+    if step_idx == 5:
+        return str(float(env_after['mean'])) == expected
+    if step_idx == 6:
+        actual = '[' + ', '.join(str(float(x)) for x in env_after['filled']) + ']'
+        return actual == expected
+    if step_idx == 7:
+        return str(float(env_after['total'])) == expected
+    return False
+
+def verify_q_m8_015(env_after, step_idx, expected):
+    """merge inner/left:
+       after_line=4(step1)→ inner.shape
+       after_line=4(step2)→ inner['id'] as list
+       after_line=5 → left_join.shape
+       after_line=6 → inner_rows (int)
+    """
+    if step_idx == 4:
+        # 兩步都在 after_line=4 — 試兩種比對
+        shape_str = str(tuple(env_after['inner'].shape))
+        id_list_str = str(env_after['inner']['id'].tolist())
+        return expected == shape_str or expected == id_list_str
+    if step_idx == 5:
+        return str(tuple(env_after['left_join'].shape)) == expected
+    if step_idx == 6:
+        return str(int(env_after['inner_rows'])) == expected
+    return False
+
 VERIFIERS = {
     'q_m8_001': verify_q_m8_001,
     'q_m8_002': verify_q_m8_002,
     'q_m8_003': verify_q_m8_003,
     'q_m8_004': verify_q_m8_004,
     'q_m8_005': verify_q_m8_005,
+    'q_m8_006': verify_q_m8_006,
+    'q_m8_007': verify_q_m8_007,
+    'q_m8_008': verify_q_m8_008,
+    'q_m8_009': verify_q_m8_009,
+    'q_m8_010': verify_q_m8_010,
+    'q_m8_011': verify_q_m8_011,
+    'q_m8_012': verify_q_m8_012,
+    'q_m8_013': verify_q_m8_013,
+    'q_m8_014': verify_q_m8_014,
+    'q_m8_015': verify_q_m8_015,
 }
 
 # ============================================================================
