@@ -20,6 +20,17 @@
   const STORAGE_KEY = 'ipas_mode7_theater_v1';
   const STORAGE_VERSION = '1.0';
 
+  // UX 功能 — 字級調整(2026-05-16):S/M/L/XL/XXL 對應 scale
+  // 持久化 key 與 5 級對應 scale(只影響 Mode 7 view-play,離場時清掉 CSS var)
+  const FONT_SCALE_KEY = 'ipas_mode7_font_v1';
+  const FONT_SCALE_LEVELS = [
+    { key: 'S',   scale: 0.85, label: 'S' },
+    { key: 'M',   scale: 1.00, label: 'M' },
+    { key: 'L',   scale: 1.20, label: 'L' },
+    { key: 'XL',  scale: 1.40, label: 'XL' },
+    { key: 'XXL', scale: 1.60, label: 'XXL' }
+  ];
+
   // === 模考時長配置(嚴格對標 IPAS AI 中級真考:單科 50 題 90 分鐘 = 108 秒/題)===
   // 2026-05-16 修:user 要求以真考標準比例延伸,50→90 / 30→54 / 25→45 / 20→36 分鐘,皆 108s/題
   const QCOUNT_OPTIONS = [
@@ -441,14 +452,50 @@
         remainSeconds: totalSeconds,
         finished: false,
         outcomeRendered: false,
-        currentNpcIdx: -1
+        currentNpcIdx: -1,
+        // UX features (2026-05-16):
+        markedIds: new Set(),       // 標記題 qid 集合
+        answers: {},                // {idx: {userKey, isCorrect, correctKey}} — 已答題記錄,支援上一題回看
+        recordedQids: new Set()     // 已寫入 Mastery/Wrongbook 的 qid,避免重答重複寫入
       };
+
+      // 套用字級設定(從 localStorage 載入)
+      this._applyFontScale(this._loadFontScale());
 
       // 進入第一題
       this._installPlayEngineHook();
       this._showCurrentQuestion();
       this._startTimer();
     },
+
+    // ===== 字級調整(UX feature #1)=====
+    _loadFontScale() {
+      const key = Storage.get(FONT_SCALE_KEY, null);
+      if (key && FONT_SCALE_LEVELS.find(l => l.key === key)) return key;
+      return 'M';
+    },
+    _saveFontScale(key) {
+      Storage.set(FONT_SCALE_KEY, key);
+    },
+    _applyFontScale(key) {
+      const level = FONT_SCALE_LEVELS.find(l => l.key === key) || FONT_SCALE_LEVELS[1];
+      // CSS variable 設在所有 .m7-mock-view 上(scope 限制在 Mode 7 wrapper 內)
+      // 因 m7-mock-view div 隨 view-play.innerHTML 替換而消失,離場後不會污染其他 mode
+      document.querySelectorAll('.m7-mock-view').forEach(el => {
+        el.style.setProperty('--m7-font-scale', String(level.scale));
+      });
+      // 同時也設 view-play(讓 question-card 兄弟也能讀取到 — CSS var 屬性繼承)
+      const view = document.getElementById('view-play');
+      if (view) view.style.setProperty('--m7-font-scale', String(level.scale));
+      this._currentFontKey = level.key;
+      this._saveFontScale(level.key);
+      // 更新按鈕 active 狀態(若已渲染)
+      document.querySelectorAll('.m7-font-size-btn').forEach(btn => {
+        if (btn.dataset.fontKey === level.key) btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+    },
+    setFontScale(key) { this._applyFontScale(key); },
 
     // ===== 計時器 =====
     _startTimer() {
@@ -526,14 +573,43 @@
       const isNpcSwitch = prevNpc !== npcIdx;
       this.state.currentNpcIdx = npcIdx;
 
-      // 上下文 HTML(NPC 對話框 + 倒數計時 + 進度條)
+      // UX 計算:目前得分 (按 IPAS 中級 100 分制:每題 2 分) + 進度比
+      const score = this.state.correct * 2;
+      const progPct = this.state.total > 0 ? (this.state.idx / this.state.total) * 100 : 0;
+
+      // 字級按鈕 group
+      const currentFont = this._currentFontKey || this._loadFontScale();
+      const fontBtns = FONT_SCALE_LEVELS.map(l => `
+        <button class="m7-font-size-btn ${l.key === currentFont ? 'active' : ''}"
+          data-font-key="${l.key}" onclick="Mode7.setFontScale('${l.key}')"
+          title="字級 ${l.label} (${l.scale}x)">${l.label}</button>`).join('');
+
+      // 已標記狀態
+      const isMarked = this.state.markedIds.has(q.id);
+      // 已答狀態
+      const prevAnswer = this.state.answers[this.state.idx];
+      const answeredHint = prevAnswer
+        ? `<div class="m7-answered-hint">📝 已選 <strong>${prevAnswer.userKey}</strong>(再點任一選項可改答)</div>` : '';
+
+      // 上下文 HTML(NPC 對話框 + 倒數計時 + 進度條 + UX 工具列)
       const ctx = `
+        <div class="m7-mock-view">
+        <div class="m7-toolbar">
+          <div class="m7-toolbar-left">
+            <span class="m7-toolbar-label">字級</span>
+            <div class="m7-font-size-group">${fontBtns}</div>
+          </div>
+          <div class="m7-toolbar-right">
+            <span class="m7-toolbar-score">📊 得分 <strong>${score}</strong> / 100</span>
+          </div>
+        </div>
+
         <div class="m7-arena">
           <div class="m7-header">
             <div class="m7-progress-info">
               <div class="m7-progress-text">第 ${this.state.idx + 1} / ${this.state.total} 題 · 已答對 ${this.state.correct}</div>
               <div class="hp-track" style="height:8px;background:rgba(0,0,0,0.4);border-radius:4px;overflow:hidden;margin-top:4px">
-                <div class="hp-fill" id="m7-progress-bar" style="width:${(this.state.idx / this.state.total) * 100}%;
+                <div class="hp-fill" id="m7-progress-bar" style="width:${progPct}%;
                   background:linear-gradient(90deg,#38bdf8,#a855f7);height:100%;transition:width 0.4s"></div>
               </div>
             </div>
@@ -554,12 +630,80 @@
             </div>
           </div>
 
-          <div class="actions" style="margin-top:8px;justify-content:center">
+          <div class="m7-action-row">
+            <button class="m7-mark-btn ${isMarked ? 'marked' : ''}" onclick="Mode7.toggleMark()"
+              title="標記此題以便日後複習">${isMarked ? '🔖 已標記' : '🔖 標記此題'}</button>
+            <button class="m7-tool-btn" onclick="Mode7.copyQuestion()"
+              title="複製題目與選項到剪貼簿">📋 複製題目</button>
+            <button class="m7-tool-btn" onclick="Mode7.openQuestionList()"
+              title="顯示所有題目清單">📋 題目列表</button>
             <button class="btn btn-ghost" onclick="Mode7.surrender()" style="font-size:0.85rem">🏳️ 投降(扣 HP 10)</button>
           </div>
+          ${answeredHint}
         </div>
 
+        ${this._renderMode7Styles()}
+        </div>
+      `;
+
+      this.state.questionStartTs = Date.now();
+      // 用 PlayEngine.show 渲染題目;之後我們的 hook 會覆寫 answer
+      // R5 task 1:Theater 模式已有整場倒數,禁用 PlayEngine 每題 90s 計時器
+      PlayEngine.show(q, { contextHTML: ctx, disableTimer: true });
+
+      // 若該題已答過(navigate back 場景),把先前選項視覺鎖在「已選」狀態(不洩漏對錯)
+      if (prevAnswer) this._showPreviousAnswerState(prevAnswer);
+
+      // 渲染導航按鈕(上一題 / 下一題 / 交卷)
+      this._renderNavButtons();
+
+      // 套用字級(view-play 已重渲染,需重新 setProperty)
+      this._applyFontScale(currentFont);
+
+      this._updateTimerHud();
+    },
+
+    // 樣式統一輸出(包含字級 CSS variable 應用)
+    _renderMode7Styles() {
+      return `
         <style>
+          /* === Mode 7 字級調整(UX #1)===
+             用 .m7-mock-view ~ 兄弟選擇器作用域限制 — m7-mock-view div 隨 view-play.innerHTML 替換而消失,
+             不會污染其他 mode(避免 goHome 後其他 mode 仍受影響) */
+          /* m7-mock-view 是 ctx 的 wrapper div,question-card 是 PlayEngine.show 寫的兄弟 div */
+          #view-play .m7-mock-view ~ .question-card .question-stem,
+          #view-play .m7-mock-view .question-stem { font-size: calc(1.1rem * var(--m7-font-scale, 1)); line-height: 1.8; }
+          #view-play .m7-mock-view ~ .question-card .option-btn,
+          #view-play .m7-mock-view .option-btn { font-size: calc(0.95rem * var(--m7-font-scale, 1)); }
+          #view-play .m7-mock-view ~ .question-card .code-syntax,
+          #view-play .m7-mock-view .code-syntax { font-size: calc(0.85rem * var(--m7-font-scale, 1)); }
+          #view-play .m7-mock-view ~ .question-card .code-question,
+          #view-play .m7-mock-view .code-question { font-size: calc(0.875rem * var(--m7-font-scale, 1)); }
+          #view-play .m7-mock-view ~ .question-card .question-code,
+          #view-play .m7-mock-view .question-code { font-size: calc(0.875rem * var(--m7-font-scale, 1)); }
+          #view-play .m7-mock-view h2 { font-size: calc(1.25rem * var(--m7-font-scale, 1)); }
+          #view-play .m7-mock-view h3 { font-size: calc(1.1rem * var(--m7-font-scale, 1)); }
+          #view-play .m7-mock-view .m7-npc-line { font-size: calc(1rem * var(--m7-font-scale, 1)); }
+          #view-play .m7-mock-view .m7-progress-text { font-size: calc(0.9rem * var(--m7-font-scale, 1)); }
+          #view-play .m7-mock-view .m7-answered-hint { font-size: calc(0.85rem * var(--m7-font-scale, 1)); }
+          #view-play .m7-mock-view ~ .question-card .explanation,
+          #view-play .m7-mock-view .explanation { font-size: calc(1rem * var(--m7-font-scale, 1)); }
+
+          .m7-toolbar { display:flex; justify-content:space-between; align-items:center;
+            gap:12px; padding:8px 12px; background:var(--bg-2); border:1px solid var(--border);
+            border-radius:var(--radius-sm); margin-bottom:10px; flex-wrap:wrap; }
+          .m7-toolbar-left { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+          .m7-toolbar-right { display:flex; align-items:center; gap:8px; }
+          .m7-toolbar-label { font-size:0.8rem; color:var(--fg-dim); font-weight:700; }
+          .m7-toolbar-score { font-size:0.9rem; color:var(--fg); }
+          .m7-toolbar-score strong { color:var(--warn); font-size:1.1rem; }
+          .m7-font-size-group { display:flex; gap:4px; }
+          .m7-font-size-btn { padding:4px 10px; background:var(--bg-3); border:2px solid var(--border);
+            border-radius:var(--radius-sm); color:var(--fg-dim); font-weight:700; font-size:0.85rem;
+            cursor:pointer; transition:all 0.15s; min-width:36px; }
+          .m7-font-size-btn:hover { border-color:var(--primary); color:var(--fg); }
+          .m7-font-size-btn.active { background:var(--primary); color:var(--primary-fg); border-color:var(--primary); }
+
           .m7-arena { background:linear-gradient(135deg,#1e1b4b,#7f1d1d 80%); border-radius:var(--radius);
             padding:14px; margin-bottom:14px; box-shadow:0 0 30px rgba(248,113,113,0.3); }
           .m7-header { display:flex; justify-content:space-between; align-items:flex-start; gap:14px; flex-wrap:wrap; margin-bottom:12px; }
@@ -583,14 +727,260 @@
           .m7-npc-dialog { flex:1; }
           .m7-npc-name { color:#facc15; font-weight:700; font-size:0.95rem; margin-bottom:4px; }
           .m7-npc-line { color:#e2e8f0; font-style:italic; line-height:1.6; }
+
+          /* === UX 工具按鈕(標記 / 複製 / 題目列表 / 投降)=== */
+          .m7-action-row { display:flex; gap:8px; margin-top:10px; justify-content:center; flex-wrap:wrap; }
+          .m7-mark-btn, .m7-tool-btn { padding:8px 14px; border:2px solid rgba(250,204,21,0.3);
+            background:rgba(0,0,0,0.35); color:#e2e8f0; border-radius:var(--radius-sm);
+            cursor:pointer; font-size:0.85rem; font-weight:600; transition:all 0.15s; }
+          .m7-mark-btn:hover, .m7-tool-btn:hover { border-color:#facc15; background:rgba(250,204,21,0.15); }
+          .m7-mark-btn.marked { background:rgba(250,204,21,0.25); border-color:#facc15; color:#fef3c7; }
+          .m7-answered-hint { margin-top:10px; padding:8px 12px; background:rgba(56,189,248,0.12);
+            border-left:3px solid var(--primary); border-radius:var(--radius-sm); color:#bae6fd;
+            font-size:0.85rem; text-align:center; }
+
+          /* === 導航按鈕(上一題 / 下一題 / 交卷)=== */
+          .m7-nav-bar { display:flex; justify-content:space-between; align-items:center;
+            margin-top:14px; padding:10px 14px; background:var(--bg-2); border:1px solid var(--border);
+            border-radius:var(--radius-sm); gap:10px; flex-wrap:wrap; }
+          .m7-nav-prev, .m7-nav-next, .m7-nav-submit { padding:10px 18px; border:2px solid var(--border);
+            border-radius:var(--radius-sm); background:var(--bg-3); color:var(--fg);
+            cursor:pointer; font-weight:700; font-size:0.95rem; transition:all 0.2s; }
+          .m7-nav-prev:hover:not(:disabled), .m7-nav-next:hover:not(:disabled) {
+            border-color:var(--primary); transform:translateY(-1px); }
+          .m7-nav-prev:disabled, .m7-nav-next:disabled { opacity:0.4; cursor:not-allowed; }
+          .m7-nav-submit { background:var(--warn); color:#0c0c0c; border-color:var(--warn); }
+          .m7-nav-submit:hover { transform:translateY(-1px); box-shadow:0 0 16px rgba(250,204,21,0.5); }
+          .m7-nav-info { font-size:0.85rem; color:var(--fg-dim); }
+
+          /* === 題目列表 modal === */
+          .m7-qlist-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.65);
+            display:flex; align-items:center; justify-content:center; z-index:500;
+            animation:m7-fadeIn 0.2s; padding:20px; }
+          @keyframes m7-fadeIn { from { opacity:0; } to { opacity:1; } }
+          .m7-qlist-modal { background:var(--bg-2); border:1px solid var(--border);
+            border-radius:var(--radius); padding:20px; max-width:720px; width:100%;
+            max-height:80vh; display:flex; flex-direction:column; box-shadow:var(--shadow); }
+          .m7-qlist-header { display:flex; justify-content:space-between; align-items:center;
+            margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--border); }
+          .m7-qlist-title { font-size:1.1rem; font-weight:700; color:var(--primary); }
+          .m7-qlist-close { background:none; border:none; color:var(--fg-dim); font-size:1.3rem;
+            cursor:pointer; padding:4px 10px; border-radius:var(--radius-sm); }
+          .m7-qlist-close:hover { background:var(--bg-3); color:var(--fg); }
+          .m7-qlist-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(72px, 1fr));
+            gap:6px; overflow-y:auto; padding:4px; }
+          .m7-qlist-cell { padding:10px 6px; background:var(--bg-3); border:2px solid var(--border);
+            border-radius:var(--radius-sm); cursor:pointer; text-align:center; transition:all 0.15s;
+            position:relative; font-size:0.85rem; font-weight:700; color:var(--fg); }
+          .m7-qlist-cell:hover { border-color:var(--primary); transform:translateY(-1px); }
+          .m7-qlist-cell.answered { background:rgba(74,222,128,0.18); border-color:#4ade80; color:#86efac; }
+          .m7-qlist-cell.current { box-shadow:0 0 0 2px var(--warn); }
+          .m7-qlist-cell .m7-qlist-mark { position:absolute; top:-4px; right:-4px;
+            font-size:0.85rem; line-height:1; }
+          .m7-qlist-legend { margin-top:10px; padding-top:10px; border-top:1px solid var(--border);
+            font-size:0.75rem; color:var(--fg-dim); display:flex; gap:14px; flex-wrap:wrap; }
         </style>
       `;
+    },
 
-      this.state.questionStartTs = Date.now();
-      // 用 PlayEngine.show 渲染題目;之後我們的 hook 會覆寫 answer
-      // R5 task 1:Theater 模式已有整場倒數,禁用 PlayEngine 每題 90s 計時器
-      PlayEngine.show(q, { contextHTML: ctx, disableTimer: true });
-      this._updateTimerHud();
+    // 把已答過的題目鎖定到「已選」視覺狀態(navigate back 用)
+    // 僅對標準選項題型有意義(confusion-matrix 題型有自己的狀態管理,跳過)
+    _showPreviousAnswerState(prevAnswer) {
+      const opts = document.querySelectorAll('#play-options .option-btn');
+      if (opts.length === 0) return; // 非標準選項題型(e.g. confusion-matrix)
+      opts.forEach(b => {
+        if (b.dataset.key === prevAnswer.userKey) {
+          b.style.background = 'var(--bg-2)';
+          b.style.borderColor = 'var(--primary)';
+        }
+      });
+      // 注意:不 disable(允許重答)
+    },
+
+    // 渲染上一題 / 下一題 / 交卷 button(UX #3)
+    _renderNavButtons() {
+      if (!this.state) return;
+      // 找 attach 點:優先 play-options 的 parent;若 confusion-matrix 題型則用 cm-container 的 parent;
+      // 都無則直接 view-play
+      const playOpts = document.getElementById('play-options');
+      const cm = document.getElementById('cm-container');
+      let parent = null;
+      if (playOpts) parent = playOpts.parentElement;
+      else if (cm) parent = cm.parentElement;
+      if (!parent) parent = document.getElementById('view-play');
+      if (!parent) return;
+      // 移除舊的(避免重複)
+      const old = parent.querySelector('.m7-nav-bar');
+      if (old) old.remove();
+
+      const idx = this.state.idx;
+      const total = this.state.total;
+      const isLast = idx === total - 1;
+      const prevDisabled = idx === 0 ? 'disabled' : '';
+      const nextBtn = isLast
+        ? `<button class="m7-nav-submit" onclick="Mode7.submitMock()">📤 交卷</button>`
+        : `<button class="m7-nav-next" onclick="Mode7.navigateNext()">下一題 →</button>`;
+
+      const nav = document.createElement('div');
+      nav.className = 'm7-nav-bar';
+      nav.innerHTML = `
+        <button class="m7-nav-prev" onclick="Mode7.navigatePrev()" ${prevDisabled}>← 上一題</button>
+        <span class="m7-nav-info">${idx + 1} / ${total}</span>
+        ${nextBtn}
+      `;
+      parent.appendChild(nav);
+    },
+
+    // ===== UX #3 上一題 / 下一題導航(允許回看 / 改答 — 真考也允許)=====
+    navigatePrev() {
+      if (!this.state || this.state.finished) return;
+      if (this.state.idx <= 0) return;
+      // 計時器持續(嚴格不暫停)
+      this.state.idx--;
+      this._showCurrentQuestion();
+    },
+    navigateNext() {
+      if (!this.state || this.state.finished) return;
+      if (this.state.idx >= this.state.total - 1) return;
+      this.state.idx++;
+      this._showCurrentQuestion();
+    },
+    submitMock() {
+      if (!this.state || this.state.finished) return;
+      const unanswered = [];
+      for (let i = 0; i < this.state.total; i++) {
+        if (!this.state.answers[i]) unanswered.push(i + 1);
+      }
+      let msg = `確定交卷?\n• 已答 ${this.state.total - unanswered.length}/${this.state.total} 題`;
+      if (unanswered.length > 0) msg += `\n• 未答題:${unanswered.slice(0, 10).join(', ')}${unanswered.length > 10 ? '...' : ''}(視為答錯)`;
+      if (!confirm(msg)) return;
+      this._finalize('submit');
+    },
+
+    // ===== UX #2 標記此題 =====
+    toggleMark() {
+      if (!this.state || this.state.finished) return;
+      const item = this.state.lineup[this.state.idx];
+      if (!item) return;
+      const qid = item.q.id;
+      if (this.state.markedIds.has(qid)) {
+        this.state.markedIds.delete(qid);
+        showToast('已取消標記', 1500);
+      } else {
+        this.state.markedIds.add(qid);
+        showToast('🔖 已標記此題', 1500);
+      }
+      // 更新按鈕視覺
+      const btn = document.querySelector('.m7-mark-btn');
+      if (btn) {
+        if (this.state.markedIds.has(qid)) {
+          btn.classList.add('marked');
+          btn.textContent = '🔖 已標記';
+        } else {
+          btn.classList.remove('marked');
+          btn.textContent = '🔖 標記此題';
+        }
+      }
+    },
+
+    // ===== UX #5 複製題目與選項到剪貼簿 =====
+    copyQuestion() {
+      if (!this.state || this.state.finished) return;
+      const item = this.state.lineup[this.state.idx];
+      if (!item) return;
+      // PlayEngine.current 是 renderQuestion 後的版本(已替換 placeholder + 洗牌選項)
+      const rendered = (typeof PlayEngine !== 'undefined' && PlayEngine.current) ? PlayEngine.current : item.q;
+      const stem = rendered.stem || '';
+      const opts = (rendered.options || [])
+        .map(o => `${o.key || ''}. ${o.text || ''}`)
+        .join('\n');
+      const code = rendered.code_block ? `\n\n${rendered.code_block}\n` : '';
+      const intType = rendered.interaction_type ? `\n[特殊互動題型:${rendered.interaction_type}]` : '';
+      const text = `[${rendered.knowledge_code || ''}] 第 ${this.state.idx + 1} 題${intType}\n\n${stem}${code}${opts ? '\n\n' + opts : ''}`;
+      const finish = () => showToast('📋 已複製題目與選項到剪貼簿', 2000);
+      const fail = () => showToast('⚠️ 複製失敗,請手動選取', 2500);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(finish).catch(() => {
+          // Fallback
+          this._fallbackCopy(text) ? finish() : fail();
+        });
+      } else {
+        this._fallbackCopy(text) ? finish() : fail();
+      }
+    },
+    _fallbackCopy(text) {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        return ok;
+      } catch (e) {
+        return false;
+      }
+    },
+
+    // ===== UX #4 題目列表(grid view + click jump)=====
+    openQuestionList() {
+      if (!this.state || this.state.finished) return;
+      // 移除舊的(若有)
+      this.closeQuestionList();
+      const backdrop = document.createElement('div');
+      backdrop.className = 'm7-qlist-backdrop';
+      backdrop.id = 'm7-qlist-backdrop';
+      backdrop.addEventListener('click', (e) => {
+        if (e.target === backdrop) this.closeQuestionList();
+      });
+
+      const cells = [];
+      for (let i = 0; i < this.state.total; i++) {
+        const item = this.state.lineup[i];
+        const qid = item.q.id;
+        const isAnswered = !!this.state.answers[i];
+        const isMarked = this.state.markedIds.has(qid);
+        const isCurrent = i === this.state.idx;
+        const classes = ['m7-qlist-cell'];
+        if (isAnswered) classes.push('answered');
+        if (isCurrent) classes.push('current');
+        cells.push(`<button class="${classes.join(' ')}" onclick="Mode7.jumpToQuestion(${i})"
+          title="第 ${i + 1} 題${isAnswered ? ' (已答)' : ''}${isMarked ? ' 🔖' : ''}">
+          ${i + 1}${isMarked ? '<span class="m7-qlist-mark">🔖</span>' : ''}
+        </button>`);
+      }
+      const answered = Object.keys(this.state.answers).length;
+      const marked = this.state.markedIds.size;
+
+      backdrop.innerHTML = `
+        <div class="m7-qlist-modal">
+          <div class="m7-qlist-header">
+            <div class="m7-qlist-title">📋 題目列表 (${answered}/${this.state.total} 已答 · ${marked} 標記)</div>
+            <button class="m7-qlist-close" onclick="Mode7.closeQuestionList()">✕</button>
+          </div>
+          <div class="m7-qlist-grid">${cells.join('')}</div>
+          <div class="m7-qlist-legend">
+            <span style="color:#86efac">■ 已答</span>
+            <span style="color:var(--fg-dim)">■ 未答</span>
+            <span style="color:#facc15">🔖 標記</span>
+            <span style="color:var(--warn)">□ 當前題</span>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(backdrop);
+    },
+    closeQuestionList() {
+      const old = document.getElementById('m7-qlist-backdrop');
+      if (old) old.remove();
+    },
+    jumpToQuestion(idx) {
+      if (!this.state || this.state.finished) return;
+      if (idx < 0 || idx >= this.state.total) return;
+      this.closeQuestionList();
+      this.state.idx = idx;
+      this._showCurrentQuestion();
     },
 
     // ===== Hook PlayEngine,讓 Theater 模式不顯示 explanation =====
@@ -609,61 +999,98 @@
         const opt = this.current.options.find(o => o.key === key);
         if (!opt) return;
         const isCorrect = !!opt.is_correct;
+        const idx = self.state.idx;
+        const qid = this.current.id;
+        const correctOpt = this.current.options.find(o => o.is_correct);
+        const correctKey = correctOpt ? correctOpt.key : '';
+        // 重答檢查(navigate back 後重新作答):上一次的答案(若有)
+        const prevAnswer = self.state.answers[idx];
+        const isReanswer = !!prevAnswer;
 
-        // 鎖定按鈕(基本鎖定但不顯示對錯著色;模擬真考不立即知道答案)
+        // 鎖定按鈕視覺(基本鎖定但不顯示對錯著色;模擬真考不立即知道答案)
+        // UX #3 允許重答:不 disable,讓使用者能再改
         document.querySelectorAll('#play-options .option-btn').forEach(b => {
-          b.disabled = true;
           if (b.dataset.key === key) {
             // 玩家選的標示淺色,不洩漏對錯
             b.style.background = 'var(--bg-2)';
             b.style.borderColor = 'var(--primary)';
+          } else {
+            // 還原其他選項(若是重答,清掉先前選的視覺)
+            b.style.background = '';
+            b.style.borderColor = '';
           }
         });
 
+        // 記錄這題的當前答案
+        self.state.answers[idx] = { userKey: key, isCorrect, correctKey };
+
         // 鐵律 #5:答題後共用層更新 mastery / wrongbook(不顯示 explanation)
-        if (this.current.node_id) Mastery.update(this.current.node_id, isCorrect);
-        if (typeof SM2 !== 'undefined' && this.current.id && isCorrect) SM2.recordAnswer(this.current.id, true, false);
-        Progress.addAnswer(isCorrect);
-        if (!isCorrect) {
-          const correctOpt = this.current.options.find(o => o.is_correct);
-          Wrongbook.add(this.current.id, this.current.node_id, key, correctOpt ? correctOpt.key : '');
-          if (typeof SM2 !== 'undefined' && this.current.id) SM2.recordAnswer(this.current.id, false, false);
+        // 但只在「首次作答」時寫入 Mastery/Wrongbook/SM2/Progress(避免重答重複扣分)
+        if (!self.state.recordedQids.has(qid)) {
+          self.state.recordedQids.add(qid);
+          if (this.current.node_id) Mastery.update(this.current.node_id, isCorrect);
+          if (typeof SM2 !== 'undefined' && qid && isCorrect) SM2.recordAnswer(qid, true, false);
+          Progress.addAnswer(isCorrect);
+          if (!isCorrect) {
+            Wrongbook.add(qid, this.current.node_id, key, correctKey);
+            if (typeof SM2 !== 'undefined' && qid) SM2.recordAnswer(qid, false, false);
+          }
         }
 
-        // 記錄統計
-        const elapsed = Date.now() - self.state.questionStartTs;
-        self.state.perQuestionTime.push(elapsed);
-        if (isCorrect) {
-          self.state.correct++;
-          // 答對視覺反饋(極短閃爍,不影響節奏)
-          GameFX.flash('correct');
+        // 記錄用時(首次作答記錄;重答不覆蓋 — 真考用時以首次為準)
+        if (!isReanswer) {
+          const elapsed = Date.now() - self.state.questionStartTs;
+          self.state.perQuestionTime[idx] = elapsed;
+          if (isCorrect) {
+            self.state.correct++;
+            GameFX.flash('correct');
+          } else {
+            GameFX.flash('wrong');
+            self.state.wrongs.push({
+              qid,
+              nodeId: this.current.node_id,
+              q: this.current,
+              userKey: key,
+              correctKey,
+              npcIdx: self.state.lineup[idx] ? self.state.lineup[idx].npcIdx : 0,
+              timeUsed: elapsed
+            });
+          }
         } else {
-          GameFX.flash('wrong');
-          const correctOpt = this.current.options.find(o => o.is_correct);
-          self.state.wrongs.push({
-            qid: this.current.id,
-            nodeId: this.current.node_id,
-            q: this.current,
-            userKey: key,
-            correctKey: correctOpt ? correctOpt.key : '',
-            npcIdx: self.state.lineup[self.state.idx] ? self.state.lineup[self.state.idx].npcIdx : 0,
-            timeUsed: elapsed
-          });
+          // 重答:更新 wrongs 內的 userKey(若該題在 wrongs 中)
+          // 注意:不調整 correct 計數,避免使用者重答多次累加。重答僅更新 answers[idx]
+          // 真考:首次作答的對錯就是真實成績,重答只是讓使用者「檢查」與「修正」自己選的選項。
+          // 為了精準對應真考體驗,我們把「首次答對 → 重答錯」記為「首次答對」(不變);
+          // 「首次答錯 → 重答對」也記為「首次答錯」(不變)。考試現場僅以首次答錯為真實。
+          // 但 answers[idx] 已更新,UI 上顯示使用者最新選擇,反饋台詞用最新選擇對錯判斷。
+          // 此設計:成績嚴格不放鬆(首次為準),但 UX 允許重看自己選了什麼
         }
 
-        // NPC 反饋台詞(短)
+        // NPC 反饋台詞(用本次選擇的對錯)
         self._renderNpcFeedback(isCorrect);
 
-        // 短延遲後進下一題(讓玩家看見 NPC 反饋)
-        setTimeout(() => {
-          if (!self.state || self.state.finished) return;
-          self.state.idx++;
-          if (self.state.idx >= self.state.total) {
-            self._finalize('all_done');
+        // 自動進下一題(僅在「首次作答」且非最後一題時自動跳;重答不自動跳,讓使用者用導航 button)
+        if (!isReanswer) {
+          if (idx >= self.state.total - 1) {
+            // 最後一題答完:不自動 finalize,等使用者按交卷(讓他有機會回看)
+            setTimeout(() => {
+              if (!self.state || self.state.finished) return;
+              // 若使用者已手動導航到別題,跳過 toast(避免干擾)
+              if (self.state.idx !== idx) return;
+              self._renderNavButtons(); // 確保最後一題的 button 是「交卷」
+              showToast('✅ 已答完最後一題,可按「交卷」或上一題回看', 3000);
+            }, 800);
           } else {
-            self._showCurrentQuestion();
+            setTimeout(() => {
+              if (!self.state || self.state.finished) return;
+              // race guard:若使用者已手動導航到別題(navigatePrev / navigateNext / jumpToQuestion),
+              // 不要再自動 advance,避免雙重跳題
+              if (self.state.idx !== idx) return;
+              self.state.idx++;
+              self._showCurrentQuestion();
+            }, 800);
           }
-        }, 800);
+        }
       };
 
       // PlayEngine.showExplanation 全程不被呼叫;我們 hook answer 後直接跳下一題
@@ -727,8 +1154,9 @@
 
     _computeResult(reason) {
       const s = this.state;
-      const answered = s.idx + (reason === 'all_done' ? 0 : 0); // idx 已經指向下一題,實際答了 idx 題
-      const totalAttempted = Math.min(s.idx, s.total);
+      // 用 answers map 而非 s.idx 計算 totalAttempted(支援 UX #3 跳題 + 重答場景)
+      const answeredIdxs = Object.keys(s.answers || {}).map(Number);
+      const totalAttempted = answeredIdxs.length;
       const correct = s.correct;
       const total = s.total;
       const wrongs = s.wrongs.slice();
@@ -736,20 +1164,21 @@
       // 用時(秒)
       const timeUsed = s.totalSeconds - Math.max(0, s.remainSeconds);
 
-      // 分科目得分
+      // 分科目得分(依 answers 集合判定哪些題已答)
       const byCategory = { L21: { correct: 0, total: 0 }, L22: { correct: 0, total: 0 }, L23: { correct: 0, total: 0 }, other: { correct: 0, total: 0 } };
-      // 已答題:從 lineup[0..totalAttempted-1]
-      for (let i = 0; i < totalAttempted; i++) {
+      for (const i of answeredIdxs) {
+        if (!s.lineup[i]) continue;
         const q = s.lineup[i].q;
         const cat = q.knowledge_code && q.knowledge_code.startsWith('L21') ? 'L21' :
                     q.knowledge_code && q.knowledge_code.startsWith('L22') ? 'L22' :
                     q.knowledge_code && q.knowledge_code.startsWith('L23') ? 'L23' : 'other';
         byCategory[cat].total++;
-        // 答對:該題不在 wrongs 內
+        // 答對:該 idx 的 answers 記錄 isCorrect=true(以首次作答為準,但 answers[idx] 記最後選擇,
+        // 若首次答錯則永遠在 wrongs;不在 wrongs 即「首次答對」)
         const wasWrong = wrongs.some(w => w.qid === q.id);
         if (!wasWrong) byCategory[cat].correct++;
       }
-      // 未答題:全部記為 other / total(避免 NaN)
+      // 未答題
       const unanswered = total - totalAttempted;
 
       // 預估等級(對應真考 60 分及格)
@@ -763,10 +1192,14 @@
         .sort((a, b) => (b.timeUsed || 0) - (a.timeUsed || 0))
         .slice(0, 5);
 
+      // 標記題(UX #2):結算回傳給 _renderResult 顯示
+      const markedQids = s.markedIds ? Array.from(s.markedIds) : [];
+
       return {
         correct, total, totalAttempted, unanswered, timeUsed,
         byCategory, estLevel, topWrong, perQuestionTime: s.perQuestionTime.slice(),
-        wrongs
+        wrongs, markedQids,
+        lineup: s.lineup.slice() // 給「展開所有解析」用
       };
     },
 
@@ -802,7 +1235,11 @@
       const lvlEmoji = result.estLevel === '高' ? '🥇' : result.estLevel === '中' ? '🥈' : '🥉';
       const reasonText = reason === 'time_up' ? '⏰ 時間到自動交卷' :
                          reason === 'surrender' ? '🏳️ 投降結束' :
+                         reason === 'submit' ? '📤 已交卷' :
                          '✅ 全部完成';
+
+      // 儲存結算用的 lineup(供 _renderAllExplanations 使用)
+      this._lastResultLineup = result.lineup || [];
 
       // Pace Heatmap
       const heatmap = this._buildHeatmapHTML(result);
@@ -846,8 +1283,32 @@
           }).join('')}
         </div>`;
 
+      // UX #2 標記題清單
+      const markedBlock = (result.markedQids && result.markedQids.length > 0) ? `
+        <div class="card">
+          <h2>🔖 已標記的題目(${result.markedQids.length} 題)</h2>
+          <p style="font-size:0.85rem;color:var(--fg-dim);margin-bottom:8px">
+            這些是你模考中主動標記的題目,建議回頭複習
+          </p>
+          <div class="weak-list" style="margin-top:8px">
+            ${result.markedQids.map((qid, i) => {
+              const allQ = (typeof QUESTIONS !== 'undefined' ? QUESTIONS : []);
+              const q = allQ.find(x => x.id === qid);
+              if (!q) return '';
+              const stem = (q.stem || '').substring(0, 60).replace(/\{[^}]+\}/g, '');
+              return `<div class="weak-item" style="flex-direction:column;align-items:flex-start;gap:6px;padding:10px">
+                <div style="display:flex;justify-content:space-between;width:100%;align-items:center">
+                  <span style="font-size:0.8rem;color:var(--fg-dim)">🔖 #${i+1} · ${q.knowledge_code || ''}</span>
+                </div>
+                <div style="font-size:0.85rem;color:var(--fg);line-height:1.5">${stem}…</div>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>` : '';
+
       const view = document.getElementById('view-play');
       view.innerHTML = `
+        <div class="m7-mock-view">
         <div class="card" style="background:linear-gradient(135deg,#1e1b4b,#7f1d1d)">
           <h1 style="text-align:center;color:#fef3c7;font-size:1.8rem">🎬 模考結束</h1>
           <div style="text-align:center;color:var(--fg-dim);margin-top:6px">${reasonText}</div>
@@ -895,18 +1356,110 @@
           ${topWrongBlock}
         </div>
 
+        ${markedBlock}
+
         <div class="card">
-          <div class="actions" style="justify-content:center">
+          <div class="actions" style="justify-content:center;flex-wrap:wrap">
             <button class="btn btn-primary" onclick="Mode7.start()">🔁 再來一場</button>
             <button class="btn btn-warn" onclick="Mode7.drillAllWrong()" ${result.topWrong.length === 0 ? 'disabled' : ''}>🎯 全部錯題下鑽</button>
+            <button class="btn btn-ghost" onclick="Mode7.expandAllExplanations()">📖 展開所有解析</button>
             <button class="btn btn-ghost" onclick="goHome()">🏠 回首頁</button>
           </div>
         </div>
+
+        <div id="m7-all-explanations"></div>
+
+        ${this._renderMode7Styles()}
+        </div>
       `;
+      // 套用字級到結算頁
+      this._applyFontScale(this._currentFontKey || this._loadFontScale());
+
       // 全大撒花(若 ≥80%)
       if (overallPct >= 80) GameFX.bigConfetti();
       else if (overallPct >= 60) GameFX.confetti({ count: 60 });
       show('view-play');
+    },
+
+    // ===== UX #6 展開所有解析(結算頁)=====
+    expandAllExplanations() {
+      const container = document.getElementById('m7-all-explanations');
+      if (!container) return;
+      const lineup = this._lastResultLineup || [];
+      if (lineup.length === 0) {
+        showToast('無題目資料可展開', 2000);
+        return;
+      }
+      // toggle:已展開則收起
+      if (container.dataset.expanded === '1') {
+        container.innerHTML = '';
+        container.dataset.expanded = '0';
+        showToast('已收起解析', 1500);
+        return;
+      }
+      const blocks = lineup.map((item, i) => {
+        const q = item.q;
+        const correctOpt = (q.options || []).find(o => o.is_correct);
+        const correctLabel = correctOpt ? `${correctOpt.key || ''} ${correctOpt.text || ''}` : '(未提供)';
+        const explCorrect = (q.explanation && q.explanation.correct) || '(此題未提供詳細解釋)';
+        const hook = (q.explanation && q.explanation.hook) || '';
+        const npc = NPCS[item.npcIdx] || NPCS[0];
+        // 顯示其他選項解析
+        const wrongOpts = (q.options || []).filter(o => !o.is_correct);
+        const wrongAnalysis = wrongOpts.map(o => {
+          let exp = '';
+          if (q.explanation && q.explanation.wrong && typeof q.explanation.wrong === 'object') {
+            exp = q.explanation.wrong[o.text] || '';
+            if (!exp) {
+              for (const k of Object.keys(q.explanation.wrong)) {
+                if (k && (k.includes((o.text || '').substring(0, 8)) || (o.text || '').includes(k.substring(0, 8)))) {
+                  exp = q.explanation.wrong[k]; break;
+                }
+              }
+            }
+          }
+          if (!exp) exp = o.trap_type ? `陷阱類型:${o.trap_type}` : '此選項不正確';
+          return `<div style="padding:6px 10px;margin:4px 0;background:rgba(255,255,255,0.04);border-radius:4px;border-left:3px solid #94a3b8">
+            <div style="color:#cbd5e1;font-weight:600;font-size:0.85rem">${o.key || ''}. ${o.text || ''}</div>
+            <div style="color:var(--fg-dim);font-size:0.8rem;margin-top:2px">└ ${exp}</div>
+          </div>`;
+        }).join('');
+        return `<div class="card" style="margin-top:8px">
+          <div style="font-size:0.85rem;color:var(--fg-dim);margin-bottom:6px">
+            第 ${i + 1} 題 · ${npc.avatar} ${npc.name} · ${q.knowledge_code || ''} · ${q.difficulty || ''}
+          </div>
+          <div class="question-stem" style="font-size:1rem;margin-bottom:10px">${q.stem || ''}</div>
+          ${q.code_block ? `<pre class="code-syntax" style="font-size:0.8rem;padding:8px">${q.code_block}</pre>` : ''}
+          <div style="background:rgba(74,222,128,0.12);border-left:4px solid #4ade80;padding:10px;border-radius:6px;margin:8px 0">
+            <div style="color:#4ade80;font-weight:700;font-size:0.9rem;margin-bottom:4px">📚 正確答案</div>
+            <div style="font-size:0.95rem;margin-bottom:6px"><strong>${correctLabel}</strong></div>
+            <div style="color:var(--fg);line-height:1.7;font-size:0.9rem">${explCorrect}</div>
+          </div>
+          ${wrongAnalysis ? `<div style="background:rgba(148,163,184,0.08);border-left:4px solid #94a3b8;padding:8px 10px;border-radius:6px;margin:6px 0">
+            <div style="color:#cbd5e1;font-weight:700;font-size:0.85rem;margin-bottom:4px">🔍 其他選項解析</div>
+            ${wrongAnalysis}
+          </div>` : ''}
+          ${hook ? `<div style="background:rgba(250,204,21,0.12);border-left:4px solid #facc15;padding:8px 10px;border-radius:6px;margin:6px 0">
+            <div style="color:#facc15;font-weight:700;font-size:0.85rem">💡 記憶口訣</div>
+            <div style="color:var(--fg);font-style:italic;margin-top:2px;font-size:0.9rem">${hook}</div>
+          </div>` : ''}
+        </div>`;
+      }).join('');
+
+      container.innerHTML = `
+        <div class="card">
+          <h2>📖 全部 ${lineup.length} 題解析</h2>
+          <p style="color:var(--fg-dim);font-size:0.85rem;margin-bottom:8px">
+            完整題目解析,可滾動查看。再點「展開所有解析」即收起。
+          </p>
+        </div>
+        ${blocks}
+      `;
+      container.dataset.expanded = '1';
+      // 自動 scroll 到展開區
+      setTimeout(() => {
+        container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
     },
 
     _buildHeatmapHTML(result) {
@@ -992,6 +1545,14 @@
     cleanup() {
       this._stopTimer();
       this._restorePlayEngine();
+      // 清掉 UX modal(若殘留)
+      const old = document.getElementById('m7-qlist-backdrop');
+      if (old) old.remove();
+      // 清掉 view-play 的 font scale CSS var(離場時,不影響其他 mode)
+      // (m7-mock-view div 已隨 view-play.innerHTML 替換被清掉;只剩 view-play 上的 CSS var 要清)
+      const view = document.getElementById('view-play');
+      if (view) view.style.removeProperty('--m7-font-scale');
+      this._lastResultLineup = null;
       this.state = null;
     }
   };
