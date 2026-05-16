@@ -1308,8 +1308,19 @@ async function loadQuestions() {
 }
 
 // === Variation 鐵律 #1 嚴格結構化下鑽(寧少勿濫,保緊扣性)===
+// 2026-05-17 fix:排除 interaction_type === 'confusion-matrix' 題目作為下鑽變化型。
+// 原因:DrillSession.next 透過 PlayEngine.show + wrap PlayEngine.answer 驅動下鑽 1/3 → 2/3 進度;
+//      但 PlayEngine.show 對 interaction_type === 'confusion-matrix' 走 early-return 分支,
+//      渲染拖曳介面而非 A/B/C/D 按鈕(line 1660-1667)。
+//      使用者看到下鑽訓練 1/3 卻沒有可點的 .option-btn,以為「點選項 D 沒反應」(其實根本沒 D 按鈕)。
+// 為何在 generateVariation 過濾而非在 DrillSession 處理:
+//      所有呼叫者(Mode 1/2/3/4/5/6/7/8 + PlayEngine.drill)都假設變化型可走 A/B/C/D 流程。
+//      在源頭排除最簡單,且 CM 題庫本來就主要透過 Mode 7 直接出題,不靠下鑽。
 function generateVariation(originalQ, count = 3) {
-  const candidates = QUESTIONS.filter(q => q.id !== originalQ.id); // 排除原題
+  const candidates = QUESTIONS.filter(q =>
+    q.id !== originalQ.id &&
+    q.interaction_type !== 'confusion-matrix' // 排除互動拖曳題型(下鑽流程不相容)
+  );
   const sameNode = candidates.filter(q => q.node_id === originalQ.node_id);
   const relatedIds = originalQ.related_node_ids || [];
   const relatedNode = candidates.filter(q => relatedIds.includes(q.node_id) && q.node_id !== originalQ.node_id);
@@ -1706,7 +1717,17 @@ const PlayEngine = {
   answer(key) {
     // R5 task 1:第一行先停 timer(使用者已答題,避免 race 後續被 _onTimeout 重複寫入)
     this._stopTimer();
+    // case 11 (2026-05-17 P0):null guard — 若 current/options 缺或 key 不在 options,
+    // 不能直接 throw(會被 inline onclick 吃掉變 silent fail)。
+    if (!this.current || !this.current.options) {
+      console.warn('[PlayEngine.answer] no current question — ignored');
+      return;
+    }
     const opt = this.current.options.find(o => o.key === key);
+    if (!opt) {
+      console.warn('[PlayEngine.answer] option key not found:', key);
+      return;
+    }
     const isCorrect = opt.is_correct;
     // 鎖定按鈕
     document.querySelectorAll('#play-options .option-btn').forEach(b => {
@@ -1829,6 +1850,15 @@ const PlayEngine = {
   }
 };
 
+// === Case 11 (2026-05-17 P0) ===
+// 捕獲原生 answer 為救生索:當 Mode 6/7 等 mode 後續 monkey-patch PlayEngine.answer
+// 後,DrillSession.next 與 Mode hooks 內部要 delegate 到「真原生」實作,而非
+// 「當下被 wrap 過的」實作。否則疊加的 wrap 鏈會造成下鑽進入時若殘存 Mode 7 hook,
+// 點選項在 Mode 7 wrap 的 `if (!self.state || self.state.finished) return` 直接
+// silent return,完全無 click feedback(symptom:button 沒鎖、explanation 不渲、
+// 無法進下一題)。
+PlayEngine.__nativeAnswer = PlayEngine.answer;
+
 // === Drill Session(鐵律 #1 結構化下鑽連戰)===
 const DrillSession = {
   queue: [], targetNode: null, correct: 0, total: 0, originalQ: null,
@@ -1908,12 +1938,21 @@ const DrillSession = {
       DrillSession.next();
     };
     // 包裝 PlayEngine.answer 以便統計正答
-    const origAnswer = PlayEngine.answer.bind(PlayEngine);
+    // case 11 (2026-05-17 P0):強制用 __nativeAnswer 救生索,避免疊加殘存的 Mode 7 wrap。
+    // 若不用救生索,Mode 7 結算後 hook 殘存時 origAnswer 抓到 Mode 7 wrap →
+    // wrap 內 `if (!self.state || self.state.finished) return` silent return → click 死掉。
+    const origAnswer = (PlayEngine.__nativeAnswer || PlayEngine.answer).bind(PlayEngine);
     PlayEngine.answer = function(key) {
-      const o = this.current.options.find(opt => opt.key === key);
-      if (o && o.is_correct) DrillSession.correct++;
-      origAnswer(key);
-      PlayEngine.answer = origAnswer; // 還原
+      try {
+        const o = this.current && this.current.options
+          ? this.current.options.find(opt => opt.key === key)
+          : null;
+        if (o && o.is_correct) DrillSession.correct++;
+        origAnswer(key);
+      } finally {
+        // case 11:用 try/finally 確保即使 origAnswer throw 也會還原,避免 wrap 永留累積污染
+        PlayEngine.answer = origAnswer;
+      }
     };
   }
 };

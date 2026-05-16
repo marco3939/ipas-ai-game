@@ -1293,7 +1293,14 @@
       // - 已 locked 的題:選項 disabled,點擊無效
       // - 真正的『送出』在 submitCurrent() 才把 draft 升格成 answers + 鎖定 + 跳下一題
       PlayEngine.answer = function (key) {
-        if (!self.state || self.state.finished) return;
+        // case 11 (2026-05-17 P0):結算後若被 DrillSession.next wrap 抓到當 origAnswer,
+        // 不能 silent return — 要 delegate 給原生 answer,讓下鑽 click 能正常觸發。
+        // 救生索優先序:__nativeAnswer(永遠原生)> _origAnswer(本 hook 安裝前的版本)
+        if (!self.state || self.state.finished) {
+          if (PlayEngine.__nativeAnswer) return PlayEngine.__nativeAnswer.call(this, key);
+          if (self._origAnswer) return self._origAnswer(key);
+          return;
+        }
         const idx = self.state.idx;
         // 鎖定後不能改
         if (self.state.locked.has(idx)) {
