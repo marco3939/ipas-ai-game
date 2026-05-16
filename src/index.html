@@ -1984,11 +1984,17 @@ const ProgressIO = {
   MAX_VALUE_SIZE: 1 * 1024 * 1024,     // 1MB / value 防單欄爆
   DANGEROUS_KEYS: ['__proto__', 'constructor', 'prototype'],
   // 白名單前綴 — 任何不在這的 key 都拒絕匯入(防 key 注入)
+  // 2026-05-16 案例 10 補:加 mode 1/2/3/5/6/8 真實 key + mode7 真實 font key
+  // 修法前匯出靜默丟掉 7 種 mode 進度,使用者誤以為已備份完整
   ALLOWED_KEY_PREFIXES: [
     'ipas_progress_v', 'ipas_mastery_v', 'ipas_wrongbook_v',
     'ipas_error_reports_v', 'ipas_settings_v', 'ipas_session_state_v',
     'ipas_seen_correct_v', 'ipas_player_v', 'ipas_user_nickname_v',
-    'ipas_mode7_theater_v', 'ipas_mode7_font_scale', 'ipas_sm2_'
+    'ipas_mode7_theater_v', 'ipas_mode7_font_scale', 'ipas_sm2_',
+    // 新加 mode-specific keys(原本完全沒進匯出 / 匯入流程)
+    'ipas_mode1_industries_v', 'ipas_mode2_bosses_v', 'ipas_mode3_progress_v',
+    'ipas_mode5_v3_progress', 'ipas_mode6_codex_v', 'ipas_mode7_font_v',
+    'ipas_mode8_dojo_v'
   ],
   _busy: false,
   _crossTabAbort: false,        // 跨 tab 偵測旗標(在 import 期間若別 tab 寫 ipas_* 則設 true)
@@ -2151,7 +2157,15 @@ const ProgressIO = {
         (v.version === undefined || that._isNum(v.version)) &&
         Array.isArray(v.history) && v.history.length <= 100 &&
         v.history.every(h => that._isObj(h) && that._isNum(h.ts)),
-      'ipas_mode7_font_scale': (v) => typeof v === 'string' && v.length > 0 && v.length <= 10
+      'ipas_mode7_font_scale': (v) => typeof v === 'string' && v.length > 0 && v.length <= 10,
+      // 2026-05-16 案例 10:mode-specific stores schema(寬鬆 — 各 mode 自己管 schema,本層只擋型別錯)
+      'ipas_mode1_industries_v1': (v) => that._isObj(v),
+      'ipas_mode2_bosses_v2': (v) => that._isObj(v),
+      'ipas_mode3_progress_v2': (v) => that._isObj(v),
+      'ipas_mode5_v3_progress': (v) => that._isObj(v),
+      'ipas_mode6_codex_v1': (v) => that._isObj(v) || Array.isArray(v),
+      'ipas_mode7_font_v1': (v) => typeof v === 'string' && v.length > 0 && v.length <= 10,
+      'ipas_mode8_dojo_v1': (v) => that._isObj(v)
     };
     // 模糊匹配(對應 ipas_sm2_* 等動態前綴)
     this.KEY_VALIDATORS_PREFIX = {
@@ -2318,7 +2332,11 @@ const ProgressIO = {
         const validator = this._getValidator(k);
         if (!validator) throw new Error(`key「${k}」無對應 schema validator(未知 key)`);
         if (!validator(parsedValue)) throw new Error(`key「${k}」資料 schema 不符,內容可能被竄改`);
-        cleanPayload[k] = rawValue;
+        // 2026-05-16 案例 10 Bug A 修法:**重新序列化已被 reviver 過濾的 parsedValue**
+        // 不能寫回原始 rawValue — 原始字串可能含 `"__proto__":{...}`,
+        // 之後 Storage.get 用無 reviver 的 JSON.parse 會把 __proto__ 變 own property
+        // 造成 prototype-pollution-like 殘留(for...in / Object.keys 會看到 __proto__ key)
+        cleanPayload[k] = JSON.stringify(parsedValue);
       }
       const acceptCount = Object.keys(cleanPayload).length;
       // 階段 7:備份 + confirm + atomic 寫入
