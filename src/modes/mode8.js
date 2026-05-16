@@ -21,6 +21,7 @@
     { key: 'activation', label: '🎯 激活函數', desc: 'ReLU / sigmoid / tanh / softmax', kbCodes: ['L23203'], tags: ['激活函數', 'ReLU', 'sigmoid', 'softmax', '數值穩定'] },
     { key: 'ml_model', label: '🤖 ML 模型', desc: 'LR / KNN / 聚類', kbCodes: ['L23202'], tags: ['邏輯迴歸', 'KNN', '聚類', 'DBSCAN', 'K-means', 'distance', '分類'] },
     { key: 'pandas', label: '📊 pandas 資料', desc: 'groupby / fillna / merge / pivot', kbCodes: ['L22201', 'L23402'], tags: ['pandas', 'groupby', 'fillna', 'merge', 'join', '缺值'] },
+    { key: 'bigdata', label: '🗄️ 大數據 (科二)', desc: '統計 / 假設檢定 / Apriori / Markov / 隱私', kbCodes: ['L22101','L22102','L22103','L22201','L22301','L22302','L22401','L22403','L22404'], tags: ['IQR','離群值','二項分佈','假設檢定','z 檢定','Apriori','Markov','SMOTE','tokenize','差分隱私','Laplace'] },
     { key: 'all', label: '🌐 全類別混合', desc: '隨機抽 5 題,類別不限', kbCodes: null, tags: null }
   ];
 
