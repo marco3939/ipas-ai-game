@@ -54,6 +54,15 @@
   function pickQuestionsForCategory(catKey, n) {
     var pool = poolForCategory(catKey);
     if (pool.length === 0) return [];
+    // 跨關卡排除已答對(SeenCorrect):戰鬥模式不重複
+    if (typeof SeenCorrect !== 'undefined') {
+      var fr = SeenCorrect.filterForBattle(pool, n);
+      if (fr.fallback) {
+        if (typeof showToast === 'function') showToast('此類可用新題不足,允許重複出已答對的舊題', 2500);
+      } else {
+        pool = fr.pool;
+      }
+    }
     if (pool.length < n) {
       if (typeof showToast === 'function') {
         showToast('此類題目不足 ' + n + ' 題,僅抽 ' + pool.length + ' 題', 2500);
@@ -67,6 +76,15 @@
   // 鐵律 #5:不造題,僅用既有題庫(QUESTIONS 已含 questions-mode8-trace.json)
   function pickQuestions(n) {
     var pool = tracePool();
+    // 跨關卡排除已答對(同 pickQuestionsForCategory 規則)
+    if (typeof SeenCorrect !== 'undefined') {
+      var fr = SeenCorrect.filterForBattle(pool, n);
+      if (fr.fallback) {
+        if (typeof showToast === 'function') showToast('Code Trace 可用新題不足,允許重複', 2500);
+      } else {
+        pool = fr.pool;
+      }
+    }
     return RNG.pickN(pool, Math.min(n, pool.length));
   }
 
