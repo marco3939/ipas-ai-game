@@ -768,6 +768,9 @@
         this.state.answers[i] = { userKey: draft.userKey, isCorrect, correctKey };
         this.state.locked.add(i);
       }
+      // 案例 10 review 補:寫入 answers 後必重算 stats(否則 s.correct/s.wrongs 不更新,
+      // 結算頁分數偏少)。放這裡讓 submitMock + _timeUp 兩條路徑永不分歧。
+      this._recomputeStats();
     },
 
     // ===== 顯示當前題目(用 PlayEngine.show + 包裹 NPC 框)=====
@@ -1131,9 +1134,8 @@
       }
       if (!confirm(msg)) return;
       // 自動把所有 draft 升格為 answers(交卷時送出剩餘草稿)
-      // 抽 _autoLockDrafts 共用,_timeUp 也用同一條路徑
+      // _autoLockDrafts 內已含 _recomputeStats(避免兩條路徑分歧)
       this._autoLockDrafts();
-      this._recomputeStats();
       this._finalize('submit');
     },
 
