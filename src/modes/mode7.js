@@ -455,8 +455,13 @@
         currentNpcIdx: -1,
         // UX features (2026-05-16):
         markedIds: new Set(),       // 標記題 qid 集合
-        answers: {}                 // {idx: {userKey, isCorrect, correctKey}} — 已答題記錄,支援上一題回看
-        // 2026-05-16 lenient 改造:移除 recordedQids — 答題期間不寫共用層,_finalize 統一寫最終 answers 為準
+        answers: {},                // {idx: {userKey, isCorrect, correctKey}} — 已『送出』的答案(locked)
+        // 2026-05-16 強化作弊防護:加 locked/draft 兩層
+        // - draft: 已點選但未送出 — 只記 userKey,不算 isCorrect、不顯示 ✓/✗
+        // - locked: 已送出本題 — 答案進入 state.answers,UI 禁用選項,不可改
+        // 此設計對齊真考:答題期 hide 對錯,送出鎖定;結算才揭曉
+        draft: {},                  // {idx: {userKey}} — 草稿選擇,未送出
+        locked: new Set()           // 已送出本題的 idx 集合(送出後 options 鎖定)
       };
 
       // 套用字級設定(從 localStorage 載入)
@@ -641,10 +646,16 @@
 
       // 已標記狀態
       const isMarked = this.state.markedIds.has(q.id);
-      // 已答狀態
+      // 答題狀態(三種):locked(已送出)/ draft(已選未送)/ 未答
       const prevAnswer = this.state.answers[this.state.idx];
-      const answeredHint = prevAnswer
-        ? `<div class="m7-answered-hint">📝 已選 <strong>${prevAnswer.userKey}</strong>(再點任一選項可改答)</div>` : '';
+      const draft = this.state.draft[this.state.idx];
+      const isLocked = this.state.locked.has(this.state.idx);
+      let answeredHint = '';
+      if (isLocked) {
+        answeredHint = `<div class="m7-answered-hint" style="color:#facc15">🔒 本題已送出(${prevAnswer.userKey}),不可修改;結算後可看對錯</div>`;
+      } else if (draft && draft.userKey) {
+        answeredHint = `<div class="m7-answered-hint" style="color:var(--fg-dim)">📝 已選 <strong>${draft.userKey}</strong> — 點選項可改 / 按「送出本題」鎖定</div>`;
+      }
 
       // 上下文 HTML(NPC 對話框 + 倒數計時 + 進度條 + UX 工具列)
       const ctx = `
@@ -706,8 +717,11 @@
       // R5 task 1:Theater 模式已有整場倒數,禁用 PlayEngine 每題 90s 計時器
       PlayEngine.show(q, { contextHTML: ctx, disableTimer: true });
 
-      // 若該題已答過(navigate back 場景),把先前選項視覺鎖在「已選」狀態(不洩漏對錯)
-      if (prevAnswer) this._showPreviousAnswerState(prevAnswer);
+      // 還原該題的視覺狀態:locked (已送出) / draft (已選未送) / unanswered
+      // 三種狀態 _showPreviousAnswerState 內部會分別處理(包含 disable options for locked)
+      if (prevAnswer || this.state.draft[this.state.idx] || this.state.locked.has(this.state.idx)) {
+        this._showPreviousAnswerState(prevAnswer);
+      }
 
       // 渲染導航按鈕(上一題 / 下一題 / 交卷)
       this._renderNavButtons();
@@ -806,6 +820,12 @@
           .m7-nav-prev:disabled, .m7-nav-next:disabled { opacity:0.4; cursor:not-allowed; }
           .m7-nav-submit { background:var(--warn); color:#0c0c0c; border-color:var(--warn); }
           .m7-nav-submit:hover { transform:translateY(-1px); box-shadow:0 0 16px rgba(250,204,21,0.5); }
+          .m7-nav-submit-question { background:var(--primary); color:#fff; border:2px solid var(--primary);
+            padding:10px 18px; border-radius:var(--radius-sm); cursor:pointer; font-weight:700;
+            transition:all 0.15s; }
+          .m7-nav-submit-question:not(:disabled):hover { transform:translateY(-1px);
+            box-shadow:0 0 16px rgba(59,130,246,0.5); }
+          .m7-nav-submit-question:disabled { opacity:0.45; cursor:not-allowed; }
           .m7-nav-info { font-size:0.85rem; color:var(--fg-dim); }
 
           /* === 題目列表 modal === */
@@ -828,28 +848,46 @@
             border-radius:var(--radius-sm); cursor:pointer; text-align:center; transition:all 0.15s;
             position:relative; font-size:0.85rem; font-weight:700; color:var(--fg); }
           .m7-qlist-cell:hover { border-color:var(--primary); transform:translateY(-1px); }
-          .m7-qlist-cell.answered { background:rgba(74,222,128,0.18); border-color:#4ade80; color:#86efac; }
+          .m7-qlist-cell.submitted-correct { background:rgba(74,222,128,0.22); border-color:#4ade80; color:#86efac; }
+          .m7-qlist-cell.submitted-wrong { background:rgba(248,113,113,0.22); border-color:#f87171; color:#fca5a5; }
+          .m7-qlist-cell.drafted { background:rgba(250,204,21,0.18); border-color:#facc15; color:#fde047; }
           .m7-qlist-cell.current { box-shadow:0 0 0 2px var(--warn); }
           .m7-qlist-cell .m7-qlist-mark { position:absolute; top:-4px; right:-4px;
             font-size:0.85rem; line-height:1; }
+          .m7-qlist-cell .m7-qlist-result { position:absolute; top:-2px; left:-2px;
+            font-size:0.95rem; line-height:1; font-weight:900; }
           .m7-qlist-legend { margin-top:10px; padding-top:10px; border-top:1px solid var(--border);
             font-size:0.75rem; color:var(--fg-dim); display:flex; gap:14px; flex-wrap:wrap; }
         </style>
       `;
     },
 
-    // 把已答過的題目鎖定到「已選」視覺狀態(navigate back 用)
+    // 把已答過 / 已選 / 已送出的題目視覺狀態還原(navigate back / jump 用)
     // 僅對標準選項題型有意義(confusion-matrix 題型有自己的狀態管理,跳過)
+    // 2026-05-16 強化:locked 題 disable 選項 + 顯示「🔒 已送出」中性提示
     _showPreviousAnswerState(prevAnswer) {
       const opts = document.querySelectorAll('#play-options .option-btn');
-      if (opts.length === 0) return; // 非標準選項題型(e.g. confusion-matrix)
+      if (opts.length === 0) return;
+      const idx = this.state.idx;
+      const isLocked = this.state.locked.has(idx);
+      const draft = this.state.draft[idx];
+      // 已送出:取 answers.userKey;否則取 draft.userKey
+      const selectedKey = isLocked ? (prevAnswer && prevAnswer.userKey) :
+                          (draft && draft.userKey) || (prevAnswer && prevAnswer.userKey);
       opts.forEach(b => {
-        if (b.dataset.key === prevAnswer.userKey) {
+        if (b.dataset.key === selectedKey) {
           b.style.background = 'var(--bg-2)';
           b.style.borderColor = 'var(--primary)';
         }
+        if (isLocked) {
+          b.disabled = true;
+          b.style.cursor = 'not-allowed';
+          b.style.opacity = '0.7';
+        }
       });
-      // 注意:不 disable(允許重答)
+      // 已送出題:顯示鎖定中性訊息(不洩漏對錯)
+      if (isLocked) this._renderLockedFeedback();
+      else if (draft && draft.userKey) this._renderNeutralDraftFeedback(draft.userKey);
     },
 
     // 渲染上一題 / 下一題 / 交卷 button(UX #3)
@@ -872,7 +910,11 @@
       const total = this.state.total;
       const isLast = idx === total - 1;
       const prevDisabled = idx === 0 ? 'disabled' : '';
-      const nextBtn = isLast
+      const hasDraft = !!(this.state.draft[idx] && this.state.draft[idx].userKey);
+      const isLocked = this.state.locked.has(idx);
+      const submitText = isLocked ? '🔒 已送出' : (hasDraft ? '📤 送出本題' : '📤 送出本題(先選答案)');
+      const submitDisabled = (isLocked || !hasDraft) ? 'disabled' : '';
+      const examBtn = isLast
         ? `<button class="m7-nav-submit" onclick="Mode7.submitMock()">📤 交卷</button>`
         : `<button class="m7-nav-next" onclick="Mode7.navigateNext()">下一題 →</button>`;
 
@@ -880,8 +922,9 @@
       nav.className = 'm7-nav-bar';
       nav.innerHTML = `
         <button class="m7-nav-prev" onclick="Mode7.navigatePrev()" ${prevDisabled}>← 上一題</button>
+        <button class="m7-nav-submit-question" onclick="Mode7.submitCurrent()" ${submitDisabled}>${submitText}</button>
         <span class="m7-nav-info">${idx + 1} / ${total}</span>
-        ${nextBtn}
+        ${examBtn}
       `;
       parent.appendChild(nav);
     },
@@ -902,13 +945,39 @@
     },
     submitMock() {
       if (!this.state || this.state.finished) return;
+      // 統計三類:已送出 / 已選但未送出(草稿) / 完全未答
+      const submitted = [];
+      const drafted = [];
       const unanswered = [];
       for (let i = 0; i < this.state.total; i++) {
-        if (!this.state.answers[i]) unanswered.push(i + 1);
+        if (this.state.locked.has(i)) submitted.push(i + 1);
+        else if (this.state.draft[i] && this.state.draft[i].userKey) drafted.push(i + 1);
+        else unanswered.push(i + 1);
       }
-      let msg = `確定交卷?\n• 已答 ${this.state.total - unanswered.length}/${this.state.total} 題`;
-      if (unanswered.length > 0) msg += `\n• 未答題:${unanswered.slice(0, 10).join(', ')}${unanswered.length > 10 ? '...' : ''}(視為答錯)`;
+      let msg = `確定交卷?\n• 已送出 ${submitted.length}/${this.state.total} 題`;
+      if (drafted.length > 0) {
+        msg += `\n• 已選未送出:${drafted.slice(0, 10).join(', ')}${drafted.length > 10 ? '...' : ''}`;
+        msg += `\n  → 交卷時將自動以草稿選擇送出計分`;
+      }
+      if (unanswered.length > 0) {
+        msg += `\n• 完全未答:${unanswered.slice(0, 10).join(', ')}${unanswered.length > 10 ? '...' : ''}(視為答錯)`;
+      }
       if (!confirm(msg)) return;
+      // 自動把所有 draft 升格為 answers(交卷時送出剩餘草稿)
+      for (let i = 0; i < this.state.total; i++) {
+        if (this.state.locked.has(i)) continue;
+        const draft = this.state.draft[i];
+        if (!draft || !draft.userKey) continue;
+        const item = this.state.lineup[i];
+        const q = item.q;
+        const opt = (q.options || []).find(o => o.key === draft.userKey);
+        const isCorrect = !!(opt && opt.is_correct);
+        const correctOpt = (q.options || []).find(o => o.is_correct);
+        const correctKey = correctOpt ? correctOpt.key : '';
+        this.state.answers[i] = { userKey: draft.userKey, isCorrect, correctKey };
+        this.state.locked.add(i);
+      }
+      this._recomputeStats();
       this._finalize('submit');
     },
 
@@ -995,29 +1064,43 @@
       for (let i = 0; i < this.state.total; i++) {
         const item = this.state.lineup[i];
         const qid = item.q.id;
-        const isAnswered = !!this.state.answers[i];
+        const ans = this.state.answers[i];
+        const isLocked = this.state.locked.has(i);
+        const draft = this.state.draft[i];
         const isMarked = this.state.markedIds.has(qid);
         const isCurrent = i === this.state.idx;
         const classes = ['m7-qlist-cell'];
-        if (isAnswered) classes.push('answered');
+        // 已送出且答對:綠 ✓;已送出且答錯:紅 ✗;已選未送出:黃;未答:灰
+        let icon = '';
+        let titleSuffix = '';
+        if (isLocked && ans) {
+          if (ans.isCorrect) { classes.push('submitted-correct'); icon = '✓'; titleSuffix = ' (已送出 · 答對)'; }
+          else { classes.push('submitted-wrong'); icon = '✗'; titleSuffix = ' (已送出 · 答錯)'; }
+        } else if (draft && draft.userKey) {
+          classes.push('drafted');
+          titleSuffix = ` (已選 ${draft.userKey} · 未送出)`;
+        }
         if (isCurrent) classes.push('current');
         cells.push(`<button class="${classes.join(' ')}" onclick="Mode7.jumpToQuestion(${i})"
-          title="第 ${i + 1} 題${isAnswered ? ' (已答)' : ''}${isMarked ? ' 🔖' : ''}">
-          ${i + 1}${isMarked ? '<span class="m7-qlist-mark">🔖</span>' : ''}
+          title="第 ${i + 1} 題${titleSuffix}${isMarked ? ' 🔖' : ''}">
+          ${i + 1}${icon ? `<span class="m7-qlist-result">${icon}</span>` : ''}${isMarked ? '<span class="m7-qlist-mark">🔖</span>' : ''}
         </button>`);
       }
-      const answered = Object.keys(this.state.answers).length;
+      const submitted = this.state.locked.size;
+      const drafted = Object.keys(this.state.draft).filter(k => this.state.draft[k]).length;
       const marked = this.state.markedIds.size;
 
       backdrop.innerHTML = `
         <div class="m7-qlist-modal">
           <div class="m7-qlist-header">
-            <div class="m7-qlist-title">📋 題目列表 (${answered}/${this.state.total} 已答 · ${marked} 標記)</div>
+            <div class="m7-qlist-title">📋 題目列表 (${submitted}/${this.state.total} 已送出 · ${drafted} 草稿 · ${marked} 標記)</div>
             <button class="m7-qlist-close" onclick="Mode7.closeQuestionList()">✕</button>
           </div>
           <div class="m7-qlist-grid">${cells.join('')}</div>
           <div class="m7-qlist-legend">
-            <span style="color:#86efac">■ 已答</span>
+            <span style="color:#4ade80">■ ✓ 已送出答對</span>
+            <span style="color:#f87171">■ ✗ 已送出答錯</span>
+            <span style="color:#facc15">■ 已選未送出</span>
             <span style="color:var(--fg-dim)">■ 未答</span>
             <span style="color:#facc15">🔖 標記</span>
             <span style="color:var(--warn)">□ 當前題</span>
@@ -1046,83 +1129,46 @@
       this._origOnNext = PlayEngine.onNext;
 
       const self = this;
+      // 2026-05-16 強化作弊防護重寫:
+      // - 點選項 = 進 state.draft(草稿),NOT state.answers(已送出)
+      // - 不立即顯示 ✓/✗、不閃光、不寫共用層、不自動跳題
+      // - 已 locked 的題:選項 disabled,點擊無效
+      // - 真正的『送出』在 submitCurrent() 才把 draft 升格成 answers + 鎖定 + 跳下一題
       PlayEngine.answer = function (key) {
-        if (!self.state || self.state.finished) {
-          // 戰局結束後不再處理(避免 race)
+        if (!self.state || self.state.finished) return;
+        const idx = self.state.idx;
+        // 鎖定後不能改
+        if (self.state.locked.has(idx)) {
+          if (typeof showToast === 'function') showToast('此題已送出,無法修改', 1800);
           return;
         }
         const opt = this.current.options.find(o => o.key === key);
         if (!opt) return;
-        const isCorrect = !!opt.is_correct;
-        const idx = self.state.idx;
-        const qid = this.current.id;
-        const correctOpt = this.current.options.find(o => o.is_correct);
-        const correctKey = correctOpt ? correctOpt.key : '';
-        // 重答檢查(navigate back 後重新作答):上一次的答案(若有)
-        const prevAnswer = self.state.answers[idx];
-        const isReanswer = !!prevAnswer;
 
-        // 鎖定按鈕視覺(基本鎖定但不顯示對錯著色;模擬真考不立即知道答案)
-        // UX #3 允許重答:不 disable,讓使用者能再改
+        // 草稿選擇:只記 userKey,不算 isCorrect 也不寫 answers
+        self.state.draft[idx] = { userKey: key };
+
+        // 視覺:選中該選項(淺色框)+ 還原其他選項
         document.querySelectorAll('#play-options .option-btn').forEach(b => {
           if (b.dataset.key === key) {
-            // 玩家選的標示淺色,不洩漏對錯
             b.style.background = 'var(--bg-2)';
             b.style.borderColor = 'var(--primary)';
           } else {
-            // 還原其他選項(若是重答,清掉先前選的視覺)
             b.style.background = '';
             b.style.borderColor = '';
           }
         });
 
-        // 記錄這題的當前答案(末答計分:lenient — 真考一致)
-        // 2026-05-16 lenient 改造:對標 IPAS 真考,答題期間任意改答,最後一次答案為準。
-        // 共用層(Mastery / Wrongbook / SM2 / Progress)的寫入延後到 _finalize 統一進行,
-        // 避免每次答題即扣分的人造嚴格性 — 此舉同時化解 strict 模式下「首答錯 → 重答對」
-        // 仍被計為錯的真考不一致問題。
-        self.state.answers[idx] = { userKey: key, isCorrect, correctKey };
-
-        // 記錄用時(僅首答記錄;重答不覆蓋 — 真考用時以首答 commit 為準)
-        // 用時是學習指標,屬於行為記錄而非計分,故與重答計分解耦
-        if (!isReanswer) {
-          const elapsed = Date.now() - self.state.questionStartTs;
-          self.state.perQuestionTime[idx] = elapsed;
+        // 記錄用時(僅首次「選擇」記錄)
+        if (typeof self.state.perQuestionTime[idx] === 'undefined') {
+          self.state.perQuestionTime[idx] = Date.now() - self.state.questionStartTs;
         }
 
-        // 即時重算 state.correct / state.wrongs(顯示得分用)
-        // 重答可能把錯題改成對(從 wrongs 移除 + correct++),反之亦然
-        self._recomputeStats();
+        // NPC 對話:中性提示「已選 X,請按送出」(不洩漏對錯)
+        self._renderNeutralDraftFeedback(key);
 
-        // 視覺回饋:對錯閃光用「目前選擇」的對錯判斷(立即回饋,不洩漏標準答案)
-        if (isCorrect) GameFX.flash('correct');
-        else GameFX.flash('wrong');
-
-        // NPC 反饋台詞(用本次選擇的對錯)
-        self._renderNpcFeedback(isCorrect);
-
-        // 自動進下一題(僅在「首次作答」且非最後一題時自動跳;重答不自動跳,讓使用者用導航 button)
-        if (!isReanswer) {
-          if (idx >= self.state.total - 1) {
-            // 最後一題答完:不自動 finalize,等使用者按交卷(讓他有機會回看)
-            setTimeout(() => {
-              if (!self.state || self.state.finished) return;
-              // 若使用者已手動導航到別題,跳過 toast(避免干擾)
-              if (self.state.idx !== idx) return;
-              self._renderNavButtons(); // 確保最後一題的 button 是「交卷」
-              showToast('✅ 已答完最後一題,可按「交卷」或上一題回看', 3000);
-            }, 800);
-          } else {
-            setTimeout(() => {
-              if (!self.state || self.state.finished) return;
-              // race guard:若使用者已手動導航到別題(navigatePrev / navigateNext / jumpToQuestion),
-              // 不要再自動 advance,避免雙重跳題
-              if (self.state.idx !== idx) return;
-              self.state.idx++;
-              self._showCurrentQuestion();
-            }, 800);
-          }
-        }
+        // 更新送出按鈕 enabled 狀態
+        self._refreshSubmitButton();
       };
 
       // PlayEngine.showExplanation 全程不被呼叫;我們 hook answer 後直接跳下一題
@@ -1145,6 +1191,7 @@
     },
 
     _renderNpcFeedback(isCorrect) {
+      // 2026-05-16 作弊防護重寫:此函式不再在答題時被呼叫,改為結算頁/locked 後使用
       const item = this.state.lineup[this.state.idx];
       if (!item) return;
       const npc = NPCS[item.npcIdx] || NPCS[0];
@@ -1155,6 +1202,88 @@
         dialogEl.textContent = `${isCorrect ? '✓ ' : '✗ '}「${line}」`;
         dialogEl.style.color = isCorrect ? '#4ade80' : '#f87171';
       }
+    },
+
+    // 草稿選擇後的中性 NPC 提示(不洩漏對錯)
+    _renderNeutralDraftFeedback(key) {
+      const dialogEl = document.querySelector('.m7-npc-line');
+      if (dialogEl) {
+        dialogEl.textContent = `📝 已選 ${key},請按「送出本題」鎖定答案`;
+        dialogEl.style.color = 'var(--fg-dim)';
+      }
+    },
+
+    // 已送出後的中性 NPC 提示(不洩漏對錯,即使本題答對 / 答錯都顯示「已送出」)
+    _renderLockedFeedback() {
+      const dialogEl = document.querySelector('.m7-npc-line');
+      if (dialogEl) {
+        dialogEl.textContent = `🔒 本題已送出,結算後可看對錯`;
+        dialogEl.style.color = '#facc15';
+      }
+    },
+
+    // ===== 送出本題 =====
+    submitCurrent() {
+      if (!this.state || this.state.finished) return;
+      const idx = this.state.idx;
+      if (this.state.locked.has(idx)) return;  // 已送出,no-op
+      const draft = this.state.draft[idx];
+      if (!draft || !draft.userKey) {
+        if (typeof showToast === 'function') showToast('請先選擇答案再送出', 1800);
+        return;
+      }
+      // 升格 draft → answers + lock
+      const item = this.state.lineup[idx];
+      const q = item.q;
+      const opt = (q.options || []).find(o => o.key === draft.userKey);
+      const isCorrect = !!(opt && opt.is_correct);
+      const correctOpt = (q.options || []).find(o => o.is_correct);
+      const correctKey = correctOpt ? correctOpt.key : '';
+      this.state.answers[idx] = { userKey: draft.userKey, isCorrect, correctKey };
+      this.state.locked.add(idx);
+      // 移除 draft(已升格)
+      delete this.state.draft[idx];
+      // 重算 stats(顯示得分用,但 UI 不立即洩漏 isCorrect)
+      this._recomputeStats();
+      // UI:disabled options + locked dialog + 重畫送出按鈕
+      this._renderLockedFeedback();
+      this._lockOptionButtons();
+      this._refreshSubmitButton();
+      // 自動跳下一個未鎖定的題(若沒有則 stay,讓使用者按交卷)
+      if (idx < this.state.total - 1) {
+        setTimeout(() => {
+          if (!this.state || this.state.finished) return;
+          if (this.state.idx !== idx) return; // 已手動跳走
+          this.state.idx = idx + 1;
+          this._showCurrentQuestion();
+        }, 350);
+      } else {
+        if (typeof showToast === 'function') {
+          showToast('✅ 已送出最後一題,可按「交卷」結算', 2500);
+        }
+      }
+    },
+
+    // 鎖定當前題選項按鈕(送出後 / navigate 進已鎖定題)
+    _lockOptionButtons() {
+      document.querySelectorAll('#play-options .option-btn').forEach(b => {
+        b.disabled = true;
+        b.style.cursor = 'not-allowed';
+        b.style.opacity = '0.7';
+      });
+    },
+
+    // 重畫送出按鈕 enabled / disabled
+    _refreshSubmitButton() {
+      const btn = document.querySelector('.m7-nav-submit-question');
+      if (!btn) return;
+      const idx = this.state.idx;
+      const hasDraft = !!(this.state.draft[idx] && this.state.draft[idx].userKey);
+      const isLocked = this.state.locked.has(idx);
+      btn.disabled = isLocked || !hasDraft;
+      if (isLocked) btn.textContent = '🔒 已送出';
+      else if (hasDraft) btn.textContent = '📤 送出本題';
+      else btn.textContent = '📤 送出本題(先選答案)';
     },
 
     // ===== 投降 =====
