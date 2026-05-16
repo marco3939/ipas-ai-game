@@ -86,14 +86,27 @@
       intro: '「LLM 在法條問答中產生幻覺,引用不存在的判例。我們要 RAG 但檢索品質太差。」',
       attack: ['「律師失格我就完了!」','「客戶要告我!」'],
       defeat: ['「正義的 AI,謝謝你。」'] },
-    // 2026-05-16 新增 L22 CDO BOSS:大數據治理 + 隱私合規 + 大規模 ML
-    // keyword 設計:大數據主題詞 + 隱私法規詞 + 資料工程詞;命中 L22101~L22404 全 13 編碼題 stem
-    { key: 'cdo', name: '周姊(首席資料官 CDO)', avatar: '🗄️', hp: 140,
-      desc: '大數據治理 + 隱私合規 + AI 資料管線',
-      keywords: ['大數據','資料治理','資料管線','隱私','PDPA','GDPR','合規','法規','匿名','差分隱私','聯邦學習','取樣','分散式','lakehouse','data lake','streaming','缺值','偏度','假設檢定','Apriori','機率分佈'],
-      intro: '「我們即將上線一個跨國 AI 平台,涉及 GDPR + PDPA。隱私架構、資料管線、合規流程 — 一個環節錯,整個專案就停擺。你能扛?」',
-      attack: ['「合規不是裝飾,是底線!」','「ε 方向都搞反了?」','「資料外洩你賠得起嗎?」'],
-      defeat: ['「治理思維清楚,可獨當一面。」','「跨國法務團隊都看你的判斷。」'] }
+    // 2026-05-16 v2:原 CDO 單 BOSS 拆 3 個 L22 主題 BOSS(L22 題庫 330 題,單 BOSS 只 20 題太少)
+    // 每 BOSS 的 keywords 對應該主題的 L22 子集;n 欄位設定本場戰鬥題數(覆寫預設 20)
+    // 池驗證:BOSS1 81/50 / BOSS2 110/60 / BOSS3 74/40(2n 抽 n 跨場 IoU<0.5 達標)
+    { key: 'data_eng', name: '阿凱(資料工程長)', avatar: '🛠️', hp: 150, n: 25,
+      desc: 'L22 大數據生命週期 — 資料管線 / 儲存 / 處理 / 統計取樣',
+      keywords: ['資料管線','data lake','lakehouse','warehouse','NoSQL','缺值','去重','ETL','ELT','串流','批次','MapReduce','CAP','ACID','分區','取樣','HyperLogLog','Bloom','感測器','Lake','Warehouse','MAR','MCAR','Lambda 架構','Kappa','partial stats','IQR','event time','資料倉','資料湖','API','並行','管線','清理','重複'],
+      intro: '「我們的資料平台一天進 50 億筆,Lake 還是 Warehouse?批次還是串流?分區策略怎麼設?— 你給我一個能扛大數據生命週期的架構。」',
+      attack: ['「CAP 三選二不是萬靈丹!」','「資料管線斷了你知道嗎?」','「Lambda 還是 Kappa 你都搞不清楚?」'],
+      defeat: ['「資料生命週期觀念紮實,可獨當一面。」','「平台架構你已經 hold 得住。」'] },
+    { key: 'ml_bigdata', name: '黃博士(ML × 大數據顧問)', avatar: '🤖', hp: 180, n: 30,
+      desc: 'L22 大數據統計、假設檢定、機器學習應用(信用 / 詐欺 / 推薦)',
+      keywords: ['集中趨勢','平均','中位數','變異數','常態分佈','機率分佈','PDF','PMF','假設檢定','p 值','t 檢定','A/B 測試','Apriori','馬可夫','加法模型','時間序列','分散式訓練','SMOTE','stratify','class_weight','詐欺','推薦系統','信用評分','預測性維護','資料洩漏','鑑別式','排序','虛無假設','偏度','五數彙整','離群','Bernoulli','Poisson','Z 分數','文字探勘','機器學習','時序'],
+      intro: '「資料規模到 PB 級了,你的 ML 流程還停留在 sklearn fit?分散式訓練、不平衡資料、評估陷阱 — 一個搞錯整個專案重做。」',
+      attack: ['「先看資料規模再選方法!」','「分散式訓練不是把 batch 切就完事!」','「資料洩漏你都沒查!」'],
+      defeat: ['「ML 思維跟得上規模化,可以接 PB 級專案。」','「評估陷阱你避得乾淨。」'] },
+    { key: 'privacy', name: '林姊(隱私合規長)', avatar: '🔒', hp: 120, n: 20,
+      desc: 'L22 視覺化、生成式 AI 風險、PDPA / GDPR / 差分隱私 / 聯邦學習',
+      keywords: ['視覺化','雷達圖','條形圖','箱形圖','熱圖','儀表板','誤導','圖型選型','token','語料','合成資料','著作權','CC 授權','Scaling Laws','PDPA','GDPR','匿名','k-匿名','差分隱私','Laplace','聯邦學習','個資','隱私','quasi-identifier','LLM','pseudonymization','生成式'],
+      intro: '「跨國 AI 平台明天上線,GDPR + PDPA 條文背得熟也沒用 — 你要會看 k-匿名、會調差分隱私 ε,還要能跟董事會解釋誤導視覺化的風險。」',
+      attack: ['「合規不是裝飾,是底線!」','「ε 方向搞反隱私就破!」','「k-匿名跟 l-多樣性差在哪你都不知道!」'],
+      defeat: ['「治理 + 合規思維清楚,跨國法務團隊都看你的判斷。」','「視覺化倫理你都顧到了。」'] }
   ];
 
   function highlightCode(code) {
@@ -229,7 +242,7 @@
                   </div>
                 </div>
                 <div class="mode-desc" style="font-size:0.85rem">${b.desc}</div>
-                <div class="mode-stats">HP ${Math.round(b.hp * BOSS_HP_MULTIPLIER)} · ${BOSS_QUESTIONS_PER_BATTLE} 題</div>
+                <div class="mode-stats">HP ${Math.round(b.hp * BOSS_HP_MULTIPLIER)} · ${b.n || BOSS_QUESTIONS_PER_BATTLE} 題</div>
               </button>`;
             }).join('')}
           </div>
@@ -264,7 +277,7 @@
       RNG.set(Date.now() + Math.floor(Math.random() * 1e5));
       const boss = BOSSES.find(b => b.key === key);
       if (!boss) return;
-      const questions = pickQuestionsForBoss(boss, BOSS_QUESTIONS_PER_BATTLE);
+      const questions = pickQuestionsForBoss(boss, boss.n || BOSS_QUESTIONS_PER_BATTLE);
       if (questions.length === 0) { showToast('題庫不足'); return; }
       if (questions.length < BOSS_QUESTIONS_PER_BATTLE) {
         showToast(`⚠️ 此 BOSS 題庫僅 ${questions.length} 題,本場較短`, 2500);
