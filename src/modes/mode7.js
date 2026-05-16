@@ -455,8 +455,8 @@
         currentNpcIdx: -1,
         // UX features (2026-05-16):
         markedIds: new Set(),       // 標記題 qid 集合
-        answers: {},                // {idx: {userKey, isCorrect, correctKey}} — 已答題記錄,支援上一題回看
-        recordedQids: new Set()     // 已寫入 Mastery/Wrongbook 的 qid,避免重答重複寫入
+        answers: {}                 // {idx: {userKey, isCorrect, correctKey}} — 已答題記錄,支援上一題回看
+        // 2026-05-16 lenient 改造:移除 recordedQids — 答題期間不寫共用層,_finalize 統一寫最終 answers 為準
       };
 
       // 套用字級設定(從 localStorage 載入)
@@ -513,6 +513,58 @@
     _stopTimer() {
       if (this.timer) clearInterval(this.timer);
       this.timer = null;
+    },
+
+    // ===== 2026-05-16 lenient 改造:即時重算 correct / wrongs(從 state.answers 推導)=====
+    // 重答可能改變對錯結果,計分顯示需即時反映。共用層寫入仍延後至 _finalize 統一處理。
+    _recomputeStats() {
+      if (!this.state) return;
+      const s = this.state;
+      let correct = 0;
+      const wrongs = [];
+      for (let idx = 0; idx < s.total; idx++) {
+        const a = s.answers[idx];
+        if (!a) continue;
+        if (a.isCorrect) {
+          correct++;
+        } else {
+          const item = s.lineup && s.lineup[idx];
+          if (item && item.q) {
+            wrongs.push({
+              qid: item.q.id,
+              nodeId: item.q.node_id,
+              q: item.q,
+              userKey: a.userKey,
+              correctKey: a.correctKey,
+              npcIdx: item.npcIdx || 0,
+              timeUsed: s.perQuestionTime[idx] || 0
+            });
+          }
+        }
+      }
+      s.correct = correct;
+      s.wrongs = wrongs;
+    },
+
+    // 統一寫共用層(_finalize 前唯一寫入點)
+    // lenient 改造:答題期間 hook 不寫共用層,等交卷時用「最終 answers」一次性寫入
+    // 這保證末答計分:首答錯 → 重答對 → 算對(寫 Mastery true / 不寫 Wrongbook)
+    _commitToSharedLayer() {
+      if (!this.state) return;
+      const s = this.state;
+      for (let idx = 0; idx < s.total; idx++) {
+        const a = s.answers[idx];
+        if (!a) continue;
+        const item = s.lineup && s.lineup[idx];
+        if (!item || !item.q) continue;
+        const q = item.q;
+        if (q.node_id) Mastery.update(q.node_id, a.isCorrect);
+        Progress.addAnswer(a.isCorrect);
+        if (typeof SM2 !== 'undefined' && q.id) SM2.recordAnswer(q.id, a.isCorrect, false);
+        if (!a.isCorrect) {
+          Wrongbook.add(q.id, q.node_id, a.userKey, a.correctKey);
+        }
+      }
     },
 
     _updateTimerHud() {
@@ -1024,50 +1076,27 @@
           }
         });
 
-        // 記錄這題的當前答案
+        // 記錄這題的當前答案(末答計分:lenient — 真考一致)
+        // 2026-05-16 lenient 改造:對標 IPAS 真考,答題期間任意改答,最後一次答案為準。
+        // 共用層(Mastery / Wrongbook / SM2 / Progress)的寫入延後到 _finalize 統一進行,
+        // 避免每次答題即扣分的人造嚴格性 — 此舉同時化解 strict 模式下「首答錯 → 重答對」
+        // 仍被計為錯的真考不一致問題。
         self.state.answers[idx] = { userKey: key, isCorrect, correctKey };
 
-        // 鐵律 #5:答題後共用層更新 mastery / wrongbook(不顯示 explanation)
-        // 但只在「首次作答」時寫入 Mastery/Wrongbook/SM2/Progress(避免重答重複扣分)
-        if (!self.state.recordedQids.has(qid)) {
-          self.state.recordedQids.add(qid);
-          if (this.current.node_id) Mastery.update(this.current.node_id, isCorrect);
-          if (typeof SM2 !== 'undefined' && qid && isCorrect) SM2.recordAnswer(qid, true, false);
-          Progress.addAnswer(isCorrect);
-          if (!isCorrect) {
-            Wrongbook.add(qid, this.current.node_id, key, correctKey);
-            if (typeof SM2 !== 'undefined' && qid) SM2.recordAnswer(qid, false, false);
-          }
-        }
-
-        // 記錄用時(首次作答記錄;重答不覆蓋 — 真考用時以首次為準)
+        // 記錄用時(僅首答記錄;重答不覆蓋 — 真考用時以首答 commit 為準)
+        // 用時是學習指標,屬於行為記錄而非計分,故與重答計分解耦
         if (!isReanswer) {
           const elapsed = Date.now() - self.state.questionStartTs;
           self.state.perQuestionTime[idx] = elapsed;
-          if (isCorrect) {
-            self.state.correct++;
-            GameFX.flash('correct');
-          } else {
-            GameFX.flash('wrong');
-            self.state.wrongs.push({
-              qid,
-              nodeId: this.current.node_id,
-              q: this.current,
-              userKey: key,
-              correctKey,
-              npcIdx: self.state.lineup[idx] ? self.state.lineup[idx].npcIdx : 0,
-              timeUsed: elapsed
-            });
-          }
-        } else {
-          // 重答:更新 wrongs 內的 userKey(若該題在 wrongs 中)
-          // 注意:不調整 correct 計數,避免使用者重答多次累加。重答僅更新 answers[idx]
-          // 真考:首次作答的對錯就是真實成績,重答只是讓使用者「檢查」與「修正」自己選的選項。
-          // 為了精準對應真考體驗,我們把「首次答對 → 重答錯」記為「首次答對」(不變);
-          // 「首次答錯 → 重答對」也記為「首次答錯」(不變)。考試現場僅以首次答錯為真實。
-          // 但 answers[idx] 已更新,UI 上顯示使用者最新選擇,反饋台詞用最新選擇對錯判斷。
-          // 此設計:成績嚴格不放鬆(首次為準),但 UX 允許重看自己選了什麼
         }
+
+        // 即時重算 state.correct / state.wrongs(顯示得分用)
+        // 重答可能把錯題改成對(從 wrongs 移除 + correct++),反之亦然
+        self._recomputeStats();
+
+        // 視覺回饋:對錯閃光用「目前選擇」的對錯判斷(立即回饋,不洩漏標準答案)
+        if (isCorrect) GameFX.flash('correct');
+        else GameFX.flash('wrong');
 
         // NPC 反饋台詞(用本次選擇的對錯)
         self._renderNpcFeedback(isCorrect);
@@ -1144,6 +1173,10 @@
       this._stopTimer();
       // 還原 PlayEngine
       this._restorePlayEngine();
+
+      // 2026-05-16 lenient 改造:答題期間 hook 不寫共用層,交卷時統一寫最終 answers
+      // 這支持「首答錯 → 重答對 → 算對」的真考一致性
+      this._commitToSharedLayer();
 
       // 計算結果
       const result = this._computeResult(reason);
