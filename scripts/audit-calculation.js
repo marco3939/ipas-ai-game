@@ -151,4 +151,34 @@ files.forEach(f => {
   });
 });
 
-console.log(JSON.stringify(results, null, 2));
+// 2026-05-16: 寫 report file(與其他 audit 一致),避免舊報告 stale 誤導
+// 之前只 console.log → audit-calculation.report.json 從未被更新 → 顯示 ghost violations
+const flagged = results.filter(r => r.violations && r.violations.length > 0);
+const report = {
+  generated_at: new Date().toISOString(),
+  summary: {
+    totalCalcQuestions: results.length,
+    flagged: flagged.length,
+    schemaCounts: results.reduce((acc, r) => {
+      acc[r.schemaVariant] = (acc[r.schemaVariant] || 0) + 1;
+      return acc;
+    }, {})
+  },
+  violations: flagged,
+  // 所有 calc 題的 summary(若需 spot-check,但保持較小體積:不含 violations 空的 detail)
+  allCalcSummary: results.map(r => ({ id: r.id, file: r.file, schemaVariant: r.schemaVariant, casesCount: r.casesCount, violationCount: r.violations.length }))
+};
+fs.writeFileSync(require('path').join(__dirname, 'audit-calculation.report.json'), JSON.stringify(report, null, 2));
+
+console.log('=== audit-calculation ===');
+console.log(`totalCalcQuestions: ${results.length}, flagged: ${flagged.length}`);
+console.log('schemaCounts:', JSON.stringify(report.summary.schemaCounts));
+if (flagged.length > 0) {
+  console.log('--- violations ---');
+  flagged.forEach(r => {
+    console.log(`  ${r.file} | ${r.id} | ${r.schemaVariant} | ${r.violations.join(' / ')}`);
+  });
+  process.exit(1);
+}
+console.log('PASS — all calculation questions have valid schema');
+process.exit(0);

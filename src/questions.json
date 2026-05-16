@@ -3,11 +3,19 @@
   "schema_version": "iron-rule-1+2",
   "generated_at": "2026-05-09",
   "based_on_nodes": 87,
-  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "exam_target": {
+    "name": "IPAS AI 應用規劃師中級",
+    "date": "2026-05-23"
+  },
   "weight_distribution": {
     "subject_1": 0.5,
     "subject_3": 0.5,
-    "by_format": {"single_choice": 0.7, "code_reading": 0.2, "calculation": 0.05, "table_chart": 0.05}
+    "by_format": {
+      "single_choice": 0.7,
+      "code_reading": 0.2,
+      "calculation": 0.05,
+      "table_chart": 0.05
+    }
   },
   "iron_rule_1_compliance": "every question has explanation.correct + explanation.wrong + explanation.hook + misconceptions + related_node_ids",
   "iron_rule_2_compliance": "stem_variables + shuffle_options:true allow per-game randomization; variation_seeds drive drill mode",
@@ -24,12 +32,33 @@
       "errata_critical": true,
       "must_cover": true,
       "stem": "下列何者為 Recall(召回率)的{descriptor}公式?",
-      "stem_variables": {"descriptor": ["正確", "標準", "完整"]},
+      "stem_variables": {
+        "descriptor": [
+          "正確",
+          "標準",
+          "完整"
+        ]
+      },
       "options": [
-        {"text": "TP / (TP + FP)", "is_correct": false, "trap_type": "與 Precision 混淆"},
-        {"text": "TP / (TP + FN)", "is_correct": true},
-        {"text": "TP / (FN + TN)", "is_correct": false, "trap_type": "分母錯誤組合"},
-        {"text": "TP / (FP + FN)", "is_correct": false, "trap_type": "分母錯誤組合"}
+        {
+          "text": "TP / (TP + FP)",
+          "is_correct": false,
+          "trap_type": "與 Precision 混淆"
+        },
+        {
+          "text": "TP / (TP + FN)",
+          "is_correct": true
+        },
+        {
+          "text": "TP / (FN + TN)",
+          "is_correct": false,
+          "trap_type": "分母錯誤組合"
+        },
+        {
+          "text": "TP / (FP + FN)",
+          "is_correct": false,
+          "trap_type": "分母錯誤組合"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -41,10 +70,26 @@
         },
         "hook": "口訣:Recall 看『實際』(分母含 FN);Precision 看『預測』(分母含 FP)"
       },
-      "misconceptions": ["把 Precision 與 Recall 公式互調(原 PDF 即誤植,勘誤已修正)"],
-      "related_node_ids": ["n_L23303_001", "n_L23303_004"],
-      "exam_appearance": [{"exam": "114-2", "q": 16, "subject": 3}],
-      "tags": ["評估指標", "混淆矩陣", "公式", "errata"]
+      "misconceptions": [
+        "把 Precision 與 Recall 公式互調(原 PDF 即誤植,勘誤已修正)"
+      ],
+      "related_node_ids": [
+        "n_L23303_001",
+        "n_L23303_004"
+      ],
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 16,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "評估指標",
+        "混淆矩陣",
+        "公式",
+        "errata"
+      ]
     },
     {
       "id": "q_0002",
@@ -58,20 +103,46 @@
       "must_cover": true,
       "stem": "依台灣個人資料保護法(PDPA)規定,蒐集個人資料前『事前告知義務』不包含下列何者?",
       "options": [
-        {"text": "蒐集機關名稱(含公務機關及非公務機關)", "is_correct": false},
-        {"text": "蒐集目的與使用範圍", "is_correct": false},
-        {"text": "個人資料銷毀後之再利用方式", "is_correct": true, "trap_type": "杜撰選項"},
-        {"text": "當事人權利及行使方式", "is_correct": false}
+        {
+          "text": "蒐集機關名稱(含公務機關及非公務機關)",
+          "is_correct": false
+        },
+        {
+          "text": "蒐集目的與使用範圍",
+          "is_correct": false
+        },
+        {
+          "text": "個人資料銷毀後之再利用方式",
+          "is_correct": true,
+          "trap_type": "杜撰選項"
+        },
+        {
+          "text": "當事人權利及行使方式",
+          "is_correct": false
+        }
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "PDPA 事前告知義務六項:蒐集機關名稱、目的與範圍、資料類別、利用情形、當事人權利、不提供之影響;不含『銷毀後再利用』",
-        "wrong": {"蒐集機關名稱(含公務機關及非公務機關)": "為六項之一(第 1 項)", "蒐集目的與使用範圍": "為六項之一(第 2 項)", "當事人權利及行使方式": "為六項之一(第 5 項)"},
+        "wrong": {
+          "蒐集機關名稱(含公務機關及非公務機關)": "為六項之一(第 1 項)",
+          "蒐集目的與使用範圍": "為六項之一(第 2 項)",
+          "當事人權利及行使方式": "為六項之一(第 5 項)"
+        },
         "hook": "六項口訣:『機目類用權影』(機關名、目的、類別、利用、權利、影響)"
       },
-      "misconceptions": ["以為 PDPA 與 GDPR 條文相同;PDPA 強調事前告知,GDPR 強調資料主體權利"],
-      "related_node_ids": ["n_L21203_002"],
-      "tags": ["法規", "PDPA", "errata", "高頻"]
+      "misconceptions": [
+        "以為 PDPA 與 GDPR 條文相同;PDPA 強調事前告知,GDPR 強調資料主體權利"
+      ],
+      "related_node_ids": [
+        "n_L21203_002"
+      ],
+      "tags": [
+        "法規",
+        "PDPA",
+        "errata",
+        "高頻"
+      ]
     },
     {
       "id": "q_0003",
@@ -84,10 +155,25 @@
       "errata_critical": true,
       "stem": "關於非負矩陣分解(NMF)中 X ≥ 0、W ≥ 0、H ≥ 0 的意義,下列何者正確?",
       "options": [
-        {"text": "矩陣的行列式 det(X) 必須嚴格大於零(正定行列式)", "is_correct": false, "trap_type": "與 determinant 混淆"},
-        {"text": "矩陣內每一個元素皆為實數且 ≥ 0(element-wise 非負)", "is_correct": true},
-        {"text": "矩陣的所有特徵值(eigenvalue)皆需非負,使矩陣為半正定", "is_correct": false, "trap_type": "與 PSD 混淆"},
-        {"text": "矩陣每列總和為 1,且每個元素 ≥ 0,可作為機率分佈使用", "is_correct": false, "trap_type": "概念誤接"}
+        {
+          "text": "矩陣的行列式 det(X) 必須嚴格大於零(正定行列式)",
+          "is_correct": false,
+          "trap_type": "與 determinant 混淆"
+        },
+        {
+          "text": "矩陣內每一個元素皆為實數且 ≥ 0(element-wise 非負)",
+          "is_correct": true
+        },
+        {
+          "text": "矩陣的所有特徵值(eigenvalue)皆需非負,使矩陣為半正定",
+          "is_correct": false,
+          "trap_type": "與 PSD 混淆"
+        },
+        {
+          "text": "矩陣每列總和為 1,且每個元素 ≥ 0,可作為機率分佈使用",
+          "is_correct": false,
+          "trap_type": "概念誤接"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -99,9 +185,17 @@
         },
         "hook": "讀法:X ≥ 0 = 對所有 i, j,X[i][j] ≥ 0"
       },
-      "misconceptions": ["把矩陣不等式誤解為對行列式或特徵值的限制"],
-      "related_node_ids": ["n_L23102_001"],
-      "tags": ["線性代數", "NMF", "errata"]
+      "misconceptions": [
+        "把矩陣不等式誤解為對行列式或特徵值的限制"
+      ],
+      "related_node_ids": [
+        "n_L23102_001"
+      ],
+      "tags": [
+        "線性代數",
+        "NMF",
+        "errata"
+      ]
     },
     {
       "id": "q_0004",
@@ -114,10 +208,25 @@
       "errata_critical": true,
       "stem": "邏輯迴歸(Logistic Regression)的核心模型假設可描述為下列何者?",
       "options": [
-        {"text": "對數勝算(Log-Odds)與特徵呈線性關係", "is_correct": true},
-        {"text": "因變數類別與自變數之間在原始空間上呈線性可分", "is_correct": false, "trap_type": "原 PDF 誤譯版本"},
-        {"text": "模型誤差項(殘差)服從零均值的常態分佈", "is_correct": false, "trap_type": "與 OLS 混淆"},
-        {"text": "給定類別下,所有特徵之間彼此條件獨立", "is_correct": false, "trap_type": "與 Naive Bayes 混淆"}
+        {
+          "text": "對數勝算(Log-Odds)與特徵呈線性關係",
+          "is_correct": true
+        },
+        {
+          "text": "因變數類別與自變數之間在原始空間上呈線性可分",
+          "is_correct": false,
+          "trap_type": "原 PDF 誤譯版本"
+        },
+        {
+          "text": "模型誤差項(殘差)服從零均值的常態分佈",
+          "is_correct": false,
+          "trap_type": "與 OLS 混淆"
+        },
+        {
+          "text": "給定類別下,所有特徵之間彼此條件獨立",
+          "is_correct": false,
+          "trap_type": "與 Naive Bayes 混淆"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -129,9 +238,15 @@
         },
         "hook": "Logistic 不是預測 y,是預測 log(p/(1-p));Sigmoid 將線性輸出壓到 (0,1)"
       },
-      "misconceptions": ["把『線性可分性』誤認為 Logistic 假設(原 PDF 譯名錯誤)"],
+      "misconceptions": [
+        "把『線性可分性』誤認為 Logistic 假設(原 PDF 譯名錯誤)"
+      ],
       "related_node_ids": [],
-      "tags": ["邏輯迴歸", "errata", "演算法"]
+      "tags": [
+        "邏輯迴歸",
+        "errata",
+        "演算法"
+      ]
     },
     {
       "id": "q_0005",
@@ -144,10 +259,25 @@
       "errata_critical": true,
       "stem": "感知器(Perceptron)或人工神經元的加權求和(Weighted Sum)正確公式為何?",
       "options": [
-        {"text": "Z = Σᵢ wᵢ xᵢ + b(i 從 1 到 n,逐項加權求和後加偏置)", "is_correct": true},
-        {"text": "Z = Σᵢ w₁ x₁ + b(索引 i 固定取第 1 個權重)", "is_correct": false, "trap_type": "原 PDF 誤植索引"},
-        {"text": "Z = w₁ + x₁ + w₂ + x₂ + ... + b(逐項相加而非乘積)", "is_correct": false, "trap_type": "錯誤運算"},
-        {"text": "Z = w · x · b(權重、輸入、偏置三者連乘)", "is_correct": false, "trap_type": "錯誤運算"}
+        {
+          "text": "Z = Σᵢ wᵢ xᵢ + b(i 從 1 到 n,逐項加權求和後加偏置)",
+          "is_correct": true
+        },
+        {
+          "text": "Z = Σᵢ w₁ x₁ + b(索引 i 固定取第 1 個權重)",
+          "is_correct": false,
+          "trap_type": "原 PDF 誤植索引"
+        },
+        {
+          "text": "Z = w₁ + x₁ + w₂ + x₂ + ... + b(逐項相加而非乘積)",
+          "is_correct": false,
+          "trap_type": "錯誤運算"
+        },
+        {
+          "text": "Z = w · x · b(權重、輸入、偏置三者連乘)",
+          "is_correct": false,
+          "trap_type": "錯誤運算"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -159,9 +289,15 @@
         },
         "hook": "索引 i 表示『遍歷所有輸入』,非僅第 1 個"
       },
-      "misconceptions": ["把求和索引固定為 1(原 PDF 誤植)"],
+      "misconceptions": [
+        "把求和索引固定為 1(原 PDF 誤植)"
+      ],
       "related_node_ids": [],
-      "tags": ["神經網路", "公式", "errata"]
+      "tags": [
+        "神經網路",
+        "公式",
+        "errata"
+      ]
     },
     {
       "id": "q_0006",
@@ -173,16 +309,59 @@
       "source_level": "L1",
       "stem": "若某二元分類模型之 Precision = {p}、Recall = {r},則 F1 分數約為多少?",
       "stem_variables": {
-        "case_a": {"p": "0.8", "r": "0.6", "answer": "0.686", "wrong1": "0.700", "wrong2": "0.480", "wrong3": "0.800"},
-        "case_b": {"p": "0.9", "r": "0.5", "answer": "0.643", "wrong1": "0.700", "wrong2": "0.450", "wrong3": "0.900"},
-        "case_c": {"p": "0.85", "r": "0.6", "answer": "0.703", "wrong1": "0.725", "wrong2": "0.510", "wrong3": "0.850"},
-        "case_d": {"p": "0.6", "r": "0.4", "answer": "0.480", "wrong1": "0.500", "wrong2": "0.240", "wrong3": "0.600"}
+        "case_a": {
+          "p": "0.8",
+          "r": "0.6",
+          "answer": "0.686",
+          "wrong1": "0.700",
+          "wrong2": "0.480",
+          "wrong3": "0.800"
+        },
+        "case_b": {
+          "p": "0.9",
+          "r": "0.5",
+          "answer": "0.643",
+          "wrong1": "0.700",
+          "wrong2": "0.450",
+          "wrong3": "0.900"
+        },
+        "case_c": {
+          "p": "0.85",
+          "r": "0.6",
+          "answer": "0.703",
+          "wrong1": "0.725",
+          "wrong2": "0.510",
+          "wrong3": "0.850"
+        },
+        "case_d": {
+          "p": "0.6",
+          "r": "0.4",
+          "answer": "0.480",
+          "wrong1": "0.500",
+          "wrong2": "0.240",
+          "wrong3": "0.600"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤算為算術平均 (P+R)/2,非調和平均"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤算為 P·R(乘法,缺除以 (P+R) 與乘 2)"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤取 max(P, R),忽略對小值敏感的調和平均特性"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤算為算術平均 (P+R)/2,非調和平均"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤算為 P·R(乘法,缺除以 (P+R) 與乘 2)"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤取 max(P, R),忽略對小值敏感的調和平均特性"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -194,10 +373,25 @@
         },
         "hook": "F1 為調和平均,對小值敏感;P 或 R 任一低 → F1 大幅下降"
       },
-      "misconceptions": ["把 F1 當算術平均", "公式記錯為 (P+R)/2"],
-      "related_node_ids": ["n_L23303_002"],
-      "exam_appearance": [{"exam": "114-2", "q": 16, "subject": 3}],
-      "tags": ["評估", "F1", "計算"]
+      "misconceptions": [
+        "把 F1 當算術平均",
+        "公式記錯為 (P+R)/2"
+      ],
+      "related_node_ids": [
+        "n_L23303_002"
+      ],
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 16,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "評估",
+        "F1",
+        "計算"
+      ]
     },
     {
       "id": "q_0007",
@@ -209,10 +403,25 @@
       "source_level": "L1",
       "stem": "在線性模型中,若希望模型能**自動進行特徵選擇**(部分權重收斂為零),應採用下列哪一種正則化?",
       "options": [
-        {"text": "L1 正則化(Lasso)", "is_correct": true},
-        {"text": "L2 正則化(Ridge)", "is_correct": false, "trap_type": "L1/L2 混淆"},
-        {"text": "Elastic Net 在 α=0 時", "is_correct": false, "trap_type": "α=0 時 Elastic Net 退化為 Ridge"},
-        {"text": "Dropout", "is_correct": false, "trap_type": "Dropout 用於神經網路非線性模型"}
+        {
+          "text": "L1 正則化(Lasso)",
+          "is_correct": true
+        },
+        {
+          "text": "L2 正則化(Ridge)",
+          "is_correct": false,
+          "trap_type": "L1/L2 混淆"
+        },
+        {
+          "text": "Elastic Net 在 α=0 時",
+          "is_correct": false,
+          "trap_type": "α=0 時 Elastic Net 退化為 Ridge"
+        },
+        {
+          "text": "Dropout",
+          "is_correct": false,
+          "trap_type": "Dropout 用於神經網路非線性模型"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -224,10 +433,30 @@
         },
         "hook": "L1 = 稀疏化(歸零);L2 = 抑制(縮小);Elastic Net = L1 + L2"
       },
-      "misconceptions": ["L1 與 L2 哪個歸零混淆", "誤以為 L2 也能特徵選擇"],
-      "related_node_ids": ["n_L23304_001"],
-      "exam_appearance": [{"exam": "114-2", "q": 2, "subject": 3}, {"exam": "114-2", "q": 32, "subject": 3}],
-      "tags": ["正則化", "易混淆", "高頻"]
+      "misconceptions": [
+        "L1 與 L2 哪個歸零混淆",
+        "誤以為 L2 也能特徵選擇"
+      ],
+      "related_node_ids": [
+        "n_L23304_001"
+      ],
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 2,
+          "subject": 3
+        },
+        {
+          "exam": "114-2",
+          "q": 32,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "正則化",
+        "易混淆",
+        "高頻"
+      ]
     },
     {
       "id": "q_0008",
@@ -240,10 +469,25 @@
       "must_cover": true,
       "stem": "某 AI 模型部署後,團隊希望最具預測力地偵測『模型效能下滑風險』。下列何者最適合作為該預警指標?",
       "options": [
-        {"text": "輸入特徵分布相對於訓練資料的 PSI(穩定度)指數", "is_correct": true},
-        {"text": "推論伺服器 CPU 使用率與 GPU 記憶體佔用率波動", "is_correct": false, "trap_type": "與模型效能無直接關聯"},
-        {"text": "推論 API 平均回應時間與 P95 / P99 延遲百分位數", "is_correct": false, "trap_type": "與模型品質無關"},
-        {"text": "模型推論輸出的置信度分數平均值與分佈寬度", "is_correct": false, "trap_type": "次佳但非最具預測力"}
+        {
+          "text": "輸入特徵分布相對於訓練資料的 PSI(穩定度)指數",
+          "is_correct": true
+        },
+        {
+          "text": "推論伺服器 CPU 使用率與 GPU 記憶體佔用率波動",
+          "is_correct": false,
+          "trap_type": "與模型效能無直接關聯"
+        },
+        {
+          "text": "推論 API 平均回應時間與 P95 / P99 延遲百分位數",
+          "is_correct": false,
+          "trap_type": "與模型品質無關"
+        },
+        {
+          "text": "模型推論輸出的置信度分數平均值與分佈寬度",
+          "is_correct": false,
+          "trap_type": "次佳但非最具預測力"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -255,10 +499,24 @@
         },
         "hook": "Drift 偵測金字塔:PSI(輸入分佈)→ KL Divergence → 置信度 → 系統指標"
       },
-      "misconceptions": ["把系統指標當作模型效能預警"],
-      "related_node_ids": ["n_L21302_002"],
-      "exam_appearance": [{"exam": "114-2", "q": 32, "subject": 1}],
-      "tags": ["MLOps", "Drift", "高頻"]
+      "misconceptions": [
+        "把系統指標當作模型效能預警"
+      ],
+      "related_node_ids": [
+        "n_L21302_002"
+      ],
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 32,
+          "subject": 1
+        }
+      ],
+      "tags": [
+        "MLOps",
+        "Drift",
+        "高頻"
+      ]
     },
     {
       "id": "q_0009",
@@ -270,10 +528,25 @@
       "source_level": "L1",
       "stem": "DBSCAN 演算法用於密度聚類,其決定聚類結果的兩個主要超參數為下列何者?",
       "options": [
-        {"text": "鄰域半徑 ε(Epsilon)與鄰域最小點數(MinPts)", "is_correct": true},
-        {"text": "預先指定的群集數量 K 與群內點之間的最大距離閾值門檻", "is_correct": false, "trap_type": "K-means 超參"},
-        {"text": "輸入資料的特徵維度數量與梯度下降演算法所採用的學習率", "is_correct": false, "trap_type": "通用學習超參"},
-        {"text": "交叉熵損失函數的設定與神經網路初始權重的隨機分佈方式", "is_correct": false, "trap_type": "神經網路訓練"}
+        {
+          "text": "鄰域半徑 ε(Epsilon)與鄰域最小點數(MinPts)",
+          "is_correct": true
+        },
+        {
+          "text": "預先指定的群集數量 K 與群內點之間的最大距離閾值門檻",
+          "is_correct": false,
+          "trap_type": "K-means 超參"
+        },
+        {
+          "text": "輸入資料的特徵維度數量與梯度下降演算法所採用的學習率",
+          "is_correct": false,
+          "trap_type": "通用學習超參"
+        },
+        {
+          "text": "交叉熵損失函數的設定與神經網路初始權重的隨機分佈方式",
+          "is_correct": false,
+          "trap_type": "神經網路訓練"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -285,10 +558,30 @@
         },
         "hook": "DBSCAN = 密度;K-means = 質心。兩超參定義『密度』"
       },
-      "misconceptions": ["把 DBSCAN 當 K-means 變體"],
-      "related_node_ids": ["n_L23202_008"],
-      "exam_appearance": [{"exam": "114-2", "q": 11, "subject": 1}, {"exam": "114-2", "q": 4, "subject": 3}],
-      "tags": ["聚類", "DBSCAN", "易混淆", "高頻"]
+      "misconceptions": [
+        "把 DBSCAN 當 K-means 變體"
+      ],
+      "related_node_ids": [
+        "n_L23202_008"
+      ],
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 11,
+          "subject": 1
+        },
+        {
+          "exam": "114-2",
+          "q": 4,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "聚類",
+        "DBSCAN",
+        "易混淆",
+        "高頻"
+      ]
     },
     {
       "id": "q_0010",
@@ -300,10 +593,25 @@
       "source_level": "L1",
       "stem": "GAN 訓練時出現 Mode Collapse(模式崩潰),下列何者為**最常被採用**的有效解法?",
       "options": [
-        {"text": "採用 Wasserstein 距離(WGAN 損失)替代原始 GAN 損失", "is_correct": true},
-        {"text": "在判別器 Softmax 輸出前加入高斯雜訊以平滑輸出機率分佈", "is_correct": false, "trap_type": "與 Attention 對策混淆"},
-        {"text": "大幅調降生成器(Generator)的學習率以穩定整體收斂表現", "is_correct": false, "trap_type": "通用對策非主流"},
-        {"text": "提高判別器(Discriminator)每輪訓練迭代的更新頻率與步數", "is_correct": false, "trap_type": "可能加劇而非解決"}
+        {
+          "text": "採用 Wasserstein 距離(WGAN 損失)替代原始 GAN 損失",
+          "is_correct": true
+        },
+        {
+          "text": "在判別器 Softmax 輸出前加入高斯雜訊以平滑輸出機率分佈",
+          "is_correct": false,
+          "trap_type": "與 Attention 對策混淆"
+        },
+        {
+          "text": "大幅調降生成器(Generator)的學習率以穩定整體收斂表現",
+          "is_correct": false,
+          "trap_type": "通用對策非主流"
+        },
+        {
+          "text": "提高判別器(Discriminator)每輪訓練迭代的更新頻率與步數",
+          "is_correct": false,
+          "trap_type": "可能加劇而非解決"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -315,10 +623,24 @@
         },
         "hook": "Mode Collapse 主流解 = 換損失函數(Wasserstein),而非結構修改"
       },
-      "misconceptions": ["把 Mode Collapse 與 Vanishing Gradient 混淆"],
-      "related_node_ids": ["n_L21103_001"],
-      "exam_appearance": [{"exam": "114-2", "q": 20, "subject": 1}],
-      "tags": ["GAN", "高頻", "高優先預測"]
+      "misconceptions": [
+        "把 Mode Collapse 與 Vanishing Gradient 混淆"
+      ],
+      "related_node_ids": [
+        "n_L21103_001"
+      ],
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 20,
+          "subject": 1
+        }
+      ],
+      "tags": [
+        "GAN",
+        "高頻",
+        "高優先預測"
+      ]
     },
     {
       "id": "q_0011",
@@ -330,21 +652,52 @@
       "source_level": "L1",
       "stem": "在自駕車影像辨識系統中,若希望同時辨識每個像素所屬的物件類別(如道路、行人),又能區分同類物件不同個體(多位行人),最適合採用下列哪一項電腦視覺技術?",
       "options": [
-        {"text": "全景分割(Panoptic Segmentation)", "is_correct": true},
-        {"text": "語意分割(Semantic Segmentation)", "is_correct": false, "trap_type": "不分實體"},
-        {"text": "實例分割(Instance Segmentation)", "is_correct": false, "trap_type": "只給實體不給每像素類別"},
-        {"text": "物件偵測(Object Detection)", "is_correct": false, "trap_type": "不到像素級"}
+        {
+          "text": "全景分割(Panoptic Segmentation)",
+          "is_correct": true
+        },
+        {
+          "text": "語意分割(Semantic Segmentation)",
+          "is_correct": false,
+          "trap_type": "不分實體"
+        },
+        {
+          "text": "實例分割(Instance Segmentation)",
+          "is_correct": false,
+          "trap_type": "只給實體不給每像素類別"
+        },
+        {
+          "text": "物件偵測(Object Detection)",
+          "is_correct": false,
+          "trap_type": "不到像素級"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "全景分割 = 語意 + 實例分割整合;對所有像素同時給予類別 + 實體 ID",
-        "wrong": {"語意分割(Semantic Segmentation)": "像素類別但不分同類實體", "實例分割(Instance Segmentation)": "區分實體但不對所有背景像素標類", "物件偵測(Object Detection)": "只給 Bounding Box,非像素級"},
+        "wrong": {
+          "語意分割(Semantic Segmentation)": "像素類別但不分同類實體",
+          "實例分割(Instance Segmentation)": "區分實體但不對所有背景像素標類",
+          "物件偵測(Object Detection)": "只給 Bounding Box,非像素級"
+        },
         "hook": "判別關鍵:能否區分同類實體 + 是否到像素級"
       },
-      "misconceptions": ["把語意與實例分割混為一談"],
+      "misconceptions": [
+        "把語意與實例分割混為一談"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 34, "subject": 1}],
-      "tags": ["CV", "易混淆", "高頻"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 34,
+          "subject": 1
+        }
+      ],
+      "tags": [
+        "CV",
+        "易混淆",
+        "高頻"
+      ]
     },
     {
       "id": "q_0012",
@@ -356,10 +709,25 @@
       "source_level": "L1",
       "stem": "若訓練資料量龐大且希望模型能更有效捕捉**罕見詞**的語意關聯,Word2Vec 訓練應選哪一種策略?",
       "options": [
-        {"text": "Skip-gram 模型(以中心詞預測周圍上下文詞)", "is_correct": true},
-        {"text": "CBOW 模型(以周圍上下文詞平均預測中心詞)", "is_correct": false, "trap_type": "適合高頻詞而非罕見詞"},
-        {"text": "Skip-gram 模型結合 TF-IDF 詞頻逆文件頻率加權", "is_correct": false, "trap_type": "TF-IDF 與 Word2Vec 不同模型"},
-        {"text": "CBOW 模型結合隨機初始化嵌入向量以增強訓練", "is_correct": false, "trap_type": "初始化與低頻詞無關"}
+        {
+          "text": "Skip-gram 模型(以中心詞預測周圍上下文詞)",
+          "is_correct": true
+        },
+        {
+          "text": "CBOW 模型(以周圍上下文詞平均預測中心詞)",
+          "is_correct": false,
+          "trap_type": "適合高頻詞而非罕見詞"
+        },
+        {
+          "text": "Skip-gram 模型結合 TF-IDF 詞頻逆文件頻率加權",
+          "is_correct": false,
+          "trap_type": "TF-IDF 與 Word2Vec 不同模型"
+        },
+        {
+          "text": "CBOW 模型結合隨機初始化嵌入向量以增強訓練",
+          "is_correct": false,
+          "trap_type": "初始化與低頻詞無關"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -371,10 +739,22 @@
         },
         "hook": "Skip-gram = 罕見詞優勢;CBOW = 高頻詞優勢"
       },
-      "misconceptions": ["把 Skip-gram 與 CBOW 訓練方向搞反"],
+      "misconceptions": [
+        "把 Skip-gram 與 CBOW 訓練方向搞反"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 33, "subject": 1}],
-      "tags": ["NLP", "Word2Vec", "易混淆"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 33,
+          "subject": 1
+        }
+      ],
+      "tags": [
+        "NLP",
+        "Word2Vec",
+        "易混淆"
+      ]
     },
     {
       "id": "q_0013",
@@ -386,10 +766,25 @@
       "source_level": "L1",
       "stem": "某醫療團隊資料量僅 150 筆,陽性個案不到 8%,希望同時兼顧**資料利用率與類別比例一致性**。最適合採用下列哪一種交叉驗證方法?",
       "options": [
-        {"text": "分層留一法交叉驗證(Stratified Leave-One-Out)", "is_correct": true},
-        {"text": "標準 5-Fold 交叉驗證,把資料隨機切成 5 等份輪流驗證", "is_correct": false, "trap_type": "對極小不平衡可能類別失衡"},
-        {"text": "留一法交叉驗證(Leave-One-Out CV),每次只留 1 筆驗證", "is_correct": false, "trap_type": "極小資料但無類別比例保護"},
-        {"text": "隨機交叉驗證(Random CV),每折抽樣比例由隨機種子決定", "is_correct": false, "trap_type": "無類別比例保護"}
+        {
+          "text": "分層留一法交叉驗證(Stratified Leave-One-Out)",
+          "is_correct": true
+        },
+        {
+          "text": "標準 5-Fold 交叉驗證,把資料隨機切成 5 等份輪流驗證",
+          "is_correct": false,
+          "trap_type": "對極小不平衡可能類別失衡"
+        },
+        {
+          "text": "留一法交叉驗證(Leave-One-Out CV),每次只留 1 筆驗證",
+          "is_correct": false,
+          "trap_type": "極小資料但無類別比例保護"
+        },
+        {
+          "text": "隨機交叉驗證(Random CV),每折抽樣比例由隨機種子決定",
+          "is_correct": false,
+          "trap_type": "無類別比例保護"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -401,10 +796,22 @@
         },
         "hook": "選 CV 三問:時序嗎?類別不平衡嗎?樣本超小嗎?"
       },
-      "misconceptions": ["不平衡資料用一般 K-Fold(會比例失衡)"],
+      "misconceptions": [
+        "不平衡資料用一般 K-Fold(會比例失衡)"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 34, "subject": 3}],
-      "tags": ["CV", "不平衡", "高優先預測"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 34,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "CV",
+        "不平衡",
+        "高優先預測"
+      ]
     },
     {
       "id": "q_0014",
@@ -416,10 +823,22 @@
       "source_level": "L1",
       "stem": "金管會反洗錢監理沙盒上線一份疑似可疑交易監測模型,實際命中可疑案件僅佔全部交易的 0.4%。為了提升模型抓出可疑樣本的能力,下列何項做法**反而會誤導**團隊判斷模型表現?",
       "options": [
-        {"text": "把整體分類準確率(Accuracy)當作優先觀察與調整方向的核心指標", "is_correct": true},
-        {"text": "對少數類別執行 SMOTE 合成過採樣,讓訓練集中可疑與正常筆數差距縮小", "is_correct": false},
-        {"text": "在訓練損失中為可疑類別配置較高的 class_weight,加重少數類錯分懲罰", "is_correct": false},
-        {"text": "對佔比超過 99% 的正常交易做隨機欠採樣,降低多數類在訓練時的主導力", "is_correct": false}
+        {
+          "text": "把整體分類準確率(Accuracy)當作優先觀察與調整方向的核心指標",
+          "is_correct": true
+        },
+        {
+          "text": "對少數類別執行 SMOTE 合成過採樣,讓訓練集中可疑與正常筆數差距縮小",
+          "is_correct": false
+        },
+        {
+          "text": "在訓練損失中為可疑類別配置較高的 class_weight,加重少數類錯分懲罰",
+          "is_correct": false
+        },
+        {
+          "text": "對佔比超過 99% 的正常交易做隨機欠採樣,降低多數類在訓練時的主導力",
+          "is_correct": false
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -431,10 +850,24 @@
         },
         "hook": "極不平衡時看 Recall / F1 / PR-AUC,Accuracy 只會讓你誤判模型有效"
       },
-      "misconceptions": ["將 Accuracy 視為通用首選指標,忽略類別比例懸殊時的失效"],
-      "related_node_ids": ["n_L23303_001"],
-      "exam_appearance": [{"exam": "114-2", "q": 19, "subject": 3}],
-      "tags": ["評估", "不平衡", "陷阱題"]
+      "misconceptions": [
+        "將 Accuracy 視為通用首選指標,忽略類別比例懸殊時的失效"
+      ],
+      "related_node_ids": [
+        "n_L23303_001"
+      ],
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 19,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "評估",
+        "不平衡",
+        "陷阱題"
+      ]
     },
     {
       "id": "q_0015",
@@ -446,10 +879,25 @@
       "source_level": "L1",
       "stem": "Transformer 架構之多頭注意力(Multi-head Attention)機制的**主要優點**為何?",
       "options": [
-        {"text": "從不同表示子空間(subspaces)平行捕捉多樣化的語意關聯資訊", "is_correct": true},
-        {"text": "顯著減少模型整體的總參數量,進而降低訓練的計算與時間成本", "is_correct": false, "trap_type": "實際增加參數"},
-        {"text": "透過多個頭部並行運算,大幅加速整體注意力機制的端到端計算", "is_correct": false, "trap_type": "計算量未必降低"},
-        {"text": "避免深層 Transformer 模型在反向傳播時出現的梯度消失問題", "is_correct": false, "trap_type": "Residual + LayerNorm 才是對策"}
+        {
+          "text": "從不同表示子空間(subspaces)平行捕捉多樣化的語意關聯資訊",
+          "is_correct": true
+        },
+        {
+          "text": "顯著減少模型整體的總參數量,進而降低訓練的計算與時間成本",
+          "is_correct": false,
+          "trap_type": "實際增加參數"
+        },
+        {
+          "text": "透過多個頭部並行運算,大幅加速整體注意力機制的端到端計算",
+          "is_correct": false,
+          "trap_type": "計算量未必降低"
+        },
+        {
+          "text": "避免深層 Transformer 模型在反向傳播時出現的梯度消失問題",
+          "is_correct": false,
+          "trap_type": "Residual + LayerNorm 才是對策"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -461,10 +909,26 @@
         },
         "hook": "Multi-head 為了『多樣化表示』,非『加速』"
       },
-      "misconceptions": ["以為 Multi-head 為了加速計算"],
+      "misconceptions": [
+        "以為 Multi-head 為了加速計算"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 21, "subject": 3}, {"exam": "114-2", "q": 2, "subject": 1}],
-      "tags": ["Transformer", "高頻"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 21,
+          "subject": 3
+        },
+        {
+          "exam": "114-2",
+          "q": 2,
+          "subject": 1
+        }
+      ],
+      "tags": [
+        "Transformer",
+        "高頻"
+      ]
     },
     {
       "id": "q_0016",
@@ -476,21 +940,52 @@
       "source_level": "L1",
       "stem": "Kubernetes 在 AI 模型部署與運行中的**核心功能**為下列何者?",
       "options": [
-        {"text": "管理與協調模型服務的部署、擴展與運行環境", "is_correct": true},
-        {"text": "自動化管理模型訓練流程與參數調校", "is_correct": false, "trap_type": "與 Kubeflow 混淆"},
-        {"text": "提供模型資料儲存與版本控管功能", "is_correct": false, "trap_type": "與 Model Registry 混淆"},
-        {"text": "負責深度學習推論的 GPU 加速運算", "is_correct": false, "trap_type": "GPU 由底層硬體負責"}
+        {
+          "text": "管理與協調模型服務的部署、擴展與運行環境",
+          "is_correct": true
+        },
+        {
+          "text": "自動化管理模型訓練流程與參數調校",
+          "is_correct": false,
+          "trap_type": "與 Kubeflow 混淆"
+        },
+        {
+          "text": "提供模型資料儲存與版本控管功能",
+          "is_correct": false,
+          "trap_type": "與 Model Registry 混淆"
+        },
+        {
+          "text": "負責深度學習推論的 GPU 加速運算",
+          "is_correct": false,
+          "trap_type": "GPU 由底層硬體負責"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "K8s = 容器編排,管理 Pod、Service、Deployment、Auto Scaling、滾動更新",
-        "wrong": {"自動化管理模型訓練流程與參數調校": "為 Kubeflow Pipelines 功能", "提供模型資料儲存與版本控管功能": "為 Model Registry 功能"},
+        "wrong": {
+          "自動化管理模型訓練流程與參數調校": "為 Kubeflow Pipelines 功能",
+          "提供模型資料儲存與版本控管功能": "為 Model Registry 功能"
+        },
         "hook": "K8s = 容器編排;Kubeflow = ML 工作流;Model Registry = 模型版本"
       },
-      "misconceptions": ["把 K8s 與 Kubeflow / Model Registry 混為一談"],
-      "related_node_ids": ["n_L21302_002"],
-      "exam_appearance": [{"exam": "114-2", "q": 13, "subject": 1}],
-      "tags": ["MLOps", "K8s"]
+      "misconceptions": [
+        "把 K8s 與 Kubeflow / Model Registry 混為一談"
+      ],
+      "related_node_ids": [
+        "n_L21302_002"
+      ],
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 13,
+          "subject": 1
+        }
+      ],
+      "tags": [
+        "MLOps",
+        "K8s"
+      ]
     },
     {
       "id": "q_0017",
@@ -502,10 +997,23 @@
       "source_level": "L1",
       "stem": "教育部 K-12 預警平台用學生缺曠、評量成績、輔導紀錄訓練輟學風險模型,實驗中已出現訓練表現遠優於驗證表現的徵兆。下列哪一個操作**目的不在「縮小模型可行解空間」**,因此不算典型的抗過擬合手段?",
       "options": [
-        {"text": "再從學生資料庫中拉入更多輔助欄位接入模型,例如家長學歷、同儕成績與打工時數", "is_correct": true, "trap_type": "增加特徵反而擴大模型自由度,效果與抑制過擬合相反"},
-        {"text": "在 Logistic Regression 損失中疊加 L1 或 L2 懲罰項,壓制不必要的權重幅度", "is_correct": false},
-        {"text": "於神經網路全連接層之間插入 Dropout,訓練時隨機關閉部分神經元", "is_correct": false},
-        {"text": "啟用 Early Stopping,當驗證集 AUC 連續若干回合無進步時就停止訓練", "is_correct": false}
+        {
+          "text": "再從學生資料庫中拉入更多輔助欄位接入模型,例如家長學歷、同儕成績與打工時數",
+          "is_correct": true,
+          "trap_type": "增加特徵反而擴大模型自由度,效果與抑制過擬合相反"
+        },
+        {
+          "text": "在 Logistic Regression 損失中疊加 L1 或 L2 懲罰項,壓制不必要的權重幅度",
+          "is_correct": false
+        },
+        {
+          "text": "於神經網路全連接層之間插入 Dropout,訓練時隨機關閉部分神經元",
+          "is_correct": false
+        },
+        {
+          "text": "啟用 Early Stopping,當驗證集 AUC 連續若干回合無進步時就停止訓練",
+          "is_correct": false
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -517,10 +1025,27 @@
         },
         "hook": "抗過擬合 = 收斂自由度;盲加特徵 = 把自由度推回去"
       },
-      "misconceptions": ["以為「特徵越多模型越強」,忽略它會把過擬合風險拉高"],
-      "related_node_ids": ["n_L23304_001", "n_L23304_002", "n_L23304_003", "n_L23304_004"],
-      "exam_appearance": [{"exam": "114-2", "q": 26, "subject": 3}],
-      "tags": ["過擬合", "陷阱題", "高頻"]
+      "misconceptions": [
+        "以為「特徵越多模型越強」,忽略它會把過擬合風險拉高"
+      ],
+      "related_node_ids": [
+        "n_L23304_001",
+        "n_L23304_002",
+        "n_L23304_003",
+        "n_L23304_004"
+      ],
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 26,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "過擬合",
+        "陷阱題",
+        "高頻"
+      ]
     },
     {
       "id": "q_0018",
@@ -532,10 +1057,25 @@
       "source_level": "L1",
       "stem": "下列何者最能反映 XGBoost 相較於傳統 GBDT 的**主要技術改進**?",
       "options": [
-        {"text": "引入正則化抑制過擬合,並支援缺失值自動處理與並行化訓練", "is_correct": true},
-        {"text": "捨棄序列式 Boosting 改採 Bagging 隨機森林架構以提升穩定性", "is_correct": false, "trap_type": "RF 是 Bagging,XGBoost 仍為 Boosting"},
-        {"text": "以多層類神經網路取代決策樹作為集成內的弱分類器", "is_correct": false, "trap_type": "XGBoost 仍用樹"},
-        {"text": "在每棵樹的節點分裂前採用批次正規化(Batch Norm)技術", "is_correct": false, "trap_type": "BN 用於神經網路"}
+        {
+          "text": "引入正則化抑制過擬合,並支援缺失值自動處理與並行化訓練",
+          "is_correct": true
+        },
+        {
+          "text": "捨棄序列式 Boosting 改採 Bagging 隨機森林架構以提升穩定性",
+          "is_correct": false,
+          "trap_type": "RF 是 Bagging,XGBoost 仍為 Boosting"
+        },
+        {
+          "text": "以多層類神經網路取代決策樹作為集成內的弱分類器",
+          "is_correct": false,
+          "trap_type": "XGBoost 仍用樹"
+        },
+        {
+          "text": "在每棵樹的節點分裂前採用批次正規化(Batch Norm)技術",
+          "is_correct": false,
+          "trap_type": "BN 用於神經網路"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -547,10 +1087,24 @@
         },
         "hook": "XGBoost 三大改進口訣:『正缺平』(正則化 / 缺失值 / 並行)"
       },
-      "misconceptions": ["以為 XGBoost = Random Forest 升級版"],
-      "related_node_ids": ["n_L23202_001"],
-      "exam_appearance": [{"exam": "114-2", "q": 18, "subject": 3}],
-      "tags": ["集成", "XGBoost", "高頻"]
+      "misconceptions": [
+        "以為 XGBoost = Random Forest 升級版"
+      ],
+      "related_node_ids": [
+        "n_L23202_001"
+      ],
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 18,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "集成",
+        "XGBoost",
+        "高頻"
+      ]
     },
     {
       "id": "q_0019",
@@ -562,10 +1116,25 @@
       "source_level": "L1",
       "stem": "下列何者為 PCA 與 LDA 的**關鍵差異**?",
       "options": [
-        {"text": "PCA 為非監督式且不需標籤;LDA 為監督式且需要類別標籤", "is_correct": true},
-        {"text": "PCA 屬線性投影;LDA 採用核函數做非線性降維", "is_correct": false, "trap_type": "兩者都是線性"},
-        {"text": "PCA 僅適合視覺化展示;LDA 才能用於建模前處理", "is_correct": false, "trap_type": "PCA 兩者皆適"},
-        {"text": "PCA 主要用於分類預測;LDA 主要用於迴歸建模", "is_correct": false, "trap_type": "LDA 用於分類前處理"}
+        {
+          "text": "PCA 為非監督式且不需標籤;LDA 為監督式且需要類別標籤",
+          "is_correct": true
+        },
+        {
+          "text": "PCA 屬線性投影;LDA 採用核函數做非線性降維",
+          "is_correct": false,
+          "trap_type": "兩者都是線性"
+        },
+        {
+          "text": "PCA 僅適合視覺化展示;LDA 才能用於建模前處理",
+          "is_correct": false,
+          "trap_type": "PCA 兩者皆適"
+        },
+        {
+          "text": "PCA 主要用於分類預測;LDA 主要用於迴歸建模",
+          "is_correct": false,
+          "trap_type": "LDA 用於分類前處理"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -577,9 +1146,18 @@
         },
         "hook": "一句話:PCA 看整體變異,LDA 看類別分離。**LDA 是唯一監督式降維**"
       },
-      "misconceptions": ["把 LDA 也當作不需標籤"],
-      "related_node_ids": ["n_L23102_001", "n_L23102_002"],
-      "tags": ["降維", "易混淆", "高頻"]
+      "misconceptions": [
+        "把 LDA 也當作不需標籤"
+      ],
+      "related_node_ids": [
+        "n_L23102_001",
+        "n_L23102_002"
+      ],
+      "tags": [
+        "降維",
+        "易混淆",
+        "高頻"
+      ]
     },
     {
       "id": "q_0020",
@@ -591,10 +1169,25 @@
       "source_level": "L1",
       "stem": "工業設備故障預測模型,因設備運行環境隨時間變化,原驗證集失準。下列哪種策略最能有效提升模型在長期運行環境的泛化能力?",
       "options": [
-        {"text": "採用時間序列交叉驗證(Time Series CV)或滑動視窗驗證", "is_correct": true},
-        {"text": "固定一份歷史驗證集,並對模型權重加上 L2 正則化抑制過擬合", "is_correct": false, "trap_type": "未解決時序分布漂移"},
-        {"text": "把所有資料一次納入訓練,搭配 Early Stopping 控制收斂時點", "is_correct": false, "trap_type": "失去驗證評估"},
-        {"text": "簡化模型架構,降低層數與參數量以提升泛化能力", "is_correct": false, "trap_type": "與時序漂移無關"}
+        {
+          "text": "採用時間序列交叉驗證(Time Series CV)或滑動視窗驗證",
+          "is_correct": true
+        },
+        {
+          "text": "固定一份歷史驗證集,並對模型權重加上 L2 正則化抑制過擬合",
+          "is_correct": false,
+          "trap_type": "未解決時序分布漂移"
+        },
+        {
+          "text": "把所有資料一次納入訓練,搭配 Early Stopping 控制收斂時點",
+          "is_correct": false,
+          "trap_type": "失去驗證評估"
+        },
+        {
+          "text": "簡化模型架構,降低層數與參數量以提升泛化能力",
+          "is_correct": false,
+          "trap_type": "與時序漂移無關"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -606,10 +1199,22 @@
         },
         "hook": "時序資料禁用一般 K-Fold(會洩漏未來)"
       },
-      "misconceptions": ["把時序資料用一般 K-Fold"],
+      "misconceptions": [
+        "把時序資料用一般 K-Fold"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 29, "subject": 3}],
-      "tags": ["CV", "時序", "高頻"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 29,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "CV",
+        "時序",
+        "高頻"
+      ]
     },
     {
       "id": "q_0021",
@@ -621,10 +1226,25 @@
       "source_level": "L1",
       "stem": "某銀行希望多家機構共同訓練 AI 信用風險預測模型,**資料於傳輸與運算過程不可解密**。技術團隊評估使用的技術為何?",
       "options": [
-        {"text": "同態加密(Homomorphic Encryption)— 加密狀態下直接進行數值運算", "is_correct": true},
-        {"text": "差分隱私(Differential Privacy)— 在統計輸出端加上隨機雜訊以保護個資", "is_correct": false, "trap_type": "輸出加噪非訓練"},
-        {"text": "對稱式加密(AES)— 各機構共享私鑰保護傳輸通道,接收後再解密運算", "is_correct": false, "trap_type": "傳輸加密非運算"},
-        {"text": "雜湊函數(Hash)— 以不可逆單向轉換對個人識別欄位做去識別化處理", "is_correct": false, "trap_type": "不可逆,無法運算"}
+        {
+          "text": "同態加密(Homomorphic Encryption)— 加密狀態下直接進行數值運算",
+          "is_correct": true
+        },
+        {
+          "text": "差分隱私(Differential Privacy)— 在統計輸出端加上隨機雜訊以保護個資",
+          "is_correct": false,
+          "trap_type": "輸出加噪非訓練"
+        },
+        {
+          "text": "對稱式加密(AES)— 各機構共享私鑰保護傳輸通道,接收後再解密運算",
+          "is_correct": false,
+          "trap_type": "傳輸加密非運算"
+        },
+        {
+          "text": "雜湊函數(Hash)— 以不可逆單向轉換對個人識別欄位做去識別化處理",
+          "is_correct": false,
+          "trap_type": "不可逆,無法運算"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -636,10 +1256,24 @@
         },
         "hook": "四技術區別:HE 加密上算 / DP 輸出加噪 / FL 參數聚合 / MPC 多方協作"
       },
-      "misconceptions": ["把同態加密與差分隱私混淆"],
-      "related_node_ids": ["n_L23401_002"],
-      "exam_appearance": [{"exam": "114-2", "q": 36, "subject": 3}],
-      "tags": ["隱私", "加密", "高頻"]
+      "misconceptions": [
+        "把同態加密與差分隱私混淆"
+      ],
+      "related_node_ids": [
+        "n_L23401_002"
+      ],
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 36,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "隱私",
+        "加密",
+        "高頻"
+      ]
     },
     {
       "id": "q_0022",
@@ -651,21 +1285,51 @@
       "source_level": "L1",
       "stem": "某顧客流失預測模型,僅用『曾經購買三次以上』活躍顧客紀錄訓練。上線後對新註冊與低消費會員預測準確率明顯偏低。最可能原因為下列何者?",
       "options": [
-        {"text": "取樣偏差(Sampling Bias)", "is_correct": true},
-        {"text": "標籤偏差(Label Bias)", "is_correct": false, "trap_type": "標註並非主觀"},
-        {"text": "特徵偏差(Feature Bias)", "is_correct": false, "trap_type": "本題重點在訓練樣本族群"},
-        {"text": "過擬合(Overfitting)", "is_correct": false, "trap_type": "未說明訓練/驗證差距"}
+        {
+          "text": "取樣偏差(Sampling Bias)",
+          "is_correct": true
+        },
+        {
+          "text": "標籤偏差(Label Bias)",
+          "is_correct": false,
+          "trap_type": "標註並非主觀"
+        },
+        {
+          "text": "特徵偏差(Feature Bias)",
+          "is_correct": false,
+          "trap_type": "本題重點在訓練樣本族群"
+        },
+        {
+          "text": "過擬合(Overfitting)",
+          "is_correct": false,
+          "trap_type": "未說明訓練/驗證差距"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "訓練樣本『僅活躍顧客』未涵蓋整體會員,造成 Sampling Bias;模型對未見過的低活躍/新註冊族群泛化失敗",
-        "wrong": {"標籤偏差(Label Bias)": "本題沒提人工標註主觀問題", "特徵偏差(Feature Bias)": "本題核心問題是訓練資料族群,而非特徵設計"},
+        "wrong": {
+          "標籤偏差(Label Bias)": "本題沒提人工標註主觀問題",
+          "特徵偏差(Feature Bias)": "本題核心問題是訓練資料族群,而非特徵設計"
+        },
         "hook": "Sampling Bias = 取樣不代表整體;Label Bias = 標註主觀;Feature Bias = 特徵設計偏"
       },
-      "misconceptions": ["把三類 Bias 混為一談"],
+      "misconceptions": [
+        "把三類 Bias 混為一談"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 28, "subject": 3}],
-      "tags": ["Bias", "公平性", "高頻"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 28,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "Bias",
+        "公平性",
+        "高頻"
+      ]
     },
     {
       "id": "q_0023",
@@ -677,10 +1341,25 @@
       "source_level": "L1",
       "stem": "某媒體公司導入 CLIP 模型協助影像自動標註與搜尋,希望**無需新增訓練資料**僅透過文字提示即可識別影像內容。CLIP 達成此能力的關鍵技術特性為何?",
       "options": [
-        {"text": "圖文對比式學習將影像與文字映射至共同嵌入空間,以語意相似度做 Zero-shot 分類", "is_correct": true},
-        {"text": "以大規模監督式學習對影像特徵接上 MLP 分類頭,訓練後預測影像所屬的類別", "is_correct": false, "trap_type": "需訓練資料"},
-        {"text": "透過影像增強(augmentation)與特徵擴散方法,大幅降低分類所需的標註訓練資料量", "is_correct": false, "trap_type": "概念不對"},
-        {"text": "採用自迴歸式生成模型,根據影像特徵逐步逐字生成對應的文字描述標籤", "is_correct": false, "trap_type": "CLIP 非生成式"}
+        {
+          "text": "圖文對比式學習將影像與文字映射至共同嵌入空間,以語意相似度做 Zero-shot 分類",
+          "is_correct": true
+        },
+        {
+          "text": "以大規模監督式學習對影像特徵接上 MLP 分類頭,訓練後預測影像所屬的類別",
+          "is_correct": false,
+          "trap_type": "需訓練資料"
+        },
+        {
+          "text": "透過影像增強(augmentation)與特徵擴散方法,大幅降低分類所需的標註訓練資料量",
+          "is_correct": false,
+          "trap_type": "概念不對"
+        },
+        {
+          "text": "採用自迴歸式生成模型,根據影像特徵逐步逐字生成對應的文字描述標籤",
+          "is_correct": false,
+          "trap_type": "CLIP 非生成式"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -692,10 +1371,22 @@
         },
         "hook": "CLIP 三關鍵字:Contrastive、Shared Embedding Space、Zero-shot"
       },
-      "misconceptions": ["以為 CLIP 為生成式模型"],
+      "misconceptions": [
+        "以為 CLIP 為生成式模型"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 35, "subject": 1}],
-      "tags": ["多模態", "CLIP", "高頻"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 35,
+          "subject": 1
+        }
+      ],
+      "tags": [
+        "多模態",
+        "CLIP",
+        "高頻"
+      ]
     },
     {
       "id": "q_0024",
@@ -708,30 +1399,80 @@
       "stem": "考慮擲骰子並用列舉方法計算條件機率。事件 A:擲出某倍數的數字;事件 B:擲出大於某門檻值。下列程式輸出 P(A|B)(四捨五入兩位)為何?",
       "code_block": "import numpy as np\nrolls = np.arange(1, 7)\nA = rolls % {mod} == 0\nB = rolls > {thresh}\nA_and_B = A & B\nresult = A_and_B.sum() / B.sum()\nprint(round(result, 2))",
       "stem_variables": {
-        "case_a": {"mod": "2", "thresh": "2", "answer": "0.5", "wrong1": "0.33", "wrong2": "0.29", "wrong3": "0.17"},
-        "case_b": {"mod": "2", "thresh": "1", "answer": "0.6", "wrong1": "0.5", "wrong2": "0.38", "wrong3": "0.2"},
-        "case_c": {"mod": "3", "thresh": "1", "answer": "0.4", "wrong1": "0.33", "wrong2": "0.29", "wrong3": "0.2"}
+        "case_a": {
+          "mod": "2",
+          "thresh": "2",
+          "answer": "0.5",
+          "wrong1": "0.67",
+          "wrong2": "0.29",
+          "wrong3": "0.17"
+        },
+        "case_b": {
+          "mod": "2",
+          "thresh": "1",
+          "answer": "0.6",
+          "wrong1": "1.0",
+          "wrong2": "0.38",
+          "wrong3": "0.2"
+        },
+        "case_c": {
+          "mod": "3",
+          "thresh": "1",
+          "answer": "0.4",
+          "wrong1": "1.0",
+          "wrong2": "0.29",
+          "wrong3": "0.2"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤用 P(A∩B)/6(無條件聯合機率)取代條件機率"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "分母誤用 A+B 之和"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "分母誤用 A*B 之積"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤用 P(B|A) 公式"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "分母誤用 A+B 之和"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "分母誤用 A*B 之積"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "P(A|B) = P(A∩B) / P(B);程式上即 A_and_B.sum() / B.sum()。對 dice [1..6] 列舉,A=偶數或某倍數、B>{thresh},計算結果 = {answer}。",
+        "correct": "P(A|B) = P(A∩B) / P(B);程式上即 A_and_B.sum() / B.sum()。對 dice [1..6] 列舉,A=偶數、B>{thresh},計算結果 = {answer}。",
         "wrong": {
-          "{wrong1}": "此值為 A_and_B.sum() / 6,把分母錯成全部樣本數(無條件聯合機率 P(A∩B)),忽略了「以 B 為條件」的概念;條件機率分母必須是 B 的計數,而非總樣本數。",
+          "{wrong1}": "此值為 P(B|A) = A_and_B.sum() / A.sum(),分母錯成 A 的計數,結果為 B 在 A 中的條件機率,意義相反。",
           "{wrong2}": "此值來自 A_and_B.sum() / (A.sum() + B.sum()) 錯誤公式,分母不是純粹的 B 計數而是聯集計數,違背條件機率定義。",
           "{wrong3}": "此值來自 A_and_B.sum() / (A.sum() * B.sum()) 錯誤公式,分母為乘積無機率意義,與獨立性檢定的式子混淆。"
         },
         "hook": "條件機率 P(A|B) 分母永遠是 B 的計數"
       },
-      "misconceptions": ["把 P(A|B) 與 P(B|A) 倒置"],
-      "related_node_ids": ["n_L23101_001"],
-      "exam_appearance": [{"exam": "114-2", "q": 41, "subject": 3}],
-      "tags": ["機率", "Monte Carlo", "程式判讀"]
+      "misconceptions": [
+        "把 P(A|B) 與 P(B|A) 倒置"
+      ],
+      "related_node_ids": [
+        "n_L23101_001"
+      ],
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 41,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "機率",
+        "Monte Carlo",
+        "程式判讀"
+      ]
     },
     {
       "id": "q_0025",
@@ -743,10 +1484,25 @@
       "source_level": "L1",
       "stem": "國家太空中心對某顆觀測衛星的多波段遙測資料做主成分分析,前四個成分得到的特徵值依序為 λ₁ = 4.5、λ₂ = 2.7、λ₃ = 0.9、λ₄ = 0.9(其餘成分可忽略)。團隊定下「累計變異量需達 85% 以上」的維持標準,最少要留下幾個主成分?",
       "options": [
-        {"text": "前 3 個主成分,累計約 91.7%,首次跨越 85% 門檻", "is_correct": true},
-        {"text": "僅前 1 個主成分,佔約 50%,已能凸顯主要趨勢即可", "is_correct": false, "trap_type": "50% 與 85% 門檻仍有相當距離"},
-        {"text": "前 2 個主成分,累計約 80%,接近 85% 應屬可接受", "is_correct": false, "trap_type": "80% 仍未達標,規則是嚴格大於等於 85%"},
-        {"text": "全部 4 個主成分都應保留以避免任何資訊損失,降維幅度交由視覺化階段處理", "is_correct": false, "trap_type": "全保留等於沒做降維,違背 PCA 的目的"}
+        {
+          "text": "前 3 個主成分,累計約 91.7%,首次跨越 85% 門檻",
+          "is_correct": true
+        },
+        {
+          "text": "僅前 1 個主成分,佔約 50%,已能凸顯主要趨勢即可",
+          "is_correct": false,
+          "trap_type": "50% 與 85% 門檻仍有相當距離"
+        },
+        {
+          "text": "前 2 個主成分,累計約 80%,接近 85% 應屬可接受",
+          "is_correct": false,
+          "trap_type": "80% 仍未達標,規則是嚴格大於等於 85%"
+        },
+        {
+          "text": "全部 4 個主成分都應保留以避免任何資訊損失,降維幅度交由視覺化階段處理",
+          "is_correct": false,
+          "trap_type": "全保留等於沒做降維,違背 PCA 的目的"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -758,10 +1514,22 @@
         },
         "hook": "PCA 取幾個成分的判準:累計變異比例首次達到目標即停"
       },
-      "misconceptions": ["把 80% 視為「接近就好」,忽略門檻是嚴格達標"],
+      "misconceptions": [
+        "把 80% 視為「接近就好」,忽略門檻是嚴格達標"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 35, "subject": 3}],
-      "tags": ["PCA", "計算", "高頻"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 35,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "PCA",
+        "計算",
+        "高頻"
+      ]
     },
     {
       "id": "q_0026",
@@ -773,10 +1541,25 @@
       "source_level": "L1",
       "stem": "資訊增益(Information Gain)主要應用於下列哪一類模型?",
       "options": [
-        {"text": "決策樹(根據資訊增益遞迴分裂建立分類規則)", "is_correct": true},
-        {"text": "L1 正則化線性模型(以 Lasso 懲罰使權重歸零)", "is_correct": false, "trap_type": "L1 用於特徵選擇但不用 IG"},
-        {"text": "深度神經網路(以激活函數疊加學習非線性表徵)", "is_correct": false, "trap_type": "DNN 用反向傳播"},
-        {"text": "支援向量機 SVM(以核函數做高維空間線性切分)", "is_correct": false, "trap_type": "SVM 用 margin"}
+        {
+          "text": "決策樹(根據資訊增益遞迴分裂建立分類規則)",
+          "is_correct": true
+        },
+        {
+          "text": "L1 正則化線性模型(以 Lasso 懲罰使權重歸零)",
+          "is_correct": false,
+          "trap_type": "L1 用於特徵選擇但不用 IG"
+        },
+        {
+          "text": "深度神經網路(以激活函數疊加學習非線性表徵)",
+          "is_correct": false,
+          "trap_type": "DNN 用反向傳播"
+        },
+        {
+          "text": "支援向量機 SVM(以核函數做高維空間線性切分)",
+          "is_correct": false,
+          "trap_type": "SVM 用 margin"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -788,10 +1571,21 @@
         },
         "hook": "IG = 父節點 Entropy - 子節點加權 Entropy"
       },
-      "misconceptions": ["把資訊增益當通用特徵選擇方法"],
+      "misconceptions": [
+        "把資訊增益當通用特徵選擇方法"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 8, "subject": 3}],
-      "tags": ["決策樹", "資訊增益"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 8,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "決策樹",
+        "資訊增益"
+      ]
     },
     {
       "id": "q_0027",
@@ -803,10 +1597,25 @@
       "source_level": "L1",
       "stem": "某團隊發現使用線性激活函數後 CNN 訓練準確率長期停滯。最合適的調整方案為何?",
       "options": [
-        {"text": "改用 ReLU 激活函數,引入非線性提升模型表達能力", "is_correct": true},
-        {"text": "增加 CNN 卷積層數量,以加深網路堆疊增加學習容量", "is_correct": false, "trap_type": "線性疊加仍是線性"},
-        {"text": "把輸入影像由 RGB 灰階化,以降低輸入維度與計算量", "is_correct": false, "trap_type": "降維不解決核心問題"},
-        {"text": "改用 Sigmoid 激活函數,使輸出限制在 (0, 1) 區間", "is_correct": false, "trap_type": "Sigmoid 易飽和"}
+        {
+          "text": "改用 ReLU 激活函數,引入非線性提升模型表達能力",
+          "is_correct": true
+        },
+        {
+          "text": "增加 CNN 卷積層數量,以加深網路堆疊增加學習容量",
+          "is_correct": false,
+          "trap_type": "線性疊加仍是線性"
+        },
+        {
+          "text": "把輸入影像由 RGB 灰階化,以降低輸入維度與計算量",
+          "is_correct": false,
+          "trap_type": "降維不解決核心問題"
+        },
+        {
+          "text": "改用 Sigmoid 激活函數,使輸出限制在 (0, 1) 區間",
+          "is_correct": false,
+          "trap_type": "Sigmoid 易飽和"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -818,10 +1627,21 @@
         },
         "hook": "兩大關鍵:引入非線性 + 計算便宜"
       },
-      "misconceptions": ["以為加深層數可解決線性激活問題"],
+      "misconceptions": [
+        "以為加深層數可解決線性激活問題"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 27, "subject": 3}],
-      "tags": ["神經網路", "激活函數"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 27,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "神經網路",
+        "激活函數"
+      ]
     },
     {
       "id": "q_0028",
@@ -833,10 +1653,25 @@
       "source_level": "L1",
       "stem": "某航空貨運公司想導入深度學習以強化營運分析,評估四個專案。下列哪一個專案的問題本質**最契合 LSTM 架構**?",
       "options": [
-        {"text": "依過去 90 天每小時的進出港貨量,動態推估隔日各時段倉儲飽和度", "is_correct": true},
-        {"text": "從機坪攝影機畫面標記出推車、貨櫃與工作人員的座標範圍", "is_correct": false, "trap_type": "為影像物件偵測任務,適合 YOLO / Faster R-CNN"},
-        {"text": "把長期累積的客戶提單依寄件習慣相似度自動劃分成數個族群", "is_correct": false, "trap_type": "為非監督分群任務,適合 K-means / 階層式分群"},
-        {"text": "從上百種感測欄位中萃取代表性軸,讓報表能以二維散佈圖呈現", "is_correct": false, "trap_type": "為線性降維任務,適合 PCA / Autoencoder"}
+        {
+          "text": "依過去 90 天每小時的進出港貨量,動態推估隔日各時段倉儲飽和度",
+          "is_correct": true
+        },
+        {
+          "text": "從機坪攝影機畫面標記出推車、貨櫃與工作人員的座標範圍",
+          "is_correct": false,
+          "trap_type": "為影像物件偵測任務,適合 YOLO / Faster R-CNN"
+        },
+        {
+          "text": "把長期累積的客戶提單依寄件習慣相似度自動劃分成數個族群",
+          "is_correct": false,
+          "trap_type": "為非監督分群任務,適合 K-means / 階層式分群"
+        },
+        {
+          "text": "從上百種感測欄位中萃取代表性軸,讓報表能以二維散佈圖呈現",
+          "is_correct": false,
+          "trap_type": "為線性降維任務,適合 PCA / Autoencoder"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -848,10 +1683,21 @@
         },
         "hook": "LSTM 看時間順序;CNN 看畫面內容;聚類看相似度;降維看軸"
       },
-      "misconceptions": ["把 LSTM 套用到無時序結構的影像或表格分群任務"],
+      "misconceptions": [
+        "把 LSTM 套用到無時序結構的影像或表格分群任務"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 7, "subject": 3}],
-      "tags": ["RNN", "LSTM"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 7,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "RNN",
+        "LSTM"
+      ]
     },
     {
       "id": "q_0029",
@@ -861,33 +1707,86 @@
       "format": "code_reading",
       "difficulty": "medium",
       "source_level": "L1",
-      "stem": "下列程式碼以同一個 nn.Dropout 層分別在 train() 與 eval() 兩種模式下對輸入做前向運算,並輸出『訓練模式下被歸零的比例』與『評估模式下全部元素相加後的結果』。請問 print 的輸出最接近下列何者?",
-      "code_block": "import torch\nimport torch.nn as nn\ntorch.manual_seed(42)\ndropout = nn.Dropout(p={p})\nx = torch.ones(1000)\n# 訓練模式下:每個元素以機率 p 被隨機歸零(其餘以 1/(1-p) 縮放)\ndropout.train()\nout_train = dropout(x)\nzero_rate = (out_train == 0).float().mean().item()\n# 評估模式下:dropout 視為 identity,完全透傳\ndropout.eval()\nout_eval = dropout(x)\neval_sum = out_eval.sum().item()\nprint(round(zero_rate, 1), round(eval_sum, 1))",
+      "stem": "下列程式碼使用 nn.Dropout 建立正則化層後,印出 net.dropout.p。請問 print 的輸出值為何?",
+      "code_block": "import torch\nimport torch.nn as nn\nclass Net(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.fc1 = nn.Linear({in_dim}, {hidden})\n        self.dropout = nn.Dropout(p={p})\n        self.fc2 = nn.Linear({hidden}, {out_dim})\n    def forward(self, x):\n        x = torch.relu(self.fc1(x))\n        x = self.dropout(x)\n        return self.fc2(x)\nnet = Net()\nprint(net.dropout.p)",
       "stem_variables": {
-        "case_a": {"p": "0.2", "answer": "0.2 1000.0", "wrong1": "0.8 1000.0", "wrong2": "0.2 800.0", "wrong3": "0.2 1250.0"},
-        "case_b": {"p": "0.5", "answer": "0.5 1000.0", "wrong1": "0.5 500.0", "wrong2": "0.0 1000.0", "wrong3": "0.5 2000.0"},
-        "case_c": {"p": "0.8", "answer": "0.8 1000.0", "wrong1": "0.2 1000.0", "wrong2": "0.8 200.0", "wrong3": "0.8 5000.0"}
+        "case_a": {
+          "in_dim": "100",
+          "hidden": "64",
+          "out_dim": "10",
+          "p": "0.5",
+          "answer": "0.5",
+          "wrong1": "1.0",
+          "wrong2": "0.0",
+          "wrong3": "100"
+        },
+        "case_b": {
+          "in_dim": "200",
+          "hidden": "128",
+          "out_dim": "5",
+          "p": "0.3",
+          "answer": "0.3",
+          "wrong1": "1.0",
+          "wrong2": "0.0",
+          "wrong3": "200"
+        },
+        "case_c": {
+          "in_dim": "150",
+          "hidden": "32",
+          "out_dim": "8",
+          "p": "0.2",
+          "answer": "0.2",
+          "wrong1": "1.0",
+          "wrong2": "0.0",
+          "wrong3": "150"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "把 p(丟棄率)與 1-p(保留率)互換"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為 eval 模式仍會把保留元素縮放後再加總、或仍會歸零"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為 eval 模式仍套用 1/(1-p) 的訓練時縮放因子"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤以為 p 是保留率而非丟棄率上限"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤以為 Dropout 預設不丟棄"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤把輸入維度當 p"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "Dropout 的核心是『train/eval 兩模式行為不同』。訓練模式(dropout.train())下,每個元素以機率 p={p} 被獨立歸零,其餘元素乘上 1/(1-p) 做 inverted scaling 以維持期望值不變;在 1000 個元素的大樣本下,實際歸零比例會收斂到 p={p},round 到一位小數得 {p}。評估模式(dropout.eval())下,nn.Dropout 退化為恆等映射,完全透傳不歸零也不縮放,因此 1000 個 1.0 相加 = 1000.0,故輸出為 {answer}。注意這個『eval 透傳』是 PyTorch 的標準設計,讓推論期能用乾淨的全網路。",
+        "correct": "nn.Dropout(p={p}) 在訓練時隨機關閉 p={p} 比例的神經元,防止過度依賴局部特徵。net.dropout.p 直接讀取建構時設定的 p 值,輸出為 {answer}。Dropout 是常用的正則化技術,與 L1/L2 在損失函數加懲罰項不同。",
         "wrong": {
-          "{wrong1}": "把 p(丟棄率)與 1-p(保留率)的角色互換;p 是『被歸零』而非『被保留』的機率。",
-          "{wrong2}": "此值假設 eval 模式仍會做歸零或縮放;實際上 nn.Dropout 在 eval() 後是 identity,輸入幾乎原樣傳出,sum 必為輸入元素總和。",
-          "{wrong3}": "此值把 1/(1-p) 訓練時的縮放因子誤套到 eval 模式;eval 模式不做任何縮放,因此 sum 不會被放大。"
+          "{wrong1}": "1.0 表示丟棄全部神經元,實務上不可能設定如此極端值;此選項把 p 的有效範圍誤以為固定為 1。",
+          "{wrong2}": "0.0 等於不啟用 Dropout,此模型仍會 dropout p={p} 比例,並非 0。",
+          "{wrong3}": "此值是輸入維度 in_features,並非 Dropout 的 p 值。p 為 [0,1] 之間的浮點數,維度數是整數,兩者意義不同。"
         },
-        "hook": "Dropout 雙模式口訣:train() 歸零+1/(1-p)縮放;eval() 純透傳"
+        "hook": "Dropout 程式辨識:nn.Dropout 或 torch.nn.functional.dropout;net.dropout.p 直接讀 p 值"
       },
-      "misconceptions": ["以為 Dropout 在 eval 模式仍會歸零或縮放", "把 p 視為保留率而非丟棄率", "以為 Dropout 訓練與推論行為相同"],
-      "related_node_ids": ["n_L23304_004"],
-      "exam_appearance": [{"exam": "114-2", "q": 39, "subject": 3}],
-      "tags": ["程式判讀", "Dropout", "train", "eval"]
+      "misconceptions": [
+        "看到 dropout 字眼但不確定為什麼是 Dropout"
+      ],
+      "related_node_ids": [],
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 39,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "程式判讀",
+        "Dropout"
+      ]
     },
     {
       "id": "q_0030",
@@ -899,10 +1798,25 @@
       "source_level": "L1",
       "stem": "連鎖咖啡品牌的營運分析師用一條多元線性迴歸預估各門市的週末日營收,模型在驗證集得到 R² = 0.72。從統計學角度,這個 0.72 在描述什麼?",
       "options": [
-        {"text": "模型挑選的特徵能解釋驗證集週末日營收總變異中約 72%", "is_correct": true},
-        {"text": "模型若被用來判斷「是否達標」這類二分類任務,Accuracy 將達 72%", "is_correct": false, "trap_type": "把迴歸 R² 與分類 Accuracy 混為一談"},
-        {"text": "模型預測值平均偏離實際營收的幅度大約是實際值的 28%", "is_correct": false, "trap_type": "誤把 1 - R² 解讀為相對誤差比例"},
-        {"text": "估計係數的統計顯著性所對應的信賴水準維持在 72%", "is_correct": false, "trap_type": "與假設檢定的信賴水準混淆"}
+        {
+          "text": "模型挑選的特徵能解釋驗證集週末日營收總變異中約 72%",
+          "is_correct": true
+        },
+        {
+          "text": "模型若被用來判斷「是否達標」這類二分類任務,Accuracy 將達 72%",
+          "is_correct": false,
+          "trap_type": "把迴歸 R² 與分類 Accuracy 混為一談"
+        },
+        {
+          "text": "模型預測值平均偏離實際營收的幅度大約是實際值的 28%",
+          "is_correct": false,
+          "trap_type": "誤把 1 - R² 解讀為相對誤差比例"
+        },
+        {
+          "text": "估計係數的統計顯著性所對應的信賴水準維持在 72%",
+          "is_correct": false,
+          "trap_type": "與假設檢定的信賴水準混淆"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -914,10 +1828,21 @@
         },
         "hook": "R² 看「變異被解釋多少」,不是分類正確率,也不是相對誤差"
       },
-      "misconceptions": ["把 R² 當成分類準確率或相對誤差"],
+      "misconceptions": [
+        "把 R² 當成分類準確率或相對誤差"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 15, "subject": 3}],
-      "tags": ["評估", "迴歸"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 15,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "評估",
+        "迴歸"
+      ]
     },
     {
       "id": "q_0031",
@@ -929,21 +1854,50 @@
       "source_level": "L1",
       "stem": "下列哪一種優化演算法**內建動量(Momentum)機制**?",
       "options": [
-        {"text": "SGD+Momentum", "is_correct": true},
-        {"text": "Adam(亦內建動量,但選 SGD+Momentum 為最直接答案)", "is_correct": false, "trap_type": "Adam 內建但題型偏直接"},
-        {"text": "RMSProp", "is_correct": false, "trap_type": "自適應學習率,無動量"},
-        {"text": "Adagrad", "is_correct": false, "trap_type": "自適應學習率,無動量"}
+        {
+          "text": "SGD+Momentum",
+          "is_correct": true
+        },
+        {
+          "text": "Adam(亦內建動量,但選 SGD+Momentum 為最直接答案)",
+          "is_correct": false,
+          "trap_type": "Adam 內建但題型偏直接"
+        },
+        {
+          "text": "RMSProp",
+          "is_correct": false,
+          "trap_type": "自適應學習率,無動量"
+        },
+        {
+          "text": "Adagrad",
+          "is_correct": false,
+          "trap_type": "自適應學習率,無動量"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "SGD+Momentum 顧名思義內建動量;Adam 雖也內建動量(結合 Momentum + RMSProp)但 SGD+Momentum 為最直接答案",
-        "wrong": {"RMSProp": "自適應學習率為主,無動量機制", "Adagrad": "累積平方梯度自適應,無動量"},
+        "wrong": {
+          "RMSProp": "自適應學習率為主,無動量機制",
+          "Adagrad": "累積平方梯度自適應,無動量"
+        },
         "hook": "Adam = Momentum + RMSProp;SGD+Momentum = 純動量"
       },
-      "misconceptions": ["以為 SGD 也內建動量(實為 SGD+Momentum 才有)"],
+      "misconceptions": [
+        "以為 SGD 也內建動量(實為 SGD+Momentum 才有)"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 17, "subject": 3}],
-      "tags": ["優化器", "動量"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 17,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "優化器",
+        "動量"
+      ]
     },
     {
       "id": "q_0032",
@@ -955,10 +1909,25 @@
       "source_level": "L1",
       "stem": "在訓練非線性模型時,若目標函數為非凸函數,演算法在參數更新過程中可能出現多個極值點,導致最佳化結果不穩定。此時最可能發生哪一種情況?",
       "options": [
-        {"text": "陷入局部最優解(Local Optima)而無法收斂至全域最佳", "is_correct": true},
-        {"text": "梯度消失(Vanishing Gradient)使深層權重幾乎不更新", "is_correct": false, "trap_type": "與深層網路深度有關"},
-        {"text": "資料量不足以支撐模型學習,導致欠擬合與高偏差", "is_correct": false, "trap_type": "資料量不足與凸性無關"},
-        {"text": "模型出現過擬合(Overfitting),驗證集表現顯著下降", "is_correct": false, "trap_type": "過擬合是泛化問題"}
+        {
+          "text": "陷入局部最優解(Local Optima)而無法收斂至全域最佳",
+          "is_correct": true
+        },
+        {
+          "text": "梯度消失(Vanishing Gradient)使深層權重幾乎不更新",
+          "is_correct": false,
+          "trap_type": "與深層網路深度有關"
+        },
+        {
+          "text": "資料量不足以支撐模型學習,導致欠擬合與高偏差",
+          "is_correct": false,
+          "trap_type": "資料量不足與凸性無關"
+        },
+        {
+          "text": "模型出現過擬合(Overfitting),驗證集表現顯著下降",
+          "is_correct": false,
+          "trap_type": "過擬合是泛化問題"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -970,10 +1939,21 @@
         },
         "hook": "凸 = 唯一全域最優;非凸 = 多局部最優 + 鞍點"
       },
-      "misconceptions": ["把非凸後果誤判為梯度消失或過擬合"],
+      "misconceptions": [
+        "把非凸後果誤判為梯度消失或過擬合"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 3, "subject": 3}],
-      "tags": ["優化", "凸性"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 3,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "優化",
+        "凸性"
+      ]
     },
     {
       "id": "q_0033",
@@ -985,10 +1965,25 @@
       "source_level": "L1",
       "stem": "自駕車團隊使用 LiDAR 距離(公尺)、車速(公里/小時)、轉向角(度)、加速度(m/s²)等異質感測欄位,訓練 KNN 與 RBF-SVM 來判定駕駛情境。**最先且最不可省略**的前處理為何?",
       "options": [
-        {"text": "對所有數值欄位施作標準化或 Min-Max 正規化,讓量級彼此可比", "is_correct": true},
-        {"text": "把連續的車速與加速度切成「低 / 中 / 高」三檔分箱,改餵離散標籤", "is_correct": false, "trap_type": "離散化損失資訊,削弱距離精度"},
-        {"text": "針對偶有遺失的轉向角欄位以該欄位均值補齊,避免空值中斷訓練", "is_correct": false, "trap_type": "為通用步驟,但非距離型模型最敏感的環節"},
-        {"text": "重抽訓練樣本讓正常駕駛、緊急煞車、急轉彎的筆數維持均勻", "is_correct": false, "trap_type": "屬於樣本層級處理,並未解決尺度差異"}
+        {
+          "text": "對所有數值欄位施作標準化或 Min-Max 正規化,讓量級彼此可比",
+          "is_correct": true
+        },
+        {
+          "text": "把連續的車速與加速度切成「低 / 中 / 高」三檔分箱,改餵離散標籤",
+          "is_correct": false,
+          "trap_type": "離散化損失資訊,削弱距離精度"
+        },
+        {
+          "text": "針對偶有遺失的轉向角欄位以該欄位均值補齊,避免空值中斷訓練",
+          "is_correct": false,
+          "trap_type": "為通用步驟,但非距離型模型最敏感的環節"
+        },
+        {
+          "text": "重抽訓練樣本讓正常駕駛、緊急煞車、急轉彎的筆數維持均勻",
+          "is_correct": false,
+          "trap_type": "屬於樣本層級處理,並未解決尺度差異"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -1000,10 +1995,21 @@
         },
         "hook": "KNN / SVM / 線性迴歸 / 神經網路都怕尺度差異,只有樹模型可省略縮放"
       },
-      "misconceptions": ["誤以為樹模型也必須先做特徵縮放"],
+      "misconceptions": [
+        "誤以為樹模型也必須先做特徵縮放"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 9, "subject": 3}],
-      "tags": ["特徵工程", "縮放"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 9,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "特徵工程",
+        "縮放"
+      ]
     },
     {
       "id": "q_0034",
@@ -1015,10 +2021,25 @@
       "source_level": "L1",
       "stem": "某 AI 服務每秒需處理 10,000 次推論請求(RPS),為確保高可用性與穩定應對流量峰值,最合適的架構方案為何?",
       "options": [
-        {"text": "容器化部署 + 水平擴展 + Auto Scaling 自動彈性伸縮", "is_correct": true},
-        {"text": "採購單台超高效能伺服器,以垂直擴展(scale up)強化規格", "is_correct": false, "trap_type": "有上限"},
-        {"text": "在 API Gateway 限制最大同時併發連線數,避免後端過載", "is_correct": false, "trap_type": "犧牲使用者體驗"},
-        {"text": "增加推論批次大小(batch size),一次合併處理上千筆請求", "is_correct": false, "trap_type": "不適即時推論"}
+        {
+          "text": "容器化部署 + 水平擴展 + Auto Scaling 自動彈性伸縮",
+          "is_correct": true
+        },
+        {
+          "text": "採購單台超高效能伺服器,以垂直擴展(scale up)強化規格",
+          "is_correct": false,
+          "trap_type": "有上限"
+        },
+        {
+          "text": "在 API Gateway 限制最大同時併發連線數,避免後端過載",
+          "is_correct": false,
+          "trap_type": "犧牲使用者體驗"
+        },
+        {
+          "text": "增加推論批次大小(batch size),一次合併處理上千筆請求",
+          "is_correct": false,
+          "trap_type": "不適即時推論"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -1030,10 +2051,21 @@
         },
         "hook": "水平 = 多台彈性;垂直 = 單台升規格(有上限)"
       },
-      "misconceptions": ["以為單機升規格能應對流量峰值"],
+      "misconceptions": [
+        "以為單機升規格能應對流量峰值"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 31, "subject": 1}],
-      "tags": ["MLOps", "高可用"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 31,
+          "subject": 1
+        }
+      ],
+      "tags": [
+        "MLOps",
+        "高可用"
+      ]
     },
     {
       "id": "q_0035",
@@ -1045,10 +2077,25 @@
       "source_level": "L1",
       "stem": "某 12 吋晶圓廠導入 AI 缺陷分類系統,工程主管希望以**Phased Rollout**降低良率損失、便於蒐集修正樣本。下列導入順序何者最契合此原則?",
       "options": [
-        {"text": "先選一條成熟製程的測試線實際接管 AOI 判讀,觀察兩週後再擴及量產線", "is_correct": true},
-        {"text": "從產品轉版、新製程的試產線開始啟用,期望讓模型直接面對最複雜的情境", "is_correct": false, "trap_type": "新製程變動大,風險首當其衝"},
-        {"text": "規定只在大夜班、無工程師在場時自動判讀,以避免影響白班生產節奏", "is_correct": false, "trap_type": "夜班缺陷型態不具代表性"},
-        {"text": "全廠所有機台同步切換到「並行建議」模式,讓模型對所有檢測站同時提供分類", "is_correct": false, "trap_type": "全面啟用即使是 advisory 也難以收斂"}
+        {
+          "text": "先選一條成熟製程的測試線實際接管 AOI 判讀,觀察兩週後再擴及量產線",
+          "is_correct": true
+        },
+        {
+          "text": "從產品轉版、新製程的試產線開始啟用,期望讓模型直接面對最複雜的情境",
+          "is_correct": false,
+          "trap_type": "新製程變動大,風險首當其衝"
+        },
+        {
+          "text": "規定只在大夜班、無工程師在場時自動判讀,以避免影響白班生產節奏",
+          "is_correct": false,
+          "trap_type": "夜班缺陷型態不具代表性"
+        },
+        {
+          "text": "全廠所有機台同步切換到「並行建議」模式,讓模型對所有檢測站同時提供分類",
+          "is_correct": false,
+          "trap_type": "全面啟用即使是 advisory 也難以收斂"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -1060,10 +2107,21 @@
         },
         "hook": "Phased Rollout 是「範圍由窄到寬」;Canary Release 是「流量由小到大」"
       },
-      "misconceptions": ["誤以為應該先丟到最具挑戰性的場景以快速取得回饋"],
+      "misconceptions": [
+        "誤以為應該先丟到最具挑戰性的場景以快速取得回饋"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 23, "subject": 1}],
-      "tags": ["部署", "漸進式"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 23,
+          "subject": 1
+        }
+      ],
+      "tags": [
+        "部署",
+        "漸進式"
+      ]
     },
     {
       "id": "q_0036",
@@ -1075,21 +2133,48 @@
       "source_level": "L1",
       "stem": "某金融機構 AI 風控系統遭對抗性攻擊。為解決模型自身脆弱性,下列何者**並非**針對此攻擊的有效手段?",
       "options": [
-        {"text": "強化網路防火牆阻擋未授權連線", "is_correct": true, "trap_type": "防外網非防模型"},
-        {"text": "強化資料前處理過濾異常輸入", "is_correct": false},
-        {"text": "對抗樣本訓練(Adversarial Training)提升模型魯棒性", "is_correct": false},
-        {"text": "推論後規則引擎驗證輸出符合業務規則", "is_correct": false}
+        {
+          "text": "強化網路防火牆阻擋未授權連線",
+          "is_correct": true,
+          "trap_type": "防外網非防模型"
+        },
+        {
+          "text": "強化資料前處理過濾異常輸入",
+          "is_correct": false
+        },
+        {
+          "text": "對抗樣本訓練(Adversarial Training)提升模型魯棒性",
+          "is_correct": false
+        },
+        {
+          "text": "推論後規則引擎驗證輸出符合業務規則",
+          "is_correct": false
+        }
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "對抗性攻擊是『模型本身脆弱性』,網路防火牆只防外網入侵,不解決模型內部問題",
-        "wrong": {"對抗樣本訓練(Adversarial Training)提升模型魯棒性": "模型層級防禦"},
+        "wrong": {
+          "對抗樣本訓練(Adversarial Training)提升模型魯棒性": "模型層級防禦"
+        },
         "hook": "三層防禦:輸入過濾(Pre)/ 對抗訓練(In)/ 規則引擎(Post)"
       },
-      "misconceptions": ["以為網路防火牆能防對抗性攻擊"],
+      "misconceptions": [
+        "以為網路防火牆能防對抗性攻擊"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 24, "subject": 1}],
-      "tags": ["風險", "對抗攻擊", "陷阱題"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 24,
+          "subject": 1
+        }
+      ],
+      "tags": [
+        "風險",
+        "對抗攻擊",
+        "陷阱題"
+      ]
     },
     {
       "id": "q_0037",
@@ -1101,10 +2186,25 @@
       "source_level": "L1",
       "stem": "某律師事務所推出 AI 合約風險審閱平台,客戶法務之後可能會在訴訟中引用平台給出的審閱結論。為符合電子簽章法的**不可否認(Non-repudiation)**要求,下列哪個機制最切合此目的?",
       "options": [
-        {"text": "對每次審閱結果連同輸入合約計算雜湊值,並由平台與客戶端各自以私鑰完成數位簽章後一併保存", "is_correct": true},
-        {"text": "升級審閱模型到更大的語言模型,讓單次審閱回應時間壓在 5 秒內,提升使用者體驗", "is_correct": false, "trap_type": "屬效能優化,無法證明訊息來源與內容未被竄改"},
-        {"text": "於核心審閱服務後方布署主備機房,確保任一節點故障時平台可以即時接手", "is_correct": false, "trap_type": "解決的是可用性,不負責對外可舉證的紀錄"},
-        {"text": "在 API 層加上 Rate Limit 與 IP 白名單,封鎖異常頻率與非預期來源的呼叫", "is_correct": false, "trap_type": "屬於存取控制,雖能擋外部濫用,但不證明內部紀錄未被否認"}
+        {
+          "text": "對每次審閱結果連同輸入合約計算雜湊值,並由平台與客戶端各自以私鑰完成數位簽章後一併保存",
+          "is_correct": true
+        },
+        {
+          "text": "升級審閱模型到更大的語言模型,讓單次審閱回應時間壓在 5 秒內,提升使用者體驗",
+          "is_correct": false,
+          "trap_type": "屬效能優化,無法證明訊息來源與內容未被竄改"
+        },
+        {
+          "text": "於核心審閱服務後方布署主備機房,確保任一節點故障時平台可以即時接手",
+          "is_correct": false,
+          "trap_type": "解決的是可用性,不負責對外可舉證的紀錄"
+        },
+        {
+          "text": "在 API 層加上 Rate Limit 與 IP 白名單,封鎖異常頻率與非預期來源的呼叫",
+          "is_correct": false,
+          "trap_type": "屬於存取控制,雖能擋外部濫用,但不證明內部紀錄未被否認"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -1116,10 +2216,22 @@
         },
         "hook": "完整性看 Hash;不可否認看 Hash + 簽章;可用性看備援;機密性看加密"
       },
-      "misconceptions": ["把可用性、效能、存取控制誤當成不可否認的解決方案"],
+      "misconceptions": [
+        "把可用性、效能、存取控制誤當成不可否認的解決方案"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 30, "subject": 1}],
-      "tags": ["風險", "資安", "不可否認"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 30,
+          "subject": 1
+        }
+      ],
+      "tags": [
+        "風險",
+        "資安",
+        "不可否認"
+      ]
     },
     {
       "id": "q_0038",
@@ -1131,10 +2243,25 @@
       "source_level": "L1",
       "stem": "某 AI 開發團隊計畫實施持續整合(Continuous Integration, CI)。下列哪一項做法**最符合**CI 核心實踐?",
       "options": [
-        {"text": "每次程式碼提交(commit)後自動觸發建置、單元測試與靜態分析", "is_correct": true},
-        {"text": "每日固定時間由負責工程師手動將各分支合併並執行整合測試", "is_correct": false, "trap_type": "手動非自動"},
-        {"text": "在每次模型訓練完成後定期回顧訓練成果並再合併程式碼至主幹", "is_correct": false, "trap_type": "與訓練無關"},
-        {"text": "透過自動化部署管道將最新模型批次發佈至測試或預備(staging)環境", "is_correct": false, "trap_type": "為 CD"}
+        {
+          "text": "每次程式碼提交(commit)後自動觸發建置、單元測試與靜態分析",
+          "is_correct": true
+        },
+        {
+          "text": "每日固定時間由負責工程師手動將各分支合併並執行整合測試",
+          "is_correct": false,
+          "trap_type": "手動非自動"
+        },
+        {
+          "text": "在每次模型訓練完成後定期回顧訓練成果並再合併程式碼至主幹",
+          "is_correct": false,
+          "trap_type": "與訓練無關"
+        },
+        {
+          "text": "透過自動化部署管道將最新模型批次發佈至測試或預備(staging)環境",
+          "is_correct": false,
+          "trap_type": "為 CD"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -1146,10 +2273,21 @@
         },
         "hook": "CI = commit 即整合;CD = 部署"
       },
-      "misconceptions": ["把 CI 當作每日整合"],
+      "misconceptions": [
+        "把 CI 當作每日整合"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 29, "subject": 1}],
-      "tags": ["MLOps", "CI"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 29,
+          "subject": 1
+        }
+      ],
+      "tags": [
+        "MLOps",
+        "CI"
+      ]
     },
     {
       "id": "q_0039",
@@ -1161,21 +2299,49 @@
       "source_level": "L1",
       "stem": "若要建立高效能 RAG(檢索增強生成)系統,下列何者為**檢索階段最關鍵**的挑戰?",
       "options": [
-        {"text": "避免向量檢索結果僅具語意相似但與查詢意圖無實質關聯", "is_correct": true},
-        {"text": "確保檢索文件能完整納入上下文視窗(Context Window)", "is_correct": false, "trap_type": "次要挑戰"},
-        {"text": "選擇 Faiss 或 ScaNN 等近似最近鄰函式庫", "is_correct": false, "trap_type": "工具選擇非核心"},
-        {"text": "降低嵌入模型在高維空間的計算成本", "is_correct": false, "trap_type": "效能非品質"}
+        {
+          "text": "避免向量檢索結果僅具語意相似但與查詢意圖無實質關聯",
+          "is_correct": true
+        },
+        {
+          "text": "確保檢索文件能完整納入上下文視窗(Context Window)",
+          "is_correct": false,
+          "trap_type": "次要挑戰"
+        },
+        {
+          "text": "選擇 Faiss 或 ScaNN 等近似最近鄰函式庫",
+          "is_correct": false,
+          "trap_type": "工具選擇非核心"
+        },
+        {
+          "text": "降低嵌入模型在高維空間的計算成本",
+          "is_correct": false,
+          "trap_type": "效能非品質"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "檢索品質決定 RAG 整體效能;最大挑戰是『語意相似 ≠ 意圖相符』,需精準的查詢意圖匹配",
-        "wrong": {"確保檢索文件能完整納入上下文視窗(Context Window)": "為次要挑戰,且現代 LLM 上下文窗已大"},
+        "wrong": {
+          "確保檢索文件能完整納入上下文視窗(Context Window)": "為次要挑戰,且現代 LLM 上下文窗已大"
+        },
         "hook": "RAG 比喻:LLM 閉卷、RAG 開卷;檢索的『書』要對才有意義"
       },
-      "misconceptions": ["以為 Context Window 是 RAG 主要瓶頸"],
+      "misconceptions": [
+        "以為 Context Window 是 RAG 主要瓶頸"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 17, "subject": 1}],
-      "tags": ["NLP", "RAG"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 17,
+          "subject": 1
+        }
+      ],
+      "tags": [
+        "NLP",
+        "RAG"
+      ]
     },
     {
       "id": "q_0040",
@@ -1187,10 +2353,25 @@
       "source_level": "L1",
       "stem": "下列何者最正確描述 VAE、GAN 與 Diffusion 三大生成模型在多模態潛在空間對齊與生成策略上的根本差異?",
       "options": [
-        {"text": "VAE 用顯式潛在變數對齊;GAN 用對抗損失映射;Diffusion 用條件化噪聲反推生成", "is_correct": true},
-        {"text": "VAE 與 Diffusion 均屬隱式生成模型,主要依賴生成器與判別器之間的對抗損失進行訓練", "is_correct": false, "trap_type": "三者訓練策略不同"},
-        {"text": "VAE 與 GAN 都採用多步馬爾可夫鏈做不同潛在空間之間的跨模態轉換與生成", "is_correct": false, "trap_type": "馬爾可夫鏈為 Diffusion 概念"},
-        {"text": "三者皆依賴完全相同的共享潛在表徵空間,各模型差異僅在於解碼器架構不同", "is_correct": false, "trap_type": "三者潛在空間建模差異大"}
+        {
+          "text": "VAE 用顯式潛在變數對齊;GAN 用對抗損失映射;Diffusion 用條件化噪聲反推生成",
+          "is_correct": true
+        },
+        {
+          "text": "VAE 與 Diffusion 均屬隱式生成模型,主要依賴生成器與判別器之間的對抗損失進行訓練",
+          "is_correct": false,
+          "trap_type": "三者訓練策略不同"
+        },
+        {
+          "text": "VAE 與 GAN 都採用多步馬爾可夫鏈做不同潛在空間之間的跨模態轉換與生成",
+          "is_correct": false,
+          "trap_type": "馬爾可夫鏈為 Diffusion 概念"
+        },
+        {
+          "text": "三者皆依賴完全相同的共享潛在表徵空間,各模型差異僅在於解碼器架構不同",
+          "is_correct": false,
+          "trap_type": "三者潛在空間建模差異大"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -1202,10 +2383,22 @@
         },
         "hook": "三選法:VAE 訓練穩但模糊;GAN 銳利但不穩;Diffusion 質高但慢"
       },
-      "misconceptions": ["把三者生成原理混為一談"],
+      "misconceptions": [
+        "把三者生成原理混為一談"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 40, "subject": 1}],
-      "tags": ["生成式", "VAE/GAN/Diffusion", "高優先預測"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 40,
+          "subject": 1
+        }
+      ],
+      "tags": [
+        "生成式",
+        "VAE/GAN/Diffusion",
+        "高優先預測"
+      ]
     },
     {
       "id": "q_0041",
@@ -1217,10 +2410,25 @@
       "source_level": "L1",
       "stem": "DNN 訓練時,驗證集損失在第 80 輪後呈現週期性波動。若要合理運用早期停止(Early Stopping)以確保最佳泛化,最適當策略為何?",
       "options": [
-        {"text": "監控驗證集損失,設定適度耐心值(patience),連續多輪未改善後再停止", "is_correct": true},
-        {"text": "改以訓練集(Training Set)損失曲線最低點作為停止訓練的最終判斷依據", "is_correct": false, "trap_type": "錯誤監控對象"},
-        {"text": "改採測試集(Test Set)損失曲線作為早期停止訓練之觸發判斷指標", "is_correct": false, "trap_type": "測試集不應參與訓練決策"},
-        {"text": "將訓練、驗證、測試三類資料全部合併後一併送進模型訓練至完全收斂", "is_correct": false, "trap_type": "失去評估"}
+        {
+          "text": "監控驗證集損失,設定適度耐心值(patience),連續多輪未改善後再停止",
+          "is_correct": true
+        },
+        {
+          "text": "改以訓練集(Training Set)損失曲線最低點作為停止訓練的最終判斷依據",
+          "is_correct": false,
+          "trap_type": "錯誤監控對象"
+        },
+        {
+          "text": "改採測試集(Test Set)損失曲線作為早期停止訓練之觸發判斷指標",
+          "is_correct": false,
+          "trap_type": "測試集不應參與訓練決策"
+        },
+        {
+          "text": "將訓練、驗證、測試三類資料全部合併後一併送進模型訓練至完全收斂",
+          "is_correct": false,
+          "trap_type": "失去評估"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -1232,10 +2440,21 @@
         },
         "hook": "三禁:依 train loss 早停 / 依 test set / 不切驗證集"
       },
-      "misconceptions": ["依錯誤指標早停"],
+      "misconceptions": [
+        "依錯誤指標早停"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 31, "subject": 3}],
-      "tags": ["過擬合", "Early Stopping"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 31,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "過擬合",
+        "Early Stopping"
+      ]
     },
     {
       "id": "q_0042",
@@ -1247,21 +2466,50 @@
       "source_level": "L1",
       "stem": "某客戶相似度比對系統需逐一比對每位客戶與其他所有客戶的資料組合,此演算法的時間複雜度為何?",
       "options": [
-        {"text": "O(n²) — 執行時間與資料量平方成正比", "is_correct": true},
-        {"text": "O(n) — 線性關係", "is_correct": false, "trap_type": "n 次比對非線性"},
-        {"text": "O(1) — 固定不變", "is_correct": false, "trap_type": "與 n 有關"},
-        {"text": "O(log n) — 對數成長", "is_correct": false, "trap_type": "需排序才會 log"}
+        {
+          "text": "O(n²) — 雙重迴圈,n² 級成長",
+          "is_correct": true,
+          "trap_type": null
+        },
+        {
+          "text": "O(n) — 單迴圈線性比對",
+          "is_correct": false,
+          "trap_type": "低估雙層巢狀的成本"
+        },
+        {
+          "text": "O(1) — 不隨資料量變化",
+          "is_correct": false,
+          "trap_type": "忽略需要兩兩比對"
+        },
+        {
+          "text": "O(log n) — 對數級成長",
+          "is_correct": false,
+          "trap_type": "誤套二分搜的形式"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "兩兩比對 n 個客戶 = n × (n-1) / 2 ≈ O(n²)",
-        "wrong": {"O(log n) — 對數成長": "對數成長僅出現於分治演算法"},
+        "wrong": {
+          "O(log n) — 對數成長": "對數成長僅出現於分治演算法"
+        },
         "hook": "兩層巢狀迴圈 = O(n²)"
       },
-      "misconceptions": ["不會分辨複雜度層級"],
+      "misconceptions": [
+        "不會分辨複雜度層級"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 33, "subject": 3}],
-      "tags": ["演算法", "複雜度"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 33,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "演算法",
+        "複雜度"
+      ]
     },
     {
       "id": "q_0043",
@@ -1273,21 +2521,47 @@
       "source_level": "L1",
       "stem": "傳統信用評分卡模型開發採用邏輯迴歸,下列哪一項**不是**標準開發步驟?",
       "options": [
-        {"text": "使用生成式模型進行特徵學習", "is_correct": true, "trap_type": "非標準步驟"},
-        {"text": "進行特徵選擇與多重共線性分析", "is_correct": false},
-        {"text": "進行分箱(Binning)與資訊值(IV)檢定", "is_correct": false},
-        {"text": "使用 PSI 樣本穩定性指標檢驗模型穩定性", "is_correct": false}
+        {
+          "text": "使用生成式模型進行特徵學習",
+          "is_correct": true,
+          "trap_type": "非標準步驟"
+        },
+        {
+          "text": "進行特徵選擇與多重共線性分析",
+          "is_correct": false
+        },
+        {
+          "text": "進行分箱(Binning)與資訊值(IV)檢定",
+          "is_correct": false
+        },
+        {
+          "text": "使用 PSI 樣本穩定性指標檢驗模型穩定性",
+          "is_correct": false
+        }
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "傳統評分卡標準流程:特徵選擇 → 多重共線性 → 分箱 IV → 邏輯迴歸 → PSI;**生成式模型不在標準流程**",
-        "wrong": {"進行分箱(Binning)與資訊值(IV)檢定": "標準步驟之一"},
+        "wrong": {
+          "進行分箱(Binning)與資訊值(IV)檢定": "標準步驟之一"
+        },
         "hook": "評分卡 = 邏輯迴歸 + 標準前處理;不用深度/生成式"
       },
-      "misconceptions": ["以為現代信用評分用生成式 AI"],
+      "misconceptions": [
+        "以為現代信用評分用生成式 AI"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 25, "subject": 3}],
-      "tags": ["信用評分", "陷阱題"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 25,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "信用評分",
+        "陷阱題"
+      ]
     },
     {
       "id": "q_0044",
@@ -1299,10 +2573,25 @@
       "source_level": "L1",
       "stem": "某商品評論分析希望模型能捕捉特徵間關聯影響(如『商品價格』與『顧客滿意度』互動)。下列何者最適合作為**互動特徵**?",
       "options": [
-        {"text": "將兩個或多個原始特徵進行乘積或交互運算組合成新欄位", "is_correct": true},
-        {"text": "對單一連續型特徵取平方項或更高次方做多項式擴展", "is_correct": false, "trap_type": "為非線性,非互動"},
-        {"text": "對所有右偏分佈之數值特徵統一做對數(log)轉換", "is_correct": false, "trap_type": "資料分布調整"},
-        {"text": "對輸入特徵做標準化(z-score)或最小最大尺度縮放", "is_correct": false, "trap_type": "尺度調整"}
+        {
+          "text": "將兩個或多個原始特徵進行乘積或交互運算組合成新欄位",
+          "is_correct": true
+        },
+        {
+          "text": "對單一連續型特徵取平方項或更高次方做多項式擴展",
+          "is_correct": false,
+          "trap_type": "為非線性,非互動"
+        },
+        {
+          "text": "對所有右偏分佈之數值特徵統一做對數(log)轉換",
+          "is_correct": false,
+          "trap_type": "資料分布調整"
+        },
+        {
+          "text": "對輸入特徵做標準化(z-score)或最小最大尺度縮放",
+          "is_correct": false,
+          "trap_type": "尺度調整"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -1314,10 +2603,21 @@
         },
         "hook": "互動 = 多特徵乘積;非線性 = 單特徵變換"
       },
-      "misconceptions": ["把『多項式特徵』當互動特徵"],
+      "misconceptions": [
+        "把『多項式特徵』當互動特徵"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 20, "subject": 3}],
-      "tags": ["特徵工程", "互動"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 20,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "特徵工程",
+        "互動"
+      ]
     },
     {
       "id": "q_0045",
@@ -1329,10 +2629,25 @@
       "source_level": "L1",
       "stem": "某大型語音合成模型訓練時 GPU 記憶體不足,模型架構與硬體均不可換。下列何者最有效降低單張 GPU 記憶體壓力?",
       "options": [
-        {"text": "縮小 Batch Size 並搭配資料分片(Data Sharding)", "is_correct": true},
-        {"text": "縮減整體訓練樣本數量,只取部分代表性資料進行模型訓練", "is_correct": false, "trap_type": "降低品質"},
-        {"text": "提高優化器的學習率(Learning Rate)以加快模型收斂速度", "is_correct": false, "trap_type": "與記憶體無關"},
-        {"text": "改以測試集(Test Set)資料進行部分訓練,以節省 GPU 資源", "is_correct": false, "trap_type": "嚴重錯誤"}
+        {
+          "text": "縮小 Batch Size 並搭配資料分片(Data Sharding)",
+          "is_correct": true
+        },
+        {
+          "text": "縮減整體訓練樣本數量,只取部分代表性資料進行模型訓練",
+          "is_correct": false,
+          "trap_type": "降低品質"
+        },
+        {
+          "text": "提高優化器的學習率(Learning Rate)以加快模型收斂速度",
+          "is_correct": false,
+          "trap_type": "與記憶體無關"
+        },
+        {
+          "text": "改以測試集(Test Set)資料進行部分訓練,以節省 GPU 資源",
+          "is_correct": false,
+          "trap_type": "嚴重錯誤"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -1344,10 +2659,21 @@
         },
         "hook": "GPU 記憶體優化:小 batch + sharding + 混合精度 + 梯度累積"
       },
-      "misconceptions": ["以為減少訓練資料能解決記憶體問題"],
+      "misconceptions": [
+        "以為減少訓練資料能解決記憶體問題"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 37, "subject": 1}],
-      "tags": ["訓練", "記憶體"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 37,
+          "subject": 1
+        }
+      ],
+      "tags": [
+        "訓練",
+        "記憶體"
+      ]
     },
     {
       "id": "q_0046",
@@ -1359,10 +2685,25 @@
       "source_level": "L1",
       "stem": "電網調度中心使用 DBSCAN 對全國變電所每 15 分鐘的負載剖面分群以揪出異常用電型態。某個變電所的剖面落在低密度區:它本身的 ε 鄰域內可數樣本未達 MinPts,亦不落在任何已成形群集的 ε 鄰域內,因此沒有任何核心點能藉由密度可達抵達它。DBSCAN 會把這個剖面標成什麼?",
       "options": [
-        {"text": "雜訊點(Noise Point)", "is_correct": true},
-        {"text": "鄰近點(Neighbor Point)", "is_correct": false, "trap_type": "DBSCAN 並沒有此分類,屬杜撰名詞"},
-        {"text": "邊界點(Border Point)", "is_correct": false, "trap_type": "邊界點必須位於某核心點的 ε 鄰域中"},
-        {"text": "潛在點(Potential Point)", "is_correct": false, "trap_type": "DBSCAN 並沒有此分類,屬杜撰名詞"}
+        {
+          "text": "雜訊點(Noise Point)",
+          "is_correct": true
+        },
+        {
+          "text": "鄰近點(Neighbor Point)",
+          "is_correct": false,
+          "trap_type": "DBSCAN 並沒有此分類,屬杜撰名詞"
+        },
+        {
+          "text": "邊界點(Border Point)",
+          "is_correct": false,
+          "trap_type": "邊界點必須位於某核心點的 ε 鄰域中"
+        },
+        {
+          "text": "潛在點(Potential Point)",
+          "is_correct": false,
+          "trap_type": "DBSCAN 並沒有此分類,屬杜撰名詞"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -1374,10 +2715,23 @@
         },
         "hook": "排除核心、排除被覆蓋,剩下的只有雜訊"
       },
-      "misconceptions": ["把雜訊點與邊界點視為同一種「不夠中心」的角色"],
-      "related_node_ids": ["n_L23202_002"],
-      "exam_appearance": [{"exam": "114-2", "q": 4, "subject": 3}],
-      "tags": ["DBSCAN", "聚類"]
+      "misconceptions": [
+        "把雜訊點與邊界點視為同一種「不夠中心」的角色"
+      ],
+      "related_node_ids": [
+        "n_L23202_002"
+      ],
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 4,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "DBSCAN",
+        "聚類"
+      ]
     },
     {
       "id": "q_0047",
@@ -1389,10 +2743,25 @@
       "source_level": "L1",
       "stem": "某房地產公司用多元迴歸模型預測房價,殘差圖在高價區出現**系統性彎曲分佈**。最合理解釋為何?",
       "options": [
-        {"text": "資料中存在異常值,或自變數與因變數之間存在非線性關係,違反迴歸假設", "is_correct": true},
-        {"text": "模型在訓練資料上產生過度擬合(Overfitting),記憶過多噪聲", "is_correct": false, "trap_type": "OF 為訓練/驗證差距大"},
-        {"text": "模型欠擬合(Underfitting),需要再加入更多解釋特徵與互動項", "is_correct": false, "trap_type": "現象不符欠擬合"},
-        {"text": "殘差呈現隨機散佈於 0 兩側,代表模型已完全符合迴歸基本假設", "is_correct": false, "trap_type": "理解錯誤"}
+        {
+          "text": "資料中存在異常值,或自變數與因變數之間存在非線性關係,違反迴歸假設",
+          "is_correct": true
+        },
+        {
+          "text": "模型在訓練資料上產生過度擬合(Overfitting),記憶過多噪聲",
+          "is_correct": false,
+          "trap_type": "OF 為訓練/驗證差距大"
+        },
+        {
+          "text": "模型欠擬合(Underfitting),需要再加入更多解釋特徵與互動項",
+          "is_correct": false,
+          "trap_type": "現象不符欠擬合"
+        },
+        {
+          "text": "殘差呈現隨機散佈於 0 兩側,代表模型已完全符合迴歸基本假設",
+          "is_correct": false,
+          "trap_type": "理解錯誤"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -1404,10 +2773,21 @@
         },
         "hook": "殘差為白噪音才符合假設"
       },
-      "misconceptions": ["把彎曲殘差誤判為過擬合"],
+      "misconceptions": [
+        "把彎曲殘差誤判為過擬合"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 24, "subject": 3}],
-      "tags": ["迴歸", "殘差"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 24,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "迴歸",
+        "殘差"
+      ]
     },
     {
       "id": "q_0048",
@@ -1419,10 +2799,25 @@
       "source_level": "L1",
       "stem": "某電商顧客流失預測模型上線數月後準確率下降,團隊懷疑顧客行為改變。為**偵測並確認資料分佈變化**,最合適做法為何?",
       "options": [
-        {"text": "計算當前輸入特徵分佈與訓練分佈間的 KL 散度(KL Divergence)", "is_correct": true},
-        {"text": "依固定週期(例如每月)定期重新訓練模型,以應對顧客行為與市場環境的外部變化", "is_correct": false, "trap_type": "對策非偵測"},
-        {"text": "提升模型架構的複雜度與整體參數量,使其能捕捉到更多顧客行為的細微變異性", "is_correct": false, "trap_type": "錯誤方向"},
-        {"text": "擴增測試資料量並反覆重複評估指標,以提高準確率(Accuracy)衡量結果的統計穩定性", "is_correct": false, "trap_type": "與漂移偵測無關"}
+        {
+          "text": "計算當前輸入特徵分佈與訓練分佈間的 KL 散度(KL Divergence)",
+          "is_correct": true
+        },
+        {
+          "text": "依固定週期(例如每月)定期重新訓練模型,以應對顧客行為與市場環境的外部變化",
+          "is_correct": false,
+          "trap_type": "對策非偵測"
+        },
+        {
+          "text": "提升模型架構的複雜度與整體參數量,使其能捕捉到更多顧客行為的細微變異性",
+          "is_correct": false,
+          "trap_type": "錯誤方向"
+        },
+        {
+          "text": "擴增測試資料量並反覆重複評估指標,以提高準確率(Accuracy)衡量結果的統計穩定性",
+          "is_correct": false,
+          "trap_type": "與漂移偵測無關"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -1434,10 +2829,21 @@
         },
         "hook": "Drift 偵測:PSI / KL Divergence / KS test 三大主流"
       },
-      "misconceptions": ["把對策誤判為偵測手段"],
+      "misconceptions": [
+        "把對策誤判為偵測手段"
+      ],
       "related_node_ids": [],
-      "exam_appearance": [{"exam": "114-2", "q": 22, "subject": 1}],
-      "tags": ["MLOps", "Drift"]
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 22,
+          "subject": 1
+        }
+      ],
+      "tags": [
+        "MLOps",
+        "Drift"
+      ]
     },
     {
       "id": "q_0049",
@@ -1449,10 +2855,25 @@
       "source_level": "L1",
       "stem": "精準農業團隊整合土壤 N/P/K、含水率、EC、pH 與多波段衛星指標,共 60 多個高度相關欄位來預測單期作物產量。在控制過擬合的同時,希望讓模型「**自己**」決定哪些欄位真正影響產量、其餘自動關閉。下列何者最直接達成此需求?",
       "options": [
-        {"text": "在迴歸目標上加 L1 懲罰(Lasso),逼迫一部分係數收斂到 0,等同於做出特徵取捨", "is_correct": true},
-        {"text": "改採 Early Stopping,在驗證集 RMSE 連續上升時提早結束本輪訓練", "is_correct": false, "trap_type": "Early Stopping 控制的是訓練回合,不會把任何特徵的權重設為 0"},
-        {"text": "改用 L2 懲罰(Ridge),統一收斂全部係數的數值幅度但仍保留所有欄位", "is_correct": false, "trap_type": "Ridge 只縮小,不歸零,故無法產生稀疏的特徵集合"},
-        {"text": "事前先用 VIF 抽掉共線性最嚴重的欄位,再於剩餘欄位上只施加 L2 訓練", "is_correct": false, "trap_type": "VIF 是人工篩,L2 仍不會稀疏化,缺乏「自動關閉特徵」的機制"}
+        {
+          "text": "在迴歸目標上加 L1 懲罰(Lasso),逼迫一部分係數收斂到 0,等同於做出特徵取捨",
+          "is_correct": true
+        },
+        {
+          "text": "改採 Early Stopping,在驗證集 RMSE 連續上升時提早結束本輪訓練",
+          "is_correct": false,
+          "trap_type": "Early Stopping 控制的是訓練回合,不會把任何特徵的權重設為 0"
+        },
+        {
+          "text": "改用 L2 懲罰(Ridge),統一收斂全部係數的數值幅度但仍保留所有欄位",
+          "is_correct": false,
+          "trap_type": "Ridge 只縮小,不歸零,故無法產生稀疏的特徵集合"
+        },
+        {
+          "text": "事前先用 VIF 抽掉共線性最嚴重的欄位,再於剩餘欄位上只施加 L2 訓練",
+          "is_correct": false,
+          "trap_type": "VIF 是人工篩,L2 仍不會稀疏化,缺乏「自動關閉特徵」的機制"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -1464,10 +2885,23 @@
         },
         "hook": "要稀疏 → L1 Lasso;只要平滑 → L2 Ridge"
       },
-      "misconceptions": ["以為 L2 也能讓特徵權重歸零、達到自動特徵選擇"],
-      "related_node_ids": ["n_L23304_002"],
-      "exam_appearance": [{"exam": "114-2", "q": 32, "subject": 3}],
-      "tags": ["正則化", "特徵選擇"]
+      "misconceptions": [
+        "以為 L2 也能讓特徵權重歸零、達到自動特徵選擇"
+      ],
+      "related_node_ids": [
+        "n_L23304_002"
+      ],
+      "exam_appearance": [
+        {
+          "exam": "114-2",
+          "q": 32,
+          "subject": 3
+        }
+      ],
+      "tags": [
+        "正則化",
+        "特徵選擇"
+      ]
     },
     {
       "id": "q_0050",
@@ -1479,10 +2913,25 @@
       "source_level": "L1",
       "stem": "某模型訓練時,訓練集損失持續下降,但驗證集損失自第 80 輪後**開始上升**。此現象代表?",
       "options": [
-        {"text": "過擬合(Overfitting)— 模型開始學到訓練雜訊", "is_correct": true},
-        {"text": "欠擬合(Underfitting)— 模型容量不足無法擬合資料", "is_correct": false, "trap_type": "兩者損失皆會高"},
-        {"text": "梯度消失(Vanishing Gradient)— 深層權重幾乎不再更新", "is_correct": false, "trap_type": "與深度傳播有關"},
-        {"text": "模型訓練成功收斂,可直接停止訓練上線部署使用", "is_correct": false, "trap_type": "錯誤判斷"}
+        {
+          "text": "過擬合(Overfitting)— 模型開始學到訓練雜訊",
+          "is_correct": true
+        },
+        {
+          "text": "欠擬合(Underfitting)— 模型容量不足無法擬合資料",
+          "is_correct": false,
+          "trap_type": "兩者損失皆會高"
+        },
+        {
+          "text": "梯度消失(Vanishing Gradient)— 深層權重幾乎不再更新",
+          "is_correct": false,
+          "trap_type": "與深度傳播有關"
+        },
+        {
+          "text": "模型訓練成功收斂,可直接停止訓練上線部署使用",
+          "is_correct": false,
+          "trap_type": "錯誤判斷"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -1494,16 +2943,36 @@
         },
         "hook": "過擬合 = 訓練好、驗證壞;欠擬合 = 兩者皆壞"
       },
-      "misconceptions": ["把過擬合與欠擬合混淆"],
-      "related_node_ids": ["n_L23304_002", "n_L23304_003", "n_L23304_004"],
-      "tags": ["過擬合", "高頻"]
+      "misconceptions": [
+        "把過擬合與欠擬合混淆"
+      ],
+      "related_node_ids": [
+        "n_L23304_002",
+        "n_L23304_003",
+        "n_L23304_004"
+      ],
+      "tags": [
+        "過擬合",
+        "高頻"
+      ]
     }
   ],
   "summary": {
     "batch_1_total": 50,
-    "by_subject": {"subject_1": 17, "subject_3": 33},
-    "by_format": {"single_choice": 44, "code_reading": 2, "calculation": 4},
-    "by_difficulty": {"easy": 17, "medium": 28, "hard": 5},
+    "by_subject": {
+      "subject_1": 17,
+      "subject_3": 33
+    },
+    "by_format": {
+      "single_choice": 44,
+      "code_reading": 2,
+      "calculation": 4
+    },
+    "by_difficulty": {
+      "easy": 17,
+      "medium": 28,
+      "hard": 5
+    },
     "errata_critical": 5,
     "must_cover": 4,
     "iron_rule_1_compliance": "all 50 questions have explanation/misconceptions/related_node_ids",

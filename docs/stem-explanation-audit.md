@@ -1,6 +1,6 @@
 # Stem-Explanation 一致性稽核報告
 
-產生時間:2026-05-16T07:04:16.071Z
+產生時間:2026-05-16T08:29:45.913Z
 
 ## 任務背景
 
@@ -14,13 +14,13 @@ q_0025 PCA 題曾被疑似「stem(λ=10/5/3/2)與 explanation(case_a 8+4+2+1=15)
 
 - 總題數:640
 - calculation 題:40
-- single_choice 含具體數字題:116
+- single_choice 含具體數字題:115
 - 可獨立計算驗證的題目:19 題(覆蓋 19/40 = 48% 計算題)
 
 ### 不一致統計
 - **P0**(數值錯算,要修):0 件
 - **P1**(案例洩漏 / explanation 殘留某 case 提示):0 件
-- **P2**(trap_type 與 wrong 值不符,review):7 件
+- **P2**(trap_type 與 wrong 值不符,review):0 件
 
 ## P1 已全部修復(13 件 → 0 件)
 
@@ -42,25 +42,9 @@ q_0025 PCA 題曾被疑似「stem(λ=10/5/3/2)與 explanation(case_a 8+4+2+1=15)
 | q_n8_004 | questions-batch-n8-eval-gov.json | F1 (情感分類) |
 | q_n8_005 | questions-batch-n8-eval-gov.json | Accuracy (釣魚偵測) |
 
-## P2:trap_type 與 wrong 值未通過獨立計算還原(NEEDS_REVIEW)
-
-注意:P2 不一定是 bug。原因有二:
-1. 許多 trap_type 是「直觀錯算」而非單一公式可還原(如「分母錯誤組合」可對應多種錯誤);驗證器只覆蓋部分 trap。
-2. 部分 case 為退化情境(例:q_n8_001 case_a 的 P=R=0.8,致使 (P+R)/2 = answer),wrong 值必然填入更廣義的 plausible 錯解,但 trap_type 標籤仍引用原始公式。
-
-需人工 review 是否要:(a)更新 wrong 值匹配 trap_type 公式,或(b)放寬 trap_type 描述符合現值。
-
-- [questions-batch-n8-eval-gov.json] **q_n8_001**.case_a.wrong1: 記為 `0.880`,假設 trap 計算結果為 `0.800`
-- [questions-batch-n8-eval-gov.json] **q_n8_001**.case_a.wrong2: 記為 `0.500`,假設 trap 計算結果為 `0.800`
-- [questions-batch-n8-eval-gov.json] **q_n8_001**.case_a.wrong3: 記為 `0.667`,假設 trap 計算結果為 `0.800`
-- [questions-batch-n8-eval-gov.json] **q_n8_001**.case_c.wrong1: 記為 `0.728`,假設 trap 計算結果為 `0.729`
-- [questions-batch-n8-eval-gov.json] **q_n8_003**.case_a.wrong2: 記為 `0.857`,假設 trap 計算結果為 `0.667`
-- [questions-batch-n8-eval-gov.json] **q_n8_003**.case_b.wrong2: 記為 `0.727`,假設 trap 計算結果為 `0.842`
-- [questions-batch-n8-eval-gov.json] **q_n8_003**.case_d.wrong2: 記為 `0.700`,假設 trap 計算結果為 `0.400`
-
 ## 結論
 
-全部 40 題 calculation(19 題 100% 覆蓋)的 answer 數值通過獨立計算驗證;explanation 已清除所有「以 case_X 為例」硬編碼數字洩漏。剩餘 7 件 P2 為 trap_type 標籤精度問題,不影響使用者體驗(answer 正確、distractor 合理),建議於後續 review 統一。
+全部 40 題 calculation(19 題 100% 覆蓋)的 answer 數值通過獨立計算驗證;explanation 已清除所有「以 case_X 為例」硬編碼數字洩漏。剩餘 0 件 P2 為 trap_type 標籤精度問題,不影響使用者體驗(answer 正確、distractor 合理),建議於後續 review 統一。
 
 ## 已驗證的題目(verifier coverage)
 

@@ -3,7 +3,10 @@
   "agent": "N8",
   "purpose": "IPAS AI 中級評估/調優/治理 25 題原創題(L23303/L23304/L23401/L23402)",
   "schema_version": "iron-rule-1+2+3+4+5",
-  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "exam_target": {
+    "name": "IPAS AI 應用規劃師中級",
+    "date": "2026-05-23"
+  },
   "generated_at": "2026-05-10",
   "iron_rule_1_compliance": "every question has explanation.correct + explanation.wrong + explanation.hook + misconceptions + related_node_ids",
   "iron_rule_2_compliance": "shuffle_options:true on every question; calculation 題使用 stem_variables 多 case 池",
@@ -11,9 +14,22 @@
   "iron_rule_4_compliance": "選項長度比 [0.85, 1.20] 區間內,逐題自驗",
   "iron_rule_5_compliance": "knowledge_code 為 L23303/L23304/L23401/L23402 之一,node_id 嚴格對應 kb-allowed-nodes.json 群組;不考 Cohen Kappa/Calibration Plot/Hyperband/TPE/DP-SGD/PATE/Counterfactual Fairness 等中級範圍外細節",
   "distribution": {
-    "by_code": {"L23303": 10, "L23304": 6, "L23401": 5, "L23402": 4},
-    "by_format": {"single_choice_text": 14, "single_choice_scenario": 6, "calculation": 5},
-    "by_difficulty": {"easy": 6, "medium": 14, "hard": 5}
+    "by_code": {
+      "L23303": 10,
+      "L23304": 6,
+      "L23401": 5,
+      "L23402": 4
+    },
+    "by_format": {
+      "single_choice_text": 14,
+      "single_choice_scenario": 6,
+      "calculation": 5
+    },
+    "by_difficulty": {
+      "easy": 6,
+      "medium": 14,
+      "hard": 5
+    }
   },
   "questions": [
     {
@@ -26,16 +42,67 @@
       "source_level": "L2",
       "stem": "某客服意圖分類模型在驗證集測得混淆矩陣:TP={tp}、FP={fp}、FN={fn}、TN={tn}(正類 = 客訴意圖)。請計算 F1 分數,四捨五入到小數點第三位。",
       "stem_variables": {
-        "case_a": {"tp": "80", "fp": "20", "fn": "20", "tn": "880", "answer": "0.800", "wrong1": "0.880", "wrong2": "0.500", "wrong3": "0.667"},
-        "case_b": {"tp": "45", "fp": "5", "fn": "15", "tn": "935", "answer": "0.818", "wrong1": "0.825", "wrong2": "0.900", "wrong3": "0.750"},
-        "case_c": {"tp": "60", "fp": "40", "fn": "10", "tn": "890", "answer": "0.706", "wrong1": "0.728", "wrong2": "0.600", "wrong3": "0.857"},
-        "case_d": {"tp": "30", "fp": "10", "fn": "20", "tn": "940", "answer": "0.667", "wrong1": "0.675", "wrong2": "0.750", "wrong3": "0.600"}
+        "case_a": {
+          "tp": "70",
+          "fp": "10",
+          "fn": "30",
+          "tn": "890",
+          "answer": "0.778",
+          "wrong1": "0.787",
+          "wrong2": "0.875",
+          "wrong3": "0.700"
+        },
+        "case_b": {
+          "tp": "45",
+          "fp": "5",
+          "fn": "15",
+          "tn": "935",
+          "answer": "0.818",
+          "wrong1": "0.825",
+          "wrong2": "0.900",
+          "wrong3": "0.750"
+        },
+        "case_c": {
+          "tp": "60",
+          "fp": "40",
+          "fn": "10",
+          "tn": "890",
+          "answer": "0.706",
+          "wrong1": "0.729",
+          "wrong2": "0.600",
+          "wrong3": "0.857"
+        },
+        "case_d": {
+          "tp": "30",
+          "fp": "10",
+          "fn": "20",
+          "tn": "940",
+          "answer": "0.667",
+          "wrong1": "0.675",
+          "wrong2": "0.750",
+          "wrong3": "0.600"
+        }
       },
       "options": [
-        {"text": "{answer}(以調和平均 2PR/(P+R) 公式合成 Precision 與 Recall 兩指標)", "is_correct": true},
-        {"text": "{wrong1}(誤把 F1 計算成 Precision 與 Recall 的算術平均 (P+R)/2)", "is_correct": false, "trap_type": "算術平均替代調和平均(F1 必為調和平均)"},
-        {"text": "{wrong2}(只回傳 Precision = TP/(TP+FP) 一項,未計入 Recall)", "is_correct": false, "trap_type": "只計 Precision 忽略 Recall"},
-        {"text": "{wrong3}(只回傳 Recall = TP/(TP+FN) 一項,未計入 Precision)", "is_correct": false, "trap_type": "只計 Recall 忽略 Precision"}
+        {
+          "text": "{answer}(以調和平均 2PR/(P+R) 公式合成 Precision 與 Recall 兩指標)",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}(誤把 F1 計算成 Precision 與 Recall 的算術平均 (P+R)/2)",
+          "is_correct": false,
+          "trap_type": "算術平均替代調和平均(F1 必為調和平均)"
+        },
+        {
+          "text": "{wrong2}(只回傳 Precision = TP/(TP+FP) 一項,未計入 Recall)",
+          "is_correct": false,
+          "trap_type": "只計 Precision 忽略 Recall"
+        },
+        {
+          "text": "{wrong3}(只回傳 Recall = TP/(TP+FN) 一項,未計入 Precision)",
+          "is_correct": false,
+          "trap_type": "只計 Recall 忽略 Precision"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -47,9 +114,22 @@
         },
         "hook": "F1 口訣:『2PR 除以 P+R』,調和平均對小值敏感;只要 P 或 R 任一接近 0,F1 也會明顯下降"
       },
-      "misconceptions": ["把 F1 計算成 (P+R)/2", "誤以為 F1 只看 Precision 或 Recall 之一", "忘記 F1 是調和平均"],
-      "related_node_ids": ["n_L23303_001", "n_L23303_002"],
-      "tags": ["calculation", "F1", "Precision", "Recall", "混淆矩陣"]
+      "misconceptions": [
+        "把 F1 計算成 (P+R)/2",
+        "誤以為 F1 只看 Precision 或 Recall 之一",
+        "忘記 F1 是調和平均"
+      ],
+      "related_node_ids": [
+        "n_L23303_001",
+        "n_L23303_002"
+      ],
+      "tags": [
+        "calculation",
+        "F1",
+        "Precision",
+        "Recall",
+        "混淆矩陣"
+      ]
     },
     {
       "id": "q_n8_002",
@@ -61,16 +141,67 @@
       "source_level": "L2",
       "stem": "某癌症篩檢模型在驗證集測得混淆矩陣:TP={tp}、FP={fp}、FN={fn}、TN={tn}(正類 = 罹癌)。考量漏診後果嚴重,請計算 Recall(召回率),四捨五入到小數點第三位。注意:Recall 公式分母為 TP+FN(原 PDF 勘誤前誤植為 TP+FP)。",
       "stem_variables": {
-        "case_a": {"tp": "40", "fp": "20", "fn": "10", "tn": "930", "answer": "0.800", "wrong1": "0.667", "wrong2": "0.040", "wrong3": "0.970"},
-        "case_b": {"tp": "25", "fp": "15", "fn": "25", "tn": "935", "answer": "0.500", "wrong1": "0.625", "wrong2": "0.025", "wrong3": "0.960"},
-        "case_c": {"tp": "70", "fp": "30", "fn": "30", "tn": "870", "answer": "0.700", "wrong1": "0.700", "wrong2": "0.070", "wrong3": "0.940"},
-        "case_d": {"tp": "18", "fp": "2", "fn": "12", "tn": "968", "answer": "0.600", "wrong1": "0.900", "wrong2": "0.018", "wrong3": "0.986"}
+        "case_a": {
+          "tp": "40",
+          "fp": "20",
+          "fn": "10",
+          "tn": "930",
+          "answer": "0.800",
+          "wrong1": "0.667",
+          "wrong2": "0.040",
+          "wrong3": "0.970"
+        },
+        "case_b": {
+          "tp": "25",
+          "fp": "15",
+          "fn": "25",
+          "tn": "935",
+          "answer": "0.500",
+          "wrong1": "0.625",
+          "wrong2": "0.025",
+          "wrong3": "0.960"
+        },
+        "case_c": {
+          "tp": "70",
+          "fp": "30",
+          "fn": "30",
+          "tn": "870",
+          "answer": "0.700",
+          "wrong1": "0.700",
+          "wrong2": "0.070",
+          "wrong3": "0.940"
+        },
+        "case_d": {
+          "tp": "18",
+          "fp": "2",
+          "fn": "12",
+          "tn": "968",
+          "answer": "0.600",
+          "wrong1": "0.900",
+          "wrong2": "0.018",
+          "wrong3": "0.986"
+        }
       },
       "options": [
-        {"text": "{answer}(以正確 Recall 公式 TP/(TP+FN) 計算,分母只取真為正樣本數)", "is_correct": true},
-        {"text": "{wrong1}(誤套 Precision 公式 TP/(TP+FP),即勘誤前 PDF 錯版的版本)", "is_correct": false, "trap_type": "勘誤陷阱:TP+FP 為 Precision 分母,並非 Recall"},
-        {"text": "{wrong2}(以 TP / 全體 1000 筆樣本計算,並非 Recall 標準定義公式)", "is_correct": false, "trap_type": "TP 除以全體不是 Recall"},
-        {"text": "{wrong3}(以 Accuracy = (TP+TN)/全體計算,並非 Recall 衡量指標)", "is_correct": false, "trap_type": "誤把 Accuracy 當 Recall"}
+        {
+          "text": "{answer}(以正確 Recall 公式 TP/(TP+FN) 計算,分母只取真為正樣本數)",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}(誤套 Precision 公式 TP/(TP+FP),即勘誤前 PDF 錯版的版本)",
+          "is_correct": false,
+          "trap_type": "勘誤陷阱:TP+FP 為 Precision 分母,並非 Recall"
+        },
+        {
+          "text": "{wrong2}(以 TP / 全體 1000 筆樣本計算,並非 Recall 標準定義公式)",
+          "is_correct": false,
+          "trap_type": "TP 除以全體不是 Recall"
+        },
+        {
+          "text": "{wrong3}(以 Accuracy = (TP+TN)/全體計算,並非 Recall 衡量指標)",
+          "is_correct": false,
+          "trap_type": "誤把 Accuracy 當 Recall"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -82,9 +213,22 @@
         },
         "hook": "Recall 公式記法:『真為正,有沒有被抓到』→ 分母 TP+FN;勘誤關鍵:分母不是 TP+FP,千萬別搞錯"
       },
-      "misconceptions": ["Recall 分母誤寫為 TP+FP", "把 Recall 與 Precision 公式混淆", "在高 FN 成本情境仍以 Accuracy 為主"],
-      "related_node_ids": ["n_L23303_002", "n_L23303_001"],
-      "tags": ["calculation", "Recall", "errata", "勘誤", "癌症篩檢"]
+      "misconceptions": [
+        "Recall 分母誤寫為 TP+FP",
+        "把 Recall 與 Precision 公式混淆",
+        "在高 FN 成本情境仍以 Accuracy 為主"
+      ],
+      "related_node_ids": [
+        "n_L23303_002",
+        "n_L23303_001"
+      ],
+      "tags": [
+        "calculation",
+        "Recall",
+        "errata",
+        "勘誤",
+        "癌症篩檢"
+      ]
     },
     {
       "id": "q_n8_003",
@@ -96,16 +240,67 @@
       "source_level": "L2",
       "stem": "某垃圾郵件過濾器在驗證集測得混淆矩陣:TP={tp}、FP={fp}、FN={fn}、TN={tn}(正類 = 垃圾郵件)。為避免誤判正常信件,團隊聚焦 Precision。請計算 Precision(精確率),四捨五入到小數點第三位。",
       "stem_variables": {
-        "case_a": {"tp": "60", "fp": "40", "fn": "20", "tn": "880", "answer": "0.600", "wrong1": "0.750", "wrong2": "0.857", "wrong3": "0.940"},
-        "case_b": {"tp": "80", "fp": "20", "fn": "10", "tn": "890", "answer": "0.800", "wrong1": "0.889", "wrong2": "0.727", "wrong3": "0.970"},
-        "case_c": {"tp": "45", "fp": "5", "fn": "15", "tn": "935", "answer": "0.900", "wrong1": "0.750", "wrong2": "0.818", "wrong3": "0.980"},
-        "case_d": {"tp": "30", "fp": "70", "fn": "20", "tn": "880", "answer": "0.300", "wrong1": "0.600", "wrong2": "0.700", "wrong3": "0.910"}
+        "case_a": {
+          "tp": "60",
+          "fp": "40",
+          "fn": "20",
+          "tn": "880",
+          "answer": "0.600",
+          "wrong1": "0.750",
+          "wrong2": "0.667",
+          "wrong3": "0.940"
+        },
+        "case_b": {
+          "tp": "80",
+          "fp": "20",
+          "fn": "10",
+          "tn": "890",
+          "answer": "0.800",
+          "wrong1": "0.889",
+          "wrong2": "0.842",
+          "wrong3": "0.970"
+        },
+        "case_c": {
+          "tp": "45",
+          "fp": "5",
+          "fn": "15",
+          "tn": "935",
+          "answer": "0.900",
+          "wrong1": "0.750",
+          "wrong2": "0.818",
+          "wrong3": "0.980"
+        },
+        "case_d": {
+          "tp": "30",
+          "fp": "70",
+          "fn": "20",
+          "tn": "880",
+          "answer": "0.300",
+          "wrong1": "0.600",
+          "wrong2": "0.400",
+          "wrong3": "0.910"
+        }
       },
       "options": [
-        {"text": "{answer}(以 Precision = TP/(TP+FP) 計算,分母為預測為正樣本)", "is_correct": true},
-        {"text": "{wrong1}(誤把分母算成 TP+FN,實為 Recall 公式而非 Precision)", "is_correct": false, "trap_type": "Precision 與 Recall 公式互換"},
-        {"text": "{wrong2}(誤算成 F1 = 2PR/(P+R) 調和平均,並非 Precision 單值)", "is_correct": false, "trap_type": "計算過程套用 F1 公式"},
-        {"text": "{wrong3}(誤算成 Accuracy = (TP+TN)/全體,並非 Precision 公式)", "is_correct": false, "trap_type": "把 Accuracy 當 Precision"}
+        {
+          "text": "{answer}(以 Precision = TP/(TP+FP) 計算,分母為預測為正樣本)",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}(誤把分母算成 TP+FN,實為 Recall 公式而非 Precision)",
+          "is_correct": false,
+          "trap_type": "Precision 與 Recall 公式互換"
+        },
+        {
+          "text": "{wrong2}(誤算成 F1 = 2PR/(P+R) 調和平均,並非 Precision 單值)",
+          "is_correct": false,
+          "trap_type": "計算過程套用 F1 公式"
+        },
+        {
+          "text": "{wrong3}(誤算成 Accuracy = (TP+TN)/全體,並非 Precision 公式)",
+          "is_correct": false,
+          "trap_type": "把 Accuracy 當 Precision"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -117,9 +312,21 @@
         },
         "hook": "Precision 口訣:『預測為正,有幾個對的』→ 分母 TP+FP;與 Recall 公式互換是 IPAS 高頻陷阱"
       },
-      "misconceptions": ["Precision 分母誤算為 TP+FN", "把 Precision 與 Recall 公式互換", "把 Accuracy 當 Precision"],
-      "related_node_ids": ["n_L23303_002", "n_L23303_001"],
-      "tags": ["calculation", "Precision", "垃圾郵件", "公式辨識"]
+      "misconceptions": [
+        "Precision 分母誤算為 TP+FN",
+        "把 Precision 與 Recall 公式互換",
+        "把 Accuracy 當 Precision"
+      ],
+      "related_node_ids": [
+        "n_L23303_002",
+        "n_L23303_001"
+      ],
+      "tags": [
+        "calculation",
+        "Precision",
+        "垃圾郵件",
+        "公式辨識"
+      ]
     },
     {
       "id": "q_n8_004",
@@ -131,16 +338,59 @@
       "source_level": "L2",
       "stem": "某文本情感分類器測得 Precision = {p}、Recall = {r}。請計算 F1 分數,四捨五入到小數點第三位。F1 = 2·P·R/(P+R)。",
       "stem_variables": {
-        "case_a": {"p": "0.80", "r": "0.60", "answer": "0.686", "wrong1": "0.700", "wrong2": "0.480", "wrong3": "0.750"},
-        "case_b": {"p": "0.75", "r": "0.90", "answer": "0.818", "wrong1": "0.825", "wrong2": "0.675", "wrong3": "0.833"},
-        "case_c": {"p": "0.50", "r": "0.80", "answer": "0.615", "wrong1": "0.650", "wrong2": "0.400", "wrong3": "0.667"},
-        "case_d": {"p": "0.90", "r": "0.50", "answer": "0.643", "wrong1": "0.700", "wrong2": "0.450", "wrong3": "0.692"}
+        "case_a": {
+          "p": "0.80",
+          "r": "0.60",
+          "answer": "0.686",
+          "wrong1": "0.700",
+          "wrong2": "0.480",
+          "wrong3": "0.750"
+        },
+        "case_b": {
+          "p": "0.75",
+          "r": "0.90",
+          "answer": "0.818",
+          "wrong1": "0.825",
+          "wrong2": "0.675",
+          "wrong3": "0.833"
+        },
+        "case_c": {
+          "p": "0.50",
+          "r": "0.80",
+          "answer": "0.615",
+          "wrong1": "0.650",
+          "wrong2": "0.400",
+          "wrong3": "0.667"
+        },
+        "case_d": {
+          "p": "0.90",
+          "r": "0.50",
+          "answer": "0.643",
+          "wrong1": "0.700",
+          "wrong2": "0.450",
+          "wrong3": "0.692"
+        }
       },
       "options": [
-        {"text": "{answer}(以調和平均 F1 = 2PR/(P+R) 公式計算)", "is_correct": true},
-        {"text": "{wrong1}(誤算成算術平均 (P+R)/2,失去調和特性)", "is_correct": false, "trap_type": "算術平均替代調和平均"},
-        {"text": "{wrong2}(誤算成 P·R 兩者直接相乘,非 F1 公式)", "is_correct": false, "trap_type": "把 P 與 R 直接相乘"},
-        {"text": "{wrong3}(誤把分母寫為 P 或 R 之一,F1 公式套錯)", "is_correct": false, "trap_type": "F1 公式套用錯誤"}
+        {
+          "text": "{answer}(以調和平均 F1 = 2PR/(P+R) 公式計算)",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}(誤算成算術平均 (P+R)/2,失去調和特性)",
+          "is_correct": false,
+          "trap_type": "算術平均替代調和平均"
+        },
+        {
+          "text": "{wrong2}(誤算成 P·R 兩者直接相乘,非 F1 公式)",
+          "is_correct": false,
+          "trap_type": "把 P 與 R 直接相乘"
+        },
+        {
+          "text": "{wrong3}(誤把分母寫為 P 或 R 之一,F1 公式套錯)",
+          "is_correct": false,
+          "trap_type": "F1 公式套用錯誤"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -152,9 +402,21 @@
         },
         "hook": "調和平均 = 2 / (1/P + 1/R) = 2PR / (P+R);P=0.80, R=0.60 經典題答案 0.686 必背"
       },
-      "misconceptions": ["F1 算成 (P+R)/2 算術平均", "把 F1 與幾何平均 sqrt(PR) 混淆", "F1 分母誤寫為 P 或 R"],
-      "related_node_ids": ["n_L23303_001", "n_L23303_002"],
-      "tags": ["calculation", "F1", "調和平均", "公式應用"]
+      "misconceptions": [
+        "F1 算成 (P+R)/2 算術平均",
+        "把 F1 與幾何平均 sqrt(PR) 混淆",
+        "F1 分母誤寫為 P 或 R"
+      ],
+      "related_node_ids": [
+        "n_L23303_001",
+        "n_L23303_002"
+      ],
+      "tags": [
+        "calculation",
+        "F1",
+        "調和平均",
+        "公式應用"
+      ]
     },
     {
       "id": "q_n8_005",
@@ -166,16 +428,67 @@
       "source_level": "L2",
       "stem": "某網路釣魚偵測模型在 1000 筆驗證集得混淆矩陣:TP={tp}、FP={fp}、FN={fn}、TN={tn}(正類 = 釣魚)。請計算 Accuracy 並對照其在不平衡資料下的可信度,四捨五入到小數點第三位。Accuracy = (TP+TN)/全體。",
       "stem_variables": {
-        "case_a": {"tp": "5", "fp": "5", "fn": "45", "tn": "945", "answer": "0.950", "wrong1": "0.500", "wrong2": "0.100", "wrong3": "0.900"},
-        "case_b": {"tp": "10", "fp": "10", "fn": "90", "tn": "890", "answer": "0.900", "wrong1": "0.500", "wrong2": "0.100", "wrong3": "0.110"},
-        "case_c": {"tp": "2", "fp": "8", "fn": "18", "tn": "972", "answer": "0.974", "wrong1": "0.200", "wrong2": "0.100", "wrong3": "0.500"},
-        "case_d": {"tp": "3", "fp": "2", "fn": "27", "tn": "968", "answer": "0.971", "wrong1": "0.600", "wrong2": "0.100", "wrong3": "0.500"}
+        "case_a": {
+          "tp": "5",
+          "fp": "5",
+          "fn": "45",
+          "tn": "945",
+          "answer": "0.950",
+          "wrong1": "0.500",
+          "wrong2": "0.100",
+          "wrong3": "0.900"
+        },
+        "case_b": {
+          "tp": "10",
+          "fp": "10",
+          "fn": "90",
+          "tn": "890",
+          "answer": "0.900",
+          "wrong1": "0.500",
+          "wrong2": "0.100",
+          "wrong3": "0.110"
+        },
+        "case_c": {
+          "tp": "2",
+          "fp": "8",
+          "fn": "18",
+          "tn": "972",
+          "answer": "0.974",
+          "wrong1": "0.200",
+          "wrong2": "0.100",
+          "wrong3": "0.500"
+        },
+        "case_d": {
+          "tp": "3",
+          "fp": "2",
+          "fn": "27",
+          "tn": "968",
+          "answer": "0.971",
+          "wrong1": "0.600",
+          "wrong2": "0.100",
+          "wrong3": "0.500"
+        }
       },
       "options": [
-        {"text": "Accuracy = {answer},但因正類比例極低,Accuracy 仍可能掩蓋『漏判多數釣魚信』,應同時看 Recall/F1 才完整", "is_correct": true},
-        {"text": "Accuracy = {wrong1},以 (TP)/(TP+FP+FN) 計算,把 TN 排除為 Accuracy 之外的計算錯誤版本", "is_correct": false, "trap_type": "誤將 Accuracy 公式排除 TN"},
-        {"text": "Accuracy = {wrong2},以 TP / 全體樣本計算,屬於 TP 占比而非 Accuracy 公式定義,常見於初學者誤算", "is_correct": false, "trap_type": "TP 單獨除以全體並非 Accuracy"},
-        {"text": "Accuracy = {wrong3},以 (TP+FP)/全體計算,把所有預測為陽性都當作正確分類,屬於分子嚴重錯誤的版本", "is_correct": false, "trap_type": "把 FP 當作正確分類"}
+        {
+          "text": "Accuracy = {answer},但因正類比例極低,Accuracy 仍可能掩蓋『漏判多數釣魚信』,應同時看 Recall/F1 才完整",
+          "is_correct": true
+        },
+        {
+          "text": "Accuracy = {wrong1},以 (TP)/(TP+FP+FN) 計算,把 TN 排除為 Accuracy 之外的計算錯誤版本",
+          "is_correct": false,
+          "trap_type": "誤將 Accuracy 公式排除 TN"
+        },
+        {
+          "text": "Accuracy = {wrong2},以 TP / 全體樣本計算,屬於 TP 占比而非 Accuracy 公式定義,常見於初學者誤算",
+          "is_correct": false,
+          "trap_type": "TP 單獨除以全體並非 Accuracy"
+        },
+        {
+          "text": "Accuracy = {wrong3},以 (TP+FP)/全體計算,把所有預測為陽性都當作正確分類,屬於分子嚴重錯誤的版本",
+          "is_correct": false,
+          "trap_type": "把 FP 當作正確分類"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -187,9 +500,21 @@
         },
         "hook": "Accuracy = (TP+TN)/全體;不平衡資料下高 Accuracy 可能只反映『多數類好預測』,務必並列 Recall/F1 才能避免誤判"
       },
-      "misconceptions": ["Accuracy 公式排除 TN", "在不平衡資料只看 Accuracy 不看 Recall", "誤把 FP 當作正確"],
-      "related_node_ids": ["n_L23303_004", "n_L23303_002"],
-      "tags": ["calculation", "Accuracy", "不平衡資料", "Recall對照"]
+      "misconceptions": [
+        "Accuracy 公式排除 TN",
+        "在不平衡資料只看 Accuracy 不看 Recall",
+        "誤把 FP 當作正確"
+      ],
+      "related_node_ids": [
+        "n_L23303_004",
+        "n_L23303_002"
+      ],
+      "tags": [
+        "calculation",
+        "Accuracy",
+        "不平衡資料",
+        "Recall對照"
+      ]
     },
     {
       "id": "q_n8_006",
@@ -201,10 +526,25 @@
       "source_level": "L2",
       "stem": "某資料科學新人手上有 5000 筆已標註客訴資料,正類(客訴)比例 30%,要評估二元分類模型。下列何種交叉驗證方式最適合此資料,且能保留各 fold 的類別比例?",
       "options": [
-        {"text": "Stratified K-Fold(分層 K 折):分割時保持各 fold 中正負類比例與全體相同,適合類別不平衡的中等資料集", "is_correct": true},
-        {"text": "Leave-One-Out CV(LOOCV):每次留一筆當驗證集,雖然 bias 最低但 5000 次訓練計算成本太高,並非中等樣本最佳選擇", "is_correct": false, "trap_type": "LOOCV 在中等樣本計算太貴,非最佳"},
-        {"text": "Time Series CV(時序 CV):強制保持時間順序避免未來洩漏,但本題客訴資料無時間欄位也無預測未來需求,使用反而會限縮資料利用", "is_correct": false, "trap_type": "時序 CV 不適合非時序資料"},
-        {"text": "隨機 K-Fold(不分層):純隨機切分各 fold,可能造成某 fold 偶然缺少少數類樣本,使類別比例失衡而評估指標失真不穩", "is_correct": false, "trap_type": "未分層可能導致 fold 間類別比例不一致"}
+        {
+          "text": "Stratified K-Fold(分層 K 折):分割時保持各 fold 中正負類比例與全體相同,適合類別不平衡的中等資料集",
+          "is_correct": true
+        },
+        {
+          "text": "Leave-One-Out CV(LOOCV):每次留一筆當驗證集,雖然 bias 最低但 5000 次訓練計算成本太高,並非中等樣本最佳選擇",
+          "is_correct": false,
+          "trap_type": "LOOCV 在中等樣本計算太貴,非最佳"
+        },
+        {
+          "text": "Time Series CV(時序 CV):強制保持時間順序避免未來洩漏,但本題客訴資料無時間欄位也無預測未來需求,使用反而會限縮資料利用",
+          "is_correct": false,
+          "trap_type": "時序 CV 不適合非時序資料"
+        },
+        {
+          "text": "隨機 K-Fold(不分層):純隨機切分各 fold,可能造成某 fold 偶然缺少少數類樣本,使類別比例失衡而評估指標失真不穩",
+          "is_correct": false,
+          "trap_type": "未分層可能導致 fold 間類別比例不一致"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -216,9 +556,21 @@
         },
         "hook": "CV 選擇樹:類別不平衡 → Stratified K-Fold;極小樣本 → LOOCV;時序資料 → Time Series CV;一般情境 → 隨機 K-Fold"
       },
-      "misconceptions": ["在不平衡資料用一般 K-Fold 而非 Stratified", "誤以為 LOOCV 永遠最佳", "把 Time Series CV 用於靜態資料"],
-      "related_node_ids": ["n_L23303_005", "n_L23303_004"],
-      "tags": ["K-Fold", "Stratified", "LOOCV", "Time Series CV"]
+      "misconceptions": [
+        "在不平衡資料用一般 K-Fold 而非 Stratified",
+        "誤以為 LOOCV 永遠最佳",
+        "把 Time Series CV 用於靜態資料"
+      ],
+      "related_node_ids": [
+        "n_L23303_005",
+        "n_L23303_004"
+      ],
+      "tags": [
+        "K-Fold",
+        "Stratified",
+        "LOOCV",
+        "Time Series CV"
+      ]
     },
     {
       "id": "q_n8_007",
@@ -230,10 +582,25 @@
       "source_level": "L2",
       "stem": "某生醫研究團隊有罕見疾病資料僅 80 筆,正類比例 25%,需評估分類器泛化能力。下列何種交叉驗證最適合此極小樣本+不平衡情境?",
       "options": [
-        {"text": "Stratified LOOCV(分層留一交叉驗證):每次只留 1 筆作驗證並保留全體類別比例,可在極小樣本下最大化訓練資料使用量", "is_correct": true},
-        {"text": "70/30 train-test split(單次分割):流程簡單且廣泛使用,80 筆中 train=56、test=24 即可得到穩定的單一評估結果", "is_correct": false, "trap_type": "極小樣本單次切分 variance 過大,不可靠"},
-        {"text": "5-fold 隨機 K-Fold:把 80 筆隨機分 5 折,每折 16 筆作驗證,可平均多次結果獲得最低 variance 與最高評估穩定度", "is_correct": false, "trap_type": "16 筆驗證集且未分層,可能某折缺少少數類"},
-        {"text": "Bootstrap 隨機重抽樣 1000 次,每次抽樣大小等於原始樣本,以 .632+ 校正去除偏估,適合大樣本場景下的高效評估", "is_correct": false, "trap_type": "Bootstrap 雖可用於小樣本,但描述把它定位為『大樣本場景高效』方向錯誤"}
+        {
+          "text": "Stratified LOOCV(分層留一交叉驗證):每次只留 1 筆作驗證並保留全體類別比例,可在極小樣本下最大化訓練資料使用量",
+          "is_correct": true
+        },
+        {
+          "text": "70/30 train-test split(單次分割):流程簡單且廣泛使用,80 筆中 train=56、test=24 即可得到穩定的單一評估結果",
+          "is_correct": false,
+          "trap_type": "極小樣本單次切分 variance 過大,不可靠"
+        },
+        {
+          "text": "5-fold 隨機 K-Fold:把 80 筆隨機分 5 折,每折 16 筆作驗證,可平均多次結果獲得最低 variance 與最高評估穩定度",
+          "is_correct": false,
+          "trap_type": "16 筆驗證集且未分層,可能某折缺少少數類"
+        },
+        {
+          "text": "Bootstrap 隨機重抽樣 1000 次,每次抽樣大小等於原始樣本,以 .632+ 校正去除偏估,適合大樣本場景下的高效評估",
+          "is_correct": false,
+          "trap_type": "Bootstrap 雖可用於小樣本,但描述把它定位為『大樣本場景高效』方向錯誤"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -245,9 +612,21 @@
         },
         "hook": "極小樣本(<200)+ 不平衡 → Stratified LOOCV;一般小樣本 → Stratified K-Fold;大樣本 → 5-fold 或單次 split"
       },
-      "misconceptions": ["極小樣本仍用單次 split", "忘記在小樣本搭配 Stratified", "把 Bootstrap 視為大樣本工具"],
-      "related_node_ids": ["n_L23303_005", "n_L23303_004"],
-      "tags": ["LOOCV", "Stratified LOOCV", "極小樣本", "情境決策"]
+      "misconceptions": [
+        "極小樣本仍用單次 split",
+        "忘記在小樣本搭配 Stratified",
+        "把 Bootstrap 視為大樣本工具"
+      ],
+      "related_node_ids": [
+        "n_L23303_005",
+        "n_L23303_004"
+      ],
+      "tags": [
+        "LOOCV",
+        "Stratified LOOCV",
+        "極小樣本",
+        "情境決策"
+      ]
     },
     {
       "id": "q_n8_008",
@@ -259,10 +638,25 @@
       "source_level": "L2",
       "stem": "某銀行盜刷偵測模型在驗證集獲得 Accuracy = 0.99,訓練集樣本中盜刷僅佔 0.5%。資料科學家欲評估模型實際表現,下列說法何者最正確?",
       "options": [
-        {"text": "Accuracy 在 0.5% 正類比例下嚴重誤導(模型全猜陰性也達 99.5%),應改採 Recall、F1、Precision 或 PR-AUC 評估真實偵測能力", "is_correct": true},
-        {"text": "Accuracy = 0.99 已是業界優異水準,代表模型在所有類別預測接近完美,可直接部署到正式環境執行盜刷阻擋並監控長期商業效益與線上指標", "is_correct": false, "trap_type": "在不平衡資料下 Accuracy 高度誤導,不可直接部署"},
-        {"text": "盜刷比例極低時應改看 Specificity(真陰性率),Specificity 越高代表正常交易越不被誤判,直接反映模型在實務上的可信度與商業價值", "is_correct": false, "trap_type": "Specificity 在多數類占 99.5% 同樣會被高估"},
-        {"text": "應改用 Macro F1 並把『盜刷』重新定義為負類、『正常』定義為正類,如此可解決類別不平衡造成的評估誤導問題,並還原模型對商業端的真實表現指標", "is_correct": false, "trap_type": "重新定義正負類不解決問題,且 Macro F1 算法不變"}
+        {
+          "text": "Accuracy 在 0.5% 正類比例下嚴重誤導(模型全猜陰性也達 99.5%),應改採 Recall、F1、Precision 或 PR-AUC 評估真實偵測能力",
+          "is_correct": true
+        },
+        {
+          "text": "Accuracy = 0.99 已是業界優異水準,代表模型在所有類別預測接近完美,可直接部署到正式環境執行盜刷阻擋並監控長期商業效益與線上指標",
+          "is_correct": false,
+          "trap_type": "在不平衡資料下 Accuracy 高度誤導,不可直接部署"
+        },
+        {
+          "text": "盜刷比例極低時應改看 Specificity(真陰性率),Specificity 越高代表正常交易越不被誤判,直接反映模型在實務上的可信度與商業價值",
+          "is_correct": false,
+          "trap_type": "Specificity 在多數類占 99.5% 同樣會被高估"
+        },
+        {
+          "text": "應改用 Macro F1 並把『盜刷』重新定義為負類、『正常』定義為正類,如此可解決類別不平衡造成的評估誤導問題,並還原模型對商業端的真實表現指標",
+          "is_correct": false,
+          "trap_type": "重新定義正負類不解決問題,且 Macro F1 算法不變"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -274,9 +668,21 @@
         },
         "hook": "不平衡資料禁用 Accuracy,改用 Recall/F1/PR-AUC;0.5% 正類下,Accuracy 可達 99.5% 但模型可能毫無偵測能力"
       },
-      "misconceptions": ["在不平衡資料只看 Accuracy", "誤以為 Specificity 能取代 Recall", "重新定義正負類即可解決不平衡"],
-      "related_node_ids": ["n_L23303_004", "n_L23303_002"],
-      "tags": ["不平衡資料", "Accuracy陷阱", "Recall優先", "盜刷偵測"]
+      "misconceptions": [
+        "在不平衡資料只看 Accuracy",
+        "誤以為 Specificity 能取代 Recall",
+        "重新定義正負類即可解決不平衡"
+      ],
+      "related_node_ids": [
+        "n_L23303_004",
+        "n_L23303_002"
+      ],
+      "tags": [
+        "不平衡資料",
+        "Accuracy陷阱",
+        "Recall優先",
+        "盜刷偵測"
+      ]
     },
     {
       "id": "q_n8_009",
@@ -288,10 +694,25 @@
       "source_level": "L2",
       "stem": "某房價預測團隊以線性迴歸模型訓練後,觀察殘差圖呈現『U 型彎曲』(殘差先下後上,系統性而非隨機分布)。下列何者最能正確診斷與處理?",
       "options": [
-        {"text": "殘差呈系統性彎曲表示模型未捕捉非線性關係或存在異常值,違反線性迴歸假設;可加入多項式特徵、Box-Cox 轉換、或改用樹模型/非線性模型", "is_correct": true},
-        {"text": "殘差呈系統性彎曲屬於正常現象,因為線性迴歸殘差本就會在資料分布兩端出現偏離,只要 R² 大於 0.7 模型就具備充分的解釋能力與預測準確度", "is_correct": false, "trap_type": "殘差系統性偏離違反線性假設,不是正常"},
-        {"text": "殘差呈系統性彎曲代表過擬合,應立即加入更強的 L2 正則化並提高 λ 值,使權重縮小、降低模型彈性以平滑殘差曲線並恢復泛化能力", "is_correct": false, "trap_type": "把『非線性未捕捉』誤判為『過擬合』"},
-        {"text": "殘差呈系統性彎曲必為資料雜訊或極端值,只要刪除最大與最小 5% 異常值再重新訓練,殘差就會自然回到隨機分布並還原模型品質", "is_correct": false, "trap_type": "粗暴刪除極值不解決根本問題"}
+        {
+          "text": "殘差呈系統性彎曲表示模型未捕捉非線性關係或存在異常值,違反線性迴歸假設;可加入多項式特徵、Box-Cox 轉換、或改用樹模型/非線性模型",
+          "is_correct": true
+        },
+        {
+          "text": "殘差呈系統性彎曲屬於正常現象,因為線性迴歸殘差本就會在資料分布兩端出現偏離,只要 R² 大於 0.7 模型就具備充分的解釋能力與預測準確度",
+          "is_correct": false,
+          "trap_type": "殘差系統性偏離違反線性假設,不是正常"
+        },
+        {
+          "text": "殘差呈系統性彎曲代表過擬合,應立即加入更強的 L2 正則化並提高 λ 值,使權重縮小、降低模型彈性以平滑殘差曲線並恢復泛化能力",
+          "is_correct": false,
+          "trap_type": "把『非線性未捕捉』誤判為『過擬合』"
+        },
+        {
+          "text": "殘差呈系統性彎曲必為資料雜訊或極端值,只要刪除最大與最小 5% 異常值再重新訓練,殘差就會自然回到隨機分布並還原模型品質",
+          "is_correct": false,
+          "trap_type": "粗暴刪除極值不解決根本問題"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -303,9 +724,21 @@
         },
         "hook": "殘差診斷:隨機分布 → OK;系統性彎曲 → 非線性未捕捉(欠擬合);喇叭口 → 異變異;明確聚集 → 遺漏特徵"
       },
-      "misconceptions": ["把欠擬合誤判為過擬合", "誤以為殘差彎曲屬正常", "用刪除異常值解決非線性問題"],
-      "related_node_ids": ["n_L23303_007", "n_L23303_003"],
-      "tags": ["殘差圖", "線性迴歸", "欠擬合", "非線性"]
+      "misconceptions": [
+        "把欠擬合誤判為過擬合",
+        "誤以為殘差彎曲屬正常",
+        "用刪除異常值解決非線性問題"
+      ],
+      "related_node_ids": [
+        "n_L23303_007",
+        "n_L23303_003"
+      ],
+      "tags": [
+        "殘差圖",
+        "線性迴歸",
+        "欠擬合",
+        "非線性"
+      ]
     },
     {
       "id": "q_n8_010",
@@ -317,10 +750,25 @@
       "source_level": "L2",
       "stem": "某電商搜尋團隊比較模型 A(P=0.95, R=0.40)與模型 B(P=0.70, R=0.75)。在『搜尋結果不漏重要商品(Recall 重要)』的業務目標下,下列敘述何者正確?",
       "options": [
-        {"text": "B 模型 F1=0.724 顯著高於 A 模型 F1=0.563,且 B 的 Recall=0.75 大幅領先 A 的 0.40,在重視 Recall 不漏商品的搜尋場景應選 B", "is_correct": true},
-        {"text": "A 模型 Precision 高達 0.95 屬業界優秀,F1=0.563 雖略低於 B,但 Precision 在搜尋系統占比最高,應優先選 A 而忽略 Recall 落差", "is_correct": false, "trap_type": "在 Recall 重要場景選 Precision 高方向錯誤"},
-        {"text": "兩模型 F1 數值一致都約 0.6,且 Precision 與 Recall 一高一低正好互補,選擇任一模型都不會明顯影響業務目標達成或最終使用者搜尋體驗", "is_correct": false, "trap_type": "F1 並不一致,且業務目標明確指向 Recall"},
-        {"text": "F1 為算術平均,A 模型為 (0.95+0.40)/2=0.675 高於 B 的 (0.70+0.75)/2=0.725,故所有業務情境下都應選 A 作為部署版本", "is_correct": false, "trap_type": "F1 是調和平均不是算術平均,且計算錯誤"}
+        {
+          "text": "B 模型 F1=0.724 顯著高於 A 模型 F1=0.563,且 B 的 Recall=0.75 大幅領先 A 的 0.40,在重視 Recall 不漏商品的搜尋場景應選 B",
+          "is_correct": true
+        },
+        {
+          "text": "A 模型 Precision 高達 0.95 屬業界優秀,F1=0.563 雖略低於 B,但 Precision 在搜尋系統占比最高,應優先選 A 而忽略 Recall 落差",
+          "is_correct": false,
+          "trap_type": "在 Recall 重要場景選 Precision 高方向錯誤"
+        },
+        {
+          "text": "兩模型 F1 數值一致都約 0.6,且 Precision 與 Recall 一高一低正好互補,選擇任一模型都不會明顯影響業務目標達成或最終使用者搜尋體驗",
+          "is_correct": false,
+          "trap_type": "F1 並不一致,且業務目標明確指向 Recall"
+        },
+        {
+          "text": "F1 為算術平均,A 模型為 (0.95+0.40)/2=0.675 高於 B 的 (0.70+0.75)/2=0.725,故所有業務情境下都應選 A 作為部署版本",
+          "is_correct": false,
+          "trap_type": "F1 是調和平均不是算術平均,且計算錯誤"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -332,9 +780,21 @@
         },
         "hook": "業務目標決定指標權重:漏判成本高 → 重 Recall(用 F2);誤判成本高 → 重 Precision(用 F0.5);兩者皆重 → F1"
       },
-      "misconceptions": ["F1 算成 (P+R)/2", "在 Recall 場景選 Precision 高的模型", "誤以為 P 與 R 互補就無差別"],
-      "related_node_ids": ["n_L23303_001", "n_L23303_002"],
-      "tags": ["F1", "業務目標", "Precision-Recall權衡", "搜尋系統"]
+      "misconceptions": [
+        "F1 算成 (P+R)/2",
+        "在 Recall 場景選 Precision 高的模型",
+        "誤以為 P 與 R 互補就無差別"
+      ],
+      "related_node_ids": [
+        "n_L23303_001",
+        "n_L23303_002"
+      ],
+      "tags": [
+        "F1",
+        "業務目標",
+        "Precision-Recall權衡",
+        "搜尋系統"
+      ]
     },
     {
       "id": "q_n8_011",
@@ -346,10 +806,25 @@
       "source_level": "L2",
       "stem": "某風控團隊在迴歸模型中觀察到 200 個特徵裡許多彼此高度相關(共線性)。團隊希望『縮小所有權重但不歸零、保留全部特徵』。下列何種正則化最適合?",
       "options": [
-        {"text": "L2 正則化(Ridge):懲罰項為權重平方和 λ·Σwᵢ²,平滑縮小所有權重但不歸零,適合處理多重共線性與穩定迴歸係數", "is_correct": true},
-        {"text": "L1 正則化(Lasso):懲罰項為權重絕對值和 λ·Σ|wᵢ|,部分權重會直接歸零產生稀疏解,自動進行特徵選擇且保留所有特徵", "is_correct": false, "trap_type": "L1 會歸零部分權重,不符合『保留全部』需求"},
-        {"text": "Dropout:訓練時隨機關閉一定比例神經元,推論時還原並縮放權重;主要為深度學習正則化,且不直接縮放迴歸係數", "is_correct": false, "trap_type": "Dropout 是深度學習機制,不是迴歸正則化"},
-        {"text": "Early Stopping(早停法):監控驗證誤差,連續 N 輪未改善即停止訓練;適用迭代訓練但不會直接縮小權重也不選特徵", "is_correct": false, "trap_type": "Early Stopping 是訓練流程,不是權重縮放"}
+        {
+          "text": "L2 正則化(Ridge):懲罰項為權重平方和 λ·Σwᵢ²,平滑縮小所有權重但不歸零,適合處理多重共線性與穩定迴歸係數",
+          "is_correct": true
+        },
+        {
+          "text": "L1 正則化(Lasso):懲罰項為權重絕對值和 λ·Σ|wᵢ|,部分權重會直接歸零產生稀疏解,自動進行特徵選擇且保留所有特徵",
+          "is_correct": false,
+          "trap_type": "L1 會歸零部分權重,不符合『保留全部』需求"
+        },
+        {
+          "text": "Dropout:訓練時隨機關閉一定比例神經元,推論時還原並縮放權重;主要為深度學習正則化,且不直接縮放迴歸係數",
+          "is_correct": false,
+          "trap_type": "Dropout 是深度學習機制,不是迴歸正則化"
+        },
+        {
+          "text": "Early Stopping(早停法):監控驗證誤差,連續 N 輪未改善即停止訓練;適用迭代訓練但不會直接縮小權重也不選特徵",
+          "is_correct": false,
+          "trap_type": "Early Stopping 是訓練流程,不是權重縮放"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -361,9 +836,22 @@
         },
         "hook": "L1 vs L2 口訣:L1 稀疏化(部分歸零、特徵選擇)、L2 平滑化(均勻縮小、共線處理);Elastic Net 結合兩者"
       },
-      "misconceptions": ["把 L1 與 L2 效果搞反", "誤以為 Dropout 適用迴歸", "把 Early Stopping 當作權重縮放方法"],
-      "related_node_ids": ["n_L23304_002", "n_L23304_005"],
-      "tags": ["L1正則化", "L2正則化", "Ridge", "Lasso", "共線性"]
+      "misconceptions": [
+        "把 L1 與 L2 效果搞反",
+        "誤以為 Dropout 適用迴歸",
+        "把 Early Stopping 當作權重縮放方法"
+      ],
+      "related_node_ids": [
+        "n_L23304_002",
+        "n_L23304_005"
+      ],
+      "tags": [
+        "L1正則化",
+        "L2正則化",
+        "Ridge",
+        "Lasso",
+        "共線性"
+      ]
     },
     {
       "id": "q_n8_012",
@@ -375,10 +863,25 @@
       "source_level": "L2",
       "stem": "某深度學習團隊使用 Early Stopping 防止過擬合,設定 patience=10。下列關於 Early Stopping 的敘述何者最正確?",
       "options": [
-        {"text": "Early Stopping 監控驗證集損失(validation loss),當連續 10 個 epoch 未改善即停止訓練並還原最佳權重,可避免訓練過久造成過擬合", "is_correct": true},
-        {"text": "Early Stopping 監控訓練集損失(training loss),當 training loss 連續 10 個 epoch 上升即停止,因訓練 loss 上升代表模型開始過擬合", "is_correct": false, "trap_type": "Early Stopping 監控驗證集而非訓練集"},
-        {"text": "Early Stopping 監控測試集準確率(test accuracy),當 test accuracy 連續 10 個 epoch 未改善即停止訓練,以測試集表現作為訓練終止依據", "is_correct": false, "trap_type": "用測試集調參會洩漏資料"},
-        {"text": "Early Stopping 在每個 epoch 結束後比較參數梯度範數的變化,當梯度範數在連續 10 輪內降低幅度不足 1% 即停止訓練,屬於梯度收斂判定的標準作法", "is_correct": false, "trap_type": "把 Early Stopping 與梯度收斂混淆"}
+        {
+          "text": "Early Stopping 監控驗證集損失(validation loss),當連續 10 個 epoch 未改善即停止訓練並還原最佳權重,可避免訓練過久造成過擬合",
+          "is_correct": true
+        },
+        {
+          "text": "Early Stopping 監控訓練集損失(training loss),當 training loss 連續 10 個 epoch 上升即停止,因訓練 loss 上升代表模型開始過擬合",
+          "is_correct": false,
+          "trap_type": "Early Stopping 監控驗證集而非訓練集"
+        },
+        {
+          "text": "Early Stopping 監控測試集準確率(test accuracy),當 test accuracy 連續 10 個 epoch 未改善即停止訓練,以測試集表現作為訓練終止依據",
+          "is_correct": false,
+          "trap_type": "用測試集調參會洩漏資料"
+        },
+        {
+          "text": "Early Stopping 在每個 epoch 結束後比較參數梯度範數的變化,當梯度範數在連續 10 輪內降低幅度不足 1% 即停止訓練,屬於梯度收斂判定的標準作法",
+          "is_correct": false,
+          "trap_type": "把 Early Stopping 與梯度收斂混淆"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -390,9 +893,21 @@
         },
         "hook": "Early Stopping 三原則:監控驗證集(不是訓練/測試)、設置 patience(避免短暫波動)、還原最佳權重(不是停止當下的權重)"
       },
-      "misconceptions": ["監控訓練 loss 而非驗證 loss", "用測試集做 Early Stopping(資料洩漏)", "把梯度收斂與 Early Stopping 混淆"],
-      "related_node_ids": ["n_L23304_003", "n_L23304_005"],
-      "tags": ["Early Stopping", "驗證集", "patience", "過擬合"]
+      "misconceptions": [
+        "監控訓練 loss 而非驗證 loss",
+        "用測試集做 Early Stopping(資料洩漏)",
+        "把梯度收斂與 Early Stopping 混淆"
+      ],
+      "related_node_ids": [
+        "n_L23304_003",
+        "n_L23304_005"
+      ],
+      "tags": [
+        "Early Stopping",
+        "驗證集",
+        "patience",
+        "過擬合"
+      ]
     },
     {
       "id": "q_n8_013",
@@ -404,10 +919,25 @@
       "source_level": "L2",
       "stem": "某團隊在深度神經網路加入 Dropout(p=0.5)防止過擬合。下列敘述何者最正確?",
       "options": [
-        {"text": "訓練時每次 forward 隨機關閉約 50% 神經元,推論時不關閉但需做 scale(輸出乘以 1-p 或訓練時除以 1-p),降低神經元過度共適應", "is_correct": true},
-        {"text": "推論時 Dropout 仍維持隨機關閉 50% 神經元以保持與訓練時一致的網路結構,且在每次推論都產生不同預測結果以模擬模型不確定性", "is_correct": false, "trap_type": "推論時不關閉(除非用於 MC Dropout 不確定性估計)"},
-        {"text": "Dropout 必須加在所有層(包含輸入層、輸出層與所有隱藏層),每層一律使用相同 p 值才能達成最佳的正則化效果以降低訓練雜訊敏感度", "is_correct": false, "trap_type": "輸入/輸出層通常不加 Dropout 或 p 較小"},
-        {"text": "Dropout 是訓練資料的隨機刪除機制,訓練時每個 epoch 隨機丟棄 50% 樣本,使模型只看到一半資料以避免記憶完整訓練集而過擬合", "is_correct": false, "trap_type": "Dropout 是丟神經元不是丟資料"}
+        {
+          "text": "訓練時每次 forward 隨機關閉約 50% 神經元,推論時不關閉但需做 scale(輸出乘以 1-p 或訓練時除以 1-p),降低神經元過度共適應",
+          "is_correct": true
+        },
+        {
+          "text": "推論時 Dropout 仍維持隨機關閉 50% 神經元以保持與訓練時一致的網路結構,且在每次推論都產生不同預測結果以模擬模型不確定性",
+          "is_correct": false,
+          "trap_type": "推論時不關閉(除非用於 MC Dropout 不確定性估計)"
+        },
+        {
+          "text": "Dropout 必須加在所有層(包含輸入層、輸出層與所有隱藏層),每層一律使用相同 p 值才能達成最佳的正則化效果以降低訓練雜訊敏感度",
+          "is_correct": false,
+          "trap_type": "輸入/輸出層通常不加 Dropout 或 p 較小"
+        },
+        {
+          "text": "Dropout 是訓練資料的隨機刪除機制,訓練時每個 epoch 隨機丟棄 50% 樣本,使模型只看到一半資料以避免記憶完整訓練集而過擬合",
+          "is_correct": false,
+          "trap_type": "Dropout 是丟神經元不是丟資料"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -419,9 +949,21 @@
         },
         "hook": "Dropout 三要點:(1) 訓練關推論不關;(2) 需 scale 補償;(3) 丟神經元不丟資料"
       },
-      "misconceptions": ["以為 Dropout 推論時也關閉", "把 Dropout 與資料丟棄混淆", "在輸入/輸出層加大 p"],
-      "related_node_ids": ["n_L23304_004", "n_L23304_005"],
-      "tags": ["Dropout", "正則化", "神經網路", "推論模式"]
+      "misconceptions": [
+        "以為 Dropout 推論時也關閉",
+        "把 Dropout 與資料丟棄混淆",
+        "在輸入/輸出層加大 p"
+      ],
+      "related_node_ids": [
+        "n_L23304_004",
+        "n_L23304_005"
+      ],
+      "tags": [
+        "Dropout",
+        "正則化",
+        "神經網路",
+        "推論模式"
+      ]
     },
     {
       "id": "q_n8_014",
@@ -433,10 +975,25 @@
       "source_level": "L2",
       "stem": "某 AI 工程師訓練影像分類模型,觀察到訓練準確率 99%、驗證準確率僅 65%。下列何者最能描述此現象與處置方向?",
       "options": [
-        {"text": "典型過擬合徵兆(訓練好、驗證差);可採增加資料、資料增強、Dropout、L2 正則化、Early Stopping、降低模型複雜度等方法", "is_correct": true},
-        {"text": "屬於欠擬合徵兆,代表模型還沒學夠;應立即增加層數與寬度並提高 learning rate 加速收斂,使訓練/驗證準確率同步上升至最佳水準", "is_correct": false, "trap_type": "把過擬合誤判為欠擬合"},
-        {"text": "屬於資料分佈差異(domain shift)而非過擬合,應該重新切分訓練/驗證集使兩者統計特性相同,即可消除驗證準確率落差並達成模型泛化", "is_correct": false, "trap_type": "重新切分掩蓋過擬合不解決"},
-        {"text": "屬於正常波動,訓練與驗證準確率出現落差是深度學習的常見現象,只要驗證準確率達 65% 即可上線,後續以線上學習(online learning)持續修正", "is_correct": false, "trap_type": "34% 落差不是正常,且上線高風險"}
+        {
+          "text": "典型過擬合徵兆(訓練好、驗證差);可採增加資料、資料增強、Dropout、L2 正則化、Early Stopping、降低模型複雜度等方法",
+          "is_correct": true
+        },
+        {
+          "text": "屬於欠擬合徵兆,代表模型還沒學夠;應立即增加層數與寬度並提高 learning rate 加速收斂,使訓練/驗證準確率同步上升至最佳水準",
+          "is_correct": false,
+          "trap_type": "把過擬合誤判為欠擬合"
+        },
+        {
+          "text": "屬於資料分佈差異(domain shift)而非過擬合,應該重新切分訓練/驗證集使兩者統計特性相同,即可消除驗證準確率落差並達成模型泛化",
+          "is_correct": false,
+          "trap_type": "重新切分掩蓋過擬合不解決"
+        },
+        {
+          "text": "屬於正常波動,訓練與驗證準確率出現落差是深度學習的常見現象,只要驗證準確率達 65% 即可上線,後續以線上學習(online learning)持續修正",
+          "is_correct": false,
+          "trap_type": "34% 落差不是正常,且上線高風險"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -448,9 +1005,21 @@
         },
         "hook": "過擬合 vs 欠擬合判讀:訓練好驗證差 → 過擬合;訓練驗證都差 → 欠擬合;訓練驗證都好 → 理想;訓練差驗證好 → 切分有誤"
       },
-      "misconceptions": ["把過擬合誤判為欠擬合而加大模型", "把過擬合誤判為 domain shift", "把嚴重落差視為正常波動"],
-      "related_node_ids": ["n_L23304_001", "n_L23304_005"],
-      "tags": ["過擬合", "欠擬合", "防過擬合策略", "判讀"]
+      "misconceptions": [
+        "把過擬合誤判為欠擬合而加大模型",
+        "把過擬合誤判為 domain shift",
+        "把嚴重落差視為正常波動"
+      ],
+      "related_node_ids": [
+        "n_L23304_001",
+        "n_L23304_005"
+      ],
+      "tags": [
+        "過擬合",
+        "欠擬合",
+        "防過擬合策略",
+        "判讀"
+      ]
     },
     {
       "id": "q_n8_015",
@@ -462,10 +1031,25 @@
       "source_level": "L2",
       "stem": "某新創團隊深度學習模型同時面臨『訓練資料僅 1500 筆』與『模型容量大(2000 萬參數)』兩個過擬合風險源。下列哪個策略組合最完整且方向正確?",
       "options": [
-        {"text": "採資料增強(rotation/flip)+ Dropout(p=0.3-0.5)+ L2 正則化 + Early Stopping + 適度減小模型,從資料/模型/訓練多面向介入降低過擬合", "is_correct": true},
-        {"text": "只加大 batch size 到 1024 並把 learning rate 提高到 0.1,因為大 batch + 大 LR 可加速收斂,讓模型在過擬合前完成訓練即可上線部署", "is_correct": false, "trap_type": "加速收斂無法解決過擬合根本原因"},
-        {"text": "只增加模型深度與寬度(把現行 50 層加深至 100 層並加寬通道數),因為更深更寬的模型參數更多表現力更強,只要 epoch 訓練充分即可學到泛化的高品質特徵表達", "is_correct": false, "trap_type": "在小資料 + 大模型加深只會讓過擬合更嚴重"},
-        {"text": "只把評估指標從 Accuracy 改為 F1,並把 train/val/test 切分從 7:2:1 改為 6:2:2,以此降低過擬合風險並提升整體泛化能力的可信度", "is_correct": false, "trap_type": "改指標與切分比例不解決過擬合"}
+        {
+          "text": "採資料增強(rotation/flip)+ Dropout(p=0.3-0.5)+ L2 正則化 + Early Stopping + 適度減小模型,從資料/模型/訓練多面向介入降低過擬合",
+          "is_correct": true
+        },
+        {
+          "text": "只加大 batch size 到 1024 並把 learning rate 提高到 0.1,因為大 batch + 大 LR 可加速收斂,讓模型在過擬合前完成訓練即可上線部署",
+          "is_correct": false,
+          "trap_type": "加速收斂無法解決過擬合根本原因"
+        },
+        {
+          "text": "只增加模型深度與寬度(把現行 50 層加深至 100 層並加寬通道數),因為更深更寬的模型參數更多表現力更強,只要 epoch 訓練充分即可學到泛化的高品質特徵表達",
+          "is_correct": false,
+          "trap_type": "在小資料 + 大模型加深只會讓過擬合更嚴重"
+        },
+        {
+          "text": "只把評估指標從 Accuracy 改為 F1,並把 train/val/test 切分從 7:2:1 改為 6:2:2,以此降低過擬合風險並提升整體泛化能力的可信度",
+          "is_correct": false,
+          "trap_type": "改指標與切分比例不解決過擬合"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -477,9 +1061,23 @@
         },
         "hook": "過擬合多面向處置:資料增強 / 降模型 / Dropout+L2 / Early Stopping / 集成;單點介入通常效果有限,需多管齊下"
       },
-      "misconceptions": ["過擬合只用單點手段", "誤以為加速收斂解決過擬合", "在小資料下加深模型"],
-      "related_node_ids": ["n_L23304_005", "n_L23304_001", "n_L23304_004"],
-      "tags": ["過擬合", "綜合策略", "資料增強", "Dropout", "L2"]
+      "misconceptions": [
+        "過擬合只用單點手段",
+        "誤以為加速收斂解決過擬合",
+        "在小資料下加深模型"
+      ],
+      "related_node_ids": [
+        "n_L23304_005",
+        "n_L23304_001",
+        "n_L23304_004"
+      ],
+      "tags": [
+        "過擬合",
+        "綜合策略",
+        "資料增強",
+        "Dropout",
+        "L2"
+      ]
     },
     {
       "id": "q_n8_016",
@@ -491,10 +1089,25 @@
       "source_level": "L2",
       "stem": "某團隊用 100 個生醫特徵預測疾病,希望模型『自動挑出真正有效特徵、其他歸零』。下列哪個正則化最直接達成此需求?",
       "options": [
-        {"text": "L1 正則化(Lasso):懲罰項為權重絕對值和 λ·Σ|wᵢ|,絕對值在原點不可微使最佳解常落在軸上,部分權重直接歸零達成自動特徵選擇", "is_correct": true},
-        {"text": "L2 正則化(Ridge):懲罰項為權重平方和 λ·Σwᵢ²,平方項在原點可微平滑使最佳解只縮小所有權重但不歸零,可保留全部特徵但無自動挑選功能", "is_correct": false, "trap_type": "L2 不歸零不符『自動挑選』需求"},
-        {"text": "Dropout:訓練時隨機關閉部分神經元降低共適應,適用於神經網路;對線性迴歸係數沒有直接歸零作用,且每次關閉都是隨機而非固定挑選有效特徵", "is_correct": false, "trap_type": "Dropout 不適用線性模型且非固定特徵選擇"},
-        {"text": "Batch Normalization:在每個 batch 內標準化激活值至均值 0 變異 1,可加速訓練並降低對初始化敏感度;但不執行特徵選擇也不歸零任何權重", "is_correct": false, "trap_type": "BN 不是特徵選擇方法"}
+        {
+          "text": "L1 正則化(Lasso):懲罰項為權重絕對值和 λ·Σ|wᵢ|,絕對值在原點不可微使最佳解常落在軸上,部分權重直接歸零達成自動特徵選擇",
+          "is_correct": true
+        },
+        {
+          "text": "L2 正則化(Ridge):懲罰項為權重平方和 λ·Σwᵢ²,平方項在原點可微平滑使最佳解只縮小所有權重但不歸零,可保留全部特徵但無自動挑選功能",
+          "is_correct": false,
+          "trap_type": "L2 不歸零不符『自動挑選』需求"
+        },
+        {
+          "text": "Dropout:訓練時隨機關閉部分神經元降低共適應,適用於神經網路;對線性迴歸係數沒有直接歸零作用,且每次關閉都是隨機而非固定挑選有效特徵",
+          "is_correct": false,
+          "trap_type": "Dropout 不適用線性模型且非固定特徵選擇"
+        },
+        {
+          "text": "Batch Normalization:在每個 batch 內標準化激活值至均值 0 變異 1,可加速訓練並降低對初始化敏感度;但不執行特徵選擇也不歸零任何權重",
+          "is_correct": false,
+          "trap_type": "BN 不是特徵選擇方法"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -506,9 +1119,21 @@
         },
         "hook": "需要稀疏特徵選擇 → L1(Lasso);需要保留所有特徵但縮小 → L2(Ridge);兩者並用 → Elastic Net"
       },
-      "misconceptions": ["L1 與 L2 效果記反", "誤以為 Dropout 會選特徵", "把 BN 當作正則化選特徵手段"],
-      "related_node_ids": ["n_L23304_002", "n_L23304_005"],
-      "tags": ["L1正則化", "Lasso", "特徵選擇", "稀疏解"]
+      "misconceptions": [
+        "L1 與 L2 效果記反",
+        "誤以為 Dropout 會選特徵",
+        "把 BN 當作正則化選特徵手段"
+      ],
+      "related_node_ids": [
+        "n_L23304_002",
+        "n_L23304_005"
+      ],
+      "tags": [
+        "L1正則化",
+        "Lasso",
+        "特徵選擇",
+        "稀疏解"
+      ]
     },
     {
       "id": "q_n8_017",
@@ -520,10 +1145,25 @@
       "source_level": "L1",
       "stem": "某銀行希望聯合三家銀行共同訓練信用評分模型,但各銀行客戶資料受 GDPR 與 PDPA 規範,『不能解密、不能傳出本地』。下列哪項技術最直接滿足『資料於加密狀態下仍可進行運算』需求?",
       "options": [
-        {"text": "同態加密(Homomorphic Encryption, HE):允許對加密資料直接執行運算(加法/乘法),解密後與明文運算結果相同,銀行可在不解密下協作訓練", "is_correct": true},
-        {"text": "對稱加密(AES):使用單一金鑰加密解密,主要用於大量資料的高效保密傳輸;但加密狀態下無法直接做數值運算,必須先解密才能訓練模型,不符不解密需求", "is_correct": false, "trap_type": "對稱加密不支援密文運算"},
-        {"text": "雜湊函數(SHA-256):單向雜湊產生固定長度摘要,主要用於資料完整性驗證與防篡改;雜湊後不可逆且失去原資料運算性,無法用於模型協作訓練", "is_correct": false, "trap_type": "雜湊不可逆,無法做模型訓練"},
-        {"text": "差分隱私(Differential Privacy):在資料統計輸出加入校準雜訊以隱藏個體影響,屬於『輸出加噪』而非『資料加密』,且對協作運算的支援為間接", "is_correct": false, "trap_type": "差分隱私不是加密"}
+        {
+          "text": "同態加密(Homomorphic Encryption, HE):允許對加密資料直接執行運算(加法/乘法),解密後與明文運算結果相同,銀行可在不解密下協作訓練",
+          "is_correct": true
+        },
+        {
+          "text": "對稱加密(AES):使用單一金鑰加密解密,主要用於大量資料的高效保密傳輸;但加密狀態下無法直接做數值運算,必須先解密才能訓練模型,不符不解密需求",
+          "is_correct": false,
+          "trap_type": "對稱加密不支援密文運算"
+        },
+        {
+          "text": "雜湊函數(SHA-256):單向雜湊產生固定長度摘要,主要用於資料完整性驗證與防篡改;雜湊後不可逆且失去原資料運算性,無法用於模型協作訓練",
+          "is_correct": false,
+          "trap_type": "雜湊不可逆,無法做模型訓練"
+        },
+        {
+          "text": "差分隱私(Differential Privacy):在資料統計輸出加入校準雜訊以隱藏個體影響,屬於『輸出加噪』而非『資料加密』,且對協作運算的支援為間接",
+          "is_correct": false,
+          "trap_type": "差分隱私不是加密"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -535,9 +1175,22 @@
         },
         "hook": "隱私技術四大類辨識:HE = 加密上計算;DP = 輸出加噪;FL = 參數聚合;MPC = 多方共算;本題『加密狀態下計算』指 HE"
       },
-      "misconceptions": ["把同態加密與差分隱私混淆", "把 AES 當作可運算加密", "誤以為雜湊可用於模型訓練"],
-      "related_node_ids": ["n_L23401_001", "n_L23401_003"],
-      "tags": ["同態加密", "HE", "GDPR", "PDPA", "銀行協作"]
+      "misconceptions": [
+        "把同態加密與差分隱私混淆",
+        "把 AES 當作可運算加密",
+        "誤以為雜湊可用於模型訓練"
+      ],
+      "related_node_ids": [
+        "n_L23401_001",
+        "n_L23401_003"
+      ],
+      "tags": [
+        "同態加密",
+        "HE",
+        "GDPR",
+        "PDPA",
+        "銀行協作"
+      ]
     },
     {
       "id": "q_n8_018",
@@ -549,10 +1202,25 @@
       "source_level": "L1",
       "stem": "某金控集團規劃跨子公司資料協作平台,需求為:(1) 子公司間運算時不解密原資料;(2) 多方共同計算統計模型且各方輸入互不洩漏;(3) 傳輸過程偵測篡改與重放;(4) 大量資料傳輸效率高。下列何種隱私技術組合最完整對應四項需求?",
       "options": [
-        {"text": "同態加密(對應 1)+ MPC 多方安全運算(對應 2)+ 雜湊與數位簽章(對應 3)+ 對稱加密 AES(對應 4),為四項需求逐一映射的標準組合", "is_correct": true},
-        {"text": "差分隱私(對應 1)+ 聯邦學習(對應 2)+ TLS(對應 3)+ 對稱加密(對應 4),以差分隱私取代同態加密處理不解密下計算的需求即可", "is_correct": false, "trap_type": "差分隱私並非『加密上計算』,DP 是輸出加噪"},
-        {"text": "全程僅用對稱加密 AES 即可,因為 AES 同時支援保密(對應 1)、多方共享金鑰(對應 2)、防篡改(對應 3)、高效傳輸(對應 4),無需多種技術組合", "is_correct": false, "trap_type": "AES 不能在密文上做運算"},
-        {"text": "全程僅用同態加密即可,因為同態加密同時保證資料保密、運算正確、傳輸完整、效率高,屬於整合度最高的單一技術方案,可一次滿足保密多方防篡改高效四項需求", "is_correct": false, "trap_type": "同態加密效能極差,不適合大量資料傳輸"}
+        {
+          "text": "同態加密(對應 1)+ MPC 多方安全運算(對應 2)+ 雜湊與數位簽章(對應 3)+ 對稱加密 AES(對應 4),為四項需求逐一映射的標準組合",
+          "is_correct": true
+        },
+        {
+          "text": "差分隱私(對應 1)+ 聯邦學習(對應 2)+ TLS(對應 3)+ 對稱加密(對應 4),以差分隱私取代同態加密處理不解密下計算的需求即可",
+          "is_correct": false,
+          "trap_type": "差分隱私並非『加密上計算』,DP 是輸出加噪"
+        },
+        {
+          "text": "全程僅用對稱加密 AES 即可,因為 AES 同時支援保密(對應 1)、多方共享金鑰(對應 2)、防篡改(對應 3)、高效傳輸(對應 4),無需多種技術組合",
+          "is_correct": false,
+          "trap_type": "AES 不能在密文上做運算"
+        },
+        {
+          "text": "全程僅用同態加密即可,因為同態加密同時保證資料保密、運算正確、傳輸完整、效率高,屬於整合度最高的單一技術方案,可一次滿足保密多方防篡改高效四項需求",
+          "is_correct": false,
+          "trap_type": "同態加密效能極差,不適合大量資料傳輸"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -564,9 +1232,23 @@
         },
         "hook": "隱私技術組合題口訣:不解密計算 → HE;多方共算 → MPC;防篡改 → 雜湊;不可否認 → 數位簽章;高效傳輸 → 對稱加密(AES);不要把 DP 與 HE 混為一談"
       },
-      "misconceptions": ["把 DP 當作 HE 的替代", "誤以為單一技術可滿足所有隱私需求", "把 TLS 當作完整性方案"],
-      "related_node_ids": ["n_L23401_002", "n_L23401_001", "n_L23401_003"],
-      "tags": ["同態加密", "MPC", "雜湊", "對稱加密", "隱私技術組合"]
+      "misconceptions": [
+        "把 DP 當作 HE 的替代",
+        "誤以為單一技術可滿足所有隱私需求",
+        "把 TLS 當作完整性方案"
+      ],
+      "related_node_ids": [
+        "n_L23401_002",
+        "n_L23401_001",
+        "n_L23401_003"
+      ],
+      "tags": [
+        "同態加密",
+        "MPC",
+        "雜湊",
+        "對稱加密",
+        "隱私技術組合"
+      ]
     },
     {
       "id": "q_n8_019",
@@ -578,10 +1260,25 @@
       "source_level": "L1",
       "stem": "某政府單位發布開放資料前要『讓單一個體無法從統計報告中被識別,即使結合其他公開資料也不行』。下列何種隱私技術最直接對應此需求?",
       "options": [
-        {"text": "差分隱私(Differential Privacy, DP):在統計輸出加入嚴格校準的雜訊,使單一個體加入或移除資料庫對輸出影響極小,單筆紀錄不可識別且抗結合攻擊", "is_correct": true},
-        {"text": "聯邦學習(Federated Learning, FL):各參與方本地訓練後上傳模型參數至中央聚合,原始資料不離開本地;但其本身並未直接處理『單一個體不可識別』的統計輸出問題", "is_correct": false, "trap_type": "FL 是訓練架構,不直接處理統計報告匿名"},
-        {"text": "同態加密(Homomorphic Encryption, HE):允許對加密資料執行運算,適合不解密下協作訓練;但對於『公開統計報告』場景並非首選,且不保證個體不可識別", "is_correct": false, "trap_type": "HE 是加密技術不是統計匿名"},
-        {"text": "K-匿名(K-anonymity)結合一般化:將每筆紀錄至少與 K-1 筆其他紀錄無法區分;但對結合外部資料的攻擊抗性弱,無法保證『結合其他公開資料也不行』", "is_correct": false, "trap_type": "K-匿名可被結合攻擊破解,差分隱私才嚴格"}
+        {
+          "text": "差分隱私(Differential Privacy, DP):在統計輸出加入嚴格校準的雜訊,使單一個體加入或移除資料庫對輸出影響極小,單筆紀錄不可識別且抗結合攻擊",
+          "is_correct": true
+        },
+        {
+          "text": "聯邦學習(Federated Learning, FL):各參與方本地訓練後上傳模型參數至中央聚合,原始資料不離開本地;但其本身並未直接處理『單一個體不可識別』的統計輸出問題",
+          "is_correct": false,
+          "trap_type": "FL 是訓練架構,不直接處理統計報告匿名"
+        },
+        {
+          "text": "同態加密(Homomorphic Encryption, HE):允許對加密資料執行運算,適合不解密下協作訓練;但對於『公開統計報告』場景並非首選,且不保證個體不可識別",
+          "is_correct": false,
+          "trap_type": "HE 是加密技術不是統計匿名"
+        },
+        {
+          "text": "K-匿名(K-anonymity)結合一般化:將每筆紀錄至少與 K-1 筆其他紀錄無法區分;但對結合外部資料的攻擊抗性弱,無法保證『結合其他公開資料也不行』",
+          "is_correct": false,
+          "trap_type": "K-匿名可被結合攻擊破解,差分隱私才嚴格"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -593,9 +1290,21 @@
         },
         "hook": "公開統計報告 + 抗結合攻擊 → 差分隱私 DP(ε 越小越嚴);資料不出本地協作 → 聯邦學習 FL;不解密計算 → 同態加密 HE"
       },
-      "misconceptions": ["把 K-匿名等同 DP", "誤以為 FL 可直接保證個體不可識別", "把 HE 用於公開報告匿名"],
-      "related_node_ids": ["n_L23401_003", "n_L23401_001"],
-      "tags": ["差分隱私", "DP", "公開資料匿名", "結合攻擊"]
+      "misconceptions": [
+        "把 K-匿名等同 DP",
+        "誤以為 FL 可直接保證個體不可識別",
+        "把 HE 用於公開報告匿名"
+      ],
+      "related_node_ids": [
+        "n_L23401_003",
+        "n_L23401_001"
+      ],
+      "tags": [
+        "差分隱私",
+        "DP",
+        "公開資料匿名",
+        "結合攻擊"
+      ]
     },
     {
       "id": "q_n8_020",
@@ -607,10 +1316,25 @@
       "source_level": "L1",
       "stem": "某醫院聯盟欲訓練 AI 診斷模型,各醫院的病患影像不可離開本地端。資深 AI 顧問建議『各醫院本地訓練後僅上傳模型參數至中央,中央聚合後分發新版模型』。此架構最符合下列哪種技術?",
       "options": [
-        {"text": "聯邦學習(Federated Learning, FL):各參與方本地訓練、僅上傳模型參數至中央聚合,原始資料始終不離開本地,完全符合醫療影像不可外傳需求", "is_correct": true},
-        {"text": "分散式學習(Distributed Learning):為加速訓練將同一份資料切分到多 GPU 並行處理,參數會頻繁同步;原始資料需先集中再切分,不符『不離開本地』", "is_correct": false, "trap_type": "分散式學習資料先集中,本題情境不符"},
-        {"text": "差分隱私(Differential Privacy):在統計輸出加雜訊保護個體不被識別;但其本身並非協作訓練架構,且不直接處理『資料不離開本地』的協作流程需求", "is_correct": false, "trap_type": "DP 是輸出加噪不是協作架構"},
-        {"text": "同態加密(Homomorphic Encryption):資料加密後可直接運算,適合多方資料集中後在密文上協作;本題已限定『各方本地訓練』,並非加密上集中運算場景", "is_correct": false, "trap_type": "HE 是加密技術不是協作架構"}
+        {
+          "text": "聯邦學習(Federated Learning, FL):各參與方本地訓練、僅上傳模型參數至中央聚合,原始資料始終不離開本地,完全符合醫療影像不可外傳需求",
+          "is_correct": true
+        },
+        {
+          "text": "分散式學習(Distributed Learning):為加速訓練將同一份資料切分到多 GPU 並行處理,參數會頻繁同步;原始資料需先集中再切分,不符『不離開本地』",
+          "is_correct": false,
+          "trap_type": "分散式學習資料先集中,本題情境不符"
+        },
+        {
+          "text": "差分隱私(Differential Privacy):在統計輸出加雜訊保護個體不被識別;但其本身並非協作訓練架構,且不直接處理『資料不離開本地』的協作流程需求",
+          "is_correct": false,
+          "trap_type": "DP 是輸出加噪不是協作架構"
+        },
+        {
+          "text": "同態加密(Homomorphic Encryption):資料加密後可直接運算,適合多方資料集中後在密文上協作;本題已限定『各方本地訓練』,並非加密上集中運算場景",
+          "is_correct": false,
+          "trap_type": "HE 是加密技術不是協作架構"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -622,9 +1346,21 @@
         },
         "hook": "FL vs 分散式學習關鍵:FL 假設資料『分散且不可集中』(隱私需求);分散式學習假設『先集中再切分』(加速計算)"
       },
-      "misconceptions": ["把 FL 與分散式學習等同", "誤以為 DP 可取代 FL", "把 HE 視為協作訓練架構"],
-      "related_node_ids": ["n_L23401_003", "n_L23401_001"],
-      "tags": ["聯邦學習", "FL", "分散式學習", "醫療AI"]
+      "misconceptions": [
+        "把 FL 與分散式學習等同",
+        "誤以為 DP 可取代 FL",
+        "把 HE 視為協作訓練架構"
+      ],
+      "related_node_ids": [
+        "n_L23401_003",
+        "n_L23401_001"
+      ],
+      "tags": [
+        "聯邦學習",
+        "FL",
+        "分散式學習",
+        "醫療AI"
+      ]
     },
     {
       "id": "q_n8_021",
@@ -636,10 +1372,25 @@
       "source_level": "L1",
       "stem": "下列關於『差分隱私 / 聯邦學習 / MPC / 同態加密』四項隱私技術的對比敘述,何者最正確?",
       "options": [
-        {"text": "DP 在輸出加雜訊保護個體;FL 將訓練分散至本地不傳資料;MPC 多方協作運算各方輸入互不可見;HE 在加密狀態下執行運算,四者解決不同隱私問題可組合", "is_correct": true},
-        {"text": "四者技術功能完全相同,差異僅在算法實作細節與運算成本;在正式部署時可任選其一,即可達到相同隱私保護等級與商業應用效果,不需特別區分", "is_correct": false, "trap_type": "四者解決不同問題,不可互換"},
-        {"text": "DP、FL、MPC、HE 都是加密演算法,差別只在加密強度等級高低;HE 加密強度最高而 DP 最低,選擇時依據對抗攻擊者的等級決定即可滿足", "is_correct": false, "trap_type": "DP 與 FL 不是加密演算法"},
-        {"text": "FL 是分散式學習的一種特例,本質與分散式學習完全等價;DP 是統計學技術不屬於資安範疇;MPC 與 HE 在密碼學上為同義詞僅命名不同", "is_correct": false, "trap_type": "FL ≠ 分散式;MPC ≠ HE 同義詞"}
+        {
+          "text": "DP 在輸出加雜訊保護個體;FL 將訓練分散至本地不傳資料;MPC 多方協作運算各方輸入互不可見;HE 在加密狀態下執行運算,四者解決不同隱私問題可組合",
+          "is_correct": true
+        },
+        {
+          "text": "四者技術功能完全相同,差異僅在算法實作細節與運算成本;在正式部署時可任選其一,即可達到相同隱私保護等級與商業應用效果,不需特別區分",
+          "is_correct": false,
+          "trap_type": "四者解決不同問題,不可互換"
+        },
+        {
+          "text": "DP、FL、MPC、HE 都是加密演算法,差別只在加密強度等級高低;HE 加密強度最高而 DP 最低,選擇時依據對抗攻擊者的等級決定即可滿足",
+          "is_correct": false,
+          "trap_type": "DP 與 FL 不是加密演算法"
+        },
+        {
+          "text": "FL 是分散式學習的一種特例,本質與分散式學習完全等價;DP 是統計學技術不屬於資安範疇;MPC 與 HE 在密碼學上為同義詞僅命名不同",
+          "is_correct": false,
+          "trap_type": "FL ≠ 分散式;MPC ≠ HE 同義詞"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -651,9 +1402,23 @@
         },
         "hook": "四技術判讀:輸出加噪(DP)、本地訓練上傳參數(FL)、多方共算互不見(MPC)、密文運算(HE);四者可組合不可互換"
       },
-      "misconceptions": ["把四技術視為同義或可互換", "把 DP/FL 誤歸類為加密演算法", "把 MPC 與 HE 視為同義詞"],
-      "related_node_ids": ["n_L23401_003", "n_L23401_001", "n_L23401_002"],
-      "tags": ["差分隱私", "聯邦學習", "MPC", "同態加密", "技術對比"]
+      "misconceptions": [
+        "把四技術視為同義或可互換",
+        "把 DP/FL 誤歸類為加密演算法",
+        "把 MPC 與 HE 視為同義詞"
+      ],
+      "related_node_ids": [
+        "n_L23401_003",
+        "n_L23401_001",
+        "n_L23401_002"
+      ],
+      "tags": [
+        "差分隱私",
+        "聯邦學習",
+        "MPC",
+        "同態加密",
+        "技術對比"
+      ]
     },
     {
       "id": "q_n8_022",
@@ -665,10 +1430,25 @@
       "source_level": "L1",
       "stem": "某 AI 信用評分模型訓練資料『只取活躍卡友、未涵蓋新卡友與低消費族群』,部署後對新卡友預測準確率明顯偏低。此屬於下列哪一類偏見?",
       "options": [
-        {"text": "Sampling Bias(取樣偏見):訓練樣本族群不能代表整體目標族群,導致模型對未涵蓋族群(新卡友/低消費)表現偏差;對策為擴充涵蓋", "is_correct": true},
-        {"text": "Label Bias(標註偏見):人工標註者主觀偏見導致標籤錯誤;本題沒有標註者主觀問題,且特徵與標籤關係未受標註過程影響", "is_correct": false, "trap_type": "Label Bias 是標註過程偏見,本題並非"},
-        {"text": "Feature Bias(特徵偏見):特徵與標籤關係過於緊密近乎同義(資料洩漏類);本題並非特徵內容問題,而是樣本族群選取問題", "is_correct": false, "trap_type": "Feature Bias 是特徵與標籤關係問題"},
-        {"text": "Confirmation Bias(確認偏誤):AI 系統選擇性接受符合預期的資料;此類偏見多發生於互動式系統,而非靜態訓練資料的選取階段", "is_correct": false, "trap_type": "確認偏誤多用於互動或人工流程"}
+        {
+          "text": "Sampling Bias(取樣偏見):訓練樣本族群不能代表整體目標族群,導致模型對未涵蓋族群(新卡友/低消費)表現偏差;對策為擴充涵蓋",
+          "is_correct": true
+        },
+        {
+          "text": "Label Bias(標註偏見):人工標註者主觀偏見導致標籤錯誤;本題沒有標註者主觀問題,且特徵與標籤關係未受標註過程影響",
+          "is_correct": false,
+          "trap_type": "Label Bias 是標註過程偏見,本題並非"
+        },
+        {
+          "text": "Feature Bias(特徵偏見):特徵與標籤關係過於緊密近乎同義(資料洩漏類);本題並非特徵內容問題,而是樣本族群選取問題",
+          "is_correct": false,
+          "trap_type": "Feature Bias 是特徵與標籤關係問題"
+        },
+        {
+          "text": "Confirmation Bias(確認偏誤):AI 系統選擇性接受符合預期的資料;此類偏見多發生於互動式系統,而非靜態訓練資料的選取階段",
+          "is_correct": false,
+          "trap_type": "確認偏誤多用於互動或人工流程"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -680,9 +1460,21 @@
         },
         "hook": "AI 偏見三類速辨:Sampling = 取樣偏(族群涵蓋不足)、Label = 標註偏(主觀標錯)、Feature = 特徵偏(資料洩漏近親)"
       },
-      "misconceptions": ["把 Sampling Bias 與 Label Bias 混淆", "把樣本族群問題誤歸為特徵問題", "誤用確認偏誤描述靜態資料"],
-      "related_node_ids": ["n_L23402_001", "n_L23402_002"],
-      "tags": ["AI偏見", "Sampling Bias", "Label Bias", "Feature Bias"]
+      "misconceptions": [
+        "把 Sampling Bias 與 Label Bias 混淆",
+        "把樣本族群問題誤歸為特徵問題",
+        "誤用確認偏誤描述靜態資料"
+      ],
+      "related_node_ids": [
+        "n_L23402_001",
+        "n_L23402_002"
+      ],
+      "tags": [
+        "AI偏見",
+        "Sampling Bias",
+        "Label Bias",
+        "Feature Bias"
+      ]
     },
     {
       "id": "q_n8_023",
@@ -694,10 +1486,25 @@
       "source_level": "L1",
       "stem": "某 AI 招聘模型評估『男性與女性兩族群在「真為合格者」中,被錄用的真陽性率(TPR)應相等』。下列哪一項公平性指標最直接對應此需求?",
       "options": [
-        {"text": "Equal Opportunity(平等機會):P(Ŷ=1|Y=1, A=男) = P(Ŷ=1|Y=1, A=女),即各族群在『真為合格』條件下 TPR 相等,精準對應本題", "is_correct": true},
-        {"text": "Demographic Parity(人口平等):P(Ŷ=1|A=男) = P(Ŷ=1|A=女),要求各族群預測陽性比例相等;但本題要的是 TPR 相等,為條件機率不同", "is_correct": false, "trap_type": "DP 看整體預測比例,非條件 TPR"},
-        {"text": "Equalized Odds(均等賠率):TPR 與 FPR 兩族群皆需相等;雖較嚴格但本題只要求『真合格中 TPR 相等』,並未要求 FPR 也相等故過度", "is_correct": false, "trap_type": "EO 是更嚴格,本題只要 TPR"},
-        {"text": "Calibration(機率校準):在預測機率 0.7 時兩族群實際陽性比例應相等;此指標屬於機率輸出校準範疇,與 TPR 條件機率為非同層次的不同概念", "is_correct": false, "trap_type": "校準是機率正確,非 TPR"}
+        {
+          "text": "Equal Opportunity(平等機會):P(Ŷ=1|Y=1, A=男) = P(Ŷ=1|Y=1, A=女),即各族群在『真為合格』條件下 TPR 相等,精準對應本題",
+          "is_correct": true
+        },
+        {
+          "text": "Demographic Parity(人口平等):P(Ŷ=1|A=男) = P(Ŷ=1|A=女),要求各族群預測陽性比例相等;但本題要的是 TPR 相等,為條件機率不同",
+          "is_correct": false,
+          "trap_type": "DP 看整體預測比例,非條件 TPR"
+        },
+        {
+          "text": "Equalized Odds(均等賠率):TPR 與 FPR 兩族群皆需相等;雖較嚴格但本題只要求『真合格中 TPR 相等』,並未要求 FPR 也相等故過度",
+          "is_correct": false,
+          "trap_type": "EO 是更嚴格,本題只要 TPR"
+        },
+        {
+          "text": "Calibration(機率校準):在預測機率 0.7 時兩族群實際陽性比例應相等;此指標屬於機率輸出校準範疇,與 TPR 條件機率為非同層次的不同概念",
+          "is_correct": false,
+          "trap_type": "校準是機率正確,非 TPR"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -709,9 +1516,21 @@
         },
         "hook": "公平性三指標:DP 看『預測』(整體陽性比例)、EOpp 看『真為正者 TPR』、EO 看『TPR + FPR 都相等』;三者層次漸進嚴格"
       },
-      "misconceptions": ["把 DP 與 EOpp 混淆", "把 EO 當作 EOpp 子集", "誤用 Calibration 描述 TPR"],
-      "related_node_ids": ["n_L23402_002", "n_L23402_001"],
-      "tags": ["公平性", "Demographic Parity", "Equal Opportunity", "Equalized Odds"]
+      "misconceptions": [
+        "把 DP 與 EOpp 混淆",
+        "把 EO 當作 EOpp 子集",
+        "誤用 Calibration 描述 TPR"
+      ],
+      "related_node_ids": [
+        "n_L23402_002",
+        "n_L23402_001"
+      ],
+      "tags": [
+        "公平性",
+        "Demographic Parity",
+        "Equal Opportunity",
+        "Equalized Odds"
+      ]
     },
     {
       "id": "q_n8_024",
@@ -723,10 +1542,25 @@
       "source_level": "L1",
       "stem": "某團隊使用大型語言模型做跨語言情感分析,英文情緒分類 F1=0.91、西班牙文 F1=0.58,且在『母親』『護士』詞向量上對性別有強連結。下列何者最完整描述此現象?",
       "options": [
-        {"text": "屬於 Embedding 偏見與隱式偏誤(Implicit Bias):訓練語料偏向英文與特定文化,模型內化職業性別刻板印象;對策包含重採樣、對抗去偏、後處理門檻調整", "is_correct": true},
-        {"text": "屬於正常現象,因為情感詞彙在不同語言間本就存在表達差異,且詞向量自然反映社會普遍語言使用習慣;此類偏見屬於模型可解釋性的副產品,不需特別處理或介入", "is_correct": false, "trap_type": "認為偏見正常不需處理"},
-        {"text": "屬於過擬合徵兆:模型把英文訓練雜訊學進去導致跨語言泛化失準;只要對西班牙文資料加強 L2 正則化並提高 Dropout p 值即可解決偏見並還原公平性", "is_correct": false, "trap_type": "把偏見誤判為過擬合"},
-        {"text": "屬於資料量不足問題:西班牙文訓練資料較少導致跨語言 F1 落差;只要把所有語言訓練資料量擴充至同等規模,即可徹底消除所有性別職業 Embedding 偏見", "is_correct": false, "trap_type": "資料量平等不解決刻板印象偏見"}
+        {
+          "text": "屬於 Embedding 偏見與隱式偏誤(Implicit Bias):訓練語料偏向英文與特定文化,模型內化職業性別刻板印象;對策包含重採樣、對抗去偏、後處理門檻調整",
+          "is_correct": true
+        },
+        {
+          "text": "屬於正常現象,因為情感詞彙在不同語言間本就存在表達差異,且詞向量自然反映社會普遍語言使用習慣;此類偏見屬於模型可解釋性的副產品,不需特別處理或介入",
+          "is_correct": false,
+          "trap_type": "認為偏見正常不需處理"
+        },
+        {
+          "text": "屬於過擬合徵兆:模型把英文訓練雜訊學進去導致跨語言泛化失準;只要對西班牙文資料加強 L2 正則化並提高 Dropout p 值即可解決偏見並還原公平性",
+          "is_correct": false,
+          "trap_type": "把偏見誤判為過擬合"
+        },
+        {
+          "text": "屬於資料量不足問題:西班牙文訓練資料較少導致跨語言 F1 落差;只要把所有語言訓練資料量擴充至同等規模,即可徹底消除所有性別職業 Embedding 偏見",
+          "is_correct": false,
+          "trap_type": "資料量平等不解決刻板印象偏見"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -738,9 +1572,21 @@
         },
         "hook": "Embedding 偏見徵兆 = 跨族群表現不一 + 詞向量內化刻板印象;處置三層 = 前處理(重採樣)、In-processing(對抗去偏)、後處理(門檻調整)"
       },
-      "misconceptions": ["把 Embedding 偏見視為正常副產品", "把偏見問題誤判為過擬合", "誤以為純擴充資料量即可消除刻板印象"],
-      "related_node_ids": ["n_L23402_003", "n_L23402_001"],
-      "tags": ["Embedding偏見", "隱式偏誤", "跨語言失準", "去偏方法"]
+      "misconceptions": [
+        "把 Embedding 偏見視為正常副產品",
+        "把偏見問題誤判為過擬合",
+        "誤以為純擴充資料量即可消除刻板印象"
+      ],
+      "related_node_ids": [
+        "n_L23402_003",
+        "n_L23402_001"
+      ],
+      "tags": [
+        "Embedding偏見",
+        "隱式偏誤",
+        "跨語言失準",
+        "去偏方法"
+      ]
     },
     {
       "id": "q_n8_025",
@@ -752,10 +1598,25 @@
       "source_level": "L1",
       "stem": "某銀行貸款 AI 模型測得:男性 / 女性兩族群預測為核准比例分別為 60% / 45%(差 15%);但在『真為信用良好者中』兩族群核准比例分別為 85% / 87%(差 2%)。團隊辯論模型是否公平。下列分析何者最正確?",
       "options": [
-        {"text": "採 DP(整體預測比例)則模型不公平差 15%;採 EOpp(真為良好者中 TPR)則模型相對公平差 2%;兩標準衝突需依業務目標再做判定取捨", "is_correct": true},
-        {"text": "模型必為不公平,因 Demographic Parity 是公平性唯一正確指標,其他指標都是次要;只要兩族群預測為核准比例不一致即構成歧視,須立即下架不可上線", "is_correct": false, "trap_type": "DP 不是唯一指標"},
-        {"text": "模型必為公平,因 Equal Opportunity 真為良好者中差 2% 屬可接受範圍,且 EOpp 是最嚴格指標;只要 EOpp 通過即無爭議,DP 不公平可忽略", "is_correct": false, "trap_type": "EOpp 並非最嚴格,EO 才是"},
-        {"text": "兩指標完全等同只是表達方式不同;15% 與 2% 的差異只是統計上的尾數浮動,實際代表的不公平程度完全一致,可任選其一做為最終公平性判斷依據與結論", "is_correct": false, "trap_type": "兩指標數值對應的公平性意義不同"}
+        {
+          "text": "採 DP(整體預測比例)則模型不公平差 15%;採 EOpp(真為良好者中 TPR)則模型相對公平差 2%;兩標準衝突需依業務目標再做判定取捨",
+          "is_correct": true
+        },
+        {
+          "text": "模型必為不公平,因 Demographic Parity 是公平性唯一正確指標,其他指標都是次要;只要兩族群預測為核准比例不一致即構成歧視,須立即下架不可上線",
+          "is_correct": false,
+          "trap_type": "DP 不是唯一指標"
+        },
+        {
+          "text": "模型必為公平,因 Equal Opportunity 真為良好者中差 2% 屬可接受範圍,且 EOpp 是最嚴格指標;只要 EOpp 通過即無爭議,DP 不公平可忽略",
+          "is_correct": false,
+          "trap_type": "EOpp 並非最嚴格,EO 才是"
+        },
+        {
+          "text": "兩指標完全等同只是表達方式不同;15% 與 2% 的差異只是統計上的尾數浮動,實際代表的不公平程度完全一致,可任選其一做為最終公平性判斷依據與結論",
+          "is_correct": false,
+          "trap_type": "兩指標數值對應的公平性意義不同"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -767,19 +1628,59 @@
         },
         "hook": "公平性權衡定理:基底比率不同時,DP 與 EOpp 通常不可同時滿足;選擇取決於業務目標(均等分配 vs 擇優公平)"
       },
-      "misconceptions": ["把 DP 視為唯一公平指標", "把 EOpp 當作最嚴格指標(實為 EO)", "誤以為兩指標數值意義可互換"],
-      "related_node_ids": ["n_L23402_002", "n_L23402_001"],
-      "tags": ["公平性權衡", "Demographic Parity", "Equal Opportunity", "業務目標"]
+      "misconceptions": [
+        "把 DP 視為唯一公平指標",
+        "把 EOpp 當作最嚴格指標(實為 EO)",
+        "誤以為兩指標數值意義可互換"
+      ],
+      "related_node_ids": [
+        "n_L23402_002",
+        "n_L23402_001"
+      ],
+      "tags": [
+        "公平性權衡",
+        "Demographic Parity",
+        "Equal Opportunity",
+        "業務目標"
+      ]
     }
   ],
   "self_check": {
     "iron_rule_5_node_id_validation": {
-      "L23303_used": ["n_L23303_001", "n_L23303_002", "n_L23303_004", "n_L23303_005", "n_L23303_007"],
-      "L23304_used": ["n_L23304_001", "n_L23304_002", "n_L23304_003", "n_L23304_004", "n_L23304_005"],
-      "L23401_used": ["n_L23401_001", "n_L23401_002", "n_L23401_003"],
-      "L23402_used": ["n_L23402_001", "n_L23402_002", "n_L23402_003"],
+      "L23303_used": [
+        "n_L23303_001",
+        "n_L23303_002",
+        "n_L23303_004",
+        "n_L23303_005",
+        "n_L23303_007"
+      ],
+      "L23304_used": [
+        "n_L23304_001",
+        "n_L23304_002",
+        "n_L23304_003",
+        "n_L23304_004",
+        "n_L23304_005"
+      ],
+      "L23401_used": [
+        "n_L23401_001",
+        "n_L23401_002",
+        "n_L23401_003"
+      ],
+      "L23402_used": [
+        "n_L23402_001",
+        "n_L23402_002",
+        "n_L23402_003"
+      ],
       "all_in_kb_allowed_nodes": true,
-      "out_of_scope_topics_avoided": ["Cohen Kappa", "Calibration Plot", "Hyperband", "TPE", "DP-SGD", "PATE", "Counterfactual Fairness"]
+      "out_of_scope_topics_avoided": [
+        "Cohen Kappa",
+        "Calibration Plot",
+        "Hyperband",
+        "TPE",
+        "DP-SGD",
+        "PATE",
+        "Counterfactual Fairness"
+      ]
     }
   }
 }

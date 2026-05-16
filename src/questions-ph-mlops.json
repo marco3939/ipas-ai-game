@@ -4,7 +4,10 @@
   "purpose": "進階 MLOps + 治理 + 部署架構 原創題",
   "iron_rule_compliance": "all 3 iron rules met",
   "generated_at": "2026-05-09",
-  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "exam_target": {
+    "name": "IPAS AI 應用規劃師中級",
+    "date": "2026-05-23"
+  },
   "iron_rule_1_compliance": "every question has explanation.correct(>=50) + explanation.wrong(each>=30) + explanation.hook + misconceptions + related_node_ids",
   "iron_rule_2_compliance": "shuffle_options:true on every question",
   "iron_rule_3_compliance": "全 13 題原創情境,未複製 114-2 原題;角色/規模/限制/目標皆情境化",
@@ -19,10 +22,25 @@
       "source_level": "L2",
       "stem": "某金融科技新創團隊只有 4 位 ML 工程師,需在 6 個月內建立完整 MLOps 平台,要求(1)實驗追蹤與模型版本控制、(2)避免雲端鎖定以利日後遷移、(3)能與既有 Kubernetes 叢集整合、(4)預算極有限不能採用每月數萬美元的企業級 SaaS。CTO 比較四類方案:(甲)開源自架實驗追蹤與模型登錄平台;(乙)專注實驗追蹤體驗的商用 SaaS(企業版採席位訂閱);(丙)公有雲 A 的一站式 ML 平台(整合 AutoML/Pipeline/Feature Store);(丁)公有雲 B 的一站式 ML 平台(Notebook/Training/Endpoint 用量計費)。下列何者為最適合本案的選型分析?",
       "options": [
-        {"text": "選(甲)開源自架平台:Apache 類開源授權、可自架於 K8s、提供實驗追蹤、模型登錄、可重現專案、統一模型格式等組件,符合低預算與無雲端鎖定需求,代價是需自管高可用性與備份", "is_correct": true},
-        {"text": "選(丙)公有雲 A 一站式平台:提供完整 AutoML、Pipeline 與 Feature Store 整合,跨雲產物可直接搬遷無鎖定,按用量計費對小團隊壓力有限可優先採用", "is_correct": false, "trap_type": "公有雲一站式平台的模型登錄、Pipeline 與 Feature Store 皆綁定該雲專屬服務,日後遷移成本高,且按用量計費對小團隊預算壓力大"},
-        {"text": "選(乙)專注實驗追蹤體驗的商用 SaaS 企業版:UI 與實驗追蹤功能業界最強,席位費可議,實驗中繼資料採開放格式儲存,後續可任意匯出至自架後端,小團隊應追求開發體驗", "is_correct": false, "trap_type": "商用 SaaS 雖體驗佳,但企業版採訂閱制(每席位月費),資料儲存於其雲端,屬於供應商鎖定;免費版有資料量與專案數上限"},
-        {"text": "選(丁)公有雲 B 一站式平台:可與任意 K8s 原生整合且不收平台費,只付實際運算用量,Endpoint 與 Notebook 計費單純透明,適合預算受限的小團隊起步", "is_correct": false, "trap_type": "公有雲一站式平台並非與任意 K8s 原生整合(需特定託管 K8s 設置),且 Notebook/Training/Endpoint 用量費累計並不便宜,亦造成該雲鎖定"}
+        {
+          "text": "選(甲)開源自架平台:Apache 類開源授權、可自架於 K8s、提供實驗追蹤、模型登錄、可重現專案、統一模型格式等組件,符合低預算與無雲端鎖定需求,代價是需自管高可用性與備份",
+          "is_correct": true
+        },
+        {
+          "text": "選(丙)公有雲 A 一站式平台:提供完整 AutoML、Pipeline 與 Feature Store 整合,跨雲產物可直接搬遷無鎖定,按用量計費對小團隊壓力有限可優先採用",
+          "is_correct": false,
+          "trap_type": "公有雲一站式平台的模型登錄、Pipeline 與 Feature Store 皆綁定該雲專屬服務,日後遷移成本高,且按用量計費對小團隊預算壓力大"
+        },
+        {
+          "text": "選(乙)專注實驗追蹤體驗的商用 SaaS 企業版:UI 與實驗追蹤功能業界最強,席位費可議,實驗中繼資料採開放格式儲存,後續可任意匯出至自架後端,小團隊應追求開發體驗",
+          "is_correct": false,
+          "trap_type": "商用 SaaS 雖體驗佳,但企業版採訂閱制(每席位月費),資料儲存於其雲端,屬於供應商鎖定;免費版有資料量與專案數上限"
+        },
+        {
+          "text": "選(丁)公有雲 B 一站式平台:可與任意 K8s 原生整合且不收平台費,只付實際運算用量,Endpoint 與 Notebook 計費單純透明,適合預算受限的小團隊起步",
+          "is_correct": false,
+          "trap_type": "公有雲一站式平台並非與任意 K8s 原生整合(需特定託管 K8s 設置),且 Notebook/Training/Endpoint 用量費累計並不便宜,亦造成該雲鎖定"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -34,9 +52,22 @@
         },
         "hook": "MLOps 平台選型口訣:開源自管→自架(無鎖定但要自管 HA);純體驗追蹤→商用 SaaS(訂閱費+資料鎖定);一站式雲服務→公有雲平台(代價:鎖定+用量費)"
       },
-      "misconceptions": ["把商用 SaaS 企業版當作免費社群版", "認為公有雲一站式平台沒有鎖定問題", "誤以為一站式雲平台可隨意搬到任何 K8s"],
-      "related_node_ids": ["n_L21302_001", "n_L21302_004", "n_L21302_007"],
-      "tags": ["MLOps平台", "ModelRegistry", "供應商鎖定", "選型決策"]
+      "misconceptions": [
+        "把商用 SaaS 企業版當作免費社群版",
+        "認為公有雲一站式平台沒有鎖定問題",
+        "誤以為一站式雲平台可隨意搬到任何 K8s"
+      ],
+      "related_node_ids": [
+        "n_L21302_001",
+        "n_L21302_004",
+        "n_L21302_007"
+      ],
+      "tags": [
+        "MLOps平台",
+        "ModelRegistry",
+        "供應商鎖定",
+        "選型決策"
+      ]
     },
     {
       "id": "q_ph_003",
@@ -48,10 +79,25 @@
       "source_level": "L2",
       "stem": "某保險公司客戶流失預測模型已上線 9 個月,Champion 模型(v1.4, AUC=0.81)正受 Challenger 模型(v2.0, AUC=0.85)挑戰。MLOps Lead 設計 Model Registry 治理規則,要求(1)Champion-Challenger 必須同時推論 14 天、(2)Challenger 在生產真實流量上 PR-AUC 達 Champion 的 1.05 倍才晉升、(3)觸發即時回滾的條件應比晉升條件嚴格。下列何者為最合理的回滾觸發條件設計?",
       "options": [
-        {"text": "連續 24 小時 PR-AUC < baseline×0.90 OR P95 延遲 > SLA 兩倍 OR 留存率單日跌幅 > 3σ,任一觸發即回滾", "is_correct": true},
-        {"text": "離線評估每週以最新 holdout 重跑一次,當離線 AUC 連續兩週不再提升即視為退化並回滾,僅依離線指標即可確保穩健,毋須線上即時監測", "is_correct": false, "trap_type": "離線重跑無法及時偵測線上漂移與災難性失效,且『不再提升』是常態,不是回滾理由"},
-        {"text": "只要 Challenger 流量錯誤率 > 0% 即立即無條件回滾,寧可錯殺一千;此設計可確保任何個案錯誤都不會擴散影響客戶決策", "is_correct": false, "trap_type": "錯誤率 > 0% 是常態(任何模型都有錯誤),這設計會造成無法上線任何 Challenger,過度敏感"},
-        {"text": "Champion 與 Challenger 由產品+資料科學+風控每月固定會議檢討,綜合業務 KPI 與用戶反饋決定是否替換,毋須自動觸發", "is_correct": false, "trap_type": "月度人工檢討無法應對突發 drift 或 degradation,違反『回滾條件應比晉升條件嚴格且即時』的要求"}
+        {
+          "text": "連續 24 小時 PR-AUC < baseline×0.90 OR P95 延遲 > SLA 兩倍 OR 留存率單日跌幅 > 3σ,任一觸發即回滾",
+          "is_correct": true
+        },
+        {
+          "text": "離線評估每週以最新 holdout 重跑一次,當離線 AUC 連續兩週不再提升即視為退化並回滾,僅依離線指標即可確保穩健,毋須線上即時監測",
+          "is_correct": false,
+          "trap_type": "離線重跑無法及時偵測線上漂移與災難性失效,且『不再提升』是常態,不是回滾理由"
+        },
+        {
+          "text": "只要 Challenger 流量錯誤率 > 0% 即立即無條件回滾,寧可錯殺一千;此設計可確保任何個案錯誤都不會擴散影響客戶決策",
+          "is_correct": false,
+          "trap_type": "錯誤率 > 0% 是常態(任何模型都有錯誤),這設計會造成無法上線任何 Challenger,過度敏感"
+        },
+        {
+          "text": "Champion 與 Challenger 由產品+資料科學+風控每月固定會議檢討,綜合業務 KPI 與用戶反饋決定是否替換,毋須自動觸發",
+          "is_correct": false,
+          "trap_type": "月度人工檢討無法應對突發 drift 或 degradation,違反『回滾條件應比晉升條件嚴格且即時』的要求"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -63,9 +109,22 @@
         },
         "hook": "Champion-Challenger 回滾三層條件:模型品質(PR-AUC)+系統 SLA(延遲)+業務 KPI(留存率),OR 邏輯且嚴於晉升條件"
       },
-      "misconceptions": ["把回滾與晉升條件混為一談", "只看模型指標忽略業務指標", "誤以為人工月檢可取代自動回滾"],
-      "related_node_ids": ["n_L21302_007", "n_L21302_003", "n_L21302_005"],
-      "tags": ["ModelRegistry", "ChampionChallenger", "回滾策略", "版本控制"]
+      "misconceptions": [
+        "把回滾與晉升條件混為一談",
+        "只看模型指標忽略業務指標",
+        "誤以為人工月檢可取代自動回滾"
+      ],
+      "related_node_ids": [
+        "n_L21302_007",
+        "n_L21302_003",
+        "n_L21302_005"
+      ],
+      "tags": [
+        "ModelRegistry",
+        "ChampionChallenger",
+        "回滾策略",
+        "版本控制"
+      ]
     },
     {
       "id": "q_ph_006",
@@ -77,10 +136,25 @@
       "source_level": "L2",
       "stem": "某銀行欲推出新版反洗錢(AML)模型 v3.0,法遵要求嚴格且模型誤判將觸發人工調查成本。SRE Lead 規劃部署策略:(1)新模型尚未驗證業務正確性、(2)需先觀察與舊版差異不影響任何客戶、(3)驗證通過後逐步切流量、(4)最終完全替換。可用模式:(甲)流量鏡像(將生產流量複製給新模型推論但不採用結果,僅比對輸出 log)、(乙)金絲雀部署(Canary,小流量先行 5→25→100%)、(丙)A/B 測試(同時跑兩版本以業務指標對照驗證)、(丁)直接全量切換(Big Bang)。下列何者為最合理的『部署模式組合』?",
       "options": [
-        {"text": "先(甲)流量鏡像(0% 真實決策,僅鏡像比對輸出)→ 再(乙)金絲雀(5→25→50% 漸進)→ 達標後 100% 切換;(丙)A/B 不在前期使用,(丁)Big Bang 絕不採用", "is_correct": true},
-        {"text": "Day 1 起直接(丙)A/B 測試 50/50 分流並計算統計顯著性,A/B 為實證金標準,(甲)流量鏡像與(乙)金絲雀都是過度設計的流程冗餘可省略", "is_correct": false, "trap_type": "A/B 50/50 分流意味 50% 客戶會直接被新模型決策,違反『不影響任何客戶』的限制(1)(2)"},
-        {"text": "直接(丁)100% 切換到 v3.0,舊版已過時且新版訓練資料更新,只要保留 rollback 按鈕在手即可即時承擔任何風險", "is_correct": false, "trap_type": "AML 場景中錯誤決策可能造成法遵風險與真實客戶損害,Big Bang 部署違反所有限制條件"},
-        {"text": "從(乙)金絲雀 5% 流量先導開始,(甲)流量鏡像為流量重複的冗餘步驟可省略,(丙)A/B 在 AML 場景毋須使用,僅金絲雀即足以漸進控管風險", "is_correct": false, "trap_type": "金絲雀 5% 仍代表 5% 真實客戶被新模型決策,違反『先觀察不影響任何客戶』(2);流量鏡像並非冗餘,正是『驗證不影響客戶』的最佳模式"}
+        {
+          "text": "先(甲)流量鏡像比對 → 再(乙)金絲雀(5→25→50%)漸進 → 達標後 100% 切換;(丙)A/B 不前期、(丁)Big Bang 不採用",
+          "is_correct": true
+        },
+        {
+          "text": "Day 1 起直接(丙)A/B 測試 50/50 分流並計算統計顯著性,A/B 為實證金標準,(甲)流量鏡像與(乙)金絲雀都是過度設計的流程冗餘可省略",
+          "is_correct": false,
+          "trap_type": "A/B 50/50 分流意味 50% 客戶會直接被新模型決策,違反『不影響任何客戶』的限制(1)(2)"
+        },
+        {
+          "text": "直接(丁)100% 切換到 v3.0,舊版已過時且新版訓練資料更新,只要保留 rollback 按鈕在手即可即時承擔任何風險",
+          "is_correct": false,
+          "trap_type": "AML 場景中錯誤決策可能造成法遵風險與真實客戶損害,Big Bang 部署違反所有限制條件"
+        },
+        {
+          "text": "從(乙)金絲雀 5% 流量先導開始,(甲)流量鏡像為流量重複的冗餘步驟可省略,(丙)A/B 在 AML 場景毋須使用,僅金絲雀即足以漸進控管風險",
+          "is_correct": false,
+          "trap_type": "金絲雀 5% 仍代表 5% 真實客戶被新模型決策,違反『先觀察不影響任何客戶』(2);流量鏡像並非冗餘,正是『驗證不影響客戶』的最佳模式"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -92,9 +166,23 @@
         },
         "hook": "部署模式光譜:流量鏡像(0% 風險,先觀察)→ 金絲雀(漸進風險,可回滾)→ A/B 測試(對照驗證,統計顯著);AML 高風險場景應全用"
       },
-      "misconceptions": ["把流量鏡像當作冗餘步驟", "誤以為 A/B 測試可取代金絲雀", "忽略 AML 等高風險場景的部署門檻"],
-      "related_node_ids": ["n_L21302_002", "n_L21302_005", "n_L21202_001"],
-      "tags": ["部署策略", "流量鏡像", "Canary", "ABTesting", "AML"]
+      "misconceptions": [
+        "把流量鏡像當作冗餘步驟",
+        "誤以為 A/B 測試可取代金絲雀",
+        "忽略 AML 等高風險場景的部署門檻"
+      ],
+      "related_node_ids": [
+        "n_L21302_002",
+        "n_L21302_005",
+        "n_L21202_001"
+      ],
+      "tags": [
+        "部署策略",
+        "流量鏡像",
+        "Canary",
+        "ABTesting",
+        "AML"
+      ]
     },
     {
       "id": "q_ph_007",
@@ -106,10 +194,25 @@
       "source_level": "L2",
       "stem": "某客服 AI 平台需監控三類資料漂移:(A) 客戶基本資料(age, income — 數值);(B) 商品類別(category id — 類別);(C) 客服對話文本(由 BERT 取出 768 維 embedding)。MLOps 評估三類漂移偵測工具:(甲)開源表格報表型(主力為數值用 KS/Wasserstein、類別用 Chi²/PSI,輸出 HTML 報表);(乙)開源輕量統計剖面型(將資料集統計剖面序列化後寫入資料湖比對,適合大規模串流);(丙)商用 ML 可觀察性平台(具 embedding 與 LLM 監控專用模組,如降維視覺化、cluster drift)。下列何者為最合理的選型考量?",
       "options": [
-        {"text": "(甲)表格報表型適合(A)(B)的標準漂移報表;(乙)輕量統計剖面型強於大規模 profile 串流;(丙)可觀察性平台有 embedding 專用模組適合(C);三者互補非單選", "is_correct": true},
-        {"text": "三類資料一律使用(甲)表格報表型即可,其支援所有資料型態且開源免費,內建降維與 LLM-specific 模組,毋須再引入(乙)(丙)增加維運與授權成本", "is_correct": false, "trap_type": "表格報表型工具對 768 維 embedding drift 雖能算 cosine 距離,但缺降維/cluster 視覺化與 LLM 專用指標;對大規模串流亦不及輕量統計剖面型"},
-        {"text": "(甲)專為影像分布監控設計、(乙)僅支援文本資料 logging、(丙)僅處理表格特徵,三者按資料型態嚴格分工互不重疊不可混用", "is_correct": false, "trap_type": "三者實際皆為通用 ML 監控工具,並非按資料型態嚴格分工;主力不同但範圍重疊"},
-        {"text": "embedding 為連續高維向量無離散分布概念,因此 drift 偵測在數學上不成立,(C) 毋須監控工具,只需聚焦 (A)(B) 表格資料的傳統指標即可", "is_correct": false, "trap_type": "embedding 是高維連續向量,有分布概念;業界用 PCA 後 KS 檢定、cosine 距離分布、降維 cluster shift、MMD 等方法偵測 embedding drift"}
+        {
+          "text": "(甲)表格報表型適合(A)(B)的標準漂移報表;(乙)輕量統計剖面型強於大規模 profile 串流;(丙)可觀察性平台有 embedding 專用模組適合(C);三者互補非單選",
+          "is_correct": true
+        },
+        {
+          "text": "三類資料一律使用(甲)表格報表型即可,其支援所有資料型態且開源免費,內建降維與 LLM-specific 模組,毋須再引入(乙)(丙)增加維運與授權成本",
+          "is_correct": false,
+          "trap_type": "表格報表型工具對 768 維 embedding drift 雖能算 cosine 距離,但缺降維/cluster 視覺化與 LLM 專用指標;對大規模串流亦不及輕量統計剖面型"
+        },
+        {
+          "text": "(甲)專為影像分布監控設計、(乙)僅支援文本資料 logging、(丙)僅處理表格特徵,三者按資料型態嚴格分工互不重疊不可混用",
+          "is_correct": false,
+          "trap_type": "三者實際皆為通用 ML 監控工具,並非按資料型態嚴格分工;主力不同但範圍重疊"
+        },
+        {
+          "text": "embedding 為連續高維向量無離散分布概念,因此 drift 偵測在數學上不成立,(C) 毋須監控工具,只需聚焦 (A)(B) 表格資料的傳統指標即可",
+          "is_correct": false,
+          "trap_type": "embedding 是高維連續向量,有分布概念;業界用 PCA 後 KS 檢定、cosine 距離分布、降維 cluster shift、MMD 等方法偵測 embedding drift"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -121,9 +224,23 @@
         },
         "hook": "Drift 偵測工具定位:表格報表型(報表分享)/ 輕量統計剖面型(大規模串流)/ 可觀察性平台(embedding + LLM 觀察)"
       },
-      "misconceptions": ["以為 embedding 不會 drift", "認為一套工具通吃所有監控需求", "把工具與資料型態作絕對分工"],
-      "related_node_ids": ["n_L21302_002", "n_L21302_001", "n_L21104_001"],
-      "tags": ["DriftDetection", "PSI", "Wasserstein", "embedding監控", "工具選型"]
+      "misconceptions": [
+        "以為 embedding 不會 drift",
+        "認為一套工具通吃所有監控需求",
+        "把工具與資料型態作絕對分工"
+      ],
+      "related_node_ids": [
+        "n_L21302_002",
+        "n_L21302_001",
+        "n_L21104_001"
+      ],
+      "tags": [
+        "DriftDetection",
+        "PSI",
+        "Wasserstein",
+        "embedding監控",
+        "工具選型"
+      ]
     },
     {
       "id": "q_ph_008",
@@ -135,10 +252,25 @@
       "source_level": "L2",
       "stem": "某保險公司客戶風險模型上線一週,監控報告顯示:特徵 X1(年收入)KS test p-value = 0.001、PSI = 0.18、KL Divergence = 0.42、Wasserstein 距離 = 12,500。團隊對嚴重度有不同判讀。下列何者為最合理的綜合判讀?",
       "options": [
-        {"text": "KS 顯著、PSI 0.18 屬中度、KL 0.42 偏離明顯、Wasserstein 須參照 baseline 比例;綜合為『中度漂移、啟動再訓練評估非緊急回滾』", "is_correct": true},
-        {"text": "KS p<0.001 即代表災難級漂移應立即回滾並停服,p-value 為最權威指標,毋須再看 PSI/KL/Wasserstein 等次要統計量", "is_correct": false, "trap_type": "p-value 顯著只代表『分布有差異』而非『差異很大』,大樣本下極小差異也會 p<0.001;需配合 effect size(PSI/KL/Wasserstein)綜合判讀"},
-        {"text": "PSI 0.18 仍 < 0.25 屬輕微範圍可忽略,只要 PSI 未達紅線即視為穩定;其他統計量並非業界標準可不參考", "is_correct": false, "trap_type": "業界 PSI 閾值 0.10-0.25 為中度漂移需關注、>0.25 才嚴重;0.18 不可忽略,且應綜合多種指標"},
-        {"text": "Wasserstein 12500 為四項中數值最大代表漂移最嚴重,p-value、PSI、KL 都可忽略,只看 Wasserstein 絕對值即可", "is_correct": false, "trap_type": "Wasserstein 是『搬土』距離,單位與資料同(年收入元),12500 元相對年收入百萬級可能很小;不能僅憑絕對值判斷"}
+        {
+          "text": "KS 顯著、PSI 0.18 屬中度、KL 0.42 偏離明顯、Wasserstein 須參照 baseline 比例;綜合為『中度漂移、啟動再訓練評估非緊急回滾』",
+          "is_correct": true
+        },
+        {
+          "text": "KS p<0.001 即代表災難級漂移應立即回滾並停服,p-value 為最權威指標,毋須再看 PSI/KL/Wasserstein 等次要統計量",
+          "is_correct": false,
+          "trap_type": "p-value 顯著只代表『分布有差異』而非『差異很大』,大樣本下極小差異也會 p<0.001;需配合 effect size(PSI/KL/Wasserstein)綜合判讀"
+        },
+        {
+          "text": "PSI 0.18 仍 < 0.25 屬輕微範圍可忽略,只要 PSI 未達紅線即視為穩定;其他統計量並非業界標準可不參考",
+          "is_correct": false,
+          "trap_type": "業界 PSI 閾值 0.10-0.25 為中度漂移需關注、>0.25 才嚴重;0.18 不可忽略,且應綜合多種指標"
+        },
+        {
+          "text": "Wasserstein 12500 為四項中數值最大代表漂移最嚴重,p-value、PSI、KL 都可忽略,只看 Wasserstein 絕對值即可",
+          "is_correct": false,
+          "trap_type": "Wasserstein 是『搬土』距離,單位與資料同(年收入元),12500 元相對年收入百萬級可能很小;不能僅憑絕對值判斷"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -150,9 +282,23 @@
         },
         "hook": "Drift 統計量綜合判讀:p-value(顯著性)+PSI(經驗閾值)+KL/Wasserstein(effect size)合看;PSI 0.10-0.25=中度需評估"
       },
-      "misconceptions": ["把 p-value 顯著等同嚴重", "忽略 PSI 業界閾值階梯", "把絕對距離不正規化解讀"],
-      "related_node_ids": ["n_L21302_002", "n_L21302_001", "n_L21302_007"],
-      "tags": ["Drift偵測", "PSI", "KStest", "Wasserstein", "統計判讀"]
+      "misconceptions": [
+        "把 p-value 顯著等同嚴重",
+        "忽略 PSI 業界閾值階梯",
+        "把絕對距離不正規化解讀"
+      ],
+      "related_node_ids": [
+        "n_L21302_002",
+        "n_L21302_001",
+        "n_L21302_007"
+      ],
+      "tags": [
+        "Drift偵測",
+        "PSI",
+        "KStest",
+        "Wasserstein",
+        "統計判讀"
+      ]
     },
     {
       "id": "q_ph_009",
@@ -164,10 +310,25 @@
       "source_level": "L2",
       "stem": "某銀行貸款核准模型對性別存在 Disparate Impact(女性核准率/男性核准率 = 0.65,違反 80% 規則)。團隊評估三類公平性介入:預處理(Reweighting / Disparate Impact Remover)、in-processing(Adversarial Debiasing)、後處理(Equalized Odds Postprocessing)。法遵要求(1)模型內部訓練流程可審計、(2)不可改動既有 LightGBM 訓練程式碼、(3)需要保留原始決策分數供業務參照。下列何者為最合理的選擇?",
       "options": [
-        {"text": "選後處理 Equalized Odds Postprocessing:不改訓練流程、保留原始分數、僅在輸出端依群組調整閾值使 TPR/FPR 對齊", "is_correct": true},
-        {"text": "選 in-processing Adversarial Debiasing,在訓練中加入 adversary 網路理論最強大,雖然需要重寫 LightGBM 訓練流程但仍值得", "is_correct": false, "trap_type": "Adversarial Debiasing 為神經網路 in-processing 技術,無法直接套用 LightGBM,且違反限制(2)『不可改既有訓練程式』與(1)『可審計』要求"},
-        {"text": "選預處理 Reweighting,僅調整訓練樣本權重最為簡潔,需重新訓練但 sample_weight 屬資料層調整不算改程式碼", "is_correct": false, "trap_type": "Reweighting 雖是預處理,但仍需重新訓練且改動 sample weight 設定,雖未必改演算法但會改 training pipeline,違反限制(2);且原始分數定義會改變"},
-        {"text": "三類技術介入都不適用本案,放棄 ML 改回完全人工核准制度,以人工審查徹底排除演算法歧視風險", "is_correct": false, "trap_type": "公平性問題在 ML 工程上有成熟解法(AIF360/Fairlearn 提供多種介入),棄用 ML 屬於過度反應,違反業務目標"}
+        {
+          "text": "選後處理 Equalized Odds Postprocessing:不改訓練流程、保留原始分數、僅在輸出端依群組調整閾值使 TPR/FPR 對齊",
+          "is_correct": true
+        },
+        {
+          "text": "選 in-processing Adversarial Debiasing,在訓練中加入 adversary 網路理論最強大,雖然需要重寫 LightGBM 訓練流程但仍值得",
+          "is_correct": false,
+          "trap_type": "Adversarial Debiasing 為神經網路 in-processing 技術,無法直接套用 LightGBM,且違反限制(2)『不可改既有訓練程式』與(1)『可審計』要求"
+        },
+        {
+          "text": "選預處理 Reweighting,僅調整訓練樣本權重最為簡潔,需重新訓練但 sample_weight 屬資料層調整不算改程式碼",
+          "is_correct": false,
+          "trap_type": "Reweighting 雖是預處理,但仍需重新訓練且改動 sample weight 設定,雖未必改演算法但會改 training pipeline,違反限制(2);且原始分數定義會改變"
+        },
+        {
+          "text": "三類技術介入都不適用本案,放棄 ML 改回完全人工核准制度,以人工審查徹底排除演算法歧視風險",
+          "is_correct": false,
+          "trap_type": "公平性問題在 ML 工程上有成熟解法(AIF360/Fairlearn 提供多種介入),棄用 ML 屬於過度反應,違反業務目標"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -179,9 +340,23 @@
         },
         "hook": "公平性介入三層:預處理(調資料)/in-processing(調演算法)/後處理(調輸出);後處理對黑盒模型最友善"
       },
-      "misconceptions": ["把後處理當作弱化的妥協方案", "忽略 in-processing 對既有訓練流程影響", "認為 Reweighting 不算改動訓練"],
-      "related_node_ids": ["n_L23402_001", "n_L23402_003", "n_L21203_001"],
-      "tags": ["AIF360", "Fairlearn", "公平性", "後處理", "EqualizedOdds"]
+      "misconceptions": [
+        "把後處理當作弱化的妥協方案",
+        "忽略 in-processing 對既有訓練流程影響",
+        "認為 Reweighting 不算改動訓練"
+      ],
+      "related_node_ids": [
+        "n_L23402_001",
+        "n_L23402_003",
+        "n_L21203_001"
+      ],
+      "tags": [
+        "AIF360",
+        "Fairlearn",
+        "公平性",
+        "後處理",
+        "EqualizedOdds"
+      ]
     }
   ]
 }
