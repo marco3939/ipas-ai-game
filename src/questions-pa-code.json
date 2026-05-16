@@ -399,30 +399,30 @@
       "format": "code_reading",
       "difficulty": "medium",
       "source_level": "L2",
-      "stem": "在零售營收分析中,分析師用 groupby 對地區同時計算兩種統計量。請問下列程式輸出 result 的欄(columns)結構為何?",
+      "stem": "在零售營收分析中,分析師用 groupby 對地區同時計算兩種統計量。請問下列程式 `print(list(result.columns))` 的實際輸出為何?",
       "code_block": "import pandas as pd\ndf = pd.DataFrame({\n    'region': ['N', 'S', 'N', 'S', 'N'],\n    'sales': [100, 80, 120, 90, 110]\n})\nresult = df.groupby('region')['sales'].agg(['{f1}', '{f2}'])\nprint(list(result.columns))",
       "stem_variables": {
-        "case_a": {"f1": "sum", "f2": "mean", "answer": "['sum', 'mean']", "wrong1": "['sales']", "wrong2": "['sales_sum', 'sales_mean']", "wrong3": "['region', 'sum', 'mean']"},
-        "case_b": {"f1": "min", "f2": "max", "answer": "['min', 'max']", "wrong1": "['sales']", "wrong2": "['sales_min', 'sales_max']", "wrong3": "['region', 'min', 'max']"},
-        "case_c": {"f1": "count", "f2": "std", "answer": "['count', 'std']", "wrong1": "['sales']", "wrong2": "['sales_count', 'sales_std']", "wrong3": "['region', 'count', 'std']"}
+        "case_a": {"f1": "sum", "f2": "mean", "answer": "['sum', 'mean']", "wrong1": "['sales']", "wrong2": "['sales_sum', 'sales_mean']", "wrong3": "[('sales', 'sum'), ('sales', 'mean')]"},
+        "case_b": {"f1": "min", "f2": "max", "answer": "['min', 'max']", "wrong1": "['sales']", "wrong2": "['sales_min', 'sales_max']", "wrong3": "[('sales', 'min'), ('sales', 'max')]"},
+        "case_c": {"f1": "count", "f2": "std", "answer": "['count', 'std']", "wrong1": "['sales']", "wrong2": "['sales_count', 'sales_std']", "wrong3": "[('sales', 'count'), ('sales', 'std')]"}
       },
       "options": [
         {"text": "{answer}", "is_correct": true},
         {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為只保留欄名"},
         {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為自動加前綴"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為 region 也是欄"}
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為 MultiIndex(SeriesGroupBy vs DataFrameGroupBy 混淆)"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "對單一 Series 做 agg(list) 時,輸出欄位即為函式名稱,故為 {answer}。region 已成為 index,不在 columns。若要自訂欄名需用 NamedAgg。",
+        "correct": "關鍵在 `['sales']`:它把 `DataFrameGroupBy` 轉成 `SeriesGroupBy`,因此 agg(list) 後 columns 為單層 Index(['{f1}', '{f2}'])。若不加 `['sales']`(直接 `df.groupby('region').agg([...])`),結果才會是 MultiIndex `[('sales','{f1}'), ('sales','{f2}')]`。region 已成為 index,不在 columns。若要自訂欄名需用 NamedAgg。",
         "wrong": {
           "{wrong1}": "agg(list) 會展開成多欄,不會只剩單一 'sales' 欄。",
           "{wrong2}": "pandas 預設不會把欄前綴上原欄名;此格式要傳 dict 或 NamedAgg。",
-          "{wrong3}": "groupby key 默認進入 index,不會出現在 columns(除非 reset_index)。"
+          "{wrong3}": "這是 *DataFrameGroupBy*(不加 `['sales']` 預先選 Series)時的 MultiIndex 結果。本題已用 `['sales']` 把 GroupBy 物件從 DataFrameGroupBy 降為 SeriesGroupBy,輸出 columns 為單層,不會出現 MultiIndex 元組。"
         },
-        "hook": "agg(list) 後欄名 = 函式名;groupby key 預設變 index"
+        "hook": "口訣『先選 Series,後不分層』:`['sales']` 後 agg(list) → 單層 columns;不選則 → MultiIndex"
       },
-      "misconceptions": ["以為 agg 自動帶上原欄名", "以為 groupby key 留在欄"],
+      "misconceptions": ["以為 SeriesGroupBy 與 DataFrameGroupBy 的 agg 輸出 columns 結構相同", "以為 agg 自動帶上原欄名", "以為 groupby key 留在欄"],
       "related_node_ids": ["n_L22201_007", "n_L22201_001"],
       "tags": ["pandas", "groupby", "agg"]
     }
