@@ -272,7 +272,7 @@
       "stem_variables": {
         "case_a": {"n_neg": "950", "n_pos": "50",  "fp": "20", "tp": "40", "answer": "0.8",   "wrong1": "0.667", "wrong2": "0.979", "wrong3": "0.04"},
         "case_b": {"n_neg": "900", "n_pos": "100", "fp": "30", "tp": "70", "answer": "0.7",   "wrong1": "0.7",   "wrong2": "0.967", "wrong3": "0.07"},
-        "case_c": {"n_neg": "970", "n_pos": "30",  "fp": "10", "tp": "24", "answer": "0.8",   "wrong1": "0.706", "wrong2": "0.99",  "wrong3": "0.024"}
+        "case_c": {"n_neg": "970", "n_pos": "30",  "fp": "10", "tp": "27", "answer": "0.9",   "wrong1": "0.73",  "wrong2": "0.987", "wrong3": "0.027"}
       },
       "options": [
         {"text": "{answer}", "is_correct": true, "trap_type": "正解:TP / (TP+FN) = TP / P"},
@@ -302,26 +302,21 @@
       "format": "code_reading",
       "difficulty": "hard",
       "source_level": "L2",
-      "stem": "信用評等模型輸出 {n_class} 類風險等級(A/B/C),工程師欲計算 ROC-AUC。下列程式正確執行的關鍵是哪一個?",
-      "code_block": "import numpy as np\nfrom sklearn.metrics import roc_auc_score\n\nrng = np.random.RandomState(0)\nN = {n}\ny_true = rng.randint(0, {n_class}, size=N)\ny_score = rng.rand(N, {n_class})\ny_score = y_score / y_score.sum(axis=1, keepdims=True)\n\nauc = roc_auc_score(\n    y_true, y_score,\n    multi_class='{mc}',\n    average='macro')\nprint(round(auc, 3))",
-      "stem_variables": {
-        "case_a": {"n_class": "3", "n": "300", "mc": "ovr", "answer": "y_score 必須是 shape=(N, n_classes) 的機率;multi_class 必須給 'ovr' 或 'ovo'", "wrong1": "y_score 可以是 1D 的預測類別(像 y_pred)", "wrong2": "multi_class 預設為 'binary',多類會自動推論",            "wrong3": "y_score 必須先 argmax 成單一類別"},
-        "case_b": {"n_class": "3", "n": "600", "mc": "ovo", "answer": "y_score 必須是 shape=(N, n_classes) 的機率;multi_class 必須給 'ovr' 或 'ovo'", "wrong1": "y_score 可以是 1D 的預測類別(像 y_pred)", "wrong2": "multi_class 預設為 'binary',多類會自動推論",            "wrong3": "y_score 必須先 argmax 成單一類別"},
-        "case_c": {"n_class": "4", "n": "400", "mc": "ovr", "answer": "y_score 必須是 shape=(N, n_classes) 的機率;multi_class 必須給 'ovr' 或 'ovo'", "wrong1": "y_score 可以是 1D 的預測類別(像 y_pred)", "wrong2": "multi_class 預設為 'binary',多類會自動推論",            "wrong3": "y_score 必須先 argmax 成單一類別"}
-      },
+      "stem": "信用評等模型輸出 3 類風險等級(A/B/C),工程師欲計算 ROC-AUC。下列程式正確執行的關鍵是哪一個?",
+      "code_block": "import numpy as np\nfrom sklearn.metrics import roc_auc_score\n\nrng = np.random.RandomState(0)\nN = 300\ny_true = rng.randint(0, 3, size=N)\ny_score = rng.rand(N, 3)\ny_score = y_score / y_score.sum(axis=1, keepdims=True)\n\nauc = roc_auc_score(\n    y_true, y_score,\n    multi_class='ovr',\n    average='macro')\nprint(round(auc, 3))",
       "options": [
-        {"text": "{answer}", "is_correct": true, "trap_type": "正解:多類 AUC 需要『每類機率』+ 明確指定 multi_class"},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為 AUC 吃 hard label"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為 multi_class 會自動推論"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為要先 argmax"}
+        {"text": "y_score 必須是 shape=(N, n_classes) 的機率;multi_class 必須給 'ovr' 或 'ovo'", "is_correct": true, "trap_type": "正解:多類 AUC 需要『每類機率』+ 明確指定 multi_class"},
+        {"text": "y_score 可以是 1D 的預測類別(像 y_pred)", "is_correct": false, "trap_type": "誤以為 AUC 吃 hard label"},
+        {"text": "multi_class 預設為 'binary',多類會自動推論", "is_correct": false, "trap_type": "誤以為 multi_class 會自動推論"},
+        {"text": "y_score 必須先 argmax 成單一類別", "is_correct": false, "trap_type": "誤以為要先 argmax"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "多類 roc_auc_score 必須:(1) y_score 是 shape=(N, n_classes) 的『連續分數 / 機率』,因為 AUC 本質上是排序指標需要連續分數;(2) 顯式指定 multi_class='ovr'(One-vs-Rest)或 'ovo'(One-vs-One),否則丟 ValueError。本題用 '{mc}'。",
+        "correct": "多類 roc_auc_score 必須:(1) y_score 是 shape=(N, n_classes) 的『連續分數 / 機率』,因為 AUC 本質上是排序指標需要連續分數;(2) 顯式指定 multi_class='ovr'(One-vs-Rest)或 'ovo'(One-vs-One),否則丟 ValueError。",
         "wrong": {
-          "{wrong1}": "AUC 是排序指標,需要『分數或機率』而非 hard label;若給 1D 整數會丟 ValueError 或退化為二元 case。",
-          "{wrong2}": "multi_class 沒有預設值;遇到多類別必須顯式指定,否則 sklearn 會丟 ValueError(0.22+ 強制要求)。",
-          "{wrong3}": "argmax 會把連續分數壓成 hard label,反而失去 AUC 所需的連續性,結果無意義。"
+          "y_score 可以是 1D 的預測類別(像 y_pred)": "AUC 是排序指標,需要『分數或機率』而非 hard label;若給 1D 整數會丟 ValueError 或退化為二元 case。",
+          "multi_class 預設為 'binary',多類會自動推論": "multi_class 沒有預設值;遇到多類別必須顯式指定,否則 sklearn 會丟 ValueError(0.22+ 強制要求)。",
+          "y_score 必須先 argmax 成單一類別": "argmax 會把連續分數壓成 hard label,反而失去 AUC 所需的連續性,結果無意義。"
         },
         "hook": "多類 AUC = 機率矩陣 (N×K) + multi_class='ovr'/'ovo'"
       },

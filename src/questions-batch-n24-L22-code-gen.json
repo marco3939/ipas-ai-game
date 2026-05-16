@@ -64,9 +64,9 @@
       "stem": "智慧醫療資料工程師要對病歷描述語料做最基本的『字串完全相同』去重。下列程式輸出剩餘行數為何?",
       "code_block": "corpus = [\n    '{a}',\n    '{b}',\n    '{a}',\n{extra_lines}\n]\ndeduped = list(set(corpus))\nprint(len(deduped))",
       "stem_variables": {
-        "case_a": {"a": "胸悶頭暈三天", "b": "輕微咳嗽兩週", "extra_lines": "    '間歇性腹痛',\n    '{b}'", "answer": "3", "wrong1": "5", "wrong2": "2", "wrong3": "4"},
-        "case_b": {"a": "發燒 38 度", "b": "夜間盜汗", "extra_lines": "    '食慾不振',\n    '皮膚紅疹',\n    '{b}'", "answer": "4", "wrong1": "6", "wrong2": "2", "wrong3": "5"},
-        "case_c": {"a": "關節腫脹疼痛", "b": "上腹部灼熱感", "extra_lines": "    '{a}'", "answer": "2", "wrong1": "4", "wrong2": "1", "wrong3": "3"}
+        "case_a": {"a": "胸悶頭暈三天", "b": "輕微咳嗽兩週", "extra_lines": "    '間歇性腹痛',\n    '輕微咳嗽兩週'", "answer": "3", "wrong1": "5", "wrong2": "2", "wrong3": "4"},
+        "case_b": {"a": "發燒 38 度", "b": "夜間盜汗", "extra_lines": "    '食慾不振',\n    '皮膚紅疹',\n    '夜間盜汗'", "answer": "4", "wrong1": "6", "wrong2": "2", "wrong3": "5"},
+        "case_c": {"a": "關節腫脹疼痛", "b": "上腹部灼熱感", "extra_lines": "    '關節腫脹疼痛'", "answer": "2", "wrong1": "4", "wrong2": "1", "wrong3": "3"}
       },
       "options": [
         {"text": "{answer}", "is_correct": true},
@@ -239,9 +239,9 @@
       "stem": "健保資料中心要對『陽性人數』查詢加 Laplace 雜訊以滿足差分隱私概念。比較 ε={eps_strong} 與 ε={eps_weak} 兩次設定,下列敘述何者正確?",
       "code_block": "import numpy as np\nnp.random.seed(0)\ntrue_count = 1000\nsensitivity = 1\nnoisy_strong = true_count + np.random.laplace(0, sensitivity/{eps_strong})\nnoisy_weak   = true_count + np.random.laplace(0, sensitivity/{eps_weak})\n# 觀察雜訊規模(scale) sensitivity/epsilon\nprint('scale_strong:', sensitivity/{eps_strong},\n      'scale_weak:', sensitivity/{eps_weak})",
       "stem_variables": {
-        "case_a": {"eps_strong": "0.1", "eps_weak": "10", "answer": "ε=0.1 scale=10、ε=10 scale=0.1,ε 小隱私強", "wrong1": "ε=0.1 scale=0.1、ε=10 scale=10,ε 大隱私強", "wrong2": "兩者 scale 都=1,ε 不影響加噪規模或隱私強度", "wrong3": "ε 越大代表預算用得越省,故 ε=10 較安全"},
-        "case_b": {"eps_strong": "0.5", "eps_weak": "5", "answer": "ε=0.5 scale=2、ε=5 scale=0.2,ε 小隱私強", "wrong1": "ε=0.5 scale=0.5、ε=5 scale=5,ε 大隱私強", "wrong2": "兩者 scale 都=1,ε 不影響加噪規模或隱私強度", "wrong3": "ε 越大代表預算用得越省,故 ε=5 較安全"},
-        "case_c": {"eps_strong": "0.2", "eps_weak": "20", "answer": "ε=0.2 scale=5、ε=20 scale=0.05,ε 小隱私強", "wrong1": "ε=0.2 scale=0.2、ε=20 scale=20,ε 大隱私強", "wrong2": "兩者 scale 都=1,ε 不影響加噪規模或隱私強度", "wrong3": "ε 越大代表預算用得越省,故 ε=20 較安全"}
+        "case_a": {"eps_strong": "0.1", "eps_weak": "10", "answer": "ε=0.1 scale=10、ε=10 scale=0.1,ε 小隱私強", "wrong1": "ε=0.1 scale=0.1、ε=10 scale=10,ε 大隱私強", "wrong2": "兩者 scale 都等於 1,ε 不影響噪訊規模或隱私強度", "wrong3": "ε 越大代表分配給雜訊的預算越省,故 ε=10 較安全"},
+        "case_b": {"eps_strong": "0.5", "eps_weak": "5", "answer": "ε=0.5 scale=2、ε=5 scale=0.2,ε 小隱私強", "wrong1": "ε=0.5 scale=0.5、ε=5 scale=5,ε 大隱私強", "wrong2": "兩者 scale 都等於 1,ε 不影響噪訊規模或隱私強度", "wrong3": "ε 越大代表分配給雜訊的預算越省,故 ε=5 較安全"},
+        "case_c": {"eps_strong": "0.2", "eps_weak": "20", "answer": "ε=0.2 scale=5、ε=20 scale=0.05,ε 小隱私強", "wrong1": "ε=0.2 scale=0.2、ε=20 scale=20,ε 大隱私強", "wrong2": "兩者 scale 都等於 1,ε 不影響噪訊規模或隱私強度", "wrong3": "ε 越大代表分配給雜訊的預算越省,故 ε=20 較安全"}
       },
       "options": [
         {"text": "{answer}", "is_correct": true},

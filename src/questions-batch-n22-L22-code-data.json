@@ -422,7 +422,7 @@
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "apriori 回傳 support ≥ min_support 的所有項集(含單品與多品組合)。case_a 中:{A}=3/4=0.75、{B}=3/4=0.75、{C}=1/4=0.25 不入選;組合 {A,B}=2/4=0.5 入選,其他組合 support < 0.5。共 {answer} 個入選(含 {A,B,C} 候選的子集若達門檻)。重點是 apriori 列出『所有』達門檻項集而非僅最大者。",
+        "correct": "apriori 回傳 support ≥ min_support 的所有項集(含單品與多品組合)。以 case_a 為例:商品 A=3/4=0.75、商品 B=3/4=0.75、商品 C=1/4=0.25 不入選;組合「A+B」=2/4=0.5 入選,其他組合 support < 0.5。共 {answer} 個項集入選。重點是 apriori 列出『所有』達門檻項集而非僅最大者。",
         "wrong": {
           "{wrong1}": "apriori 不只列單項,也列入達門檻的多品組合。",
           "{wrong2}": "並非所有 2^k-1 子集皆達門檻,需逐一計算 support。",
