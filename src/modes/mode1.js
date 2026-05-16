@@ -93,7 +93,8 @@
     let s = code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     s = s.replace(/(#[^\n]*)/g, '<span class="com">$1</span>');
     s = s.replace(/(["'])((?:(?!\1).)*)\1/g, '<span class="str">$1$2$1</span>');
-    s = s.replace(/\b(import|from|def|class|return|if|else|elif|for|while|in|as|with|try|except|None|True|False|lambda|pass|self|print|len|range|np|pd|sklearn|torch|nn|tf)\b/g, '<span class="kw">$1</span>');
+    // 2026-05-11 bug fix(同 index.html:highlightCodeSimple):移除 'class' 避免咬到 <span class="str"> 屬性產生 <span <span...> 巢狀破爛 HTML
+    s = s.replace(/\b(import|from|def|return|if|else|elif|for|while|in|as|with|try|except|None|True|False|lambda|pass|self|print|len|range|np|pd|sklearn|torch|nn|tf)\b/g, '<span class="kw">$1</span>');
     s = s.replace(/\b(\d+\.?\d*)\b/g, '<span class="num">$1</span>');
     return s;
   }

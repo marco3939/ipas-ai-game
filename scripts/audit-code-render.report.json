@@ -1,0 +1,14 @@
+{
+  "generated_at": "2026-05-16T04:13:24.511Z",
+  "summary": {
+    "fns_audited": [
+      "index.html:highlightCodeSimple",
+      "mode1.js:highlightCode",
+      "mode5.js:highlightCode"
+    ],
+    "codeBlocksScanned": 22,
+    "totalRuns": 66,
+    "violations": 0
+  },
+  "violations": []
+}
