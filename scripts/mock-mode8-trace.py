@@ -366,6 +366,209 @@ def verify_q_m8_015(env_after, step_idx, expected):
         return str(int(env_after['inner_rows'])) == expected
     return False
 
+# === q_m8_016..q_m8_027(R5 L22 大數據擴充):每題 3-4 trace_steps ===
+
+def _floats_eq(a_str, b_str, tol=1e-3):
+    """Compare two strings as floats with tolerance; fall back to string equality."""
+    try:
+        return abs(float(a_str) - float(b_str)) <= tol
+    except (ValueError, TypeError):
+        return a_str == b_str
+
+def verify_q_m8_016(env_after, step_idx, expected):
+    """numpy var/std/IQR:
+       after_line=3 → mean
+       after_line=4 → var (ddof=0)
+       after_line=5 → std
+       after_line=8 → iqr
+    """
+    import numpy as np
+    if step_idx == 3:
+        return _floats_eq(str(float(env_after['mean'])), expected)
+    if step_idx == 4:
+        return _floats_eq(str(float(env_after['var'])), expected)
+    if step_idx == 5:
+        return _floats_eq(str(float(env_after['std'])), expected)
+    if step_idx == 8:
+        return _floats_eq(str(float(env_after['iqr'])), expected)
+    return False
+
+def verify_q_m8_017(env_after, step_idx, expected):
+    """IQR outlier:
+       after_line=5 → iqr
+       after_line=6 → lower
+       after_line=7 → upper
+       after_line=8 → outliers list
+    """
+    if step_idx == 5:
+        return _floats_eq(str(float(env_after['iqr'])), expected)
+    if step_idx == 6:
+        return _floats_eq(str(float(env_after['lower'])), expected)
+    if step_idx == 7:
+        return _floats_eq(str(float(env_after['upper'])), expected)
+    if step_idx == 8:
+        actual = '[' + ', '.join(str(float(x)) for x in env_after['outliers']) + ']'
+        return actual == expected
+    return False
+
+def verify_q_m8_018(env_after, step_idx, expected):
+    """binom pmf:
+       after_line=6 → coef (int)
+       after_line=7 → pk
+       after_line=8 → qnk
+       after_line=9 → pmf
+    """
+    if step_idx == 6:
+        return str(env_after['coef']) == expected
+    if step_idx == 7:
+        return _floats_eq(str(env_after['pk']), expected, tol=1e-4)
+    if step_idx == 8:
+        return _floats_eq(str(env_after['qnk']), expected, tol=1e-3)
+    if step_idx == 9:
+        return _floats_eq(str(env_after['pmf']), expected, tol=1e-3)
+    return False
+
+def verify_q_m8_019(env_after, step_idx, expected):
+    """z-test:
+       after_line=6 → se
+       after_line=7 → z
+       after_line=8 → reject (True/False)
+    """
+    if step_idx == 6:
+        return _floats_eq(str(env_after['se']), expected)
+    if step_idx == 7:
+        return _floats_eq(str(env_after['z']), expected)
+    if step_idx == 8:
+        return str(env_after['reject']) == expected
+    return False
+
+def verify_q_m8_020(env_after, step_idx, expected):
+    """pandas groupby fillna:
+       after_line=4 → nulls
+       after_line=5 → g_mean dict
+       after_line=7 → filled_list
+    """
+    if step_idx == 4:
+        return str(int(env_after['nulls'])) == expected
+    if step_idx == 5:
+        return str(env_after['g_mean'].to_dict()) == expected
+    if step_idx == 7:
+        return str(env_after['filled_list']) == expected
+    return False
+
+def verify_q_m8_021(env_after, step_idx, expected):
+    """combined statistics:
+       after_line=7 → n_total (int)
+       after_line=8 → mc
+       after_line=9 → vc
+    """
+    if step_idx == 7:
+        return str(int(env_after['n_total'])) == expected
+    if step_idx == 8:
+        return _floats_eq(str(env_after['mc']), expected)
+    if step_idx == 9:
+        return _floats_eq(str(env_after['vc']), expected)
+    return False
+
+def verify_q_m8_022(env_after, step_idx, expected):
+    """Apriori:
+       after_line=5 → count_A (int)
+       after_line=6 → count_AB (int)
+       after_line=7 → support_AB
+       after_line=8 → confidence_AtoB
+    """
+    if step_idx == 5:
+        return str(env_after['count_A']) == expected
+    if step_idx == 6:
+        return str(env_after['count_AB']) == expected
+    if step_idx == 7:
+        return _floats_eq(str(env_after['support_AB']), expected)
+    if step_idx == 8:
+        return _floats_eq(str(env_after['confidence_AtoB']), expected)
+    return False
+
+def verify_q_m8_023(env_after, step_idx, expected):
+    """Markov:
+       after_line=4 → row_sums "[1.0, 1.0]"
+       after_line=6 → next_state0
+       after_line=7 → next_state1
+    """
+    if step_idx == 4:
+        actual = '[' + ', '.join(str(float(x)) for x in env_after['row_sums']) + ']'
+        return actual == expected
+    if step_idx == 6:
+        return _floats_eq(str(float(env_after['next_state0'])), expected)
+    if step_idx == 7:
+        return _floats_eq(str(float(env_after['next_state1'])), expected)
+    return False
+
+def verify_q_m8_024(env_after, step_idx, expected):
+    """time series additive:
+       after_line=5 → last_trend (rounded 3)
+       after_line=6 → last_detrended (rounded 3)
+       after_line=7 → first_valid_index (int)
+    """
+    if step_idx == 5:
+        actual = round(float(env_after['last_trend']), 3)
+        try:
+            return abs(actual - float(expected)) <= 1e-2
+        except ValueError:
+            return False
+    if step_idx == 6:
+        actual = round(float(env_after['last_detrended']), 3)
+        try:
+            return abs(actual - float(expected)) <= 1e-2
+        except ValueError:
+            return False
+    if step_idx == 7:
+        return str(env_after['first_valid_index']) == expected
+    return False
+
+def verify_q_m8_025(env_after, step_idx, expected):
+    """SMOTE:
+       after_line=3 → cnt_before (Counter repr)
+       after_line=6 → n_synthetic (int)
+       after_line=8 → cnt_after (dict)
+    """
+    if step_idx == 3:
+        return str(env_after['cnt_before']) == expected
+    if step_idx == 6:
+        return str(env_after['n_synthetic']) == expected
+    if step_idx == 8:
+        return str(env_after['cnt_after']) == expected
+    return False
+
+def verify_q_m8_026(env_after, step_idx, expected):
+    """tokenize:
+       after_line=3 → n_tokens (int)
+       after_line=5 → vocab_size (int)
+       after_line=6 → ratio (4 decimal)
+    """
+    if step_idx == 3:
+        return str(env_after['n_tokens']) == expected
+    if step_idx == 5:
+        return str(env_after['vocab_size']) == expected
+    if step_idx == 6:
+        try:
+            return abs(round(float(env_after['ratio']), 4) - float(expected)) <= 1e-3
+        except ValueError:
+            return False
+    return False
+
+def verify_q_m8_027(env_after, step_idx, expected):
+    """DP Laplace:
+       after_line=5 → noisy_answer
+       after_line=6 → scale
+       after_line=7 → within_3scale (bool)
+    """
+    if step_idx == 5:
+        return _floats_eq(str(env_after['noisy_answer']), expected)
+    if step_idx == 6:
+        return _floats_eq(str(env_after['scale']), expected)
+    if step_idx == 7:
+        return str(env_after['within_3scale']) == expected
+    return False
+
 VERIFIERS = {
     'q_m8_001': verify_q_m8_001,
     'q_m8_002': verify_q_m8_002,
@@ -382,6 +585,18 @@ VERIFIERS = {
     'q_m8_013': verify_q_m8_013,
     'q_m8_014': verify_q_m8_014,
     'q_m8_015': verify_q_m8_015,
+    'q_m8_016': verify_q_m8_016,
+    'q_m8_017': verify_q_m8_017,
+    'q_m8_018': verify_q_m8_018,
+    'q_m8_019': verify_q_m8_019,
+    'q_m8_020': verify_q_m8_020,
+    'q_m8_021': verify_q_m8_021,
+    'q_m8_022': verify_q_m8_022,
+    'q_m8_023': verify_q_m8_023,
+    'q_m8_024': verify_q_m8_024,
+    'q_m8_025': verify_q_m8_025,
+    'q_m8_026': verify_q_m8_026,
+    'q_m8_027': verify_q_m8_027,
 }
 
 # ============================================================================
