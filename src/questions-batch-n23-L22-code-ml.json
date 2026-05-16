@@ -60,9 +60,9 @@
       "stem": "保險詐欺偵測有 {n0} 筆正常案與 {n1} 筆詐欺案,工程師欲以 class_weight='balanced' 訓練。下列程式輸出兩類在 sklearn 內部使用的權重(類別 0, 類別 1)最接近?",
       "code_block": "import numpy as np\nfrom sklearn.utils.class_weight import compute_class_weight\n\ny = np.array([0]*{n0} + [1]*{n1})\nw = compute_class_weight(\n    class_weight='balanced',\n    classes=np.unique(y),\n    y=y)\nprint(np.round(w, 3))",
       "stem_variables": {
-        "case_a": {"n0": "900", "n1": "100", "answer": "[0.556 5.0  ]", "wrong1": "[1.    1.   ]", "wrong2": "[0.1   0.9  ]", "wrong3": "[0.9   0.1  ]"},
+        "case_a": {"n0": "900", "n1": "100", "answer": "[0.556 5.   ]", "wrong1": "[1.    1.   ]", "wrong2": "[0.1   0.9  ]", "wrong3": "[0.9   0.1  ]"},
         "case_b": {"n0": "800", "n1": "200", "answer": "[0.625 2.5  ]", "wrong1": "[1.    1.   ]", "wrong2": "[0.2   0.8  ]", "wrong3": "[0.8   0.2  ]"},
-        "case_c": {"n0": "950", "n1": "50",  "answer": "[0.526 10.0 ]", "wrong1": "[1.    1.   ]", "wrong2": "[0.05  0.95 ]", "wrong3": "[0.95  0.05 ]"}
+        "case_c": {"n0": "950", "n1": "50",  "answer": "[ 0.526 10.   ]", "wrong1": "[1.    1.   ]", "wrong2": "[0.05  0.95 ]", "wrong3": "[0.95  0.05 ]"}
       },
       "options": [
         {"text": "{answer}", "is_correct": true, "trap_type": "正解:n_samples / (n_classes * np.bincount(y))"},
@@ -233,7 +233,7 @@
       "difficulty": "easy",
       "source_level": "L2",
       "stem": "醫院糖尿病篩檢模型混淆矩陣如下,索引 0=陰性、1=陽性。下列程式輸出『陽性精確率』(precision of class 1)最接近?",
-      "code_block": "import numpy as np\nfrom sklearn.metrics import confusion_matrix, precision_score\n\ny_true = np.array([0]*{tn_n} + [1]*{p_n})\ny_pred = np.array(\n    [0]*{tn} + [1]*({tn_n}-{tn}) +\n    [1]*{tp} + [0]*({p_n}-{tp}))\n\ncm = confusion_matrix(y_true, y_pred)\nprint(cm)\nprint(round(precision_score(y_true, y_pred, pos_label=1), 3))",
+      "code_block": "import numpy as np\nfrom sklearn.metrics import precision_score\n\ny_true = np.array([0]*{tn_n} + [1]*{p_n})\ny_pred = np.array(\n    [0]*{tn} + [1]*({tn_n}-{tn}) +\n    [1]*{tp} + [0]*({p_n}-{tp}))\n\nprint(round(precision_score(y_true, y_pred, pos_label=1), 3))",
       "stem_variables": {
         "case_a": {"tn_n": "900", "p_n": "100", "tn": "810", "tp": "80",  "answer": "0.471", "wrong1": "0.8",   "wrong2": "0.9",   "wrong3": "0.08"},
         "case_b": {"tn_n": "950", "p_n": "50",  "tn": "855", "tp": "40",  "answer": "0.296", "wrong1": "0.8",   "wrong2": "0.9",   "wrong3": "0.04"},

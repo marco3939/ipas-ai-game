@@ -132,11 +132,11 @@
       "difficulty": "medium",
       "source_level": "L1",
       "stem": "智慧城市開放資料平台想用 TfidfVectorizer 把新聞語料轉成詞向量。下列程式 X.shape 輸出為何?(假設詞彙表唯一詞數為 {vocab})",
-      "code_block": "from sklearn.feature_extraction.text import TfidfVectorizer\n# 已知該 corpus 經預設 token pattern 切詞後唯一詞共 {vocab} 個\ncorpus = [...]\nn_docs = {ndocs}\nvec = TfidfVectorizer(max_features={m})\nX = vec.fit_transform(corpus)\nprint(X.shape)  # 上限取 min(unique_terms, max_features)",
+      "code_block": "from sklearn.feature_extraction.text import TfidfVectorizer\n# 已知該 corpus 經預設 token pattern 切詞後唯一詞共 {vocab} 個\ncorpus = {corpus}\nn_docs = {ndocs}\nvec = TfidfVectorizer(max_features={m})\nX = vec.fit_transform(corpus)\nprint(X.shape)  # 上限取 min(unique_terms, max_features)",
       "stem_variables": {
-        "case_a": {"vocab": "12", "ndocs": "4", "m": "50", "answer": "(4, 12)", "wrong1": "(12, 4)", "wrong2": "(4, 50)", "wrong3": "(4, 4)"},
-        "case_b": {"vocab": "30", "ndocs": "5", "m": "20", "answer": "(5, 20)", "wrong1": "(20, 5)", "wrong2": "(5, 30)", "wrong3": "(5, 5)"},
-        "case_c": {"vocab": "8", "ndocs": "6", "m": "100", "answer": "(6, 8)", "wrong1": "(8, 6)", "wrong2": "(6, 100)", "wrong3": "(6, 6)"}
+        "case_a": {"vocab": "12", "ndocs": "4", "m": "50", "corpus": "['alpha beta gamma', 'delta epsilon zeta', 'eta theta iota', 'kappa lambda mu']", "answer": "(4, 12)", "wrong1": "(12, 4)", "wrong2": "(4, 50)", "wrong3": "(4, 4)"},
+        "case_b": {"vocab": "30", "ndocs": "5", "m": "20", "corpus": "['aa01 aa02 aa03 aa04 aa05 aa06', 'bb01 bb02 bb03 bb04 bb05 bb06', 'cc01 cc02 cc03 cc04 cc05 cc06', 'dd01 dd02 dd03 dd04 dd05 dd06', 'ee01 ee02 ee03 ee04 ee05 ee06']", "answer": "(5, 20)", "wrong1": "(20, 5)", "wrong2": "(5, 30)", "wrong3": "(5, 5)"},
+        "case_c": {"vocab": "8", "ndocs": "6", "m": "100", "corpus": "['term1 term2', 'term3 term4', 'term5 term6', 'term7 term8', 'term1 term3', 'term5 term7']", "answer": "(6, 8)", "wrong1": "(8, 6)", "wrong2": "(6, 100)", "wrong3": "(6, 6)"}
       },
       "options": [
         {"text": "{answer}", "is_correct": true},
@@ -167,7 +167,7 @@
       "difficulty": "medium",
       "source_level": "L1",
       "stem": "教育平台想評估 LLM 的數學解題能力,要把評估集從訓練集中『以 hash 排除』來防 contamination。下列程式輸出的乾淨 eval 題目數為何?",
-      "code_block": "import hashlib\ntrain_set = {{'A題','B題','C題','D題'}}\neval_set = [{eval_list}]\ntrain_hash = {{hashlib.sha1(t.encode()).hexdigest() for t in train_set}}\nclean_eval = [q for q in eval_set\n              if hashlib.sha1(q.encode()).hexdigest() not in train_hash]\nprint(len(clean_eval))",
+      "code_block": "import hashlib\ntrain_set = {'A題','B題','C題','D題'}\neval_set = [{eval_list}]\ntrain_hash = {hashlib.sha1(t.encode()).hexdigest() for t in train_set}\nclean_eval = [q for q in eval_set\n              if hashlib.sha1(q.encode()).hexdigest() not in train_hash]\nprint(len(clean_eval))",
       "stem_variables": {
         "case_a": {"eval_list": "'A題','X題','Y題'", "answer": "2", "wrong1": "3", "wrong2": "1", "wrong3": "0"},
         "case_b": {"eval_list": "'X題','Y題','Z題','W題'", "answer": "4", "wrong1": "0", "wrong2": "2", "wrong3": "3"},
@@ -202,7 +202,7 @@
       "difficulty": "medium",
       "source_level": "L1",
       "stem": "電商風控分析師要用 groupby 計算 quasi-identifier 群組的最小群大小,以檢查 k-匿名。下列程式輸出為何?",
-      "code_block": "import pandas as pd\ndf = pd.DataFrame({{\n    'age_group': {ages},\n    'zip3':      {zips}\n}})\ngroup_min = df.groupby(['age_group','zip3']).size().min()\nprint(group_min)",
+      "code_block": "import pandas as pd\ndf = pd.DataFrame({\n    'age_group': {ages},\n    'zip3':      {zips}\n})\ngroup_min = df.groupby(['age_group','zip3']).size().min()\nprint(group_min)",
       "stem_variables": {
         "case_a": {"ages": "['20s','20s','20s','30s','30s','40s']", "zips": "['100','100','100','110','110','120']", "answer": "1", "wrong1": "6", "wrong2": "3", "wrong3": "2"},
         "case_b": {"ages": "['20s','20s','30s','30s','40s','40s']", "zips": "['100','100','110','110','120','120']", "answer": "2", "wrong1": "6", "wrong2": "3", "wrong3": "1"},
@@ -237,7 +237,7 @@
       "difficulty": "medium",
       "source_level": "L1",
       "stem": "健保資料中心要對『陽性人數』查詢加 Laplace 雜訊以滿足差分隱私概念。比較 ε={eps_strong} 與 ε={eps_weak} 兩次設定,下列敘述何者正確?",
-      "code_block": "import numpy as np\nnp.random.seed(0)\ntrue_count = 1000\nsensitivity = 1\nnoisy_strong = true_count + np.random.laplace(0, sensitivity/{eps_strong})\nnoisy_weak   = true_count + np.random.laplace(0, sensitivity/{eps_weak})\n# 觀察雜訊規模(scale) sensitivity/epsilon\nprint('scale_strong:', sensitivity/{eps_strong},\n      'scale_weak:', sensitivity/{eps_weak})",
+      "code_block": "import numpy as np\nnp.random.seed(0)\ntrue_count = 1000\nsensitivity = 1\n# scale = sensitivity / ε,ε 小 → scale 大 → 雜訊大 → 隱私強\nscale_strong = sensitivity/{eps_strong}\nscale_weak   = sensitivity/{eps_weak}\nnoisy_strong = true_count + np.random.laplace(0, scale_strong)\nnoisy_weak   = true_count + np.random.laplace(0, scale_weak)\nprint(f'ε={eps_strong} scale={scale_strong:g}、ε={eps_weak} scale={scale_weak:g},ε 小隱私強')",
       "stem_variables": {
         "case_a": {"eps_strong": "0.1", "eps_weak": "10", "answer": "ε=0.1 scale=10、ε=10 scale=0.1,ε 小隱私強", "wrong1": "ε=0.1 scale=0.1、ε=10 scale=10,ε 大隱私強", "wrong2": "兩者 scale 都等於 1,ε 不影響噪訊規模或隱私強度", "wrong3": "ε 越大代表分配給雜訊的預算越省,故 ε=10 較安全"},
         "case_b": {"eps_strong": "0.5", "eps_weak": "5", "answer": "ε=0.5 scale=2、ε=5 scale=0.2,ε 小隱私強", "wrong1": "ε=0.5 scale=0.5、ε=5 scale=5,ε 大隱私強", "wrong2": "兩者 scale 都等於 1,ε 不影響噪訊規模或隱私強度", "wrong3": "ε 越大代表分配給雜訊的預算越省,故 ε=5 較安全"},
@@ -272,7 +272,7 @@
       "difficulty": "easy",
       "source_level": "L1",
       "stem": "智慧電網公司要對使用者 ID 做欄位級假名化,僅保留 sha256 hex 的前 N 字元。下列程式輸出 id_pseudo 各字串的『長度』為何?",
-      "code_block": "import hashlib\nimport pandas as pd\ndf = pd.DataFrame({{'user_id': ['{u1}', '{u2}']}})\ndf['id_pseudo'] = df['user_id'].apply(\n    lambda x: hashlib.sha256(x.encode()).hexdigest()[:{n}]\n)\nprint([len(s) for s in df['id_pseudo']])",
+      "code_block": "import hashlib\nimport pandas as pd\ndf = pd.DataFrame({'user_id': ['{u1}', '{u2}']})\ndf['id_pseudo'] = df['user_id'].apply(\n    lambda x: hashlib.sha256(x.encode()).hexdigest()[:{n}]\n)\nprint([len(s) for s in df['id_pseudo']])",
       "stem_variables": {
         "case_a": {"u1": "U001", "u2": "U002", "n": "16", "answer": "[16, 16]", "wrong1": "[4, 4]", "wrong2": "[64, 64]", "wrong3": "報錯 (TypeError)"},
         "case_b": {"u1": "C123", "u2": "C456", "n": "12", "answer": "[12, 12]", "wrong1": "[4, 4]", "wrong2": "[64, 64]", "wrong3": "報錯 (TypeError)"},
@@ -342,7 +342,7 @@
       "difficulty": "easy",
       "source_level": "L1",
       "stem": "物聯網安全平台收到 GDPR 被遺忘權(right to erasure)請求,需把某 user_id 從資料表中移除。下列程式執行後剩餘列數為何?",
-      "code_block": "import pandas as pd\ndf = pd.DataFrame({{\n    'user_id': ['{u1}','{u2}','{u3}','{u1}','{u4}'],\n    'event':   ['login','login','logout','logout','login']\n}})\ntarget = '{target}'\ndf = df[df['user_id'] != target]\nprint(len(df))",
+      "code_block": "import pandas as pd\ndf = pd.DataFrame({\n    'user_id': ['{u1}','{u2}','{u3}','{u1}','{u4}'],\n    'event':   ['login','login','logout','logout','login']\n})\ntarget = '{target}'\ndf = df[df['user_id'] != target]\nprint(len(df))",
       "stem_variables": {
         "case_a": {"u1": "U01", "u2": "U02", "u3": "U03", "u4": "U04", "target": "U01", "answer": "3", "wrong1": "5", "wrong2": "4", "wrong3": "1"},
         "case_b": {"u1": "A10", "u2": "A20", "u3": "A30", "u4": "A40", "target": "A20", "answer": "4", "wrong1": "5", "wrong2": "3", "wrong3": "1"},

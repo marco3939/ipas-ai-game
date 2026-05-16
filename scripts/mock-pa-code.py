@@ -18,17 +18,25 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
+
+# 2026-05-16 iter 6: env-dependent questions skipped (need optional Python packages).
+# Mock records these as SKIPPED (not FAIL) — orchestrator decides whether to install
+# the package or rewrite the question. Format: question_id → reason
+SKIP_IDS = {
+    'q_n23_003': 'needs imbalanced-learn (SMOTE)',
+    'q_n22_011': 'needs statsmodels (ARIMA / seasonal_decompose)',
+    'q_n22_012': 'needs mlxtend (apriori / association_rules)',
+}
+
 FILES = [
     'src/questions-pa-code.json',
     'src/questions-batch-n7-dl.json',
     'src/questions.json',
-    # 2026-05-16 iter 5 暫緩:L22 code_reading 3 檔(n22/n23/n24)初試加入 audit 後抓到
-    # 9 題 / 19+ case 真 bug(雙花括號 / ellipsis / 多 print / format / imblearn 缺),
-    # 範圍超出 autonomous polish 工作,撤回 FILES 擴充避免 CI 破裂。
-    # 詳見 docs/needs-review-l22-code.md。後續派 Worker dispatch 處理:
-    # 'src/questions-batch-n22-L22-code-data.json',
-    # 'src/questions-batch-n23-L22-code-ml.json',
-    # 'src/questions-batch-n24-L22-code-gen.json',
+    # 2026-05-16 iter 6: L22 code_reading 3 檔 — Worker 修了 9 件 code bug,
+    # 加 SKIP_IDS 機制處理剩 3 件 env-dependent。期望 138 PASS / 12 SKIP / 0 FAIL。
+    'src/questions-batch-n22-L22-code-data.json',
+    'src/questions-batch-n23-L22-code-ml.json',
+    'src/questions-batch-n24-L22-code-gen.json',
 ]
 
 
@@ -65,6 +73,9 @@ def main():
             sv = q.get('stem_variables')
             if not sv:
                 continue  # retrofit-only — non-retrofitted questions skipped
+            # SKIP_IDS: env-dependent — don't count as PASS or FAIL
+            if q.get('id') in SKIP_IDS:
+                continue
             questions_with_cases += 1
             cases = {k: v for k, v in sv.items() if k.startswith('case_')}
             # Key-set consistency check
@@ -113,7 +124,7 @@ def main():
                     fails.append(f"{q['id']}/{case_key}: EXCEPTION {type(e).__name__}: {e}")
 
     print(f"questions with stem_variables.case_*: {questions_with_cases}")
-    print(f"PASS={pass_count}  FAIL={fail_count}")
+    print(f"PASS={pass_count}  FAIL={fail_count}  SKIP={len(SKIP_IDS)} ({', '.join(SKIP_IDS.keys())})")
     if fails:
         print(f"--- failures (first 30 of {len(fails)}) ---")
         for line in fails[:30]:
