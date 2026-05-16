@@ -270,32 +270,135 @@
     _renderHistory() {
       const data = Storage.get(STORAGE_KEY, null);
       if (!data || !data.history || data.history.length === 0) return '';
-      const recent = data.history.slice(-5).reverse();
-      const rows = recent.map(h => {
+      const recent = data.history.slice(-10).reverse();
+      const allQ = (typeof QUESTIONS !== 'undefined' ? QUESTIONS : []);
+
+      // scope label 對照
+      const scopeLabel = (k) => ({
+        all: '全主題', s1: '科一', s2: '科二', s3: '科三',
+        wrongbook: '錯題本', weak: '弱點優先'
+      }[k] || (k || '?'));
+      // difficulty label
+      const diffLabel = (k) => ({ easy: '簡單', medium: '中等', hard: '困難', mixed: '混合' }[k] || '?');
+
+      const cards = recent.map((h, idx) => {
         const date = new Date(h.ts);
         const ds = `${date.getMonth()+1}/${date.getDate()} ${date.getHours()}:${String(date.getMinutes()).padStart(2,'0')}`;
         const r = h.result || {};
+        const c = h.config || {};
         const pct = r.total ? Math.round(r.correct / r.total * 100) : 0;
         const lvlColor = r.estLevel === '高' ? '#4ade80' : r.estLevel === '中' ? '#facc15' : '#f87171';
-        return `<tr>
-          <td style="padding:6px 8px">${ds}</td>
-          <td style="padding:6px 8px">${(h.config && h.config.qcount) || '?'} 題</td>
-          <td style="padding:6px 8px"><strong>${r.correct || 0}/${r.total || 0}</strong> (${pct}%)</td>
-          <td style="padding:6px 8px;color:${lvlColor};font-weight:700">${r.estLevel || '-'}</td>
-        </tr>`;
+        const lvlEmoji = r.estLevel === '高' ? '🥇' : r.estLevel === '中' ? '🥈' : '🥉';
+        const tu = r.timeUsed || 0;
+        const tuStr = `${Math.floor(tu/60)}m ${tu%60}s`;
+        const avgPerQ = r.total > 0 ? Math.round(tu / r.total) : 0;
+        // 分科目區塊
+        const bc = r.byCategory || {};
+        const catRow = ['L21','L22','L23','other'].map(k => {
+          const v = bc[k] || '0/0';
+          const [cc, tt] = v.split('/').map(Number);
+          if (!tt) return '';
+          const p = tt ? Math.round(cc/tt*100) : 0;
+          const col = p >= 80 ? '#4ade80' : p >= 60 ? '#facc15' : '#f87171';
+          const lbl = k === 'L21' ? '科一' : k === 'L22' ? '科二' : k === 'L23' ? '科三' : '其他';
+          return `<span style="display:inline-block;background:var(--bg-3);padding:4px 10px;border-radius:4px;margin:2px 4px 2px 0;font-size:0.82rem">
+            ${lbl} <strong style="color:${col}">${v}</strong> (${p}%)
+          </span>`;
+        }).filter(Boolean).join('');
+
+        // Top wrong 區塊
+        const tw = Array.isArray(h.topWrong) ? h.topWrong : [];
+        const twHtml = tw.length === 0
+          ? `<div style="color:var(--success);padding:8px;text-align:center">🎉 此場無錯題</div>`
+          : tw.map((qid, i) => {
+              const q = allQ.find(x => x.id === qid);
+              const stem = q ? (q.stem || '').substring(0, 60).replace(/\{[^}]+\}/g, '') : '(題目已不在題庫)';
+              const kc = q ? (q.knowledge_code || '') : '?';
+              return `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 10px;margin:4px 0;background:rgba(255,255,255,0.03);border-radius:4px;border-left:3px solid #f87171">
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:0.75rem;color:var(--fg-dim)">#${i+1} · ${kc} · ${qid}</div>
+                  <div style="font-size:0.85rem;color:var(--fg);line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${stem}${stem.length >= 55 ? '…' : ''}</div>
+                </div>
+                ${q ? `<button class="btn btn-warn" style="font-size:0.75rem;padding:4px 10px;flex-shrink:0" onclick="event.stopPropagation();Mode7.drillWrong('${qid}')">🎯 下鑽</button>` : ''}
+              </div>`;
+            }).join('');
+
+        const validTw = tw.filter(qid => allQ.find(x => x.id === qid));
+        // 真歷史 array 中的 index(slice(-10).reverse() 後位置與原 history index 對應)
+        const realHistoryIdx = data.history.length - 1 - idx;
+        const drillAllBtn = validTw.length > 0
+          ? `<button class="btn btn-warn" style="font-size:0.82rem;padding:6px 14px;margin-top:8px;margin-right:6px" onclick="event.stopPropagation();Mode7.drillHistoryAllWrong(${realHistoryIdx})">🎯 此場錯題全部下鑽(${validTw.length})</button>`
+          : '';
+        // 完整逐題回顧按鈕(只在有 fullLog 時顯示)
+        const hasFullLog = Array.isArray(h.fullLog) && h.fullLog.length > 0;
+        const reviewAllBtn = hasFullLog
+          ? `<button class="btn btn-primary" style="font-size:0.82rem;padding:6px 14px;margin-top:8px" onclick="event.stopPropagation();Mode7.reviewHistorySession(${realHistoryIdx})">📚 完整逐題回顧(${h.fullLog.length} 題)</button>`
+          : `<span style="font-size:0.78rem;color:var(--fg-dim);display:inline-block;margin-top:8px">(舊紀錄無逐題資料,新模考起會自動儲存)</span>`;
+
+        return `<details class="m7-history-card" style="background:var(--bg-2);border:1px solid var(--bg-3);border-radius:6px;padding:0;margin-bottom:8px">
+          <summary style="cursor:pointer;padding:10px 14px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex:1;min-width:0">
+              <span style="font-size:0.85rem;color:var(--fg-dim);font-family:monospace">${ds}</span>
+              <span style="font-size:0.78rem;color:var(--fg-dim)">${scopeLabel(c.scope)} · ${diffLabel(c.difficulty)} · ${c.qcount || '?'}題</span>
+              <strong style="color:${lvlColor};font-size:1rem">${lvlEmoji} ${r.correct || 0}/${r.total || 0}</strong>
+              <span style="color:${lvlColor};font-weight:700">${pct}%</span>
+              <span style="font-size:0.78rem;color:var(--fg-dim)">⏱ ${tuStr}</span>
+            </div>
+            <span style="color:var(--fg-dim);font-size:0.85rem">點此展開 ▼</span>
+          </summary>
+          <div style="padding:0 14px 14px 14px;border-top:1px solid var(--bg-3)">
+            <div style="margin:10px 0">
+              <div style="font-size:0.85rem;color:var(--fg-dim);margin-bottom:4px">📊 分科目得分</div>
+              <div>${catRow || '<span style="color:var(--fg-dim)">(無分科資料)</span>'}</div>
+            </div>
+            <div style="margin:10px 0;font-size:0.85rem;color:var(--fg-dim)">
+              ⏱ 用時 ${tuStr} · 平均每題 ${avgPerQ}s · 等級 <strong style="color:${lvlColor}">${r.estLevel || '-'}</strong>
+            </div>
+            <div style="margin:14px 0 6px;font-size:0.9rem;color:#f87171;font-weight:700">🎯 Top 卡題錯題(${tw.length})</div>
+            ${twHtml}
+            <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+              ${reviewAllBtn}
+              ${drillAllBtn}
+            </div>
+          </div>
+        </details>`;
       }).join('');
+
       return `<div class="card">
-        <h3>📜 最近模考紀錄(最多 5 場)</h3>
-        <table style="width:100%;font-size:0.85rem;border-collapse:collapse">
-          <thead><tr style="background:var(--bg-3);color:var(--fg-dim)">
-            <th style="padding:6px 8px;text-align:left">日期</th>
-            <th style="padding:6px 8px;text-align:left">題數</th>
-            <th style="padding:6px 8px;text-align:left">得分</th>
-            <th style="padding:6px 8px;text-align:left">等級</th>
-          </tr></thead>
-          <tbody>${rows}</tbody>
-        </table>
+        <h3>📜 最近 ${recent.length} 場模考紀錄 <span style="font-size:0.75rem;color:var(--fg-dim);font-weight:normal">(點任一場展開,可逐題下鑽複習)</span></h3>
+        ${cards}
       </div>`;
+    },
+
+    // 此場 topWrong 全部下鑽(串接 generateVariation 各取 1)
+    drillHistoryAllWrong(historyIdx) {
+      const data = Storage.get(STORAGE_KEY, null);
+      if (!data || !data.history || !data.history[historyIdx]) {
+        showToast('找不到此場紀錄', 2000);
+        return;
+      }
+      const h = data.history[historyIdx];
+      const tw = Array.isArray(h.topWrong) ? h.topWrong : [];
+      const allQ = (typeof QUESTIONS !== 'undefined' ? QUESTIONS : []);
+      const validQs = tw.map(qid => allQ.find(x => x.id === qid)).filter(Boolean);
+      if (validQs.length === 0) {
+        showToast('此場無可下鑽錯題(題目可能已從題庫移除)', 2500);
+        return;
+      }
+      // 取每題 1 個 variation 串接(若題目自己沒 variation 就跳過)
+      const queue = [];
+      validQs.forEach(q => {
+        const vs = generateVariation(q, 1);
+        if (vs && vs.length > 0) queue.push(...vs);
+      });
+      if (queue.length === 0) {
+        showToast('⚠️ 這些題的知識點變化型不足', 2500);
+        return;
+      }
+      // 隨第 1 題的 node_id 作 DrillSession seed
+      DrillSession.start(validQs[0].node_id, queue, validQs[0], () => {
+        goHome();
+      });
     },
 
     _getLastConfig() {
@@ -1376,6 +1479,23 @@
       const data = Storage.get(STORAGE_KEY, { version: STORAGE_VERSION, history: [] });
       if (!data.version) data.version = STORAGE_VERSION;
       if (!Array.isArray(data.history)) data.history = [];
+      // 2026-05-16 加 fullLog:整場每題的 qid + 玩家答案 + 正解,讓未來可逐題回顧
+      const s = this.state;
+      const fullLog = (s.lineup || []).map((item, i) => {
+        const q = item.q;
+        const a = s.answers[i];  // {userKey, isCorrect, correctKey} or undefined
+        const correctOpt = (q.options || []).find(o => o.is_correct);
+        return {
+          qid: q.id,
+          npcIdx: item.npcIdx,
+          kc: q.knowledge_code || '',
+          userKey: a ? a.userKey : '',
+          isCorrect: a ? a.isCorrect : false,
+          correctKey: a ? a.correctKey : (correctOpt ? correctOpt.key : ''),
+          answered: !!a,
+          marked: s.markedIds && s.markedIds.has(q.id)
+        };
+      });
       data.history.push({
         ts: Date.now(),
         config: this.state.config,
@@ -1390,9 +1510,10 @@
           },
           estLevel: result.estLevel
         },
-        topWrong: result.topWrong.map(w => w.qid)
+        topWrong: result.topWrong.map(w => w.qid),
+        fullLog
       });
-      // 保留最近 50 場
+      // 保留最近 50 場(每場 60 題 × ~50B ≈ 3KB,50 場 ≈ 150KB,localStorage 容量無虞)
       if (data.history.length > 50) data.history = data.history.slice(-50);
       Storage.set(STORAGE_KEY, data);
     },
@@ -1643,13 +1764,17 @@
         ? `<pre style="background:#0f172a;color:#e2e8f0;padding:10px;border-radius:6px;font-size:0.85rem;overflow-x:auto;margin:8px 0"><code>${q.code_block.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</code></pre>`
         : '';
 
+      const isHistoryMode = !!(this.state && this.state._historyMode);
+      const modeLabel = isHistoryMode ? '📜 歷史模考逐題回顧' : '📚 逐題回顧';
+      const exitBtnLabel = isHistoryMode ? '📋 回考古題首頁' : '📋 回結算頁';
+
       const view = document.getElementById('view-play');
       view.innerHTML = `
         <div class="m7-mock-view">
           <div class="card" style="position:sticky;top:0;z-index:10;background:var(--bg-2);border-bottom:2px solid var(--accent)">
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
               <div>
-                <strong style="font-size:1.1rem">📚 逐題回顧 — 第 ${idx + 1} / ${total} 題</strong>
+                <strong style="font-size:1.1rem">${modeLabel} — 第 ${idx + 1} / ${total} 題</strong>
                 <span style="margin-left:10px">${statusBadge}</span>
               </div>
               <div style="font-size:0.85rem;color:var(--fg-dim)">
@@ -1682,7 +1807,7 @@
             <div class="actions" style="justify-content:space-between;flex-wrap:wrap;gap:6px">
               <button class="btn btn-ghost" onclick="Mode7.reviewPrev()" ${idx === 0 ? 'disabled' : ''}>⬅️ 上一題</button>
               ${wbBtn}
-              <button class="btn btn-ghost" onclick="Mode7.exitReviewToResult()">📋 回結算頁</button>
+              <button class="btn btn-ghost" onclick="Mode7.exitReviewToResult()">${exitBtnLabel}</button>
               <button class="btn btn-primary" onclick="Mode7.reviewNext()" ${idx === total - 1 ? 'disabled' : ''}>下一題 ➡️</button>
             </div>
           </div>
@@ -1706,10 +1831,63 @@
     },
     exitReviewToResult() {
       if (!this.state) return;
+      // 歷史回顧 mode → 退回 setup 頁(該頁含歷史列表)
+      if (this.state._historyMode) {
+        this.cleanup();
+        this.renderSetup();
+        return;
+      }
       this.state.reviewMode = false;
       // 重渲染結算頁(順便更新「已看」徽章)
       const result = this._lastResult;
       if (result) this._renderResult(result, this._lastResultReason || 'submit');
+    },
+
+    // ===== 完整逐題回顧過去任一場考古題模考 =====
+    // 從 history[historyIdx].fullLog 重建 lineup + answers,重用 _renderReviewQuestion UI
+    reviewHistorySession(historyIdx) {
+      const data = Storage.get(STORAGE_KEY, null);
+      if (!data || !data.history || !data.history[historyIdx]) {
+        showToast('找不到此場紀錄', 2000);
+        return;
+      }
+      const h = data.history[historyIdx];
+      const fullLog = h.fullLog;
+      if (!Array.isArray(fullLog) || fullLog.length === 0) {
+        showToast('此場為舊紀錄,無逐題回顧資料(新模考起會自動儲存)', 3000);
+        return;
+      }
+      const allQ = (typeof QUESTIONS !== 'undefined' ? QUESTIONS : []);
+      const lineup = [];
+      const answers = {};
+      const markedIds = new Set();
+      fullLog.forEach((e, i) => {
+        const q = allQ.find(x => x.id === e.qid);
+        if (q) {
+          lineup.push({ q, npcIdx: e.npcIdx || 0 });
+        } else {
+          // 題目已從題庫移除 → 顯示 placeholder,讓使用者知道
+          lineup.push({
+            q: { id: e.qid, stem: '⚠️ 此題已從題庫移除,無法顯示題幹', options: [], knowledge_code: e.kc || '', difficulty: '?', explanation: { correct: '此題已不在當前題庫,無解析可看。' } },
+            npcIdx: e.npcIdx || 0
+          });
+        }
+        if (e.answered) {
+          answers[i] = { userKey: e.userKey, isCorrect: e.isCorrect, correctKey: e.correctKey };
+        }
+        if (e.marked) markedIds.add(e.qid);
+      });
+      this._lastResultLineup = lineup;
+      // 建合成 state(只填 review 流程需要的欄位,標記 _historyMode 讓退出走 setup 不走結算)
+      this.state = {
+        answers, lineup, total: lineup.length, correct: h.result.correct || 0, wrongs: [],
+        markedIds, draft: {}, locked: new Set(),
+        reviewMode: true, reviewIdx: 0, reviewedSet: new Set(),
+        finished: true,
+        _historyMode: true,
+        _historyIdx: historyIdx
+      };
+      this._renderReviewQuestion(0);
     },
     toggleWrongbookFromReview(qid) {
       const wbList = Wrongbook.load();
