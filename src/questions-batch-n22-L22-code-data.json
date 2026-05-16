@@ -1,0 +1,538 @@
+{
+  "version": "1.0",
+  "schema_version": "iron-rule-1+2+6",
+  "generated_at": "2026-05-16",
+  "batch": "N22 — 科二大數據 L22 code_reading: 數據組(pandas / numpy / mlxtend)",
+  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "iron_rule_compliance": {
+    "rule_1": "explanation 完整 + misconceptions",
+    "rule_2": "shuffle_options + stem_variables 3+ cases distinct answers",
+    "rule_3": "原創跨產業 stem",
+    "rule_4": "option length 比",
+    "rule_5": "knowledge_code ∈ {L22201, L22301, L22302}",
+    "rule_6": "本檔僅 L22 code_reading,related_node_ids 不指 L21/L23"
+  },
+  "distribution": { "L22201_count": 5, "L22301_count": 5, "L22302_count": 5, "total": 15 },
+  "questions": [
+    {
+      "id": "q_n22_001",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_002",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "醫院門診資料整合後,資料工程師欲先用最簡單方式刪掉任一欄位有缺值的列。請問下列程式 print 出的列數為何?",
+      "code_block": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({\n    'age': [{a1}, {a2}, {a3}, {a4}, {a5}],\n    'bp':  [{b1}, {b2}, {b3}, {b4}, {b5}]\n})\nclean = df.dropna()\nprint(len(clean))",
+      "stem_variables": {
+        "case_a": {"a1": "30", "a2": "np.nan", "a3": "55", "a4": "62", "a5": "np.nan", "b1": "120", "b2": "118", "b3": "np.nan", "b4": "135", "b5": "140", "answer": "2", "wrong1": "5", "wrong2": "3", "wrong3": "0"},
+        "case_b": {"a1": "25", "a2": "33", "a3": "40", "a4": "70", "a5": "np.nan", "b1": "110", "b2": "125", "b3": "np.nan", "b4": "138", "b5": "150", "answer": "3", "wrong1": "5", "wrong2": "2", "wrong3": "0"},
+        "case_c": {"a1": "45", "a2": "38", "a3": "50", "a4": "68", "a5": "72", "b1": "115", "b2": "128", "b3": "np.nan", "b4": "142", "b5": "148", "answer": "4", "wrong1": "5", "wrong2": "2", "wrong3": "0"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為 dropna 預設不動原列數"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為只刪 age 缺值列"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為任一缺值即整表清空"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "df.dropna() 預設 how='any',只要該列任一欄為 NaN 即刪除。逐列檢查 age 與 bp 兩欄是否含 NaN,凡含 NaN 的列皆被刪除,剩餘 {answer} 列。dropna 回傳新 DataFrame 不修改原表(除非加 inplace=True)。",
+        "wrong": {
+          "{wrong1}": "dropna() 不是 inplace 但有回傳新 DataFrame;clean 已是過濾後結果,5 為原始列數。",
+          "{wrong2}": "dropna() 預設掃描所有欄位,bp 為 NaN 的列也會被刪。",
+          "{wrong3}": "dropna() 是『有缺值的列才刪』,沒缺值的列仍保留。"
+        },
+        "hook": "dropna() 預設 how='any',只要任一欄 NaN 整列刪"
+      },
+      "misconceptions": ["以為 dropna 預設 how='all'", "把 inplace 與回傳值混淆"],
+      "related_node_ids": ["n_L22201_002", "n_L22201_004"],
+      "tags": ["pandas", "dropna", "資料清理"]
+    },
+    {
+      "id": "q_n22_002",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_003",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "電商客戶名單因系統匯入兩次,須以『姓名+手機』組合判斷重複並去除。請問下列程式 print 的列數為何?",
+      "code_block": "import pandas as pd\ndf = pd.DataFrame({\n    'name':  [{n1}, {n2}, {n3}, {n4}, {n5}],\n    'phone': [{p1}, {p2}, {p3}, {p4}, {p5}],\n    'email': ['a@x','a@y','b@x','c@x','b@z']\n})\nout = df.drop_duplicates(subset=['name','phone'])\nprint(len(out))",
+      "stem_variables": {
+        "case_a": {"n1": "'Amy'", "n2": "'Amy'", "n3": "'Bob'", "n4": "'Carl'", "n5": "'Bob'", "p1": "'0911'", "p2": "'0911'", "p3": "'0922'", "p4": "'0933'", "p5": "'0922'", "answer": "3", "wrong1": "5", "wrong2": "1", "wrong3": "4"},
+        "case_b": {"n1": "'Amy'", "n2": "'Amy'", "n3": "'Bob'", "n4": "'Amy'", "n5": "'Bob'", "p1": "'0911'", "p2": "'0911'", "p3": "'0922'", "p4": "'0911'", "p5": "'0922'", "answer": "2", "wrong1": "5", "wrong2": "1", "wrong3": "3"},
+        "case_c": {"n1": "'Amy'", "n2": "'Bob'", "n3": "'Carl'", "n4": "'Dan'", "n5": "'Eve'", "p1": "'0911'", "p2": "'0922'", "p3": "'0933'", "p4": "'0944'", "p5": "'0955'", "answer": "5", "wrong1": "1", "wrong2": "3", "wrong3": "4"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為 subset 仍要全欄相同才算重複"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為去重後只剩首列"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為只 phone 相同就算重複"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "drop_duplicates(subset=['name','phone']) 只比對 name+phone 兩欄。(Amy,0911) 出現 2 次、(Bob,0922) 出現 2 次,各保留首筆,(Carl,0933) 唯一,共 {answer} 列。email 欄不參與比對。",
+        "wrong": {
+          "{wrong1}": "subset 已限定比對欄位,5 為原始列數而非去重後列數。",
+          "{wrong2}": "drop_duplicates 預設 keep='first',會保留首筆而非僅留 1 列。",
+          "{wrong3}": "若只看 phone 也是 3 筆,但本題以 name+phone 組合判斷,結果剛好也是 {answer},不過題目強調是組合鍵而非單欄。"
+        },
+        "hook": "drop_duplicates(subset=...) 只比對指定欄位"
+      },
+      "misconceptions": ["以為 drop_duplicates 永遠看全欄", "忘了 keep='first' 預設"],
+      "related_node_ids": ["n_L22201_003", "n_L22201_004"],
+      "tags": ["pandas", "drop_duplicates", "去重"]
+    },
+    {
+      "id": "q_n22_003",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_002",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "物流公司運費資料表中『重量』欄有缺值,工程師打算以平均值填補。請問下列程式輸出 weight 欄填補後的總和為何?",
+      "code_block": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({\n    'weight': [{w1}, np.nan, {w3}, np.nan, {w5}]\n})\nm = df['weight'].mean()\ndf['weight'] = df['weight'].fillna(m)\nprint(df['weight'].sum())",
+      "stem_variables": {
+        "case_a": {"w1": "10", "w3": "20", "w5": "30", "answer": "100.0", "wrong1": "60.0", "wrong2": "90.0", "wrong3": "200.0"},
+        "case_b": {"w1": "4", "w3": "8", "w5": "12", "answer": "40.0", "wrong1": "24.0", "wrong2": "36.0", "wrong3": "80.0"},
+        "case_c": {"w1": "5", "w3": "10", "w5": "15", "answer": "50.0", "wrong1": "30.0", "wrong2": "45.0", "wrong3": "100.0"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為 NaN 不被填補仍排除於 sum"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "忘記填補後新加了兩筆平均值"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤把所有缺值補成最大值"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "mean 計算時自動忽略 NaN,僅取 3 筆有值平均;再以該平均填補 2 筆缺值。最終 5 筆皆有值,且因為填補值 = mean,總和 = mean × 5 = (3 筆有值總和 / 3) × 5 = {answer}。",
+        "wrong": {
+          "{wrong1}": "此值是原始 3 筆有值的總和,但 fillna 後 NaN 已被替換為平均,sum 不會跳過。",
+          "{wrong2}": "此值漏算被填補的 2 個值。fillna 之後 weight 欄已沒有 NaN,sum 會把 5 筆全加。",
+          "{wrong3}": "fillna(m) 是用平均填補,不是用最大值。"
+        },
+        "hook": "fillna(mean) 後 sum = mean × n;mean 計算時自動忽略 NaN"
+      },
+      "misconceptions": ["以為 mean 不會忽略 NaN", "忘記 fillna 後缺值消失"],
+      "related_node_ids": ["n_L22201_002"],
+      "tags": ["pandas", "fillna", "缺值填補"]
+    },
+    {
+      "id": "q_n22_004",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_004",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "保險公司將『要保人主檔』與『理賠紀錄』以 policy_id 合併,以分析每位要保人的理賠次數。請問下列程式 print 的合併後列數為何?",
+      "code_block": "import pandas as pd\nleft = pd.DataFrame({\n    'policy_id': {left_ids},\n    'name': {left_names}\n})\nright = pd.DataFrame({\n    'policy_id': {right_ids},\n    'claim': {right_claims}\n})\nmerged = pd.merge(left, right, on='policy_id', how='{how}')\nprint(len(merged))",
+      "stem_variables": {
+        "case_a": {"left_ids": "[1, 2, 3, 4]", "left_names": "['A','B','C','D']", "right_ids": "[2, 2, 3, 5]", "right_claims": "[100, 200, 300, 400]", "how": "inner", "answer": "3", "wrong1": "4", "wrong2": "5", "wrong3": "8"},
+        "case_b": {"left_ids": "[1, 2, 3, 4]", "left_names": "['A','B','C','D']", "right_ids": "[2, 2, 3, 5]", "right_claims": "[100, 200, 300, 400]", "how": "left", "answer": "5", "wrong1": "3", "wrong2": "4", "wrong3": "8"},
+        "case_c": {"left_ids": "[1, 2, 3, 4, 6]", "left_names": "['A','B','C','D','E']", "right_ids": "[2, 3, 3, 5]", "right_claims": "[100, 200, 300, 400]", "how": "left", "answer": "6", "wrong1": "4", "wrong2": "5", "wrong3": "9"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為 inner join 等於 left join"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為 inner join 保留右表全部"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為是笛卡兒乘積"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "依 how 與兩表 key 配對展開。inner 僅保留兩側 key 皆存在的記錄,left 保留左表全部(右表無對應則為 NaN)。一對多會展開為多列,本題依參數計算結果為 {answer} 列。",
+        "wrong": {
+          "{wrong1}": "此為若用『其他 how』可能出現的列數,需依題目實際參數 how 判斷。",
+          "{wrong2}": "right join 會保留右表全部 key;left join 保留左表全部 key,兩者不同。",
+          "{wrong3}": "笛卡兒積 (how='cross') 才會把所有左右兩兩相乘;預設 inner 不會。"
+        },
+        "hook": "inner = 交集;left = 保留左;一對多展開為多列"
+      },
+      "misconceptions": ["以為 pd.merge 預設 how='left'", "忘記一對多會增列"],
+      "related_node_ids": ["n_L22201_004", "n_L22201_001"],
+      "tags": ["pandas", "merge", "join"]
+    },
+    {
+      "id": "q_n22_005",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_002",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "智慧電表資料品質稽核要先看『各欄位缺值數』。請問下列程式輸出 'voltage' 欄的缺值數為何?",
+      "code_block": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({\n    'voltage': [{v1}, {v2}, {v3}, {v4}, {v5}, {v6}],\n    'current': [{c1}, {c2}, {c3}, {c4}, {c5}, {c6}]\n})\nresult = df.isna().sum()\nprint(result['voltage'])",
+      "stem_variables": {
+        "case_a": {"v1": "220", "v2": "np.nan", "v3": "221", "v4": "np.nan", "v5": "np.nan", "v6": "218", "c1": "5.0", "c2": "5.2", "c3": "np.nan", "c4": "4.9", "c5": "5.1", "c6": "5.3", "answer": "3", "wrong1": "1", "wrong2": "4", "wrong3": "6"},
+        "case_b": {"v1": "220", "v2": "219", "v3": "221", "v4": "np.nan", "v5": "np.nan", "v6": "218", "c1": "5.0", "c2": "5.2", "c3": "np.nan", "c4": "4.9", "c5": "5.1", "c6": "5.3", "answer": "2", "wrong1": "1", "wrong2": "3", "wrong3": "6"},
+        "case_c": {"v1": "np.nan", "v2": "np.nan", "v3": "np.nan", "v4": "np.nan", "v5": "220", "v6": "218", "c1": "5.0", "c2": "5.2", "c3": "5.0", "c4": "4.9", "c5": "5.1", "c6": "5.3", "answer": "4", "wrong1": "0", "wrong2": "2", "wrong3": "6"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為 isna 只回傳 True/False 不計數"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤把 current 缺值也算進來"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為回傳列數"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "df.isna() 回傳同形布林表,sum() 沿 axis=0 把 True(=1)累加為各欄缺值數。voltage 欄掃描各列計算 NaN 個數 = {answer},取 result['voltage'] 即該欄缺值數。",
+        "wrong": {
+          "{wrong1}": "isna().sum() 會把布林轉為 int 加總,得整數;不會只回傳布林。",
+          "{wrong2}": "result 是 Series,索引 ['voltage'] 取 voltage 欄,不會混入 current 欄的缺值。",
+          "{wrong3}": "isna().sum() 預設 axis=0 算欄缺值,不是回傳整體列數。"
+        },
+        "hook": "isna().sum() 沿 axis=0 給每欄缺值數"
+      },
+      "misconceptions": ["isna() 與 isnull() 混用且以為功能不同", "誤以為 sum 算總列數"],
+      "related_node_ids": ["n_L22201_002", "n_L22201_004"],
+      "tags": ["pandas", "isna", "缺值統計"]
+    },
+    {
+      "id": "q_n22_006",
+      "knowledge_code": "L22301",
+      "node_id": "n_L22301_003",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "風力發電場分析師欲算單日發電量的 IQR(四分位距)以偵測異常時段。請問下列程式 print 的 IQR 為何?",
+      "code_block": "import numpy as np\narr = np.array([{x1}, {x2}, {x3}, {x4}, {x5}, {x6}, {x7}, {x8}, {x9}])\nq25, q50, q75 = np.percentile(arr, [25, 50, 75])\niqr = q75 - q25\nprint(iqr)",
+      "stem_variables": {
+        "case_a": {"x1": "2", "x2": "4", "x3": "6", "x4": "8", "x5": "10", "x6": "12", "x7": "14", "x8": "16", "x9": "18", "answer": "8.0", "wrong1": "10.0", "wrong2": "16.0", "wrong3": "4.0"},
+        "case_b": {"x1": "0", "x2": "4", "x3": "8", "x4": "12", "x5": "16", "x6": "20", "x7": "24", "x8": "28", "x9": "32", "answer": "16.0", "wrong1": "20.0", "wrong2": "32.0", "wrong3": "8.0"},
+        "case_c": {"x1": "5", "x2": "10", "x3": "15", "x4": "20", "x5": "25", "x6": "30", "x7": "35", "x8": "40", "x9": "45", "answer": "20.0", "wrong1": "25.0", "wrong2": "40.0", "wrong3": "10.0"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤把中位數當 IQR"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤把 max-min 當 IQR"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤把 Q1 當 IQR"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "9 筆資料下,np.percentile 預設 linear 內插。等差數列中 Q1 與 Q3 落在第 3、第 7 筆位置;IQR = Q3 − Q1 = {answer}。IQR 衡量中間 50% 資料的離散程度,常用於 1.5*IQR 法則偵測離群值。",
+        "wrong": {
+          "{wrong1}": "此值是中位數 Q2,不是 IQR;IQR 是 Q3 − Q1。",
+          "{wrong2}": "此值是全距 max − min,不是 IQR;全距會被極值左右,IQR 較穩健。",
+          "{wrong3}": "此值是 Q1 本身,IQR 需減 Q1。"
+        },
+        "hook": "IQR = Q3 − Q1;np.percentile 預設線性內插"
+      },
+      "misconceptions": ["混淆 IQR 與全距", "誤以為 percentile 預設方法是 nearest"],
+      "related_node_ids": ["n_L22301_003", "n_L22301_006"],
+      "tags": ["numpy", "percentile", "IQR"]
+    },
+    {
+      "id": "q_n22_007",
+      "knowledge_code": "L22301",
+      "node_id": "n_L22301_003",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "工廠品質工程師欲標記『溫度超過門檻』的批號索引以利離群分析。請問下列程式 print 的索引 tuple 為何?",
+      "code_block": "import numpy as np\ntemp = np.array([{t0}, {t1}, {t2}, {t3}, {t4}, {t5}])\nidx = np.where(temp > {th})\nprint(idx[0].tolist())",
+      "stem_variables": {
+        "case_a": {"t0": "30", "t1": "55", "t2": "28", "t3": "60", "t4": "33", "t5": "70", "th": "50", "answer": "[1, 3, 5]", "wrong1": "[55, 60, 70]", "wrong2": "[0, 2, 4]", "wrong3": "[1, 3, 5, 0]"},
+        "case_b": {"t0": "60", "t1": "10", "t2": "70", "t3": "5", "t4": "80", "t5": "15", "th": "40", "answer": "[0, 2, 4]", "wrong1": "[60, 70, 80]", "wrong2": "[1, 3, 5]", "wrong3": "[0, 2, 4, 1]"},
+        "case_c": {"t0": "10", "t1": "11", "t2": "30", "t3": "5", "t4": "40", "t5": "50", "th": "20", "answer": "[2, 4, 5]", "wrong1": "[30, 40, 50]", "wrong2": "[0, 1, 3]", "wrong3": "[2, 4, 5, 0]"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為 where 回傳值"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為條件取反"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤算邊界含等於"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "np.where(cond) 單參數版本回傳『滿足條件的索引 tuple』,各維一個 ndarray。本題 1D 取 idx[0] 即索引陣列,toList 為 {answer}。比較用嚴格 > 不含等於。",
+        "wrong": {
+          "{wrong1}": "np.where(cond) 單參數模式回傳『索引』不是『值』;若要值需 temp[idx]。",
+          "{wrong2}": "此為條件取反的索引;temp > {th} 是『大於』,選的是被取反的另一半。",
+          "{wrong3}": "嚴格不等號 > 不包含等於,且不會多吐索引 0。"
+        },
+        "hook": "np.where(cond) 單參數模式回傳索引 tuple,各軸一個 ndarray"
+      },
+      "misconceptions": ["把 np.where(cond) 當 np.where(cond, x, y)", "誤以為 > 含等於"],
+      "related_node_ids": ["n_L22301_003"],
+      "tags": ["numpy", "where", "離群偵測"]
+    },
+    {
+      "id": "q_n22_008",
+      "knowledge_code": "L22301",
+      "node_id": "n_L22301_001",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "外送平台欲依城市權重對訂單做加權隨機抽樣以估算口味偏好。下列關於此加權抽樣程式的敘述,何者最正確?",
+      "code_block": "import numpy as np\nrng = np.random.default_rng(0)\ncities = np.array(['TPE', 'TXG', 'KHH'])\nweights = np.array([0.7, 0.2, 0.1])\nsample = rng.choice(cities, size=4, p=weights)\nprint(list(sample))",
+      "options": [
+        {"text": "輸出 4 個城市的序列,TPE 出現機率最高(p=0.7),但具體序列仍受亂數決定,並非必為全 TPE", "is_correct": true, "trap_type": "正解:加權影響長期頻率,單次序列仍隨機"},
+        {"text": "輸出必為 ['TPE','TPE','TPE','TPE'],因 weights[0]=0.7 > 0.5 為主導機率", "is_correct": false, "trap_type": "誤以為最高機率即必選"},
+        {"text": "輸出必為 ['KHH','KHH','KHH','KHH'],因 KHH 為陣列最後一項作為預設", "is_correct": false, "trap_type": "誤以為輸出與順序相關"},
+        {"text": "報錯:size=4 必須等於 cities 的長度(3),不符會丟出 ValueError", "is_correct": false, "trap_type": "誤以為 size 與 cities 維度需相等"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "rng.choice(a, size, p) 為加權隨機抽樣,各元素被抽到的機率正比於 p。size=4 表抽 4 次(可重複,with replacement),機率向量需加總為 1。輸出非固定值,而是依權重分佈的機率序列;TPE 出現次數平均較多但任何單次抽樣的具體序列受亂數種子決定。",
+        "wrong": {
+          "輸出必為 ['TPE','TPE','TPE','TPE'],因 weights[0]=0.7 > 0.5 為主導機率": "權重高不代表 100% 中選,只是出現機率較高;0.7 機率仍允許 30% 為其他城市。",
+          "輸出必為 ['KHH','KHH','KHH','KHH'],因 KHH 為陣列最後一項作為預設": "rng.choice 不會偏好陣列尾端;順序與抽樣機率無關。",
+          "報錯:size=4 必須等於 cities 的長度(3),不符會丟出 ValueError": "size 是抽樣次數,可大於、小於或等於 cities 長度;rng.choice 預設 with replacement 允許 size > len(a)。p 長度才需等於 a 長度且加總為 1。"
+        },
+        "hook": "rng.choice(p=weights) 加權抽樣 — 權重高的長期頻率高,但單次序列仍隨機"
+      },
+      "misconceptions": ["以為高權重 = 必中", "把 size 與 p 維度限制混淆"],
+      "related_node_ids": ["n_L22301_001"],
+      "tags": ["numpy", "random.choice", "加權抽樣"]
+    },
+    {
+      "id": "q_n22_009",
+      "knowledge_code": "L22301",
+      "node_id": "n_L22301_003",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "兩個分散節點分別計算其資料量與平均值,中央節點欲合併兩節點以得正確總平均。請問下列程式 print 的合併平均為何?",
+      "code_block": "import numpy as np\nn1, m1 = {n1}, {m1}\nn2, m2 = {n2}, {m2}\ncombined = (n1 * m1 + n2 * m2) / (n1 + n2)\nprint(round(combined, 2))",
+      "stem_variables": {
+        "case_a": {"n1": "100", "m1": "50", "n2": "300", "m2": "70", "answer": "65.0", "wrong1": "60.0", "wrong2": "120.0", "wrong3": "40.0"},
+        "case_b": {"n1": "100", "m1": "30", "n2": "400", "m2": "80", "answer": "70.0", "wrong1": "55.0", "wrong2": "110.0", "wrong3": "20.0"},
+        "case_c": {"n1": "50", "m1": "80", "n2": "150", "m2": "40", "answer": "50.0", "wrong1": "60.0", "wrong2": "120.0", "wrong3": "10.0"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤把兩平均直接平均"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤算為兩平均相加"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤把樣本數倒置加權"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "分散統計合併平均需以樣本數為權重:combined = (n1*m1 + n2*m2) / (n1+n2) = {answer}。直接把兩平均相加平均會忽略樣本數差異,造成偏誤;此為 partial stats 合併的基本可結合性原則。",
+        "wrong": {
+          "{wrong1}": "此為 (m1+m2)/2,忽略兩節點樣本數差異;當 n1≠n2 時會產生偏差。case_b 因 n1=n2 才偶然相等。",
+          "{wrong2}": "此為 m1+m2 兩平均相加,單位都不對。",
+          "{wrong3}": "此為 (n2*m1 + n1*m2)/(n1+n2),樣本數加權倒置,常見的反向錯誤。"
+        },
+        "hook": "分散平均合併:加權(以 n 為權重)而非直接平均"
+      },
+      "misconceptions": ["直接把多節點平均再平均", "忘記 mean 不具直接結合性"],
+      "related_node_ids": ["n_L22301_003"],
+      "tags": ["numpy", "partial_stats", "分散統計"]
+    },
+    {
+      "id": "q_n22_010",
+      "knowledge_code": "L22301",
+      "node_id": "n_L22301_003",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "金融研究員以兩支股票日報酬計算共變異數矩陣以驗證投資組合風險。請問下列程式 print 的對角和(兩股票變異數之和)為何?",
+      "code_block": "import numpy as np\nx = np.array([{x1}, {x2}, {x3}, {x4}])\ny = np.array([{y1}, {y2}, {y3}, {y4}])\nC = np.cov(np.vstack([x, y]))\nprint(round(np.trace(C), 2))",
+      "stem_variables": {
+        "case_a": {"x1": "1", "x2": "2", "x3": "3", "x4": "4", "y1": "2", "y2": "4", "y3": "6", "y4": "8", "answer": "8.33", "wrong1": "1.67", "wrong2": "10.0", "wrong3": "5.0"},
+        "case_b": {"x1": "2", "x2": "4", "x3": "6", "x4": "8", "y1": "1", "y2": "3", "y3": "5", "y4": "7", "answer": "13.33", "wrong1": "10.0", "wrong2": "15.0", "wrong3": "6.67"},
+        "case_c": {"x1": "0", "x2": "3", "x3": "6", "x4": "9", "y1": "0", "y2": "1", "y3": "2", "y4": "3", "answer": "16.67", "wrong1": "15.0", "wrong2": "20.0", "wrong3": "5.0"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤用 ddof=0(母體) 而非預設 ddof=1"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤把共變數當變異數加"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤取對角單一元素"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "np.cov 預設 ddof=1(樣本變異數);對角元素 C[0,0]、C[1,1] 分別為 var(x)、var(y);trace 為兩者和,case_a 結果為 {answer}(var(x)=1.67, var(y)=6.67,和=8.33)。",
+        "wrong": {
+          "{wrong1}": "此為 ddof=0(母體變異數)結果,np.cov 預設使用樣本變異數 ddof=1。",
+          "{wrong2}": "此值疑似把整個矩陣四元素相加(含兩個 cov 項),trace 只取對角。",
+          "{wrong3}": "此值僅為單一對角元素(var(x) 或 var(y)),trace 是兩者和。"
+        },
+        "hook": "np.cov 對角 = 各變數變異數(預設 ddof=1)"
+      },
+      "misconceptions": ["以為 np.cov 預設 ddof=0", "把 trace 與全矩陣加總混用"],
+      "related_node_ids": ["n_L22301_003", "n_L22301_004"],
+      "tags": ["numpy", "cov", "variance"]
+    },
+    {
+      "id": "q_n22_011",
+      "knowledge_code": "L22302",
+      "node_id": "n_L22302_006",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "連鎖咖啡店欲分解每月銷售量為趨勢、季節、殘差三成分,以預測下季備料。下列程式取得的 result.seasonal 物件型別與長度為何?",
+      "code_block": "import pandas as pd\nimport numpy as np\nfrom statsmodels.tsa.seasonal import seasonal_decompose\nidx = pd.date_range('2024-01-01', periods={n}, freq='M')\nsales = pd.Series([{a}+i + 10*np.sin(i*np.pi/6) for i in range({n})], index=idx)\nresult = seasonal_decompose(sales, model='additive', period=12)\nprint(type(result.seasonal).__name__, len(result.seasonal))",
+      "stem_variables": {
+        "case_a": {"a": "100", "n": "24", "answer": "Series 24", "wrong1": "DataFrame 24", "wrong2": "Series 12", "wrong3": "ndarray 24"},
+        "case_b": {"a": "200", "n": "36", "answer": "Series 36", "wrong1": "DataFrame 36", "wrong2": "Series 12", "wrong3": "ndarray 36"},
+        "case_c": {"a": "50", "n": "48", "answer": "Series 48", "wrong1": "DataFrame 48", "wrong2": "Series 12", "wrong3": "ndarray 48"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為回傳 DataFrame"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為長度等於 period"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為回傳 ndarray"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "seasonal_decompose 回傳 DecomposeResult 物件,屬性 trend / seasonal / resid 各為與原序列等長的 pandas Series。本題 seasonal 型別與長度為 {answer}。季節成分『以 period 為週期重複』,但長度仍等於原序列長度。",
+        "wrong": {
+          "{wrong1}": "result 本身是 DecomposeResult,seasonal 屬性是 Series 而非 DataFrame。",
+          "{wrong2}": "誤以為 seasonal 只存週期內 12 筆;實際是把週期模式 broadcast 回原序列長度。",
+          "{wrong3}": "因輸入是 pd.Series,輸出三成分也都是 Series,可保留時間索引。"
+        },
+        "hook": "seasonal_decompose 三成分皆為與原序列等長的 Series"
+      },
+      "misconceptions": ["以為 seasonal 長度 = period", "把回傳物件當 DataFrame"],
+      "related_node_ids": ["n_L22302_006"],
+      "tags": ["statsmodels", "seasonal_decompose", "時間序列"]
+    },
+    {
+      "id": "q_n22_012",
+      "knowledge_code": "L22302",
+      "node_id": "n_L22302_002",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "便利商店分析師欲用 apriori 找出最小支持度 0.5 的頻繁項集。請問下列程式 print 的『頻繁項集數量』為何?(資料如下)",
+      "code_block": "import pandas as pd\nfrom mlxtend.frequent_patterns import apriori\n# 4 筆交易 × 3 商品 one-hot\ndf = pd.DataFrame({\n    'A': [{a1},{a2},{a3},{a4}],\n    'B': [{b1},{b2},{b3},{b4}],\n    'C': [{c1},{c2},{c3},{c4}]\n}).astype(bool)\nfreq = apriori(df, min_support={ms}, use_colnames=True)\nprint(len(freq))",
+      "stem_variables": {
+        "case_a": {"a1": "1", "a2": "1", "a3": "1", "a4": "0", "b1": "1", "b2": "1", "b3": "0", "b4": "0", "c1": "0", "c2": "0", "c3": "1", "c4": "1", "ms": "0.5", "answer": "4", "wrong1": "3", "wrong2": "7", "wrong3": "1"},
+        "case_b": {"a1": "1", "a2": "1", "a3": "0", "a4": "1", "b1": "1", "b2": "0", "b3": "1", "b4": "1", "c1": "1", "c2": "1", "c3": "0", "c4": "0", "ms": "0.5", "answer": "5", "wrong1": "3", "wrong2": "6", "wrong3": "1"},
+        "case_c": {"a1": "1", "a2": "1", "a3": "1", "a4": "1", "b1": "1", "b2": "1", "b3": "1", "b4": "1", "c1": "0", "c2": "0", "c3": "0", "c4": "0", "ms": "0.5", "answer": "3", "wrong1": "7", "wrong2": "1", "wrong3": "4"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤只算單一項集"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤把所有 2^k-1 子集都當頻繁"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為只剩最大項集"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "apriori 回傳 support ≥ min_support 的所有項集(含單品與多品組合)。以 case_a 為例:商品 A=3/4=0.75、商品 B=3/4=0.75、商品 C=1/4=0.25 不入選;組合「A+B」=2/4=0.5 入選,其他組合 support < 0.5。共 {answer} 個項集入選。重點是 apriori 列出『所有』達門檻項集而非僅最大者。",
+        "wrong": {
+          "{wrong1}": "apriori 不只列單項,也列入達門檻的多品組合。",
+          "{wrong2}": "並非所有 2^k-1 子集皆達門檻,需逐一計算 support。",
+          "{wrong3}": "apriori 列出所有達門檻項集,而非只有 maximal frequent itemset。"
+        },
+        "hook": "apriori 列出『所有』達 min_support 的項集(含單品與組合)"
+      },
+      "misconceptions": ["以為 apriori 只回傳 maximal", "忘記計算單項 support"],
+      "related_node_ids": ["n_L22302_002"],
+      "tags": ["mlxtend", "apriori", "關聯規則"]
+    },
+    {
+      "id": "q_n22_013",
+      "knowledge_code": "L22302",
+      "node_id": "n_L22302_002",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "美妝電商用 association_rules 從頻繁項集產生規則並只保留 lift > 1 的規則。請問下列程式 print 的『過濾後規則數』為何?",
+      "code_block": "import pandas as pd\nrules = pd.DataFrame({\n    'antecedents': ['A','B','C','D','E'],\n    'consequents': ['X','Y','Z','W','V'],\n    'support':    [0.30, 0.25, 0.40, 0.20, 0.15],\n    'confidence': [0.60, 0.50, 0.80, 0.45, 0.70],\n    'lift':       [{l1}, {l2}, {l3}, {l4}, {l5}]\n})\nstrong = rules[rules['lift'] > 1.0]\nprint(len(strong))",
+      "stem_variables": {
+        "case_a": {"l1": "1.5", "l2": "0.8", "l3": "1.2", "l4": "0.9", "l5": "1.0", "answer": "2", "wrong1": "5", "wrong2": "3", "wrong3": "1"},
+        "case_b": {"l1": "0.5", "l2": "1.1", "l3": "1.4", "l4": "1.0", "l5": "1.8", "answer": "3", "wrong1": "5", "wrong2": "4", "wrong3": "2"},
+        "case_c": {"l1": "1.2", "l2": "1.3", "l3": "1.4", "l4": "1.5", "l5": "0.9", "answer": "4", "wrong1": "5", "wrong2": "3", "wrong3": "1"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為 lift > 1 含等於"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤把 lift = 1 也算強規則"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤只看最高 lift"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "rules['lift'] > 1.0 為嚴格大於不含等於;case_a 中 lift 為 1.5、0.8、1.2、0.9、1.0,只有 1.5、1.2 兩條 > 1,過濾後 {answer} 條。Lift > 1 表前項與後項正相關;= 1 為獨立;< 1 為負相關。",
+        "wrong": {
+          "{wrong1}": "此為過濾前總規則數,未套用條件。",
+          "{wrong2}": "嚴格 > 1.0 不含等於;lift = 1.0 代表獨立應視為弱規則。",
+          "{wrong3}": "過濾條件回傳所有達門檻列,而非僅最高 lift 一條。"
+        },
+        "hook": "lift > 1 為正向關聯;= 1 獨立;< 1 負向"
+      },
+      "misconceptions": ["以為 lift = 1 算強規則", "忘了 lift 的基準是 1"],
+      "related_node_ids": ["n_L22302_002"],
+      "tags": ["mlxtend", "association_rules", "lift"]
+    },
+    {
+      "id": "q_n22_014",
+      "knowledge_code": "L22302",
+      "node_id": "n_L22302_003",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "電信公司以兩狀態馬可夫鏈描述客戶狀態(活躍 / 流失)。已知一步轉移矩陣,下列程式計算『今日活躍』後兩天仍為活躍的機率,結果為何?",
+      "code_block": "import numpy as np\nP = np.array([\n    [{p_aa}, {p_al}],\n    [{p_la}, {p_ll}]\n])\nstate = np.array([1.0, 0.0])  # 今日活躍\ntwo_step = state @ P @ P\nprint(round(two_step[0], 2))",
+      "stem_variables": {
+        "case_a": {"p_aa": "0.8", "p_al": "0.2", "p_la": "0.3", "p_ll": "0.7", "answer": "0.7", "wrong1": "0.8", "wrong2": "1.0", "wrong3": "0.64"},
+        "case_b": {"p_aa": "0.9", "p_al": "0.1", "p_la": "0.4", "p_ll": "0.6", "answer": "0.85", "wrong1": "0.9", "wrong2": "1.0", "wrong3": "0.81"},
+        "case_c": {"p_aa": "0.6", "p_al": "0.4", "p_la": "0.2", "p_ll": "0.8", "answer": "0.44", "wrong1": "0.6", "wrong2": "1.0", "wrong3": "0.36"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為轉移一次即定論"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為一定保持活躍"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤算為 p_aa 平方"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "兩步轉移機率為 P²;從『活躍』出發,兩天後仍為『活躍』 = P²[0,0] = p_aa*p_aa + p_al*p_la。case_a:0.8*0.8 + 0.2*0.3 = 0.64 + 0.06 = 0.7 = {answer}。馬可夫性質:下一狀態僅依當前狀態。",
+        "wrong": {
+          "{wrong1}": "此值是『一步』轉移仍活躍機率,題目問兩天後。",
+          "{wrong2}": "活躍 → 活躍機率僅 p_aa,並非 100%;客戶可能流失。",
+          "{wrong3}": "此值是 p_aa²,忽略另一條路徑『活躍→流失→活躍』的貢獻。"
+        },
+        "hook": "兩步轉移 = P²;包含所有中間路徑加總"
+      },
+      "misconceptions": ["以為兩步機率 = 一步機率平方", "忽略中間經由其他狀態的路徑"],
+      "related_node_ids": ["n_L22302_003"],
+      "tags": ["numpy", "markov", "轉移矩陣"]
+    },
+    {
+      "id": "q_n22_015",
+      "knowledge_code": "L22302",
+      "node_id": "n_L22302_006",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "健康管理 App 每日步數資料以日為頻率,分析師欲降頻為『月平均步數』以做趨勢報告。請問下列程式 print 的結果列數(月份數)為何?",
+      "code_block": "import pandas as pd\nimport numpy as np\nidx = pd.date_range('{start}', '{end}', freq='D')\nsteps = pd.Series(np.arange(len(idx)), index=idx)\nmonthly = steps.resample('M').mean()\nprint(len(monthly))",
+      "stem_variables": {
+        "case_a": {"start": "2025-01-01", "end": "2025-03-31", "answer": "3", "wrong1": "90", "wrong2": "1", "wrong3": "12"},
+        "case_b": {"start": "2025-01-01", "end": "2025-06-30", "answer": "6", "wrong1": "181", "wrong2": "1", "wrong3": "12"},
+        "case_c": {"start": "2025-01-01", "end": "2025-12-31", "answer": "12", "wrong1": "365", "wrong2": "1", "wrong3": "52"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為仍保持日頻"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為 resample 回傳純量"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為固定回 12 個月"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "resample('M') 以月為桶聚合,每個月份產出一列;mean() 取桶內平均。case_a 涵蓋 1/2/3 三個月份 → {answer} 列。降頻(downsample)是時序分析中對齊不同粒度的常用步驟。",
+        "wrong": {
+          "{wrong1}": "此為原始日頻列數,resample 已聚合至月。",
+          "{wrong2}": "resample().mean() 回傳 Series(每月一值),非單一純量。",
+          "{wrong3}": "月份數視時間範圍而定,並非永遠 12。"
+        },
+        "hook": "resample('M') 降頻 = 每個月一列"
+      },
+      "misconceptions": ["以為 resample 不改變列數", "把 freq='M' 誤解為固定 12 個月"],
+      "related_node_ids": ["n_L22302_006"],
+      "tags": ["pandas", "resample", "時間序列"]
+    }
+  ]
+}

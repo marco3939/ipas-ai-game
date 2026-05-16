@@ -1,7 +1,7 @@
 // ============================================================
 // Mode 7: 考古題模考劇場 (Theater) — 30 分鐘倒數模考
 // 對標 2026-05-23 真考臨場壓力訓練
-// 5 NPC 輪流出場 + 倒數計時 + Pace Heatmap 結算
+// 6 NPC 輪流出場 + 倒數計時 + Pace Heatmap 結算
 //
 // 鐵律合規:
 //   #1 下鑽:Theater 中不可下鑽(模擬真考),結算頁 Top 5 錯題後可進 DrillSession
@@ -32,8 +32,9 @@
   ];
 
   const SCOPE_OPTIONS = [
-    { key: 'all',  label: '🌐 全範圍混合', desc: '科一 + 科三 + 邊界,依現況比例(50:50:0)' },
+    { key: 'all',  label: '🌐 全範圍混合', desc: '科一 + 科二 + 科三 全包,依題庫實際分佈' },
     { key: 's1',   label: '📚 科一 only',  desc: '人工智慧技術應用與規劃(L21*)' },
+    { key: 's2',   label: '🗄️ 科二 only',  desc: '大數據處理分析與應用(L22*)' },
     { key: 's3',   label: '🔧 科三 only',  desc: '機器學習技術與應用(L23*)' },
     { key: 'weak', label: '🎯 弱點優先',    desc: '從錯題本 + 熟練度低的節點抽題' }
   ];
@@ -43,7 +44,7 @@
     { key: 'hard',   label: '🔥 進階為主',   desc: 'hard 為主、medium 次之(挑戰真考)' }
   ];
 
-  // === 5 NPC 配置(每答 ceil(qcount/5) 題切換一位)===
+  // === 6 NPC 配置(每答 ceil(qcount/6) 題切換一位)===
   // 匹配規則:依 question.format / knowledge_code / tags 派發給最契合 NPC
   const NPCS = [
     {
@@ -102,6 +103,17 @@
       onWrong: ['「先看商業目標,再選技術。」', '「不平衡資料不是只用 SMOTE 就完事。」', '「優先順序你得排一排。」'],
       // 偏好:knowledge_code=L21201(商業)/L21202(規劃)/scenario / single_choice 但難度高
       match: (q) => ['L21201', 'L21202', 'L21301', 'L21302'].includes(q.knowledge_code)
+    },
+    {
+      key: 'bigdata',
+      name: '🗄️ 大數據工程師 阿勇',
+      avatar: '🗄️',
+      role: '科二大數據題(統計 / 數據生命週期 / 大數據 × AI)',
+      intro: '「Lake、Warehouse、Streaming Pipeline,十三個編碼一個都別放過。」',
+      onCorrect: ['「分佈選對了!」', '「假設檢定五步驟很熟。」', '「PDPA 條文你抓到關鍵了。」'],
+      onWrong: ['「先看資料規模再選方法。」', '「CAP 三選二不是萬靈丹。」', '「DP 的 ε 方向別搞反。」'],
+      // 偏好:科二 13 編碼(L22101..L22404 全包)
+      match: (q) => q.knowledge_code && q.knowledge_code.startsWith('L22')
     }
   ];
 
@@ -130,7 +142,7 @@
         <div class="card">
           <h1 style="color:#f87171;font-size:1.6rem">🎭 考古題模考劇場</h1>
           <p style="color:var(--fg-dim);line-height:1.7">
-            模擬 2026-05-23 真實考試:倒數計時、不可暫停、5 NPC 輪流出場。<br>
+            模擬 2026-05-23 真實考試:倒數計時、不可暫停、6 NPC 輪流出場。<br>
             時間到自動交卷;交卷後可看 Pace Heatmap、錯題清單,並選擇進下鑽。
           </p>
           <div style="background:rgba(248,113,113,0.10);border-left:4px solid #f87171;padding:12px;border-radius:6px;margin-top:12px">
@@ -236,8 +248,9 @@
         el.innerHTML = `<span style="color:var(--warn)">⚠️ 候選池僅 ${pool.length} 題,將自動取所有可用題</span>`;
       } else {
         const s1 = pool.filter(q => q.subject === 1).length;
+        const s2 = pool.filter(q => q.subject === 2).length;
         const s3 = pool.filter(q => q.subject === 3).length;
-        el.innerHTML = `候選池 ${pool.length} 題(科一 ${s1} / 科三 ${s3})— 將抽 ${cfg.qcount} 題`;
+        el.innerHTML = `候選池 ${pool.length} 題(科一 ${s1} / 科二 ${s2} / 科三 ${s3})— 將抽 ${cfg.qcount} 題`;
       }
     },
 
@@ -286,6 +299,8 @@
       // 主題範圍
       if (cfg.scope === 's1') {
         pool = pool.filter(q => q.knowledge_code && q.knowledge_code.startsWith('L21'));
+      } else if (cfg.scope === 's2') {
+        pool = pool.filter(q => q.knowledge_code && q.knowledge_code.startsWith('L22'));
       } else if (cfg.scope === 's3') {
         pool = pool.filter(q => q.knowledge_code && q.knowledge_code.startsWith('L23'));
       } else if (cfg.scope === 'weak') {
@@ -327,7 +342,7 @@
       return pool;
     },
 
-    // 抽 qcount 題並依 5 NPC 派發
+    // 抽 qcount 題並依 6 NPC 派發
     _drawQuestions(cfg) {
       const pool = this._buildPool(cfg);
       const want = Math.min(cfg.qcount, pool.length);
@@ -350,9 +365,9 @@
         }
         minB.qs.push(q);
       }
-      // 重排成輪流出場順序:每答 ceil(want/5) 題切換一位
+      // 重排成輪流出場順序:每答 ceil(want / NPCS.length) 題切換一位
       // 先讓每位 NPC 至少出 1 題(若 bucket 空,從最多者偷 1 題)
-      const segSize = Math.ceil(want / 5);
+      const segSize = Math.ceil(want / NPCS.length);
       // Round-robin 切片重組
       const ordered = [];
       // 每位 NPC 出 min(segSize, bucket.qs.length) 題
@@ -720,11 +735,12 @@
       const timeUsed = s.totalSeconds - Math.max(0, s.remainSeconds);
 
       // 分科目得分
-      const byCategory = { L21: { correct: 0, total: 0 }, L23: { correct: 0, total: 0 }, other: { correct: 0, total: 0 } };
+      const byCategory = { L21: { correct: 0, total: 0 }, L22: { correct: 0, total: 0 }, L23: { correct: 0, total: 0 }, other: { correct: 0, total: 0 } };
       // 已答題:從 lineup[0..totalAttempted-1]
       for (let i = 0; i < totalAttempted; i++) {
         const q = s.lineup[i].q;
         const cat = q.knowledge_code && q.knowledge_code.startsWith('L21') ? 'L21' :
+                    q.knowledge_code && q.knowledge_code.startsWith('L22') ? 'L22' :
                     q.knowledge_code && q.knowledge_code.startsWith('L23') ? 'L23' : 'other';
         byCategory[cat].total++;
         // 答對:該題不在 wrongs 內
@@ -764,6 +780,7 @@
           timeUsed: result.timeUsed,
           byCategory: {
             L21: result.byCategory.L21.total > 0 ? `${result.byCategory.L21.correct}/${result.byCategory.L21.total}` : '0/0',
+            L22: result.byCategory.L22.total > 0 ? `${result.byCategory.L22.correct}/${result.byCategory.L22.total}` : '0/0',
             L23: result.byCategory.L23.total > 0 ? `${result.byCategory.L23.correct}/${result.byCategory.L23.total}` : '0/0',
             other: result.byCategory.other.total > 0 ? `${result.byCategory.other.correct}/${result.byCategory.other.total}` : '0/0'
           },
@@ -791,9 +808,9 @@
       // 分科目得分區塊
       const catBlock = `
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin:12px 0">
-          ${['L21', 'L23', 'other'].map(c => {
+          ${['L21', 'L22', 'L23', 'other'].map(c => {
             const data = result.byCategory[c];
-            const label = c === 'L21' ? '科一(L21)' : c === 'L23' ? '科三(L23)' : '其他/邊界';
+            const label = c === 'L21' ? '科一(L21)' : c === 'L22' ? '科二(L22)' : c === 'L23' ? '科三(L23)' : '其他/邊界';
             const pct = data.total > 0 ? Math.round(data.correct / data.total * 100) : 0;
             const color = pct >= 80 ? '#4ade80' : pct >= 60 ? '#facc15' : '#f87171';
             return `<div style="background:var(--bg-3);padding:10px;border-radius:var(--radius-sm);text-align:center;border-left:4px solid ${color}">

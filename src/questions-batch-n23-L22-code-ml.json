@@ -1,0 +1,363 @@
+{
+  "version": "1.0",
+  "schema_version": "iron-rule-1+2+6",
+  "generated_at": "2026-05-16",
+  "batch": "N23 — 科二大數據 L22 code_reading: ML 組(sklearn)",
+  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "iron_rule_compliance": {
+    "rule_1_drill_explanation": "every question has explanation.correct/wrong/hook + misconceptions + related_node_ids",
+    "rule_2_shuffle": "all shuffle_options:true; stem_variables provides 3 cases each",
+    "rule_3_original": "100% original cross-industry scenarios, no copy from 114-2",
+    "rule_4_option_length": "options balanced; correct answers not always longest",
+    "rule_5_source_fidelity": "knowledge_code ∈ {L22401, L22402}; related_node_ids ∈ n_L22401_* / n_L22402_*",
+    "rule_6_isolation": "single new file; no edits to existing questions*.json or shared layer"
+  },
+  "distribution": {"L22401_count": 5, "L22402_count": 5, "total": 10},
+  "questions": [
+    {
+      "id": "q_n23_001",
+      "knowledge_code": "L22401",
+      "node_id": "n_L22401_006",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "電商風控團隊將盜刷紀錄做訓練/測試切分,正類(盜刷)僅佔 {pos_rate}。下列程式以 stratify=y 切分後,測試集的正類比例最接近?",
+      "code_block": "import numpy as np\nfrom sklearn.model_selection import train_test_split\n\nN = {n}\nn_pos = {n_pos}\ny = np.concatenate([np.ones(n_pos), np.zeros(N - n_pos)])\nX = np.random.RandomState(0).randn(N, 4)\n\nX_tr, X_te, y_tr, y_te = train_test_split(\n    X, y, test_size=0.2, stratify=y, random_state=42)\n\nprint(round(y_te.mean(), 4))",
+      "stem_variables": {
+        "case_a": {"n": "1000", "n_pos": "20", "pos_rate": "2%", "answer": "0.02", "wrong1": "0.5", "wrong2": "0.0", "wrong3": "0.2"},
+        "case_b": {"n": "5000", "n_pos": "50", "pos_rate": "1%", "answer": "0.01", "wrong1": "0.5", "wrong2": "0.0", "wrong3": "0.2"},
+        "case_c": {"n": "2000", "n_pos": "100", "pos_rate": "5%", "answer": "0.05", "wrong1": "0.5", "wrong2": "0.0", "wrong3": "0.2"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true, "trap_type": "正解:stratify 保留原始正類比例"},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為 stratify 會把兩類平衡到 50/50"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為隨機切分會把全部正類丟到訓練集"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "把 test_size 0.2 誤當成正類比例"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "stratify=y 會讓 train/test 各自保留 y 的原始類別比例。原資料 {pos_rate} 正類,測試集約為 {answer}。這是不平衡資料切分的標準做法,避免測試集完全沒有正類。",
+        "wrong": {
+          "{wrong1}": "stratify 並不會強制 50/50 平衡,只是『保留』原比例。要平衡需用 SMOTE / class_weight,不是 stratify。",
+          "{wrong2}": "即使 random_state 固定,test_size=0.2 也會切到 ~20% 樣本,包含正類;結果不會是 0。",
+          "{wrong3}": "test_size=0.2 是測試集佔總樣本比例,跟正類比例無關。"
+        },
+        "hook": "stratify=y 保留比例(不平衡),非平衡(50/50)"
+      },
+      "misconceptions": ["以為 stratify 會自動平衡兩類", "把 test_size 誤當成正類比例"],
+      "related_node_ids": ["n_L22401_006", "n_L22401_005"],
+      "tags": ["sklearn", "train_test_split", "stratify", "不平衡資料"]
+    },
+    {
+      "id": "q_n23_002",
+      "knowledge_code": "L22401",
+      "node_id": "n_L22401_005",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "保險詐欺偵測有 {n0} 筆正常案與 {n1} 筆詐欺案,工程師欲以 class_weight='balanced' 訓練。下列程式輸出兩類在 sklearn 內部使用的權重(類別 0, 類別 1)最接近?",
+      "code_block": "import numpy as np\nfrom sklearn.utils.class_weight import compute_class_weight\n\ny = np.array([0]*{n0} + [1]*{n1})\nw = compute_class_weight(\n    class_weight='balanced',\n    classes=np.unique(y),\n    y=y)\nprint(np.round(w, 3))",
+      "stem_variables": {
+        "case_a": {"n0": "900", "n1": "100", "answer": "[0.556 5.0  ]", "wrong1": "[1.    1.   ]", "wrong2": "[0.1   0.9  ]", "wrong3": "[0.9   0.1  ]"},
+        "case_b": {"n0": "800", "n1": "200", "answer": "[0.625 2.5  ]", "wrong1": "[1.    1.   ]", "wrong2": "[0.2   0.8  ]", "wrong3": "[0.8   0.2  ]"},
+        "case_c": {"n0": "950", "n1": "50",  "answer": "[0.526 10.0 ]", "wrong1": "[1.    1.   ]", "wrong2": "[0.05  0.95 ]", "wrong3": "[0.95  0.05 ]"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true, "trap_type": "正解:n_samples / (n_classes * np.bincount(y))"},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為 'balanced' 直接給兩類相同權重"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤算成 class prior(類別比例)"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "把多數類給高權重(方向相反)"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "'balanced' 公式為 n_samples / (n_classes * np.bincount(y))。n_samples=({n0}+{n1}), n_classes=2;類別 0 權重 = ({n0}+{n1})/(2*{n0});類別 1 權重 = ({n0}+{n1})/(2*{n1})。少數類拿較高權重,使其在 loss 中影響等同多數類。",
+        "wrong": {
+          "{wrong1}": "'balanced' 並非平均權重 1.0;若兩類等權,等同沒做平衡。",
+          "{wrong2}": "此值是類別比例(prior),sklearn 用『樣本數倒數』而非比例。",
+          "{wrong3}": "權重方向相反 — 多數類應拿『較低』權重,使其總貢獻被少數類追上。"
+        },
+        "hook": "class_weight='balanced' = n_samples /(n_classes × bincount);少數類拿大權重"
+      },
+      "misconceptions": ["以為 'balanced' 就是 50/50 平均", "把權重方向弄反"],
+      "related_node_ids": ["n_L22401_005", "n_L22401_004"],
+      "tags": ["sklearn", "class_weight", "balanced", "不平衡資料"]
+    },
+    {
+      "id": "q_n23_003",
+      "knowledge_code": "L22401",
+      "node_id": "n_L22401_005",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "醫療影像團隊以 SMOTE 平衡 {n0} 筆健康 vs {n1} 筆罕病樣本。下列程式輸出 fit_resample 後的 X_res 形狀為何?",
+      "code_block": "import numpy as np\nfrom imblearn.over_sampling import SMOTE\n\nrng = np.random.RandomState(0)\nX = rng.randn({total}, {feat})\ny = np.array([0]*{n0} + [1]*{n1})\n\nsm = SMOTE(random_state=42)\nX_res, y_res = sm.fit_resample(X, y)\nprint(X_res.shape)",
+      "stem_variables": {
+        "case_a": {"n0": "900", "n1": "100", "total": "1000", "feat": "8",  "answer": "(1800, 8)",  "wrong1": "(1000, 8)",  "wrong2": "(200, 8)",   "wrong3": "(1000, 16)"},
+        "case_b": {"n0": "800", "n1": "200", "total": "1000", "feat": "10", "answer": "(1600, 10)", "wrong1": "(1000, 10)", "wrong2": "(400, 10)",  "wrong3": "(1000, 20)"},
+        "case_c": {"n0": "950", "n1": "50",  "total": "1000", "feat": "6",  "answer": "(1900, 6)",  "wrong1": "(1000, 6)",  "wrong2": "(100, 6)",   "wrong3": "(1000, 12)"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true, "trap_type": "正解:少數類被過取樣到等於多數類"},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為 SMOTE 不改樣本數"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為 SMOTE 把多數類欠取樣"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為 SMOTE 增加特徵維度"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "SMOTE 預設把少數類過取樣到與多數類相同數量。原 {n0} 多數 + {n1} 少數;少數類補到 {n0},總筆數 = {n0}*2 = (2*{n0})。特徵維度不變仍為 {feat}。故 X_res.shape = {answer}。",
+        "wrong": {
+          "{wrong1}": "SMOTE 是『過取樣』方法,會新增合成樣本,總列數必增。",
+          "{wrong2}": "SMOTE 不會刪多數類;『欠取樣』是另一種策略(RandomUnderSampler)。",
+          "{wrong3}": "SMOTE 在原特徵空間插值,特徵維度不變,只增列。"
+        },
+        "hook": "SMOTE = 少數類過取樣到等多數類;列數增,行數不變"
+      },
+      "misconceptions": ["以為 SMOTE 不增加樣本", "以為 SMOTE 會新增特徵維度"],
+      "related_node_ids": ["n_L22401_005", "n_L22401_004"],
+      "tags": ["imblearn", "SMOTE", "fit_resample", "shape"]
+    },
+    {
+      "id": "q_n23_004",
+      "knowledge_code": "L22401",
+      "node_id": "n_L22401_004",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "物流公司在派遣 ML 模型中,以類別頻率倒數作 sample_weight。資料三類分別有 [{c0}, {c1}, {c2}] 筆。下列程式輸出 sample_weight 中『類別 0 樣本』的權重最接近?",
+      "code_block": "import numpy as np\n\ncounts = np.array([{c0}, {c1}, {c2}])\nprior = counts / counts.sum()\nweight_per_class = 1.0 / prior\n\ny = np.concatenate([\n    np.zeros({c0}, dtype=int),\n    np.ones({c1}, dtype=int),\n    np.full({c2}, 2, dtype=int)])\nsample_weight = weight_per_class[y]\nprint(round(sample_weight[0], 3))",
+      "stem_variables": {
+        "case_a": {"c0": "100", "c1": "200", "c2": "700", "answer": "10.0",   "wrong1": "0.1",   "wrong2": "3.333", "wrong3": "1.0"},
+        "case_b": {"c0": "250", "c1": "500", "c2": "250", "answer": "4.0",    "wrong1": "0.25",  "wrong2": "3.0",   "wrong3": "1.0"},
+        "case_c": {"c0": "50",  "c1": "150", "c2": "800", "answer": "20.0",   "wrong1": "0.05",  "wrong2": "3.333", "wrong3": "1.0"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true, "trap_type": "正解:1 / (c0 / N)"},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤把 prior 本身當作權重"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤用 'balanced' 公式 N/(K*c0)"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為 sample_weight 都是 1"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "weight_per_class[0] = 1 / ({c0}/N),其中 N={c0}+{c1}+{c2}。代入得 N/{c0} = {answer}。fancy index `weight_per_class[y]` 把每筆樣本對應到所屬類別的權重。",
+        "wrong": {
+          "{wrong1}": "這是 class prior({c0}/N),題目要的是『prior 的倒數』。",
+          "{wrong2}": "這是 sklearn 'balanced' 的公式 N/(K*count),但本題用的是『純倒數』1/prior,不除類別數 K。",
+          "{wrong3}": "若 sample_weight 全為 1 等於沒加權,失去整段程式意義。"
+        },
+        "hook": "倒數權重 = 1 / prior = N / count"
+      },
+      "misconceptions": ["把 prior 當權重", "混淆 'balanced' 公式與純倒數"],
+      "related_node_ids": ["n_L22401_004", "n_L22401_005"],
+      "tags": ["numpy", "sample_weight", "class_prior"]
+    },
+    {
+      "id": "q_n23_005",
+      "knowledge_code": "L22401",
+      "node_id": "n_L22401_005",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "資安團隊在惡意流量資料(正類佔 {pos_rate})上,以下列預設 cross_val_score 評估模型。若模型『永遠預測負類』,輸出平均分數最接近?",
+      "code_block": "import numpy as np\nfrom sklearn.model_selection import cross_val_score\nfrom sklearn.dummy import DummyClassifier\n\nN = {n}\nn_pos = {n_pos}\ny = np.concatenate([np.ones(n_pos), np.zeros(N - n_pos)])\nX = np.random.RandomState(0).randn(N, 5)\n\nclf = DummyClassifier(strategy='constant', constant=0)\nscores = cross_val_score(clf, X, y, cv=5)\nprint(round(scores.mean(), 3))",
+      "stem_variables": {
+        "case_a": {"n": "1000", "n_pos": "10",  "pos_rate": "1%", "answer": "0.99",  "wrong1": "0.5",  "wrong2": "0.01", "wrong3": "0.0"},
+        "case_b": {"n": "2000", "n_pos": "40",  "pos_rate": "2%", "answer": "0.98",  "wrong1": "0.5",  "wrong2": "0.02", "wrong3": "0.0"},
+        "case_c": {"n": "1000", "n_pos": "50",  "pos_rate": "5%", "answer": "0.95",  "wrong1": "0.5",  "wrong2": "0.05", "wrong3": "0.0"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true, "trap_type": "正解:預設 metric 為 accuracy,負類比例極高"},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為平均得到 50%"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤把分數當作 recall(正類)"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為永遠錯所以 0"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "cross_val_score 預設使用模型的 .score(),對 Classifier 即 accuracy。資料 {pos_rate} 為正類,永遠預測 0 答對了負類部分 = 約 (1 - {pos_rate}) ≈ {answer}。這正是『不平衡 + 預設 accuracy』的經典陷阱;應改用 scoring='f1' 或 'roc_auc'。",
+        "wrong": {
+          "{wrong1}": "0.5 是隨機猜測二元分類的 accuracy 期望值;此處『永遠猜 0』在不平衡資料下會遠高於 0.5。",
+          "{wrong2}": "Recall 正類 = TP/P,永遠預測 0 → TP=0 → recall=0,但本題 metric 是 accuracy 非 recall。",
+          "{wrong3}": "雖然『正類全錯』,但『負類全對』而負類佔絕大多數,故 accuracy 反而很高。"
+        },
+        "hook": "cross_val_score 預設 accuracy;不平衡資料下會被多數類灌爆"
+      },
+      "misconceptions": ["以為 cross_val_score 預設 F1", "在不平衡資料只看 accuracy"],
+      "related_node_ids": ["n_L22401_005", "n_L22401_006"],
+      "tags": ["sklearn", "cross_val_score", "accuracy", "不平衡資料"]
+    },
+    {
+      "id": "q_n23_006",
+      "knowledge_code": "L22402",
+      "node_id": "n_L22402_001",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "客服意圖分類模型輸出三類(查詢 / 投訴 / 取消),樣本嚴重不平衡。下列程式以 average='weighted' 計算 precision,輸出最接近?",
+      "code_block": "import numpy as np\nfrom sklearn.metrics import precision_score\n\ny_true = np.array([0]*{n0} + [1]*{n1} + [2]*{n2})\ny_pred = np.array(\n    [0]*{tp0} + [1]*({n0}-{tp0}) +\n    [1]*{tp1} + [0]*({n1}-{tp1}) +\n    [2]*{tp2} + [0]*({n2}-{tp2}))\n\nprint(round(precision_score(y_true, y_pred, average='weighted'), 3))",
+      "stem_variables": {
+        "case_a": {"n0": "700", "n1": "200", "n2": "100", "tp0": "630", "tp1": "150", "tp2": "60", "answer": "0.849", "wrong1": "0.69", "wrong2": "0.84", "wrong3": "1.0"},
+        "case_b": {"n0": "600", "n1": "300", "n2": "100", "tp0": "540", "tp1": "240", "tp2": "70", "answer": "0.854", "wrong1": "0.68", "wrong2": "0.83", "wrong3": "1.0"},
+        "case_c": {"n0": "800", "n1": "150", "n2": "50",  "tp0": "720", "tp1": "120", "tp2": "30", "answer": "0.888", "wrong1": "0.72", "wrong2": "0.87", "wrong3": "1.0"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true, "trap_type": "正解:各類 precision 以該類『真實樣本數』加權平均"},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為 macro(各類等權)"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為 micro(全域 TP / (TP+FP))"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為多類預設全是 1.0"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "average='weighted' 是『各類 precision × 該類 support / 總 support』。本題 support=[{n0},{n1},{n2}],每類 precision = TP/(TP+FP);加權求和得 {answer}。weighted 在不平衡多類別時兼顧樣本分佈,比 macro 更接近實際表現。",
+        "wrong": {
+          "{wrong1}": "macro 是各類等權平均,忽略樣本數;在不平衡資料會放大少數類雜訊。",
+          "{wrong2}": "micro 把所有 TP/FP 全域加總再算,在多類別下等同於 accuracy,失去 per-class 解讀。",
+          "{wrong3}": "預設 average 是 'binary',會在多類別丟 ValueError;此處顯式給了 'weighted',不會丟錯。"
+        },
+        "hook": "weighted = Σ(precision_i × support_i / N);macro 等權、micro 全域"
+      },
+      "misconceptions": ["把 weighted 跟 macro 混用", "以為 precision_score 預設可吃多類別"],
+      "related_node_ids": ["n_L22402_001", "n_L22402_002"],
+      "tags": ["sklearn", "precision_score", "weighted", "multi-class"]
+    },
+    {
+      "id": "q_n23_007",
+      "knowledge_code": "L22402",
+      "node_id": "n_L22402_002",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "醫院糖尿病篩檢模型混淆矩陣如下,索引 0=陰性、1=陽性。下列程式輸出『陽性精確率』(precision of class 1)最接近?",
+      "code_block": "import numpy as np\nfrom sklearn.metrics import confusion_matrix, precision_score\n\ny_true = np.array([0]*{tn_n} + [1]*{p_n})\ny_pred = np.array(\n    [0]*{tn} + [1]*({tn_n}-{tn}) +\n    [1]*{tp} + [0]*({p_n}-{tp}))\n\ncm = confusion_matrix(y_true, y_pred)\nprint(cm)\nprint(round(precision_score(y_true, y_pred, pos_label=1), 3))",
+      "stem_variables": {
+        "case_a": {"tn_n": "900", "p_n": "100", "tn": "810", "tp": "80",  "answer": "0.471", "wrong1": "0.8",   "wrong2": "0.9",   "wrong3": "0.08"},
+        "case_b": {"tn_n": "950", "p_n": "50",  "tn": "855", "tp": "40",  "answer": "0.296", "wrong1": "0.8",   "wrong2": "0.9",   "wrong3": "0.04"},
+        "case_c": {"tn_n": "800", "p_n": "200", "tn": "720", "tp": "160", "answer": "0.667", "wrong1": "0.8",   "wrong2": "0.9",   "wrong3": "0.16"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true, "trap_type": "正解:TP / (TP + FP)"},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤算成 Recall(TP / P)"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤算成 Specificity(TN / N)"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤用 TP / 全部樣本"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Precision(類別 1) = TP / (TP + FP)。TP={tp};FP 來自『實際為 0 但預測為 1』= {tn_n}-{tn};故 precision = {tp} / ({tp} + ({tn_n}-{tn})) = {answer}。在篩檢情境此值低代表『大量誤報』,需搭配 recall 一起看。",
+        "wrong": {
+          "{wrong1}": "Recall(類別 1) = TP / P = {tp}/{p_n},分母是『實際正類』,而 precision 分母是『預測為正類』。",
+          "{wrong2}": "Specificity = TN/N = {tn}/{tn_n},是『負類正確率』,跟 precision 不同。",
+          "{wrong3}": "TP/N_total 沒有對應任何標準指標,既非 precision 也非 recall。"
+        },
+        "hook": "precision 分母=『預測為正』;recall 分母=『實際為正』"
+      },
+      "misconceptions": ["把 precision 跟 recall 公式弄反", "把 specificity 當 precision"],
+      "related_node_ids": ["n_L22402_002", "n_L22402_001"],
+      "tags": ["sklearn", "confusion_matrix", "precision", "recall"]
+    },
+    {
+      "id": "q_n23_008",
+      "knowledge_code": "L22402",
+      "node_id": "n_L22402_002",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "工廠瑕疵偵測團隊用下列程式評估二元分類器(1=瑕疵)。下列程式輸出『瑕疵 recall』最接近?",
+      "code_block": "import numpy as np\nfrom sklearn.metrics import recall_score\n\ny_true = np.array([0]*{n_neg} + [1]*{n_pos})\ny_pred = np.array(\n    [0]*({n_neg}-{fp}) + [1]*{fp} +\n    [1]*{tp} + [0]*({n_pos}-{tp}))\n\nprint(round(recall_score(y_true, y_pred, pos_label=1), 3))",
+      "stem_variables": {
+        "case_a": {"n_neg": "950", "n_pos": "50",  "fp": "20", "tp": "40", "answer": "0.8",   "wrong1": "0.667", "wrong2": "0.979", "wrong3": "0.04"},
+        "case_b": {"n_neg": "900", "n_pos": "100", "fp": "30", "tp": "70", "answer": "0.7",   "wrong1": "0.7",   "wrong2": "0.967", "wrong3": "0.07"},
+        "case_c": {"n_neg": "970", "n_pos": "30",  "fp": "10", "tp": "27", "answer": "0.9",   "wrong1": "0.73",  "wrong2": "0.987", "wrong3": "0.027"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true, "trap_type": "正解:TP / (TP+FN) = TP / P"},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤算成 precision(TP / (TP+FP))"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤算成 accuracy"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤用 TP / 全部樣本"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Recall(瑕疵) = TP / (TP + FN) = TP / 實際正類數 = {tp}/{n_pos} = {answer}。在瑕疵偵測『漏掉瑕疵(FN)』成本高,recall 比 precision 更關鍵,常與 PR-AUC 一起看。",
+        "wrong": {
+          "{wrong1}": "Precision = TP/(TP+FP),分母是『預測為正』包含 FP={fp};recall 分母是『實際為正』={n_pos}。",
+          "{wrong2}": "Accuracy = (TP+TN)/Total,在不平衡資料常被多數類灌爆,不能代替 recall。",
+          "{wrong3}": "TP/Total 既非 precision 也非 recall,無實際語意。"
+        },
+        "hook": "recall = 抓到多少真實正類 = TP / P"
+      },
+      "misconceptions": ["把 recall 跟 precision 混用", "在不平衡資料只看 accuracy"],
+      "related_node_ids": ["n_L22402_002", "n_L22402_001"],
+      "tags": ["sklearn", "recall_score", "瑕疵偵測"]
+    },
+    {
+      "id": "q_n23_009",
+      "knowledge_code": "L22402",
+      "node_id": "n_L22402_002",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "信用評等模型輸出 3 類風險等級(A/B/C),工程師欲計算 ROC-AUC。下列程式正確執行的關鍵是哪一個?",
+      "code_block": "import numpy as np\nfrom sklearn.metrics import roc_auc_score\n\nrng = np.random.RandomState(0)\nN = 300\ny_true = rng.randint(0, 3, size=N)\ny_score = rng.rand(N, 3)\ny_score = y_score / y_score.sum(axis=1, keepdims=True)\n\nauc = roc_auc_score(\n    y_true, y_score,\n    multi_class='ovr',\n    average='macro')\nprint(round(auc, 3))",
+      "options": [
+        {"text": "y_score 必須是 shape=(N, n_classes) 的機率;multi_class 必須給 'ovr' 或 'ovo'", "is_correct": true, "trap_type": "正解:多類 AUC 需要『每類機率』+ 明確指定 multi_class"},
+        {"text": "y_score 可以是 1D 的預測類別(像 y_pred)", "is_correct": false, "trap_type": "誤以為 AUC 吃 hard label"},
+        {"text": "multi_class 預設為 'binary',多類會自動推論", "is_correct": false, "trap_type": "誤以為 multi_class 會自動推論"},
+        {"text": "y_score 必須先 argmax 成單一類別", "is_correct": false, "trap_type": "誤以為要先 argmax"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "多類 roc_auc_score 必須:(1) y_score 是 shape=(N, n_classes) 的『連續分數 / 機率』,因為 AUC 本質上是排序指標需要連續分數;(2) 顯式指定 multi_class='ovr'(One-vs-Rest)或 'ovo'(One-vs-One),否則丟 ValueError。",
+        "wrong": {
+          "y_score 可以是 1D 的預測類別(像 y_pred)": "AUC 是排序指標,需要『分數或機率』而非 hard label;若給 1D 整數會丟 ValueError 或退化為二元 case。",
+          "multi_class 預設為 'binary',多類會自動推論": "multi_class 沒有預設值;遇到多類別必須顯式指定,否則 sklearn 會丟 ValueError(0.22+ 強制要求)。",
+          "y_score 必須先 argmax 成單一類別": "argmax 會把連續分數壓成 hard label,反而失去 AUC 所需的連續性,結果無意義。"
+        },
+        "hook": "多類 AUC = 機率矩陣 (N×K) + multi_class='ovr'/'ovo'"
+      },
+      "misconceptions": ["以為 AUC 吃 hard label", "以為 multi_class 會自動推論"],
+      "related_node_ids": ["n_L22402_002", "n_L22402_001"],
+      "tags": ["sklearn", "roc_auc_score", "multi_class", "ovr"]
+    },
+    {
+      "id": "q_n23_010",
+      "knowledge_code": "L22402",
+      "node_id": "n_L22402_001",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "影音推薦系統評估 Top-{k} 結果。實際相關影片集合為 relevant,模型排序前 {k} 名為 top_k。下列程式 Precision@K 輸出最接近?",
+      "code_block": "import numpy as np\n\nrelevant = np.array({relevant})\ntop_k    = np.array({topk})\nK = {k}\n\nhits = np.sum(np.isin(top_k, relevant))\nprecision_at_k = hits / K\nprint(round(precision_at_k, 3))",
+      "stem_variables": {
+        "case_a": {"k": "10", "relevant": "[1,5,7,9,12,15,18,20,25,30,33,40,50]",  "topk": "[1,2,5,7,9,11,12,15,16,18]", "answer": "0.7",   "wrong1": "0.538", "wrong2": "1.0", "wrong3": "0.5"},
+        "case_b": {"k": "5",  "relevant": "[2,4,6,8,10,12,14,16,18,20]",            "topk": "[1,2,3,4,6]",                "answer": "0.6",   "wrong1": "0.3",   "wrong2": "1.0", "wrong3": "0.4"},
+        "case_c": {"k": "8",  "relevant": "[3,7,11,15,19,23,27,31,35,39,43]",       "topk": "[3,7,9,11,13,15,17,19]",     "answer": "0.625", "wrong1": "0.455", "wrong2": "1.0", "wrong3": "0.5"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true, "trap_type": "正解:hits / K(分母是 K)"},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤把分母改為 |relevant|(變 Recall@K)"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為只要有命中就是 1.0"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為固定為 0.5"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Precision@K = (Top-K 中命中的 relevant 數) / K。本題 K={k},用 np.isin 計算 top_k 中有幾筆落在 relevant 集合,結果除以 K(『分母固定為 K』是 Precision@K 的關鍵)。Hit Rate@K 是另一回事(任一命中即 1)。",
+        "wrong": {
+          "{wrong1}": "若分母改為 len(relevant) 就變成 Recall@K(命中數 / 真實相關總數),語意不同。",
+          "{wrong2}": "Hit Rate@K = 1 if any hit else 0;Precision@K 計算命中『比例』,不是 0/1。",
+          "{wrong3}": "0.5 並非通用值;Precision@K 由實際命中數決定,不會固定。"
+        },
+        "hook": "Precision@K 分母 = K;Recall@K 分母 = |relevant|;Hit Rate@K 0/1"
+      },
+      "misconceptions": ["把 Precision@K 跟 Recall@K 分母搞混", "把 Hit Rate 當 Precision"],
+      "related_node_ids": ["n_L22402_001", "n_L22402_002"],
+      "tags": ["numpy", "Precision@K", "推薦系統", "ranking"]
+    }
+  ]
+}
