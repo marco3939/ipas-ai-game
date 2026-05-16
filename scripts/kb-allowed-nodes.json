@@ -446,5 +446,317 @@
       "id": "n_L22101_007",
       "title": "資料品質快照(Data Profiling — 缺值 / 重複 / 型別 / 不平衡)"
     }
+  ],
+  "L22102": [
+    {
+      "id": "n_L22102_001",
+      "title": "連續 vs 離散分佈分類(PDF vs PMF)"
+    },
+    {
+      "id": "n_L22102_002",
+      "title": "常態分佈與 68-95-99.7 法則(Z 分數)"
+    },
+    {
+      "id": "n_L22102_003",
+      "title": "二項分佈與 Bernoulli 試驗"
+    },
+    {
+      "id": "n_L22102_004",
+      "title": "Poisson 分佈(罕見事件 / 單位時間發生數)"
+    },
+    {
+      "id": "n_L22102_005",
+      "title": "指數分佈與 Weibull(等待時間 / 故障率)"
+    },
+    {
+      "id": "n_L22102_006",
+      "title": "分佈選擇情境抉擇(連續/離散 × 對稱/偏態 × 厚薄尾)"
+    }
+  ],
+  "L22103": [
+    {
+      "id": "n_L22103_001",
+      "title": "假設檢定五步驟(H0/H1 → α → 統計量 → p → 結論)"
+    },
+    {
+      "id": "n_L22103_002",
+      "title": "型一錯誤 vs 型二錯誤(α / β / Power)"
+    },
+    {
+      "id": "n_L22103_003",
+      "title": "p-value 正確解讀(常見三大誤解)"
+    },
+    {
+      "id": "n_L22103_004",
+      "title": "信賴區間(CI)與 p-value 對應關係"
+    },
+    {
+      "id": "n_L22103_005",
+      "title": "t 檢定 vs Z 檢定 vs ANOVA 選擇(樣本大小 / 變異已知否 / 組數)"
+    },
+    {
+      "id": "n_L22103_006",
+      "title": "多重檢定問題與 Bonferroni 校正概念"
+    }
+  ],
+  "L22201": [
+    {
+      "id": "n_L22201_001",
+      "title": "資料來源類型(結構化 / 半結構化 / 非結構化)"
+    },
+    {
+      "id": "n_L22201_002",
+      "title": "缺值機制三分類(MCAR / MAR / MNAR)+ 處理策略"
+    },
+    {
+      "id": "n_L22201_003",
+      "title": "重複資料偵測與去重策略(精確匹配 / 模糊匹配)"
+    },
+    {
+      "id": "n_L22201_004",
+      "title": "資料一致性檢查(referential integrity / domain rule)"
+    },
+    {
+      "id": "n_L22201_005",
+      "title": "資料標籤化品質(Inter-rater agreement 概念)"
+    },
+    {
+      "id": "n_L22201_006",
+      "title": "ETL vs ELT 流程概念"
+    }
+  ],
+  "L22202": [
+    {
+      "id": "n_L22202_001",
+      "title": "資料倉儲(Warehouse)vs 資料湖(Lake)vs Lakehouse 概念"
+    },
+    {
+      "id": "n_L22202_002",
+      "title": "SQL vs NoSQL 四大類選型(KV / Document / Column / Graph)"
+    },
+    {
+      "id": "n_L22202_003",
+      "title": "CAP 定理三選二(Consistency / Availability / Partition tolerance)"
+    },
+    {
+      "id": "n_L22202_004",
+      "title": "ACID vs BASE 一致性模型概念"
+    },
+    {
+      "id": "n_L22202_005",
+      "title": "資料分區(Partition)與索引(Index)目的"
+    },
+    {
+      "id": "n_L22202_006",
+      "title": "儲存階層(Hot / Warm / Cold / Archive)成本效益"
+    }
+  ],
+  "L22203": [
+    {
+      "id": "n_L22203_001",
+      "title": "批次處理 vs 串流處理 vs 微批次選擇情境"
+    },
+    {
+      "id": "n_L22203_002",
+      "title": "Lambda 架構 vs Kappa 架構概念對比"
+    },
+    {
+      "id": "n_L22203_003",
+      "title": "資料管線(Data Pipeline)六階段"
+    },
+    {
+      "id": "n_L22203_004",
+      "title": "分散式處理基本概念(MapReduce 觀念)"
+    },
+    {
+      "id": "n_L22203_005",
+      "title": "串流處理事件時間(Event Time)vs 處理時間(Processing Time)"
+    },
+    {
+      "id": "n_L22203_006",
+      "title": "資料品質監控與 Data Observability 概念"
+    }
+  ],
+  "L22301": [
+    {
+      "id": "n_L22301_001",
+      "title": "大數據取樣策略(Simple Random / Stratified / Cluster / Reservoir)"
+    },
+    {
+      "id": "n_L22301_002",
+      "title": "近似計算概念(HyperLogLog / Bloom Filter / Count-Min Sketch)"
+    },
+    {
+      "id": "n_L22301_003",
+      "title": "分散式統計挑戰(Partial Stats 合併 / 數值穩定性)"
+    },
+    {
+      "id": "n_L22301_004",
+      "title": "大數據相關性 vs 因果性(資料規模放大假關聯風險)"
+    },
+    {
+      "id": "n_L22301_005",
+      "title": "大數據樣本偏差(Survivorship / Selection / Availability Bias)"
+    },
+    {
+      "id": "n_L22301_006",
+      "title": "大數據時代假設檢定的 p-value 問題"
+    }
+  ],
+  "L22302": [
+    {
+      "id": "n_L22302_001",
+      "title": "分析四階層(Descriptive / Diagnostic / Predictive / Prescriptive)"
+    },
+    {
+      "id": "n_L22302_002",
+      "title": "關聯規則(Apriori / FP-Growth 概念,Support / Confidence / Lift)"
+    },
+    {
+      "id": "n_L22302_003",
+      "title": "序列分析(序列模式 / 馬可夫鏈概念)"
+    },
+    {
+      "id": "n_L22302_004",
+      "title": "文字探勘流程(分詞 / 詞頻 / 主題模型概念)"
+    },
+    {
+      "id": "n_L22302_005",
+      "title": "社群網路分析(節點 / 邊 / 中心性指標概念)"
+    },
+    {
+      "id": "n_L22302_006",
+      "title": "時間序列分析(趨勢 / 季節性 / 殘差分解概念)"
+    }
+  ],
+  "L22303": [
+    {
+      "id": "n_L22303_001",
+      "title": "圖型選型 — 比較關係(條形圖 / 雷達圖 / 點圖)"
+    },
+    {
+      "id": "n_L22303_002",
+      "title": "圖型選型 — 分佈(直方圖 / 箱形圖 / 密度圖 / 小提琴圖)"
+    },
+    {
+      "id": "n_L22303_003",
+      "title": "圖型選型 — 組成關係(堆疊條形 / 樹狀圖 / 桑基圖)"
+    },
+    {
+      "id": "n_L22303_004",
+      "title": "圖型選型 — 流向與關聯(熱圖 / 散佈矩陣 / 弦圖)"
+    },
+    {
+      "id": "n_L22303_005",
+      "title": "誤導視覺化七大手法"
+    },
+    {
+      "id": "n_L22303_006",
+      "title": "儀表板資訊架構(KPI 卡 → 趨勢 → 下鑽 三層)"
+    }
+  ],
+  "L22401": [
+    {
+      "id": "n_L22401_001",
+      "title": "資料規模對 ML 模型的影響(scaling 概念層)"
+    },
+    {
+      "id": "n_L22401_002",
+      "title": "Online Learning vs Batch Learning(大資料流情境選擇)"
+    },
+    {
+      "id": "n_L22401_003",
+      "title": "分散式訓練概念(資料平行 vs 模型平行)"
+    },
+    {
+      "id": "n_L22401_004",
+      "title": "取樣策略對訓練的影響(均勻 / 加權 / 重要性取樣)"
+    },
+    {
+      "id": "n_L22401_005",
+      "title": "不平衡資料處理(SMOTE / 欠取樣 / 類別權重)"
+    },
+    {
+      "id": "n_L22401_006",
+      "title": "大數據下的 train/val/test 切分策略(time-based / group-based)"
+    }
+  ],
+  "L22402": [
+    {
+      "id": "n_L22402_001",
+      "title": "鑑別式 AI 預測任務分類(分類 / 迴歸 / 排序 / 推薦)"
+    },
+    {
+      "id": "n_L22402_002",
+      "title": "信用評分情境(特徵 / 標籤 / 評估指標選擇)"
+    },
+    {
+      "id": "n_L22402_003",
+      "title": "詐欺偵測情境(極端不平衡 / 即時推論)"
+    },
+    {
+      "id": "n_L22402_004",
+      "title": "預測性維護情境(時序資料 / 警示閾值設計)"
+    },
+    {
+      "id": "n_L22402_005",
+      "title": "推薦系統概念(協同過濾 / 內容過濾基本概念)"
+    },
+    {
+      "id": "n_L22402_006",
+      "title": "鑑別式 AI 評估常見陷阱(資料洩漏 / 時序倒推)"
+    }
+  ],
+  "L22403": [
+    {
+      "id": "n_L22403_001",
+      "title": "LLM 預訓練語料規模(token 級資料量)"
+    },
+    {
+      "id": "n_L22403_002",
+      "title": "語料品質清洗(去重 / 過濾低品質 / 多樣性平衡)"
+    },
+    {
+      "id": "n_L22403_003",
+      "title": "多語料混合策略(語言 / 領域比例)"
+    },
+    {
+      "id": "n_L22403_004",
+      "title": "生成式 AI 著作權與授權資料來源(CC 授權 / opt-out / 訴訟風險)"
+    },
+    {
+      "id": "n_L22403_005",
+      "title": "合成資料(synthetic data)用於訓練的風險與機會"
+    },
+    {
+      "id": "n_L22403_006",
+      "title": "Scaling Laws(資料 × 參數 × 算力)三方平衡概念"
+    }
+  ],
+  "L22404": [
+    {
+      "id": "n_L22404_001",
+      "title": "PDPA 個資法事前告知義務六項(高頻法規考點)"
+    },
+    {
+      "id": "n_L22404_002",
+      "title": "GDPR 七大原則與資料主體權利"
+    },
+    {
+      "id": "n_L22404_003",
+      "title": "匿名化 vs 假名化(anonymization vs pseudonymization)"
+    },
+    {
+      "id": "n_L22404_004",
+      "title": "k-匿名 / l-多樣性 / t-接近性(re-identification 防護)"
+    },
+    {
+      "id": "n_L22404_005",
+      "title": "差分隱私概念層(ε 隱私預算 / 加噪機制)"
+    },
+    {
+      "id": "n_L22404_006",
+      "title": "聯邦學習概念層(資料不離本地 / 模型聚合)"
+    }
   ]
 }
