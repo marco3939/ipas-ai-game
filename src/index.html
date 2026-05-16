@@ -1960,7 +1960,7 @@ const ProgressIO = {
   sanitizeNickname(s) {
     if (typeof s !== 'string') return '';
     let v = s.trim().substring(0, 20);
-    v = v.replace(/[ --​-‏‪-‮﻿]/g, '');
+    v = v.replace(/[\u0001-\u001F\u007F-\u009F\u200B-\u200F\u202A-\u202E\uFEFF]/g, '');
     if (!/^[A-Za-z0-9一-鿿぀-ゟ゠-ヿ가-힯 _.\-]+$/.test(v)) return '';
     return v;
   },
