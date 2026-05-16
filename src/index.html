@@ -1716,7 +1716,10 @@ function highlightCodeSimple(code) {
   let s = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   s = s.replace(/(#[^\n]*)/g, '<span class="com">$1</span>');
   s = s.replace(/(["'])((?:(?!\1).)*)\1/g, '<span class="str">$1$2$1</span>');
-  s = s.replace(/\b(import|from|def|class|return|if|else|elif|for|while|in|as|with|try|except|None|True|False|lambda|pass|self|print|len|range|np|pd|sklearn|torch|nn|tf)\b/g, '<span class="kw">$1</span>');
+  // 2026-05-11 bug fix: 不可包 'class' 為 keyword — 會把已 wrap 字串內的 class 屬性(<span class="str">)再度 wrap,
+  // 產出 <span <span class="kw">class</span>="str"> 破壞 HTML,使用者看到 `class="str">'region'` 字面文字(ChatGPT 抓到的渲染污染)。
+  // Python OOP class 定義在題庫罕用,移除此關鍵字高亮無實質影響。
+  s = s.replace(/\b(import|from|def|return|if|else|elif|for|while|in|as|with|try|except|None|True|False|lambda|pass|self|print|len|range|np|pd|sklearn|torch|nn|tf)\b/g, '<span class="kw">$1</span>');
   s = s.replace(/\b(\d+\.?\d*)\b/g, '<span class="num">$1</span>');
   return s;
 }
