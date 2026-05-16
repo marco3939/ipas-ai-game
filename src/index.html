@@ -1949,6 +1949,20 @@ const ProgressIO = {
     'ipas_mode7_theater_v', 'ipas_mode7_font_scale', 'ipas_sm2_'
   ],
   _busy: false,
+  _crossTabAbort: false,        // 跨 tab 偵測旗標(在 import 期間若別 tab 寫 ipas_* 則設 true)
+  _crossTabGuardSet: false,
+  _setupCrossTabGuard() {
+    if (this._crossTabGuardSet) return;
+    this._crossTabGuardSet = true;
+    const self = this;
+    window.addEventListener('storage', (e) => {
+      // 只在 import 進行中 才考慮中止;e.key === null 是 clear() 觸發,也算威脅
+      if (self._busy && (e.key === null || (typeof e.key === 'string' && e.key.startsWith('ipas_')))) {
+        self._crossTabAbort = true;
+        console.warn('[ProgressIO] cross-tab storage event detected during import:', e.key);
+      }
+    });
+  },
 
   // === 字串安全(防 XSS layer 2 / display defense)===
   escapeHTML(s) {
@@ -2181,6 +2195,8 @@ const ProgressIO = {
       showToast(`❌ 檔案過大(${(file.size / 1024 / 1024).toFixed(1)} MB,上限 2 MB)`, 4000); return;
     }
     if (file.size === 0) { showToast('❌ 檔案為空', 2500); return; }
+    this._setupCrossTabGuard();
+    this._crossTabAbort = false;
     this._busy = true;
     try {
       // 階段 2:讀取 + 文字長度
@@ -2219,12 +2235,19 @@ const ProgressIO = {
         if (parsed.nickname.length > 20) throw new Error('nickname 過長');
         if (this.sanitizeNickname(parsed.nickname) !== parsed.nickname) throw new Error('nickname 含不允許字元');
       }
-      // keyCount(若有)必須與實際相符
+      // keyCount(若有)必須是 safe integer + 範圍合理 + 與實際相符
+      // 加 Number.isSafeInteger 防 integer overflow 繞過 ===(MAX_SAFE_INTEGER+1 在 JS 失準)
       const actualKeyCount = Object.keys(parsed.payload).length;
-      if (parsed.keyCount !== undefined && parsed.keyCount !== actualKeyCount) {
-        throw new Error(`keyCount 不符(宣稱 ${parsed.keyCount},實際 ${actualKeyCount})`);
+      if (parsed.keyCount !== undefined) {
+        if (!Number.isSafeInteger(parsed.keyCount) || parsed.keyCount < 0 || parsed.keyCount > 1000) {
+          throw new Error('keyCount 不是合法的安全整數(strict 拒,可能被竄改)');
+        }
+        if (parsed.keyCount !== actualKeyCount) {
+          throw new Error(`keyCount 不符(宣稱 ${parsed.keyCount},實際 ${actualKeyCount})`);
+        }
       }
       if (actualKeyCount === 0) throw new Error('payload 為空');
+      if (actualKeyCount > 1000) throw new Error('payload 含過多 keys');
 
       // 階段 5:Checksum 硬拒(strict,不再 advisory)
       if (typeof parsed.checksum !== 'string' || parsed.checksum.length !== 64 || !/^[0-9a-f]+$/.test(parsed.checksum)) {
@@ -2261,6 +2284,10 @@ const ProgressIO = {
       const importNick = this.sanitizeNickname(parsed.nickname || '') || '(未知)';
       const exportedAt = String(parsed.exportedAt || '').substring(0, 19) || '(未知時間)';
       const msg = [
+        '⚠️ 安全提醒:只匯入【你信任來源】的進度檔。',
+        '若此檔來自他人 / 下載連結 / 通訊軟體分享,可能含被偽造的學習數據。',
+        '(系統已對檔案做 SHA-256 + schema 嚴格驗證,但無法判斷是否來自惡意第三方)',
+        '',
         '✅ 所有 strict 驗證通過。即將匯入進度:',
         '• 來源:' + importNick + '(' + exportedAt + ')',
         '• 將覆蓋:' + currentNick + ' 的所有現有進度',
@@ -2271,6 +2298,8 @@ const ProgressIO = {
         '確定要匯入?'
       ].filter(Boolean).join('\n');
       if (!window.confirm(msg)) { showToast('已取消匯入', 1500); return; }
+      // 跨 tab 中止檢查(confirm 期間若別 tab 寫入則拒)
+      if (this._crossTabAbort) throw new Error('偵測到另一分頁同時修改本地資料,已中止匯入');
       // 自動備份(失敗則再次 confirm)
       try { await this._exportInternal('backup-before-import-' + Date.now()); }
       catch (e) {
@@ -2278,6 +2307,8 @@ const ProgressIO = {
           showToast('已中止匯入(備份失敗)', 2500); return;
         }
       }
+      // 寫入前再 check 一次(備份過程若有跨 tab 改動也擋)
+      if (this._crossTabAbort) throw new Error('偵測到另一分頁同時修改本地資料,已中止匯入(寫入前)');
       // Rollback snapshot
       const rollback = {};
       for (let i = 0; i < localStorage.length; i++) {
