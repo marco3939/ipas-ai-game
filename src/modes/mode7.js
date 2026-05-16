@@ -1779,8 +1779,18 @@
         : '';
 
       const isHistoryMode = !!(this.state && this.state._historyMode);
+      const isLegacyData = !!(this.state && this.state._legacyData);
       const modeLabel = isHistoryMode ? '📜 歷史模考逐題回顧' : '📚 逐題回顧';
       const exitBtnLabel = isHistoryMode ? '📋 回考古題首頁' : '📋 回結算頁';
+      // 2026-05-16 fix:舊紀錄沒存洗牌後 options 與 keys,無法重建「你選的紅框」
+      // 跳警告 banner 讓使用者清楚這是技術限制不是 bug
+      const legacyWarning = isLegacyData
+        ? `<div class="card" style="background:rgba(250,204,21,0.12);border:1px solid #facc15;color:#fef3c7;font-size:0.85rem;line-height:1.6">
+            <strong>⚠️ 此場為 2026-05-16 前的舊紀錄</strong><br>
+            當時模考的「洗牌後選項」沒被儲存,因此這場回顧只看得到 ✓ 綠框正解,看不到 ✗ 紅框「你選的錯解」對照。<br>
+            <span style="color:#4ade80">從新一場模考開始,逐題回顧會完整顯示對照。</span>
+          </div>`
+        : '';
 
       const view = document.getElementById('view-play');
       view.innerHTML = `
@@ -1799,6 +1809,7 @@
               <div style="background:linear-gradient(90deg,#16a34a,#facc15);height:100%;width:${progPct}%;transition:width 0.3s"></div>
             </div>
           </div>
+          ${legacyWarning}
 
           <div class="card">
             <div style="font-size:0.8rem;color:var(--fg-dim);margin-bottom:6px">
@@ -1875,10 +1886,12 @@
       const lineup = [];
       const answers = {};
       const markedIds = new Set();
+      let anyLegacy = false;
       fullLog.forEach((e, i) => {
         const baseQ = allQ.find(x => x.id === e.qid);
         // 優先用 fullLog 儲存的洗牌後 options 與替換後 stem/code(才能正確對齊 userKey)
         const hasSnapshot = Array.isArray(e.options) && e.options.length > 0;
+        if (!hasSnapshot && e.answered) anyLegacy = true;
         if (baseQ) {
           if (hasSnapshot) {
             // spread 原 q 取得 explanation/node_id/difficulty 等,以 snapshot 覆蓋 stem/code/options
@@ -1917,7 +1930,8 @@
         reviewMode: true, reviewIdx: 0, reviewedSet: new Set(),
         finished: true,
         _historyMode: true,
-        _historyIdx: historyIdx
+        _historyIdx: historyIdx,
+        _legacyData: anyLegacy   // 2026-05-16 後新模考有 snapshot;之前舊紀錄沒有
       };
       this._renderReviewQuestion(0);
     },
