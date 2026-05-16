@@ -1,0 +1,372 @@
+{
+  "version": "1.0",
+  "schema_version": "iron-rule-1+2+6",
+  "generated_at": "2026-05-16",
+  "batch": "N24 — 科二大數據 L22 code_reading: Gen+Privacy 組",
+  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "iron_rule_compliance": {
+    "rule_1_drill_explanation": "每題 explanation.correct / wrong (per option) / hook + misconceptions + related_node_ids 齊備",
+    "rule_2_dynamic": "全部 shuffle_options:true;每題 3 個 stem_variables case,answer 全部不同",
+    "rule_3_original": "全原創跨產業情境(社群輿情 / 智慧醫療 / 金融客服 / 智慧城市 / 教育平台 / 電商風控 / 健保資料 / 智慧電網 / 線上學習 / 物聯網安全);不複製 114-2 原題",
+    "rule_4_option_length": "正解與平均錯解長度比 ∈ [0.85, 1.20];錯解寫得與正解同等專業",
+    "rule_5_source_fidelity": "knowledge_code ∈ {L22403, L22404};related_node_ids 僅使用 n_L22403_001..006 / n_L22404_001..006",
+    "rule_6_isolation": "僅新建本檔,未修改其他科目 questions / KB / 共用層",
+    "critical_guardrails": {
+      "L22403_excluded": "禁用 LoRA / RLHF / DPO / GPTQ / SentencePiece config / BPE merging 演算法 / Chinchilla 精確百分比;Tokenization 僅停留 len(split)/len(encode) 概念",
+      "L22404_excluded": "禁用 DP-SGD / RDP / Rényi composition / FedAvg 平均演算法內部 / BFV / CKKS;Laplace 只用 np.random.laplace 概念,ε 僅方向性(越小越強)"
+    }
+  },
+  "distribution": {"L22403_count": 5, "L22404_count": 5, "total": 10},
+  "questions": [
+    {
+      "id": "q_n24_001",
+      "knowledge_code": "L22403",
+      "node_id": "n_L22403_001",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "社群輿情團隊想統計一段中文貼文的『詞數』與『token 數』差異(中文 token 通常比詞多)。下列程式輸出為何?",
+      "code_block": "text = '{text}'\nword_count = len(text.split())\n# 模擬 tokenizer:每個非空白字元算 1 token\ntoken_count = len([c for c in text if not c.isspace()])\nprint(word_count, token_count)",
+      "stem_variables": {
+        "case_a": {"text": "生成式 AI 改變產業", "answer": "4 9", "wrong1": "9 9", "wrong2": "4 4", "wrong3": "5 10"},
+        "case_b": {"text": "大型 語言 模型", "answer": "3 7", "wrong1": "7 7", "wrong2": "3 3", "wrong3": "4 8"},
+        "case_c": {"text": "資料 驅動 決策 流程", "answer": "4 10", "wrong1": "10 10", "wrong2": "4 4", "wrong3": "5 11"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "trap_type": "誤把 token 數當成詞數"},
+        {"text": "{wrong2}", "trap_type": "誤把詞數當成 token 數"},
+        {"text": "{wrong3}", "trap_type": "把空白字元也算進 token"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "split() 預設依空白切詞,得到 word_count;中文 tokenizer 通常以字元(甚至 sub-character)為單位,本題以『非空白字元數』模擬,故 token_count 遠大於 word_count。中文 1 字 ≈ 1~2 token,故同一段文本的 token 數常數倍於詞數。",
+        "wrong": {
+          "{wrong1}": "把兩個輸出都當成 token 數;split 切的是『空白分隔的詞』,不會把每個字元都算成詞。",
+          "{wrong2}": "把兩個輸出都當成詞數;tokenizer 切的粒度比 split 細,不會等於詞數。",
+          "{wrong3}": "isspace 篩掉了空白字元,計數不包含空白,故不會大於非空白字元數。"
+        },
+        "hook": "中文:1 詞常拆成多 token;token_count >> word_count"
+      },
+      "misconceptions": ["以為 split 切出的就是 token", "以為中文每個字元 = 1 個詞"],
+      "related_node_ids": ["n_L22403_001", "n_L22403_002"],
+      "tags": ["tokenization", "中文 NLP", "LLM 資料量"]
+    },
+    {
+      "id": "q_n24_002",
+      "knowledge_code": "L22403",
+      "node_id": "n_L22403_002",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "智慧醫療資料工程師要對病歷描述語料做最基本的『字串完全相同』去重。下列程式輸出剩餘行數為何?",
+      "code_block": "corpus = [\n    '{a}',\n    '{b}',\n    '{a}',\n{extra_lines}\n]\ndeduped = list(set(corpus))\nprint(len(deduped))",
+      "stem_variables": {
+        "case_a": {"a": "胸悶頭暈三天", "b": "輕微咳嗽兩週", "extra_lines": "    '間歇性腹痛',\n    '{b}'", "answer": "3", "wrong1": "5", "wrong2": "2", "wrong3": "4"},
+        "case_b": {"a": "發燒 38 度", "b": "夜間盜汗", "extra_lines": "    '食慾不振',\n    '皮膚紅疹',\n    '{b}'", "answer": "4", "wrong1": "6", "wrong2": "2", "wrong3": "5"},
+        "case_c": {"a": "關節腫脹疼痛", "b": "上腹部灼熱感", "extra_lines": "    '{a}'", "answer": "2", "wrong1": "4", "wrong2": "1", "wrong3": "3"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "trap_type": "誤以為 set 不去重"},
+        {"text": "{wrong2}", "trap_type": "漏算 c 這個唯一項"},
+        {"text": "{wrong3}", "trap_type": "只去掉 1 個重複"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "set 將完全相同的字串視為同一元素;先逐行展開後計算唯一字串數,得 {answer}。注意:這是『完全相同』去重,對近重複(near-duplicate,如多一個空格、改一字)無效,需用 MinHash / SimHash。",
+        "wrong": {
+          "{wrong1}": "此值等於原 corpus 長度;set 會自動去除完全相同元素,不會等於原長度。",
+          "{wrong2}": "去重後仍應保留所有不同字串,不會只剩這麼少。",
+          "{wrong3}": "請逐行核對重複次數,常見差 1 的誤算來自漏算一筆唯一項。"
+        },
+        "hook": "set() 只能完全相同去重;近重複需 MinHash / SimHash"
+      },
+      "misconceptions": ["以為 set 也能處理近重複", "認為去重後行數 = 原長度"],
+      "related_node_ids": ["n_L22403_002", "n_L22403_001"],
+      "tags": ["語料清洗", "去重", "Python set"]
+    },
+    {
+      "id": "q_n24_003",
+      "knowledge_code": "L22403",
+      "node_id": "n_L22403_002",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "金融客服 NLP 團隊想用文件前綴 hash 作為『近重複偵測 key』來預過濾語料。下列程式輸出的 key 數量為何?",
+      "code_block": "import hashlib\ndocs = [\n{doc_lines}\n]\nseen = set()\nfor d in docs:\n    key = hashlib.md5(d[:{n}].encode()).hexdigest()[:8]\n    seen.add(key)\nprint(len(seen))",
+      "stem_variables": {
+        "case_a": {"doc_lines": "    '信用卡帳務很重要',\n    '信用卡帳務很關鍵',\n    '投資理財今日上線',\n    '信用卡帳務很核心',\n    '投資理財今日發布'", "n": "4", "answer": "2", "wrong1": "5", "wrong2": "3", "wrong3": "1"},
+        "case_b": {"doc_lines": "    '貸款利率走勢',\n    '貸款利率公告',\n    '保險理賠流程',\n    '基金績效排行'", "n": "4", "answer": "3", "wrong1": "4", "wrong2": "2", "wrong3": "1"},
+        "case_c": {"doc_lines": "    '外匯換匯試算',\n    '外匯換匯說明',\n    '外匯換匯範例'", "n": "4", "answer": "1", "wrong1": "3", "wrong2": "2", "wrong3": "0"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "trap_type": "忽略前綴 hash 會撞 key"},
+        {"text": "{wrong2}", "trap_type": "誤以為截 4 字元的 hash 是 3 種"},
+        {"text": "{wrong3}", "trap_type": "誤把所有 hash 視為同一 key"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "key 取前 {n} 字元 hash;前綴相同的文件會落到同一 key,逐筆掃描後共得 {answer} 個唯一 key。前綴 hash 是『近重複偵測』的快速啟發式:同前綴大機率主題相同,可進入後續更精細比對。",
+        "wrong": {
+          "{wrong1}": "此值等於原文件總數;前綴 hash 的目的就是把前綴相同的合併為候選重複群。",
+          "{wrong2}": "請逐筆比對前 {n} 字元是否相同;同前綴會碰撞為同一 key。",
+          "{wrong3}": "不同前綴不會碰撞為同一 key,也不會出現 0 個 key(只要 docs 非空)。"
+        },
+        "hook": "前綴 hash 是近重複候選聚類,不是精確比對"
+      },
+      "misconceptions": ["以為 hash 撞 key 機率高", "誤把 hash 全視為唯一"],
+      "related_node_ids": ["n_L22403_002", "n_L22403_001"],
+      "tags": ["MinHash 概念", "hashlib", "去重"]
+    },
+    {
+      "id": "q_n24_004",
+      "knowledge_code": "L22403",
+      "node_id": "n_L22403_003",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "智慧城市開放資料平台想用 TfidfVectorizer 把新聞語料轉成詞向量。下列程式 X.shape 輸出為何?(假設詞彙表唯一詞數為 {vocab})",
+      "code_block": "from sklearn.feature_extraction.text import TfidfVectorizer\n# 已知該 corpus 經預設 token pattern 切詞後唯一詞共 {vocab} 個\ncorpus = [...]\nn_docs = {ndocs}\nvec = TfidfVectorizer(max_features={m})\nX = vec.fit_transform(corpus)\nprint(X.shape)  # 上限取 min(unique_terms, max_features)",
+      "stem_variables": {
+        "case_a": {"vocab": "12", "ndocs": "4", "m": "50", "answer": "(4, 12)", "wrong1": "(12, 4)", "wrong2": "(4, 50)", "wrong3": "(4, 4)"},
+        "case_b": {"vocab": "30", "ndocs": "5", "m": "20", "answer": "(5, 20)", "wrong1": "(20, 5)", "wrong2": "(5, 30)", "wrong3": "(5, 5)"},
+        "case_c": {"vocab": "8", "ndocs": "6", "m": "100", "answer": "(6, 8)", "wrong1": "(8, 6)", "wrong2": "(6, 100)", "wrong3": "(6, 6)"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "trap_type": "把 shape 行列順序顛倒"},
+        {"text": "{wrong2}", "trap_type": "誤以為 max_features 就是實際欄數"},
+        {"text": "{wrong3}", "trap_type": "誤以為欄數 = 文件數"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "fit_transform 輸出 shape = (n_docs, n_features),其中 n_features = min(unique_terms, max_features)。本題 n_docs={ndocs},unique_terms={vocab},max_features={m},取 min({vocab}, {m}) 為欄數,故 shape = {answer}。max_features 僅是上限,不是強制欄數。",
+        "wrong": {
+          "{wrong1}": "shape 第一維是樣本數(文件數),第二維才是特徵數,順序不可顛倒。",
+          "{wrong2}": "max_features 是『最多取幾個』,若實際唯一詞少於此值,欄數會以實際為準;反之若超過則被截斷至 max_features。",
+          "{wrong3}": "TF-IDF 的欄數是『詞彙表大小』,與文件數無關。"
+        },
+        "hook": "X.shape = (n_docs, min(unique_terms, max_features))"
+      },
+      "misconceptions": ["以為 max_features 是強制欄數", "把行列順序記錯"],
+      "related_node_ids": ["n_L22403_003", "n_L22403_002"],
+      "tags": ["TfidfVectorizer", "sklearn", "詞向量"]
+    },
+    {
+      "id": "q_n24_005",
+      "knowledge_code": "L22403",
+      "node_id": "n_L22403_005",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "教育平台想評估 LLM 的數學解題能力,要把評估集從訓練集中『以 hash 排除』來防 contamination。下列程式輸出的乾淨 eval 題目數為何?",
+      "code_block": "import hashlib\ntrain_set = {{'A題','B題','C題','D題'}}\neval_set = [{eval_list}]\ntrain_hash = {{hashlib.sha1(t.encode()).hexdigest() for t in train_set}}\nclean_eval = [q for q in eval_set\n              if hashlib.sha1(q.encode()).hexdigest() not in train_hash]\nprint(len(clean_eval))",
+      "stem_variables": {
+        "case_a": {"eval_list": "'A題','X題','Y題'", "answer": "2", "wrong1": "3", "wrong2": "1", "wrong3": "0"},
+        "case_b": {"eval_list": "'X題','Y題','Z題','W題'", "answer": "4", "wrong1": "0", "wrong2": "2", "wrong3": "3"},
+        "case_c": {"eval_list": "'A題','B題','C題','X題'", "answer": "1", "wrong1": "4", "wrong2": "0", "wrong3": "3"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "trap_type": "忘了排除與訓練集重疊的題目"},
+        {"text": "{wrong2}", "trap_type": "誤算為只剩 1 題"},
+        {"text": "{wrong3}", "trap_type": "誤以為全部都被排除"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "把 eval_set 與 train_set 取 SHA1 比對,凡 hash 出現在 train_hash 的題目都被排除;逐筆比對後剩 {answer} 題未污染。Hash 比對可避免人工目視疏漏的『資料洩漏(data contamination)』,是 LLM 評估的常見前處理。",
+        "wrong": {
+          "{wrong1}": "此值等於 eval_set 原長度;若不排除直接評估會高估模型分數(因背過原題)。",
+          "{wrong2}": "請逐筆比對:重疊題目要全部排除,不能漏一筆。",
+          "{wrong3}": "不在訓練集的題目(X / Y)不會被排除,clean_eval 不會是 0 或等於 train 大小。"
+        },
+        "hook": "Hash 排除 = 防 train/eval contamination 的標準前處理"
+      },
+      "misconceptions": ["以為人工目視就能避免 contamination", "誤以為 hash 會碰撞造成多筆排除"],
+      "related_node_ids": ["n_L22403_005", "n_L22403_002"],
+      "tags": ["LLM 評估", "data contamination", "hashlib"]
+    },
+    {
+      "id": "q_n24_006",
+      "knowledge_code": "L22404",
+      "node_id": "n_L22404_004",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "電商風控分析師要用 groupby 計算 quasi-identifier 群組的最小群大小,以檢查 k-匿名。下列程式輸出為何?",
+      "code_block": "import pandas as pd\ndf = pd.DataFrame({{\n    'age_group': {ages},\n    'zip3':      {zips}\n}})\ngroup_min = df.groupby(['age_group','zip3']).size().min()\nprint(group_min)",
+      "stem_variables": {
+        "case_a": {"ages": "['20s','20s','20s','30s','30s','40s']", "zips": "['100','100','100','110','110','120']", "answer": "1", "wrong1": "6", "wrong2": "3", "wrong3": "2"},
+        "case_b": {"ages": "['20s','20s','30s','30s','40s','40s']", "zips": "['100','100','110','110','120','120']", "answer": "2", "wrong1": "6", "wrong2": "3", "wrong3": "1"},
+        "case_c": {"ages": "['20s','20s','20s','30s','30s','30s']", "zips": "['100','100','100','110','110','110']", "answer": "3", "wrong1": "6", "wrong2": "2", "wrong3": "1"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "trap_type": "誤算為總筆數"},
+        {"text": "{wrong2}", "trap_type": "誤把最大群當成最小群"},
+        {"text": "{wrong3}", "trap_type": "群組大小算錯 1"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "groupby(['age_group','zip3']).size() 統計每組(age_group, zip3)組合的筆數;min() 取最小群的大小,結果 = {answer}。k-匿名要求最小群 ≥ k;若 group_min = {answer},僅能通過 k ≤ {answer} 的檢查。",
+        "wrong": {
+          "{wrong1}": "此值是總筆數 6,不是各群大小的最小值;groupby 後 size() 已經分群統計。",
+          "{wrong2}": "k-匿名要看『最弱』那群,不是最大群;最大群通過不代表整體通過。",
+          "{wrong3}": "請逐群核對筆數;groupby 鍵是 (age_group, zip3) 組合,不是單一欄。"
+        },
+        "hook": "k-匿名 = 最小群 ≥ k(看最弱不看最強)"
+      },
+      "misconceptions": ["看最大群決定 k-匿名", "忽略 quasi-identifier 組合"],
+      "related_node_ids": ["n_L22404_004", "n_L22404_003"],
+      "tags": ["k-匿名", "pandas groupby", "去識別化"]
+    },
+    {
+      "id": "q_n24_007",
+      "knowledge_code": "L22404",
+      "node_id": "n_L22404_005",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "健保資料中心要對『陽性人數』查詢加 Laplace 雜訊以滿足差分隱私概念。比較 ε={eps_strong} 與 ε={eps_weak} 兩次設定,下列敘述何者正確?",
+      "code_block": "import numpy as np\nnp.random.seed(0)\ntrue_count = 1000\nsensitivity = 1\nnoisy_strong = true_count + np.random.laplace(0, sensitivity/{eps_strong})\nnoisy_weak   = true_count + np.random.laplace(0, sensitivity/{eps_weak})\n# 觀察雜訊規模(scale) sensitivity/epsilon\nprint('scale_strong:', sensitivity/{eps_strong},\n      'scale_weak:', sensitivity/{eps_weak})",
+      "stem_variables": {
+        "case_a": {"eps_strong": "0.1", "eps_weak": "10", "answer": "ε=0.1 scale=10、ε=10 scale=0.1,ε 小隱私強", "wrong1": "ε=0.1 scale=0.1、ε=10 scale=10,ε 大隱私強", "wrong2": "兩者 scale 都=1,ε 不影響加噪規模或隱私強度", "wrong3": "ε 越大代表預算用得越省,故 ε=10 較安全"},
+        "case_b": {"eps_strong": "0.5", "eps_weak": "5", "answer": "ε=0.5 scale=2、ε=5 scale=0.2,ε 小隱私強", "wrong1": "ε=0.5 scale=0.5、ε=5 scale=5,ε 大隱私強", "wrong2": "兩者 scale 都=1,ε 不影響加噪規模或隱私強度", "wrong3": "ε 越大代表預算用得越省,故 ε=5 較安全"},
+        "case_c": {"eps_strong": "0.2", "eps_weak": "20", "answer": "ε=0.2 scale=5、ε=20 scale=0.05,ε 小隱私強", "wrong1": "ε=0.2 scale=0.2、ε=20 scale=20,ε 大隱私強", "wrong2": "兩者 scale 都=1,ε 不影響加噪規模或隱私強度", "wrong3": "ε 越大代表預算用得越省,故 ε=20 較安全"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "trap_type": "把 ε 方向搞反"},
+        {"text": "{wrong2}", "trap_type": "誤以為 ε 不影響 scale"},
+        {"text": "{wrong3}", "trap_type": "把大 ε 當成強隱私"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Laplace 機制中 scale = sensitivity / ε。ε 越小 → scale 越大 → 雜訊越大 → 隱私越強但統計效用越低。本題 ε={eps_strong} 的 scale = {eps_strong} 的倒數倍 sensitivity,而 ε={eps_weak} 的 scale 較小,故前者隱私強、後者效用高,呈現典型 trade-off。",
+        "wrong": {
+          "{wrong1}": "ε 越小代表預算越緊、雜訊越大、隱私越強;不是越小代表隱私越弱。",
+          "{wrong2}": "scale = sensitivity / ε,ε 直接影響 scale;不會相同。",
+          "{wrong3}": "ε 越大 → scale 越小 → 雜訊越少 → 隱私越弱;不是越強。"
+        },
+        "hook": "Laplace scale = sensitivity / ε;ε 小 → scale 大 → 隱私強"
+      },
+      "misconceptions": ["把 ε 越大當隱私越強", "以為 sensitivity 才是主要旋鈕"],
+      "related_node_ids": ["n_L22404_005", "n_L22404_004"],
+      "tags": ["差分隱私", "Laplace 機制", "numpy"]
+    },
+    {
+      "id": "q_n24_008",
+      "knowledge_code": "L22404",
+      "node_id": "n_L22404_003",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "智慧電網公司要對使用者 ID 做欄位級假名化,僅保留 sha256 hex 的前 N 字元。下列程式輸出 id_pseudo 各字串的『長度』為何?",
+      "code_block": "import hashlib\nimport pandas as pd\ndf = pd.DataFrame({{'user_id': ['{u1}', '{u2}']}})\ndf['id_pseudo'] = df['user_id'].apply(\n    lambda x: hashlib.sha256(x.encode()).hexdigest()[:{n}]\n)\nprint([len(s) for s in df['id_pseudo']])",
+      "stem_variables": {
+        "case_a": {"u1": "U001", "u2": "U002", "n": "16", "answer": "[16, 16]", "wrong1": "[4, 4]", "wrong2": "[64, 64]", "wrong3": "報錯 (TypeError)"},
+        "case_b": {"u1": "C123", "u2": "C456", "n": "12", "answer": "[12, 12]", "wrong1": "[4, 4]", "wrong2": "[64, 64]", "wrong3": "報錯 (TypeError)"},
+        "case_c": {"u1": "M888", "u2": "M999", "n": "20", "answer": "[20, 20]", "wrong1": "[4, 4]", "wrong2": "[64, 64]", "wrong3": "報錯 (TypeError)"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "trap_type": "誤把原 ID 長度當作 hash 長度"},
+        {"text": "{wrong2}", "trap_type": "忽略 [:n] 截斷"},
+        {"text": "{wrong3}", "trap_type": "誤以為 hexdigest 不可被 [:n] 索引"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "sha256().hexdigest() 預設為 64 字元 hex 字串;經 [:{n}] 截斷後每筆長度為 {n}。對 user_id 共 2 筆 → 輸出 [{n}, {n}] = {answer}。注意:此種 hash 截斷實為『假名化』,因可保留原 ID 對照表還原,GDPR / 台灣個資法仍視為個資。",
+        "wrong": {
+          "{wrong1}": "hash 輸出長度由 sha256 與 [:n] 決定,與原 ID 字元數無關。",
+          "{wrong2}": "sha256 hex 是 64 字元,但已被 [:{n}] 截斷,不會保留全長 64。",
+          "{wrong3}": "hexdigest() 回傳的就是字串,可用 [:n] 切片;不會丟出 TypeError。"
+        },
+        "hook": "sha256 hex 全長 64;[:n] 截斷後長度 = n。假名化(可還原)≠ 匿名化"
+      },
+      "misconceptions": ["把 hash 當匿名化", "把假名化當加密"],
+      "related_node_ids": ["n_L22404_003", "n_L22404_002"],
+      "tags": ["假名化", "hashlib", "pandas"]
+    },
+    {
+      "id": "q_n24_009",
+      "knowledge_code": "L22404",
+      "node_id": "n_L22404_003",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "線上學習平台要把含敏感欄位的學員資料釋出給研究單位,執行欄位抑制(column suppression)。下列程式輸出剩餘欄位數為何?",
+      "code_block": "import pandas as pd\ndf = pd.DataFrame(columns=[\n    'student_id', 'name', 'national_id', 'phone',\n    'course_id', 'score', 'login_count'\n])\nsensitive = [{drop_list}]\ndf_clean = df.drop(columns=sensitive)\nprint(len(df_clean.columns))",
+      "stem_variables": {
+        "case_a": {"drop_list": "'name', 'national_id', 'phone'", "answer": "4", "wrong1": "3", "wrong2": "7", "wrong3": "5"},
+        "case_b": {"drop_list": "'name', 'national_id'", "answer": "5", "wrong1": "2", "wrong2": "7", "wrong3": "6"},
+        "case_c": {"drop_list": "'national_id', 'phone', 'student_id', 'name'", "answer": "3", "wrong1": "4", "wrong2": "7", "wrong3": "2"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "trap_type": "誤把『刪除欄位數』當答案"},
+        {"text": "{wrong2}", "trap_type": "誤以為 drop 不會生效"},
+        {"text": "{wrong3}", "trap_type": "少 / 多算一欄"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "df 原本 7 個欄位,drop(columns=sensitive) 移除 sensitive list 中所有欄位,得到 df_clean。欄位數 = 7 − len(sensitive) = {answer}。注意 drop 預設回傳新 DataFrame(不會 inplace),原 df 不變。欄位抑制是 GDPR 資料最小化原則的直接實作。",
+        "wrong": {
+          "{wrong1}": "題目問『剩下幾欄』,不是『刪掉幾欄』;兩者方向相反。",
+          "{wrong2}": "drop(columns=...) 一定會作用於回傳的新 DataFrame;原 df 才不變。",
+          "{wrong3}": "請逐欄計算原始 7 欄與抑制 list 長度的差,常見因漏算或多算 1。"
+        },
+        "hook": "drop(columns=...) 回傳新 df;剩餘 = 原欄數 − 抑制欄數"
+      },
+      "misconceptions": ["以為 drop 預設 inplace", "把剩餘與刪除欄數記反"],
+      "related_node_ids": ["n_L22404_003", "n_L22404_002"],
+      "tags": ["欄位抑制", "資料最小化", "pandas"]
+    },
+    {
+      "id": "q_n24_010",
+      "knowledge_code": "L22404",
+      "node_id": "n_L22404_002",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "物聯網安全平台收到 GDPR 被遺忘權(right to erasure)請求,需把某 user_id 從資料表中移除。下列程式執行後剩餘列數為何?",
+      "code_block": "import pandas as pd\ndf = pd.DataFrame({{\n    'user_id': ['{u1}','{u2}','{u3}','{u1}','{u4}'],\n    'event':   ['login','login','logout','logout','login']\n}})\ntarget = '{target}'\ndf = df[df['user_id'] != target]\nprint(len(df))",
+      "stem_variables": {
+        "case_a": {"u1": "U01", "u2": "U02", "u3": "U03", "u4": "U04", "target": "U01", "answer": "3", "wrong1": "5", "wrong2": "4", "wrong3": "1"},
+        "case_b": {"u1": "A10", "u2": "A20", "u3": "A30", "u4": "A40", "target": "A20", "answer": "4", "wrong1": "5", "wrong2": "3", "wrong3": "1"},
+        "case_c": {"u1": "X1", "u2": "X2", "u3": "X1", "u4": "X4", "target": "X1", "answer": "2", "wrong1": "5", "wrong2": "4", "wrong3": "3"}
+      },
+      "options": [
+        {"text": "{answer}", "is_correct": true},
+        {"text": "{wrong1}", "trap_type": "誤以為 filter 不生效"},
+        {"text": "{wrong2}", "trap_type": "只刪除一筆"},
+        {"text": "{wrong3}", "trap_type": "誤刪剩 1 筆"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "df[df['user_id'] != target] 把 user_id 等於 target 的所有列濾掉。本題 target='{target}',在 5 列中出現的次數視 case 而定,剩 {answer} 列。GDPR 第 17 條被遺忘權要求所有與該資料主體相關的紀錄都需刪除,不只是『取消顯示』,實務上還須串接備份、日誌、衍生資料。",
+        "wrong": {
+          "{wrong1}": "布林索引一定會作用;不會回到原始 5 列。",
+          "{wrong2}": "若 target 出現多次,要全部刪除,不是只刪一筆。",
+          "{wrong3}": "本題只刪 target 那位使用者的列,其餘列保留;不會剩個位數那麼少。"
+        },
+        "hook": "GDPR 刪除權 = 所有相關紀錄都要移除(不只取消顯示)"
+      },
+      "misconceptions": ["以為 GDPR 刪除只需 UI 隱藏", "誤算 target 出現次數"],
+      "related_node_ids": ["n_L22404_002", "n_L22404_001"],
+      "tags": ["GDPR", "被遺忘權", "pandas filter"]
+    }
+  ]
+}
