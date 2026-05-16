@@ -669,13 +669,16 @@
         if (!a) continue;
         const item = s.lineup && s.lineup[idx];
         if (!item || !item.q) continue;
+        // 2026-05-16 critical fix:用 rendered 快照取得洗牌後 options(含 key)
+        // 詳見 submitCurrent 註解
+        const renderedQ = item._rendered || item.q;
         const q = item.q;
         if (q.node_id) Mastery.update(q.node_id, a.isCorrect);
         Progress.addAnswer(a.isCorrect);
         if (typeof SM2 !== 'undefined' && q.id) SM2.recordAnswer(q.id, a.isCorrect, false);
         if (!a.isCorrect) {
-          const userOpt = (q.options || []).find(o => o.key === a.userKey);
-          const correctOpt = (q.options || []).find(o => o.is_correct);
+          const userOpt = (renderedQ.options || []).find(o => o.key === a.userKey);
+          const correctOpt = (renderedQ.options || []).find(o => o.is_correct);
           Wrongbook.add(
             q.id, q.node_id, a.userKey, a.correctKey,
             (userOpt && userOpt.text) || '',
@@ -735,7 +738,15 @@
       if (!this.state) return;
       const item = this.state.lineup[this.state.idx];
       if (!item) { this._finalize('all_done'); return; }
-      const { q, npcIdx } = item;
+      // 2026-05-16 critical fix:同一題重複進入時,renderQuestion 會「重新洗牌」
+      // → 同 idx 的 D 選項在不同次渲染指向不同 text → draft.userKey 失準
+      // → 也害 submitCurrent 拿 lineup.q.options(無 key)算 correctKey=undefined
+      // 解:第一次渲染後 cache 到 item._rendered,後續傳 shuffle_options:false 跳過洗牌
+      const baseQ = item._rendered
+        ? Object.assign({}, item._rendered, { shuffle_options: false })  // 跳洗牌,維持原始順序與 key
+        : item.q;
+      const { npcIdx } = item;
+      const q = baseQ;
       const npc = NPCS[npcIdx] || NPCS[0];
 
       // NPC 切換動畫(從上一題不同 NPC 切換時)
@@ -832,6 +843,10 @@
       // 用 PlayEngine.show 渲染題目;之後我們的 hook 會覆寫 answer
       // R5 task 1:Theater 模式已有整場倒數,禁用 PlayEngine 每題 90s 計時器
       PlayEngine.show(q, { contextHTML: ctx, disableTimer: true });
+      // 2026-05-16 critical fix:cache 渲染後快照(有 key 的洗牌結果),供 submitCurrent + 再訪復用
+      if (!item._rendered && PlayEngine.current && PlayEngine.current.id === item.q.id) {
+        item._rendered = PlayEngine.current;
+      }
 
       // 還原該題的視覺狀態:locked (已送出) / draft (已選未送) / unanswered
       // 三種狀態 _showPreviousAnswerState 內部會分別處理(包含 disable options for locked)
@@ -1340,9 +1355,14 @@
         dialogEl.style.color = '#facc15';
         return;
       }
-      const q = (this.state.lineup[idx] || {}).q || {};
-      const correctOpt = (q.options || []).find(o => o.is_correct);
-      const userOpt = (q.options || []).find(o => o.key === ans.userKey);
+      // 用 rendered 快照取得洗牌後 options(含 key)— 詳見 submitCurrent 註解
+      const item = this.state.lineup[idx] || {};
+      const renderedQ = item._rendered
+        || (PlayEngine.current && PlayEngine.current.id === (item.q && item.q.id) ? PlayEngine.current : null)
+        || item.q
+        || {};
+      const correctOpt = (renderedQ.options || []).find(o => o.is_correct);
+      const userOpt = (renderedQ.options || []).find(o => o.key === ans.userKey);
       // escape for innerHTML
       const esc = (s) => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
       const correctTxt = esc((correctOpt && correctOpt.text) || '');
@@ -1367,11 +1387,17 @@
         return;
       }
       // 升格 draft → answers + lock
+      // 2026-05-16 critical fix:用 rendered 快照取代 lineup.q
+      // 因為 lineup.q 是 QUESTIONS 原版,options 沒洗牌後的 key,
+      // o.key === draft.userKey 永遠對不上 → isCorrect 永遠 false / correctKey undefined
       const item = this.state.lineup[idx];
-      const q = item.q;
-      const opt = (q.options || []).find(o => o.key === draft.userKey);
+      const renderedQ = item._rendered
+        || (PlayEngine.current && PlayEngine.current.id === item.q.id ? PlayEngine.current : null)
+        || item.q;
+      const rOpts = renderedQ.options || [];
+      const opt = rOpts.find(o => o.key === draft.userKey);
       const isCorrect = !!(opt && opt.is_correct);
-      const correctOpt = (q.options || []).find(o => o.is_correct);
+      const correctOpt = rOpts.find(o => o.is_correct);
       const correctKey = correctOpt ? correctOpt.key : '';
       this.state.answers[idx] = { userKey: draft.userKey, isCorrect, correctKey };
       this.state.locked.add(idx);
@@ -1524,7 +1550,10 @@
       const fullLog = (s.lineup || []).map((item, i) => {
         const q = item.q;
         const a = s.answers[i];  // {userKey, isCorrect, correctKey} or undefined
-        const correctOpt = (q.options || []).find(o => o.is_correct);
+        // 2026-05-16 critical fix:用 item._rendered 取洗牌後 options(含 key)
+        // 否則 q.options[*].key 全 undefined,fullLog snapshot 廢掉
+        const renderedQ = item._rendered || q;
+        const correctOpt = (renderedQ.options || []).find(o => o.is_correct);
         return {
           qid: q.id,
           npcIdx: item.npcIdx,
@@ -1534,12 +1563,10 @@
           correctKey: a ? a.correctKey : (correctOpt ? correctOpt.key : ''),
           answered: !!a,
           marked: s.markedIds && s.markedIds.has(q.id),
-          // 2026-05-16 加 rendered snapshot:洗牌後 options + 替換 variables 後的 stem/code
-          // 修 bug:reviewHistorySession 用 QUESTIONS 原版時,options 沒 key 對應(renderQuestion 在
-          // 洗牌後才指派 A/B/C/D),導致使用者紅框沒顯示
-          stem: q.stem || '',
-          code_block: q.code_block || '',
-          options: (q.options || []).map(o => ({
+          // rendered snapshot — 洗牌後實際看到的版本
+          stem: renderedQ.stem || q.stem || '',
+          code_block: renderedQ.code_block || q.code_block || '',
+          options: (renderedQ.options || []).map(o => ({
             key: o.key, text: o.text || '', is_correct: !!o.is_correct
           }))
         };
