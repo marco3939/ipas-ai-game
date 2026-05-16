@@ -139,6 +139,23 @@
     _origShowExplanation: null,
     _origOnNext: null,
 
+    // === 2026-05-16 案例 10 修補:集中 rendered 快照 fallback ===
+    // 為何需要:state.lineup[i].q 是 QUESTIONS 原版,options 沒洗牌後的 key
+    // (renderQuestion 在 index.html:685-689 洗牌後才指派 A/B/C/D)。
+    // 任何讀 q.options.find(o.key === userKey) 的地方必須用 _rendered.options
+    // (或 PlayEngine.current 若 id 匹配)才能對得上;否則 isCorrect 永遠 false、
+    // correctKey 永遠 undefined。
+    // 使用者:`const renderedQ = Mode7._getRendered(item);`
+    _getRendered(item) {
+      if (!item) return null;
+      if (item._rendered) return item._rendered;
+      if (typeof PlayEngine !== 'undefined' && PlayEngine.current
+          && item.q && PlayEngine.current.id === item.q.id) {
+        return PlayEngine.current;
+      }
+      return item.q || null;
+    },
+
     // ===== 入口 =====
     start() {
       // 進場前先清理上一場殘留(若有)
@@ -669,13 +686,15 @@
         if (!a) continue;
         const item = s.lineup && s.lineup[idx];
         if (!item || !item.q) continue;
-        const q = item.q;
+        // 案例 10:用 rendered 取洗牌後 options(含 key);未渲染過則 fallback 原版
+        const renderedQ = this._getRendered(item);
+        const q = item.q;   // q.id/node_id 從原版取(穩定)
         if (q.node_id) Mastery.update(q.node_id, a.isCorrect);
         Progress.addAnswer(a.isCorrect);
         if (typeof SM2 !== 'undefined' && q.id) SM2.recordAnswer(q.id, a.isCorrect, false);
         if (!a.isCorrect) {
-          const userOpt = (q.options || []).find(o => o.key === a.userKey);
-          const correctOpt = (q.options || []).find(o => o.is_correct);
+          const userOpt = (renderedQ.options || []).find(o => o.key === a.userKey);
+          const correctOpt = (renderedQ.options || []).find(o => o.is_correct);
           Wrongbook.add(
             q.id, q.node_id, a.userKey, a.correctKey,
             (userOpt && userOpt.text) || '',
@@ -735,7 +754,14 @@
       if (!this.state) return;
       const item = this.state.lineup[this.state.idx];
       if (!item) { this._finalize('all_done'); return; }
-      const { q, npcIdx } = item;
+      // 案例 10:同題重複進入 renderQuestion 會重洗牌 → 同 idx 的 D 在不同次指向不同 text
+      // → draft.userKey 失準。首次渲染後 cache 到 item._rendered,後續傳
+      // {...item._rendered, shuffle_options:false} 跳洗牌維持相同順序與 key。
+      const baseQ = item._rendered
+        ? Object.assign({}, item._rendered, { shuffle_options: false })
+        : item.q;
+      const { npcIdx } = item;
+      const q = baseQ;
       const npc = NPCS[npcIdx] || NPCS[0];
 
       // NPC 切換動畫(從上一題不同 NPC 切換時)
@@ -832,6 +858,10 @@
       // 用 PlayEngine.show 渲染題目;之後我們的 hook 會覆寫 answer
       // R5 task 1:Theater 模式已有整場倒數,禁用 PlayEngine 每題 90s 計時器
       PlayEngine.show(q, { contextHTML: ctx, disableTimer: true });
+      // 案例 10:第一次渲染後 cache 洗牌結果(供 submit/review/snapshot 等下游使用)
+      if (!item._rendered && PlayEngine.current && PlayEngine.current.id === item.q.id) {
+        item._rendered = PlayEngine.current;
+      }
 
       // 還原該題的視覺狀態:locked (已送出) / draft (已選未送) / unanswered
       // 三種狀態 _showPreviousAnswerState 內部會分別處理(包含 disable options for locked)
@@ -1080,15 +1110,18 @@
       }
       if (!confirm(msg)) return;
       // 自動把所有 draft 升格為 answers(交卷時送出剩餘草稿)
+      // 案例 10 critical fix:必須用 _getRendered 才有洗牌後 key,否則所有自動升格題
+      // 全被判答錯、correctKey='',進入 fullLog 污染整場結算
       for (let i = 0; i < this.state.total; i++) {
         if (this.state.locked.has(i)) continue;
         const draft = this.state.draft[i];
         if (!draft || !draft.userKey) continue;
         const item = this.state.lineup[i];
-        const q = item.q;
-        const opt = (q.options || []).find(o => o.key === draft.userKey);
+        const renderedQ = this._getRendered(item);
+        const rOpts = (renderedQ && renderedQ.options) || [];
+        const opt = rOpts.find(o => o.key === draft.userKey);
         const isCorrect = !!(opt && opt.is_correct);
-        const correctOpt = (q.options || []).find(o => o.is_correct);
+        const correctOpt = rOpts.find(o => o.is_correct);
         const correctKey = correctOpt ? correctOpt.key : '';
         this.state.answers[i] = { userKey: draft.userKey, isCorrect, correctKey };
         this.state.locked.add(i);
@@ -1340,9 +1373,11 @@
         dialogEl.style.color = '#facc15';
         return;
       }
-      const q = (this.state.lineup[idx] || {}).q || {};
-      const correctOpt = (q.options || []).find(o => o.is_correct);
-      const userOpt = (q.options || []).find(o => o.key === ans.userKey);
+      // 案例 10:用 _getRendered 取洗牌後 options(含 key)
+      const item = this.state.lineup[idx] || {};
+      const renderedQ = this._getRendered(item) || {};
+      const correctOpt = (renderedQ.options || []).find(o => o.is_correct);
+      const userOpt = (renderedQ.options || []).find(o => o.key === ans.userKey);
       // escape for innerHTML
       const esc = (s) => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
       const correctTxt = esc((correctOpt && correctOpt.text) || '');
@@ -1366,12 +1401,13 @@
         if (typeof showToast === 'function') showToast('請先選擇答案再送出', 1800);
         return;
       }
-      // 升格 draft → answers + lock
+      // 升格 draft → answers + lock(案例 10:用 _getRendered 才有洗牌後 key)
       const item = this.state.lineup[idx];
-      const q = item.q;
-      const opt = (q.options || []).find(o => o.key === draft.userKey);
+      const renderedQ = this._getRendered(item);
+      const rOpts = (renderedQ && renderedQ.options) || [];
+      const opt = rOpts.find(o => o.key === draft.userKey);
       const isCorrect = !!(opt && opt.is_correct);
-      const correctOpt = (q.options || []).find(o => o.is_correct);
+      const correctOpt = rOpts.find(o => o.is_correct);
       const correctKey = correctOpt ? correctOpt.key : '';
       this.state.answers[idx] = { userKey: draft.userKey, isCorrect, correctKey };
       this.state.locked.add(idx);
@@ -1524,7 +1560,9 @@
       const fullLog = (s.lineup || []).map((item, i) => {
         const q = item.q;
         const a = s.answers[i];  // {userKey, isCorrect, correctKey} or undefined
-        const correctOpt = (q.options || []).find(o => o.is_correct);
+        // 案例 10:用 _getRendered 取洗牌後 options(含 key)+ 替換後 stem/code
+        const renderedQ = this._getRendered(item) || q;
+        const correctOpt = (renderedQ.options || []).find(o => o.is_correct);
         return {
           qid: q.id,
           npcIdx: item.npcIdx,
@@ -1534,12 +1572,10 @@
           correctKey: a ? a.correctKey : (correctOpt ? correctOpt.key : ''),
           answered: !!a,
           marked: s.markedIds && s.markedIds.has(q.id),
-          // 2026-05-16 加 rendered snapshot:洗牌後 options + 替換 variables 後的 stem/code
-          // 修 bug:reviewHistorySession 用 QUESTIONS 原版時,options 沒 key 對應(renderQuestion 在
-          // 洗牌後才指派 A/B/C/D),導致使用者紅框沒顯示
-          stem: q.stem || '',
-          code_block: q.code_block || '',
-          options: (q.options || []).map(o => ({
+          // rendered snapshot — 洗牌後實際看到的版本(歷史回顧時用)
+          stem: renderedQ.stem || q.stem || '',
+          code_block: renderedQ.code_block || q.code_block || '',
+          options: (renderedQ.options || []).map(o => ({
             key: o.key, text: o.text || '', is_correct: !!o.is_correct
           }))
         };
@@ -1745,7 +1781,9 @@
       this.state.reviewedSet.add(idx);
 
       const item = lineup[idx];
-      const q = item.q;
+      // 案例 10:結算後即時 review 需用 _getRendered 才有洗牌後 key;歷史回顧的
+      // lineup 已用 fullLog snapshot 重建(item.q 已含 key),fallback 也對齊
+      const q = this._getRendered(item) || item.q;
       const npc = NPCS[item.npcIdx] || NPCS[0];
       const userAns = this.state.answers[idx];                // {userKey, isCorrect, correctKey} or undefined
       const correctOpt = (q.options || []).find(o => o.is_correct);
@@ -1977,17 +2015,18 @@
         Wrongbook.markMastered(qid);
         showToast('已從錯題本移除', 1500);
       } else {
-        // 加入錯題本(從 lineup 找出 nodeId + 用戶答案)
+        // 加入錯題本(案例 10:用 _getRendered 取洗牌後 options 才有 key)
         const lineup = this._lastResultLineup || [];
         const idx = lineup.findIndex(it => it.q.id === qid);
         if (idx < 0) { showToast('找不到題目資料', 1500); return; }
         const item = lineup[idx];
-        const q = item.q;
+        const q = item.q;  // q.id/node_id 從原版取
+        const renderedQ = this._getRendered(item) || q;
         const userAns = this.state.answers[idx];
-        const correctOpt = (q.options || []).find(o => o.is_correct);
+        const correctOpt = (renderedQ.options || []).find(o => o.is_correct);
         const correctKey = correctOpt ? correctOpt.key : '';
         const userKey = userAns ? userAns.userKey : '';
-        const userOpt = (q.options || []).find(o => o.key === userKey);
+        const userOpt = (renderedQ.options || []).find(o => o.key === userKey);
         Wrongbook.add(
           q.id, q.node_id, userKey, correctKey,
           (userOpt && userOpt.text) || '',
@@ -2029,22 +2068,25 @@
         return;
       }
       const blocks = lineup.map((item, i) => {
-        const q = item.q;
+        // 案例 10:用 _getRendered 才有洗牌後 key + 替換 placeholder 後的 stem/options/code
+        const q = this._getRendered(item) || item.q;
+        const baseQ = item.q;   // explanation 從原版穩定取
         const correctOpt = (q.options || []).find(o => o.is_correct);
         const correctLabel = correctOpt ? `${correctOpt.key || ''} ${correctOpt.text || ''}` : '(未提供)';
-        const explCorrect = (q.explanation && q.explanation.correct) || '(此題未提供詳細解釋)';
-        const hook = (q.explanation && q.explanation.hook) || '';
+        const explCorrect = (baseQ.explanation && baseQ.explanation.correct) || '(此題未提供詳細解釋)';
+        const hook = (baseQ.explanation && baseQ.explanation.hook) || '';
         const npc = NPCS[item.npcIdx] || NPCS[0];
         // 顯示其他選項解析
         const wrongOpts = (q.options || []).filter(o => !o.is_correct);
         const wrongAnalysis = wrongOpts.map(o => {
           let exp = '';
-          if (q.explanation && q.explanation.wrong && typeof q.explanation.wrong === 'object') {
-            exp = q.explanation.wrong[o.text] || '';
+          // explanation 從原版穩定取(case_a/b/c 不會洗牌)
+          if (baseQ.explanation && baseQ.explanation.wrong && typeof baseQ.explanation.wrong === 'object') {
+            exp = baseQ.explanation.wrong[o.text] || '';
             if (!exp) {
-              for (const k of Object.keys(q.explanation.wrong)) {
+              for (const k of Object.keys(baseQ.explanation.wrong)) {
                 if (k && (k.includes((o.text || '').substring(0, 8)) || (o.text || '').includes(k.substring(0, 8)))) {
-                  exp = q.explanation.wrong[k]; break;
+                  exp = baseQ.explanation.wrong[k]; break;
                 }
               }
             }
