@@ -130,8 +130,8 @@
   function _filterCards(cards, filters) {
     let out = cards;
     if (filters.subject && filters.subject !== 'all') {
-      // 科目從 knowledge_code 推:L21*=科一 / L23*=科三 / L22*=科二(本案無)
-      const prefix = filters.subject === '1' ? 'L21' : filters.subject === '3' ? 'L23' : null;
+      // 科目從 knowledge_code 推:L21*=科一 / L22*=科二(boundary subject) / L23*=科三
+      const prefix = filters.subject === '1' ? 'L21' : filters.subject === '2' ? 'L22' : filters.subject === '3' ? 'L23' : null;
       if (prefix) out = out.filter(c => c.knowledge_code.startsWith(prefix));
     }
     if (filters.code && filters.code !== 'all') {

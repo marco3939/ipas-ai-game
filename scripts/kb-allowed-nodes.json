@@ -416,5 +416,35 @@
       "id": "n_L23402_003",
       "title": "Embedding 偏見與隱式偏誤"
     }
+  ],
+  "L22101": [
+    {
+      "id": "n_L22101_001",
+      "title": "集中趨勢三選一(Mean / Median / Mode)"
+    },
+    {
+      "id": "n_L22101_002",
+      "title": "離散程度(Variance / Std / IQR / Range)"
+    },
+    {
+      "id": "n_L22101_003",
+      "title": "偏度與峰度(Skewness / Kurtosis)"
+    },
+    {
+      "id": "n_L22101_004",
+      "title": "五數彙整與箱形圖(Five-number Summary / Boxplot)"
+    },
+    {
+      "id": "n_L22101_005",
+      "title": "離群值偵測(描述性層面 — IQR 規則 / Z-score)"
+    },
+    {
+      "id": "n_L22101_006",
+      "title": "描述性 vs 推論統計分界"
+    },
+    {
+      "id": "n_L22101_007",
+      "title": "資料品質快照(Data Profiling — 缺值 / 重複 / 型別 / 不平衡)"
+    }
   ]
 }

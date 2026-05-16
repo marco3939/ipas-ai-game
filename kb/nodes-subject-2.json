@@ -1,0 +1,225 @@
+{
+  "version": "1.0",
+  "subject": 2,
+  "schema_version": "1.0-iron-rule",
+  "iron_rule_compliance": "every node has misconceptions, explanation_hooks, variation_seeds",
+  "last_updated": "2026-05-16",
+  "scope_alignment": "限 scope.json include=true 之 L22 編碼;subject-2 為 boundary subject,所有節點以 ML 前置概念角度切入,不考工具操作細節(對齊鐵律 #5 來源忠實性)",
+  "batches_processed": [
+    {"batch": "subject-2-pilot", "files": ["01指引/科二指引 Ch3.1 敘述統計"], "date": "2026-05-16", "scope": "L22101 pilot(7 nodes)"}
+  ],
+  "primary_source_note": "節點以 IPAS 科二指引 Ch3.1 敘述統計章節為主 source,並對齊 L23101 推論統計避免概念重疊",
+  "nodes": [
+    {
+      "node_id": "n_L22101_001",
+      "knowledge_code": "L22101",
+      "title": "集中趨勢三選一(Mean / Median / Mode)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch3.1 敘述統計"}],
+      "summary": "平均數受極端值影響大;偏態或有離群值時用中位數;類別資料只能用眾數;對 ML 特徵縮放決策(StandardScaler vs RobustScaler)有直接影響",
+      "key_points": [
+        "Mean 對所有資料敏感,適合常態 / 對稱分佈",
+        "Median 為穩健統計量(robust),抗離群值",
+        "Mode 是唯一可用於名目尺度(類別)資料的集中趨勢量",
+        "右偏分佈:Mean > Median > Mode;左偏反之"
+      ],
+      "common_misconceptions": [
+        "誤以為任何情境都用平均數最具代表性",
+        "把『眾數』套到連續變數(實際需先分組)",
+        "誤判右偏左偏與三量關係順序"
+      ],
+      "explanation_hooks": [
+        "薪資、房價、所得 → 右偏 → 用中位數而非平均",
+        "RobustScaler 用 median / IQR 而非 mean / std,正是同樣原理",
+        "三量關係順序口訣『左尾左偏 Mean 拉低』:右偏 Mean > Median > Mode"
+      ],
+      "variation_seeds": [
+        {"context": "公司薪資中位數遠低於平均,代表什麼?", "answer": "右偏(少數高薪拉高平均)"},
+        {"context": "問卷『最喜歡的品牌』集中趨勢量?", "answer": "眾數(類別資料)"}
+      ],
+      "related_node_ids": ["n_L22101_002", "n_L22101_003"]
+    },
+    {
+      "node_id": "n_L22101_002",
+      "knowledge_code": "L22101",
+      "title": "離散程度(Variance / Std / IQR / Range)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch3.1 離散程度"}],
+      "summary": "Variance / Std 受極端值放大;IQR(Q3-Q1)為穩健離散量;Range 只看兩端最不穩定。ML 特徵縮放、離群值偵測、特徵選擇皆以離散量為基礎",
+      "key_points": [
+        "Variance = Σ(xᵢ-μ)² / n(母體)或 /(n-1)(樣本)",
+        "Std = √Variance,與原資料同單位",
+        "IQR = Q3 - Q1,涵蓋中間 50% 資料",
+        "Range = Max - Min,僅兩點易被離群值左右"
+      ],
+      "common_misconceptions": [
+        "把樣本變異數公式 (n-1) 寫成 n",
+        "誤以為 Std 越大模型一定越難學(實際看是否與目標相關)",
+        "用 Range 描述穩定性"
+      ],
+      "explanation_hooks": [
+        "n-1 為自由度修正(Bessel's correction)避免低估母體變異",
+        "IQR 是箱形圖盒子的高度,也是 RobustScaler 分母",
+        "Variance 是 PCA 主成分排序的核心依據"
+      ],
+      "variation_seeds": [
+        {"context": "感測器 99% 讀數穩定但偶有極端尖峰,描述其穩定性最適量?", "answer": "IQR"},
+        {"context": "PCA 第一主成分挑哪個方向?", "answer": "變異最大的方向"}
+      ],
+      "related_node_ids": ["n_L22101_001", "n_L22101_005"]
+    },
+    {
+      "node_id": "n_L22101_003",
+      "knowledge_code": "L22101",
+      "title": "偏度與峰度(Skewness / Kurtosis)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch3.1 分佈型態"}],
+      "summary": "Skewness 衡量分佈對稱性(正/負/零);Kurtosis 衡量尾部厚度與尖峰度(常態為 3,超額峰度 = Kurtosis-3)。對線性回歸 / 假設常態的 ML 模型有直接影響",
+      "key_points": [
+        "Skewness > 0:右偏(長尾在右),如薪資、房價",
+        "Skewness < 0:左偏(長尾在左),如考試高分集中",
+        "Kurtosis > 3(超額峰度 > 0):厚尾(Leptokurtic),極端值機率高",
+        "Kurtosis < 3:薄尾(Platykurtic),分佈較平緩"
+      ],
+      "common_misconceptions": [
+        "把右偏的『右』誤認為是高峰在右(實際是尾巴在右)",
+        "誤以為厚尾代表整體變異大(實際是極端事件機率大)",
+        "把超額峰度 0 誤判為非常態"
+      ],
+      "explanation_hooks": [
+        "右偏:大多數值偏小,少數很大 →『拖一條長尾在右』",
+        "金融報酬常見厚尾 → 用常態低估極端風險(2008 金融海嘯教訓)",
+        "log transform 常用於對右偏資料『拉回常態』"
+      ],
+      "variation_seeds": [
+        {"context": "信用卡交易金額分佈,偏度方向?", "answer": "右偏(大多小額,少數高額)"},
+        {"context": "對右偏資料如何處理?", "answer": "log / Box-Cox 轉換"}
+      ],
+      "related_node_ids": ["n_L22101_001", "n_L22101_004"]
+    },
+    {
+      "node_id": "n_L22101_004",
+      "knowledge_code": "L22101",
+      "title": "五數彙整與箱形圖(Five-number Summary / Boxplot)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch3.1 資料摘要"}],
+      "summary": "Min / Q1 / Median / Q3 / Max 構成五數彙整,對應箱形圖五條線;鬚長外的點視為潛在離群值。為 EDA 第一張必看圖",
+      "key_points": [
+        "Q1 = 下四分位數(25 百分位)",
+        "Q3 = 上四分位數(75 百分位)",
+        "盒子高 = IQR;盒中橫線 = Median",
+        "鬚(whisker)上限 = Q3 + 1.5×IQR;下限 = Q1 - 1.5×IQR",
+        "鬚外的點以圓點標示為潛在離群值"
+      ],
+      "common_misconceptions": [
+        "把鬚長誤認為 Min/Max(實際是 1.5×IQR 規則內的最遠點)",
+        "誤以為盒中橫線是平均數(實際是中位數)",
+        "把箱形圖的偏態誤判反(盒子上移應為左偏)"
+      ],
+      "explanation_hooks": [
+        "箱形圖一眼看出:中位數位置、分佈散度、偏度、離群值",
+        "盒子上半部較大 → 右偏(Q3 距 Median 比 Median 距 Q1 遠)",
+        "比較多組資料分佈時箱形圖比直方圖更省版面"
+      ],
+      "variation_seeds": [
+        {"context": "盒子中位線靠近 Q1,代表偏態?", "answer": "右偏"},
+        {"context": "箱形圖盒外圓點是什麼?", "answer": "1.5×IQR 規則外的潛在離群值"}
+      ],
+      "related_node_ids": ["n_L22101_002", "n_L22101_005"]
+    },
+    {
+      "node_id": "n_L22101_005",
+      "knowledge_code": "L22101",
+      "title": "離群值偵測(描述性層面 — IQR 規則 / Z-score)",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch3.1 資料摘要"}, {"file": "科二指引", "section": "Ch4.1 數據清理(交叉)"}],
+      "summary": "兩大描述性離群值規則:1.5×IQR(穩健、不假設分佈)與 |Z|>3(假設近常態)。為資料清理前置步驟,影響後續特徵縮放與模型訓練品質",
+      "key_points": [
+        "IQR 規則:x < Q1 - 1.5×IQR 或 x > Q3 + 1.5×IQR 視為離群",
+        "Z-score 規則:Z = (x-μ)/σ,|Z|>3 視為離群(假設常態)",
+        "IQR 屬穩健統計,適合偏態 / 厚尾資料",
+        "Z-score 對厚尾分佈會低估離群點(σ 被尾部撐大)"
+      ],
+      "common_misconceptions": [
+        "對右偏資料硬套 |Z|>3 規則",
+        "把所有離群值都當錯誤刪除(實際應先評估是否為真實罕見事件)",
+        "把 IQR 規則的 1.5 倍誤套成 3 倍(那是『極端離群』判準)"
+      ],
+      "explanation_hooks": [
+        "右偏資料 → 用 IQR;近常態 → Z-score 兩者皆可",
+        "1.5×IQR 為一般離群、3×IQR 為極端離群",
+        "離群值處理三選一:刪除 / 縮尾(winsorize)/ 保留標註"
+      ],
+      "variation_seeds": [
+        {"context": "信用卡盜刷偵測,該『刪除』離群值嗎?", "answer": "不,離群值就是訊號本身"},
+        {"context": "厚尾報酬資料用哪種離群規則較穩健?", "answer": "IQR 規則"}
+      ],
+      "related_node_ids": ["n_L22101_002", "n_L22101_004"]
+    },
+    {
+      "node_id": "n_L22101_006",
+      "knowledge_code": "L22101",
+      "title": "描述性 vs 推論統計分界",
+      "category": "concept",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch3.1 統計學基礎"}, {"file": "科二指引", "section": "Ch3.3 假設檢定(對照)"}],
+      "summary": "描述性統計:摘要『手上這份資料』(mean / median / variance / distribution);推論統計:從樣本『推估母體』或檢驗假設(信賴區間 / p-value / 假設檢定)。兩者目的不同,工具不可互換",
+      "key_points": [
+        "描述性:summarize 已知資料(不外推)",
+        "推論性:從樣本推估母體 / 檢驗假設(外推)",
+        "EDA 階段以描述性為主,模型評估階段才會用到推論性",
+        "描述性結論不需 p-value;推論性結論一定有不確定性陳述"
+      ],
+      "common_misconceptions": [
+        "看到 mean / variance 就以為是推論統計",
+        "把『樣本平均』與『母體平均估計』畫等號(後者才需 CI)",
+        "對描述性統計結果做顯著性檢定"
+      ],
+      "explanation_hooks": [
+        "口訣『描述看現況、推論看未來/母體』",
+        "描述性 → 一個數字 / 一張圖;推論性 → 一個區間 / 一個 p-value",
+        "ML EDA 90% 是描述性;模型上線後 A/B test 才是推論"
+      ],
+      "variation_seeds": [
+        {"context": "報告『本月客單價平均 380 元』屬?", "answer": "描述性"},
+        {"context": "報告『新功能對轉換率影響 p=0.03 顯著』屬?", "answer": "推論性"}
+      ],
+      "related_node_ids": ["n_L22101_001"]
+    },
+    {
+      "node_id": "n_L22101_007",
+      "knowledge_code": "L22101",
+      "title": "資料品質快照(Data Profiling — 缺值 / 重複 / 型別 / 不平衡)",
+      "category": "flow",
+      "source_level": "L1",
+      "source_refs": [{"file": "科二指引", "section": "Ch3.1 資料摘要應用"}, {"file": "科二指引", "section": "Ch4.1 數據清理(交叉)"}],
+      "summary": "EDA 第一步必跑的四項摘要:缺值率、重複率、欄位型別分佈、目標類別平衡度。為後續清理 / 特徵工程 / 取樣策略決策的起點",
+      "key_points": [
+        "缺值率 > 30% 通常考慮整欄刪除或建構缺值標記",
+        "高重複率可能是 ETL bug 或天然重複(看業務語境)",
+        "型別錯置(數字被讀為字串)是 schema 第一檢查項",
+        "目標類別比例 > 10:1 視為不平衡,影響 metric 選擇(F1 / PR-AUC 取代 Accuracy)"
+      ],
+      "common_misconceptions": [
+        "直接刪掉所有有缺值的列(忽略缺值機制是 MCAR / MAR / MNAR)",
+        "用 Accuracy 評估不平衡分類(99% 多數類就有 99% Accuracy)",
+        "把『缺值』和『0』畫等號"
+      ],
+      "explanation_hooks": [
+        "缺值機制三類:MCAR(完全隨機)/ MAR(條件隨機)/ MNAR(非隨機)",
+        "不平衡資料 → 用 F1 / Precision-Recall / 重取樣(SMOTE)",
+        "Profiling 工具(pandas-profiling / ydata-profiling)會一鍵產生這四項"
+      ],
+      "variation_seeds": [
+        {"context": "信用卡詐欺資料正:負 = 1:999,該用什麼指標?", "answer": "F1 或 PR-AUC,不是 Accuracy"},
+        {"context": "某欄位缺值率 35%,首選處理?", "answer": "評估刪欄或建『is_missing』標記"}
+      ],
+      "related_node_ids": ["n_L22101_005"]
+    }
+  ]
+}

@@ -19,6 +19,7 @@ const FILES = [
   'questions-batch-n3-genai.json', 'questions-batch-n4-planning.json',
   'questions-batch-n5-deploy.json', 'questions-batch-n6-ml-core.json',
   'questions-batch-n7-dl.json', 'questions-batch-n8-eval-gov.json',
+  'questions-batch-n9-subject2.json',
   'questions-confusion-matrix.json',
   'questions-mode8-trace.json',
 ];

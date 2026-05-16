@@ -7,7 +7,7 @@ const ROOT = path.join(__dirname, '..');
 const KB_DIR = path.join(ROOT, 'kb');
 const SRC_DIR = path.join(ROOT, 'src');
 
-const KB_FILES = ['nodes-subject-1.json', 'nodes-subject-1-extended.json', 'nodes-subject-3.json', 'nodes-subject-3-extended.json'];
+const KB_FILES = ['nodes-subject-1.json', 'nodes-subject-1-extended.json', 'nodes-subject-2.json', 'nodes-subject-3.json', 'nodes-subject-3-extended.json'];
 const Q_FILES = [
   'questions.json', 'questions-pa-code.json', 'questions-pb-visual.json',
   'questions-pc-modes.json', 'questions-pd-scenario.json',
@@ -17,6 +17,7 @@ const Q_FILES = [
   'questions-batch-n3-genai.json', 'questions-batch-n4-planning.json',
   'questions-batch-n5-deploy.json', 'questions-batch-n6-ml-core.json',
   'questions-batch-n7-dl.json', 'questions-batch-n8-eval-gov.json',
+  'questions-batch-n9-subject2.json',
   'questions-confusion-matrix.json',
   'questions-mode8-trace.json',
 ];

@@ -24,9 +24,9 @@
 
 ---
 
-## 1. 五大鐵律(Iron Rules,違反即任務失敗)
+## 1. 六大鐵律(Iron Rules,違反即任務失敗)
 
-> 所有 sub agent prompt 必須複製這五條進去,作為硬約束。
+> 所有 sub agent prompt 必須複製這六條進去,作為硬約束。
 
 ### 鐵律 #1 — 錯題驅動下鑽學習
 **規範**:
@@ -96,6 +96,21 @@
 - **稽核腳本**:`node scripts/audit-source-fidelity.js`(必須 100% 合規)
 - Sub agent 寫題時**禁止憑空**,必須先讀 `scripts/kb-allowed-nodes.json` 限定 node_id
 - 升級 mode 時不得新增題目(只能用既有 questions*.json),違者標 NEEDS_DELETION
+
+### 鐵律 #6 — 科目隔離性(新增科目資料不污染其他科目)
+**規範**:
+- 新增**任一**科目(科一/科二/科三)的題目或 KB 節點時,**禁止修改其他科目既有的 `questions*.json` 與 `kb/nodes-subject-*.json`**
+- 新題庫一律放**獨立檔**(如 `questions-batch-nN-subjectK.json`),不得 inline 進其他科目批次檔
+- 新 KB 節點放對應科目檔(如 `kb/nodes-subject-2.json`),不得借用其他科目檔承載
+- 跨檔共用層(`scripts/audit-*.js` Q_FILES、`scripts/kb-allowed-nodes.json`、`src/index.html` `loadQuestions()` 清單、`src/modes/mode6.js` 科目 filter)的修改僅限**純 additive**(加分支、加檔名),不得改既有科目的處理邏輯
+- 跨科目重疊概念(如 L22101 ↔ L23101 統計):新增科目的節點 `related_node_ids` 可指向其他科目節點,但**反向不可**(不得回頭修既有節點加新引用)
+
+**Why**:使用者明示「新加入的科目二資料不可以影響到其他科目的考題跟 KB」。違反 = 既有 mastery / wrongbook / drill 行為被連坐改變 = 已通過驗證的科目資料退化。
+
+**How to apply**:
+- 開工前列「**新增檔清單**」與「**additive 修改檔清單**」兩類,任一檔出現「修改既有科目內容」即為違反
+- Commit diff 自驗:`git diff` 不得出現既有 `questions-batch-n[1-8]*.json`、`kb/nodes-subject-1*.json`、`kb/nodes-subject-3*.json` 的內容變更
+- Sub agent prompt 必含本鐵律 + 嚴格約束「你只能新建以下檔案 / 你不可修改以下檔案」清單
 
 ---
 
