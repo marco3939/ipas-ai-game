@@ -20,15 +20,17 @@
   const STORAGE_KEY = 'ipas_mode7_theater_v1';
   const STORAGE_VERSION = '1.0';
 
-  // === 模考時長配置(對標 IPAS 中級真考:60 分 50 題)===
-  // 25 題 30 分鐘(72s/題)/ 30 題 40 分鐘(80s/題)/ 50 題 60 分鐘(72s/題)
+  // === 模考時長配置(嚴格對標 IPAS AI 中級真考:單科 50 題 90 分鐘 = 108 秒/題)===
+  // 2026-05-16 修:user 要求以真考標準比例延伸,50→90 / 30→54 / 25→45 / 20→36 分鐘,皆 108s/題
   const QCOUNT_OPTIONS = [
-    { qcount: 25, minutes: 30, label: '🥉 衝刺 25 題 / 30 分鐘',
-      desc: '快節奏體驗,適合臨睡前一場(72s/題)' },
-    { qcount: 30, minutes: 40, label: '🥈 標準 30 題 / 40 分鐘',
-      desc: '平衡時長與壓力(80s/題)' },
-    { qcount: 50, minutes: 60, label: '🥇 全餐 50 題 / 60 分鐘',
-      desc: '完整模擬真考時長(72s/題,對標 IPAS 中級單科)' }
+    { qcount: 20, minutes: 36, label: '🥉 短場 20 題 / 36 分鐘',
+      desc: '時間有限版,真考比例 108s/題' },
+    { qcount: 25, minutes: 45, label: '🏃 衝刺 25 題 / 45 分鐘',
+      desc: '半場演練,真考比例 108s/題' },
+    { qcount: 30, minutes: 54, label: '🥈 標準 30 題 / 54 分鐘',
+      desc: '考前壓力訓練,真考比例 108s/題' },
+    { qcount: 50, minutes: 90, label: '🥇 全餐 50 題 / 90 分鐘',
+      desc: '完整對標 IPAS AI 中級單科真考(108s/題)' }
   ];
 
   const SCOPE_OPTIONS = [
