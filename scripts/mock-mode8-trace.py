@@ -270,22 +270,24 @@ def verify_q_m8_010(env_after, step_idx, expected):
     return False
 
 def verify_q_m8_011(env_after, step_idx, expected):
-    """KNN:
-       after_line=5 → diffs.shape
-       after_line=6 → sq_dists (list of floats)
-       after_line=9 → nearest_idx (list)
-       after_line=12 → pred (int)
+    """K-means vectorized distance (PR #4 后實際 trace_steps 是 after_line 4-7):
+       after_line=4 → diffs.shape (tuple)
+       after_line=5 → sq_dists 2D as "[[r1c1, r1c2], [r2c1, r2c2], ...]"
+       after_line=6 → labels list
+       after_line=7 → c0_count int
+    2026-05-16 修補:原 verifier 寫舊版 KNN-vote 的 step_idx 5/6/9/12,跟現行 trace_steps 不符。
     """
-    if step_idx == 5:
+    if step_idx == 4:
         return str(tuple(env_after['diffs'].shape)) == expected
+    if step_idx == 5:
+        arr = env_after['sq_dists']
+        rows = ['[' + ', '.join(str(float(x)) for x in row) + ']' for row in arr]
+        actual = '[' + ', '.join(rows) + ']'
+        return actual == expected
     if step_idx == 6:
-        actual = '[' + ', '.join(str(float(x)) for x in env_after['sq_dists']) + ']'
-        return actual == expected
-    if step_idx == 9:
-        actual = str(env_after['nearest_idx'].tolist())
-        return actual == expected
-    if step_idx == 12:
-        return str(env_after['pred']) == expected
+        return str(env_after['labels'].tolist()) == expected
+    if step_idx == 7:
+        return str(env_after['c0_count']) == expected
     return False
 
 def verify_q_m8_012(env_after, step_idx, expected):
