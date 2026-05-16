@@ -362,34 +362,34 @@
       "node_id": "n_L22201_002",
       "subject": 2,
       "format": "code_reading",
-      "difficulty": "easy",
+      "difficulty": "medium",
       "source_level": "L2",
-      "stem": "在保險理賠資料清理中,分析師檢查缺值。請問下列程式中,a 與 b 的關係為何?",
-      "code_block": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'claim': [{x1}, {x2}, {x3}, {x4}]})\na = df['claim'].isna().sum()\nb = df['claim'].isnull().sum()\nprint(a == b, a)",
+      "stem": "保險理賠資料含缺值,分析師比較『刪除缺值列(dropna)』與『以 0 填補(fillna(0))』兩策略對平均的影響。下列程式 `print(round(drop_mean, 1), round(zero_mean, 1))` 的實際輸出為何?",
+      "code_block": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'claim': [{x1}, np.nan, {x2}, np.nan, {x3}]})\ndrop_mean = df['claim'].dropna().mean()     # 策略 A:刪除缺值列\nzero_mean = df['claim'].fillna(0).mean()    # 策略 B:以 0 填補\nprint(round(drop_mean, 1), round(zero_mean, 1))",
       "stem_variables": {
-        "case_a": {"x1": "100", "x2": "np.nan", "x3": "50", "x4": "np.nan", "answer": "True 2", "wrong1": "False 2", "wrong2": "True 4", "wrong3": "False 0"},
-        "case_b": {"x1": "np.nan", "x2": "100", "x3": "np.nan", "x4": "np.nan", "answer": "True 3", "wrong1": "False 3", "wrong2": "True 4", "wrong3": "False 0"},
-        "case_c": {"x1": "100", "x2": "50", "x3": "np.nan", "x4": "200", "answer": "True 1", "wrong1": "False 1", "wrong2": "True 4", "wrong3": "False 0"}
+        "case_a": {"x1": "100", "x2": "50", "x3": "150", "answer": "100.0 60.0", "wrong1": "60.0 100.0", "wrong2": "100.0 100.0", "wrong3": "nan nan"},
+        "case_b": {"x1": "80", "x2": "60", "x3": "100", "answer": "80.0 48.0", "wrong1": "48.0 80.0", "wrong2": "80.0 80.0", "wrong3": "nan nan"},
+        "case_c": {"x1": "200", "x2": "100", "x3": "300", "answer": "200.0 120.0", "wrong1": "120.0 200.0", "wrong2": "200.0 200.0", "wrong3": "nan nan"}
       },
       "options": [
         {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為 isna/isnull 不同"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為計算總列數"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為 NaN 不算缺值"}
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤把策略順序倒置"},
+        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為 fillna(0) 不改變平均值"},
+        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為 NaN 會污染整個 mean 運算"}
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "pandas 的 isna() 與 isnull() 是同一個函式的別名,行為完全相同。兩者都把 NaN 視為缺值,故 a == b 為 True。本題資料中 NaN 個數確定,所以 a = b 同值。",
+        "correct": "dropna 後 mean 只算 3 個觀測值 ({x1}+{x2}+{x3})/3 = drop_mean;fillna(0) 把 2 個 NaN 換成 0,然後 mean 仍以 5 筆計算 (drop_mean*3+0+0)/5,因此 zero_mean = drop_mean × 3/5,系統性向下偏移。對保險理賠這類非負數據,0 填補會造成 mean 嚴重低估,違反業務常識,屬於常見的『缺值處理誤用』。應依缺值機制(MCAR/MAR/MNAR)選對應策略:MCAR 可 dropna 或 mean/median imputation;MAR 用條件式填補;MNAR 需另建『is_missing』標記欄。",
         "wrong": {
-          "{wrong1}": "isna 與 isnull 完全等價,不會 False。pandas 為了 R 與 SQL 使用者各取一個別名。",
-          "{wrong2}": "4 是總筆數,但 sum 在布林上計算的是 True 的個數,只有 NaN 處為 True,不是總筆數。",
-          "{wrong3}": "np.nan 在 isna/isnull 都會回傳 True,絕不會視為非缺值。"
+          "{wrong1}": "策略 A(dropna)在前、策略 B(fillna 0)在後,順序倒置會誤判兩策略對 mean 的相對位置;dropna 必 ≥ fillna(0) 因為觀測值非負。",
+          "{wrong2}": "fillna(0) 會把 NaN 變成 0 進入 mean 分子,但分母仍是 5(不像 dropna 縮減為 3),所以 mean 必降低。此選項為對 fillna 機制的根本誤解。",
+          "{wrong3}": "pandas 的 .mean() 預設 skipna=True,NaN 會被跳過而非污染運算;只有當資料全為 NaN 時才會輸出 NaN。"
         },
-        "hook": "isna == isnull(別名);兩個都偵測 NaN"
+        "hook": "口訣『非負數據 fillna(0) 必拉低 mean』:dropna 算 k 筆真實平均;fillna(0) 把 NaN 換 0 但分母還是 n,所以 mean 縮成 k/n 倍。對應 MCAR/MAR/MNAR 機制選不同策略才對"
       },
-      "misconceptions": ["以為 isna 與 isnull 行為不同", "忽略 sum 在布林上的意義"],
+      "misconceptions": ["以為 fillna(0) 不會影響統計量", "忽略缺值機制(MCAR/MAR/MNAR)與處理策略的對應", "以為 dropna 與 fillna 兩策略 mean 必相同"],
       "related_node_ids": ["n_L22201_002"],
-      "tags": ["pandas", "缺值", "isna"]
+      "tags": ["pandas", "缺值處理", "imputation", "MCAR"]
     },
     {
       "id": "q_pa_014",
