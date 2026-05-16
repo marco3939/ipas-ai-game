@@ -192,13 +192,13 @@
       "stem": "在多維基因表現資料的降維專案中,資料科學家保留若干個主成分。請問下列程式輸出 X_pca 的形狀為何?",
       "code_block": "from sklearn.decomposition import PCA\nimport numpy as np\nnp.random.seed(0)\nX = np.random.rand({n}, {d})\npca = PCA(n_components={k})\nX_pca = pca.fit_transform(X)\nprint(X_pca.shape)",
       "stem_variables": {
-        "case_a": {"n": "120", "d": "5", "k": "2", "answer": "(120, 2)", "wrong1": "(2, 120)", "wrong2": "(120, 5)", "wrong3": "(2, 5)"},
-        "case_b": {"n": "200", "d": "8", "k": "3", "answer": "(200, 3)", "wrong1": "(3, 200)", "wrong2": "(200, 8)", "wrong3": "(3, 8)"},
-        "case_c": {"n": "150", "d": "10", "k": "4", "answer": "(150, 4)", "wrong1": "(4, 150)", "wrong2": "(150, 10)", "wrong3": "(4, 10)"}
+        "case_a": {"n": "120", "d": "5", "k": "2", "answer": "(120, 2)", "wrong1": "(120,)", "wrong2": "(120, 5)", "wrong3": "(2, 5)"},
+        "case_b": {"n": "200", "d": "8", "k": "3", "answer": "(200, 3)", "wrong1": "(200,)", "wrong2": "(200, 8)", "wrong3": "(3, 8)"},
+        "case_c": {"n": "150", "d": "10", "k": "4", "answer": "(150, 4)", "wrong1": "(150,)", "wrong2": "(150, 10)", "wrong3": "(4, 10)"}
       },
       "options": [
         {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "搞反列與欄"},
+        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為 PCA 結果是一維(每筆樣本只剩單一分數)"},
         {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為原維度保留"},
         {"text": "{wrong3}", "is_correct": false, "trap_type": "把 components_ 形狀當成 transform 輸出"}
       ],
@@ -206,7 +206,7 @@
       "explanation": {
         "correct": "fit_transform 同時 fit 且把資料投影到主成分空間。樣本數不變({n}),特徵維度降為 n_components({k}),所以形狀為 {answer}。",
         "wrong": {
-          "{wrong1}": "sklearn 慣例是 (n_samples, n_features),樣本在列、特徵在欄,不會把樣本擺到欄。",
+          "{wrong1}": "此形狀把 PCA 結果誤想成一維陣列(只剩單一主成分分數),但 n_components={k} > 1 時,每筆樣本會有 {k} 個座標,結果必為 2D ({n}, {k})。只有 n_components=1 才會像 (n,) 一維,但若以 fit_transform 傳回仍是 2D ({n},1) 而非 ({n},)。",
           "{wrong2}": "PCA 主目的就是降維,輸出維度為 n_components 不是原 {d} 維。",
           "{wrong3}": "此形狀是 pca.components_ 的形狀(每列是一個主成分向量),不是 fit_transform 結果。"
         },
@@ -224,12 +224,12 @@
       "format": "code_reading",
       "difficulty": "easy",
       "source_level": "L2",
-      "stem": "在電商點擊率預測模型,工程師用 KFold 做交叉驗證。請問下列程式輸出迴圈執行次數與每次測試集大小?",
-      "code_block": "from sklearn.model_selection import KFold\nimport numpy as np\nX = np.arange({n}).reshape(-1, 1)\nkf = KFold(n_splits={k}, shuffle=True, random_state=0)\ncount = 0\ntest_sizes = []\nfor _, test_idx in kf.split(X):\n    count += 1\n    test_sizes.append(len(test_idx))\nprint(count, set(test_sizes))",
+      "stem": "在電商點擊率預測模型,工程師用 KFold 做交叉驗證。下列程式印出『迴圈執行次數、所有測試集大小去重後的個數、第一折的測試集大小』,請問輸出為何?",
+      "code_block": "from sklearn.model_selection import KFold\nimport numpy as np\nX = np.arange({n}).reshape(-1, 1)\nkf = KFold(n_splits={k}, shuffle=True, random_state=0)\ncount = 0\ntest_sizes = []\nfor _, test_idx in kf.split(X):\n    count += 1\n    test_sizes.append(len(test_idx))\nprint(count, len(set(test_sizes)), test_sizes[0])",
       "stem_variables": {
-        "case_a": {"n": "1000", "k": "5", "answer": "5 {200}", "wrong1": "1 {1000}", "wrong2": "5 {800}", "wrong3": "10 {100}"},
-        "case_b": {"n": "1200", "k": "4", "answer": "4 {300}", "wrong1": "1 {1200}", "wrong2": "4 {900}", "wrong3": "8 {150}"},
-        "case_c": {"n": "800", "k": "8", "answer": "8 {100}", "wrong1": "1 {800}", "wrong2": "8 {700}", "wrong3": "16 {50}"}
+        "case_a": {"n": "1000", "k": "5", "answer": "5 1 200", "wrong1": "1 1 1000", "wrong2": "5 1 800", "wrong3": "10 1 100"},
+        "case_b": {"n": "1200", "k": "4", "answer": "4 1 300", "wrong1": "1 1 1200", "wrong2": "4 1 900", "wrong3": "8 1 150"},
+        "case_c": {"n": "800", "k": "8", "answer": "8 1 100", "wrong1": "1 1 800", "wrong2": "8 1 700", "wrong3": "16 1 50"}
       },
       "options": [
         {"text": "{answer}", "is_correct": true},
@@ -239,13 +239,13 @@
       ],
       "shuffle_options": true,
       "explanation": {
-        "correct": "KFold(n_splits={k}) 把資料切 {k} 等份,迴圈執行 {k} 次。每次以 1/{k} 筆為 test,其餘為 train。set 去重後僅剩單一測試集大小。",
+        "correct": "KFold(n_splits={k}) 把 n={n} 筆資料切 {k} 等份,迴圈執行 {k} 次,故 count={k}。當 n 能被 {k} 整除時每折 test 大小都相同,len(set(test_sizes))=1。第一折 test_idx 長度為 n/{k},即 {answer} 末位值。",
         "wrong": {
           "{wrong1}": "split 是產生 {k} 組 (train_idx, test_idx) 索引,迴圈會跑 {k} 次而非 1 次。",
-          "{wrong2}": "此值為訓練集大小(n-n/k)不是測試集。題目印的是 len(test_idx)。",
-          "{wrong3}": "n_splits={k} 就是 {k} 折,不會翻倍。要 2{k} 折需要設定 n_splits=2*{k}。"
+          "{wrong2}": "末位值為訓練集大小(n-n/k)不是測試集。題目印的是 test_sizes[0] = len(test_idx)。",
+          "{wrong3}": "n_splits={k} 就是 {k} 折,迴圈次數不會翻倍。"
         },
-        "hook": "KFold n_splits = K → 跑 K 次,每次 test = n/K"
+        "hook": "KFold n_splits = K → 跑 K 次,每折 test = n/K"
       },
       "misconceptions": ["搞反訓練/測試比例", "以為 KFold 是隨機抽一次"],
       "related_node_ids": ["n_L23303_005"],
@@ -323,13 +323,13 @@
     },
     {
       "id": "q_pa_010",
-      "knowledge_code": "L23302",
-      "node_id": "n_L23302_001",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_003",
       "subject": 3,
       "format": "code_reading",
       "difficulty": "easy",
       "source_level": "L2",
-      "stem": "在語音辨識前處理,工程師建立全連接層 nn.Linear(in={in_dim}, out={out_dim}),輸入 batch={batch} 的特徵。請問下列程式輸出形狀為何?",
+      "stem": "在語音辨識前處理,工程師用 nn.Linear(in={in_dim}, out={out_dim}) 實作神經元的加權求和公式 y = xW^T + b,輸入 batch={batch} 的特徵。請問下列程式輸出形狀為何?",
       "code_block": "import torch\nimport torch.nn as nn\ntorch.manual_seed(0)\nlayer = nn.Linear({in_dim}, {out_dim})\nx = torch.randn({batch}, {in_dim})\ny = layer(x)\nprint(y.shape)",
       "stem_variables": {
         "case_a": {"in_dim": "64", "out_dim": "16", "batch": "8", "answer": "torch.Size([8, 16])", "wrong1": "torch.Size([8, 64])", "wrong2": "torch.Size([16, 8])", "wrong3": "torch.Size([64, 16])"},
@@ -353,8 +353,8 @@
         "hook": "nn.Linear 只改最後一軸:in→out,batch 不變"
       },
       "misconceptions": ["搞反 weight 與輸出形狀", "以為 Linear 改 batch"],
-      "related_node_ids": ["n_L23302_001"],
-      "tags": ["pytorch", "nn.Linear", "shape"]
+      "related_node_ids": ["n_L23203_003"],
+      "tags": ["pytorch", "nn.Linear", "shape", "加權求和"]
     },
     {
       "id": "q_pa_013",
