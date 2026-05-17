@@ -169,6 +169,18 @@
     state: null,
 
     // 入口:start()
+    // 案例 10 audit C-1:加 cleanup,goHome 呼叫時還原 PlayEngine hook(避免 hook 殘留污染其他 mode)
+    cleanup() {
+      if (this._origAnswer && typeof PlayEngine !== 'undefined') {
+        PlayEngine.answer = this._origAnswer;
+        this._origAnswer = null;
+      }
+      if (this._origOnNext !== undefined && this._origOnNext !== null && typeof PlayEngine !== 'undefined') {
+        PlayEngine.onNext = this._origOnNext;
+        this._origOnNext = null;
+      }
+    },
+
     async start() {
       RNG.set(Date.now()); // 鐵律 #2:每場新 seed
       // 還原可能殘留的 PlayEngine hook(若上次 challenge 中途離開)

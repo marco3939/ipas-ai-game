@@ -125,6 +125,13 @@
   ];
 
   // === 取題:嚴格從 BOSS 的 qids 抓,缺題就少出(鐵律 #5)===
+  // 案例 10 audit BUG-X1:HTML escape helper(defense-in-depth)
+  function esc(s) {
+    if (s === null || s === undefined) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
   function pickQuestionsForBoss(boss) {
     const list = [];
     for (const id of boss.qids) {
@@ -135,7 +142,7 @@
     // (BOSS qids 池小,fallback 很常見;此模式以「全 BOSS 池打完才完全切換」為設計)
     if (typeof SeenCorrect !== 'undefined' && list.length > 0) {
       const fr = SeenCorrect.filterForBattle(list, 1);
-      if (fr.fallback) showToast(`「${boss.name||'本 BOSS'}」全題已答對過,允許重複再戰`);
+      if (fr.fallback) showToast(`「${esc(boss.name||'本 BOSS')}」全題已答對過,允許重複再戰`);
       else if (fr.pool.length < list.length) {
         // 部分排除成功
         return RNG.shuffle(fr.pool);
@@ -240,10 +247,10 @@
                   <span style="font-size:2rem">${b.avatar}</span>
                   <div>
                     <div class="mode-num">${disabled ? '🚧 題庫補強中' : (cleared ? (perfect ? '⭐ 完美通關' : '✅ 已通關') : '未通關')}</div>
-                    <div class="mode-title" style="font-size:0.95rem">${b.name}</div>
+                    <div class="mode-title" style="font-size:0.95rem">${esc(b.name)}</div>
                   </div>
                 </div>
-                <div class="mode-desc" style="font-size:0.85rem">${b.desc}</div>
+                <div class="mode-desc" style="font-size:0.85rem">${esc(b.desc)}</div>
                 <div class="mode-stats">HP ${dynHp} · ${qcnt} 題判讀 ${reducedNote}</div>
                 ${emptyNote}
               </button>`;
@@ -301,12 +308,12 @@
           <div class="enemy-bar">
             <div class="avatar boss" style="font-size:2.5rem">${boss.avatar}</div>
             <div class="bar-info">
-              <div class="bar-name">${boss.name}</div>
+              <div class="bar-name">${esc(boss.name)}</div>
               <div class="hp-text">HP ${dynHp} · ${questions.length} 題程式判讀${questions.length < boss.qids.length ? ' (題庫減量)' : ''}</div>
             </div>
           </div>
           <div class="dialogue-box">
-            <div class="dialogue-name">${boss.name}</div>
+            <div class="dialogue-name">${esc(boss.name)}</div>
             <div class="dialogue-text" id="m2-intro-text"></div>
           </div>
           <div class="actions" style="margin-top:16px;justify-content:center">
@@ -357,7 +364,7 @@
           <div class="enemy-bar">
             <div class="avatar boss" id="m2-boss-avatar" style="font-size:2.5rem">${this.state.boss.avatar}</div>
             <div class="bar-info">
-              <div class="bar-name">${this.state.boss.name}</div>
+              <div class="bar-name">${esc(this.state.boss.name)}</div>
               <div class="hp-track"><div class="hp-fill" id="m2-boss-hp-fill" style="width:100%"></div></div>
               <div class="hp-text" id="m2-boss-hp-text">${this.state.bossHp} / ${this.state.bossHpMax}</div>
             </div>
@@ -438,16 +445,16 @@
         <div class="question-card">
           <div class="question-meta">
             <span class="badge">第 ${this.state.idx + 1} / ${this.state.questions.length} 回合</span>
-            <span class="badge">${q.knowledge_code}</span>
-            <span class="badge">${q.difficulty}</span>
-            <span class="badge">${q.format}</span>
+            <span class="badge">${esc(q.knowledge_code)}</span>
+            <span class="badge">${esc(q.difficulty)}</span>
+            <span class="badge">${esc(q.format)}</span>
           </div>
-          <div class="question-stem">${q.stem}</div>
+          <div class="question-stem">${esc(q.stem)}</div>
           ${codeBlock}
           ${visualData}
           <div class="options" id="m2-options">
-            ${q.options.map(o => `<button class="option-btn" data-key="${o.key}" onclick="Mode2.answer('${o.key}')">
-              <span class="option-key">${o.key}.</span>${o.text}</button>`).join('')}
+            ${q.options.map(o => `<button class="option-btn" data-key="${esc(o.key)}" onclick="Mode2.answer('${esc(o.key)}')">
+              <span class="option-key">${esc(o.key)}.</span>${esc(o.text)}</button>`).join('')}
           </div>
           <div id="m2-explanation"></div>
         </div>
@@ -595,16 +602,16 @@
       const otherWrongOptions = q.options.filter(o => !o.is_correct && (!opt || o.key !== opt.key));
       const otherAnalysis = otherWrongOptions.map(o => `
         <div style="padding:8px 10px;margin:6px 0;background:rgba(255,255,255,0.04);border-radius:4px;border-left:3px solid #94a3b8">
-          <div style="color:#cbd5e1;font-weight:600;margin-bottom:2px">${o.key}. ${o.text}</div>
-          <div style="color:var(--fg-dim);font-size:0.875rem;line-height:1.6">└ ${findWrongExp(o)}</div>
+          <div style="color:#cbd5e1;font-weight:600;margin-bottom:2px">${esc(o.key)}. ${esc(o.text)}</div>
+          <div style="color:var(--fg-dim);font-size:0.875rem;line-height:1.6">└ ${esc(findWrongExp(o))}</div>
         </div>
       `).join('');
 
       const userWrongExp = !isCorrect && opt ? findWrongExp(opt) : '';
 
       const enemyTaunt = !isCorrect ? `<div class="dialogue-box" style="border-color:rgba(239,68,68,0.4)">
-        <div class="dialogue-name" style="color:#f87171">${this.state.boss.name}</div>
-        <div class="dialogue-text">「${RNG.pick(this.state.boss.attack)}」</div>
+        <div class="dialogue-name" style="color:#f87171">${esc(this.state.boss.name)}</div>
+        <div class="dialogue-text">「${esc(RNG.pick(this.state.boss.attack))}」</div>
       </div>` : '';
 
       explainEl.innerHTML = `
@@ -614,13 +621,13 @@
 
           <div style="background:rgba(74,222,128,0.12);border-left:4px solid #4ade80;padding:12px;border-radius:6px;margin:10px 0">
             <div style="color:#4ade80;font-weight:700;font-size:0.95rem;margin-bottom:4px">📚 正解</div>
-            <div style="font-size:1rem;margin-bottom:6px"><strong>${correctOpt ? correctOpt.key + '. ' + correctOpt.text : '(無)'}</strong></div>
-            <div style="color:var(--fg);line-height:1.7">${e.correct || '(此題未提供詳細解釋,請參考正確選項文字)'}</div>
+            <div style="font-size:1rem;margin-bottom:6px"><strong>${correctOpt ? esc(correctOpt.key) + '. ' + esc(correctOpt.text) : '(無)'}</strong></div>
+            <div style="color:var(--fg);line-height:1.7">${esc(e.correct || '(此題未提供詳細解釋,請參考正確選項文字)')}</div>
           </div>
 
           ${!isCorrect ? `<div style="background:rgba(248,113,113,0.12);border-left:4px solid #f87171;padding:12px;border-radius:6px;margin:10px 0">
-            <div style="color:#f87171;font-weight:700;font-size:0.95rem;margin-bottom:4px">❌ 你選了 ${opt.key}. ${opt.text}</div>
-            <div style="color:var(--fg);line-height:1.7">${userWrongExp}</div>
+            <div style="color:#f87171;font-weight:700;font-size:0.95rem;margin-bottom:4px">❌ 你選了 ${esc(opt.key)}. ${esc(opt.text)}</div>
+            <div style="color:var(--fg);line-height:1.7">${esc(userWrongExp)}</div>
           </div>` : ''}
 
           ${otherAnalysis ? `<div style="background:rgba(148,163,184,0.08);border-left:4px solid #94a3b8;padding:12px;border-radius:6px;margin:10px 0">
@@ -630,12 +637,12 @@
 
           ${e.hook ? `<div style="background:rgba(250,204,21,0.12);border-left:4px solid #facc15;padding:10px 12px;border-radius:6px;margin:10px 0">
             <div style="color:#facc15;font-weight:700;font-size:0.85rem">💡 記憶口訣</div>
-            <div style="color:var(--fg);font-style:italic;margin-top:2px">${e.hook}</div>
+            <div style="color:var(--fg);font-style:italic;margin-top:2px">${esc(e.hook)}</div>
           </div>` : ''}
 
           ${q.misconceptions && q.misconceptions.length > 0 ? `<div style="background:rgba(168,85,247,0.10);border-left:4px solid #a855f7;padding:10px 12px;border-radius:6px;margin:10px 0">
             <div style="color:#c084fc;font-weight:700;font-size:0.85rem">⚠️ 此題常見誤解</div>
-            <div style="color:var(--fg);margin-top:2px">${q.misconceptions.map(m => '• ' + m).join('<br>')}</div>
+            <div style="color:var(--fg);margin-top:2px">${q.misconceptions.map(m => '• ' + esc(m)).join('<br>')}</div>
           </div>` : ''}
 
           <div class="actions" style="margin-top:14px">
@@ -733,7 +740,7 @@
       this.state.skillsUsedThisQ.review = true;
 
       const q = this.state.currentQ;
-      const traps = q.options.filter(o => !o.is_correct && o.trap_type).map(o => `• ${o.trap_type}`);
+      const traps = q.options.filter(o => !o.is_correct && o.trap_type).map(o => `• ${esc(o.trap_type)}`);
       const miscons = (q.misconceptions || []).map(m => '• ' + m);
       const lines = [];
       if (miscons.length) lines.push('⚠️ 常見誤解:\n' + miscons.join('\n'));
@@ -770,8 +777,8 @@
           <h1 style="color:#fbbf24;font-size:2rem">🏆 推理勝利!惡魔倒下</h1>
           <div style="font-size:4rem;margin:16px 0">${this.state.boss.avatar}</div>
           <div class="dialogue-box">
-            <div class="dialogue-name">${this.state.boss.name}</div>
-            <div class="dialogue-text">「${RNG.pick(this.state.boss.defeat)}」</div>
+            <div class="dialogue-name">${esc(this.state.boss.name)}</div>
+            <div class="dialogue-text">「${esc(RNG.pick(this.state.boss.defeat))}」</div>
           </div>
           <div style="background:rgba(0,0,0,0.5);padding:16px;border-radius:var(--radius);margin:16px 0;text-align:left">
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
@@ -819,7 +826,7 @@
           <div style="font-size:4rem;margin:16px 0">😵</div>
           <div class="dialogue-box">
             <div class="dialogue-name">${bossNameForRetry}</div>
-            <div class="dialogue-text">「${lastAttack}」</div>
+            <div class="dialogue-text">「${esc(lastAttack)}」</div>
           </div>
           <p style="margin:16px 0;color:var(--fg-dim)">休息片刻後,你恢復了一半 HP...</p>
           <div class="actions" style="justify-content:center">

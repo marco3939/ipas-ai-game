@@ -274,6 +274,8 @@
     selectStage(qid) {
       const q = (typeof QUESTIONS !== 'undefined' ? QUESTIONS : []).find(x => x.id === qid);
       if (!q) { showToast('找不到此題'); return; }
+      // 案例 10 audit BUG-M3-2:contract 嚴格驗證 — pipeline 模式只吃 format=sequence 題
+      if (q.format !== 'sequence') { showToast('此題不是 pipeline 題型'); return; }
       const correct = q.options.find(o => o.is_correct);
       const steps = parseSteps(correct ? correct.text : '');
       if (steps.length === 0) { showToast('此題無法解析步驟'); return; }
@@ -814,6 +816,9 @@
 
     // === 結算 ===
     victory() {
+      // 案例 10 audit C-3:entry guard 防雙呼叫雙發 EXP / 雙寫 Storage
+      if (!this.state || this.state.victorySettled) return;
+      this.state.victorySettled = true;
       const s = this.state;
       // R5b:停掉 PlayEngine 計時器(平行運作,需獨立停止)
       if (typeof PlayEngine !== 'undefined' && PlayEngine._stopTimer) PlayEngine._stopTimer();
@@ -833,6 +838,8 @@
       Player.gainExp(totalExp);
       Mastery.update(s.q.node_id || s.q.id, true);
       if (typeof SM2 !== 'undefined' && s.q.id) SM2.recordAnswer(s.q.id, true, false);
+      // 案例 10 audit S-1:Mode 3 pipeline 通關時 mark SeenCorrect 讓跨關卡排除生效
+      if (s.q.id && typeof SeenCorrect !== 'undefined') SeenCorrect.mark(s.q.id);
       Progress.addAnswer(true);
 
       const progress = loadProgress();

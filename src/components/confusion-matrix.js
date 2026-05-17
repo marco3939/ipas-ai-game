@@ -309,6 +309,8 @@ const ConfusionMatrix = {
     const q = this.state.question;
     if (typeof Mastery !== 'undefined' && q.node_id) Mastery.update(q.node_id, isCorrect);
     if (typeof Progress !== 'undefined') Progress.addAnswer(isCorrect);
+    // 案例 10 audit S-3:CM 答對 mark SeenCorrect 讓跨關卡排除生效
+    if (isCorrect && q.id && typeof SeenCorrect !== 'undefined') SeenCorrect.mark(q.id);
     if (!isCorrect && typeof Wrongbook !== 'undefined') {
       // 2026-05-16 案例 10 補:Wrongbook.add 簽名是 (qid, nodeId, userChoice, correctChoice, userText, correctText)
       // Confusion-matrix 題型沒有 A/B/C/D key,userInput 是數字字串。文字放對欄位、key 槽留 '?'
