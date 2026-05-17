@@ -512,6 +512,8 @@
 
       // 共用層:更新答題進度
       Progress.addAnswer(isCorrect);
+      // 案例 10 LOW-1:答對時 mark SeenCorrect(跨關卡排除)
+      if (isCorrect && q.id && typeof SeenCorrect !== 'undefined') SeenCorrect.mark(q.id);
 
       if (isCorrect) {
         this.attack();

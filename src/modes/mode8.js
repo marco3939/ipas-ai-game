@@ -414,6 +414,8 @@
         const allCorrect = this.state.stepResults.every(function (r) { return r; });
         if (q.node_id) Mastery.update(q.node_id, allCorrect);
         Progress.addAnswer(allCorrect);
+        // 案例 10 LOW-1:全步答對才 mark SeenCorrect
+        if (allCorrect && q.id && typeof SeenCorrect !== 'undefined') SeenCorrect.mark(q.id);
         if (!allCorrect) {
           // 整題 options 固定為 [{全部正確,is_correct:true}, {任一錯誤,is_correct:false}]
           // 使用者實際選了「任一錯誤」(is_correct:false),故 userChoice=B、correctChoice=A

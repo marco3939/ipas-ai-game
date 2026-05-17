@@ -156,6 +156,14 @@
       return item.q || null;
     },
 
+    // 案例 10 LOW-2:HTML escape helper(stem/code/text 經 user-controlled snapshot 進來)
+    // defense in depth — 題庫信任 + 強型別仍可能因匯入 fullLog 受外部資料污染
+    _esc(s) {
+      if (s === null || s === undefined) return '';
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    },
+
     // ===== 入口 =====
     start() {
       // 進場前先清理上一場殘留(若有)
@@ -1170,8 +1178,8 @@
       if (!this.state || this.state.finished) return;
       const item = this.state.lineup[this.state.idx];
       if (!item) return;
-      // PlayEngine.current 是 renderQuestion 後的版本(已替換 placeholder + 洗牌選項)
-      const rendered = (typeof PlayEngine !== 'undefined' && PlayEngine.current) ? PlayEngine.current : item.q;
+      // 案例 10 LOW-5:統一用 _getRendered helper(原本直用 PlayEngine.current,改為同條 fallback 鏈)
+      const rendered = this._getRendered(item) || item.q;
       const stem = rendered.stem || '';
       const opts = (rendered.options || [])
         .map(o => `${o.key || ''}. ${o.text || ''}`)
@@ -1828,13 +1836,14 @@
         else if (isAns) { bg = 'rgba(22,163,74,0.12)'; border = '2px solid #16a34a'; tag = '<span style="color:#16a34a;font-weight:700;margin-left:8px">✓ 正解</span>'; }
         else if (isUser) { bg = 'rgba(220,38,38,0.14)'; border = '2px solid #dc2626'; tag = '<span style="color:#f87171;font-weight:700;margin-left:8px">✗ 你選的</span>'; }
         return `<div style="padding:8px 12px;margin:4px 0;background:${bg};border:${border};border-radius:6px;font-size:0.95rem">
-          <strong>${o.key || ''}.</strong> ${o.text || ''}${tag}
+          <strong>${this._esc(o.key || '')}.</strong> ${this._esc(o.text || '')}${tag}
         </div>`;
       }).join('');
 
       // explanation
-      const explCorrect = (q.explanation && q.explanation.correct) || '(此題未提供詳細解釋)';
-      const hook = (q.explanation && q.explanation.hook) || '';
+      // 案例 10 LOW-2 補完:explanation 來自 fullLog 也屬可污染面,inject 前 escape
+      const explCorrect = this._esc((q.explanation && q.explanation.correct) || '(此題未提供詳細解釋)');
+      const hook = this._esc((q.explanation && q.explanation.hook) || '');
       const wrongOpts = (q.options || []).filter(o => !o.is_correct);
       const wrongAnalysis = wrongOpts.map(o => {
         let exp = '';
@@ -1848,9 +1857,11 @@
             }
           }
         }
-        if (!exp) exp = o.trap_type ? `陷阱類型:${o.trap_type}` : '此選項不正確';
+        // 案例 10 LOW-2 補完:trap_type / exp / o.text 全 escape(fullLog 匯入污染面)
+        if (!exp) exp = o.trap_type ? `陷阱類型:${this._esc(o.trap_type)}` : '此選項不正確';
+        else exp = this._esc(exp);
         return `<div style="padding:6px 10px;margin:4px 0;background:rgba(255,255,255,0.04);border-radius:4px;border-left:3px solid #94a3b8">
-          <div style="color:#cbd5e1;font-weight:600;font-size:0.85rem">${o.key || ''}. ${o.text || ''}</div>
+          <div style="color:#cbd5e1;font-weight:600;font-size:0.85rem">${this._esc(o.key || '')}. ${this._esc(o.text || '')}</div>
           <div style="color:var(--fg-dim);font-size:0.8rem;margin-top:2px">└ ${exp}</div>
         </div>`;
       }).join('');
@@ -1908,7 +1919,7 @@
             <div style="font-size:0.8rem;color:var(--fg-dim);margin-bottom:6px">
               ${npc.avatar} ${npc.name} · ${q.knowledge_code || ''} · ${q.difficulty || ''}
             </div>
-            <div style="font-size:1rem;line-height:1.6;margin-bottom:10px">${q.stem || ''}</div>
+            <div style="font-size:1rem;line-height:1.6;margin-bottom:10px">${this._esc(q.stem || '')}</div>
             ${codeBlock}
             ${optsHtml}
           </div>
@@ -2093,9 +2104,12 @@
         const q = this._getRendered(item) || item.q;
         const baseQ = item.q;   // explanation 從原版穩定取
         const correctOpt = (q.options || []).find(o => o.is_correct);
-        const correctLabel = correctOpt ? `${correctOpt.key || ''} ${correctOpt.text || ''}` : '(未提供)';
-        const explCorrect = (baseQ.explanation && baseQ.explanation.correct) || '(此題未提供詳細解釋)';
-        const hook = (baseQ.explanation && baseQ.explanation.hook) || '';
+        // 案例 10 LOW-2 補完:correctLabel / explCorrect / hook escape
+        const correctLabel = correctOpt
+          ? `${this._esc(correctOpt.key || '')} ${this._esc(correctOpt.text || '')}`
+          : '(未提供)';
+        const explCorrect = this._esc((baseQ.explanation && baseQ.explanation.correct) || '(此題未提供詳細解釋)');
+        const hook = this._esc((baseQ.explanation && baseQ.explanation.hook) || '');
         const npc = NPCS[item.npcIdx] || NPCS[0];
         // 顯示其他選項解析
         const wrongOpts = (q.options || []).filter(o => !o.is_correct);
@@ -2112,9 +2126,11 @@
               }
             }
           }
-          if (!exp) exp = o.trap_type ? `陷阱類型:${o.trap_type}` : '此選項不正確';
+          // 案例 10 LOW-2 補完:trap_type / exp / o.text 全 escape
+          if (!exp) exp = o.trap_type ? `陷阱類型:${this._esc(o.trap_type)}` : '此選項不正確';
+          else exp = this._esc(exp);
           return `<div style="padding:6px 10px;margin:4px 0;background:rgba(255,255,255,0.04);border-radius:4px;border-left:3px solid #94a3b8">
-            <div style="color:#cbd5e1;font-weight:600;font-size:0.85rem">${o.key || ''}. ${o.text || ''}</div>
+            <div style="color:#cbd5e1;font-weight:600;font-size:0.85rem">${this._esc(o.key || '')}. ${this._esc(o.text || '')}</div>
             <div style="color:var(--fg-dim);font-size:0.8rem;margin-top:2px">└ ${exp}</div>
           </div>`;
         }).join('');
@@ -2122,8 +2138,8 @@
           <div style="font-size:0.85rem;color:var(--fg-dim);margin-bottom:6px">
             第 ${i + 1} 題 · ${npc.avatar} ${npc.name} · ${q.knowledge_code || ''} · ${q.difficulty || ''}
           </div>
-          <div class="question-stem" style="font-size:1rem;margin-bottom:10px">${q.stem || ''}</div>
-          ${q.code_block ? `<pre class="code-syntax" style="font-size:0.8rem;padding:8px">${q.code_block}</pre>` : ''}
+          <div class="question-stem" style="font-size:1rem;margin-bottom:10px">${this._esc(q.stem || '')}</div>
+          ${q.code_block ? `<pre class="code-syntax" style="font-size:0.8rem;padding:8px">${this._esc(q.code_block)}</pre>` : ''}
           <div style="background:rgba(74,222,128,0.12);border-left:4px solid #4ade80;padding:10px;border-radius:6px;margin:8px 0">
             <div style="color:#4ade80;font-weight:700;font-size:0.9rem;margin-bottom:4px">📚 正確答案</div>
             <div style="font-size:0.95rem;margin-bottom:6px"><strong>${correctLabel}</strong></div>
