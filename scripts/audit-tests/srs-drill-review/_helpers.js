@@ -136,6 +136,13 @@ function makeSandbox(opts = {}) {
     navigator: { userAgent: 'test', language: 'en' },
     console,
     Date, JSON, Math, Number, String, Boolean, Array, Object, Set, Map, Symbol, Error, RegExp,
+    // ErrorReports stub for _drillEsc (避免 ReferenceError;真實 _esc 行為由 fallback 處理)
+    ErrorReports: { _esc: (s) => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') },
+    // SeenCorrect stub for DrillSession.next() 100% mark logic
+    SeenCorrect: { mark: (qid) => { ctx && ctx.__seenMarks && ctx.__seenMarks.push(qid); } },
+    __seenMarks: [],
+    // generateVariation stub for _enterDeep(deep drill 取題);測試可 override
+    generateVariation: (q, n) => [],
     setTimeout: function (fn, ms) {
       // 預設 stub:不真跑(避免測試 hang)。若 opts.runTimers=true 才同步跑。
       if (opts.runTimers) {
