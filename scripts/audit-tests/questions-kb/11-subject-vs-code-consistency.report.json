@@ -1,0 +1,82 @@
+{
+  "total": 652,
+  "mismatches": [
+    {
+      "file": "questions-pb-visual.json",
+      "id": "q_pb_001",
+      "code": "L21102",
+      "subject": 3,
+      "expected": 1
+    },
+    {
+      "file": "questions-pb-visual.json",
+      "id": "q_pb_002",
+      "code": "L21102",
+      "subject": 3,
+      "expected": 1
+    },
+    {
+      "file": "questions-pb-visual.json",
+      "id": "q_pb_003",
+      "code": "L21102",
+      "subject": 3,
+      "expected": 1
+    },
+    {
+      "file": "questions-pb-visual.json",
+      "id": "q_pb_004",
+      "code": "L21302",
+      "subject": 3,
+      "expected": 1
+    },
+    {
+      "file": "questions-pb-visual.json",
+      "id": "q_pb_005",
+      "code": "L21101",
+      "subject": 3,
+      "expected": 1
+    },
+    {
+      "file": "questions-pb-visual.json",
+      "id": "q_pb_006",
+      "code": "L21101",
+      "subject": 3,
+      "expected": 1
+    },
+    {
+      "file": "questions-ph-mlops.json",
+      "id": "q_ph_001",
+      "code": "L21302",
+      "subject": 2,
+      "expected": 1
+    },
+    {
+      "file": "questions-ph-mlops.json",
+      "id": "q_ph_003",
+      "code": "L21302",
+      "subject": 2,
+      "expected": 1
+    },
+    {
+      "file": "questions-ph-mlops.json",
+      "id": "q_ph_006",
+      "code": "L21302",
+      "subject": 2,
+      "expected": 1
+    },
+    {
+      "file": "questions-ph-mlops.json",
+      "id": "q_ph_007",
+      "code": "L21302",
+      "subject": 2,
+      "expected": 1
+    },
+    {
+      "file": "questions-ph-mlops.json",
+      "id": "q_ph_008",
+      "code": "L21302",
+      "subject": 2,
+      "expected": 1
+    }
+  ]
+}
