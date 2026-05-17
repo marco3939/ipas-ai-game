@@ -132,8 +132,8 @@ console.log('\n[9] markMastered nonexistent');
   A.eq(sb.Wrongbook.load().length, 1, 'still 1');
 }
 
-// ----- [10] BUG TEST: wrongCount = Number.MAX_VALUE / overflow -----
-console.log('\n[10] wrongCount overflow attack');
+// ----- [10] wrongCount overflow 防護(PR #28 A-MED1 修補)-----
+console.log('\n[10] wrongCount overflow — PR #28 A-MED1 fix');
 {
   const sb = setup();
   // 攻擊面:直接寫入巨大 wrongCount
@@ -146,9 +146,11 @@ console.log('\n[10] wrongCount overflow attack');
   }]);
   sb.Wrongbook.add('evil', 'n', 'A', 'B', '', '');
   const e = sb.Wrongbook.load().find(x => x.qid === 'evil');
-  // Number.MAX_VALUE + 1 = Number.MAX_VALUE (precision loss)
-  A.ok(e.wrongCount === Number.MAX_VALUE || e.wrongCount > 1e308,
-    `wrongCount overflow: ${e.wrongCount} (BUG candidate: no upper-bound clamp; MED-1 ref)`);
+  A.eq(e.wrongCount, 99999, `✅ PR #28 fix: 從 Number.MAX_VALUE 被 clamp 到 99999(${e.wrongCount})`);
+  // 再多 add 100 次,確認 cap 不漲
+  for (let i = 0; i < 100; i++) sb.Wrongbook.add('evil', 'n', 'A', 'B', '', '');
+  const e2 = sb.Wrongbook.load().find(x => x.qid === 'evil');
+  A.eq(e2.wrongCount, 99999, `✅ 上限穩定:多次 add 後仍 99999(${e2.wrongCount})`);
 }
 
 // ----- [11] BUG TEST: XSS via userText (stored, escaping must be downstream) -----

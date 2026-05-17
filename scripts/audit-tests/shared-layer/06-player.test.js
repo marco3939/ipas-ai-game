@@ -113,13 +113,13 @@ console.log('\n[6] gainExp multi-levelup');
   A.eq(p.exp, 188, 'remaining exp=188');
 }
 
-// ----- [7] gainExp negative -----
-console.log('\n[7] gainExp negative');
+// ----- [7] gainExp negative (PR #28 fix: A-H1 入口 isFinite + ≥0 guard, 不再扣 exp) -----
+console.log('\n[7] gainExp negative — PR #28 A-H1 fix');
 {
   const sb = setup();
   sb.Player.gainExp(50);
   const p = sb.Player.gainExp(-10);
-  A.eq(p.exp, 40, 'negative gainExp subtracts (BUG candidate: no validation, but actual behavior subtracts)');
+  A.eq(p.exp, 50, '✅ PR #28 A-H1 fix: negative gainExp early-return, exp 不被改');
 }
 
 // ----- [8] gainExp zero -----
@@ -131,104 +131,75 @@ console.log('\n[8] gainExp 0');
   A.eq(p.level, 1, 'no change');
 }
 
-// ----- [9] CRITICAL BUG: expMax=0 → infinite loop -----
-console.log('\n[9] CRITICAL BUG TEST: expMax=0 infinite loop');
+// ----- [9] expMax=0 → 不再 infinite loop(PR #28 A-C1 修補)-----
+console.log('\n[9] expMax=0 — PR #28 A-C1 fix (while expMax>0 守衛)');
 {
   const sb = setup();
-  // 注入 expMax=0
   sb.Storage.set('ipas_player_v1', { hp:100, hpMax:100, mp:50, mpMax:50,
     level:1, exp:0, expMax:0, skillPoints:0,
     stats:{analysis:5,planning:5,decision:5,technical:5},
     skills:{hint:false,eliminate:false,double:false} });
-  // 任何 gainExp(amt where amt >= 0) 會無限迴圈
-  // 用 setTimeout watchdog 中斷:無法在 sync 環境設,改用 try/catch 偵測
-  let hung = false;
-  // 我們用一個粗暴的方法:設一個 maxIterations 限制,但既存程式沒這個 limit
-  // 改用 spy:在 GameFX.levelUp 計次,呼叫 N 次就強行 throw
   let callCount = 0;
   sb.GameFX = {
-    levelUp: () => {
-      callCount++;
-      if (callCount > 10000) {
-        hung = true;
-        throw new Error('INFINITE_LOOP_DETECTED');
-      }
-    },
+    levelUp: () => { callCount++; if (callCount > 10000) throw new Error('still hangs'); },
     flash: () => {}
   };
-  // 重新 inject Player(因為 closure 已綁原 GameFX)— 用 vm.runInContext eval Player.gainExp
-  // 但 Player 已 bound — 直接呼叫
-  // 由於 GameFX 在 sandbox 上是 ctx property,runtime 查找會拿到新值
   let threw = false;
-  try {
-    sb.Player.gainExp(1);  // amt=1, exp=1, expMax=0 → while(1>=0) infinite
-  } catch (e) {
-    threw = true;
-  }
-  A.ok(threw && hung, `⚠️ CRITICAL: expMax=0 → infinite loop confirmed (broke after ${callCount} levelups)`);
+  try { sb.Player.gainExp(1); } catch (e) { threw = true; }
+  const p = sb.Player.load();
+  A.ok(!threw, '✅ PR #28 A-C1 fix: 不再 throw');
+  A.eq(callCount, 0, `✅ levelUp 從未被呼叫(while expMax>0 守住)`);
+  A.eq(p.level, 1, `✅ level 維持 1`);
+  A.eq(p.exp, 1, `✅ exp 仍累積 1(amt 還是有效)`);
 }
 
-// ----- [10] gainExp NaN -----
-console.log('\n[10] gainExp NaN');
+// ----- [10] gainExp NaN(PR #28 A-H1 修補:NaN 入口擋)-----
+console.log('\n[10] gainExp NaN — PR #28 A-H1 fix');
 {
   const sb = setup();
   const p = sb.Player.gainExp(NaN);
-  // exp += NaN → NaN; NaN >= expMax = false → no loop;但 save 後 JSON.stringify(NaN)=null
-  A.ok(isNaN(p.exp), `exp NaN in return value (${p.exp})`);
-  // 重新 load:NaN 被 JSON 序列化為 null → 下次 load 變 null
-  // 後續 gainExp(10) → exp = null + 10 = 10(JSON 自動清洗 NaN)
+  A.ok(!isNaN(p.exp), `✅ PR #28 fix: NaN 早 return,exp 不被污染(${p.exp})`);
+  A.eq(p.exp, 0, 'exp 維持 0');
   const p2 = sb.Player.gainExp(10);
-  A.ok(!isNaN(p2.exp) && p2.exp === 10,
-    `JSON.stringify(NaN)=null self-heals: next gainExp(10) → exp=${p2.exp}`);
+  A.eq(p2.exp, 10, `後續正常呼叫不受影響: exp=${p2.exp}`);
 }
 
-// ----- [11] gainExp Infinity (HIGH bug: massive level inflation + state corruption) -----
-console.log('\n[11] gainExp Infinity → massive level inflation');
+// ----- [11] gainExp Infinity(PR #28 A-H1 修補:Infinity 早 return)-----
+console.log('\n[11] gainExp Infinity — PR #28 A-H1 fix');
 {
   const sb = setup();
   let callCount = 0;
-  sb.GameFX = {
-    levelUp: () => {
-      callCount++;
-      if (callCount > 100000) throw new Error('TOO_MANY');
-    },
-    flash: () => {}
-  };
+  sb.GameFX = { levelUp: () => { callCount++; }, flash: () => {} };
   let threw = false;
   try { sb.Player.gainExp(Infinity); } catch { threw = true; }
   const p = sb.Player.load();
-  A.ok(!threw, `loop self-terminates via Infinity-Infinity=NaN (after ${callCount} levelups)`);
-  A.ok(p.level > 100,
-    `⚠️ HIGH BUG: gainExp(Infinity) inflated level to ${p.level} (BUG: no upper-bound on gainExp input)`);
-  A.ok(p.expMax === null || p.expMax === Infinity || isNaN(p.expMax),
-    `⚠️ HIGH BUG: state corruption — expMax=${p.expMax}`);
+  A.ok(!threw, '✅ 不 throw');
+  A.eq(callCount, 0, `✅ PR #28 fix: Infinity 早 return,levelUp 從未被呼叫`);
+  A.eq(p.level, 1, `✅ level 維持 1(無 inflation)`);
+  A.eq(p.expMax, 100, `✅ expMax 維持 100(無污染)`);
 }
 
-// ----- [12] damage NaN / Infinity -----
-console.log('\n[12] damage NaN/Infinity');
+// ----- [12] damage NaN/Infinity/負數(PR #28 A-H2 修補)-----
+console.log('\n[12] damage NaN/Infinity/負數 — PR #28 A-H2 fix');
 {
   const sb = setup();
   const hp1 = sb.Player.damage(NaN);
-  A.ok(isNaN(hp1), `⚠️ damage(NaN) → hp=NaN (BUG: no input validation)`);
-  // reset fully (NaN now JSON-stringified to null and saved)
+  A.eq(hp1, 100, `✅ PR #28 fix: damage(NaN) 視為 0,hp=${hp1} 不變`);
   sb.Player.reset();
   const hp2 = sb.Player.damage(Infinity);
-  A.eq(hp2, 0, 'damage(Infinity) → hp=0 (Math.max clamps)');
-  // 再 reset 才能驗證 negative damage
+  A.eq(hp2, 100, `✅ PR #28 fix: damage(Infinity) 視為 0(isFinite 擋掉),hp=${hp2} 不變`);
   sb.Player.reset();
   const hp3 = sb.Player.damage(-50);
-  // 100 - (-50) = 150 → Math.max(0, 150) = 150 — BUG: hp > hpMax via negative damage
-  A.eq(hp3, 150, `⚠️ damage(-50) → hp=${hp3} > hpMax (BUG: negative damage heals beyond cap)`);
+  A.eq(hp3, 100, `✅ PR #28 fix: damage(-50) 視為 0,hp 不會 inflate`);
 }
 
-// ----- [13] heal negative -----
-console.log('\n[13] heal negative');
+// ----- [13] heal negative(PR #28 A-H3 修補)-----
+console.log('\n[13] heal negative — PR #28 A-H3 fix');
 {
   const sb = setup();
   sb.Player.damage(30); // hp=70
   const hp = sb.Player.heal(-20);
-  // Math.min(100, 70 + (-20)) = Math.min(100, 50) = 50
-  A.eq(hp, 50, '⚠️ heal(-20) → hp drops to 50 (BUG candidate: negative heal damages)');
+  A.eq(hp, 70, `✅ PR #28 fix: heal(-20) 視為 0,hp 不變(維持 ${hp})`);
 }
 
 // ----- [14] reset -----
