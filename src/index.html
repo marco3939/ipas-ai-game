@@ -1841,8 +1841,13 @@ const DrillSession = {
   start(nodeId, questions, originalQ, onComplete, depth) {
     this.onComplete = onComplete || null; // 完成後 callback,沒則回首頁
     this.depth = Number.isFinite(depth) ? depth : 0;
+    // §8 LOW-1 hygiene:頂層 start 清空 _parentStack(防玩家「答錯 → 進 deep → 中途 goHome」殘留 stack 慢慢長大)
+    if (this.depth === 0) this._parentStack = [];
     // 2026-05-17 空 queue silent fallback:不顯 toast、不 setTimeout、直接 onComplete
     // 原 UX(toast 3.5s + 1.2s delay)在「找不到變化型」時打斷玩家節奏,改為無感繼續下一題。
+    // 注意:不在此重置 this.queue/total/correct/targetNode/originalQ。重置這些會讓 PlayEngine.onNext
+    // 回呼回 DrillSession.next() 時走「queue空+total=0」分支,該分支又會 fallback 呼叫
+    // PlayEngine.onNext,造成 wrap ↔ next 無限遞迴(LOW-3 hygiene 嘗試已 revert)。
     if (!questions || questions.length === 0) {
       const cb = this.onComplete;
       this.onComplete = null;
