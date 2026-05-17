@@ -474,6 +474,11 @@ function buildSandbox(opts = {}) {
   const goHome = () => { stats.goHomeCalled = (stats.goHomeCalled || 0) + 1; };
   const refreshHome = () => {};
   const show = () => {};
+  // highlightCodeSimple stub used by Mode 8 renderTrace
+  const highlightCodeSimple = (code) => {
+    if (!code) return '';
+    return String(code).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  };
 
   const sandbox = {
     console: {
@@ -522,7 +527,7 @@ function buildSandbox(opts = {}) {
     generateVariation,
     renderQuestion,
     ConfusionMatrix,
-    showToast, goHome, refreshHome, show,
+    showToast, goHome, refreshHome, show, highlightCodeSimple,
     __stats: stats,
     _runTimersImmediately: false,
   };

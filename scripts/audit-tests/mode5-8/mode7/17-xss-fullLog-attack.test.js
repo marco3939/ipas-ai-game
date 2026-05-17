@@ -76,34 +76,25 @@ for (const payload of XSS_PAYLOADS.slice(0, 2)) {
 // --- 3: explanation.correct escaped (LOW-2 補完) ---
 {
   const r = setupWithLegitData();
-  const data = r.sandbox.Storage.get('ipas_mode7_theater_v1');
-  // The explanation comes from QUESTIONS, but expandAllExplanations uses _esc.
-  // We test via reviewHistorySession where explanation is constructed from
-  // both renderedQ.explanation and baseQ.explanation; here renderedQ is the
-  // reconstructed lineup q which DOES include explanation from baseQ.
-  // Since we can't easily inject malicious explanation via fullLog (it's not
-  // in the snapshot — comes from QUESTIONS), instead we contaminate the
-  // QUESTIONS source for review fallback.
+  // The explanation comes from baseQ in QUESTIONS via reviewHistorySession's
+  // Object.assign({}, baseQ, {...}). Mutate QUESTIONS[0].explanation now.
   r.sandbox.QUESTIONS[0].explanation = { correct: '<script>alert("xss-expl")</script>', wrong: {} };
-  // Force reload of state lineup with our q0 used as a base
-  // Easier: legit reconstruction reads explanation from baseQ (q in QUESTIONS).
+  // Clear PlayEngine.current so _getRendered falls back to item.q (which now
+  // has the malicious explanation via the rebuilt lineup).
+  r.sandbox.PlayEngine.current = null;
   r.Mode.reviewHistorySession(0);
-  // Move to q0 (or wherever it landed in fullLog)
-  // Find the review idx for q0
+  // Find the review idx where q.id === 'q0'
   let q0Idx = -1;
   for (let i = 0; i < r.Mode.state.lineup.length; i++) {
     if (r.Mode.state.lineup[i].q.id === 'q0') { q0Idx = i; break; }
   }
-  if (q0Idx >= 0) {
-    r.Mode._renderReviewQuestion(q0Idx);
-    const html = r.sandbox.document.getElementById('view-play').innerHTML;
-    A.ok(!html.includes('<script>alert("xss-expl")</script>'),
-      'explanation.correct XSS NOT injected (case 10 LOW-2 補完)');
-    A.ok(html.includes('&lt;script&gt;') || html.includes('&lt;'),
-      'explanation rendered as escaped HTML');
-  } else {
-    A.ok(true, 'q0 not found in lineup (lineup is shuffled — skip but pass)');
-  }
+  A.ok(q0Idx >= 0, 'q0 found in reconstructed lineup');
+  r.Mode._renderReviewQuestion(q0Idx);
+  const html = r.sandbox.document.getElementById('view-play').innerHTML;
+  A.ok(!html.includes('<script>alert("xss-expl")</script>'),
+    'explanation.correct XSS NOT injected (case 10 LOW-2 補完)');
+  A.ok(html.includes('&lt;script&gt;') || html.includes('&lt;'),
+    'explanation rendered as escaped HTML');
 }
 
 // --- 4: malicious code_block escaped via _esc ---
