@@ -15,6 +15,26 @@
       "host_id": "linux-x86_64-node22.22.2",
       "executor_id": "claude-opus-4-7[1m]",
       "auditor_id": null
+    },
+    {
+      "phase": 1,
+      "artifact_path": "reports/phase1-sast.md",
+      "sha256": "0b0dca68664dd0f2a835ba2b63e7ba806a97c35a1cb89e56d18ac34e9a2255fe",
+      "generated_at": "2026-05-17T10:23:41.992Z",
+      "tool": "manual-grep + node--check + diff-scan",
+      "tool_version": "eslint-bin-only / no-semgrep-available",
+      "command": "git diff 5ff76a5..origin/main + grep SAST patterns + cross-file caller grep",
+      "host_id": "linux-x86_64-node22.22.2",
+      "executor_id": "claude-opus-4-7[1m]",
+      "auditor_id": null,
+      "verdict": "PASS",
+      "findings": {
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 2,
+        "info": 2
+      }
     }
   ]
 }
