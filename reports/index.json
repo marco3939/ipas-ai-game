@@ -55,6 +55,20 @@
         "violations": 0,
         "exit_codes_nonzero": 0
       }
+    },
+    {
+      "phase": 3,
+      "artifact_path": "reports/phase3-build.md",
+      "sha256": "8bfea146115e152fd302cc84bcc914018515b1f4cdc4eb7522975e22bbb0ad13",
+      "generated_at": "2026-05-17T10:43:09.399Z",
+      "tool": "http-server@14.1.1 + curl",
+      "tool_version": "node@22.22.2",
+      "command": "http-server src -p 8765 -c-1 --silent + curl probes",
+      "host_id": "linux-x86_64-node22.22.2",
+      "executor_id": "claude-opus-4-7[1m]",
+      "auditor_id": null,
+      "verdict": "PASS",
+      "notes": "Static SPA — no build pipeline; sandbox-image NOT_APPLICABLE per §0.4"
     }
   ]
 }
