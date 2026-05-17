@@ -356,9 +356,29 @@
           : '';
         // 完整逐題回顧按鈕(只在有 fullLog 時顯示)
         const hasFullLog = Array.isArray(h.fullLog) && h.fullLog.length > 0;
+        // 2026-05-17 critical:偵測 PR #21 (案例 10) 修補前留下的壞紀錄。
+        // 症狀:fullLog 內 options 雖有 text 但 key 為空(o.key === '' 或 undefined),
+        //       且 correctKey 為空字串 → state.correct 永遠是 0,結算頁顯示 0/N 假分數。
+        // 偵測:有 fullLog 且 result.correct === 0(零分),且至少一題 option 缺 key → 視為壞掉。
+        const isCorruptedLegacy = hasFullLog && (r.correct === 0 || !r.correct) && h.fullLog.some(e =>
+          e.answered && Array.isArray(e.options) && e.options.length > 0 &&
+          e.options.some(o => !o.key || typeof o.key !== 'string' || !/^[A-Z]$/.test(o.key))
+        );
         const reviewAllBtn = hasFullLog
           ? `<button class="btn btn-primary" style="font-size:0.82rem;padding:6px 14px;margin-top:8px" onclick="event.stopPropagation();Mode7.reviewHistorySession(${realHistoryIdx})">📚 完整逐題回顧(${h.fullLog.length} 題)</button>`
           : `<span style="font-size:0.78rem;color:var(--fg-dim);display:inline-block;margin-top:8px">(舊紀錄無逐題資料,新模考起會自動儲存)</span>`;
+        // 2026-05-17:壞掉的舊紀錄加紅色警告 + 刪除按鈕(避免使用者誤以為現在出 bug)
+        const corruptedWarn = isCorruptedLegacy
+          ? `<div style="margin:8px 0;padding:8px 12px;background:rgba(220,38,38,0.12);border:1px solid #dc2626;border-radius:4px;color:#fca5a5;font-size:0.82rem;line-height:1.5">
+              <strong style="color:#f87171">⚠️ 此場為 PR #21(2026-05-16)修補前的舊紀錄</strong><br>
+              當時計分有 bug:即使全部答對,分數也會被永久記成 0/${r.total || '?'}。<br>
+              <span style="color:#fde68a">逐題回顧的「✓ 答對 / ✗ 答錯」與「你選的紅框」可能完全不準。</span><br>
+              <span style="color:#86efac">建議刪除本場 — 從新一場模考開始計分會正確。</span>
+            </div>`
+          : '';
+        const deleteBtn = isCorruptedLegacy
+          ? `<button class="btn" style="font-size:0.82rem;padding:6px 14px;margin-top:8px;background:#7f1d1d;color:#fef2f2;border:1px solid #dc2626" onclick="event.stopPropagation();Mode7.deleteHistoryEntry(${realHistoryIdx})">🗑️ 刪除此場壞紀錄</button>`
+          : '';
 
         return `<details class="m7-history-card" style="background:var(--bg-2);border:1px solid var(--bg-3);border-radius:6px;padding:0;margin-bottom:8px">
           <summary style="cursor:pointer;padding:10px 14px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
@@ -379,11 +399,13 @@
             <div style="margin:10px 0;font-size:0.85rem;color:var(--fg-dim)">
               ⏱ 用時 ${tuStr} · 平均每題 ${avgPerQ}s · 等級 <strong style="color:${lvlColor}">${r.estLevel || '-'}</strong>
             </div>
+            ${corruptedWarn}
             <div style="margin:14px 0 6px;font-size:0.9rem;color:#f87171;font-weight:700">🎯 Top 卡題錯題(${tw.length})</div>
             ${twHtml}
             <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center">
               ${reviewAllBtn}
               ${drillAllBtn}
+              ${deleteBtn}
             </div>
           </div>
         </details>`;
@@ -1890,12 +1912,17 @@
       const modeLabel = isHistoryMode ? '📜 歷史模考逐題回顧' : '📚 逐題回顧';
       const exitBtnLabel = isHistoryMode ? '📋 回考古題首頁' : '📋 回結算頁';
       // 2026-05-16 fix:舊紀錄沒存洗牌後 options 與 keys,無法重建「你選的紅框」
+      // 2026-05-17 強化:案例 10 (PR #21) 修補前的壞紀錄不只「紅框失效」,連「結算分數」也是假的
+      //   因為當時 isCorrect 永遠 false → state.correct = 0 → 顯示 0/N 假分數
       // 跳警告 banner 讓使用者清楚這是技術限制不是 bug
       const legacyWarning = isLegacyData
-        ? `<div class="card" style="background:rgba(250,204,21,0.12);border:1px solid #facc15;color:#fef3c7;font-size:0.85rem;line-height:1.6">
-            <strong>⚠️ 此場為 2026-05-16 前的舊紀錄</strong><br>
-            當時模考的「洗牌後選項」沒被儲存,因此這場回顧只看得到 ✓ 綠框正解,看不到 ✗ 紅框「你選的錯解」對照。<br>
-            <span style="color:#4ade80">從新一場模考開始,逐題回顧會完整顯示對照。</span>
+        ? `<div class="card" style="background:rgba(220,38,38,0.12);border:1px solid #dc2626;color:#fecaca;font-size:0.85rem;line-height:1.6">
+            <strong style="color:#f87171">⚠️ 此場為 PR #21(2026-05-16 案例 10)修補前的壞紀錄</strong><br>
+            當時 Mode 7 計分有 bug:即使你答對,系統也會把該題記成答錯。<br>
+            <strong style="color:#fde68a">因此這場的:</strong><br>
+            • 結算頁顯示的「0/${total}」分數是假的(實際正確數不可考)<br>
+            • 逐題回顧的「✓ 答對 / ✗ 答錯」badge 跟「你選的紅框」都不準<br>
+            <span style="color:#4ade80">建議從考古題首頁刪除此場 → 從新模考開始,計分與回顧會完全正確。</span>
           </div>`
         : '';
 
@@ -1998,7 +2025,11 @@
         const baseQ = allQ.find(x => x.id === e.qid);
         // 優先用 fullLog 儲存的洗牌後 options 與替換後 stem/code(才能正確對齊 userKey)
         const hasSnapshot = Array.isArray(e.options) && e.options.length > 0;
-        if (!hasSnapshot && e.answered) anyLegacy = true;
+        // 2026-05-17 補完案例 10 偵測:options 雖存在但 key 為空 = PR #21 修補前的壞紀錄。
+        //   原 anyLegacy 只看 !hasSnapshot,漏掉「有 text 沒 key」這種更隱蔽的壞資料。
+        //   症狀:逐題回顧 option 前綴顯示「.」而非「A./B./C./D.」,「✗ 你選的」紅框永遠不出現。
+        const keysBroken = hasSnapshot && e.options.some(o => !o.key || typeof o.key !== 'string' || !/^[A-Z]$/.test(o.key));
+        if ((!hasSnapshot || keysBroken) && e.answered) anyLegacy = true;
         if (baseQ) {
           if (hasSnapshot) {
             // spread 原 q 取得 explanation/node_id/difficulty 等,以 snapshot 覆蓋 stem/code/options
@@ -2252,6 +2283,31 @@
       const data = Storage.get(STORAGE_KEY, null);
       if (!data || !data.history || data.history.length === 0) return null;
       return data.history[data.history.length - 1];
+    },
+
+    // 2026-05-17:刪除單一 history entry(主要給 PR #21 修補前的壞紀錄用)
+    //   - confirm 二次確認,避免誤刪
+    //   - 從 history 陣列移除指定 index,寫回 storage
+    //   - 呼叫 refreshHome → 重渲染考古題首頁(_renderHistory 會重抓最新)
+    deleteHistoryEntry(historyIdx) {
+      const data = Storage.get(STORAGE_KEY, null);
+      if (!data || !Array.isArray(data.history) || !data.history[historyIdx]) {
+        showToast('找不到此場紀錄(可能已刪除)', 2000);
+        return;
+      }
+      const h = data.history[historyIdx];
+      const date = new Date(h.ts);
+      const ds = `${date.getMonth()+1}/${date.getDate()} ${date.getHours()}:${String(date.getMinutes()).padStart(2,'0')}`;
+      const score = `${(h.result && h.result.correct) || 0}/${(h.result && h.result.total) || 0}`;
+      if (typeof confirm === 'function' && !confirm(`確定刪除此場模考紀錄?\n\n時間:${ds}\n成績:${score}\n\n刪除後無法復原,但因為這是 PR #21 修補前的壞紀錄,分數本來就不準。`)) return;
+      data.history.splice(historyIdx, 1);
+      Storage.set(STORAGE_KEY, data);
+      showToast(`✅ 已刪除 ${ds} 那場紀錄`, 2200);
+      // 重渲染首頁(若使用者在 setup 頁就會看到 history 列表更新)
+      if (typeof refreshHome === 'function') refreshHome();
+      // 若使用者剛好在考古題 setup 頁的 history 區塊 → 重渲染該區塊
+      // (簡單做法:呼叫 setup 重畫整頁)
+      try { if (this.setup) this.setup(); } catch (_) {}
     },
 
     // ===== 清理(離場/重啟前都呼叫)=====
