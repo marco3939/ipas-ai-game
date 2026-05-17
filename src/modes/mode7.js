@@ -1651,8 +1651,10 @@
         topWrong: result.topWrong.map(w => w.qid),
         fullLog
       });
-      // 保留最近 50 場(每場 60 題 × ~50B ≈ 3KB,50 場 ≈ 150KB,localStorage 容量無虞)
-      if (data.history.length > 50) data.history = data.history.slice(-50);
+      // 2026-05-17 F-007:rolling cap 50 → 10。原註 3KB/場 是 fullLog 加入前的舊估算;
+      // PR #21 加 fullLog(stem + code_block + options.text × 60 題)後實測 ~50KB/場,
+      // 50 場可達 2.5MB,逼近 5MB localStorage 容量上限。降到 N=10 ≈ 500KB,留足安全餘裕。
+      if (data.history.length > 10) data.history = data.history.slice(-10);
       Storage.set(STORAGE_KEY, data);
     },
 

@@ -136,12 +136,12 @@ function setupMode7(n = 5) {
   A.eq(marked.length, 2, '2 marked entries preserved');
 }
 
-// --- 6: history capped to 50 entries ---
+// --- 6: history capped to 10 entries (F-007 2026-05-17:fullLog 加入後實測 ~50KB/場,從 50 降到 10 留 quota 餘裕)---
 {
   const { Mode, sandbox } = setupMode7(2);
-  // Pre-fill 60 history entries
+  // Pre-fill 20 history entries (>10 to trigger cap)
   const existingHistory = [];
-  for (let i = 0; i < 60; i++) {
+  for (let i = 0; i < 20; i++) {
     existingHistory.push({ ts: i, config: {}, result: {}, topWrong: [], fullLog: [] });
   }
   sandbox.Storage.set('ipas_mode7_theater_v1',
@@ -154,8 +154,11 @@ function setupMode7(n = 5) {
   }
   Mode.submitMock();
   const data = sandbox.Storage.get('ipas_mode7_theater_v1', null);
-  A.ok(data.history.length === 50,
-    `history capped at 50 entries (got ${data.history.length})`);
+  A.ok(data.history.length === 10,
+    `history capped at 10 entries (got ${data.history.length})`);
+  // Also verify it's the LATEST 10 (not the earliest) — slice(-10) keeps last
+  const oldestTs = data.history[0].ts;
+  A.ok(oldestTs >= 11, `slice(-10) keeps latest entries (oldest ts=${oldestTs}, expected ≥ 11)`);
 }
 
 process.exit(A.summary('Mode7 fullLog snapshot'));
