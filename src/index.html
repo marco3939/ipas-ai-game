@@ -932,8 +932,27 @@ const Mastery = {
     m[nodeId] = node; this.save(m);
     return node;
   },
-  drillBonus(nodeId) { const m = this.load(); if (!m[nodeId]) m[nodeId] = {score:0,attempts:0,correct:0,streak:0};
-    m[nodeId].score = Math.min(100, m[nodeId].score + 20); this.save(m); },
+  // 2026-05-17 鐵律 #1:依下鑽 ratio 差異化 bonus(取代舊 fixed +20)
+  //   ratio === 1 (100%) → +25(獎勵完美)
+  //   ratio ≥ 0.7        → +15
+  //   ratio ≥ 0.5        → +10
+  //   ratio > 0          → +5
+  //   ratio === 0        → +0(沒答對任一題不獎勵)
+  // 向後相容:caller 沒傳 ratio(undefined)→ 視為 1(舊行為 +20 升級成 +25,差異 +5 在誤差範圍)
+  drillBonus(nodeId, ratio) {
+    const m = this.load();
+    if (!m[nodeId]) m[nodeId] = { score: 0, attempts: 0, correct: 0, streak: 0 };
+    let bonus = 0;
+    if (ratio === undefined || ratio === null || !Number.isFinite(ratio)) bonus = 25;
+    else if (ratio >= 1)   bonus = 25;
+    else if (ratio >= 0.7) bonus = 15;
+    else if (ratio >= 0.5) bonus = 10;
+    else if (ratio > 0)    bonus = 5;
+    else                   bonus = 0;
+    m[nodeId].score = Math.min(100, m[nodeId].score + bonus);
+    this.save(m);
+    return bonus;
+  },
   getWeakest(nodeIds, n = 5) {
     const m = this.load();
     return nodeIds
@@ -1405,24 +1424,10 @@ function generateVariation(originalQ, count = 3) {
     addPick(RNG.pick(sameCodeFiltered.filter(q => !used.has(q.id))), '同主題延伸');
   }
 
-  // 最終保險:若三策略全失敗 → 用同 knowledge_code 任意題(誠實標註寬鬆 fallback)
-  if (result.length === 0) {
-    const anyInCode = candidates.filter(q => q.knowledge_code === originalQ.knowledge_code);
-    if (anyInCode.length > 0) {
-      const q = RNG.pick(anyInCode);
-      q._drillStrategy = '寬鬆延伸';
-      result.push(q);
-    }
-    // 若同 code 也沒題,使用同 subject 任意題
-    if (result.length === 0) {
-      const anyInSubject = candidates.filter(q => q.subject === originalQ.subject);
-      if (anyInSubject.length > 0) {
-        const q = RNG.pick(anyInSubject);
-        q._drillStrategy = '寬鬆延伸';
-        result.push(q);
-      }
-    }
-  }
+  // 2026-05-17 鐵律 #1 強化:移除「寬鬆延伸」fallback。
+  // 若三策略全部失敗或結果跨度過大(無法形成緊扣下鑽),寧可不出下鑽也不出無關題目。
+  // DrillSession.start 收到空陣列會 silent fallback → 繼續原本流程。
+  // 原寬鬆 fallback (同 code / 同 subject) 因關鍵詞重疊 < 2,造成下鑽變「亂選題」品質低落,故移除。
 
   return result.map(q => {
     const rendered = renderQuestion(q);
@@ -1819,23 +1824,45 @@ const PlayEngine = {
 PlayEngine.__nativeAnswer = PlayEngine.answer;
 
 // === Drill Session(鐵律 #1 結構化下鑽連戰)===
+// 2026-05-17 新規則:
+//   - depth:0=頂層下鑽(3 題),1=深度下鑽(nested,1 題,由頂層答錯觸發)
+//   - depth=1 答錯不再 nested(只允許 1 層深),避免無窮下鑽
+//   - 完成 100% 全對 → SeenCorrect.mark(originalQ.id) 跨 mode 共享「已掌握」訊號
+//   - 空 queue silent fallback(不顯 toast 不 setTimeout 直接 onComplete)
+//   - drillBonus 依 ratio 差異化(見 Mastery.drillBonus)
 const DrillSession = {
   queue: [], targetNode: null, correct: 0, total: 0, originalQ: null,
+  depth: 0,             // 巢狀層數:0 = 頂層 / 1 = deep drill(由頂層答錯觸發)
+  _parentStack: [],     // 父層狀態 stack(深度下鑽完回到父層用)
+  _wasCorrect: null,    // 最後一答對錯(供 onNext 決定是否觸發 deep drill)
+  _justAnswered: null,  // 最後作答的題(deep drill 的 originalQ)
   strategyEmoji: { '換角度': '🔄', '易混淆對手': '⚔️', '加深難度': '🔥', '勘誤強化': '⚠️',
     '同知識點': '📚', '同主題擴展': '🌐', '同主題綜合': '🎯', '同主題補強': '➕' },
-  start(nodeId, questions, originalQ, onComplete) {
+  start(nodeId, questions, originalQ, onComplete, depth) {
     this.onComplete = onComplete || null; // 完成後 callback,沒則回首頁
+    this.depth = Number.isFinite(depth) ? depth : 0;
+    // §8 LOW-1 hygiene:頂層 start 清空 _parentStack(防玩家「答錯 → 進 deep → 中途 goHome」殘留 stack 慢慢長大)
+    if (this.depth === 0) this._parentStack = [];
+    // 2026-05-17 空 queue silent fallback:不顯 toast、不 setTimeout、直接 onComplete
+    // 原 UX(toast 3.5s + 1.2s delay)在「找不到變化型」時打斷玩家節奏,改為無感繼續下一題。
+    // 注意:不在此重置 this.queue/total/correct/targetNode/originalQ。重置這些會讓 PlayEngine.onNext
+    // 回呼回 DrillSession.next() 時走「queue空+total=0」分支,該分支又會 fallback 呼叫
+    // PlayEngine.onNext,造成 wrap ↔ next 無限遞迴(LOW-3 hygiene 嘗試已 revert)。
     if (!questions || questions.length === 0) {
-      showToast('⚠️ 找不到變化型題目,題庫該知識點不足。請繼續其他題目', 3500);
-      setTimeout(() => {
-        if (this.onComplete) this.onComplete();
-        else if (PlayEngine.onNext) PlayEngine.onNext();
-      }, 1200);
+      const cb = this.onComplete;
+      this.onComplete = null;
+      if (cb) cb();
+      else if (PlayEngine.onNext) PlayEngine.onNext();
       return;
     }
     this.queue = questions; this.targetNode = nodeId; this.originalQ = originalQ;
     this.correct = 0; this.total = questions.length;
-    showToast(`🎯 結構化下鑽啟動:${questions.length} 題(${questions.map(q => q._drillStrategy).join(' → ')})`, 3500);
+    if (this.depth === 0) {
+      showToast(`🎯 結構化下鑽啟動:${questions.length} 題(${questions.map(q => q._drillStrategy).join(' → ')})`, 3500);
+    } else {
+      // 深度下鑽 toast(較短,讓玩家知道進入第二層)
+      showToast(`🔬 深度下鑽 Lv.${this.depth}:再練 1 題`, 2500);
+    }
     this.next();
   },
   next() {
@@ -1845,12 +1872,20 @@ const DrillSession = {
         else if (PlayEngine.onNext) PlayEngine.onNext();
         return;
       }
-      Mastery.drillBonus(this.targetNode);
-      if (PlayEngine.current && PlayEngine.current.id) Wrongbook.markMastered(PlayEngine.current.id);
-      const ratio = Math.round(this.correct / this.total * 100);
+      const ratio = this.correct / this.total;
+      const ratioPct = Math.round(ratio * 100);
       const allCorrect = this.correct === this.total;
-      showToast(`${allCorrect ? '🎉' : '✓'} 下鑽完成!正答 ${this.correct}/${this.total} (${ratio}%) · 熟練度 +20%`, 3500);
-      if (window.confetti && allCorrect && this.total > 0) GameFX.bigConfetti();
+      const bonus = Mastery.drillBonus(this.targetNode, ratio);
+      if (PlayEngine.current && PlayEngine.current.id) Wrongbook.markMastered(PlayEngine.current.id);
+      // 2026-05-17 鐵律 #1:100% 全對 → SeenCorrect.mark(originalQ.id)
+      // 跨 mode 共享「已透過下鑽 demonstrate 掌握」訊號 → 其他 mode 抽題時排除
+      // 嚴格條件:必須全對(保留最嚴格,避免半懂就被當作 mastered)
+      if (allCorrect && this.originalQ && this.originalQ.id && typeof SeenCorrect !== 'undefined') {
+        try { SeenCorrect.mark(this.originalQ.id); } catch (_) {}
+      }
+      const lvLabel = this.depth > 0 ? ` (Lv.${this.depth})` : '';
+      showToast(`${allCorrect ? '🎉' : '✓'} 下鑽完成${lvLabel}!正答 ${this.correct}/${this.total} (${ratioPct}%) · 熟練度 +${bonus}`, 3500);
+      if (window.confetti && allCorrect && this.total > 0 && this.depth === 0) GameFX.bigConfetti();
       // 完成後:若有 onComplete 就呼叫(回到原戰鬥),否則才回首頁
       setTimeout(() => {
         if (this.onComplete) {
@@ -1894,11 +1929,19 @@ const DrillSession = {
       </div>` : ''}
     </div>`;
     PlayEngine.show(q, { contextHTML: ctx });
+    // 紀錄當前題(_justAnswered)+ 重置 _wasCorrect,供 onNext 判斷是否觸發 deep drill
+    this._justAnswered = q;
+    this._wasCorrect = null;
     PlayEngine.onNext = () => {
-      // 統計正答(從 PlayEngine 的最後一題狀態判斷)
-      DrillSession.next();
+      // 2026-05-17 鐵律 #1 deep drill:頂層下鑽答錯 + 還沒進過 deep → 觸發 1 題 nested
+      // depth=1 答錯不再 nested(只允許 1 層深);頂層答對則正常前進
+      if (DrillSession._wasCorrect === false && DrillSession.depth < 1) {
+        DrillSession._enterDeep(DrillSession._justAnswered);
+      } else {
+        DrillSession.next();
+      }
     };
-    // 包裝 PlayEngine.answer 以便統計正答
+    // 包裝 PlayEngine.answer 以便統計正答 + 紀錄對錯供 onNext 決策
     // case 11 (2026-05-17 P0):強制用 __nativeAnswer 救生索,避免疊加殘存的 Mode 7 wrap。
     // 若不用救生索,Mode 7 結算後 hook 殘存時 origAnswer 抓到 Mode 7 wrap →
     // wrap 內 `if (!self.state || self.state.finished) return` silent return → click 死掉。
@@ -1908,13 +1951,56 @@ const DrillSession = {
         const o = this.current && this.current.options
           ? this.current.options.find(opt => opt.key === key)
           : null;
-        if (o && o.is_correct) DrillSession.correct++;
+        const isCorrect = !!(o && o.is_correct);
+        DrillSession._wasCorrect = isCorrect;
+        if (isCorrect) DrillSession.correct++;
         origAnswer(key);
       } finally {
         // case 11:用 try/finally 確保即使 origAnswer throw 也會還原,避免 wrap 永留累積污染
         PlayEngine.answer = origAnswer;
       }
     };
+  },
+  // 2026-05-17 deep drill:頂層答錯時暫停當前 DrillSession,進 1 題 nested 訓練
+  //   - 巢狀只允許 1 層(start 時 depth=1,進去後 _wasCorrect=false 也不再觸發此函式)
+  //   - nested 結束(無論 100% 與否)→ restore 父層狀態 → DrillSession.next() 進下一題
+  //   - generateVariation 取 1 題;若取不到 → silent fallback(直接 next 進父層下一題)
+  _enterDeep(wrongQ) {
+    if (!wrongQ) { this.next(); return; }
+    if (this.depth >= 1) { this.next(); return; }  // safety:已是 deep,不再 nested
+    // 找 1 題 nested drill question(generateVariation 取最多 3 題,我們只用第 1 題)
+    let nested = [];
+    try {
+      const variations = generateVariation(wrongQ, 3);
+      nested = variations.slice(0, 1);
+    } catch (_) { nested = []; }
+    if (nested.length === 0) { this.next(); return; }
+    // 保存當前(父層)狀態
+    const saved = {
+      queue: this.queue.slice(),
+      targetNode: this.targetNode,
+      correct: this.correct,
+      total: this.total,
+      originalQ: this.originalQ,
+      depth: this.depth,
+      onComplete: this.onComplete
+    };
+    this._parentStack.push(saved);
+    // 啟動 nested(depth+1)
+    this.start(wrongQ.node_id || this.targetNode, nested, wrongQ, () => {
+      // nested 完成 → restore 父層
+      const parent = this._parentStack.pop();
+      if (parent) {
+        this.queue = parent.queue;
+        this.targetNode = parent.targetNode;
+        this.correct = parent.correct;
+        this.total = parent.total;
+        this.originalQ = parent.originalQ;
+        this.depth = parent.depth;
+        this.onComplete = parent.onComplete;
+      }
+      this.next();
+    }, (saved.depth || 0) + 1);
   }
 };
 

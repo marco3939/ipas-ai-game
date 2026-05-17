@@ -171,8 +171,8 @@ console.log('\n[12] multiple confusion-matrix all excluded');
   out.forEach(v => A.ok(v.interaction_type !== 'confusion-matrix', `${v.id} not confusion-matrix`));
 }
 
-// ----- 13. 同 subject 大規模 fallback -----
-console.log('\n[13] same subject fallback (last resort)');
+// ----- 13. 2026-05-17 鐵律 #1:同 subject 大規模 fallback 已移除 → 跨度太大不下鑽 -----
+console.log('\n[13] 2026-05-17 鐵律 #1:寬鬆延伸已移除');
 {
   const orig = q('orig', { node_id: 'N1', knowledge_code: 'K1', subject: 'S1' });
   const anyInSubject = q('any', {
@@ -181,10 +181,8 @@ console.log('\n[13] same subject fallback (last resort)');
   });
   const { gv } = setup([orig, anyInSubject]);
   const out = gv(orig, 3);
-  A.ok(out.length >= 1, `subject fallback produced: ${out.length} variations`);
-  if (out.length > 0) {
-    A.ok(out[0]._drillStrategy === '寬鬆延伸', `strategy='寬鬆延伸' (got "${out[0]._drillStrategy}")`);
-  }
+  // 新規則:跨 node_id / 跨 code / 關鍵詞 < 2 重疊 → 跨度太大不下鑽,寧可回空
+  A.eq(out.length, 0, `✅ 2026-05-17:跨度太大(only same-subject)→ 0 variations(實際 ${out.length})`);
 }
 
 // ----- 14. 完全不相關題庫 → 0 -----
