@@ -142,7 +142,7 @@
     // (BOSS qids 池小,fallback 很常見;此模式以「全 BOSS 池打完才完全切換」為設計)
     if (typeof SeenCorrect !== 'undefined' && list.length > 0) {
       const fr = SeenCorrect.filterForBattle(list, 1);
-      if (fr.fallback) showToast(`「${boss.name||'本 BOSS'}」全題已答對過,允許重複再戰`);
+      if (fr.fallback) showToast(`「${esc(boss.name||'本 BOSS')}」全題已答對過,允許重複再戰`);
       else if (fr.pool.length < list.length) {
         // 部分排除成功
         return RNG.shuffle(fr.pool);
@@ -247,10 +247,10 @@
                   <span style="font-size:2rem">${b.avatar}</span>
                   <div>
                     <div class="mode-num">${disabled ? '🚧 題庫補強中' : (cleared ? (perfect ? '⭐ 完美通關' : '✅ 已通關') : '未通關')}</div>
-                    <div class="mode-title" style="font-size:0.95rem">${b.name}</div>
+                    <div class="mode-title" style="font-size:0.95rem">${esc(b.name)}</div>
                   </div>
                 </div>
-                <div class="mode-desc" style="font-size:0.85rem">${b.desc}</div>
+                <div class="mode-desc" style="font-size:0.85rem">${esc(b.desc)}</div>
                 <div class="mode-stats">HP ${dynHp} · ${qcnt} 題判讀 ${reducedNote}</div>
                 ${emptyNote}
               </button>`;
@@ -308,12 +308,12 @@
           <div class="enemy-bar">
             <div class="avatar boss" style="font-size:2.5rem">${boss.avatar}</div>
             <div class="bar-info">
-              <div class="bar-name">${boss.name}</div>
+              <div class="bar-name">${esc(boss.name)}</div>
               <div class="hp-text">HP ${dynHp} · ${questions.length} 題程式判讀${questions.length < boss.qids.length ? ' (題庫減量)' : ''}</div>
             </div>
           </div>
           <div class="dialogue-box">
-            <div class="dialogue-name">${boss.name}</div>
+            <div class="dialogue-name">${esc(boss.name)}</div>
             <div class="dialogue-text" id="m2-intro-text"></div>
           </div>
           <div class="actions" style="margin-top:16px;justify-content:center">
@@ -364,7 +364,7 @@
           <div class="enemy-bar">
             <div class="avatar boss" id="m2-boss-avatar" style="font-size:2.5rem">${this.state.boss.avatar}</div>
             <div class="bar-info">
-              <div class="bar-name">${this.state.boss.name}</div>
+              <div class="bar-name">${esc(this.state.boss.name)}</div>
               <div class="hp-track"><div class="hp-fill" id="m2-boss-hp-fill" style="width:100%"></div></div>
               <div class="hp-text" id="m2-boss-hp-text">${this.state.bossHp} / ${this.state.bossHpMax}</div>
             </div>
@@ -603,15 +603,15 @@
       const otherAnalysis = otherWrongOptions.map(o => `
         <div style="padding:8px 10px;margin:6px 0;background:rgba(255,255,255,0.04);border-radius:4px;border-left:3px solid #94a3b8">
           <div style="color:#cbd5e1;font-weight:600;margin-bottom:2px">${esc(o.key)}. ${esc(o.text)}</div>
-          <div style="color:var(--fg-dim);font-size:0.875rem;line-height:1.6">└ ${findWrongExp(o)}</div>
+          <div style="color:var(--fg-dim);font-size:0.875rem;line-height:1.6">└ ${esc(findWrongExp(o))}</div>
         </div>
       `).join('');
 
       const userWrongExp = !isCorrect && opt ? findWrongExp(opt) : '';
 
       const enemyTaunt = !isCorrect ? `<div class="dialogue-box" style="border-color:rgba(239,68,68,0.4)">
-        <div class="dialogue-name" style="color:#f87171">${this.state.boss.name}</div>
-        <div class="dialogue-text">「${RNG.pick(this.state.boss.attack)}」</div>
+        <div class="dialogue-name" style="color:#f87171">${esc(this.state.boss.name)}</div>
+        <div class="dialogue-text">「${esc(RNG.pick(this.state.boss.attack))}」</div>
       </div>` : '';
 
       explainEl.innerHTML = `
@@ -740,7 +740,7 @@
       this.state.skillsUsedThisQ.review = true;
 
       const q = this.state.currentQ;
-      const traps = q.options.filter(o => !o.is_correct && o.trap_type).map(o => `• ${o.trap_type}`);
+      const traps = q.options.filter(o => !o.is_correct && o.trap_type).map(o => `• ${esc(o.trap_type)}`);
       const miscons = (q.misconceptions || []).map(m => '• ' + m);
       const lines = [];
       if (miscons.length) lines.push('⚠️ 常見誤解:\n' + miscons.join('\n'));
@@ -777,8 +777,8 @@
           <h1 style="color:#fbbf24;font-size:2rem">🏆 推理勝利!惡魔倒下</h1>
           <div style="font-size:4rem;margin:16px 0">${this.state.boss.avatar}</div>
           <div class="dialogue-box">
-            <div class="dialogue-name">${this.state.boss.name}</div>
-            <div class="dialogue-text">「${RNG.pick(this.state.boss.defeat)}」</div>
+            <div class="dialogue-name">${esc(this.state.boss.name)}</div>
+            <div class="dialogue-text">「${esc(RNG.pick(this.state.boss.defeat))}」</div>
           </div>
           <div style="background:rgba(0,0,0,0.5);padding:16px;border-radius:var(--radius);margin:16px 0;text-align:left">
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
@@ -826,7 +826,7 @@
           <div style="font-size:4rem;margin:16px 0">😵</div>
           <div class="dialogue-box">
             <div class="dialogue-name">${bossNameForRetry}</div>
-            <div class="dialogue-text">「${lastAttack}」</div>
+            <div class="dialogue-text">「${esc(lastAttack)}」</div>
           </div>
           <p style="margin:16px 0;color:var(--fg-dim)">休息片刻後,你恢復了一半 HP...</p>
           <div class="actions" style="justify-content:center">

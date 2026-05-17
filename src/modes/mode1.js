@@ -246,10 +246,10 @@
                   <span style="font-size:2rem">${b.avatar}</span>
                   <div>
                     <div class="mode-num">${cleared ? (perfect ? '⭐ 完美通關' : '✅ 已通關') : '未通關'}</div>
-                    <div class="mode-title" style="font-size:0.95rem">${b.name}</div>
+                    <div class="mode-title" style="font-size:0.95rem">${esc(b.name)}</div>
                   </div>
                 </div>
-                <div class="mode-desc" style="font-size:0.85rem">${b.desc}</div>
+                <div class="mode-desc" style="font-size:0.85rem">${esc(b.desc)}</div>
                 <div class="mode-stats">HP ${Math.round(b.hp * BOSS_HP_MULTIPLIER)} · ${b.n || BOSS_QUESTIONS_PER_BATTLE} 題</div>
               </button>`;
             }).join('')}
@@ -306,12 +306,12 @@
           <div class="enemy-bar">
             <div class="avatar boss" style="font-size:2.5rem">${boss.avatar}</div>
             <div class="bar-info">
-              <div class="bar-name">${boss.name}</div>
+              <div class="bar-name">${esc(boss.name)}</div>
               <div class="hp-text">HP ${Math.round(boss.hp * BOSS_HP_MULTIPLIER)}</div>
             </div>
           </div>
           <div class="dialogue-box">
-            <div class="dialogue-name">${boss.name}</div>
+            <div class="dialogue-name">${esc(boss.name)}</div>
             <div class="dialogue-text" id="intro-text"></div>
           </div>
           <div class="actions" style="margin-top:16px;justify-content:center">
@@ -355,7 +355,7 @@
           <div class="enemy-bar">
             <div class="avatar boss" id="boss-avatar" style="font-size:2.5rem">${this.state.boss.avatar}</div>
             <div class="bar-info">
-              <div class="bar-name">${this.state.boss.name}</div>
+              <div class="bar-name">${esc(this.state.boss.name)}</div>
               <div class="hp-track"><div class="hp-fill" id="boss-hp-fill" style="width:100%"></div></div>
               <div class="hp-text" id="boss-hp-text">${this.state.bossHp} / ${this.state.bossHpMax}</div>
             </div>
@@ -712,8 +712,8 @@
           <h1 style="color:#fbbf24;font-size:2rem">🏆 戰鬥勝利!</h1>
           <div style="font-size:4rem;margin:16px 0">${this.state.boss.avatar}</div>
           <div class="dialogue-box">
-            <div class="dialogue-name">${this.state.boss.name}</div>
-            <div class="dialogue-text">「${RNG.pick(this.state.boss.defeat)}」</div>
+            <div class="dialogue-name">${esc(this.state.boss.name)}</div>
+            <div class="dialogue-text">「${esc(RNG.pick(this.state.boss.defeat))}」</div>
           </div>
           <div style="background:rgba(0,0,0,0.5);padding:16px;border-radius:var(--radius);margin:16px 0;text-align:left">
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
@@ -753,8 +753,8 @@
           <h1 style="color:#f87171;font-size:2rem">💀 你倒下了</h1>
           <div style="font-size:4rem;margin:16px 0">😵</div>
           <div class="dialogue-box">
-            <div class="dialogue-name">${this.state.boss.name}</div>
-            <div class="dialogue-text">「${RNG.pick(this.state.boss.attack)}」</div>
+            <div class="dialogue-name">${esc(this.state.boss.name)}</div>
+            <div class="dialogue-text">「${esc(RNG.pick(this.state.boss.attack))}」</div>
           </div>
           <p style="margin:16px 0;color:var(--fg-dim)">休息片刻後,你恢復了一半 HP...</p>
           <div class="actions" style="justify-content:center">
