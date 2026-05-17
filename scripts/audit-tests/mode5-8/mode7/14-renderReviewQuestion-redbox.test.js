@@ -108,7 +108,40 @@ function setupAndPlay(allCorrect = false) {
   A.eq(r.Mode.state.reviewIdx, 2, 'reviewNext at last idx stays at last');
 }
 
-// --- 7: source contract — _renderReviewQuestion handles userKey/correctKey ---
+// --- 7: attack — options.key all undefined (old bug scenario, simulate legacy data) ---
+//   reviewHistorySession with fullLog where options[i].key is undefined.
+//   The render must NOT crash; user-selected red box may not appear, but
+//   correct option green box still rendered.
+{
+  const r = setupAndPlay(false);
+  const data = r.sandbox.Storage.get('ipas_mode7_theater_v1');
+  // Strip keys from fullLog options (simulate pre-PR #5 bug data)
+  data.history[0].fullLog.forEach(e => {
+    e.options.forEach(o => { delete o.key; });
+  });
+  r.sandbox.Storage.set('ipas_mode7_theater_v1', data);
+  A.nothrow(() => r.Mode.reviewHistorySession(0),
+    'reviewHistorySession with all options.key=undefined does NOT crash');
+  A.nothrow(() => r.Mode.reviewNext(),
+    'reviewNext with broken keys does NOT crash');
+}
+
+// --- 8: attack — markedIds with 10000+ entries — UI does not freeze ---
+//   _renderReviewQuestion iterates over markedIds.has(q.id) — must be O(1).
+{
+  const r = setupAndPlay(false);
+  // Add 10000 marked ids to state
+  for (let i = 0; i < 10000; i++) {
+    r.Mode.state.markedIds.add('zzz_' + i);
+  }
+  const t0 = Date.now();
+  r.Mode._renderReviewQuestion(0);
+  const dt = Date.now() - t0;
+  A.ok(dt < 500,
+    `render with markedIds.size=10000 fast (${dt}ms < 500ms — UI not frozen)`);
+}
+
+// --- 9: source contract — _renderReviewQuestion handles userKey/correctKey ---
 {
   const fs = require('fs');
   const path = require('path');
