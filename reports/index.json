@@ -114,6 +114,20 @@
         "new_in_phase": 9
       },
       "notes": "L1 surfaced F-006 + F-007 (MEDIUM) that L0 missed in Phases 1-4. F-001 upgraded LOW→MEDIUM per L1 analysis."
+    },
+    {
+      "phase": 6,
+      "artifact_path": "reports/phase6-compliance-summary.md",
+      "sha256": "5e848e5ea033ce3d0272a861860012d1a2b57acf5e3975181d5cb05edb075341",
+      "generated_at": "2026-05-17T11:43:06.100Z",
+      "tool": "manual-clause-mapping",
+      "tool_version": "v3.0-protocol",
+      "command": "minimal compliance map per Phase 0 §6 (no real CRA/ISO/GDPR/HIPAA/PCI hits)",
+      "host_id": "linux-x86_64-node22.22.2",
+      "executor_id": "claude-opus-4-7[1m]",
+      "auditor_id": null,
+      "verdict": "REVIEW_COMPLETE",
+      "notes": "All compliance families NOT_APPLICABLE for this frontend SPA. Review chain complete: PASS_WITH_RECOMMEND_FIX, 3 MEDIUM + 7 LOW + 4 INFO."
     }
   ]
 }
