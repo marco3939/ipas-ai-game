@@ -528,6 +528,8 @@ function buildSandbox(opts = {}) {
   };
   // Make window refer back to sandbox so `window.ModeN = Mode_` works.
   sandbox.window = sandbox;
+  // window-level stubs that some modes call (scrollTo, addEventListener, etc.)
+  sandbox.scrollTo = () => {};
   const ctx = vm.createContext(sandbox);
   return { ctx, sandbox, stats };
 }

@@ -116,7 +116,9 @@ console.log('=== Mode 3 — selectStage format check ===');
   vm.runInContext('Mode3.start(); Mode3.selectStage("q_pc_seq_001");', sb);
   const view = sb.document.getElementById('view-play');
   A.ok(!view.innerHTML.includes('<script>alert(1)</script>'), 'no raw <script>');
-  A.ok(!view.innerHTML.includes('onerror=evil()'), 'no raw onerror=');
+  // onerror= 在 escaped text 內仍會出現,但 < 已被 escape 為 &lt;,不會形成 <img> element
+  A.ok(!view.innerHTML.includes('<img src=x'), 'no raw <img tag (escaped to &lt;img)');
+  A.ok(view.innerHTML.includes('&lt;img') || view.innerHTML.includes('&lt;script'), 'XSS escaped via &lt;');
   vm.runInContext('Mode3.stopTimer();', sb);
 }
 
