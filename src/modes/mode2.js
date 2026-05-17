@@ -171,9 +171,24 @@
 
   const Mode2 = {
     state: null,
+    // 案例 10 deep-audit Agent H Finding 1:加 timer 管理(原本 goHome 的 Mode2._clearAllTimers guard 永遠 falsy)
+    _pendingTimers: [],
+    _scheduleTimeout(fn, delay) {
+      const id = setTimeout(() => {
+        this._pendingTimers = this._pendingTimers.filter(x => x !== id);
+        fn();
+      }, delay);
+      this._pendingTimers.push(id);
+      return id;
+    },
+    _clearAllTimers() {
+      this._pendingTimers.forEach(id => clearTimeout(id));
+      this._pendingTimers = [];
+    },
 
     start() {
       this.stopTypeText();
+      this._clearAllTimers();   // 案例 10 deep-audit Agent H Finding 1:進場清舊 timer
       // 清掉殘留 state(避免從戰鬥中按「退避」回地圖後,先前 takeDamage 排好的
       // 1.5s gameOver setTimeout 仍會用 state.gameOverPending 觸發,把地圖蓋掉)
       this.state = null;
@@ -520,7 +535,7 @@
       const playerAv = document.getElementById('m2-player-avatar');
       const bossAv = document.getElementById('m2-boss-avatar');
       GameFX.attackAnim(playerAv);
-      setTimeout(() => {
+      this._scheduleTimeout(() => {
         GameFX.shake(bossAv);
         GameFX.damageNumber(bossAv, dmg, { kind: 'player', crit: isCrit });
       }, 200);
@@ -540,7 +555,7 @@
       p.mp = Math.min(p.mpMax, p.mp + mpHeal);
       Player.save(p);
       if (p.hp > beforeHp) {
-        setTimeout(() => GameFX.damageNumber(playerAv, '+' + (p.hp - beforeHp), { kind: 'player' }), 400);
+        this._scheduleTimeout(() => GameFX.damageNumber(playerAv, '+' + (p.hp - beforeHp), { kind: 'player' }), 400);
       }
 
       this.updateBars();
@@ -559,7 +574,7 @@
       const playerAv = document.getElementById('m2-player-avatar');
       const bossAv = document.getElementById('m2-boss-avatar');
       GameFX.attackAnim(bossAv);
-      setTimeout(() => {
+      this._scheduleTimeout(() => {
         GameFX.shake(playerAv);
         GameFX.damageNumber(playerAv, dmg, { kind: 'enemy' });
       }, 200);
@@ -568,7 +583,7 @@
       const p = Player.load();
       if (p.hp <= 0) {
         this.state.gameOverPending = true;
-        setTimeout(() => {
+        this._scheduleTimeout(() => {
           // 防呆:玩家若已退回地圖或進別場戰鬥,state 可能變更,只在仍為同場時觸發
           if (this.state && this.state.gameOverPending) this.gameOver();
         }, 1500);

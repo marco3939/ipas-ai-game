@@ -965,10 +965,26 @@ const Mastery = {
 //   - Fallback:若 filter 後池 < 需求量,showToast 提醒並允許重複
 const SeenCorrect = {
   _cache: null,
+  _crossTabBound: false,
   _load() {
-    if (this._cache) return this._cache;
+    if (this._cache) {
+      this._bindCrossTab();
+      return this._cache;
+    }
     this._cache = new Set(Storage.get(Storage.K_SEEN_CORRECT, []));
+    this._bindCrossTab();
     return this._cache;
+  },
+  // 案例 10 deep-audit Agent A H-4:cross-tab storage event listener
+  // 防使用者開多 tab 練題時 _cache 看不到別 tab 寫入(stale data)
+  _bindCrossTab() {
+    if (this._crossTabBound) return;
+    this._crossTabBound = true;
+    try {
+      window.addEventListener('storage', (e) => {
+        if (e.key === Storage.K_SEEN_CORRECT) this._cache = null;
+      });
+    } catch (_) { /* SSR / 無 window */ }
   },
   mark(qid) {
     if (!qid) return;
@@ -1009,7 +1025,8 @@ const Wrongbook = {
     const w = this.load();
     const existing = w.find(x => x.qid === qid);
     if (existing) {
-      existing.wrongCount = (existing.wrongCount||1) + 1;
+      // 案例 10 deep-audit Agent A MED-1:wrongCount 加 99999 上限防 Number.MAX_VALUE 注入
+      existing.wrongCount = Math.min(99999, (Number.isFinite(existing.wrongCount) ? existing.wrongCount : 1) + 1);
       existing.lastWrong = Date.now();
       // 若舊紀錄沒 text 而本次傳了,補上(向後相容遷移)
       if (!existing.userText && userText) existing.userText = userText;
@@ -1860,9 +1877,11 @@ const DrillSession = {
       '同主題延伸': '同主題關鍵詞重疊的延伸題'
     };
     // 上層題核心摘要(讓使用者看到「下鑽是針對什麼概念」)
-    const upperHook = (this.originalQ && this.originalQ.explanation && this.originalQ.explanation.hook) || '';
-    const upperMiscon = (this.originalQ && this.originalQ.misconceptions || []).slice(0, 1).join(' / ');
-    const upperCode = (this.originalQ && this.originalQ.knowledge_code) || '';
+    // 案例 10 deep-audit Agent D D-2:全部 escape 防 stored XSS(若 ProgressIO 匯入污染 explanation.hook)
+    const _drillEsc = (s) => ErrorReports && ErrorReports._esc ? ErrorReports._esc(s) : String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const upperHook = _drillEsc((this.originalQ && this.originalQ.explanation && this.originalQ.explanation.hook) || '');
+    const upperMiscon = _drillEsc((this.originalQ && this.originalQ.misconceptions || []).slice(0, 1).join(' / '));
+    const upperCode = _drillEsc((this.originalQ && this.originalQ.knowledge_code) || '');
     const ctx = `<div class="boss-bar" style="background:linear-gradient(90deg,#ef4444,#f59e0b)">
       <div class="boss-name">${emoji} 下鑽訓練 ${stepNum}/${this.total} — 策略:<strong style="color:#fef3c7">${strategy}</strong></div>
       <div style="font-size:0.85rem;color:rgba(255,255,255,0.85);margin-top:6px">
@@ -2189,12 +2208,31 @@ const Player = {
       skills: { hint: false, eliminate: false, double: false } });
   },
   save(p) { Storage.set('ipas_player_v1', p); },
-  damage(amt) { const p = this.load(); p.hp = Math.max(0, p.hp - amt); this.save(p); return p.hp; },
-  heal(amt) { const p = this.load(); p.hp = Math.min(p.hpMax, p.hp + amt); this.save(p); return p.hp; },
+  // 案例 10 deep-audit Agent A — Player 4 個 bug 全修
+  // H-2:damage(-x) 突破 hpMax → 加 Math.min(hpMax) cap;NaN 防護
+  // H-3:heal(-x) 反扣 HP → 入口 amt 強制 ≥ 0
+  damage(amt) {
+    if (!Number.isFinite(amt) || amt < 0) amt = 0;
+    const p = this.load();
+    p.hp = Math.min(p.hpMax, Math.max(0, p.hp - amt));
+    this.save(p);
+    return p.hp;
+  },
+  heal(amt) {
+    if (!Number.isFinite(amt) || amt < 0) amt = 0;
+    const p = this.load();
+    p.hp = Math.min(p.hpMax, p.hp + amt);
+    this.save(p);
+    return p.hp;
+  },
+  // CRITICAL-1:gainExp + expMax=0 → infinite loop;HIGH:gainExp(Infinity) → level 暴衝 + expMax=NaN
+  // 修法:NaN/Infinity/負數早 return + while 加 expMax>0 守衛
   gainExp(amt) {
     const p = this.load();
+    if (!Number.isFinite(amt) || amt < 0) return p;
     p.exp += amt;
-    while (p.exp >= p.expMax) {
+    let maxLevelUps = 1000;   // 雙保險:防 expMax 損壞時無窮迴圈
+    while (p.expMax > 0 && p.exp >= p.expMax && maxLevelUps-- > 0) {
       p.exp -= p.expMax; p.level++; p.skillPoints++;
       p.expMax = Math.floor(p.expMax * 1.5);
       p.hpMax += 20; p.hp = p.hpMax; p.mpMax += 10; p.mp = p.mpMax;
