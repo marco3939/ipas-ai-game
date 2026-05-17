@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "host_id": "linux-x86_64-node22.22.2-ephemeral-claude-web",
+  "executor_id": "claude-opus-4-7[1m] (orchestrator L0)",
+  "auditor_id": "pending (Phase 1+)",
+  "artifacts": [
+    {
+      "phase": 0,
+      "artifact_path": "reports/scope.md",
+      "sha256": "ade452ad5e79f7c286aa9f243efd69e24447980cb35ccef5067008453063b6a9",
+      "generated_at": "2026-05-17T09:56:06Z",
+      "tool": "manual-orchestrator",
+      "tool_version": "v3.0-protocol",
+      "command": "git diff 5ff76a5..origin/main + manual scope analysis",
+      "host_id": "linux-x86_64-node22.22.2",
+      "executor_id": "claude-opus-4-7[1m]",
+      "auditor_id": null
+    }
+  ]
+}
