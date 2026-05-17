@@ -94,17 +94,34 @@ console.log('\n[6] score ceiling 100');
   A.eq(n.correct, 100, 'correct=100');
 }
 
-// ----- [7] drillBonus -----
-console.log('\n[7] drillBonus +20');
+// ----- [7] drillBonus (差異化 by ratio,2026-05-17 鐵律 #1 強化)-----
+console.log('\n[7] drillBonus differentiated by ratio');
 {
   const sb = setup();
-  sb.Mastery.drillBonus('new-node');
-  const n = sb.Mastery.get('new-node');
-  A.eq(n.score, 20, 'drillBonus on new node → 20');
-  sb.Mastery.drillBonus('new-node');
-  A.eq(sb.Mastery.get('new-node').score, 40, 'drillBonus again → 40');
-  for (let i = 0; i < 10; i++) sb.Mastery.drillBonus('new-node');
-  A.eq(sb.Mastery.get('new-node').score, 100, 'drillBonus capped at 100');
+  // ratio 100% → +25
+  sb.Mastery.drillBonus('n100', 1.0);
+  A.eq(sb.Mastery.get('n100').score, 25, '100% → +25');
+  // ratio 70% → +15
+  sb.Mastery.drillBonus('n70', 0.7);
+  A.eq(sb.Mastery.get('n70').score, 15, '70% → +15');
+  // ratio 50% → +10
+  sb.Mastery.drillBonus('n50', 0.5);
+  A.eq(sb.Mastery.get('n50').score, 10, '50% → +10');
+  // ratio 30% → +5
+  sb.Mastery.drillBonus('n30', 0.3);
+  A.eq(sb.Mastery.get('n30').score, 5, '30% → +5');
+  // ratio 0% → +0
+  sb.Mastery.drillBonus('n0', 0);
+  A.eq(sb.Mastery.get('n0').score, 0, '0% → +0');
+  // 向後相容:undefined ratio 視為 100%(+25)
+  sb.Mastery.drillBonus('nlegacy');
+  A.eq(sb.Mastery.get('nlegacy').score, 25, 'undefined ratio → +25 (back-compat ≈ 100%)');
+  // cap at 100
+  for (let i = 0; i < 10; i++) sb.Mastery.drillBonus('ncap', 1.0);
+  A.eq(sb.Mastery.get('ncap').score, 100, '多次 100% 累積後 capped at 100');
+  // NaN ratio 視為 100%(防呆)
+  sb.Mastery.drillBonus('nnan', NaN);
+  A.eq(sb.Mastery.get('nnan').score, 25, 'NaN ratio → +25 (safe default)');
 }
 
 // ----- [8] getWeakest fresh node default score 50 -----

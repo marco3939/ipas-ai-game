@@ -31,15 +31,17 @@ function setup(opts = {}) {
   return { sb, DrillSession, playLog };
 }
 
-// ----- 1. 空 questions 走 fallback -----
-console.log('\n[1] empty questions array');
+// ----- 1. 空 questions 走 fallback (2026-05-17 新規則:silent fallback,無 toast 無 delay,直接 onComplete) -----
+console.log('\n[1] empty questions array — silent fallback (2026-05-17)');
 {
   const { sb, DrillSession } = setup();
   let cbCalled = false;
-  // runTimers=false → setTimeout 不真跑,callback 不會被呼叫
   DrillSession.start('node1', [], { id: 'q_origin' }, () => { cbCalled = true; });
-  A.ok(sb.__toasts.some(t => t.includes('找不到變化型')), 'fallback toast shown');
-  A.eq(cbCalled, false, 'callback NOT called sync (deferred to setTimeout)');
+  // 新規則:不顯 toast(避免打斷玩家節奏)
+  A.eq(sb.__toasts.some(t => t.includes('找不到變化型')), false,
+    '✅ 2026-05-17:空 queue 不再顯「找不到變化型」toast');
+  // 新規則:onComplete 同步呼叫(不再 setTimeout)
+  A.eq(cbCalled, true, '✅ 2026-05-17:onComplete 同步呼叫(無 setTimeout 延遲)');
 }
 
 // ----- 2. 正常 3 題啟動 -----
@@ -157,13 +159,17 @@ console.log('\n[8] strategyEmoji map');
   A.ok(DrillSession.strategyEmoji['加深難度'], 'has 加深難度 emoji');
 }
 
-// ----- 9. 攻擊:variations 為 null -----
-console.log('\n[9] attack: variations=null');
+// ----- 9. 攻擊:variations 為 null (2026-05-17 新規則:silent fallback)-----
+console.log('\n[9] attack: variations=null — silent fallback');
 {
   const { sb, DrillSession } = setup();
-  A.nothrow(() => DrillSession.start('node1', null, { id: 'origQ' }, () => {}),
+  let cbCalled = false;
+  A.nothrow(() => DrillSession.start('node1', null, { id: 'origQ' }, () => { cbCalled = true; }),
     'null variations: no throw');
-  A.ok(sb.__toasts.some(t => t.includes('找不到變化型')), 'null variations: fallback toast');
+  // 新規則:silent fallback,不顯 toast,onComplete 同步呼叫
+  A.eq(sb.__toasts.some(t => t.includes('找不到變化型')), false,
+    '✅ 2026-05-17:null variations 不再顯 toast');
+  A.eq(cbCalled, true, '✅ 2026-05-17:null variations onComplete 同步呼叫');
 }
 
 // ----- 10. 攻擊:originalQ.explanation.hook 含 XSS -----
@@ -222,6 +228,138 @@ console.log('\n[12] PlayEngine.onNext hook set');
   A.ok(typeof sb.PlayEngine.onNext === 'function', 'PlayEngine.onNext is a function');
   // 模擬使用者點下一題
   A.nothrow(() => sb.PlayEngine.onNext(), 'onNext() no throw');
+}
+
+// ----- 13. 2026-05-17 鐵律 #1:depth 起始 0,start 接受 depth 參數 -----
+console.log('\n[13] depth tracking — 2026-05-17 deep drill 鐵律 #1');
+{
+  const { sb, DrillSession } = setup();
+  const variations = [
+    { id: 'v1', options: [{ key: 'A', is_correct: true }] }
+  ];
+  DrillSession.start('node1', variations, { id: 'origQ' });
+  A.eq(DrillSession.depth, 0, '預設 depth=0');
+  // 重新 start 並傳 depth=1
+  DrillSession.start('node1', variations, { id: 'origQ' }, null, 1);
+  A.eq(DrillSession.depth, 1, 'start depth=1 被尊重');
+  // 不傳 depth → 預設 0
+  DrillSession.start('node1', variations, { id: 'origQ' }, null);
+  A.eq(DrillSession.depth, 0, '不傳 depth → 預設 0');
+}
+
+// ----- 14. 2026-05-17 鐵律 #1:100% 全對 → SeenCorrect.mark(originalQ.id) -----
+console.log('\n[14] SeenCorrect.mark on 100% — 2026-05-17 鐵律 #1');
+{
+  const { sb, DrillSession } = setup({ runTimers: true });
+  sb.__seenMarks = []; // reset
+  const variations = [
+    { id: 'v1', options: [{ key: 'A', is_correct: true }] }
+  ];
+  // 模擬 100% 全對:start + answer 'A' + next 完成
+  DrillSession.start('node1', variations, { id: 'origQ_target' });
+  sb.PlayEngine.answer('A'); // correct
+  DrillSession.next();       // queue 空,觸發完成邏輯
+  A.ok(sb.__seenMarks.includes('origQ_target'),
+    `✅ 100% 全對 → SeenCorrect.mark(originalQ.id) 被呼叫,marks=${JSON.stringify(sb.__seenMarks)}`);
+}
+
+// ----- 15. 2026-05-17 鐵律 #1:非 100% → 不 mark SeenCorrect -----
+console.log('\n[15] non-100% → no SeenCorrect.mark — 2026-05-17 鐵律 #1');
+{
+  const { sb, DrillSession } = setup({ runTimers: true });
+  sb.__seenMarks = []; // reset
+  const variations = [
+    { id: 'v1', options: [{ key: 'A', is_correct: true }, { key: 'B' }] },
+    { id: 'v2', options: [{ key: 'A', is_correct: true }, { key: 'B' }] },
+  ];
+  DrillSession.start('node1', variations, { id: 'origQ_partial' });
+  sb.PlayEngine.answer('A'); // correct (1/2)
+  DrillSession.next();        // 推進到 v2
+  sb.PlayEngine.answer('B'); // wrong (still 1/2 = 50%)
+  DrillSession.next();        // 完成
+  A.eq(sb.__seenMarks.includes('origQ_partial'), false,
+    `✅ 50% 不 mark SeenCorrect,marks=${JSON.stringify(sb.__seenMarks)}`);
+}
+
+// ----- 16. 2026-05-17 鐵律 #1:Mastery.drillBonus 收到 ratio 參數 -----
+console.log('\n[16] Mastery.drillBonus receives ratio — 2026-05-17 鐵律 #1');
+{
+  const { sb, DrillSession } = setup({ runTimers: true });
+  // wrap Mastery.drillBonus 觀察 ratio 參數
+  const Mastery = vm.runInContext('Mastery', sb);
+  const origDrillBonus = Mastery.drillBonus.bind(Mastery);
+  let receivedRatio = null;
+  Mastery.drillBonus = (nodeId, ratio) => { receivedRatio = ratio; return origDrillBonus(nodeId, ratio); };
+  const variations = [
+    { id: 'v1', options: [{ key: 'A', is_correct: true }, { key: 'B' }] },
+    { id: 'v2', options: [{ key: 'A', is_correct: true }, { key: 'B' }] },
+  ];
+  DrillSession.start('node1', variations, { id: 'origQ' });
+  sb.PlayEngine.answer('A'); // correct
+  DrillSession.next();
+  sb.PlayEngine.answer('B'); // wrong → 1/2 = 0.5
+  DrillSession.next();
+  A.eq(receivedRatio, 0.5, `✅ drillBonus 收到 ratio=0.5(實際 ${receivedRatio})`);
+}
+
+// ----- 17. 2026-05-17 鐵律 #1:deep drill 觸發 — 頂層答錯 + generateVariation 有題 -----
+console.log('\n[17] deep drill triggers on wrong (depth 0→1) — 2026-05-17 鐵律 #1');
+{
+  const { sb, DrillSession } = setup();
+  // 模擬 generateVariation 回傳 1 題 nested
+  sb.generateVariation = (q, n) => [
+    { id: 'deep_v1', _drillStrategy: '換角度', options: [{ key: 'A', is_correct: true }] }
+  ];
+  const variations = [
+    { id: 'top_v1', options: [{ key: 'A', is_correct: true }, { key: 'B' }] },
+  ];
+  DrillSession.start('node1', variations, { id: 'origQ' }, null, 0);
+  A.eq(DrillSession.depth, 0, '初始 depth=0');
+  sb.PlayEngine.answer('B'); // wrong
+  // 模擬使用者點「下一題」→ 應觸發 deep drill 而非 next()
+  sb.PlayEngine.onNext();
+  A.eq(DrillSession.depth, 1, '✅ wrong answer 觸發 nested drill,depth → 1');
+  // nested 啟動了 1 題,start 內部會立刻 next() 將該題 shift 出,所以 queue.length === 0
+  A.eq(DrillSession.total, 1, '✅ nested drill total=1(1 題 deep drill)');
+  A.eq(DrillSession._parentStack.length, 1, '✅ 父層 state 已壓入 _parentStack');
+}
+
+// ----- 18. 2026-05-17 鐵律 #1:deep drill 不會無限巢狀(depth=1 不再 nested)-----
+console.log('\n[18] no further nesting at depth=1 — 2026-05-17 鐵律 #1');
+{
+  const { sb, DrillSession } = setup();
+  let varCallCount = 0;
+  sb.generateVariation = (q, n) => {
+    varCallCount++;
+    return [{ id: 'deep' + varCallCount, _drillStrategy: '換角度', options: [{ key: 'A', is_correct: true }, { key: 'B' }] }];
+  };
+  // 直接以 depth=1 啟動(模擬已進 nested)
+  const variations = [
+    { id: 'nested_v1', options: [{ key: 'A', is_correct: true }, { key: 'B' }] },
+  ];
+  DrillSession.start('nodeX', variations, { id: 'origQ' }, null, 1);
+  sb.PlayEngine.answer('B'); // wrong in nested
+  // onNext 應該走 next() 而非 _enterDeep
+  A.nothrow(() => sb.PlayEngine.onNext(), 'depth=1 wrong → no throw');
+  A.eq(DrillSession._parentStack.length, 0,
+    `✅ depth=1 答錯不 nested(_parentStack 仍空),varCallCount=${varCallCount}`);
+}
+
+// ----- 19. 2026-05-17 鐵律 #1:_enterDeep 找不到變化型 → silent fallback 進 next() -----
+console.log('\n[19] _enterDeep no-variation fallback — 2026-05-17 鐵律 #1');
+{
+  const { sb, DrillSession } = setup();
+  // generateVariation 回空 → silent fallback
+  sb.generateVariation = (q, n) => [];
+  const variations = [
+    { id: 'top_v1', options: [{ key: 'A', is_correct: true }, { key: 'B' }] },
+    { id: 'top_v2', options: [{ key: 'A', is_correct: true }] },
+  ];
+  DrillSession.start('node1', variations, { id: 'origQ' });
+  sb.PlayEngine.answer('B'); // wrong
+  sb.PlayEngine.onNext();    // 應 silent fallback,直接 next() → 顯示 top_v2
+  A.eq(DrillSession.depth, 0, '✅ 沒進 nested,depth 維持 0');
+  A.eq(DrillSession._parentStack.length, 0, '✅ _parentStack 空');
 }
 
 process.exit(A.summary('DrillSession'));
