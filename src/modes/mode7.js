@@ -360,10 +360,10 @@
       const recent = data.history.slice(-10).reverse();
       const allQ = (typeof QUESTIONS !== 'undefined' ? QUESTIONS : []);
 
-      // scope label 對照
+      // scope label 對照(2026-05-17 §8 follow-up:加 codex 對應)
       const scopeLabel = (k) => ({
         all: '全主題', s1: '科一', s2: '科二', s3: '科三',
-        wrongbook: '錯題本', weak: '弱點優先'
+        wrongbook: '錯題本', weak: '弱點優先', codex: '🃏 卡牌篩選'
       }[k] || (k || '?'));
       // difficulty label
       const diffLabel = (k) => ({ easy: '簡單', medium: '中等', hard: '困難', mixed: '混合' }[k] || '?');
@@ -446,7 +446,7 @@
           <summary style="cursor:pointer;padding:10px 14px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
             <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex:1;min-width:0">
               <span style="font-size:0.85rem;color:var(--fg-dim);font-family:monospace">${ds}</span>
-              <span style="font-size:0.78rem;color:var(--fg-dim)">${scopeLabel(c.scope)} · ${diffLabel(c.difficulty)} · ${c.qcount || '?'}題</span>
+              <span style="font-size:0.78rem;color:var(--fg-dim)">${h.sourceLabel ? this._esc(h.sourceLabel) : scopeLabel(c.scope)} · ${diffLabel(c.difficulty)} · ${c.qcount || '?'}題</span>
               <strong style="color:${lvlColor};font-size:1rem">${lvlEmoji} ${r.correct || 0}/${r.total || 0}</strong>
               <span style="color:${lvlColor};font-weight:700">${pct}%</span>
               <span style="font-size:0.78rem;color:var(--fg-dim)">⏱ ${tuStr}</span>
@@ -1698,6 +1698,10 @@
       });
       data.history.push({
         ts: Date.now(),
+        // 2026-05-17 §8 follow-up:卡牌模擬考(Mode 6)發起的場次,寫入 source/sourceLabel 區隔
+        // 讓 _renderHistory 能顯示「🃏 卡牌:科三-已解鎖」而非原始字串 "codex"
+        source: this.state.source || 'mode7',
+        sourceLabel: this.state.sourceLabel || null,
         config: this.state.config,
         result: {
           correct: result.correct, total: result.total,

@@ -179,6 +179,9 @@
         PlayEngine.onNext = this._origOnNext;
         this._origOnNext = null;
       }
+      // 2026-05-17 §8 follow-up:清卡牌模擬考的暫存池,避免下次回 Mode 6 殘留
+      this._pendingMockPool = null;
+      this._pendingMockScopeLabel = null;
     },
 
     async start() {
