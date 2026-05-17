@@ -91,6 +91,29 @@
         "new_id": "F-005"
       },
       "notes": "Network DAST NOT_APPLICABLE (no backend/auth/CORS surface). F-005 stored-XSS defence-in-depth gap, no remote vector."
+    },
+    {
+      "phase": 5,
+      "artifact_path": "reports/phase5-threat-model.md",
+      "sha256": "c5d2ca6067a554b18ed4830e0bb6aa553d28e63c536617da9e826312ac1774e0",
+      "generated_at": "2026-05-17T10:58:54.159Z",
+      "tool": "L0-orchestrator + L1-auditor-subagent cross-validation",
+      "tool_version": "general-purpose subagent (no prior phase context)",
+      "command": "Agent(subagent_type=general-purpose) + STRIDE synthesis",
+      "host_id": "linux-x86_64-node22.22.2",
+      "executor_id": "claude-opus-4-7[1m]",
+      "auditor_id": "general-purpose-L1-ad5daacbcd817735d",
+      "verdict": "PASS_WITH_RECOMMEND_FIX",
+      "findings": {
+        "critical": 0,
+        "high": 0,
+        "medium": 3,
+        "low": 7,
+        "info": 4,
+        "total": 14,
+        "new_in_phase": 9
+      },
+      "notes": "L1 surfaced F-006 + F-007 (MEDIUM) that L0 missed in Phases 1-4. F-001 upgraded LOW→MEDIUM per L1 analysis."
     }
   ]
 }
