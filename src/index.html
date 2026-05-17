@@ -2,6 +2,8 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
+<!-- 案例 10 LOW-4:防 clickjacking — 拒絕被任何站 iframe 嵌入 -->
+<meta http-equiv="Content-Security-Policy" content="frame-ancestors 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0f172a">
 <title>IPAS AI 中級 — 互動學習遊戲</title>
@@ -2186,7 +2188,7 @@ const ProgressIO = {
     'ipas_progress_v1', 'ipas_mastery_v1', 'ipas_wrongbook_v1',
     'ipas_error_reports_v1', 'ipas_settings_v1', 'ipas_session_state_v1',
     'ipas_seen_correct_v1', 'ipas_player_v1', 'ipas_user_nickname_v1',
-    'ipas_mode7_theater_v1', 'ipas_mode7_font_scale', 'ipas_mode7_font_v1',
+    'ipas_mode7_theater_v1', 'ipas_mode7_font_v1',
     'ipas_mode1_industries_v1', 'ipas_mode2_bosses_v2', 'ipas_mode3_progress_v2',
     'ipas_mode5_v3_progress', 'ipas_mode6_codex_v1', 'ipas_mode8_dojo_v1'
   ]),
@@ -2216,7 +2218,8 @@ const ProgressIO = {
   // 暱稱 layer 1:白名單字元集 + 長度 + 過濾控制 / 零寬 / RTL override
   sanitizeNickname(s) {
     if (typeof s !== 'string') return '';
-    let v = s.trim().substring(0, 20);
+    // 案例 10 LOW-3:先 NFC normalize
+    let v = s.normalize('NFC').trim().substring(0, 20);
     v = v.replace(/[\u0001-\u001F\u007F-\u009F\u200B-\u200F\u202A-\u202E\uFEFF]/g, '');
     if (!/^[A-Za-z0-9一-鿿぀-ゟ゠-ヿ가-힯 _.\-]+$/.test(v)) return '';
     return v;
@@ -2361,7 +2364,6 @@ const ProgressIO = {
         (v.version === undefined || that._isNum(v.version)) &&
         Array.isArray(v.history) && v.history.length <= 100 &&
         v.history.every(h => that._isObj(h) && that._isNum(h.ts)),
-      'ipas_mode7_font_scale': (v) => typeof v === 'string' && v.length > 0 && v.length <= 10,
       // 2026-05-16 案例 10:mode-specific stores schema(寬鬆 — 各 mode 自己管 schema,本層只擋型別錯)
       'ipas_mode1_industries_v1': (v) => that._isObj(v),
       'ipas_mode2_bosses_v2': (v) => that._isObj(v),

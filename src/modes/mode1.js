@@ -447,6 +447,8 @@
       if (q.node_id) Mastery.update(q.node_id, isCorrect);
       if (typeof SM2 !== 'undefined' && q.id) SM2.recordAnswer(q.id, isCorrect, false);
       Progress.addAnswer(isCorrect);
+      // 案例 10 LOW-1:答對時 mark SeenCorrect,讓跨關卡 filterForBattle 真生效
+      if (isCorrect && q.id && typeof SeenCorrect !== 'undefined') SeenCorrect.mark(q.id);
       if (!isCorrect) {
         const c = q.options.find(o => o.is_correct);
         const userOpt = q.options.find(o => o.key === key);

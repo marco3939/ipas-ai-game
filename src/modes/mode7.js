@@ -156,6 +156,14 @@
       return item.q || null;
     },
 
+    // 案例 10 LOW-2:HTML escape helper(stem/code/text 經 user-controlled snapshot 進來)
+    // defense in depth — 題庫信任 + 強型別仍可能因匯入 fullLog 受外部資料污染
+    _esc(s) {
+      if (s === null || s === undefined) return '';
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    },
+
     // ===== 入口 =====
     start() {
       // 進場前先清理上一場殘留(若有)
@@ -1170,8 +1178,8 @@
       if (!this.state || this.state.finished) return;
       const item = this.state.lineup[this.state.idx];
       if (!item) return;
-      // PlayEngine.current 是 renderQuestion 後的版本(已替換 placeholder + 洗牌選項)
-      const rendered = (typeof PlayEngine !== 'undefined' && PlayEngine.current) ? PlayEngine.current : item.q;
+      // 案例 10 LOW-5:統一用 _getRendered helper(原本直用 PlayEngine.current,改為同條 fallback 鏈)
+      const rendered = this._getRendered(item) || item.q;
       const stem = rendered.stem || '';
       const opts = (rendered.options || [])
         .map(o => `${o.key || ''}. ${o.text || ''}`)
@@ -1908,7 +1916,7 @@
             <div style="font-size:0.8rem;color:var(--fg-dim);margin-bottom:6px">
               ${npc.avatar} ${npc.name} · ${q.knowledge_code || ''} · ${q.difficulty || ''}
             </div>
-            <div style="font-size:1rem;line-height:1.6;margin-bottom:10px">${q.stem || ''}</div>
+            <div style="font-size:1rem;line-height:1.6;margin-bottom:10px">${this._esc(q.stem || '')}</div>
             ${codeBlock}
             ${optsHtml}
           </div>
@@ -2122,8 +2130,8 @@
           <div style="font-size:0.85rem;color:var(--fg-dim);margin-bottom:6px">
             第 ${i + 1} 題 · ${npc.avatar} ${npc.name} · ${q.knowledge_code || ''} · ${q.difficulty || ''}
           </div>
-          <div class="question-stem" style="font-size:1rem;margin-bottom:10px">${q.stem || ''}</div>
-          ${q.code_block ? `<pre class="code-syntax" style="font-size:0.8rem;padding:8px">${q.code_block}</pre>` : ''}
+          <div class="question-stem" style="font-size:1rem;margin-bottom:10px">${this._esc(q.stem || '')}</div>
+          ${q.code_block ? `<pre class="code-syntax" style="font-size:0.8rem;padding:8px">${this._esc(q.code_block)}</pre>` : ''}
           <div style="background:rgba(74,222,128,0.12);border-left:4px solid #4ade80;padding:10px;border-radius:6px;margin:8px 0">
             <div style="color:#4ade80;font-weight:700;font-size:0.9rem;margin-bottom:4px">📚 正確答案</div>
             <div style="font-size:0.95rem;margin-bottom:6px"><strong>${correctLabel}</strong></div>
