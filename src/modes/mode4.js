@@ -471,6 +471,8 @@
       const pairData = cardAState && cardAState.data;
       if (pairData && pairData.nodeId) Mastery.update(pairData.nodeId, true);
       if (typeof SM2 !== 'undefined' && pairData && pairData.sourceQ && pairData.sourceQ.id) SM2.recordAnswer(pairData.sourceQ.id, true, false);
+      // 案例 10 audit S-2:配對成功 mark SeenCorrect 讓跨關卡排除生效
+      if (pairData && pairData.sourceQ && pairData.sourceQ.id && typeof SeenCorrect !== 'undefined') SeenCorrect.mark(pairData.sourceQ.id);
       Progress.addAnswer(true);
 
       this.updateHud();

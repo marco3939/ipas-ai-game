@@ -147,8 +147,32 @@
   const Mode5 = {
     state: null,
     cachedBosses: null, // 快取本回合的 BOSS 名單,避免 engageBoss(idx) 因 RNG / Wrongbook 變化抓錯目標
+    // 案例 10 audit H-1:集中管理 setTimeout id,讓 goHome / cleanup 能一次清乾淨
+    // 對齊 Mode 1 _scheduleTimeout / _clearAllTimers 模式
+    _pendingTimers: [],
+    _scheduleTimeout(fn, delay) {
+      const id = setTimeout(() => {
+        // 自我從 _pendingTimers 移除(避免 list 無限增長)
+        this._pendingTimers = this._pendingTimers.filter(x => x !== id);
+        fn();
+      }, delay);
+      this._pendingTimers.push(id);
+      return id;
+    },
+    _clearAllTimers() {
+      this._pendingTimers.forEach(id => clearTimeout(id));
+      this._pendingTimers = [];
+      if (this._typeTimer) { clearInterval(this._typeTimer); this._typeTimer = null; }
+    },
+    cleanup() {
+      this._clearAllTimers();
+      // state 不清為 null(避免 timer 殘留 callback 內 this.state.xxx 噴錯;timer 已清)
+      // 對齊 Mode 1 的設計
+    },
 
     start() {
+      // 進場前清舊 timer(防 home → start 殘留)
+      this._clearAllTimers();
       RNG.set(Date.now());
       this.cachedBosses = null; // 進案時重新偵測
       this.renderMap();
@@ -514,6 +538,8 @@
       Progress.addAnswer(isCorrect);
       // 案例 10 LOW-1:答對時 mark SeenCorrect(跨關卡排除)
       if (isCorrect && q.id && typeof SeenCorrect !== 'undefined') SeenCorrect.mark(q.id);
+      // 案例 10 audit SM-1:Mode 5 也要 recordAnswer 到 SM-2(原本完全沒寫,弱點獵人對 SM2 EF/interval 無貢獻)
+      if (typeof SM2 !== 'undefined' && q.id) SM2.recordAnswer(q.id, isCorrect, false);
 
       if (isCorrect) {
         this.attack();
@@ -558,12 +584,12 @@
       GameFX.flash('correct');
       GameFX.attackAnim(playerAv);
       const dmgShow = SCORE_DELTA_CORRECT; // 對 BOSS 顯示「-15 弱化」
-      setTimeout(() => {
+      this._scheduleTimeout(() => {
         GameFX.shake(bossAv);
         GameFX.damageNumber(bossAv, dmgShow, { kind: 'player' });
       }, 200);
       if (p.hp > beforeHp) {
-        setTimeout(() => GameFX.damageNumber(playerAv, '+' + (p.hp - beforeHp), { kind: 'player' }), 400);
+        this._scheduleTimeout(() => GameFX.damageNumber(playerAv, '+' + (p.hp - beforeHp), { kind: 'player' }), 400);
       }
       if (s.combo >= 2) GameFX.combo(s.combo);
       if (s.combo === 5) {
@@ -594,7 +620,7 @@
       GameFX.flash('wrong');
       GameFX.hideCombo();
       GameFX.attackAnim(bossAv);
-      setTimeout(() => {
+      this._scheduleTimeout(() => {
         GameFX.shake(playerAv);
         GameFX.damageNumber(playerAv, dmg, { kind: 'enemy' });
       }, 200);
@@ -602,7 +628,7 @@
 
       const p = Player.load();
       if (p.hp <= 0) {
-        setTimeout(() => this.gameOver(), 1500);
+        this._scheduleTimeout(() => this.gameOver(), 1500);
       }
     },
 
@@ -723,7 +749,7 @@
       // 若直接打到 80%,進入勝利
       const m = Mastery.get(this.state.boss.nodeId);
       if ((m.score || 0) >= MASTERY_DEFEAT_THRESHOLD) {
-        setTimeout(() => this.victory(), 800);
+        this._scheduleTimeout(() => this.victory(), 800);
       }
     },
 

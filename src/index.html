@@ -757,16 +757,30 @@ const Storage = {
     try { localStorage.setItem(k, JSON.stringify(v)); }
     catch(e) {
       console.warn('storage full:', e);
-      // 2026-05-16 H3 fix: 不再靜默失敗 — 進度寫入失敗(quota / 私密模式)直接 toast 警示,
-      // 避免使用者誤以為進度已存。5 秒節流避免 toast 連發。
+      // 案例 10 audit HIGH-5D:silent data-loss 高風險 — 改 persistent banner 取代 throttled toast,
+      // 使用者不再「整場進度不存但 UI 看似正常」。5s throttle 避免 toast 連發,但 banner 一旦顯示就常駐
+      // 直到使用者匯出進度或重新整理。
+      Storage._writeFailed = true;
+      try { Storage._showQuotaBanner(); } catch (_) {}
       const now = Date.now();
       if (!Storage._lastToastAt || now - Storage._lastToastAt > 5000) {
         Storage._lastToastAt = now;
         if (typeof showToast === 'function') {
-          showToast('⚠️ 進度儲存失敗(可能 quota 已滿或私密模式),請考慮匯出錯題本備份', 4500);
+          showToast('⚠️ 進度儲存失敗(可能 quota 已滿或私密模式),請立即匯出進度備份', 5000);
         }
       }
     }
+  },
+  // 案例 10 audit HIGH-5D:常駐 banner — 顯示後不主動消失,只在使用者匯出 / 清進度 / reload 後重置
+  _showQuotaBanner() {
+    if (document.getElementById('storage-quota-banner')) return; // 已顯示
+    const div = document.createElement('div');
+    div.id = 'storage-quota-banner';
+    div.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#dc2626;color:white;padding:10px 14px;text-align:center;z-index:9999;font-size:0.9rem;box-shadow:0 2px 8px rgba(0,0,0,0.3)';
+    div.innerHTML = '⚠️ <strong>儲存失敗</strong> — localStorage 可能已滿或在私密模式。' +
+      '<strong>進度不會被儲存!</strong>請立即「📤 匯出進度」備份。' +
+      '<button onclick="this.parentElement.remove()" style="margin-left:10px;background:rgba(255,255,255,0.2);border:1px solid white;color:white;padding:2px 8px;border-radius:4px;cursor:pointer">關閉</button>';
+    document.body.insertBefore(div, document.body.firstChild);
   },
   del(k) { localStorage.removeItem(k); }
 };
@@ -1436,6 +1450,11 @@ function goHome() {
   // 2026-05-16 fix:Mode 1 / 2 各自有 _clearAllTimers(setTimeout animation 殘留會綜合影響其他 view)
   if (typeof Mode1 !== 'undefined' && Mode1._clearAllTimers) Mode1._clearAllTimers();
   if (typeof Mode2 !== 'undefined' && Mode2._clearAllTimers) Mode2._clearAllTimers();
+  // 案例 10 audit C-1:goHome 漏 cleanup Mode 3/4/5/6 → 中途離場 timer 殘留會洗 home view
+  if (typeof Mode3 !== 'undefined' && Mode3.stopTimer) Mode3.stopTimer();
+  if (typeof Mode4 !== 'undefined' && Mode4.stopTimer) Mode4.stopTimer();
+  if (typeof Mode5 !== 'undefined' && Mode5.cleanup) Mode5.cleanup();
+  if (typeof Mode6 !== 'undefined' && Mode6.cleanup) Mode6.cleanup();
   refreshHome();
   show('view-home');
 }

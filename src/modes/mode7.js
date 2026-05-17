@@ -700,6 +700,9 @@
         if (q.node_id) Mastery.update(q.node_id, a.isCorrect);
         Progress.addAnswer(a.isCorrect);
         if (typeof SM2 !== 'undefined' && q.id) SM2.recordAnswer(q.id, a.isCorrect, false);
+        // 案例 10 audit C-4 critical:Mode 7 覆寫 PlayEngine.answer 跳過原生 SeenCorrect.mark,
+        // 這裡是唯一 commit 點,缺這條會讓模考答對的所有題在 Mode 1/2/4/5/8 不被排除
+        if (a.isCorrect && q.id && typeof SeenCorrect !== 'undefined') SeenCorrect.mark(q.id);
         if (!a.isCorrect) {
           const userOpt = (renderedQ.options || []).find(o => o.key === a.userKey);
           const correctOpt = (renderedQ.options || []).find(o => o.is_correct);
@@ -1703,7 +1706,7 @@
               const stem = (q.stem || '').substring(0, 60).replace(/\{[^}]+\}/g, '');
               return `<div class="weak-item" style="flex-direction:column;align-items:flex-start;gap:6px;padding:10px">
                 <div style="display:flex;justify-content:space-between;width:100%;align-items:center">
-                  <span style="font-size:0.8rem;color:var(--fg-dim)">🔖 #${i+1} · ${q.knowledge_code || ''}</span>
+                  <span style="font-size:0.8rem;color:var(--fg-dim)">🔖 #${i+1} · ${this._esc(q.knowledge_code || '')}</span>
                 </div>
                 <div style="font-size:0.85rem;color:var(--fg);line-height:1.5">${stem}…</div>
               </div>`;
@@ -1917,7 +1920,7 @@
 
           <div class="card">
             <div style="font-size:0.8rem;color:var(--fg-dim);margin-bottom:6px">
-              ${npc.avatar} ${npc.name} · ${q.knowledge_code || ''} · ${q.difficulty || ''}
+              ${npc.avatar} ${this._esc(npc.name)} · ${this._esc(q.knowledge_code || '')} · ${this._esc(q.difficulty || '')}
             </div>
             <div style="font-size:1rem;line-height:1.6;margin-bottom:10px">${this._esc(q.stem || '')}</div>
             ${codeBlock}
@@ -2136,7 +2139,7 @@
         }).join('');
         return `<div class="card" style="margin-top:8px">
           <div style="font-size:0.85rem;color:var(--fg-dim);margin-bottom:6px">
-            第 ${i + 1} 題 · ${npc.avatar} ${npc.name} · ${q.knowledge_code || ''} · ${q.difficulty || ''}
+            第 ${i + 1} 題 · ${npc.avatar} ${this._esc(npc.name)} · ${this._esc(q.knowledge_code || '')} · ${this._esc(q.difficulty || '')}
           </div>
           <div class="question-stem" style="font-size:1rem;margin-bottom:10px">${this._esc(q.stem || '')}</div>
           ${q.code_block ? `<pre class="code-syntax" style="font-size:0.8rem;padding:8px">${this._esc(q.code_block)}</pre>` : ''}

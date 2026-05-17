@@ -109,6 +109,14 @@
       defeat: ['「治理 + 合規思維清楚,跨國法務團隊都看你的判斷。」','「視覺化倫理你都顧到了。」'] }
   ];
 
+  // 案例 10 audit BUG-X1:HTML escape helper(defense-in-depth)
+  // Mode 1 / Mode 2 大量 innerHTML 內插題庫內容,雖然目前題庫無 HTML 但 ProgressIO 匯入後不可信
+  function esc(s) {
+    if (s === null || s === undefined) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
   function highlightCode(code) {
     if (!code) return '';
     let s = code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -405,16 +413,16 @@
         <div class="question-card">
           <div class="question-meta">
             <span class="badge">第 ${this.state.idx + 1} / ${this.state.questions.length} 回合</span>
-            <span class="badge">${q.knowledge_code}</span>
-            <span class="badge">${q.difficulty}</span>
+            <span class="badge">${esc(q.knowledge_code)}</span>
+            <span class="badge">${esc(q.difficulty)}</span>
             ${q.errata_critical ? '<span class="badge" style="background:var(--danger);color:white">⚠️ 必出</span>' : ''}
           </div>
-          <div class="question-stem">${q.stem}</div>
+          <div class="question-stem">${esc(q.stem)}</div>
           ${codeBlock}
           ${visualData}
           <div class="options" id="m1-options">
-            ${q.options.map(o => `<button class="option-btn" data-key="${o.key}" onclick="Mode1.answer('${o.key}')">
-              <span class="option-key">${o.key}.</span>${o.text}</button>`).join('')}
+            ${q.options.map(o => `<button class="option-btn" data-key="${esc(o.key)}" onclick="Mode1.answer('${esc(o.key)}')">
+              <span class="option-key">${esc(o.key)}.</span>${esc(o.text)}</button>`).join('')}
           </div>
           <div id="m1-explanation"></div>
         </div>
@@ -555,16 +563,16 @@
       const otherWrongOptions = q.options.filter(o => !o.is_correct && (!opt || o.key !== opt.key));
       const otherAnalysis = otherWrongOptions.map(o => `
         <div style="padding:8px 10px;margin:6px 0;background:rgba(255,255,255,0.04);border-radius:4px;border-left:3px solid #94a3b8">
-          <div style="color:#cbd5e1;font-weight:600;margin-bottom:2px">${o.key}. ${o.text}</div>
-          <div style="color:var(--fg-dim);font-size:0.875rem;line-height:1.6">└ ${findWrongExp(o)}</div>
+          <div style="color:#cbd5e1;font-weight:600;margin-bottom:2px">${esc(o.key)}. ${esc(o.text)}</div>
+          <div style="color:var(--fg-dim);font-size:0.875rem;line-height:1.6">└ ${esc(findWrongExp(o))}</div>
         </div>
       `).join('');
 
       const userWrongExp = !isCorrect && opt ? findWrongExp(opt) : '';
 
       const enemyTaunt = !isCorrect ? `<div class="dialogue-box" style="border-color:rgba(239,68,68,0.4)">
-        <div class="dialogue-name" style="color:#f87171">${this.state.boss.name}</div>
-        <div class="dialogue-text">「${RNG.pick(this.state.boss.attack)}」</div>
+        <div class="dialogue-name" style="color:#f87171">${esc(this.state.boss.name)}</div>
+        <div class="dialogue-text">「${esc(RNG.pick(this.state.boss.attack))}」</div>
       </div>` : '';
 
       document.getElementById('m1-explanation').innerHTML = `
@@ -574,13 +582,13 @@
 
           <div style="background:rgba(74,222,128,0.12);border-left:4px solid #4ade80;padding:12px;border-radius:6px;margin:10px 0">
             <div style="color:#4ade80;font-weight:700;font-size:0.95rem;margin-bottom:4px">📚 正確答案</div>
-            <div style="font-size:1rem;margin-bottom:6px"><strong>${correctOpt ? correctOpt.key + '. ' + correctOpt.text : '(無)'}</strong></div>
-            <div style="color:var(--fg);line-height:1.7">${e.correct || '(此題未提供詳細解釋,請參考正確選項文字)'}</div>
+            <div style="font-size:1rem;margin-bottom:6px"><strong>${correctOpt ? esc(correctOpt.key) + '. ' + esc(correctOpt.text) : '(無)'}</strong></div>
+            <div style="color:var(--fg);line-height:1.7">${esc(e.correct || '(此題未提供詳細解釋,請參考正確選項文字)')}</div>
           </div>
 
           ${!isCorrect ? `<div style="background:rgba(248,113,113,0.12);border-left:4px solid #f87171;padding:12px;border-radius:6px;margin:10px 0">
-            <div style="color:#f87171;font-weight:700;font-size:0.95rem;margin-bottom:4px">❌ 你選了 ${opt.key}. ${opt.text}</div>
-            <div style="color:var(--fg);line-height:1.7">${userWrongExp}</div>
+            <div style="color:#f87171;font-weight:700;font-size:0.95rem;margin-bottom:4px">❌ 你選了 ${esc(opt.key)}. ${esc(opt.text)}</div>
+            <div style="color:var(--fg);line-height:1.7">${esc(userWrongExp)}</div>
           </div>` : ''}
 
           ${otherAnalysis ? `<div style="background:rgba(148,163,184,0.08);border-left:4px solid #94a3b8;padding:12px;border-radius:6px;margin:10px 0">
@@ -590,12 +598,12 @@
 
           ${e.hook ? `<div style="background:rgba(250,204,21,0.12);border-left:4px solid #facc15;padding:10px 12px;border-radius:6px;margin:10px 0">
             <div style="color:#facc15;font-weight:700;font-size:0.85rem">💡 記憶口訣</div>
-            <div style="color:var(--fg);font-style:italic;margin-top:2px">${e.hook}</div>
+            <div style="color:var(--fg);font-style:italic;margin-top:2px">${esc(e.hook)}</div>
           </div>` : ''}
 
           ${q.misconceptions && q.misconceptions.length > 0 ? `<div style="background:rgba(168,85,247,0.10);border-left:4px solid #a855f7;padding:10px 12px;border-radius:6px;margin:10px 0">
             <div style="color:#c084fc;font-weight:700;font-size:0.85rem">⚠️ 此題常見誤解</div>
-            <div style="color:var(--fg);margin-top:2px">${q.misconceptions.map(m => '• ' + m).join('<br>')}</div>
+            <div style="color:var(--fg);margin-top:2px">${q.misconceptions.map(m => '• ' + esc(m)).join('<br>')}</div>
           </div>` : ''}
 
           <div class="actions" style="margin-top:14px">
@@ -679,6 +687,9 @@
     },
 
     victory() {
+      // 案例 10 audit C-1:entry guard 防雙呼叫雙發 EXP / 雙寫 Storage
+      if (!this.state || this.state.victorySettled) return;
+      this.state.victorySettled = true;
       const baseExp = 60 + this.state.correct * 12;
       const perfectBonus = this.state.wrong === 0 ? 40 : 0;
       const comboBonus = this.state.maxCombo * 5;
@@ -729,6 +740,9 @@
     },
 
     gameOver() {
+      // 案例 10 audit C-2:entry guard 防雙呼叫
+      if (!this.state || this.state.gameOverSettled) return;
+      this.state.gameOverSettled = true;
       // QA Round2:文案說「恢復一半 HP」,Player.heal(50) 在 Lv1 hpMax=100 時剛好 50%,
       // 但升級後 hpMax 增加(每級 +20),50 點就低於一半。改為 Math.floor(hpMax/2) 一致化。
       const before = Player.load();
