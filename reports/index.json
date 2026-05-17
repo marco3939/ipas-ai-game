@@ -69,6 +69,28 @@
       "auditor_id": null,
       "verdict": "PASS",
       "notes": "Static SPA — no build pipeline; sandbox-image NOT_APPLICABLE per §0.4"
+    },
+    {
+      "phase": 4,
+      "artifact_path": "reports/phase4-dast.md",
+      "sha256": "93ec679dc38e44980e861aaf5be3961d6b8cd3b4e33e3247e7d1c3c810790810",
+      "generated_at": "2026-05-17T10:47:40.999Z",
+      "tool": "node-vm-sandbox dataflow + adversarial payload",
+      "tool_version": "manual probe (no ZAP/schemathesis available)",
+      "command": "node /tmp/dast-storage.js (5 probes T1-T5)",
+      "host_id": "linux-x86_64-node22.22.2",
+      "executor_id": "claude-opus-4-7[1m]",
+      "auditor_id": null,
+      "verdict": "PASS",
+      "findings": {
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 1,
+        "info": 0,
+        "new_id": "F-005"
+      },
+      "notes": "Network DAST NOT_APPLICABLE (no backend/auth/CORS surface). F-005 stored-XSS defence-in-depth gap, no remote vector."
     }
   ]
 }
