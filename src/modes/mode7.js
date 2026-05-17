@@ -371,7 +371,7 @@
         const corruptedWarn = isCorruptedLegacy
           ? `<div style="margin:8px 0;padding:8px 12px;background:rgba(220,38,38,0.12);border:1px solid #dc2626;border-radius:4px;color:#fca5a5;font-size:0.82rem;line-height:1.5">
               <strong style="color:#f87171">⚠️ 此場為 PR #21(2026-05-16)修補前的舊紀錄</strong><br>
-              當時計分有 bug:即使全部答對,分數也會被永久記成 0/${r.total || '?'}。<br>
+              當時計分有 bug:即使全部答對,分數也會被永久記成 0/${this._esc(String(r.total || '?'))}。<br>
               <span style="color:#fde68a">逐題回顧的「✓ 答對 / ✗ 答錯」與「你選的紅框」可能完全不準。</span><br>
               <span style="color:#86efac">建議刪除本場 — 從新一場模考開始計分會正確。</span>
             </div>`
@@ -1920,7 +1920,7 @@
             <strong style="color:#f87171">⚠️ 此場為 PR #21(2026-05-16 案例 10)修補前的壞紀錄</strong><br>
             當時 Mode 7 計分有 bug:即使你答對,系統也會把該題記成答錯。<br>
             <strong style="color:#fde68a">因此這場的:</strong><br>
-            • 結算頁顯示的「0/${total}」分數是假的(實際正確數不可考)<br>
+            • 結算頁顯示的「0/${this._esc(String(total))}」分數是假的(實際正確數不可考)<br>
             • 逐題回顧的「✓ 答對 / ✗ 答錯」badge 跟「你選的紅框」都不準<br>
             <span style="color:#4ade80">建議從考古題首頁刪除此場 → 從新模考開始,計分與回顧會完全正確。</span>
           </div>`
@@ -2307,7 +2307,7 @@
       if (typeof refreshHome === 'function') refreshHome();
       // 若使用者剛好在考古題 setup 頁的 history 區塊 → 重渲染該區塊
       // (簡單做法:呼叫 setup 重畫整頁)
-      try { if (this.setup) this.setup(); } catch (_) {}
+      try { if (this.renderSetup) this.renderSetup(); } catch (_) {}
     },
 
     // ===== 清理(離場/重啟前都呼叫)=====
