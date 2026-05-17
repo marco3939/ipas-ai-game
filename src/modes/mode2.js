@@ -14,12 +14,16 @@
   //  - 大數據鑑別 AI 靈(10 q from n23):L22401 大數據 ML / L22402 鑑別式 AI
   //  - 生成式 AI + 隱私靈(10 q from n24):L22403 生成式 AI / L22404 隱私合規
   const BOSSES = [
+    // 2026-05-17:L23 程式 BOSS 題庫 ×3 擴增(numpy 5→15 / sklearn 4→12 / pytorch 2→12 / pandas 2→6 / viz 4→12 / mc 1→3)
+    // 配合「每場最多 5 題隨機」(pickQuestionsForBoss 內 maxN=5),qids 池放大讓每場抽題不重複機率提升
     {
       key: 'numpy',
       name: '🔢 NumPy 矩陣惡魔',
       avatar: '🔢',
       desc: '線性代數的化身,玩弄維度與形狀的詭計',
-      qids: ['q_pa_001', 'q_pa_002', 'q_pa_003', 'q_pa_004', 'q_pa_005'],
+      qids: ['q_pa_001', 'q_pa_002', 'q_pa_003', 'q_pa_004', 'q_pa_005',
+             'q_pa_np_001','q_pa_np_002','q_pa_np_003','q_pa_np_004','q_pa_np_005',
+             'q_pa_np_006','q_pa_np_007','q_pa_np_008','q_pa_np_009','q_pa_np_010'],
       hp: 140,
       intro: '「凡人...你以為看得懂這個矩陣?dot 與 *、跡與行列式、L1 與 L2... 這些細節會讓你血債血還。」',
       attack: ['「形狀對不上!」','「shape 看反了吧?」','「einsum 也不會讀?」'],
@@ -30,29 +34,35 @@
       name: '🤖 Sklearn API 守門者',
       avatar: '🤖',
       desc: '掌管 fit_transform 與 KFold,API 簽名的守護惡靈',
-      qids: ['q_pa_006', 'q_pa_007', 'q_pa_008', 'q_pa_009'],
+      qids: ['q_pa_006', 'q_pa_007', 'q_pa_008', 'q_pa_009',
+             'q_pa_sk_001','q_pa_sk_002','q_pa_sk_003','q_pa_sk_004',
+             'q_pa_sk_005','q_pa_sk_006','q_pa_sk_007','q_pa_sk_008'],
       hp: 130,
       intro: '「PCA 後的 shape 是什麼?StandardScaler 跟 MinMax 哪個是哪個?coef_ 是 1D 還是 2D?犯一個錯,你的模型就崩了。」',
       attack: ['「API 用錯了!」','「sklearn 慣例你都不熟?」','「fit 跟 fit_transform 你分得清?」'],
       defeat: ['「(n_samples, n_features) 居然這麼牢...」','「我承認你已掌握 API 的精髓。」']
     },
     {
+      // 修補 2026-05-17:原 qids 含 q_pa_011/012 兩個不存在 ID(歷史殘存),已刪除;新增 q_pa_pt_001~010 共 10 題擴增到 12 個有效 qids
       key: 'pytorch',
       name: '🔥 PyTorch 訓練幽靈',
       avatar: '🔥',
-      desc: 'Linear 形狀、Dropout 與訓練迴圈細節的混淆師',
-      qids: ['q_pa_010', 'q_pa_011', 'q_pa_012', 'q_0029'],
+      desc: 'Linear 形狀、訓練迴圈與張量 shape 的混淆師',
+      qids: ['q_pa_010', 'q_0029',
+             'q_pa_pt_001','q_pa_pt_002','q_pa_pt_003','q_pa_pt_004','q_pa_pt_005',
+             'q_pa_pt_006','q_pa_pt_007','q_pa_pt_008','q_pa_pt_009','q_pa_pt_010'],
       hp: 130,
-      intro: '「Linear 改的是哪個軸?Dropout 在 train/eval 行為不同?訓練迴圈裡的細節,我是專家。」',
-      attack: ['「梯度累加爆了!」','「loss 永遠下不去!」','「nan 出現了!」'],
+      intro: '「Linear 改的是哪個軸?zero_grad 漏了會怎樣?訓練迴圈裡的細節,我是專家。」',
+      attack: ['「梯度累加爆了!」','「loss 永遠下不去!」','「shape 對不上!」'],
       defeat: ['「我的訓練陷阱全被你破解...」','「PyTorch 的細節已是你的本能。」']
     },
     {
       key: 'pandas',
       name: '📊 Pandas 資料惡靈',
       avatar: '📊',
-      desc: 'isna 與 isnull、groupby 與 agg 的詭計大師',
-      qids: ['q_pa_013', 'q_pa_014'],
+      desc: 'fillna 與 drop_duplicates、groupby 與 agg 的詭計大師',
+      qids: ['q_pa_013', 'q_pa_014',
+             'q_pa_pd_001','q_pa_pd_002','q_pa_pd_003','q_pa_pd_004'],
       hp: 90,
       intro: '「DataFrame 的細節最折磨人。groupby 後 key 還在嗎?agg 的 columns 是什麼?快猜!」',
       attack: ['「shape 對不上!」','「columns 找不到!」'],
@@ -66,7 +76,9 @@
       name: '📊 資料視覺化判讀靈',
       avatar: '📊',
       desc: '參數量表、混淆矩陣、ROC 曲線:讀懂視覺資料才能擊敗他',
-      qids: ['q_pb_001', 'q_pb_007', 'q_pb_009', 'q_pb_010'],
+      qids: ['q_pb_001', 'q_pb_007', 'q_pb_009', 'q_pb_010',
+             'q_pb_011','q_pb_012','q_pb_013','q_pb_014',
+             'q_pb_015','q_pb_016','q_pb_017','q_pb_018'],
       hp: 100,
       intro: '「凡人...VGG16 參數量哪一層最多?F1 不是算術平均、是調和平均;ROC 曲線下面積你會用梯形法則嗎?把這些表讀對,我才認你。」',
       attack: ['「Accuracy 陷阱!不平衡資料看 F1 啊!」','「ROC 點看歪了吧?」','「FC 跟 Conv 參數量差幾倍?」'],
@@ -77,7 +89,7 @@
       name: '🎲 Monte Carlo 機率魔',
       avatar: '🎲',
       desc: '條件機率程式化:P(A|B) 的分母永遠是 B',
-      qids: ['q_0024'],
+      qids: ['q_0024','q_pa_mc_001','q_pa_mc_002'],
       hp: 70,
       intro: '「P(A|B) 還是 P(B|A)?分母擺哪個?Monte Carlo 模擬最容易把人騙倒。」',
       attack: ['「條件反了!」','「貝氏定理不會用?」'],
@@ -132,23 +144,26 @@
       .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
   }
 
-  function pickQuestionsForBoss(boss) {
+  // 2026-05-17:配合 L23 BOSS qids ×3 擴增,加「每場最多 5 題隨機」限制
+  // 設計理由:擴增後 numpy/sklearn/pytorch/viz BOSS 各 12-15 題,一場全打太累贅;
+  //   用 5 題上限 + 隨機抽,讓玩家可以多次挑戰同一 BOSS 都有新鮮感
+  const MAX_QUESTIONS_PER_BATTLE = 5;
+  function pickQuestionsForBoss(boss, maxN) {
+    if (maxN === undefined) maxN = MAX_QUESTIONS_PER_BATTLE;
     const list = [];
     for (const id of boss.qids) {
       const q = QUESTIONS.find(x => x.id === id);
       if (q) list.push(q);
     }
     // 跨關卡排除已答對(SeenCorrect):filter 後若不足 1 題則 fallback 回原 list
-    // (BOSS qids 池小,fallback 很常見;此模式以「全 BOSS 池打完才完全切換」為設計)
+    let pool = list;
     if (typeof SeenCorrect !== 'undefined' && list.length > 0) {
       const fr = SeenCorrect.filterForBattle(list, 1);
       if (fr.fallback) showToast(`「${esc(boss.name||'本 BOSS')}」全題已答對過,允許重複再戰`);
-      else if (fr.pool.length < list.length) {
-        // 部分排除成功
-        return RNG.shuffle(fr.pool);
-      }
+      else if (fr.pool.length < list.length) pool = fr.pool;
     }
-    return RNG.shuffle(list);
+    // 隨機洗牌後取最多 maxN 題(2026-05-17:用 RNG.set(Date.now()) seed 保證每場不同序)
+    return RNG.shuffle(pool).slice(0, maxN);
   }
 
   // 動態調整 BOSS HP 以匹配實際存活題數(避免題庫被刪後出現「打不完」殘血的視覺殘留)

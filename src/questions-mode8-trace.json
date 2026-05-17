@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "schema_version": "iron-rule-1+2+3+5",
-  "purpose": "Mode 8 Code Trace 題庫(v0-minimal 5 題,涵蓋 numpy / 演算法 / 激活 / 邏輯迴歸 / DBSCAN)",
+  "purpose": "Mode 8 Code Trace 題庫(v1:57 題,L23 ×3 擴增 + L22 補齊 33 cohort)",
   "iron_rule_compliance": {
     "iron_rule_1": "整題層級 explanation.correct/hook/misconceptions/related_node_ids 齊備",
     "iron_rule_2": "支援 stem_variables.case_a/b/c(R4B retrofit);每次 render 由 pickCase 隨機抽一 case 替換 code_block / trace_steps placeholder,並對 step.options RNG.shuffle",
@@ -5644,6 +5644,6371 @@
         "Laplace",
         "DP",
         "隱私預算"
+      ]
+    },
+    {
+      "id": "q_m8_028",
+      "knowledge_code": "L22202",
+      "node_id": "n_L22202_002",
+      "subject": 2,
+      "format": "code_trace",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "某電商平台用 Python dict 模擬 NoSQL Document Store(類 MongoDB),插入商品文件後依條件查詢符合「庫存大於門檻」的商品數量。請依提示逐行追蹤變數狀態。",
+      "code_block": "products = []\nproducts.append({\"sku\": \"A1\", \"stock\": {p0}})\nproducts.append({\"sku\": \"B2\", \"stock\": {p1}})\nproducts.append({\"sku\": \"C3\", \"stock\": {p2}})\nlow = [p for p in products if p[\"stock\"] < {thr}]\nhigh = [p for p in products if p[\"stock\"] >= {thr}]\nresult = len(high)",
+      "stem_variables": {
+        "case_a": {
+          "p0": "5",
+          "p1": "20",
+          "p2": "15",
+          "thr": "10",
+          "s1_correct": "3",
+          "s1_w1": "1",
+          "s1_w2": "0",
+          "s1_w3": "2",
+          "s2_correct": "1",
+          "s2_w1": "2",
+          "s2_w2": "3",
+          "s2_w3": "0",
+          "s3_correct": "2",
+          "s3_w1": "1",
+          "s3_w2": "3",
+          "s3_w3": "0",
+          "s4_correct": "2",
+          "s4_w1": "1",
+          "s4_w2": "3",
+          "s4_w3": "0"
+        },
+        "case_b": {
+          "p0": "8",
+          "p1": "30",
+          "p2": "25",
+          "thr": "20",
+          "s1_correct": "3",
+          "s1_w1": "1",
+          "s1_w2": "0",
+          "s1_w3": "2",
+          "s2_correct": "1",
+          "s2_w1": "2",
+          "s2_w2": "3",
+          "s2_w3": "0",
+          "s3_correct": "2",
+          "s3_w1": "1",
+          "s3_w2": "3",
+          "s3_w3": "0",
+          "s4_correct": "2",
+          "s4_w1": "1",
+          "s4_w2": "3",
+          "s4_w3": "0"
+        },
+        "case_c": {
+          "p0": "3",
+          "p1": "12",
+          "p2": "4",
+          "thr": "10",
+          "s1_correct": "3",
+          "s1_w1": "1",
+          "s1_w2": "0",
+          "s1_w3": "2",
+          "s2_correct": "2",
+          "s2_w1": "1",
+          "s2_w2": "3",
+          "s2_w3": "0",
+          "s3_correct": "1",
+          "s3_w1": "2",
+          "s3_w2": "3",
+          "s3_w3": "0",
+          "s4_correct": "1",
+          "s4_w1": "2",
+          "s4_w2": "3",
+          "s4_w3": "0"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 4,
+          "ask": "此時 products 這個 Document Collection 共含有幾筆文件?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為 append 只生效最後一次"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為 list 是空集合"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "漏算其中一次 append"
+            }
+          ]
+        },
+        {
+          "after_line": 5,
+          "ask": "low 這個列表所含的文件數量為何?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "誤把高庫存也計入"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為全部都低於門檻"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "誤以為沒有低於門檻者"
+            }
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "high 這個列表所含的文件數量為何?",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "誤把 < 也計入"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為全部符合條件"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "誤算為零"
+            }
+          ]
+        },
+        {
+          "after_line": 7,
+          "ask": "最終 result 變數的值為何?",
+          "options": [
+            {
+              "text": "{s4_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s4_w1}",
+              "is_correct": false,
+              "trap_type": "誤回傳 low 的長度"
+            },
+            {
+              "text": "{s4_w2}",
+              "is_correct": false,
+              "trap_type": "誤回傳全部文件數"
+            },
+            {
+              "text": "{s4_w3}",
+              "is_correct": false,
+              "trap_type": "誤以為查詢結果為空"
+            }
+          ]
+        }
+      ],
+      "explanation": {
+        "correct": "**Step 1:** 三次 append 各放入一筆 dict 文件,products 長度 = {s1_correct}。**Step 2:** low 篩選 stock < {thr} 的文件 → {s2_correct} 筆。**Step 3:** high 篩選 stock >= {thr} 的文件 → {s3_correct} 筆。**Step 4:** result = len(high) = {s4_correct}。NoSQL Document Store(MongoDB 等)以 dict / JSON 結構儲存,查詢條件可直接套用於欄位值,適合 schema 變動頻繁的電商商品資料。",
+        "hook": "Document Store 看 dict 數量,查詢看條件過濾後的剩餘文件數。"
+      },
+      "misconceptions": [
+        "誤以為 NoSQL 必須先定義 schema 才能插入文件",
+        "誤把 list comprehension 篩選條件 < 和 >= 邊界搞反"
+      ],
+      "related_node_ids": [
+        "n_L22202_002"
+      ],
+      "tags": [
+        "L22",
+        "NoSQL",
+        "Document Store",
+        "零售",
+        "查詢"
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "id": "q_m8_029",
+      "knowledge_code": "L22202",
+      "node_id": "n_L22202_005",
+      "subject": 2,
+      "format": "code_trace",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某銀行交易系統將交易記錄以「帳戶 ID hash 取模」方式分散到 4 個 partition,以提升大量交易查詢吞吐量。請依提示逐行追蹤變數狀態。",
+      "code_block": "NUM_PARTITIONS = 4\ntxns = [{t0}, {t1}, {t2}, {t3}]\npartitions = [[], [], [], []]\nfor acct in txns:\n    idx = acct % NUM_PARTITIONS\n    partitions[idx].append(acct)\nsizes = [len(p) for p in partitions]\nresult = sizes[{q}]",
+      "stem_variables": {
+        "case_a": {
+          "t0": "101",
+          "t1": "204",
+          "t2": "307",
+          "t3": "405",
+          "q": "1",
+          "s1_correct": "[101, 204, 307, 405]",
+          "s1_w1": "[101, 204, 307]",
+          "s1_w2": "[]",
+          "s1_w3": "[405, 307, 204, 101]",
+          "s2_correct": "1",
+          "s2_w1": "0",
+          "s2_w2": "2",
+          "s2_w3": "3",
+          "s3_correct": "[1, 2, 0, 1]",
+          "s3_w1": "[4, 0, 0, 0]",
+          "s3_w2": "[1, 1, 1, 1]",
+          "s3_w3": "[0, 1, 2, 1]",
+          "s4_correct": "2",
+          "s4_w1": "1",
+          "s4_w2": "0",
+          "s4_w3": "4"
+        },
+        "case_b": {
+          "t0": "510",
+          "t1": "623",
+          "t2": "734",
+          "t3": "847",
+          "q": "2",
+          "s1_correct": "[510, 623, 734, 847]",
+          "s1_w1": "[510, 623, 734]",
+          "s1_w2": "[]",
+          "s1_w3": "[847, 734, 623, 510]",
+          "s2_correct": "2",
+          "s2_w1": "0",
+          "s2_w2": "1",
+          "s2_w3": "3",
+          "s3_correct": "[0, 0, 2, 2]",
+          "s3_w1": "[4, 0, 0, 0]",
+          "s3_w2": "[1, 1, 1, 1]",
+          "s3_w3": "[2, 2, 0, 0]",
+          "s4_correct": "2",
+          "s4_w1": "0",
+          "s4_w2": "1",
+          "s4_w3": "4"
+        },
+        "case_c": {
+          "t0": "200",
+          "t1": "201",
+          "t2": "202",
+          "t3": "203",
+          "q": "0",
+          "s1_correct": "[200, 201, 202, 203]",
+          "s1_w1": "[200, 201, 202]",
+          "s1_w2": "[]",
+          "s1_w3": "[203, 202, 201, 200]",
+          "s2_correct": "0",
+          "s2_w1": "1",
+          "s2_w2": "2",
+          "s2_w3": "3",
+          "s3_correct": "[1, 1, 1, 1]",
+          "s3_w1": "[4, 0, 0, 0]",
+          "s3_w2": "[0, 0, 0, 4]",
+          "s3_w3": "[2, 2, 0, 0]",
+          "s4_correct": "1",
+          "s4_w1": "0",
+          "s4_w2": "2",
+          "s4_w3": "4"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 3,
+          "ask": "txns 列表此時的內容為何?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "漏掉最後一筆"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為尚未填入"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "誤以為 list 自動反序"
+            }
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "迴圈第一輪 acct = {t0} 時,idx 的值為何?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "誤用整數除法商而非餘數"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "餘數計算錯誤"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "誤把 NUM_PARTITIONS 當作 3"
+            }
+          ]
+        },
+        {
+          "after_line": 8,
+          "ask": "迴圈跑完後,sizes 的內容為何?",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為全部進同一桶"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為一律平均分配"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "桶位順序計算錯誤"
+            }
+          ]
+        },
+        {
+          "after_line": 9,
+          "ask": "最終 result 的值為何?",
+          "options": [
+            {
+              "text": "{s4_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s4_w1}",
+              "is_correct": false,
+              "trap_type": "取錯 partition index"
+            },
+            {
+              "text": "{s4_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為該 partition 為空"
+            },
+            {
+              "text": "{s4_w3}",
+              "is_correct": false,
+              "trap_type": "誤回傳全部交易數"
+            }
+          ]
+        }
+      ],
+      "explanation": {
+        "correct": "**Step 1:** txns 經四次寫入後 = {s1_correct}。**Step 2:** 第一筆 {t0} % 4 = {s2_correct},決定該筆落到 partition[{s2_correct}]。**Step 3:** 逐筆 hash 取模 → 每個 partition 的筆數為 {s3_correct}。**Step 4:** 取 sizes[{q}] = {s4_correct}。Hash partition 把資料依 key 餘數均勻分散到多個分區,可平行查詢提升吞吐量,但若 key 分佈不均(熱點帳號)會造成 partition skew。",
+        "hook": "Partition index = key mod N,均勻與否取決於 key 散布的平均性。"
+      },
+      "misconceptions": [
+        "誤以為 hash partition 一定會完全均勻(實際取決於 key 分佈)",
+        "把整數除法 // 與餘數 % 用反"
+      ],
+      "related_node_ids": [
+        "n_L22202_005"
+      ],
+      "tags": [
+        "L22",
+        "Partition",
+        "Hash",
+        "金融",
+        "Sharding"
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "id": "q_m8_030",
+      "knowledge_code": "L22203",
+      "node_id": "n_L22203_004",
+      "subject": 2,
+      "format": "code_trace",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "某物流平台用 Python 模擬 MapReduce 範式統計 IoT 包裹各狀態事件數:map 階段把每筆事件轉成 (status, 1) 鍵值對,reduce 階段對相同 key 累加。請依提示逐行追蹤變數狀態。",
+      "code_block": "events = [{ev_list}]\nmapped = [(s, 1) for s in events]\ngrouped = {}\nfor k, v in mapped:\n    grouped.setdefault(k, []).append(v)\nresult = {k: sum(vs) for k, vs in grouped.items()}",
+      "stem_variables": {
+        "case_a": {
+          "ev_list": "'DELIVERED', 'IN_TRANSIT', 'DELIVERED', 'RETURNED', 'DELIVERED'",
+          "s1_correct": "5",
+          "s1_w1": "3",
+          "s1_w2": "4",
+          "s1_w3": "1",
+          "s2_correct": "[('DELIVERED', 1), ('IN_TRANSIT', 1), ('DELIVERED', 1), ('RETURNED', 1), ('DELIVERED', 1)]",
+          "s2_w1": "[('DELIVERED', 3), ('DELIVERED', 1), ('IN_TRANSIT', 1), ('DELIVERED', 1), ('RETURNED', 1)]",
+          "s2_w2": "[('DELIVERED', 1), ('IN_TRANSIT', 2), ('DELIVERED', 1), ('RETURNED', 1), ('DELIVERED', 1)]",
+          "s2_w3": "[('DELIVERED', 1), ('IN_TRANSIT', 1), ('DELIVERED', 2), ('RETURNED', 1), ('DELIVERED', 1)]",
+          "s3_correct": "{'DELIVERED': [1, 1, 1], 'IN_TRANSIT': [1], 'RETURNED': [1]}",
+          "s3_w1": "{'DELIVERED': 3, 'IN_TRANSIT': 1, 'RETURNED': 1}",
+          "s3_w2": "{'DELIVERED': [1], 'IN_TRANSIT': [1], 'RETURNED': [1]}",
+          "s3_w3": "{'DELIVERED': [3], 'IN_TRANSIT': [1], 'RETURNED': [1]}",
+          "s4_correct": "{'DELIVERED': 3, 'IN_TRANSIT': 1, 'RETURNED': 1}",
+          "s4_w1": "{'DELIVERED': [1, 1, 1], 'IN_TRANSIT': [1], 'RETURNED': [1]}",
+          "s4_w2": "{'DELIVERED': 5, 'IN_TRANSIT': 5, 'RETURNED': 5}",
+          "s4_w3": "{'DELIVERED': 1, 'IN_TRANSIT': 1, 'RETURNED': 1}",
+          "map_pairs": "DELIVERED→1, IN_TRANSIT→1, DELIVERED→1, RETURNED→1, DELIVERED→1",
+          "final_dict": "{'DELIVERED': 3, 'IN_TRANSIT': 1, 'RETURNED': 1}",
+          "scenario": "物流包裹"
+        },
+        "case_b": {
+          "ev_list": "'PAID', 'PAID', 'REFUND', 'PAID', 'REFUND', 'PENDING'",
+          "s1_correct": "6",
+          "s1_w1": "3",
+          "s1_w2": "5",
+          "s1_w3": "2",
+          "s2_correct": "[('PAID', 1), ('PAID', 1), ('REFUND', 1), ('PAID', 1), ('REFUND', 1), ('PENDING', 1)]",
+          "s2_w1": "[('PAID', 3), ('PAID', 1), ('REFUND', 1), ('PAID', 1), ('REFUND', 1), ('PENDING', 1)]",
+          "s2_w2": "[('PAID', 1), ('PAID', 1), ('REFUND', 2), ('PAID', 1), ('REFUND', 1), ('PENDING', 1)]",
+          "s2_w3": "[('PAID', 2), ('PAID', 1), ('REFUND', 1), ('PAID', 1), ('REFUND', 1), ('PENDING', 1)]",
+          "s3_correct": "{'PAID': [1, 1, 1], 'REFUND': [1, 1], 'PENDING': [1]}",
+          "s3_w1": "{'PAID': 3, 'REFUND': 2, 'PENDING': 1}",
+          "s3_w2": "{'PAID': [1], 'REFUND': [1], 'PENDING': [1]}",
+          "s3_w3": "{'PAID': [3], 'REFUND': [2], 'PENDING': [1]}",
+          "s4_correct": "{'PAID': 3, 'REFUND': 2, 'PENDING': 1}",
+          "s4_w1": "{'PAID': [1, 1, 1], 'REFUND': [1, 1], 'PENDING': [1]}",
+          "s4_w2": "{'PAID': 6, 'REFUND': 6, 'PENDING': 6}",
+          "s4_w3": "{'PAID': 1, 'REFUND': 1, 'PENDING': 1}",
+          "map_pairs": "PAID→1, PAID→1, REFUND→1, PAID→1, REFUND→1, PENDING→1",
+          "final_dict": "{'PAID': 3, 'REFUND': 2, 'PENDING': 1}",
+          "scenario": "金融交易"
+        },
+        "case_c": {
+          "ev_list": "'CLICK', 'VIEW', 'CLICK', 'SHARE'",
+          "s1_correct": "4",
+          "s1_w1": "3",
+          "s1_w2": "2",
+          "s1_w3": "1",
+          "s2_correct": "[('CLICK', 1), ('VIEW', 1), ('CLICK', 1), ('SHARE', 1)]",
+          "s2_w1": "[('CLICK', 2), ('VIEW', 1), ('CLICK', 1), ('SHARE', 1)]",
+          "s2_w2": "[('CLICK', 1), ('VIEW', 1), ('CLICK', 2), ('SHARE', 1)]",
+          "s2_w3": "[('CLICK', 1), ('VIEW', 2), ('CLICK', 1), ('SHARE', 1)]",
+          "s3_correct": "{'CLICK': [1, 1], 'VIEW': [1], 'SHARE': [1]}",
+          "s3_w1": "{'CLICK': 2, 'VIEW': 1, 'SHARE': 1}",
+          "s3_w2": "{'CLICK': [1], 'VIEW': [1], 'SHARE': [1]}",
+          "s3_w3": "{'CLICK': [2], 'VIEW': [1], 'SHARE': [1]}",
+          "s4_correct": "{'CLICK': 2, 'VIEW': 1, 'SHARE': 1}",
+          "s4_w1": "{'CLICK': [1, 1], 'VIEW': [1], 'SHARE': [1]}",
+          "s4_w2": "{'CLICK': 4, 'VIEW': 4, 'SHARE': 4}",
+          "s4_w3": "{'CLICK': 1, 'VIEW': 1, 'SHARE': 1}",
+          "map_pairs": "CLICK→1, VIEW→1, CLICK→1, SHARE→1",
+          "final_dict": "{'CLICK': 2, 'VIEW': 1, 'SHARE': 1}",
+          "scenario": "社群點擊"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 1,
+          "ask": "events 串列共有幾筆事件?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為去重後筆數"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "漏算重複項"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "誤以為只有一筆"
+            }
+          ]
+        },
+        {
+          "after_line": 2,
+          "ask": "map 階段執行後,mapped 內容為何?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "誤把第一筆 map 值預先累加"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "中間誤插入累加值,違反 map 階段獨立性"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "誤把某筆 value 改成累加結果"
+            }
+          ]
+        },
+        {
+          "after_line": 5,
+          "ask": "shuffle/group 完成後 grouped 的內容為何?",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "誤把 group 結果直接視為已 reduce"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為 group 也去重"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "誤把 list 收成單元素"
+            }
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "reduce 階段執行後 result 的值為何?",
+          "options": [
+            {
+              "text": "{s4_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s4_w1}",
+              "is_correct": false,
+              "trap_type": "誤把 grouped 當最終輸出"
+            },
+            {
+              "text": "{s4_w2}",
+              "is_correct": false,
+              "trap_type": "把總筆數套到每個 key"
+            },
+            {
+              "text": "{s4_w3}",
+              "is_correct": false,
+              "trap_type": "未做加總,只取首筆"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "MapReduce 三階段對應 {scenario} 事件統計:**Step 1:** events 是原始事件序列,長度即筆數 {s1_correct}。 **Step 2:** map 對每筆獨立輸出 (key, 1) 鍵值對,結果為 {map_pairs},此時相同 key 尚未合併。 **Step 3:** shuffle/group 把相同 key 的 value 收集成 list(本題用 setdefault 模擬),此時 grouped[key] 是 [1,1,...] 而非數字。 **Step 4:** reduce 對每組 value list 做 sum,得到最終 {final_dict};這就是 MapReduce 統計型工作負載的標準流程。",
+        "wrong": {
+          "(任一步驟錯誤)": "見各 trace_step 的陷阱類型說明。"
+        },
+        "hook": "map 不合併、reduce 才合併;group 後是 list,reduce 後才是數字 {final_dict}"
+      },
+      "misconceptions": [
+        "誤把 map 階段就視為已聚合(跳過 shuffle/group)",
+        "誤把 group 結果直接當作 reduce 輸出"
+      ],
+      "related_node_ids": [
+        "n_L22203_004",
+        "n_L22203_003"
+      ],
+      "tags": [
+        "code-trace",
+        "python",
+        "mapreduce",
+        "分散式處理",
+        "大數據"
+      ]
+    },
+    {
+      "id": "q_m8_031",
+      "knowledge_code": "L22203",
+      "node_id": "n_L22203_005",
+      "subject": 2,
+      "format": "code_trace",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某智慧城市團隊用 Python 模擬串流處理引擎的固定時間視窗(tumbling window)聚合:依事件時間(event_time,單位秒)以 W=10 秒為視窗大小,計算每個視窗內的事件數。請依提示逐行追蹤變數狀態。",
+      "code_block": "events = [{ts_list}]\nW = 10\nwindow_key = [t // W for t in events]\nbuckets = {}\nfor k in window_key:\n    buckets[k] = buckets.get(k, 0) + 1\nresult = dict(sorted(buckets.items()))",
+      "stem_variables": {
+        "case_a": {
+          "ts_list": "3, 8, 9, 14, 25, 27, 28",
+          "s1_correct": "7",
+          "s1_w1": "6",
+          "s1_w2": "5",
+          "s1_w3": "8",
+          "s2_correct": "[0, 0, 0, 1, 2, 2, 2]",
+          "s2_w1": "[3, 8, 9, 14, 25, 27, 28]",
+          "s2_w2": "[0, 0, 0, 1, 1, 2, 2]",
+          "s2_w3": "[0, 1, 2, 3, 4, 5, 6]",
+          "s3_correct": "{0: 3, 1: 1, 2: 3}",
+          "s3_w1": "{0: 7, 1: 7, 2: 7}",
+          "s3_w2": "{0: 1, 1: 1, 2: 1}",
+          "s3_w3": "{0: 3, 1: 2, 2: 2}",
+          "s4_correct": "{0: 3, 1: 1, 2: 3}",
+          "s4_w1": "{2: 3, 1: 1, 0: 3}",
+          "s4_w2": "{0: 3, 2: 3, 1: 1}",
+          "s4_w3": "{0: 7, 1: 7, 2: 7}",
+          "bucket_calc": "視窗 [0,10): 3 筆;[10,20): 1 筆;[20,30): 3 筆",
+          "total": "7",
+          "scenario": "智慧城市車流"
+        },
+        "case_b": {
+          "ts_list": "1, 4, 5, 7, 12, 18, 21",
+          "s1_correct": "7",
+          "s1_w1": "6",
+          "s1_w2": "5",
+          "s1_w3": "8",
+          "s2_correct": "[0, 0, 0, 0, 1, 1, 2]",
+          "s2_w1": "[1, 4, 5, 7, 12, 18, 21]",
+          "s2_w2": "[0, 0, 0, 0, 1, 1, 1]",
+          "s2_w3": "[0, 1, 2, 3, 4, 5, 6]",
+          "s3_correct": "{0: 4, 1: 2, 2: 1}",
+          "s3_w1": "{0: 7, 1: 7, 2: 7}",
+          "s3_w2": "{0: 1, 1: 1, 2: 1}",
+          "s3_w3": "{0: 4, 1: 3, 2: 0}",
+          "s4_correct": "{0: 4, 1: 2, 2: 1}",
+          "s4_w1": "{2: 1, 1: 2, 0: 4}",
+          "s4_w2": "{0: 4, 2: 1, 1: 2}",
+          "s4_w3": "{0: 7, 1: 7, 2: 7}",
+          "bucket_calc": "視窗 [0,10): 4 筆;[10,20): 2 筆;[20,30): 1 筆",
+          "total": "7",
+          "scenario": "金融交易流"
+        },
+        "case_c": {
+          "ts_list": "2, 6, 11, 13, 17, 22, 26, 29",
+          "s1_correct": "8",
+          "s1_w1": "7",
+          "s1_w2": "6",
+          "s1_w3": "9",
+          "s2_correct": "[0, 0, 1, 1, 1, 2, 2, 2]",
+          "s2_w1": "[2, 6, 11, 13, 17, 22, 26, 29]",
+          "s2_w2": "[0, 0, 1, 1, 1, 1, 2, 2]",
+          "s2_w3": "[0, 1, 2, 3, 4, 5, 6, 7]",
+          "s3_correct": "{0: 2, 1: 3, 2: 3}",
+          "s3_w1": "{0: 8, 1: 8, 2: 8}",
+          "s3_w2": "{0: 1, 1: 1, 2: 1}",
+          "s3_w3": "{0: 2, 1: 4, 2: 2}",
+          "s4_correct": "{0: 2, 1: 3, 2: 3}",
+          "s4_w1": "{2: 3, 1: 3, 0: 2}",
+          "s4_w2": "{0: 2, 2: 3, 1: 3}",
+          "s4_w3": "{0: 8, 1: 8, 2: 8}",
+          "bucket_calc": "視窗 [0,10): 2 筆;[10,20): 3 筆;[20,30): 3 筆",
+          "total": "8",
+          "scenario": "社群點擊流"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 1,
+          "ask": "events 串列共有幾筆事件?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "漏算最後一筆"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為以視窗數為長度"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "多算一筆"
+            }
+          ]
+        },
+        {
+          "after_line": 3,
+          "ask": "window_key(每筆事件對應的視窗編號)為何?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "誤把原始 timestamp 當視窗編號"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "邊界 t//W 進位方向誤判"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "誤以為每筆獨立成一視窗"
+            }
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "buckets 累加完成後內容為何?",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "把總筆數套到每個視窗"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "未做累加,每 key 只記一次"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "視窗邊界歸屬誤判"
+            }
+          ]
+        },
+        {
+          "after_line": 7,
+          "ask": "最終 result(依 key 升冪排序)為何?",
+          "options": [
+            {
+              "text": "{s4_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s4_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為 sorted 是降冪"
+            },
+            {
+              "text": "{s4_w2}",
+              "is_correct": false,
+              "trap_type": "未依 key 排序,沿用插入序"
+            },
+            {
+              "text": "{s4_w3}",
+              "is_correct": false,
+              "trap_type": "把總筆數套到每個視窗"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "Tumbling window 以 event_time 分桶({scenario}場景):**Step 1:** events 為原始事件時間序列,共 {total} 筆。 **Step 2:** 對每個 t 計算 t // W(W=10),即把 [0,10)→0、[10,20)→1、[20,30)→2 對映到視窗編號;這是 event time 處理(非 processing time)的核心:無論晚多久到達,只看事件發生時間落在哪個視窗。 **Step 3:** 用 dict.get(k, 0)+1 對每個視窗 key 累加,得到 {bucket_calc}。 **Step 4:** sorted(items()) 依 key 升冪重排輸出,確保視窗順序穩定。若改用 processing time(事件抵達系統的時間)排桶,遲到事件會被分到錯誤視窗,這就是為何串流引擎(Flink、Spark Structured Streaming)預設用 event time 搭配 watermark。",
+        "wrong": {
+          "(任一步驟錯誤)": "見各 trace_step 的陷阱類型說明。"
+        },
+        "hook": "event time 看「事件發生」時間,t // W 決定視窗;遲到事件不會跑錯桶 → {bucket_calc}"
+      },
+      "misconceptions": [
+        "誤把 processing time 與 event time 視為等價",
+        "邊界值(如 t=10、t=20)歸屬視窗方向誤判"
+      ],
+      "related_node_ids": [
+        "n_L22203_005",
+        "n_L22203_003"
+      ],
+      "tags": [
+        "code-trace",
+        "python",
+        "streaming",
+        "event-time",
+        "tumbling-window",
+        "大數據"
+      ]
+    },
+    {
+      "id": "q_m8_032",
+      "knowledge_code": "L22303",
+      "node_id": "n_L22303_002",
+      "subject": 2,
+      "format": "code_trace",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "下列程式為某{scenario_desc}的箱形圖五數彙整計算。請追蹤 numpy 各步驟回傳的統計量,以決定箱形圖的盒身與鬚線位置。",
+      "code_block": "import numpy as np\ndata = np.array([{a0}, {a1}, {a2}, {a3}, {a4}, {a5}, {a6}, {a7}, {a8}, {a9}])\nq1 = np.percentile(data, 25)\nq3 = np.percentile(data, 75)\niqr = q3 - q1\nupper_fence = q3 + 1.5 * iqr\nlower_fence = q1 - 1.5 * iqr\nupper_whisker = data[data <= upper_fence].max()\nlower_whisker = data[data >= lower_fence].min()",
+      "stem_variables": {
+        "case_a": {
+          "scenario_desc": "醫療診所 10 位病患就診時間(分鐘)",
+          "a0": "4",
+          "a1": "7",
+          "a2": "9",
+          "a3": "10",
+          "a4": "12",
+          "a5": "14",
+          "a6": "15",
+          "a7": "18",
+          "a8": "22",
+          "a9": "35",
+          "s1_correct": "9.25",
+          "s1_w1": "10.0",
+          "s1_w2": "9.0",
+          "s1_w3": "11.0",
+          "s2_correct": "17.25",
+          "s2_w1": "18.0",
+          "s2_w2": "15.0",
+          "s2_w3": "20.0",
+          "s3_correct": "8.0",
+          "s3_w1": "9.0",
+          "s3_w2": "6.0",
+          "s3_w3": "26.5",
+          "s4_correct": "29.25",
+          "s4_w1": "30.0",
+          "s4_w2": "21.25",
+          "s4_w3": "35.0",
+          "s5_correct": "22",
+          "s5_w1": "35",
+          "s5_w2": "18",
+          "s5_w3": "29",
+          "q1_val": "9.25",
+          "q3_val": "17.25",
+          "iqr_val": "8.0",
+          "upper_fence_val": "29.25",
+          "outlier_note": "35 超過上界 29.25,視為離群值,upper_whisker 取小於等於 29.25 的最大值 22"
+        },
+        "case_b": {
+          "scenario_desc": "製造產線 10 批次良率(%)",
+          "a0": "82",
+          "a1": "85",
+          "a2": "87",
+          "a3": "88",
+          "a4": "90",
+          "a5": "91",
+          "a6": "92",
+          "a7": "93",
+          "a8": "95",
+          "a9": "99",
+          "s1_correct": "87.25",
+          "s1_w1": "88.0",
+          "s1_w2": "87.0",
+          "s1_w3": "85.5",
+          "s2_correct": "92.75",
+          "s2_w1": "93.0",
+          "s2_w2": "92.0",
+          "s2_w3": "94.0",
+          "s3_correct": "5.5",
+          "s3_w1": "5.0",
+          "s3_w2": "6.0",
+          "s3_w3": "8.25",
+          "s4_correct": "101.0",
+          "s4_w1": "99.0",
+          "s4_w2": "95.5",
+          "s4_w3": "105.0",
+          "s5_correct": "99",
+          "s5_w1": "95",
+          "s5_w2": "93",
+          "s5_w3": "101",
+          "q1_val": "87.25",
+          "q3_val": "92.75",
+          "iqr_val": "5.5",
+          "upper_fence_val": "101.0",
+          "outlier_note": "無離群值,99 小於上界 101.0,upper_whisker 直接取資料最大值 99"
+        },
+        "case_c": {
+          "scenario_desc": "教育單位 10 位學生期末成績",
+          "a0": "45",
+          "a1": "58",
+          "a2": "62",
+          "a3": "68",
+          "a4": "72",
+          "a5": "75",
+          "a6": "78",
+          "a7": "82",
+          "a8": "88",
+          "a9": "95",
+          "s1_correct": "63.5",
+          "s1_w1": "62.0",
+          "s1_w2": "68.0",
+          "s1_w3": "60.0",
+          "s2_correct": "81.0",
+          "s2_w1": "82.0",
+          "s2_w2": "78.0",
+          "s2_w3": "85.0",
+          "s3_correct": "17.5",
+          "s3_w1": "16.0",
+          "s3_w2": "20.0",
+          "s3_w3": "26.25",
+          "s4_correct": "107.25",
+          "s4_w1": "95.0",
+          "s4_w2": "100.0",
+          "s4_w3": "98.5",
+          "s5_correct": "95",
+          "s5_w1": "88",
+          "s5_w2": "82",
+          "s5_w3": "107",
+          "q1_val": "63.5",
+          "q3_val": "81.0",
+          "iqr_val": "17.5",
+          "upper_fence_val": "107.25",
+          "outlier_note": "無離群值,95 小於上界 107.25,upper_whisker 直接取資料最大值 95"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 3,
+          "ask": "q1 的值為何?(np.percentile 預設 linear 插值)",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "誤用 nearest 取第三筆值"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "誤用 lower 取下界值"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "誤算插值位置或中位數"
+            }
+          ]
+        },
+        {
+          "after_line": 4,
+          "ask": "q3 的值為何?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "誤用 higher 直接取右側值"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "誤用 lower 直接取左側值"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "誤估插值位置"
+            }
+          ]
+        },
+        {
+          "after_line": 5,
+          "ask": "iqr 的值為何?",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "整數截斷誤差"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "誤算成 q3 減中位數"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "誤套 1.5 倍 IQR 公式"
+            }
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "upper_fence 的值為何?",
+          "options": [
+            {
+              "text": "{s4_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s4_w1}",
+              "is_correct": false,
+              "trap_type": "誤直接取資料最大值當上界"
+            },
+            {
+              "text": "{s4_w2}",
+              "is_correct": false,
+              "trap_type": "誤用 q1 加 1.5 倍 iqr"
+            },
+            {
+              "text": "{s4_w3}",
+              "is_correct": false,
+              "trap_type": "誤用 3 倍 iqr 倍數"
+            }
+          ]
+        },
+        {
+          "after_line": 8,
+          "ask": "upper_whisker 的值為何?",
+          "options": [
+            {
+              "text": "{s5_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s5_w1}",
+              "is_correct": false,
+              "trap_type": "誤把離群值或最大值當鬚線"
+            },
+            {
+              "text": "{s5_w2}",
+              "is_correct": false,
+              "trap_type": "誤把次大值當鬚線"
+            },
+            {
+              "text": "{s5_w3}",
+              "is_correct": false,
+              "trap_type": "誤把 upper_fence 數值當鬚線"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "Step 1: q1 採 np.percentile 預設 linear 插值,索引位置 (n-1)*0.25 = 2.25,取 data[2] + 0.25*(data[3]-data[2]) 得 {q1_val}。Step 2: q3 同理在索引 6.75 位置插值,得 {q3_val}。Step 3: iqr = q3 - q1 = {iqr_val}。Step 4: upper_fence = q3 + 1.5*iqr = {upper_fence_val},為箱形圖判斷離群值的標準上界。Step 5: upper_whisker 取「資料中小於等於 upper_fence 的最大值」,而非資料最大值或 fence 本身。{outlier_note}。",
+        "wrong": {
+          "(任一步驟錯誤)": "箱形圖鬚線常見誤解:(1) 把資料最大值直接當鬚線,忽略離群值判斷;(2) 把 upper_fence 數值當鬚線,但 fence 只是判斷邊界不是實際資料點;(3) 忘記 np.percentile 預設 linear 插值而非取整數位置。"
+        },
+        "hook": "箱形圖鬚線是「在 fence 內的最遠資料點」,不是 fence 本身;有離群值時鬚線會縮回最後一筆合法資料"
+      },
+      "misconceptions": [
+        "誤把資料最大值當箱形圖上鬚線",
+        "誤把 upper_fence 數值直接當鬚線位置",
+        "忽略 np.percentile 預設 linear 插值"
+      ],
+      "related_node_ids": [
+        "n_L22303_002",
+        "n_L22303_001"
+      ],
+      "tags": [
+        "code-trace",
+        "python",
+        "numpy",
+        "boxplot",
+        "視覺化",
+        "分佈圖"
+      ]
+    },
+    {
+      "id": "q_m8_033",
+      "knowledge_code": "L22303",
+      "node_id": "n_L22303_005",
+      "subject": 2,
+      "format": "code_trace",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "下列程式比較{scenario_desc}的「未截斷」與「Y 軸截斷至 base」兩種長條圖的視覺呈現倍率,用於評估是否屬於誤導視覺化七大手法之一的截斷 Y 軸。請追蹤每一步的計算結果。",
+      "code_block": "v1 = {v1}\nv2 = {v2}\nbase = {base}\ntrue_ratio = v2 / v1\nvisual_ratio = (v2 - base) / (v1 - base)\namplification = visual_ratio / true_ratio\nis_misleading = amplification > 1.5",
+      "stem_variables": {
+        "case_a": {
+          "scenario_desc": "金融券商兩日收盤股價",
+          "v1": "100",
+          "v2": "105",
+          "base": "95",
+          "s1_correct": "1.05",
+          "s1_w1": "1.5",
+          "s1_w2": "0.952",
+          "s1_w3": "5.0",
+          "s2_correct": "2.0",
+          "s2_w1": "1.05",
+          "s2_w2": "1.1",
+          "s2_w3": "0.5",
+          "s3_correct": "1.905",
+          "s3_w1": "0.525",
+          "s3_w2": "0.952",
+          "s3_w3": "1.05",
+          "s4_correct": "True",
+          "s4_w1": "False",
+          "s4_w2": "None",
+          "s4_w3": "1",
+          "true_ratio_val": "1.05",
+          "visual_ratio_val": "2.0",
+          "amp_val": "1.905",
+          "misleading_note": "視覺倍率約為真實倍率的 1.9 倍,屬於 Y 軸截斷誤導手法"
+        },
+        "case_b": {
+          "scenario_desc": "能源公司兩日總用電量(kWh)",
+          "v1": "500",
+          "v2": "520",
+          "base": "480",
+          "s1_correct": "1.04",
+          "s1_w1": "1.4",
+          "s1_w2": "0.962",
+          "s1_w3": "20.0",
+          "s2_correct": "2.0",
+          "s2_w1": "1.04",
+          "s2_w2": "1.08",
+          "s2_w3": "0.5",
+          "s3_correct": "1.923",
+          "s3_w1": "0.520",
+          "s3_w2": "0.962",
+          "s3_w3": "1.04",
+          "s4_correct": "True",
+          "s4_w1": "False",
+          "s4_w2": "None",
+          "s4_w3": "1",
+          "true_ratio_val": "1.04",
+          "visual_ratio_val": "2.0",
+          "amp_val": "1.923",
+          "misleading_note": "視覺倍率約為真實倍率的 1.92 倍,屬於 Y 軸截斷誤導手法"
+        },
+        "case_c": {
+          "scenario_desc": "製造廠兩季不良率(ppm)",
+          "v1": "80",
+          "v2": "88",
+          "base": "75",
+          "s1_correct": "1.1",
+          "s1_w1": "1.5",
+          "s1_w2": "0.909",
+          "s1_w3": "8.0",
+          "s2_correct": "2.6",
+          "s2_w1": "1.1",
+          "s2_w2": "1.16",
+          "s2_w3": "0.385",
+          "s3_correct": "2.364",
+          "s3_w1": "0.423",
+          "s3_w2": "0.909",
+          "s3_w3": "1.1",
+          "s4_correct": "True",
+          "s4_w1": "False",
+          "s4_w2": "None",
+          "s4_w3": "1",
+          "true_ratio_val": "1.1",
+          "visual_ratio_val": "2.6",
+          "amp_val": "2.364",
+          "misleading_note": "視覺倍率約為真實倍率的 2.36 倍,屬於嚴重 Y 軸截斷誤導"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 4,
+          "ask": "true_ratio 的值為何?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "誤把成長率當倍率"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "分子分母對調"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "誤算成 v2 減 v1 差值"
+            }
+          ]
+        },
+        {
+          "after_line": 5,
+          "ask": "visual_ratio 的值為何?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "誤套用 true_ratio 公式"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "只扣 v2 沒扣 v1"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "分子分母對調"
+            }
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "amplification 的值為何?(四捨五入到小數第三位)",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "分子分母對調"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "誤用 true_ratio 倒數"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "誤把 true_ratio 當答案"
+            }
+          ]
+        },
+        {
+          "after_line": 7,
+          "ask": "is_misleading 的值為何?",
+          "options": [
+            {
+              "text": "{s4_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s4_w1}",
+              "is_correct": false,
+              "trap_type": "誤判 amplification 是否大於 1.5"
+            },
+            {
+              "text": "{s4_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為比較式回傳 None"
+            },
+            {
+              "text": "{s4_w3}",
+              "is_correct": false,
+              "trap_type": "誤以為 True 顯示為整數 1"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "Step 1: true_ratio = v2 / v1 = {true_ratio_val},代表資料本身的倍率關係。Step 2: visual_ratio = (v2 - base) / (v1 - base) = {visual_ratio_val},代表 Y 軸從 base 開始截斷後長條圖在畫面上的視覺高度比。Step 3: amplification = visual_ratio / true_ratio = {amp_val},代表截斷導致的視覺放大倍率。Step 4: amplification 大於 1.5,因此 is_misleading = {s4_correct}。{misleading_note}。誤導視覺化七大手法之一即截斷 Y 軸(Truncated Y-axis):透過將基準線拉高,使原本微小的差異在視覺上看起來懸殊。",
+        "wrong": {
+          "(任一步驟錯誤)": "Y 軸截斷誤判常見錯誤:(1) 把 true_ratio 與 visual_ratio 分子分母對調;(2) 忘記兩個值都要扣 base 才是視覺高度;(3) 不理解成長率 (v2-v1)/v1 與倍率 v2/v1 的差別。"
+        },
+        "hook": "Y 軸截斷的視覺放大倍率 = (v2-base)/(v1-base) ÷ (v2/v1);base 越靠近 v1 視覺放大越誇張"
+      },
+      "misconceptions": [
+        "誤以為長條圖視覺高度比等於資料倍率",
+        "混淆 v2/v1 倍率與 (v2-v1)/v1 成長率",
+        "忽略 Y 軸基準線對視覺比例的放大效應"
+      ],
+      "related_node_ids": [
+        "n_L22303_005",
+        "n_L22303_001"
+      ],
+      "tags": [
+        "code-trace",
+        "python",
+        "numpy",
+        "誤導視覺化",
+        "Y軸截斷",
+        "視覺化"
+      ]
+    },
+    {
+      "id": "q_m8_034",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_001",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某金融風控團隊以 Adam 優化器更新風險模型權重 w。請依 Adam 公式(beta1=0.9, beta2=0.999, eps=1e-8)追蹤第一次更新後變數。",
+      "code_block": "import numpy as np\ng = {g}\nm = 0.0\nv = 0.0\nbeta1, beta2, lr = 0.9, 0.999, {lr}\nm = beta1 * m + (1 - beta1) * g\nv = beta2 * v + (1 - beta2) * (g ** 2)\nm_hat = m / (1 - beta1)\nv_hat = v / (1 - beta2)\nupdate = lr * m_hat / (np.sqrt(v_hat) + 1e-8)",
+      "stem_variables": {
+        "case_a": {
+          "g": "1.0",
+          "lr": "0.01",
+          "s1_correct": "0.1",
+          "s1_w1": "1.0",
+          "s1_w2": "0.9",
+          "s1_w3": "0.01",
+          "s2_correct": "0.001",
+          "s2_w1": "1.0",
+          "s2_w2": "0.999",
+          "s2_w3": "0.1",
+          "s3_correct": "1.0",
+          "s3_w1": "0.1",
+          "s3_w2": "0.9",
+          "s3_w3": "0.001",
+          "s4_correct": "0.01",
+          "s4_w1": "0.1",
+          "s4_w2": "1.0",
+          "s4_w3": "0.001",
+          "m_val": "0.1",
+          "v_val": "0.001",
+          "update_val": "0.01"
+        },
+        "case_b": {
+          "g": "2.0",
+          "lr": "0.01",
+          "s1_correct": "0.2",
+          "s1_w1": "2.0",
+          "s1_w2": "1.8",
+          "s1_w3": "0.02",
+          "s2_correct": "0.004",
+          "s2_w1": "4.0",
+          "s2_w2": "3.996",
+          "s2_w3": "0.2",
+          "s3_correct": "2.0",
+          "s3_w1": "0.2",
+          "s3_w2": "1.8",
+          "s3_w3": "0.004",
+          "s4_correct": "0.01",
+          "s4_w1": "0.02",
+          "s4_w2": "2.0",
+          "s4_w3": "0.004",
+          "m_val": "0.2",
+          "v_val": "0.004",
+          "update_val": "0.01"
+        },
+        "case_c": {
+          "g": "0.5",
+          "lr": "0.001",
+          "s1_correct": "0.05",
+          "s1_w1": "0.5",
+          "s1_w2": "0.45",
+          "s1_w3": "0.005",
+          "s2_correct": "0.00025",
+          "s2_w1": "0.25",
+          "s2_w2": "0.2499",
+          "s2_w3": "0.05",
+          "s3_correct": "0.5",
+          "s3_w1": "0.05",
+          "s3_w2": "0.45",
+          "s3_w3": "0.00025",
+          "s4_correct": "0.001",
+          "s4_w1": "0.005",
+          "s4_w2": "0.5",
+          "s4_w3": "0.00025",
+          "m_val": "0.05",
+          "v_val": "0.00025",
+          "update_val": "0.001"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 6,
+          "ask": "m 的值為何?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為 m=g"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "誤算 beta1*g"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "誤套 lr"
+            }
+          ]
+        },
+        {
+          "after_line": 7,
+          "ask": "v 的值為何?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為 v=g²"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "誤算 beta2*g²"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "誤用一階動量公式"
+            }
+          ]
+        },
+        {
+          "after_line": 8,
+          "ask": "m_hat 的值為何?",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "未做 bias correction"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "誤算 beta1*m"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "混淆 v"
+            }
+          ]
+        },
+        {
+          "after_line": 10,
+          "ask": "update 的值約為何?",
+          "options": [
+            {
+              "text": "{s4_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s4_w1}",
+              "is_correct": false,
+              "trap_type": "誤等於 m"
+            },
+            {
+              "text": "{s4_w2}",
+              "is_correct": false,
+              "trap_type": "誤等於 g"
+            },
+            {
+              "text": "{s4_w3}",
+              "is_correct": false,
+              "trap_type": "未除以 sqrt(v_hat)"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "Adam 第一次更新追蹤:Step 1: m = beta1*0 + (1-beta1)*g = 0.1*g = {m_val}(一階動量是梯度的指數移動平均)。Step 2: v = beta2*0 + (1-beta2)*g² = 0.001*g² = {v_val}(二階動量是梯度平方的 EMA)。Step 3: m_hat = m/(1-beta1) = m/0.1,v_hat = v/(1-beta2) = v/0.001,故 m_hat 等於原始 g,v_hat 等於 g²;update = lr * m_hat / sqrt(v_hat) ≈ lr * g / |g| = {update_val}(Adam 第一步幾乎只受 lr 控制,自動將梯度標準化)。",
+        "wrong": {
+          "(任一步驟錯誤)": "見 trace_step 陷阱類型;常見錯誤是忘記 bias correction 導致前幾步更新過小。"
+        },
+        "hook": "Adam 第一步 update ≈ lr,因 bias correction 把 m_hat、v_hat 還原成 g 與 g²"
+      },
+      "misconceptions": [
+        "忘記做 bias correction(m_hat、v_hat)",
+        "誤以為 Adam 更新量等於 lr*g"
+      ],
+      "related_node_ids": [
+        "n_L23103_001",
+        "n_L23103_003"
+      ],
+      "tags": [
+        "code-trace",
+        "numpy",
+        "adam",
+        "optimizer",
+        "金融"
+      ]
+    },
+    {
+      "id": "q_m8_035",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_002",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某醫療影像團隊評估損失函式 f(x) 是否為凸函數。凸函數判定法:對任意 a, b 與 t ∈ [0,1],須滿足 f(t*a + (1-t)*b) ≤ t*f(a) + (1-t)*f(b)。請追蹤下列程式對 f(x) = {fn_label} 的判定。",
+      "code_block": "def f(x):\n    return {fn_expr}\na, b, t = {a}, {b}, 0.5\nmid = t * a + (1 - t) * b\nlhs = f(mid)\nrhs = t * f(a) + (1 - t) * f(b)\nis_convex_here = lhs <= rhs",
+      "stem_variables": {
+        "case_a": {
+          "fn_label": "x²",
+          "fn_expr": "x ** 2",
+          "a": "-2",
+          "b": "4",
+          "s1_correct": "1.0",
+          "s1_w1": "0.5",
+          "s1_w2": "2.0",
+          "s1_w3": "0.0",
+          "s2_correct": "1.0",
+          "s2_w1": "0.25",
+          "s2_w2": "4.0",
+          "s2_w3": "2.0",
+          "s3_correct": "10.0",
+          "s3_w1": "20.0",
+          "s3_w2": "1.0",
+          "s3_w3": "8.0",
+          "s4_correct": "True",
+          "s4_w1": "False",
+          "s4_w2": "None",
+          "s4_w3": "Error",
+          "fn_class": "凸函數",
+          "verdict": "True"
+        },
+        "case_b": {
+          "fn_label": "-x²(倒拋物線)",
+          "fn_expr": "-(x ** 2)",
+          "a": "-2",
+          "b": "4",
+          "s1_correct": "1.0",
+          "s1_w1": "0.5",
+          "s1_w2": "2.0",
+          "s1_w3": "0.0",
+          "s2_correct": "-1.0",
+          "s2_w1": "1.0",
+          "s2_w2": "-4.0",
+          "s2_w3": "-2.0",
+          "s3_correct": "-10.0",
+          "s3_w1": "10.0",
+          "s3_w2": "-1.0",
+          "s3_w3": "-8.0",
+          "s4_correct": "False",
+          "s4_w1": "True",
+          "s4_w2": "None",
+          "s4_w3": "Error",
+          "fn_class": "非凸(凹)函數",
+          "verdict": "False"
+        },
+        "case_c": {
+          "fn_label": "|x|(絕對值)",
+          "fn_expr": "abs(x)",
+          "a": "-3",
+          "b": "5",
+          "s1_correct": "1.0",
+          "s1_w1": "0.5",
+          "s1_w2": "2.0",
+          "s1_w3": "4.0",
+          "s2_correct": "1.0",
+          "s2_w1": "-1.0",
+          "s2_w2": "3.0",
+          "s2_w3": "0.5",
+          "s3_correct": "4.0",
+          "s3_w1": "1.0",
+          "s3_w2": "8.0",
+          "s3_w3": "2.0",
+          "s4_correct": "True",
+          "s4_w1": "False",
+          "s4_w2": "None",
+          "s4_w3": "Error",
+          "fn_class": "凸函數(分段線性)",
+          "verdict": "True"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 4,
+          "ask": "mid 的值為何?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "誤算 t*a"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "誤算 b/2"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "誤算 a+b"
+            }
+          ]
+        },
+        {
+          "after_line": 5,
+          "ask": "lhs = f(mid) 的值為何?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "符號錯誤"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "誤用 a 代入"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "誤代未平方"
+            }
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "rhs 的值為何?",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "符號錯誤"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "誤代 mid"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "誤用 a/b 之一"
+            }
+          ]
+        },
+        {
+          "after_line": 7,
+          "ask": "is_convex_here 的值為何?",
+          "options": [
+            {
+              "text": "{s4_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s4_w1}",
+              "is_correct": false,
+              "trap_type": "凸性判定方向反"
+            },
+            {
+              "text": "{s4_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為比較失敗"
+            },
+            {
+              "text": "{s4_w3}",
+              "is_correct": false,
+              "trap_type": "誤以為 type error"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "凸函數判定流程:Step 1: 取中點 mid = 0.5*a + 0.5*b,並計算 lhs=f(mid)、rhs=0.5*f(a)+0.5*f(b)。Step 2: f(x) = {fn_label} 屬於 {fn_class};凸函數會讓曲線位於弦下方(lhs ≤ rhs),非凸則反之。Step 3: 本題 lhs vs rhs 得 is_convex_here = {verdict}。注意「單點測試成立」不能保證全局凸,但若任一測試點不成立即可反證非凸 — 非凸函數常出現多個局部最優與鞍點。",
+        "wrong": {
+          "(任一步驟錯誤)": "見 trace_step;最常見是把凸性方向(≤ vs ≥)記反。"
+        },
+        "hook": "凸函數的弦在曲線之上 → lhs ≤ rhs;-x² 是凹函數會反過來"
+      },
+      "misconceptions": [
+        "誤以為所有平滑函式都是凸",
+        "弄反 lhs ≤ rhs 方向"
+      ],
+      "related_node_ids": [
+        "n_L23103_002",
+        "n_L23103_003"
+      ],
+      "tags": [
+        "code-trace",
+        "convex",
+        "optimization",
+        "醫療"
+      ]
+    },
+    {
+      "id": "q_m8_036",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_003",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某製造業預測模型以梯度下降最小化 f(x) = x²,梯度 f'(x) = 2x。請追蹤從 x={x0} 開始,以學習率 lr={lr} 做 2 步更新後的 x。",
+      "code_block": "x = {x0}\nlr = {lr}\nfor step in range(2):\n    grad = 2 * x\n    x = x - lr * grad\nresult = x",
+      "stem_variables": {
+        "case_a": {
+          "x0": "10.0",
+          "lr": "0.1",
+          "s1_correct": "20.0",
+          "s1_w1": "10.0",
+          "s1_w2": "2.0",
+          "s1_w3": "100.0",
+          "s2_correct": "8.0",
+          "s2_w1": "9.0",
+          "s2_w2": "2.0",
+          "s2_w3": "-10.0",
+          "s3_correct": "16.0",
+          "s3_w1": "20.0",
+          "s3_w2": "8.0",
+          "s3_w3": "4.0",
+          "s4_correct": "6.4",
+          "s4_w1": "8.0",
+          "s4_w2": "1.6",
+          "s4_w3": "0.0",
+          "step1_x": "8.0",
+          "step2_x": "6.4",
+          "convergence": "收斂(往 0 移動)"
+        },
+        "case_b": {
+          "x0": "5.0",
+          "lr": "0.6",
+          "s1_correct": "10.0",
+          "s1_w1": "5.0",
+          "s1_w2": "1.0",
+          "s1_w3": "25.0",
+          "s2_correct": "-1.0",
+          "s2_w1": "4.0",
+          "s2_w2": "1.0",
+          "s2_w3": "-5.0",
+          "s3_correct": "-2.0",
+          "s3_w1": "-1.0",
+          "s3_w2": "2.0",
+          "s3_w3": "-0.4",
+          "s4_correct": "0.2",
+          "s4_w1": "-0.4",
+          "s4_w2": "-2.2",
+          "s4_w3": "1.4",
+          "step1_x": "-1.0",
+          "step2_x": "0.2",
+          "convergence": "震盪(過大 lr,符號擺動)"
+        },
+        "case_c": {
+          "x0": "4.0",
+          "lr": "1.5",
+          "s1_correct": "8.0",
+          "s1_w1": "4.0",
+          "s1_w2": "1.0",
+          "s1_w3": "16.0",
+          "s2_correct": "-8.0",
+          "s2_w1": "8.0",
+          "s2_w2": "-4.0",
+          "s2_w3": "0.0",
+          "s3_correct": "-16.0",
+          "s3_w1": "-8.0",
+          "s3_w2": "16.0",
+          "s3_w3": "-2.0",
+          "s4_correct": "16.0",
+          "s4_w1": "-8.0",
+          "s4_w2": "8.0",
+          "s4_w3": "0.0",
+          "step1_x": "-8.0",
+          "step2_x": "16.0",
+          "convergence": "發散(lr 過大,絕對值反而增大)"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 4,
+          "ask": "第 1 次迴圈中 grad 的值為何?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為 grad=x"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "誤算 x/?"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "代入 x²"
+            }
+          ]
+        },
+        {
+          "after_line": 5,
+          "ask": "第 1 次更新後 x 的值為何?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "誤減 lr 而非 lr*grad"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "誤除以 lr"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "誤直接取負"
+            }
+          ]
+        },
+        {
+          "after_line": 4,
+          "ask": "第 2 次迴圈中 grad 的值為何?",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "用了第 1 次的 x"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "代成 x²"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "誤算 lr*x"
+            }
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "最終 result 的值為何?",
+          "options": [
+            {
+              "text": "{s4_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s4_w1}",
+              "is_correct": false,
+              "trap_type": "只跑 1 步"
+            },
+            {
+              "text": "{s4_w2}",
+              "is_correct": false,
+              "trap_type": "未更新 grad"
+            },
+            {
+              "text": "{s4_w3}",
+              "is_correct": false,
+              "trap_type": "誤以為已收斂到 0"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "梯度下降追蹤:Step 1: 每步 x ← x - lr*2x = (1-2*lr)*x。Step 2: 第 1 步後 x = {step1_x},第 2 步後 x = {step2_x}。Step 3: 觀察 |1-2*lr|;當 lr=0.1 時 |0.8|<1 收斂;lr=0.6 時 |-0.2|<1 但符號震盪;lr=1.5 時 |-2|>1 直接發散。學習率過大會跨過最小值並反向放大,過小則收斂緩慢 — 本場情境屬於「{convergence}」。",
+        "wrong": {
+          "(任一步驟錯誤)": "見 trace_step;最常見錯誤是只看第 1 步就斷言收斂。"
+        },
+        "hook": "lr 過大會把 x 反向甩到更遠;|1-2*lr|<1 才會收斂"
+      },
+      "misconceptions": [
+        "誤以為 lr 越大越快收斂",
+        "忘記每步要重新算 grad"
+      ],
+      "related_node_ids": [
+        "n_L23103_003",
+        "n_L23103_002"
+      ],
+      "tags": [
+        "code-trace",
+        "gradient-descent",
+        "learning-rate",
+        "製造"
+      ]
+    },
+    {
+      "id": "q_m8_037",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_004",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "某零售推薦系統用雙層迴圈計算商品兩兩相似度比對次數(triangular pair count)。請追蹤 n={n} 商品時的執行次數。",
+      "code_block": "n = {n}\ncount = 0\nfor i in range(n):\n    for j in range(i + 1, n):\n        count += 1\nresult = count",
+      "stem_variables": {
+        "case_a": {
+          "n": "4",
+          "s1_correct": "4",
+          "s1_w1": "3",
+          "s1_w2": "5",
+          "s1_w3": "16",
+          "s2_correct": "3",
+          "s2_w1": "4",
+          "s2_w2": "2",
+          "s2_w3": "0",
+          "s3_correct": "0",
+          "s3_w1": "1",
+          "s3_w2": "3",
+          "s3_w3": "4",
+          "s4_correct": "6",
+          "s4_w1": "12",
+          "s4_w2": "16",
+          "s4_w3": "10",
+          "pair_count": "6",
+          "complexity": "O(n²)"
+        },
+        "case_b": {
+          "n": "5",
+          "s1_correct": "5",
+          "s1_w1": "4",
+          "s1_w2": "6",
+          "s1_w3": "25",
+          "s2_correct": "4",
+          "s2_w1": "5",
+          "s2_w2": "3",
+          "s2_w3": "0",
+          "s3_correct": "0",
+          "s3_w1": "1",
+          "s3_w2": "4",
+          "s3_w3": "5",
+          "s4_correct": "10",
+          "s4_w1": "20",
+          "s4_w2": "25",
+          "s4_w3": "15",
+          "pair_count": "10",
+          "complexity": "O(n²)"
+        },
+        "case_c": {
+          "n": "6",
+          "s1_correct": "6",
+          "s1_w1": "5",
+          "s1_w2": "7",
+          "s1_w3": "36",
+          "s2_correct": "5",
+          "s2_w1": "6",
+          "s2_w2": "4",
+          "s2_w3": "0",
+          "s3_correct": "0",
+          "s3_w1": "1",
+          "s3_w2": "5",
+          "s3_w3": "6",
+          "s4_correct": "15",
+          "s4_w1": "30",
+          "s4_w2": "36",
+          "s4_w3": "21",
+          "pair_count": "15",
+          "complexity": "O(n²)"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 3,
+          "ask": "外層迴圈 i 共執行幾次?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為 i 從 1 開始"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "誤算 n+1"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "誤算 n²"
+            }
+          ]
+        },
+        {
+          "after_line": 4,
+          "ask": "當 i=0 時內層 j 執行幾次?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為 j 從 0 開始"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "誤算 n/2"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "忽略 i+1 起始"
+            }
+          ]
+        },
+        {
+          "after_line": 4,
+          "ask": "當 i=n-1 時內層 j 執行幾次?",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為固定 1 次"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為 n-1"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "誤以為 n"
+            }
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "result 最終為何?",
+          "options": [
+            {
+              "text": "{s4_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s4_w1}",
+              "is_correct": false,
+              "trap_type": "誤算 n*(n-1)"
+            },
+            {
+              "text": "{s4_w2}",
+              "is_correct": false,
+              "trap_type": "誤算 n²"
+            },
+            {
+              "text": "{s4_w3}",
+              "is_correct": false,
+              "trap_type": "誤算 n*(n+1)/2"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "兩兩比對追蹤:Step 1: 外層 i 跑 n 次,內層 j 從 i+1 跑到 n-1。Step 2: 各層次數為 (n-1)+(n-2)+...+1+0 = n*(n-1)/2,即 {pair_count} 對。Step 3: 此為「組合 C(n,2)」公式,時間複雜度為 {complexity};雙層迴圈雖看似 n² 但因內層平均跑 n/2 次故總數約為 n²/2,大 O 仍歸類 O(n²)。零售場景中 1 萬商品就需 5 千萬次相似度比對 → 必須改用近似搜索(LSH / FAISS)。",
+        "wrong": {
+          "(任一步驟錯誤)": "見 trace_step;最常見是把總次數誤算為 n²。"
+        },
+        "hook": "n*(n-1)/2 是 C(n,2),總計 {pair_count} 對而非 n²"
+      },
+      "misconceptions": [
+        "誤以為內外層相乘=n²",
+        "忽略 j 從 i+1 起始"
+      ],
+      "related_node_ids": [
+        "n_L23103_004"
+      ],
+      "tags": [
+        "code-trace",
+        "complexity",
+        "loops",
+        "零售"
+      ]
+    },
+    {
+      "id": "q_m8_038",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_005",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "某物流公司以路徑優化矩陣 D 的反矩陣分析路網冗餘。D 為對角矩陣,請追蹤反矩陣的對角元素與跡(trace)。",
+      "code_block": "import numpy as np\nD = np.diag([{d0}, {d1}, {d2}])\nD_inv = np.linalg.inv(D)\ndiag = np.diag(D_inv)\ntr = np.trace(D_inv)",
+      "stem_variables": {
+        "case_a": {
+          "d0": "2",
+          "d1": "4",
+          "d2": "5",
+          "s1_correct": "(3, 3)",
+          "s1_w1": "(3,)",
+          "s1_w2": "(3, 1)",
+          "s1_w3": "(9,)",
+          "s2_correct": "[0.5, 0.25, 0.2]",
+          "s2_w1": "[2, 4, 5]",
+          "s2_w2": "[1, 1, 1]",
+          "s2_w3": "[-0.5, -0.25, -0.2]",
+          "s3_correct": "[0.5, 0.25, 0.2]",
+          "s3_w1": "[2, 4, 5]",
+          "s3_w2": "[0.5, 0.5, 0.5]",
+          "s3_w3": "[1, 1, 1]",
+          "s4_correct": "0.95",
+          "s4_w1": "11.0",
+          "s4_w2": "0.025",
+          "s4_w3": "0.317",
+          "diag_str": "[1/2, 1/4, 1/5]",
+          "trace_val": "0.95"
+        },
+        "case_b": {
+          "d0": "1",
+          "d1": "2",
+          "d2": "5",
+          "s1_correct": "(3, 3)",
+          "s1_w1": "(3,)",
+          "s1_w2": "(3, 1)",
+          "s1_w3": "(9,)",
+          "s2_correct": "[1.0, 0.5, 0.2]",
+          "s2_w1": "[1, 2, 5]",
+          "s2_w2": "[1, 1, 1]",
+          "s2_w3": "[-1.0, -0.5, -0.2]",
+          "s3_correct": "[1.0, 0.5, 0.2]",
+          "s3_w1": "[1, 2, 5]",
+          "s3_w2": "[0.5, 0.5, 0.5]",
+          "s3_w3": "[1, 1, 1]",
+          "s4_correct": "1.7",
+          "s4_w1": "8.0",
+          "s4_w2": "0.1",
+          "s4_w3": "0.567",
+          "diag_str": "[1/1, 1/2, 1/5]",
+          "trace_val": "1.7"
+        },
+        "case_c": {
+          "d0": "4",
+          "d1": "5",
+          "d2": "10",
+          "s1_correct": "(3, 3)",
+          "s1_w1": "(3,)",
+          "s1_w2": "(3, 1)",
+          "s1_w3": "(9,)",
+          "s2_correct": "[0.25, 0.2, 0.1]",
+          "s2_w1": "[4, 5, 10]",
+          "s2_w2": "[1, 1, 1]",
+          "s2_w3": "[-0.25, -0.2, -0.1]",
+          "s3_correct": "[0.25, 0.2, 0.1]",
+          "s3_w1": "[4, 5, 10]",
+          "s3_w2": "[0.5, 0.5, 0.5]",
+          "s3_w3": "[1, 1, 1]",
+          "s4_correct": "0.55",
+          "s4_w1": "19.0",
+          "s4_w2": "0.005",
+          "s4_w3": "0.183",
+          "diag_str": "[1/4, 1/5, 1/10]",
+          "trace_val": "0.55"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 2,
+          "ask": "D 的 shape 為何?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為一維"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為 column"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "誤算 flatten"
+            }
+          ]
+        },
+        {
+          "after_line": 3,
+          "ask": "D_inv 的對角元素為何?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "未做 inv"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為單位陣"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "誤加負號"
+            }
+          ]
+        },
+        {
+          "after_line": 4,
+          "ask": "diag = np.diag(D_inv) 的值為何?",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "拿到原 D 對角"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為平均化"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "誤以為單位向量"
+            }
+          ]
+        },
+        {
+          "after_line": 5,
+          "ask": "tr = np.trace(D_inv) 的值為何?",
+          "options": [
+            {
+              "text": "{s4_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s4_w1}",
+              "is_correct": false,
+              "trap_type": "誤算原 D 的 trace"
+            },
+            {
+              "text": "{s4_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為 trace=det"
+            },
+            {
+              "text": "{s4_w3}",
+              "is_correct": false,
+              "trap_type": "誤算對角平均"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "對角矩陣反矩陣追蹤:Step 1: 對角陣 D 的反矩陣 D_inv 也是對角陣,對角元素為原對角的倒數 → {diag_str}。Step 2: np.diag(矩陣) 會抽出主對角線元素為一維陣列;np.trace 則是把對角線元素相加。Step 3: 故 tr = 1/d0 + 1/d1 + 1/d2 = {trace_val}。對角矩陣的反矩陣計算複雜度 O(n),遠低於一般 n×n 矩陣的 O(n³),這是物流路網優化選用對角化的關鍵動機。",
+        "wrong": {
+          "(任一步驟錯誤)": "見 trace_step;最常見是把 trace 誤算成行列式。"
+        },
+        "hook": "對角陣反矩陣對角元素 = 原對角的倒數,trace = 倒數和"
+      },
+      "misconceptions": [
+        "把 trace 與 det 混淆",
+        "誤以為 inv 改變 shape"
+      ],
+      "related_node_ids": [
+        "n_L23103_005"
+      ],
+      "tags": [
+        "code-trace",
+        "numpy",
+        "linalg",
+        "trace",
+        "物流"
+      ]
+    },
+    {
+      "id": "q_m8_039",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_005",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某教育評量團隊用主成分分析觀察學生表現協方差矩陣 A。請追蹤特徵值與行列式關係:eig 的乘積等於 det(A)。",
+      "code_block": "import numpy as np\nA = np.array([[{a00}, {a01}], [{a10}, {a11}]])\neig = np.linalg.eigvals(A)\ndet = np.linalg.det(A)\nprod_eig = np.prod(eig)\nratio = prod_eig / det",
+      "stem_variables": {
+        "case_a": {
+          "a00": "3",
+          "a01": "0",
+          "a10": "0",
+          "a11": "4",
+          "s1_correct": "[3.0, 4.0]",
+          "s1_w1": "[1.0, 1.0]",
+          "s1_w2": "[7.0, 12.0]",
+          "s1_w3": "[3.0, 0.0]",
+          "s2_correct": "12.0",
+          "s2_w1": "7.0",
+          "s2_w2": "0.0",
+          "s2_w3": "-12.0",
+          "s3_correct": "12.0",
+          "s3_w1": "7.0",
+          "s3_w2": "1.0",
+          "s3_w3": "0.0",
+          "s4_correct": "1.0",
+          "s4_w1": "12.0",
+          "s4_w2": "0.0",
+          "s4_w3": "1.7",
+          "eig_str": "[3, 4]",
+          "det_val": "12",
+          "rule": "det(A) = 特徵值乘積"
+        },
+        "case_b": {
+          "a00": "2",
+          "a01": "1",
+          "a10": "0",
+          "a11": "3",
+          "s1_correct": "[2.0, 3.0]",
+          "s1_w1": "[1.0, 1.0]",
+          "s1_w2": "[5.0, 6.0]",
+          "s1_w3": "[2.0, 0.0]",
+          "s2_correct": "6.0",
+          "s2_w1": "5.0",
+          "s2_w2": "0.0",
+          "s2_w3": "-6.0",
+          "s3_correct": "6.0",
+          "s3_w1": "5.0",
+          "s3_w2": "1.0",
+          "s3_w3": "0.0",
+          "s4_correct": "1.0",
+          "s4_w1": "6.0",
+          "s4_w2": "0.0",
+          "s4_w3": "1.2",
+          "eig_str": "[2, 3](上三角矩陣特徵值=對角元素)",
+          "det_val": "6",
+          "rule": "det(A) = 特徵值乘積"
+        },
+        "case_c": {
+          "a00": "5",
+          "a01": "0",
+          "a10": "0",
+          "a11": "2",
+          "s1_correct": "[5.0, 2.0]",
+          "s1_w1": "[1.0, 1.0]",
+          "s1_w2": "[7.0, 10.0]",
+          "s1_w3": "[5.0, 0.0]",
+          "s2_correct": "10.0",
+          "s2_w1": "7.0",
+          "s2_w2": "0.0",
+          "s2_w3": "-10.0",
+          "s3_correct": "10.0",
+          "s3_w1": "7.0",
+          "s3_w2": "1.0",
+          "s3_w3": "0.0",
+          "s4_correct": "1.0",
+          "s4_w1": "10.0",
+          "s4_w2": "0.0",
+          "s4_w3": "1.4",
+          "eig_str": "[5, 2]",
+          "det_val": "10",
+          "rule": "det(A) = 特徵值乘積"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 3,
+          "ask": "eig 的元素為何(順序不論)?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為皆為 1"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "誤算 trace, det"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "誤取第一列"
+            }
+          ]
+        },
+        {
+          "after_line": 4,
+          "ask": "det = np.linalg.det(A) 的值為何?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "誤算 trace"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為奇異"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "符號錯誤"
+            }
+          ]
+        },
+        {
+          "after_line": 5,
+          "ask": "prod_eig = np.prod(eig) 的值為何?",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為等於 trace"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為單位陣"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "誤為 0"
+            }
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "ratio = prod_eig / det 的值為何?",
+          "options": [
+            {
+              "text": "{s4_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s4_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為兩者不相等"
+            },
+            {
+              "text": "{s4_w2}",
+              "is_correct": false,
+              "trap_type": "除以 0"
+            },
+            {
+              "text": "{s4_w3}",
+              "is_correct": false,
+              "trap_type": "誤算 trace/det"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "特徵值與行列式追蹤:Step 1: A 的特徵值為 {eig_str};對角矩陣與三角矩陣的特徵值就是對角元素。Step 2: det(A) = {det_val},此值同時等於特徵值的乘積(線性代數核心定理:{rule})。Step 3: 故 prod_eig / det = 1.0(任何可對角化矩陣皆滿足)。另記:trace(A) = 特徵值「之和」,PCA 中以 trace 衡量總變異、以特徵值排序選主成分,兩條對應關係要分清。",
+        "wrong": {
+          "(任一步驟錯誤)": "見 trace_step;常見是把 trace=和、det=積搞錯。"
+        },
+        "hook": "det = 特徵值乘積、trace = 特徵值之和,兩者方向不同別搞混"
+      },
+      "misconceptions": [
+        "誤以為 trace = det",
+        "誤以為特徵值之和 = det"
+      ],
+      "related_node_ids": [
+        "n_L23103_005"
+      ],
+      "tags": [
+        "code-trace",
+        "numpy",
+        "eigenvalue",
+        "determinant",
+        "教育"
+      ]
+    },
+    {
+      "id": "q_m8_040",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_006",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "某能源用電預測團隊比較特徵向量的 L1 與 L2 範數(用於正則化選擇)。請追蹤 np.linalg.norm 不同 ord 參數的結果。",
+      "code_block": "import numpy as np\nv = np.array([{v0}, {v1}, {v2}])\nl1 = np.linalg.norm(v, ord=1)\nl2 = np.linalg.norm(v, ord=2)\nl2_default = np.linalg.norm(v)\nratio = l1 / l2",
+      "stem_variables": {
+        "case_a": {
+          "v0": "3",
+          "v1": "-4",
+          "v2": "0",
+          "s1_correct": "7.0",
+          "s1_w1": "5.0",
+          "s1_w2": "-1.0",
+          "s1_w3": "25.0",
+          "s2_correct": "5.0",
+          "s2_w1": "7.0",
+          "s2_w2": "25.0",
+          "s2_w3": "12.5",
+          "s3_correct": "5.0",
+          "s3_w1": "7.0",
+          "s3_w2": "1.0",
+          "s3_w3": "25.0",
+          "s4_correct": "1.4",
+          "s4_w1": "1.0",
+          "s4_w2": "5.0",
+          "s4_w3": "0.714",
+          "l1_val": "|3|+|-4|+|0|=7",
+          "l2_val": "sqrt(9+16+0)=5",
+          "default_ord": "L2"
+        },
+        "case_b": {
+          "v0": "1",
+          "v1": "-2",
+          "v2": "2",
+          "s1_correct": "5.0",
+          "s1_w1": "1.0",
+          "s1_w2": "-3.0",
+          "s1_w3": "9.0",
+          "s2_correct": "3.0",
+          "s2_w1": "5.0",
+          "s2_w2": "9.0",
+          "s2_w3": "4.5",
+          "s3_correct": "3.0",
+          "s3_w1": "5.0",
+          "s3_w2": "1.0",
+          "s3_w3": "9.0",
+          "s4_correct": "1.667",
+          "s4_w1": "1.0",
+          "s4_w2": "3.0",
+          "s4_w3": "0.6",
+          "l1_val": "|1|+|-2|+|2|=5",
+          "l2_val": "sqrt(1+4+4)=3",
+          "default_ord": "L2"
+        },
+        "case_c": {
+          "v0": "2",
+          "v1": "3",
+          "v2": "6",
+          "s1_correct": "11.0",
+          "s1_w1": "5.0",
+          "s1_w2": "7.0",
+          "s1_w3": "49.0",
+          "s2_correct": "7.0",
+          "s2_w1": "11.0",
+          "s2_w2": "49.0",
+          "s2_w3": "24.5",
+          "s3_correct": "7.0",
+          "s3_w1": "11.0",
+          "s3_w2": "1.0",
+          "s3_w3": "49.0",
+          "s4_correct": "1.571",
+          "s4_w1": "1.0",
+          "s4_w2": "7.0",
+          "s4_w3": "0.636",
+          "l1_val": "|2|+|3|+|6|=11",
+          "l2_val": "sqrt(4+9+36)=7",
+          "default_ord": "L2"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 3,
+          "ask": "l1 的值為何?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "誤算 L2"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "未取絕對值"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "誤算平方和"
+            }
+          ]
+        },
+        {
+          "after_line": 4,
+          "ask": "l2 的值為何?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "誤算 L1"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "未開根號"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "誤除以 2"
+            }
+          ]
+        },
+        {
+          "after_line": 5,
+          "ask": "l2_default 的值為何?(np.linalg.norm 預設 ord)",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為預設 L1"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為預設 L∞"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "誤等於平方和"
+            }
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "ratio = l1 / l2 約為何?",
+          "options": [
+            {
+              "text": "{s4_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s4_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為兩範數恆等"
+            },
+            {
+              "text": "{s4_w2}",
+              "is_correct": false,
+              "trap_type": "誤算 l1-l2"
+            },
+            {
+              "text": "{s4_w3}",
+              "is_correct": false,
+              "trap_type": "誤倒置"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "L1 vs L2 範數追蹤:Step 1: L1 = 絕對值總和,即 {l1_val};L1 用於 Lasso 正則化以促稀疏。Step 2: L2 = sqrt(平方和),即 {l2_val};L2 用於 Ridge 正則化以縮放權重。Step 3: np.linalg.norm 預設 ord 為 {default_ord}(故 l2_default 等於 l2);ratio = L1 / L2 一定 ≥ 1 且 ≤ sqrt(n)(柯西-施瓦茲),反映向量稀疏程度 — 比值越大代表向量越「平均分布」、越小代表越「集中於少數維度」。",
+        "wrong": {
+          "(任一步驟錯誤)": "見 trace_step;最常見是把 norm 預設值記成 L1。"
+        },
+        "hook": "np.linalg.norm 預設 ord=2(L2),不是 L1"
+      },
+      "misconceptions": [
+        "誤以為 norm 預設 L1",
+        "L1 忘記取絕對值"
+      ],
+      "related_node_ids": [
+        "n_L23103_006"
+      ],
+      "tags": [
+        "code-trace",
+        "numpy",
+        "norm",
+        "regularization",
+        "能源"
+      ]
+    },
+    {
+      "id": "q_m8_041",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_006",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某社群媒體比較用戶向量的 L∞(最大絕對值)範數以偵測極端離群行為。請追蹤 np.linalg.norm(v, ord=np.inf) 的計算。",
+      "code_block": "import numpy as np\nv = np.array([{v0}, {v1}, {v2}, {v3}])\nabs_v = np.abs(v)\nl_inf = np.linalg.norm(v, ord=np.inf)\nl_neg_inf = np.linalg.norm(v, ord=-np.inf)\nis_max = (l_inf == abs_v.max())",
+      "stem_variables": {
+        "case_a": {
+          "v0": "3",
+          "v1": "-7",
+          "v2": "2",
+          "v3": "5",
+          "s1_correct": "[3, 7, 2, 5]",
+          "s1_w1": "[3, -7, 2, 5]",
+          "s1_w2": "[9, 49, 4, 25]",
+          "s1_w3": "[3, 7, 2, 5, 0]",
+          "s2_correct": "7.0",
+          "s2_w1": "5.0",
+          "s2_w2": "17.0",
+          "s2_w3": "87.0",
+          "s3_correct": "2.0",
+          "s3_w1": "7.0",
+          "s3_w2": "0.0",
+          "s3_w3": "-7.0",
+          "s4_correct": "True",
+          "s4_w1": "False",
+          "s4_w2": "None",
+          "s4_w3": "Error",
+          "max_abs": "|-7|=7",
+          "min_abs": "|2|=2",
+          "inf_rule": "L∞ = max|v_i|;-∞ = min|v_i|"
+        },
+        "case_b": {
+          "v0": "-4",
+          "v1": "1",
+          "v2": "6",
+          "v3": "-2",
+          "s1_correct": "[4, 1, 6, 2]",
+          "s1_w1": "[-4, 1, 6, -2]",
+          "s1_w2": "[16, 1, 36, 4]",
+          "s1_w3": "[4, 1, 6, 2, 0]",
+          "s2_correct": "6.0",
+          "s2_w1": "4.0",
+          "s2_w2": "13.0",
+          "s2_w3": "57.0",
+          "s3_correct": "1.0",
+          "s3_w1": "6.0",
+          "s3_w2": "0.0",
+          "s3_w3": "-1.0",
+          "s4_correct": "True",
+          "s4_w1": "False",
+          "s4_w2": "None",
+          "s4_w3": "Error",
+          "max_abs": "|6|=6",
+          "min_abs": "|1|=1",
+          "inf_rule": "L∞ = max|v_i|;-∞ = min|v_i|"
+        },
+        "case_c": {
+          "v0": "0",
+          "v1": "-9",
+          "v2": "3",
+          "v3": "8",
+          "s1_correct": "[0, 9, 3, 8]",
+          "s1_w1": "[0, -9, 3, 8]",
+          "s1_w2": "[0, 81, 9, 64]",
+          "s1_w3": "[0, 9, 3, 8, 0]",
+          "s2_correct": "9.0",
+          "s2_w1": "8.0",
+          "s2_w2": "20.0",
+          "s2_w3": "154.0",
+          "s3_correct": "0.0",
+          "s3_w1": "9.0",
+          "s3_w2": "3.0",
+          "s3_w3": "-9.0",
+          "s4_correct": "True",
+          "s4_w1": "False",
+          "s4_w2": "None",
+          "s4_w3": "Error",
+          "max_abs": "|-9|=9",
+          "min_abs": "|0|=0",
+          "inf_rule": "L∞ = max|v_i|;-∞ = min|v_i|"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 3,
+          "ask": "abs_v 的內容為何?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "未取絕對值"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "誤平方"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "誤加 0"
+            }
+          ]
+        },
+        {
+          "after_line": 4,
+          "ask": "l_inf 的值為何?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "取首尾平均"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "誤算 L1"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "誤算平方和"
+            }
+          ]
+        },
+        {
+          "after_line": 5,
+          "ask": "l_neg_inf 的值為何?",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "誤等於 l_inf"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "誤取中位數"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "誤取最負值"
+            }
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "is_max 的值為何?",
+          "options": [
+            {
+              "text": "{s4_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s4_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為兩者不等"
+            },
+            {
+              "text": "{s4_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為比較失敗"
+            },
+            {
+              "text": "{s4_w3}",
+              "is_correct": false,
+              "trap_type": "誤以為 type error"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "L∞ 範數追蹤:Step 1: np.abs 先把所有負值轉正,得到 {max_abs} 為最大絕對值。Step 2: L∞ 範數定義為 max|v_i|,故 l_inf 等於 abs_v.max();這就是 is_max 為 True 的原因。Step 3: 進階規則:ord=-np.inf 取 min|v_i|({min_abs});ord=0 計非零元素數;ord=1 取絕對值總和;ord=2 為歐氏距離。社群網路常用 L∞ 限制單一行為特徵不可過於極端,避免單一爆量觸發誤判 — 整理:{inf_rule}。",
+        "wrong": {
+          "(任一步驟錯誤)": "見 trace_step;最常見是把 L∞ 與 L1 混淆。"
+        },
+        "hook": "L∞ = max|v_i|,只看最大絕對值,不是總和"
+      },
+      "misconceptions": [
+        "誤以為 L∞ = 所有元素相加",
+        "誤把 ord=-inf 當成 ord=inf"
+      ],
+      "related_node_ids": [
+        "n_L23103_006"
+      ],
+      "tags": [
+        "code-trace",
+        "numpy",
+        "L-infinity-norm",
+        "社群"
+      ]
+    },
+    {
+      "id": "q_m8_042",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_007",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "某設備感測器團隊比較兩感測讀數向量的內積與逐元素乘積。請追蹤 np.dot(a, b) 與 a * b 的差異。",
+      "code_block": "import numpy as np\na = np.array([{a0}, {a1}, {a2}])\nb = np.array([{b0}, {b1}, {b2}])\nelem_prod = a * b\ndot_prod = np.dot(a, b)\nsum_check = elem_prod.sum()\nis_equal = (dot_prod == sum_check)",
+      "stem_variables": {
+        "case_a": {
+          "a0": "1",
+          "a1": "2",
+          "a2": "3",
+          "b0": "4",
+          "b1": "5",
+          "b2": "6",
+          "s1_correct": "[4, 10, 18]",
+          "s1_w1": "32",
+          "s1_w2": "[5, 7, 9]",
+          "s1_w3": "[1, 2, 3]",
+          "s2_correct": "32",
+          "s2_w1": "[4, 10, 18]",
+          "s2_w2": "[5, 7, 9]",
+          "s2_w3": "0",
+          "s3_correct": "32",
+          "s3_w1": "[4, 10, 18]",
+          "s3_w2": "0",
+          "s3_w3": "10.67",
+          "s4_correct": "True",
+          "s4_w1": "False",
+          "s4_w2": "None",
+          "s4_w3": "Error",
+          "elem_str": "[1*4, 2*5, 3*6] = [4, 10, 18]",
+          "dot_val": "32",
+          "rule": "dot = (a*b).sum()"
+        },
+        "case_b": {
+          "a0": "2",
+          "a1": "3",
+          "a2": "4",
+          "b0": "1",
+          "b1": "0",
+          "b2": "2",
+          "s1_correct": "[2, 0, 8]",
+          "s1_w1": "10",
+          "s1_w2": "[3, 3, 6]",
+          "s1_w3": "[2, 3, 4]",
+          "s2_correct": "10",
+          "s2_w1": "[2, 0, 8]",
+          "s2_w2": "[3, 3, 6]",
+          "s2_w3": "0",
+          "s3_correct": "10",
+          "s3_w1": "[2, 0, 8]",
+          "s3_w2": "0",
+          "s3_w3": "3.33",
+          "s4_correct": "True",
+          "s4_w1": "False",
+          "s4_w2": "None",
+          "s4_w3": "Error",
+          "elem_str": "[2*1, 3*0, 4*2] = [2, 0, 8]",
+          "dot_val": "10",
+          "rule": "dot = (a*b).sum()"
+        },
+        "case_c": {
+          "a0": "1",
+          "a1": "-2",
+          "a2": "3",
+          "b0": "2",
+          "b1": "1",
+          "b2": "1",
+          "s1_correct": "[2, -2, 3]",
+          "s1_w1": "3",
+          "s1_w2": "[3, -1, 4]",
+          "s1_w3": "[1, -2, 3]",
+          "s2_correct": "3",
+          "s2_w1": "[2, -2, 3]",
+          "s2_w2": "[3, -1, 4]",
+          "s2_w3": "0",
+          "s3_correct": "3",
+          "s3_w1": "[2, -2, 3]",
+          "s3_w2": "0",
+          "s3_w3": "1.0",
+          "s4_correct": "True",
+          "s4_w1": "False",
+          "s4_w2": "None",
+          "s4_w3": "Error",
+          "elem_str": "[1*2, -2*1, 3*1] = [2, -2, 3]",
+          "dot_val": "3",
+          "rule": "dot = (a*b).sum()"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 4,
+          "ask": "elem_prod 的值為何?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "誤把 * 當內積"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "誤算為加法"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "誤回傳 a"
+            }
+          ]
+        },
+        {
+          "after_line": 5,
+          "ask": "dot_prod 的值為何?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "誤回傳逐元素乘積"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "誤算加法總和"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "誤以為正交"
+            }
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "sum_check 的值為何?",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "未做 sum"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "誤算為 0"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "誤算 mean"
+            }
+          ]
+        },
+        {
+          "after_line": 7,
+          "ask": "is_equal 的值為何?",
+          "options": [
+            {
+              "text": "{s4_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s4_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為 dot != sum"
+            },
+            {
+              "text": "{s4_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為比較失敗"
+            },
+            {
+              "text": "{s4_w3}",
+              "is_correct": false,
+              "trap_type": "誤以為 type error"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "np.dot vs * 追蹤:Step 1: NumPy 的 * 運算子在 ndarray 之間是「逐元素」乘法(elementwise / Hadamard 積),結果是同形狀向量 {elem_str}。Step 2: np.dot 對一維向量為「內積」,把逐元素相乘再加總,得到純量 {dot_val}。Step 3: 故 dot(a, b) == (a*b).sum(),is_equal 必為 True。注意:對二維矩陣,np.dot 退化為矩陣乘法,跟 * (仍是逐元素)行為不同,易混淆 — 規則:{rule}。",
+        "wrong": {
+          "(任一步驟錯誤)": "見 trace_step;最常見錯誤是把 NumPy 的 * 當成內積。"
+        },
+        "hook": "ndarray 的 * 是逐元素;內積要用 np.dot 或 @"
+      },
+      "misconceptions": [
+        "誤以為 NumPy * 等同 np.dot",
+        "誤以為 dot 必須開根號"
+      ],
+      "related_node_ids": [
+        "n_L23103_007"
+      ],
+      "tags": [
+        "code-trace",
+        "numpy",
+        "dot-product",
+        "elementwise",
+        "製造"
+      ]
+    },
+    {
+      "id": "q_m8_043",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_007",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某智慧城市交通向量分析中,以 np.dot 進行矩陣與向量乘法。請追蹤輸出 shape 與數值。",
+      "code_block": "import numpy as np\nM = np.array([[{m00}, {m01}], [{m10}, {m11}], [{m20}, {m21}]])\nv = np.array([{v0}, {v1}])\nresult = np.dot(M, v)\nshape_out = result.shape\nfirst = result[0]",
+      "stem_variables": {
+        "case_a": {
+          "m00": "1",
+          "m01": "2",
+          "m10": "3",
+          "m11": "4",
+          "m20": "5",
+          "m21": "6",
+          "v0": "1",
+          "v1": "1",
+          "s1_correct": "(3, 2)",
+          "s1_w1": "(2, 3)",
+          "s1_w2": "(3, 3)",
+          "s1_w3": "(6,)",
+          "s2_correct": "(2,)",
+          "s2_w1": "(2, 1)",
+          "s2_w2": "(1, 2)",
+          "s2_w3": "(3,)",
+          "s3_correct": "(3,)",
+          "s3_w1": "(2,)",
+          "s3_w2": "(3, 2)",
+          "s3_w3": "(3, 1)",
+          "s4_correct": "3",
+          "s4_w1": "1",
+          "s4_w2": "7",
+          "s4_w3": "11",
+          "result_str": "[3, 7, 11]",
+          "shape_rule": "M(3,2) @ v(2,) = (3,)"
+        },
+        "case_b": {
+          "m00": "2",
+          "m01": "1",
+          "m10": "0",
+          "m11": "3",
+          "m20": "4",
+          "m21": "2",
+          "v0": "1",
+          "v1": "2",
+          "s1_correct": "(3, 2)",
+          "s1_w1": "(2, 3)",
+          "s1_w2": "(3, 3)",
+          "s1_w3": "(6,)",
+          "s2_correct": "(2,)",
+          "s2_w1": "(2, 1)",
+          "s2_w2": "(1, 2)",
+          "s2_w3": "(3,)",
+          "s3_correct": "(3,)",
+          "s3_w1": "(2,)",
+          "s3_w2": "(3, 2)",
+          "s3_w3": "(3, 1)",
+          "s4_correct": "4",
+          "s4_w1": "1",
+          "s4_w2": "6",
+          "s4_w3": "8",
+          "result_str": "[4, 6, 8]",
+          "shape_rule": "M(3,2) @ v(2,) = (3,)"
+        },
+        "case_c": {
+          "m00": "1",
+          "m01": "0",
+          "m10": "2",
+          "m11": "1",
+          "m20": "0",
+          "m21": "3",
+          "v0": "2",
+          "v1": "1",
+          "s1_correct": "(3, 2)",
+          "s1_w1": "(2, 3)",
+          "s1_w2": "(3, 3)",
+          "s1_w3": "(6,)",
+          "s2_correct": "(2,)",
+          "s2_w1": "(2, 1)",
+          "s2_w2": "(1, 2)",
+          "s2_w3": "(3,)",
+          "s3_correct": "(3,)",
+          "s3_w1": "(2,)",
+          "s3_w2": "(3, 2)",
+          "s3_w3": "(3, 1)",
+          "s4_correct": "2",
+          "s4_w1": "1",
+          "s4_w2": "5",
+          "s4_w3": "3",
+          "result_str": "[2, 5, 3]",
+          "shape_rule": "M(3,2) @ v(2,) = (3,)"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 2,
+          "ask": "M 的 shape 為何?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "誤置換維度"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為方陣"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "誤算 flatten"
+            }
+          ]
+        },
+        {
+          "after_line": 3,
+          "ask": "v 的 shape 為何?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為 column"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為 row"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "誤以為 (3,)"
+            }
+          ]
+        },
+        {
+          "after_line": 5,
+          "ask": "shape_out 為何?",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "誤等於 v.shape"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "誤等於 M.shape"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "誤以為 column vec"
+            }
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "first = result[0] 的值為何?",
+          "options": [
+            {
+              "text": "{s4_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s4_w1}",
+              "is_correct": false,
+              "trap_type": "誤取 M[0,0]"
+            },
+            {
+              "text": "{s4_w2}",
+              "is_correct": false,
+              "trap_type": "誤取 result[1]"
+            },
+            {
+              "text": "{s4_w3}",
+              "is_correct": false,
+              "trap_type": "誤取 result[2]"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "矩陣與向量乘法追蹤:Step 1: M 為 (3, 2) 矩陣,v 為一維 (2,) 向量;np.dot 規則為左物件最後一軸需等於右物件倒數第二軸(此處皆為 2),可乘。Step 2: 結果為 (3,) 一維陣列(不是 (3, 1) column);內容為 M 各列與 v 的內積,即 {result_str}。Step 3: result[0] = M[0]·v = {s4_correct}。智慧城市分析常以 M @ feature_vec 把交通讀數投影到嵌入空間 — 整理規則:{shape_rule}。",
+        "wrong": {
+          "(任一步驟錯誤)": "見 trace_step;常見是把 (3,) 誤判成 (3, 1)。"
+        },
+        "hook": "np.dot(M, 一維 v) 回傳一維 (m,),不是 column (m, 1)"
+      },
+      "misconceptions": [
+        "誤以為一維 = column vector",
+        "誤算 M.shape[0] != 結果長度"
+      ],
+      "related_node_ids": [
+        "n_L23103_007",
+        "n_L23103_005"
+      ],
+      "tags": [
+        "code-trace",
+        "numpy",
+        "matmul",
+        "shape",
+        "智慧城市"
+      ]
+    },
+    {
+      "id": "q_m8_044",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_008",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某農業作物特徵維度團隊用 np.einsum 'ij,jk->ik' 做矩陣乘。請追蹤輸出 shape 與首元素。",
+      "code_block": "import numpy as np\nA = np.array([[{a00}, {a01}], [{a10}, {a11}]])\nB = np.array([[{b00}, {b01}], [{b10}, {b11}]])\nC = np.einsum('ij,jk->ik', A, B)\nC2 = A @ B\nis_same = np.array_equal(C, C2)",
+      "stem_variables": {
+        "case_a": {
+          "a00": "1",
+          "a01": "2",
+          "a10": "3",
+          "a11": "4",
+          "b00": "5",
+          "b01": "6",
+          "b10": "7",
+          "b11": "8",
+          "s1_correct": "(2, 2)",
+          "s1_w1": "(2,)",
+          "s1_w2": "(4, 4)",
+          "s1_w3": "(2, 2, 2)",
+          "s2_correct": "(2, 2)",
+          "s2_w1": "(2,)",
+          "s2_w2": "(4,)",
+          "s2_w3": "(2, 2, 2)",
+          "s3_correct": "19",
+          "s3_w1": "5",
+          "s3_w2": "12",
+          "s3_w3": "26",
+          "s4_correct": "True",
+          "s4_w1": "False",
+          "s4_w2": "None",
+          "s4_w3": "Error",
+          "rule_str": "C[i,k] = Σ_j A[i,j] * B[j,k]",
+          "c00_calc": "1*5 + 2*7 = 19"
+        },
+        "case_b": {
+          "a00": "2",
+          "a01": "0",
+          "a10": "1",
+          "a11": "3",
+          "b00": "1",
+          "b01": "2",
+          "b10": "4",
+          "b11": "5",
+          "s1_correct": "(2, 2)",
+          "s1_w1": "(2,)",
+          "s1_w2": "(4, 4)",
+          "s1_w3": "(2, 2, 2)",
+          "s2_correct": "(2, 2)",
+          "s2_w1": "(2,)",
+          "s2_w2": "(4,)",
+          "s2_w3": "(2, 2, 2)",
+          "s3_correct": "2",
+          "s3_w1": "1",
+          "s3_w2": "5",
+          "s3_w3": "8",
+          "s4_correct": "True",
+          "s4_w1": "False",
+          "s4_w2": "None",
+          "s4_w3": "Error",
+          "rule_str": "C[i,k] = Σ_j A[i,j] * B[j,k]",
+          "c00_calc": "2*1 + 0*4 = 2"
+        },
+        "case_c": {
+          "a00": "1",
+          "a01": "1",
+          "a10": "0",
+          "a11": "2",
+          "b00": "3",
+          "b01": "0",
+          "b10": "1",
+          "b11": "4",
+          "s1_correct": "(2, 2)",
+          "s1_w1": "(2,)",
+          "s1_w2": "(4, 4)",
+          "s1_w3": "(2, 2, 2)",
+          "s2_correct": "(2, 2)",
+          "s2_w1": "(2,)",
+          "s2_w2": "(4,)",
+          "s2_w3": "(2, 2, 2)",
+          "s3_correct": "4",
+          "s3_w1": "3",
+          "s3_w2": "1",
+          "s3_w3": "8",
+          "s4_correct": "True",
+          "s4_w1": "False",
+          "s4_w2": "None",
+          "s4_w3": "Error",
+          "rule_str": "C[i,k] = Σ_j A[i,j] * B[j,k]",
+          "c00_calc": "1*3 + 1*1 = 4"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 2,
+          "ask": "A 的 shape 為何?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為一維"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "誤算 flatten 過大"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "誤以為三維"
+            }
+          ]
+        },
+        {
+          "after_line": 4,
+          "ask": "C 的 shape 為何?(依 einsum 'ij,jk->ik')",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "誤把 j 留下"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為 flatten"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "誤增加維度"
+            }
+          ]
+        },
+        {
+          "after_line": 4,
+          "ask": "C[0, 0] 的值為何?",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "只算第 1 項"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "誤等於 A[0,0]+B[0,0]"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "誤等於 C[1,0]"
+            }
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "is_same 的值為何?",
+          "options": [
+            {
+              "text": "{s4_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s4_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為 einsum != @"
+            },
+            {
+              "text": "{s4_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為比較失敗"
+            },
+            {
+              "text": "{s4_w3}",
+              "is_correct": false,
+              "trap_type": "誤以為 type error"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "einsum 矩陣乘追蹤:Step 1: einsum 規則「重複下標代表加總、未列在 -> 之後的下標被縮並」;此處 j 出現於兩側但不在輸出,故對 j 加總 → 即 {rule_str}。Step 2: 輸入 A(2,2)、B(2,2),依規則對 j 縮並後輸出形狀為 (2, 2),內容同 A @ B。Step 3: C[0,0] = {c00_calc};A @ B 完全等價,故 is_same=True。einsum 在多軸張量運算(如 batch matmul、attention 'bhqd,bhkd->bhqk')比 @ 更直覺。",
+        "wrong": {
+          "(任一步驟錯誤)": "見 trace_step;最常見錯誤是把 j 留在輸出。"
+        },
+        "hook": "einsum 'ij,jk->ik' 等同矩陣乘;j 被縮並、ik 被保留"
+      },
+      "misconceptions": [
+        "誤以為 einsum 與 @ 結果不同",
+        "誤以為 j 會出現在輸出 shape"
+      ],
+      "related_node_ids": [
+        "n_L23103_008",
+        "n_L23103_007"
+      ],
+      "tags": [
+        "code-trace",
+        "numpy",
+        "einsum",
+        "matmul",
+        "農業"
+      ]
+    },
+    {
+      "id": "q_m8_045",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_008",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某遊戲玩家行為向量分析中,需以 einsum 'ii->' 抽取方陣對角和(等同 trace)。請追蹤計算結果。",
+      "code_block": "import numpy as np\nM = np.array([[{m00}, {m01}, {m02}], [{m10}, {m11}, {m12}], [{m20}, {m21}, {m22}]])\ndiag_sum = np.einsum('ii->', M)\ntr = np.trace(M)\ndiag_arr = np.einsum('ii->i', M)\nis_same = (diag_sum == tr)",
+      "stem_variables": {
+        "case_a": {
+          "m00": "1",
+          "m01": "2",
+          "m02": "3",
+          "m10": "4",
+          "m11": "5",
+          "m12": "6",
+          "m20": "7",
+          "m21": "8",
+          "m22": "9",
+          "s1_correct": "(3, 3)",
+          "s1_w1": "(3,)",
+          "s1_w2": "(9,)",
+          "s1_w3": "(3, 3, 3)",
+          "s2_correct": "15",
+          "s2_w1": "45",
+          "s2_w2": "9",
+          "s2_w3": "5",
+          "s3_correct": "15",
+          "s3_w1": "45",
+          "s3_w2": "1",
+          "s3_w3": "5",
+          "s4_correct": "[1, 5, 9]",
+          "s4_w1": "[1, 4, 7]",
+          "s4_w2": "[3, 5, 7]",
+          "s4_w3": "15",
+          "diag_elems": "[1, 5, 9]",
+          "diag_sum_val": "15"
+        },
+        "case_b": {
+          "m00": "2",
+          "m01": "0",
+          "m02": "1",
+          "m10": "1",
+          "m11": "3",
+          "m12": "0",
+          "m20": "0",
+          "m21": "1",
+          "m22": "4",
+          "s1_correct": "(3, 3)",
+          "s1_w1": "(3,)",
+          "s1_w2": "(9,)",
+          "s1_w3": "(3, 3, 3)",
+          "s2_correct": "9",
+          "s2_w1": "12",
+          "s2_w2": "6",
+          "s2_w3": "3",
+          "s3_correct": "9",
+          "s3_w1": "12",
+          "s3_w2": "1",
+          "s3_w3": "3",
+          "s4_correct": "[2, 3, 4]",
+          "s4_w1": "[2, 1, 0]",
+          "s4_w2": "[1, 0, 4]",
+          "s4_w3": "9",
+          "diag_elems": "[2, 3, 4]",
+          "diag_sum_val": "9"
+        },
+        "case_c": {
+          "m00": "5",
+          "m01": "2",
+          "m02": "1",
+          "m10": "0",
+          "m11": "6",
+          "m12": "3",
+          "m20": "1",
+          "m21": "1",
+          "m22": "7",
+          "s1_correct": "(3, 3)",
+          "s1_w1": "(3,)",
+          "s1_w2": "(9,)",
+          "s1_w3": "(3, 3, 3)",
+          "s2_correct": "18",
+          "s2_w1": "26",
+          "s2_w2": "9",
+          "s2_w3": "6",
+          "s3_correct": "18",
+          "s3_w1": "26",
+          "s3_w2": "1",
+          "s3_w3": "6",
+          "s4_correct": "[5, 6, 7]",
+          "s4_w1": "[5, 0, 1]",
+          "s4_w2": "[1, 3, 7]",
+          "s4_w3": "18",
+          "diag_elems": "[5, 6, 7]",
+          "diag_sum_val": "18"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 2,
+          "ask": "M 的 shape 為何?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為一維"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "誤算 flatten"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "誤以為 3D"
+            }
+          ]
+        },
+        {
+          "after_line": 3,
+          "ask": "diag_sum = np.einsum('ii->', M) 的值為何?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "誤算所有元素之和"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "誤等於 M[2,2]"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "誤等於 M[1,1]"
+            }
+          ]
+        },
+        {
+          "after_line": 4,
+          "ask": "tr = np.trace(M) 的值為何?",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "誤等於所有元素之和"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "誤等於 det"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "誤取中間元素"
+            }
+          ]
+        },
+        {
+          "after_line": 5,
+          "ask": "diag_arr = np.einsum('ii->i', M) 的內容為何?",
+          "options": [
+            {
+              "text": "{s4_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s4_w1}",
+              "is_correct": false,
+              "trap_type": "誤取第一行"
+            },
+            {
+              "text": "{s4_w2}",
+              "is_correct": false,
+              "trap_type": "誤取反對角"
+            },
+            {
+              "text": "{s4_w3}",
+              "is_correct": false,
+              "trap_type": "誤回傳純量"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "einsum 對角追蹤:Step 1: M 形狀 (3, 3);einsum 表示式 'ii->' 表示「兩軸下標同時使用 i(只走對角)且 -> 後沒列 i(對 i 加總)」,即抽出對角再相加。Step 2: 對角元素為 {diag_elems};diag_sum = 對角和 = {diag_sum_val},正好等於 np.trace(M)。Step 3: 改寫 'ii->i' 則「只抽出對角不加總」,輸出一維陣列 {diag_elems}。einsum 因此可單一表達式同時做切片、轉置、縮並 — 是遊戲行為向量分析等高維張量運算的利器。",
+        "wrong": {
+          "(任一步驟錯誤)": "見 trace_step;常見是把 'ii->' 誤當成全元素之和。"
+        },
+        "hook": "einsum 'ii->' = trace;改成 'ii->i' 則保留為一維對角向量"
+      },
+      "misconceptions": [
+        "誤以為 'ii->' 等於所有元素之和",
+        "誤以為 trace 等於 det"
+      ],
+      "related_node_ids": [
+        "n_L23103_008",
+        "n_L23103_005"
+      ],
+      "tags": [
+        "code-trace",
+        "numpy",
+        "einsum",
+        "trace",
+        "遊戲"
+      ]
+    },
+    {
+      "id": "q_m8_046",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_002",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某金融風控團隊使用 DBSCAN 偵測信用卡交易金額異常,設 ε={eps}、MinPts={mp}。下列程式對點 P 計算其在 ε 鄰域內(含自己)的點數 n,並判定 P 屬於 Core/Border/Noise 哪一類。",
+      "code_block": "from math import sqrt\npoints = {pts}\nP = {pp}\neps = {eps}\nMinPts = {mp}\nneigh = [q for q in points if sqrt((q[0]-P[0])**2 + (q[1]-P[1])**2) <= eps]\nn = len(neigh)\nif n >= MinPts:\n    label = 'Core'\nelif n >= 2:\n    label = 'Border'\nelse:\n    label = 'Noise'",
+      "stem_variables": {
+        "case_a": {
+          "eps": "2.0",
+          "mp": "4",
+          "pts": "[(0,0),(1,0),(0,1),(1,1),(5,5)]",
+          "pp": "(0,0)",
+          "s1_correct": "4",
+          "s1_w1": "5",
+          "s1_w2": "3",
+          "s1_w3": "1",
+          "s2_correct": "Core",
+          "s2_w1": "Border",
+          "s2_w2": "Noise",
+          "s2_w3": "Outlier",
+          "neigh_list": "(0,0)、(1,0)、(0,1)、(1,1)",
+          "dist_far": "sqrt(50)≈7.07>2",
+          "n_val": "4",
+          "label_val": "Core"
+        },
+        "case_b": {
+          "eps": "1.5",
+          "mp": "4",
+          "pts": "[(0,0),(1,0),(2,0),(10,10),(11,10)]",
+          "pp": "(1,0)",
+          "s1_correct": "3",
+          "s1_w1": "4",
+          "s1_w2": "2",
+          "s1_w3": "5",
+          "s2_correct": "Border",
+          "s2_w1": "Core",
+          "s2_w2": "Noise",
+          "s2_w3": "Outlier",
+          "neigh_list": "(0,0)、(1,0)、(2,0)",
+          "dist_far": "至(10,10)≈13.45>1.5",
+          "n_val": "3",
+          "label_val": "Border"
+        },
+        "case_c": {
+          "eps": "1.0",
+          "mp": "3",
+          "pts": "[(0,0),(5,5),(5,6),(6,5),(6,6)]",
+          "pp": "(0,0)",
+          "s1_correct": "1",
+          "s1_w1": "2",
+          "s1_w2": "3",
+          "s1_w3": "0",
+          "s2_correct": "Noise",
+          "s2_w1": "Border",
+          "s2_w2": "Core",
+          "s2_w3": "Cluster",
+          "neigh_list": "僅自己(0,0)",
+          "dist_far": "最近(5,5)≈7.07>1",
+          "n_val": "1",
+          "label_val": "Noise"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 7,
+          "ask": "鄰域點數 n 的值為何?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "誤把所有點都算入"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "漏算自己"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "只算最近一點"
+            }
+          ]
+        },
+        {
+          "after_line": 12,
+          "ask": "label 的最終值為何?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "誤判 Core/Border 門檻"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "誤判為 Noise"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "DBSCAN 沒有此標籤"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "Step 1: 列出與 P 距離 ≤ ε 的點:{neigh_list},共 {n_val} 個({dist_far} 不計)。Step 2: 將 n={n_val} 與 MinPts 比較。Step 3: n≥MinPts→Core;n<MinPts 但 ≥2 且在某 Core 鄰域內→Border;否則 Noise。本題判定為 {label_val}。",
+        "wrong": {
+          "(任一步驟錯誤)": "鄰域必含 P 自己;Core 條件是 n≥MinPts(含自己)。"
+        },
+        "hook": "ε 鄰域含自己;n≥MinPts 才是 Core,否則退為 Border 或 Noise"
+      },
+      "misconceptions": [
+        "DBSCAN 鄰域漏算 P 自己",
+        "誤以為點數少就一定是 Noise(忽略 Border 條件)"
+      ],
+      "related_node_ids": [
+        "n_L23202_002",
+        "n_L23202_008"
+      ],
+      "tags": [
+        "code-trace",
+        "DBSCAN",
+        "ML演算法",
+        "密度聚類"
+      ]
+    },
+    {
+      "id": "q_m8_047",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_003",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某零售平台用邏輯迴歸預測顧客是否流失。模型 w=[{w1},{w2}]、b={b}、門檻 threshold={thr}。請追蹤對特徵 x=[{x1},{x2}] 的線性分數 z、sigmoid 機率 p 與最終預測。",
+      "code_block": "import math\nx = [{x1}, {x2}]\nw = [{w1}, {w2}]\nb = {b}\nz = w[0]*x[0] + w[1]*x[1] + b\np = 1 / (1 + math.exp(-z))\npred = 1 if p >= {thr} else 0",
+      "stem_variables": {
+        "case_a": {
+          "w1": "1.0",
+          "w2": "2.0",
+          "b": "0.0",
+          "thr": "0.5",
+          "x1": "1.0",
+          "x2": "1.0",
+          "s1_correct": "3.0",
+          "s1_w1": "2.0",
+          "s1_w2": "0.0",
+          "s1_w3": "1.5",
+          "s2_correct": "0.953",
+          "s2_w1": "0.731",
+          "s2_w2": "0.5",
+          "s2_w3": "0.047",
+          "s3_correct": "1",
+          "s3_w1": "0",
+          "s3_w2": "0.953",
+          "s3_w3": "-1",
+          "z_calc": "1×1+2×1+0=3",
+          "p_calc": "1/(1+e^{-3})≈0.953",
+          "pred_val": "1(流失)"
+        },
+        "case_b": {
+          "w1": "0.5",
+          "w2": "-1.0",
+          "b": "0.5",
+          "thr": "0.5",
+          "x1": "2.0",
+          "x2": "2.0",
+          "s1_correct": "-0.5",
+          "s1_w1": "0.5",
+          "s1_w2": "1.5",
+          "s1_w3": "2.5",
+          "s2_correct": "0.378",
+          "s2_w1": "0.622",
+          "s2_w2": "0.5",
+          "s2_w3": "0.269",
+          "s3_correct": "0",
+          "s3_w1": "1",
+          "s3_w2": "0.378",
+          "s3_w3": "-1",
+          "z_calc": "0.5×2+(-1)×2+0.5=-0.5",
+          "p_calc": "1/(1+e^{0.5})≈0.378",
+          "pred_val": "0(留存)"
+        },
+        "case_c": {
+          "w1": "2.0",
+          "w2": "1.0",
+          "b": "-3.0",
+          "thr": "0.5",
+          "x1": "1.0",
+          "x2": "1.0",
+          "s1_correct": "0.0",
+          "s1_w1": "3.0",
+          "s1_w2": "-3.0",
+          "s1_w3": "1.0",
+          "s2_correct": "0.5",
+          "s2_w1": "0.731",
+          "s2_w2": "0.269",
+          "s2_w3": "0.0",
+          "s3_correct": "1",
+          "s3_w1": "0",
+          "s3_w2": "0.5",
+          "s3_w3": "-1",
+          "z_calc": "2×1+1×1+(-3)=0",
+          "p_calc": "1/(1+e^0)=0.5",
+          "pred_val": "1(邊界含等號→流失)"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 4,
+          "ask": "線性分數 z 的值為何?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "漏加 bias"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "誤算符號"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "誤把 b 當乘數"
+            }
+          ]
+        },
+        {
+          "after_line": 5,
+          "ask": "sigmoid 機率 p 的值約為?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "誤套 1/(1+e^z)"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "誤把 sigmoid 當階梯函數"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "1-p 取反"
+            }
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "pred 的最終值為何?",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "誤判門檻方向"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "誤把機率當預測"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "邏輯迴歸無 -1 標籤"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "Step 1: 計算線性分數 z=w·x+b={z_calc}。Step 2: 套 sigmoid p={p_calc}。Step 3: 依門檻 0.5 比較,p≥threshold 預測為 1,否則 0,本題預測={pred_val}。",
+        "wrong": {
+          "(任一步驟錯誤)": "sigmoid σ(z)=1/(1+e^{-z}),z>0 時 p>0.5、z<0 時 p<0.5、z=0 時 p=0.5。"
+        },
+        "hook": "z=w·x+b → p=σ(z) → 比門檻 0.5;符號和門檻別搞反"
+      },
+      "misconceptions": [
+        "把 sigmoid 寫成 1/(1+e^z)",
+        "用機率 0.953 當預測類別"
+      ],
+      "related_node_ids": [
+        "n_L23202_003"
+      ],
+      "tags": [
+        "code-trace",
+        "邏輯迴歸",
+        "sigmoid",
+        "二元分類"
+      ]
+    },
+    {
+      "id": "q_m8_048",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_004",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某醫療團隊用線性 SVM 判別腫瘤良惡性,訓練中需對單一樣本計算 hinge loss。給 w=[{w1},{w2}]、b={b}、樣本 x=[{x1},{x2}]、真實標籤 y={y}(±1)。請追蹤 margin 與 hinge loss。",
+      "code_block": "x = [{x1}, {x2}]\nw = [{w1}, {w2}]\nb = {b}\ny = {y}\nscore = w[0]*x[0] + w[1]*x[1] + b\nmargin = y * score\nloss = max(0, 1 - margin)",
+      "stem_variables": {
+        "case_a": {
+          "w1": "1.0",
+          "w2": "1.0",
+          "b": "0.0",
+          "x1": "2.0",
+          "x2": "1.0",
+          "y": "1",
+          "s1_correct": "3.0",
+          "s1_w1": "2.0",
+          "s1_w2": "1.0",
+          "s1_w3": "0.0",
+          "s2_correct": "3.0",
+          "s2_w1": "-3.0",
+          "s2_w2": "1.0",
+          "s2_w3": "0.0",
+          "s3_correct": "0",
+          "s3_w1": "2.0",
+          "s3_w2": "-2.0",
+          "s3_w3": "1.0",
+          "score_val": "3.0",
+          "margin_val": "3.0",
+          "loss_val": "0(margin≥1 表正確且足夠遠)"
+        },
+        "case_b": {
+          "w1": "1.0",
+          "w2": "-1.0",
+          "b": "0.0",
+          "x1": "1.0",
+          "x2": "1.0",
+          "y": "1",
+          "s1_correct": "0.0",
+          "s1_w1": "2.0",
+          "s1_w2": "-2.0",
+          "s1_w3": "1.0",
+          "s2_correct": "0.0",
+          "s2_w1": "1.0",
+          "s2_w2": "-1.0",
+          "s2_w3": "0.5",
+          "s3_correct": "1.0",
+          "s3_w1": "0",
+          "s3_w2": "0.5",
+          "s3_w3": "2.0",
+          "score_val": "0.0",
+          "margin_val": "0.0",
+          "loss_val": "1.0(正在分隔面上→違規)"
+        },
+        "case_c": {
+          "w1": "2.0",
+          "w2": "1.0",
+          "b": "-1.0",
+          "x1": "1.0",
+          "x2": "1.0",
+          "y": "-1",
+          "s1_correct": "2.0",
+          "s1_w1": "3.0",
+          "s1_w2": "-2.0",
+          "s1_w3": "1.0",
+          "s2_correct": "-2.0",
+          "s2_w1": "2.0",
+          "s2_w2": "1.0",
+          "s2_w3": "0.0",
+          "s3_correct": "3.0",
+          "s3_w1": "0",
+          "s3_w2": "1.0",
+          "s3_w3": "-1.0",
+          "score_val": "2.0",
+          "margin_val": "-2.0",
+          "loss_val": "3.0(誤分類,且離 margin 很遠)"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 5,
+          "ask": "score 的值為何?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "漏加 bias"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "誤算符號"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "只算第一項"
+            }
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "margin = y*score 的值為何?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "忘記乘 y"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "誤把 y 當 0/1"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "誤算為差值"
+            }
+          ]
+        },
+        {
+          "after_line": 7,
+          "ask": "hinge loss = max(0, 1-margin) 的值為何?",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為一定為 0"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "把負值寫進 loss"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "誤套 1-margin 不取 max"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "Step 1: 計算 score=w·x+b={score_val}。Step 2: margin=y·score={margin_val};y∈{{-1,+1}},margin>0 代表分類正確、margin≥1 代表落在 margin 之外。Step 3: hinge loss=max(0,1-margin)={loss_val}。",
+        "wrong": {
+          "(任一步驟錯誤)": "SVM 標籤是 ±1,而非 0/1;hinge loss 一定 ≥0(取 max)。"
+        },
+        "hook": "margin=y·score;margin≥1→loss=0,否則 loss=1-margin>0"
+      },
+      "misconceptions": [
+        "把 SVM 標籤當 0/1",
+        "hinge loss 忘記取 max 變成負值"
+      ],
+      "related_node_ids": [
+        "n_L23202_004"
+      ],
+      "tags": [
+        "code-trace",
+        "SVM",
+        "hinge-loss",
+        "監督式學習"
+      ]
+    },
+    {
+      "id": "q_m8_049",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_005",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某教育平台用決策樹預測學生是否通過考試,父節點 10 人({p_pos} 通過、{p_neg} 未通過)。依特徵『有無補習』切分為左子({L_pos}通過/{L_neg}未通過)和右子({R_pos}通過/{R_neg}未通過)。請計算 entropy 與 Information Gain(取 log2)。",
+      "code_block": "import math\ndef H(p):\n    if p == 0 or p == 1:\n        return 0.0\n    return -p*math.log2(p) - (1-p)*math.log2(1-p)\nH_parent = H({p_pos}/10)\nH_left  = H({L_pos}/{L_n})\nH_right = H({R_pos}/{R_n})\nIG = H_parent - ({L_n}/10)*H_left - ({R_n}/10)*H_right",
+      "stem_variables": {
+        "case_a": {
+          "p_pos": "5",
+          "p_neg": "5",
+          "L_pos": "4",
+          "L_neg": "1",
+          "R_pos": "1",
+          "R_neg": "4",
+          "L_n": "5",
+          "R_n": "5",
+          "s1_correct": "1.0",
+          "s1_w1": "0.5",
+          "s1_w2": "0.0",
+          "s1_w3": "0.722",
+          "s2_correct": "0.722",
+          "s2_w1": "1.0",
+          "s2_w2": "0.5",
+          "s2_w3": "0.0",
+          "s3_correct": "0.278",
+          "s3_w1": "0.0",
+          "s3_w2": "0.722",
+          "s3_w3": "1.0",
+          "h_parent_calc": "H(0.5)=1.0",
+          "h_child_calc": "H(0.8)=H(0.2)≈0.722",
+          "ig_calc": "1-0.5×0.722-0.5×0.722=0.278"
+        },
+        "case_b": {
+          "p_pos": "6",
+          "p_neg": "4",
+          "L_pos": "5",
+          "L_neg": "1",
+          "R_pos": "1",
+          "R_neg": "3",
+          "L_n": "6",
+          "R_n": "4",
+          "s1_correct": "0.971",
+          "s1_w1": "1.0",
+          "s1_w2": "0.6",
+          "s1_w3": "0.722",
+          "s2_correct": "0.650",
+          "s2_w1": "0.971",
+          "s2_w2": "0.833",
+          "s2_w3": "1.0",
+          "s3_correct": "0.256",
+          "s3_w1": "0.0",
+          "s3_w2": "0.971",
+          "s3_w3": "0.5",
+          "h_parent_calc": "H(0.6)≈0.971",
+          "h_child_calc": "H_left≈0.650、H_right≈0.811",
+          "ig_calc": "0.971-0.6×0.650-0.4×0.811≈0.256"
+        },
+        "case_c": {
+          "p_pos": "4",
+          "p_neg": "6",
+          "L_pos": "4",
+          "L_neg": "0",
+          "R_pos": "0",
+          "R_neg": "6",
+          "L_n": "4",
+          "R_n": "6",
+          "s1_correct": "0.971",
+          "s1_w1": "1.0",
+          "s1_w2": "0.4",
+          "s1_w3": "0.0",
+          "s2_correct": "0.0",
+          "s2_w1": "1.0",
+          "s2_w2": "0.971",
+          "s2_w3": "0.5",
+          "s3_correct": "0.971",
+          "s3_w1": "0.0",
+          "s3_w2": "0.5",
+          "s3_w3": "1.0",
+          "h_parent_calc": "H(0.4)≈0.971",
+          "h_child_calc": "兩子節點純→H=0",
+          "ig_calc": "0.971-0=0.971(完美切分)"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 6,
+          "ask": "父節點 entropy H_parent 約為?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "誤算為 0.5 比例"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "誤把 p 當 entropy"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "誤算子節點 entropy"
+            }
+          ]
+        },
+        {
+          "after_line": 7,
+          "ask": "左子 H_left 約為?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "誤把純度當 1.0"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "誤把比例當 entropy"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "誤算混亂度為 0.5"
+            }
+          ]
+        },
+        {
+          "after_line": 9,
+          "ask": "Information Gain 約為?",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為 IG=0"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "把子節點 entropy 當 IG"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "誤把 IG 上限當 1"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "Step 1: 父節點 entropy {h_parent_calc}。Step 2: 子節點 entropy {h_child_calc}。Step 3: IG=H(parent)-Σ(n_i/n)·H(child_i)={ig_calc};IG 愈大代表此特徵切分愈純,決策樹會選 IG 最大的特徵。",
+        "wrong": {
+          "(任一步驟錯誤)": "entropy H(p)=-p·log2(p)-(1-p)·log2(1-p),純節點 p=0 或 1 時 H=0。"
+        },
+        "hook": "entropy 用 log2;純子節點 entropy=0,IG 才會大"
+      },
+      "misconceptions": [
+        "entropy 誤用 ln 或 log10",
+        "把子節點 entropy 直接當作 IG"
+      ],
+      "related_node_ids": [
+        "n_L23202_005"
+      ],
+      "tags": [
+        "code-trace",
+        "決策樹",
+        "Information-Gain",
+        "entropy"
+      ]
+    },
+    {
+      "id": "q_m8_050",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_008",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某物流公司用 K-means 規劃配送點分群(K=2)。當前 centers C1={c1}、C2={c2},四個配送點 P={pts}。請追蹤一次 iteration:先把每點分到最近 center,再更新 center 為該群點平均。",
+      "code_block": "from math import sqrt\nC1 = {c1}\nC2 = {c2}\nP = {pts}\ndef dist(a, b):\n    return sqrt((a[0]-b[0])**2 + (a[1]-b[1])**2)\nlabels = [1 if dist(p, C1) <= dist(p, C2) else 2 for p in P]\nG1 = [p for p,l in zip(P, labels) if l == 1]\nG2 = [p for p,l in zip(P, labels) if l == 2]\nnew_C1 = (sum(x for x,_ in G1)/len(G1), sum(y for _,y in G1)/len(G1))\nnew_C2 = (sum(x for x,_ in G2)/len(G2), sum(y for _,y in G2)/len(G2))",
+      "stem_variables": {
+        "case_a": {
+          "c1": "(0, 0)",
+          "c2": "(10, 10)",
+          "pts": "[(1,1),(2,0),(9,9),(10,11)]",
+          "s1_correct": "[1, 1, 2, 2]",
+          "s1_w1": "[1, 2, 1, 2]",
+          "s1_w2": "[2, 2, 1, 1]",
+          "s1_w3": "[1, 1, 1, 2]",
+          "s2_correct": "(1.5, 0.5)",
+          "s2_w1": "(0, 0)",
+          "s2_w2": "(1, 1)",
+          "s2_w3": "(3, 1)",
+          "s3_correct": "(9.5, 10.0)",
+          "s3_w1": "(10, 10)",
+          "s3_w2": "(9, 9)",
+          "s3_w3": "(19, 20)",
+          "labels_val": "[1,1,2,2]",
+          "newC1_val": "((1+2)/2,(1+0)/2)=(1.5,0.5)",
+          "newC2_val": "((9+10)/2,(9+11)/2)=(9.5,10.0)"
+        },
+        "case_b": {
+          "c1": "(0, 0)",
+          "c2": "(5, 5)",
+          "pts": "[(0,1),(1,0),(5,6),(6,5)]",
+          "s1_correct": "[1, 1, 2, 2]",
+          "s1_w1": "[1, 2, 1, 2]",
+          "s1_w2": "[2, 1, 2, 1]",
+          "s1_w3": "[1, 1, 1, 1]",
+          "s2_correct": "(0.5, 0.5)",
+          "s2_w1": "(0, 0)",
+          "s2_w2": "(1, 1)",
+          "s2_w3": "(0.5, 1.0)",
+          "s3_correct": "(5.5, 5.5)",
+          "s3_w1": "(5, 5)",
+          "s3_w2": "(6, 6)",
+          "s3_w3": "(11, 11)",
+          "labels_val": "[1,1,2,2]",
+          "newC1_val": "((0+1)/2,(1+0)/2)=(0.5,0.5)",
+          "newC2_val": "((5+6)/2,(6+5)/2)=(5.5,5.5)"
+        },
+        "case_c": {
+          "c1": "(2, 2)",
+          "c2": "(8, 8)",
+          "pts": "[(1,2),(3,3),(7,8),(9,9)]",
+          "s1_correct": "[1, 1, 2, 2]",
+          "s1_w1": "[1, 2, 1, 2]",
+          "s1_w2": "[2, 1, 2, 1]",
+          "s1_w3": "[1, 1, 2, 1]",
+          "s2_correct": "(2.0, 2.5)",
+          "s2_w1": "(2, 2)",
+          "s2_w2": "(1, 2)",
+          "s2_w3": "(4, 5)",
+          "s3_correct": "(8.0, 8.5)",
+          "s3_w1": "(8, 8)",
+          "s3_w2": "(9, 9)",
+          "s3_w3": "(16, 17)",
+          "labels_val": "[1,1,2,2]",
+          "newC1_val": "((1+3)/2,(2+3)/2)=(2.0,2.5)",
+          "newC2_val": "((7+9)/2,(8+9)/2)=(8.0,8.5)"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 7,
+          "ask": "labels 的值為何?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "誤判中間點歸屬"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "兩群完全互換"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "全部分到 C1"
+            }
+          ]
+        },
+        {
+          "after_line": 10,
+          "ask": "new_C1 的值為何?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為 center 不變"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "誤取第一個點"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "誤算為總和而非平均"
+            }
+          ]
+        },
+        {
+          "after_line": 11,
+          "ask": "new_C2 的值為何?",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為 center 不變"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "誤取單一點代表"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "誤算為總和"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "Step 1: 對每點計算到 C1/C2 距離,標籤={labels_val}(取較近者)。Step 2: 取群 1 點座標平均更新 new_C1={newC1_val}。Step 3: 同樣對群 2 取平均 new_C2={newC2_val};K-means 反覆 assign+update 直到 center 不再變動。",
+        "wrong": {
+          "(任一步驟錯誤)": "update 步驟一律取『該群所有點座標分量的算術平均』,不是中位數也不是只取一點。"
+        },
+        "hook": "K-means 兩步驟:assign(取最近)→ update(取群平均);別忘了取平均"
+      },
+      "misconceptions": [
+        "把 K-means 的 update 當成只取一個代表點",
+        "把總和當作新 center(忘記除以群點數)"
+      ],
+      "related_node_ids": [
+        "n_L23202_008",
+        "n_L23202_002"
+      ],
+      "tags": [
+        "code-trace",
+        "K-means",
+        "聚類",
+        "iteration"
+      ]
+    },
+    {
+      "id": "q_m8_051",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_009",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某零售商分析購物籃 {N} 筆交易,計算關聯規則『A→B』的 Apriori 三指標。已知含 A 的交易 {nA} 筆、含 B 的交易 {nB} 筆、同時含 A 和 B 的交易 {nAB} 筆。請計算 Support、Confidence、Lift。",
+      "code_block": "N    = {N}\nnA   = {nA}\nnB   = {nB}\nnAB  = {nAB}\nsupport    = nAB / N\nconfidence = nAB / nA\nlift       = confidence / (nB / N)",
+      "stem_variables": {
+        "case_a": {
+          "N": "1000",
+          "nA": "200",
+          "nB": "400",
+          "nAB": "160",
+          "s1_correct": "0.16",
+          "s1_w1": "0.20",
+          "s1_w2": "0.40",
+          "s1_w3": "0.08",
+          "s2_correct": "0.80",
+          "s2_w1": "0.40",
+          "s2_w2": "0.20",
+          "s2_w3": "0.16",
+          "s3_correct": "2.0",
+          "s3_w1": "0.5",
+          "s3_w2": "1.0",
+          "s3_w3": "0.8",
+          "sup_calc": "160/1000=0.16",
+          "conf_calc": "160/200=0.80",
+          "lift_calc": "0.80/(400/1000)=0.80/0.40=2.0",
+          "lift_meaning": "lift>1→A 與 B 正相關(買 A 增加買 B 的機率)"
+        },
+        "case_b": {
+          "N": "500",
+          "nA": "100",
+          "nB": "250",
+          "nAB": "50",
+          "s1_correct": "0.10",
+          "s1_w1": "0.20",
+          "s1_w2": "0.50",
+          "s1_w3": "0.05",
+          "s2_correct": "0.50",
+          "s2_w1": "0.20",
+          "s2_w2": "0.10",
+          "s2_w3": "0.25",
+          "s3_correct": "1.0",
+          "s3_w1": "0.5",
+          "s3_w2": "2.0",
+          "s3_w3": "0.25",
+          "sup_calc": "50/500=0.10",
+          "conf_calc": "50/100=0.50",
+          "lift_calc": "0.50/(250/500)=0.50/0.50=1.0",
+          "lift_meaning": "lift=1→A 與 B 獨立(沒有關聯)"
+        },
+        "case_c": {
+          "N": "2000",
+          "nA": "400",
+          "nB": "1000",
+          "nAB": "100",
+          "s1_correct": "0.05",
+          "s1_w1": "0.20",
+          "s1_w2": "0.50",
+          "s1_w3": "0.10",
+          "s2_correct": "0.25",
+          "s2_w1": "0.05",
+          "s2_w2": "0.10",
+          "s2_w3": "0.50",
+          "s3_correct": "0.5",
+          "s3_w1": "1.0",
+          "s3_w2": "2.0",
+          "s3_w3": "0.25",
+          "sup_calc": "100/2000=0.05",
+          "conf_calc": "100/400=0.25",
+          "lift_calc": "0.25/(1000/2000)=0.25/0.50=0.5",
+          "lift_meaning": "lift<1→A 與 B 負相關(買 A 反而減少買 B)"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 5,
+          "ask": "support 的值為何?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "誤算成 nA/N"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "誤算成 nB/N"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "誤多除一次"
+            }
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "confidence 的值為何?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "誤把 nA/N 當 confidence"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "誤算為 support"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "誤除 nB"
+            }
+          ]
+        },
+        {
+          "after_line": 7,
+          "ask": "lift 的值為何?",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為 lift 上限 1"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "分子分母倒置"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "誤用 support 當 lift"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "Step 1: support = P(A∩B) = {sup_calc}。Step 2: confidence = P(B|A) = nAB/nA = {conf_calc}。Step 3: lift = confidence/P(B) = {lift_calc};{lift_meaning}。",
+        "wrong": {
+          "(任一步驟錯誤)": "Apriori 三指標:support 是聯合機率、confidence 是條件機率、lift 衡量規則強度(>1 才有實質提升)。"
+        },
+        "hook": "support=P(A∩B);confidence=P(B|A);lift=conf/P(B),lift>1 才算強規則"
+      },
+      "misconceptions": [
+        "把 confidence 和 support 混淆",
+        "lift<1 仍誤以為是強規則"
+      ],
+      "related_node_ids": [
+        "n_L23202_009"
+      ],
+      "tags": [
+        "code-trace",
+        "Apriori",
+        "關聯規則",
+        "lift"
+      ]
+    },
+    {
+      "id": "q_m8_052",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_001",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某製造廠用 Bagging 集成 3 棵決策樹偵測產品瑕疵(0=正常、1=瑕疵)。對某樣本,三棵樹預測結果為 preds={preds}。請追蹤多數投票後的最終預測,以及『預測為 1 的比例』作為瑕疵機率分數。",
+      "code_block": "from collections import Counter\npreds = {preds}\ncnt = Counter(preds)\nmajority = cnt.most_common(1)[0][0]\nprob_1 = sum(1 for p in preds if p == 1) / len(preds)\nfinal = majority",
+      "stem_variables": {
+        "case_a": {
+          "preds": "[1, 1, 0]",
+          "s1_correct": "Counter({1: 2, 0: 1})",
+          "s1_w1": "Counter({0: 2, 1: 1})",
+          "s1_w2": "Counter({1: 3})",
+          "s1_w3": "Counter({0: 1, 1: 1})",
+          "s2_correct": "1",
+          "s2_w1": "0",
+          "s2_w2": "0.667",
+          "s2_w3": "2",
+          "s3_correct": "0.667",
+          "s3_w1": "0.5",
+          "s3_w2": "1.0",
+          "s3_w3": "0.333",
+          "cnt_val": "Counter({1: 2, 0: 1})",
+          "majority_val": "1(瑕疵)",
+          "prob_val": "2/3≈0.667"
+        },
+        "case_b": {
+          "preds": "[0, 1, 0]",
+          "s1_correct": "Counter({0: 2, 1: 1})",
+          "s1_w1": "Counter({1: 2, 0: 1})",
+          "s1_w2": "Counter({0: 3})",
+          "s1_w3": "Counter({0: 1, 1: 1})",
+          "s2_correct": "0",
+          "s2_w1": "1",
+          "s2_w2": "0.333",
+          "s2_w3": "2",
+          "s3_correct": "0.333",
+          "s3_w1": "0.5",
+          "s3_w2": "0.667",
+          "s3_w3": "1.0",
+          "cnt_val": "Counter({0: 2, 1: 1})",
+          "majority_val": "0(正常)",
+          "prob_val": "1/3≈0.333"
+        },
+        "case_c": {
+          "preds": "[1, 1, 1]",
+          "s1_correct": "Counter({1: 3})",
+          "s1_w1": "Counter({1: 2, 0: 1})",
+          "s1_w2": "Counter({0: 3})",
+          "s1_w3": "Counter({1: 1})",
+          "s2_correct": "1",
+          "s2_w1": "0",
+          "s2_w2": "3",
+          "s2_w3": "1.0",
+          "s3_correct": "1.0",
+          "s3_w1": "0.667",
+          "s3_w2": "0.333",
+          "s3_w3": "0.0",
+          "cnt_val": "Counter({1: 3})",
+          "majority_val": "1(瑕疵)",
+          "prob_val": "3/3=1.0"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 3,
+          "ask": "cnt 的值為何?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "兩類計數對調"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為全部同類"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "誤把重複只算一次"
+            }
+          ]
+        },
+        {
+          "after_line": 4,
+          "ask": "majority 的值為何?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "誤判少數類為多數"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "把比例當類別"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "誤把計數當標籤"
+            }
+          ]
+        },
+        {
+          "after_line": 5,
+          "ask": "prob_1 的值約為?",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為 prob 一定 0.5"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "把 majority 0/1 當機率"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "1-prob 取反"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "Step 1: Counter 統計各類出現次數 = {cnt_val}。Step 2: most_common(1) 取出現最多的類別,majority={majority_val}。Step 3: 以『預測為 1 的比例』作為 soft probability = {prob_val};Bagging 同時提供 hard label(多數投票)與 soft score(投票比例),後者用於 AUC 等需機率的指標。",
+        "wrong": {
+          "(任一步驟錯誤)": "Bagging 對分類用多數投票(hard)或機率平均(soft);Random Forest 即為 Bagging+決策樹。"
+        },
+        "hook": "Bagging 分類=多數投票;機率=投 1 的比例"
+      },
+      "misconceptions": [
+        "把 Bagging 當成 Boosting(序列加權)",
+        "把投票比例和類別搞混"
+      ],
+      "related_node_ids": [
+        "n_L23202_001",
+        "n_L23202_006"
+      ],
+      "tags": [
+        "code-trace",
+        "Bagging",
+        "集成學習",
+        "多數投票"
+      ]
+    },
+    {
+      "id": "q_m8_053",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_007",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某銀行信用評分卡對『年齡分箱』計算 WOE 與 IV 貢獻。此分箱共 {nb} 人,其中違約(bad)={nb_bad} 人、正常(good)={nb_good} 人;全樣本違約 {tot_bad}、正常 {tot_good}。WOE=ln(good_rate/bad_rate),IV 貢獻=(good_rate-bad_rate)·WOE。請追蹤(取 ln)。",
+      "code_block": "import math\nbin_bad   = {nb_bad}\nbin_good  = {nb_good}\ntot_bad   = {tot_bad}\ntot_good  = {tot_good}\nbad_rate  = bin_bad / tot_bad\ngood_rate = bin_good / tot_good\nwoe       = math.log(good_rate / bad_rate)\niv_part   = (good_rate - bad_rate) * woe",
+      "stem_variables": {
+        "case_a": {
+          "nb": "300",
+          "nb_bad": "30",
+          "nb_good": "270",
+          "tot_bad": "100",
+          "tot_good": "900",
+          "s1_correct": "0.30",
+          "s1_w1": "0.03",
+          "s1_w2": "0.10",
+          "s1_w3": "0.27",
+          "s2_correct": "0.30",
+          "s2_w1": "0.27",
+          "s2_w2": "0.10",
+          "s2_w3": "0.03",
+          "s3_correct": "0.0",
+          "s3_w1": "1.0",
+          "s3_w2": "0.30",
+          "s3_w3": "-0.30",
+          "s4_correct": "0.0",
+          "s4_w1": "0.30",
+          "s4_w2": "1.0",
+          "s4_w3": "0.09",
+          "bad_rate_calc": "30/100=0.30",
+          "good_rate_calc": "270/900=0.30",
+          "woe_calc": "ln(0.30/0.30)=ln(1)=0",
+          "iv_calc": "(0.30-0.30)×0=0(此箱無區辨力)"
+        },
+        "case_b": {
+          "nb": "200",
+          "nb_bad": "10",
+          "nb_good": "190",
+          "tot_bad": "100",
+          "tot_good": "900",
+          "s1_correct": "0.10",
+          "s1_w1": "0.05",
+          "s1_w2": "0.21",
+          "s1_w3": "0.19",
+          "s2_correct": "0.211",
+          "s2_w1": "0.10",
+          "s2_w2": "0.19",
+          "s2_w3": "0.50",
+          "s3_correct": "0.747",
+          "s3_w1": "-0.747",
+          "s3_w2": "0.0",
+          "s3_w3": "0.211",
+          "s4_correct": "0.083",
+          "s4_w1": "0.0",
+          "s4_w2": "0.747",
+          "s4_w3": "0.111",
+          "bad_rate_calc": "10/100=0.10",
+          "good_rate_calc": "190/900≈0.211",
+          "woe_calc": "ln(0.211/0.10)=ln(2.11)≈0.747",
+          "iv_calc": "(0.211-0.10)×0.747≈0.083(好客戶集中,正貢獻)"
+        },
+        "case_c": {
+          "nb": "100",
+          "nb_bad": "40",
+          "nb_good": "60",
+          "tot_bad": "100",
+          "tot_good": "900",
+          "s1_correct": "0.40",
+          "s1_w1": "0.04",
+          "s1_w2": "0.067",
+          "s1_w3": "0.10",
+          "s2_correct": "0.067",
+          "s2_w1": "0.60",
+          "s2_w2": "0.40",
+          "s2_w3": "0.10",
+          "s3_correct": "-1.792",
+          "s3_w1": "1.792",
+          "s3_w2": "0.0",
+          "s3_w3": "-0.747",
+          "s4_correct": "0.597",
+          "s4_w1": "-0.597",
+          "s4_w2": "0.0",
+          "s4_w3": "0.083",
+          "bad_rate_calc": "40/100=0.40",
+          "good_rate_calc": "60/900≈0.067",
+          "woe_calc": "ln(0.067/0.40)=ln(0.167)≈-1.792",
+          "iv_calc": "(0.067-0.40)×(-1.792)≈0.597(壞客戶高度集中,強區辨)"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 6,
+          "ask": "bad_rate 的值約為?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "誤除以總樣本數"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "誤算為 good_rate"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "誤算分箱內比例"
+            }
+          ]
+        },
+        {
+          "after_line": 7,
+          "ask": "good_rate 的值約為?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "誤算箱內比例"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "誤算為 bad_rate"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "誤除分箱人數"
+            }
+          ]
+        },
+        {
+          "after_line": 8,
+          "ask": "woe 的值約為?",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "誤反 ln 內分子分母"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為相等→0"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "誤算其他箱 WOE"
+            }
+          ]
+        },
+        {
+          "after_line": 9,
+          "ask": "iv_part 的值約為?",
+          "options": [
+            {
+              "text": "{s4_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s4_w1}",
+              "is_correct": false,
+              "trap_type": "誤以為 IV 一定為 0"
+            },
+            {
+              "text": "{s4_w2}",
+              "is_correct": false,
+              "trap_type": "把 WOE 當 IV"
+            },
+            {
+              "text": "{s4_w3}",
+              "is_correct": false,
+              "trap_type": "誤抓其他分箱 IV"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "Step 1: bad_rate=bin_bad/tot_bad={bad_rate_calc}。Step 2: good_rate=bin_good/tot_good={good_rate_calc}。Step 3: WOE=ln(good_rate/bad_rate)={woe_calc};WOE>0 代表此箱好客比例高、<0 反之。Step 4: IV 貢獻=(good_rate-bad_rate)·WOE={iv_calc};全箱 IV 加總用於評估特徵預測力(IV<0.02 不可用、0.1~0.3 中等、>0.3 強)。",
+        "wrong": {
+          "(任一步驟錯誤)": "WOE 分母分子都用『佔總 good/bad 的比例』,不是箱內比例;IV 必 ≥0(因 (g-b) 與 WOE 同號)。"
+        },
+        "hook": "WOE=ln(good分佈/bad分佈);IV=Σ(g-b)·WOE,衡量整個特徵的區辨力"
+      },
+      "misconceptions": [
+        "WOE 用箱內 good/(good+bad) 而非『佔總 good 比例』",
+        "把單一箱 IV 當作整個特徵 IV"
+      ],
+      "related_node_ids": [
+        "n_L23202_007",
+        "n_L23202_003"
+      ],
+      "tags": [
+        "code-trace",
+        "信用評分卡",
+        "WOE",
+        "IV"
+      ]
+    },
+    {
+      "id": "q_m8_054",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_001",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "某半導體廠瑕疵分類模型的隱藏層套用 ReLU 激活函數,定義為 ReLU(x) = max(0, x)。下列程式對神經元輸入向量 z 套用 ReLU,請追蹤每步輸出。",
+      "code_block": "import numpy as np\nz = np.array([{z0}, {z1}, {z2}, {z3}])\nmask = z > 0\nout = np.where(mask, z, 0.0)\nactive_count = int(mask.sum())",
+      "stem_variables": {
+        "case_a": {
+          "z0": "2.0",
+          "z1": "-1.5",
+          "z2": "0.0",
+          "z3": "3.5",
+          "s1_correct": "[True, False, False, True]",
+          "s1_w1": "[True, True, False, True]",
+          "s1_w2": "[False, True, True, False]",
+          "s1_w3": "[True, False, True, True]",
+          "s2_correct": "[2.0, 0.0, 0.0, 3.5]",
+          "s2_w1": "[2.0, -1.5, 0.0, 3.5]",
+          "s2_w2": "[2.0, 1.5, 0.0, 3.5]",
+          "s2_w3": "[0.0, -1.5, 0.0, 0.0]",
+          "s3_correct": "2",
+          "s3_w1": "3",
+          "s3_w2": "1",
+          "s3_w3": "4",
+          "neg_count": "1",
+          "active_neurons": "2"
+        },
+        "case_b": {
+          "z0": "-0.5",
+          "z1": "4.0",
+          "z2": "1.0",
+          "z3": "-2.0",
+          "s1_correct": "[False, True, True, False]",
+          "s1_w1": "[True, True, True, False]",
+          "s1_w2": "[False, False, True, True]",
+          "s1_w3": "[True, True, False, False]",
+          "s2_correct": "[0.0, 4.0, 1.0, 0.0]",
+          "s2_w1": "[-0.5, 4.0, 1.0, -2.0]",
+          "s2_w2": "[0.5, 4.0, 1.0, 2.0]",
+          "s2_w3": "[0.0, 0.0, 0.0, 0.0]",
+          "s3_correct": "2",
+          "s3_w1": "3",
+          "s3_w2": "1",
+          "s3_w3": "4",
+          "neg_count": "2",
+          "active_neurons": "2"
+        },
+        "case_c": {
+          "z0": "1.2",
+          "z1": "0.0",
+          "z2": "-3.0",
+          "z3": "0.8",
+          "s1_correct": "[True, False, False, True]",
+          "s1_w1": "[True, True, False, True]",
+          "s1_w2": "[True, False, True, True]",
+          "s1_w3": "[False, False, False, True]",
+          "s2_correct": "[1.2, 0.0, 0.0, 0.8]",
+          "s2_w1": "[1.2, 0.0, -3.0, 0.8]",
+          "s2_w2": "[1.2, 0.0, 3.0, 0.8]",
+          "s2_w3": "[0.0, 0.0, 0.0, 0.8]",
+          "s3_correct": "2",
+          "s3_w1": "3",
+          "s3_w2": "1",
+          "s3_w3": "4",
+          "neg_count": "1",
+          "active_neurons": "2"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 3,
+          "ask": "mask 的內容為何?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "誤把 0 視為 True"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "比較方向反了"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "誤判 0 為正"
+            }
+          ]
+        },
+        {
+          "after_line": 4,
+          "ask": "out 的內容為何?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "未把負值歸零(誤用 identity)"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "誤套絕對值而非 ReLU"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "全部歸零(誤把 ReLU 當常數)"
+            }
+          ]
+        },
+        {
+          "after_line": 5,
+          "ask": "active_count 的值為何?",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "誤把 0 計入 active"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "漏算正值"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "誤把全部當 active"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "ReLU 逐元素操作流程:Step 1: mask = z > 0,嚴格大於 0 才 True(0.0 與負值皆 False)。Step 2: out = where(mask, z, 0),正值保留、其餘歸零,本題負值有 {neg_count} 個全部變 0。Step 3: active_count = mask.sum() = {active_neurons},即神經元活化數。ReLU 解決 sigmoid 飽和區梯度消失,且運算便宜(只比較一次)。",
+        "wrong": {
+          "(任一步驟錯誤)": "若把 0 當 active 會多算;若沒把負值歸零會變成 identity 函數;ReLU 與絕對值不同(後者 |-1.5|=1.5,前者 -1.5→0)。"
+        },
+        "hook": "ReLU = max(0, x);正值 pass-through、負值清零、0 也是 0(非 active)"
+      },
+      "misconceptions": [
+        "誤把 ReLU 當絕對值函數",
+        "誤以為 0 也算 active 神經元"
+      ],
+      "related_node_ids": [
+        "n_L23203_001"
+      ],
+      "tags": [
+        "code-trace",
+        "activation",
+        "ReLU",
+        "neural-network"
+      ]
+    },
+    {
+      "id": "q_m8_055",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_001",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某社群平台語言模型輸出層用數值穩定版 softmax(先減 max 避免 exp 溢位)。下列程式對 logits 向量 z 計算機率分佈,請逐步追蹤(數值四捨五入到小數第 3 位)。",
+      "code_block": "import numpy as np\nz = np.array([{z0}, {z1}, {z2}])\nm = z.max()\nshifted = z - m\nexps = np.exp(shifted)\nprobs = exps / exps.sum()",
+      "stem_variables": {
+        "case_a": {
+          "z0": "2.0",
+          "z1": "1.0",
+          "z2": "0.0",
+          "s1_correct": "2.0",
+          "s1_w1": "1.0",
+          "s1_w2": "0.0",
+          "s1_w3": "3.0",
+          "s2_correct": "[0.0, -1.0, -2.0]",
+          "s2_w1": "[2.0, 1.0, 0.0]",
+          "s2_w2": "[-2.0, -1.0, 0.0]",
+          "s2_w3": "[0.0, 1.0, 2.0]",
+          "s3_correct": "[1.0, 0.368, 0.135]",
+          "s3_w1": "[7.389, 2.718, 1.0]",
+          "s3_w2": "[0.0, -1.0, -2.0]",
+          "s3_w3": "[1.0, 1.0, 1.0]",
+          "s4_correct": "[0.665, 0.245, 0.090]",
+          "s4_w1": "[1.0, 0.368, 0.135]",
+          "s4_w2": "[0.333, 0.333, 0.333]",
+          "s4_w3": "[0.5, 0.3, 0.2]",
+          "max_val": "2.0",
+          "shifted_sum_exp": "1.503"
+        },
+        "case_b": {
+          "z0": "3.0",
+          "z1": "1.0",
+          "z2": "2.0",
+          "s1_correct": "3.0",
+          "s1_w1": "2.0",
+          "s1_w2": "1.0",
+          "s1_w3": "6.0",
+          "s2_correct": "[0.0, -2.0, -1.0]",
+          "s2_w1": "[3.0, 1.0, 2.0]",
+          "s2_w2": "[-3.0, -1.0, -2.0]",
+          "s2_w3": "[0.0, 2.0, 1.0]",
+          "s3_correct": "[1.0, 0.135, 0.368]",
+          "s3_w1": "[20.086, 2.718, 7.389]",
+          "s3_w2": "[0.0, -2.0, -1.0]",
+          "s3_w3": "[1.0, 1.0, 1.0]",
+          "s4_correct": "[0.665, 0.090, 0.245]",
+          "s4_w1": "[1.0, 0.135, 0.368]",
+          "s4_w2": "[0.333, 0.333, 0.333]",
+          "s4_w3": "[0.7, 0.1, 0.2]",
+          "max_val": "3.0",
+          "shifted_sum_exp": "1.503"
+        },
+        "case_c": {
+          "z0": "0.0",
+          "z1": "2.0",
+          "z2": "1.0",
+          "s1_correct": "2.0",
+          "s1_w1": "0.0",
+          "s1_w2": "1.0",
+          "s1_w3": "3.0",
+          "s2_correct": "[-2.0, 0.0, -1.0]",
+          "s2_w1": "[0.0, 2.0, 1.0]",
+          "s2_w2": "[2.0, 0.0, 1.0]",
+          "s2_w3": "[-2.0, 2.0, -1.0]",
+          "s3_correct": "[0.135, 1.0, 0.368]",
+          "s3_w1": "[1.0, 7.389, 2.718]",
+          "s3_w2": "[-2.0, 0.0, -1.0]",
+          "s3_w3": "[1.0, 1.0, 1.0]",
+          "s4_correct": "[0.090, 0.665, 0.245]",
+          "s4_w1": "[0.135, 1.0, 0.368]",
+          "s4_w2": "[0.333, 0.333, 0.333]",
+          "s4_w3": "[0.1, 0.7, 0.2]",
+          "max_val": "2.0",
+          "shifted_sum_exp": "1.503"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 3,
+          "ask": "m 的值為何?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "誤取第二大"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "誤取最小值"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "誤算 sum 而非 max"
+            }
+          ]
+        },
+        {
+          "after_line": 4,
+          "ask": "shifted 的內容為何?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "忘記減 max"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "誤把 z 取相反數"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "減法方向相反(m - z)"
+            }
+          ]
+        },
+        {
+          "after_line": 5,
+          "ask": "exps 的內容為何?",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "未先減 max(數值不穩)"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "忘記 exp 直接傳 shifted"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "誤以為 exp(任意)=1"
+            }
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "probs 的內容為何?",
+          "options": [
+            {
+              "text": "{s4_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s4_w1}",
+              "is_correct": false,
+              "trap_type": "忘記除以 sum(未正規化)"
+            },
+            {
+              "text": "{s4_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為輸出均勻分佈"
+            },
+            {
+              "text": "{s4_w3}",
+              "is_correct": false,
+              "trap_type": "誤用直觀比例硬湊"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "softmax 數值穩定版流程:Step 1: m = max(z) = {max_val}。Step 2: shifted = z - m,最大元素變 0,其餘為非正(避免 exp 溢位)。Step 3: exps = e^shifted,最大位 e^0 = 1,其餘 e^(負值) ∈ (0,1]。Step 4: probs = exps / sum(exps),sum ≈ {shifted_sum_exp},輸出機率和為 1。減 max 不改變最終 probs(分子分母同乘 e^(-m) 相消),但避免 z 很大時 exp 溢位。",
+        "wrong": {
+          "(任一步驟錯誤)": "忘記減 max 時,z=[1000, ...] 會 exp 溢位 inf;忘記除以 sum 就只是 exp 不是機率;softmax 不會給均勻分佈,大 logit 對應大機率。"
+        },
+        "hook": "softmax 三件事:減 max(穩定)→ exp(放大)→ 除 sum(正規化);機率總和必為 1"
+      },
+      "misconceptions": [
+        "誤以為減 max 會改變最終機率分佈",
+        "忘記 normalize 步驟"
+      ],
+      "related_node_ids": [
+        "n_L23203_001"
+      ],
+      "tags": [
+        "code-trace",
+        "activation",
+        "softmax",
+        "numerical-stability"
+      ]
+    },
+    {
+      "id": "q_m8_056",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_003",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某醫院影像分類模型用單一感知器(perceptron)做二元分類。給定權重 w、偏差 b、輸入 x,先計算加權求和 z = w·x + b,再套 sigmoid σ(z) = 1/(1 + e^(-z)) 得到機率。請追蹤每步(數值四捨五入到小數第 3 位)。",
+      "code_block": "import numpy as np\nx = np.array([{x0}, {x1}, {x2}])\nw = np.array([{w0}, {w1}, {w2}])\nb = {b}\nz = float(np.dot(w, x) + b)\nout = 1.0 / (1.0 + np.exp(-z))\npred = 1 if out >= 0.5 else 0",
+      "stem_variables": {
+        "case_a": {
+          "x0": "1.0",
+          "x1": "2.0",
+          "x2": "1.0",
+          "w0": "0.5",
+          "w1": "1.0",
+          "w2": "-0.5",
+          "b": "0.0",
+          "s1_correct": "2.0",
+          "s1_w1": "3.0",
+          "s1_w2": "2.5",
+          "s1_w3": "1.5",
+          "s2_correct": "0.881",
+          "s2_w1": "0.119",
+          "s2_w2": "0.5",
+          "s2_w3": "2.0",
+          "s3_correct": "1",
+          "s3_w1": "0",
+          "s3_w2": "2",
+          "s3_w3": "-1",
+          "z_val": "2.0",
+          "sigmoid_val": "0.881",
+          "decision": "1 (positive)"
+        },
+        "case_b": {
+          "x0": "2.0",
+          "x1": "1.0",
+          "x2": "3.0",
+          "w0": "-1.0",
+          "w1": "0.5",
+          "w2": "0.0",
+          "b": "-0.5",
+          "s1_correct": "-2.0",
+          "s1_w1": "-1.5",
+          "s1_w2": "0.5",
+          "s1_w3": "2.0",
+          "s2_correct": "0.119",
+          "s2_w1": "0.881",
+          "s2_w2": "0.5",
+          "s2_w3": "-2.0",
+          "s3_correct": "0",
+          "s3_w1": "1",
+          "s3_w2": "-1",
+          "s3_w3": "2",
+          "z_val": "-2.0",
+          "sigmoid_val": "0.119",
+          "decision": "0 (negative)"
+        },
+        "case_c": {
+          "x0": "1.0",
+          "x1": "1.0",
+          "x2": "1.0",
+          "w0": "1.0",
+          "w1": "-1.0",
+          "w2": "1.0",
+          "b": "0.0",
+          "s1_correct": "1.0",
+          "s1_w1": "0.0",
+          "s1_w2": "3.0",
+          "s1_w3": "-1.0",
+          "s2_correct": "0.731",
+          "s2_w1": "0.269",
+          "s2_w2": "0.5",
+          "s2_w3": "1.0",
+          "s3_correct": "1",
+          "s3_w1": "0",
+          "s3_w2": "2",
+          "s3_w3": "-1",
+          "z_val": "1.0",
+          "sigmoid_val": "0.731",
+          "decision": "1 (positive)"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 5,
+          "ask": "z 的值為何?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "忘記加 bias"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "誤把 bias 加兩次"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "誤算 w 與 x 元素相加"
+            }
+          ]
+        },
+        {
+          "after_line": 6,
+          "ask": "out 的值為何?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "誤算 σ(-z) 而非 σ(z)"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "誤以為 sigmoid 永遠是 0.5"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "忘記套 sigmoid,直接回傳 z"
+            }
+          ]
+        },
+        {
+          "after_line": 7,
+          "ask": "pred 的值為何?",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "閾值方向反了"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "誤把機率當類別"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "誤用 sign(z) 但回傳 -1"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "感知器二元分類流程:Step 1: z = w·x + b,即逐元素相乘後加總、再加偏差 b,本例 z = {z_val}。Step 2: 套 sigmoid σ(z) = 1/(1+e^(-z)),把任意實數壓縮到 (0,1),本例 σ({z_val}) = {sigmoid_val}。Step 3: 以 0.5 為閾值判類,out ≥ 0.5 → 1,否則 → 0,本例判為 {decision}。注意 σ(0) = 0.5、σ(z) + σ(-z) = 1。",
+        "wrong": {
+          "(任一步驟錯誤)": "忘記加 b 會偏離決策邊界;σ(z) 與 σ(-z) 互補,搞反方向會剛好相反;閾值 0.5 對應 z=0,不是 out=0。"
+        },
+        "hook": "感知器三步:點積 + bias → sigmoid 壓縮 → 0.5 閾值判類"
+      },
+      "misconceptions": [
+        "誤把 bias 視為可省略",
+        "誤以為 sigmoid 輸出就是類別(忘記閾值步驟)"
+      ],
+      "related_node_ids": [
+        "n_L23203_003",
+        "n_L23203_001"
+      ],
+      "tags": [
+        "code-trace",
+        "perceptron",
+        "sigmoid",
+        "binary-classification"
+      ]
+    },
+    {
+      "id": "q_m8_057",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_002",
+      "subject": 3,
+      "format": "code_trace",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某券商以 LSTM 預測股價趨勢。下列程式單時間步前向傳播:給定前一時刻 cell state c_prev、三個 gate(input i、forget f、output o)以及候選 cell g,計算新 cell state c_t 與 hidden state h_t。公式:c_t = f * c_prev + i * g;h_t = o * tanh(c_t)。請追蹤每步(*為 element-wise,數值四捨五入到小數第 3 位)。",
+      "code_block": "import numpy as np\nc_prev = np.array([{cp0}, {cp1}])\ni = np.array([{i0}, {i1}])\nf = np.array([{f0}, {f1}])\no = np.array([{o0}, {o1}])\ng = np.array([{g0}, {g1}])\nretained = f * c_prev\nadded = i * g\nc_t = retained + added\nh_t = o * np.tanh(c_t)",
+      "stem_variables": {
+        "case_a": {
+          "cp0": "1.0",
+          "cp1": "2.0",
+          "i0": "0.5",
+          "i1": "0.2",
+          "f0": "0.8",
+          "f1": "0.5",
+          "o0": "0.6",
+          "o1": "0.4",
+          "g0": "1.0",
+          "g1": "1.0",
+          "s1_correct": "[0.8, 1.0]",
+          "s1_w1": "[1.0, 2.0]",
+          "s1_w2": "[0.0, 0.0]",
+          "s1_w3": "[1.8, 2.5]",
+          "s2_correct": "[0.5, 0.2]",
+          "s2_w1": "[1.0, 1.0]",
+          "s2_w2": "[1.5, 1.2]",
+          "s2_w3": "[0.0, 0.0]",
+          "s3_correct": "[1.3, 1.2]",
+          "s3_w1": "[0.3, 0.8]",
+          "s3_w2": "[1.0, 2.0]",
+          "s3_w3": "[2.3, 3.2]",
+          "s4_correct": "[0.517, 0.333]",
+          "s4_w1": "[0.862, 0.834]",
+          "s4_w2": "[1.3, 1.2]",
+          "s4_w3": "[0.6, 0.4]",
+          "retained_val": "[0.8, 1.0]",
+          "added_val": "[0.5, 0.2]",
+          "c_t_val": "[1.3, 1.2]",
+          "h_t_val": "[0.517, 0.333]"
+        },
+        "case_b": {
+          "cp0": "2.0",
+          "cp1": "0.5",
+          "i0": "0.3",
+          "i1": "0.8",
+          "f0": "0.5",
+          "f1": "0.2",
+          "o0": "0.8",
+          "o1": "0.5",
+          "g0": "1.0",
+          "g1": "1.0",
+          "s1_correct": "[1.0, 0.1]",
+          "s1_w1": "[2.0, 0.5]",
+          "s1_w2": "[0.0, 0.0]",
+          "s1_w3": "[2.5, 0.7]",
+          "s2_correct": "[0.3, 0.8]",
+          "s2_w1": "[1.0, 1.0]",
+          "s2_w2": "[1.3, 1.8]",
+          "s2_w3": "[0.0, 0.0]",
+          "s3_correct": "[1.3, 0.9]",
+          "s3_w1": "[0.7, -0.7]",
+          "s3_w2": "[2.0, 0.5]",
+          "s3_w3": "[3.3, 1.9]",
+          "s4_correct": "[0.689, 0.358]",
+          "s4_w1": "[0.862, 0.716]",
+          "s4_w2": "[1.3, 0.9]",
+          "s4_w3": "[0.8, 0.5]",
+          "retained_val": "[1.0, 0.1]",
+          "added_val": "[0.3, 0.8]",
+          "c_t_val": "[1.3, 0.9]",
+          "h_t_val": "[0.689, 0.358]"
+        },
+        "case_c": {
+          "cp0": "0.5",
+          "cp1": "1.5",
+          "i0": "0.6",
+          "i1": "0.4",
+          "f0": "0.2",
+          "f1": "0.8",
+          "o0": "0.5",
+          "o1": "0.6",
+          "g0": "1.0",
+          "g1": "1.0",
+          "s1_correct": "[0.1, 1.2]",
+          "s1_w1": "[0.5, 1.5]",
+          "s1_w2": "[0.0, 0.0]",
+          "s1_w3": "[0.7, 2.3]",
+          "s2_correct": "[0.6, 0.4]",
+          "s2_w1": "[1.0, 1.0]",
+          "s2_w2": "[1.6, 1.4]",
+          "s2_w3": "[0.0, 0.0]",
+          "s3_correct": "[0.7, 1.6]",
+          "s3_w1": "[-0.5, 0.8]",
+          "s3_w2": "[0.5, 1.5]",
+          "s3_w3": "[1.7, 2.6]",
+          "s4_correct": "[0.302, 0.553]",
+          "s4_w1": "[0.604, 0.922]",
+          "s4_w2": "[0.7, 1.6]",
+          "s4_w3": "[0.5, 0.6]",
+          "retained_val": "[0.1, 1.2]",
+          "added_val": "[0.6, 0.4]",
+          "c_t_val": "[0.7, 1.6]",
+          "h_t_val": "[0.302, 0.553]"
+        }
+      },
+      "trace_steps": [
+        {
+          "after_line": 7,
+          "ask": "retained = f * c_prev 的內容為何?",
+          "options": [
+            {
+              "text": "{s1_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s1_w1}",
+              "is_correct": false,
+              "trap_type": "忘記乘 forget gate(全保留)"
+            },
+            {
+              "text": "{s1_w2}",
+              "is_correct": false,
+              "trap_type": "誤把 forget gate=0(全遺忘)"
+            },
+            {
+              "text": "{s1_w3}",
+              "is_correct": false,
+              "trap_type": "誤算 f + c_prev(加法)"
+            }
+          ]
+        },
+        {
+          "after_line": 8,
+          "ask": "added = i * g 的內容為何?",
+          "options": [
+            {
+              "text": "{s2_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s2_w1}",
+              "is_correct": false,
+              "trap_type": "忽略 input gate 縮放"
+            },
+            {
+              "text": "{s2_w2}",
+              "is_correct": false,
+              "trap_type": "誤算 i + g(加法)"
+            },
+            {
+              "text": "{s2_w3}",
+              "is_correct": false,
+              "trap_type": "誤把 input gate=0(全擋)"
+            }
+          ]
+        },
+        {
+          "after_line": 9,
+          "ask": "c_t 的內容為何?",
+          "options": [
+            {
+              "text": "{s3_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s3_w1}",
+              "is_correct": false,
+              "trap_type": "誤用減法 retained - added"
+            },
+            {
+              "text": "{s3_w2}",
+              "is_correct": false,
+              "trap_type": "直接用 c_prev 未更新"
+            },
+            {
+              "text": "{s3_w3}",
+              "is_correct": false,
+              "trap_type": "重複加上 c_prev 一次"
+            }
+          ]
+        },
+        {
+          "after_line": 10,
+          "ask": "h_t 的內容為何?",
+          "options": [
+            {
+              "text": "{s4_correct}",
+              "is_correct": true
+            },
+            {
+              "text": "{s4_w1}",
+              "is_correct": false,
+              "trap_type": "忘記乘 output gate"
+            },
+            {
+              "text": "{s4_w2}",
+              "is_correct": false,
+              "trap_type": "忘記套 tanh,直接乘 c_t"
+            },
+            {
+              "text": "{s4_w3}",
+              "is_correct": false,
+              "trap_type": "誤把 h_t 當作 output gate"
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "text": "(全部步驟正確)",
+          "is_correct": true
+        },
+        {
+          "text": "(任一步驟錯誤)",
+          "is_correct": false
+        }
+      ],
+      "shuffle_options": false,
+      "explanation": {
+        "correct": "LSTM 單時間步流程:Step 1: retained = f * c_prev,forget gate 控制保留多少舊記憶,本例 = {retained_val}。Step 2: added = i * g,input gate 控制新候選資訊寫入比例,本例 = {added_val}。Step 3: c_t = retained + added,新 cell state = {c_t_val}(LSTM 把記憶當加法累積,正是長距離依賴能保留的關鍵)。Step 4: h_t = o * tanh(c_t),output gate 決定輸出多少 cell 內容,tanh 將 c_t 壓縮到 (-1, 1),本例 h_t = {h_t_val}。三個 gate 皆為 element-wise [0,1] 縮放器(已由 sigmoid 算好,本題直接給數值)。",
+        "wrong": {
+          "(任一步驟錯誤)": "忘記 forget gate 變成 RNN 全保留舊記憶;忘記 output gate 就把 c_t 全部曝光;忘記 tanh 會讓 h_t 超出 (-1,1) 範圍。"
+        },
+        "hook": "LSTM 公式三件事:f 守舊、i 納新、o 開關輸出;c_t 用加法累積、h_t 經 tanh 壓縮"
+      },
+      "misconceptions": [
+        "誤以為 LSTM 用乘法更新 c_t(實為加法,避免長距離梯度消失)",
+        "誤把 h_t 與 c_t 視為同物(c 是長期記憶、h 是當步輸出)"
+      ],
+      "related_node_ids": [
+        "n_L23203_002"
+      ],
+      "tags": [
+        "code-trace",
+        "LSTM",
+        "sequence-model",
+        "gates"
       ]
     }
   ]

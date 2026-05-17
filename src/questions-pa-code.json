@@ -17,15 +17,51 @@
       "stem": "資料科學家在處理 IoT 感測器訊號時,需計算協方差矩陣的反矩陣以做白化(whitening)。請問下列程式輸出的對角元素和為何?",
       "code_block": "import numpy as np\nC = np.array([[{a}, 0.0],\n              [0.0, {b}]])\nC_inv = np.linalg.inv(C)\nprint(np.trace(C_inv))",
       "stem_variables": {
-        "case_a": {"a": "2.0", "b": "4.0", "answer": "0.75", "wrong1": "6.0", "wrong2": "0.125", "wrong3": "ValueError"},
-        "case_b": {"a": "4.0", "b": "5.0", "answer": "0.45", "wrong1": "9.0", "wrong2": "0.05", "wrong3": "ValueError"},
-        "case_c": {"a": "1.0", "b": "8.0", "answer": "1.125", "wrong1": "9.0", "wrong2": "0.125", "wrong3": "ValueError"}
+        "case_a": {
+          "a": "2.0",
+          "b": "4.0",
+          "answer": "0.75",
+          "wrong1": "6.0",
+          "wrong2": "0.125",
+          "wrong3": "ValueError"
+        },
+        "case_b": {
+          "a": "4.0",
+          "b": "5.0",
+          "answer": "0.45",
+          "wrong1": "9.0",
+          "wrong2": "0.05",
+          "wrong3": "ValueError"
+        },
+        "case_c": {
+          "a": "1.0",
+          "b": "8.0",
+          "answer": "1.125",
+          "wrong1": "9.0",
+          "wrong2": "0.125",
+          "wrong3": "ValueError"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤算成原矩陣的跡"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤算為對角元素相乘的倒數"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為對角矩陣不可反"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤算成原矩陣的跡"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤算為對角元素相乘的倒數"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤以為對角矩陣不可反"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -37,9 +73,19 @@
         },
         "hook": "對角反矩陣 = 每個對角元素取倒數;跡是對角加總"
       },
-      "misconceptions": ["把跡與行列式混淆", "以為對角矩陣不可逆"],
-      "related_node_ids": ["n_L23103_005", "n_L23102_001"],
-      "tags": ["numpy", "線性代數", "反矩陣"]
+      "misconceptions": [
+        "把跡與行列式混淆",
+        "以為對角矩陣不可逆"
+      ],
+      "related_node_ids": [
+        "n_L23103_005",
+        "n_L23102_001"
+      ],
+      "tags": [
+        "numpy",
+        "線性代數",
+        "反矩陣"
+      ]
     },
     {
       "id": "q_pa_002",
@@ -52,15 +98,51 @@
       "stem": "金融風控團隊以 PCA 處理客戶特徵,需驗證共變異數矩陣特徵值的乘積關係。請問下列程式輸出值最接近?",
       "code_block": "import numpy as np\nM = np.array([[{a}, {b}],\n              [{b}, {a}]])\neigvals, _ = np.linalg.eig(M)\nresult = np.prod(eigvals)\nprint(round(result, 2))",
       "stem_variables": {
-        "case_a": {"a": "5.0", "b": "2.0", "answer": "21.0", "wrong1": "10.0", "wrong2": "25.0", "wrong3": "14.0"},
-        "case_b": {"a": "6.0", "b": "3.0", "answer": "27.0", "wrong1": "12.0", "wrong2": "36.0", "wrong3": "18.0"},
-        "case_c": {"a": "10.0", "b": "4.0", "answer": "84.0", "wrong1": "20.0", "wrong2": "100.0", "wrong3": "28.0"}
+        "case_a": {
+          "a": "5.0",
+          "b": "2.0",
+          "answer": "21.0",
+          "wrong1": "10.0",
+          "wrong2": "25.0",
+          "wrong3": "14.0"
+        },
+        "case_b": {
+          "a": "6.0",
+          "b": "3.0",
+          "answer": "27.0",
+          "wrong1": "12.0",
+          "wrong2": "36.0",
+          "wrong3": "18.0"
+        },
+        "case_c": {
+          "a": "10.0",
+          "b": "4.0",
+          "answer": "84.0",
+          "wrong1": "20.0",
+          "wrong2": "100.0",
+          "wrong3": "28.0"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤算為特徵值總和"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤算為對角線之積"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤把所有元素相加"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤算為特徵值總和"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤算為對角線之積"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤把所有元素相加"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -72,9 +154,19 @@
         },
         "hook": "特徵值乘積 = 行列式;特徵值總和 = 跡"
       },
-      "misconceptions": ["以為對角元素積就是行列式", "把和與積混用"],
-      "related_node_ids": ["n_L23103_005", "n_L23102_001"],
-      "tags": ["numpy", "特徵值", "行列式"]
+      "misconceptions": [
+        "以為對角元素積就是行列式",
+        "把和與積混用"
+      ],
+      "related_node_ids": [
+        "n_L23103_005",
+        "n_L23102_001"
+      ],
+      "tags": [
+        "numpy",
+        "特徵值",
+        "行列式"
+      ]
     },
     {
       "id": "q_pa_003",
@@ -87,15 +179,51 @@
       "stem": "資料工程師為了正規化推薦系統的使用者向量,需求其 L2 範數。下列程式輸出為何?",
       "code_block": "import numpy as np\nuser_vec = np.array([{a}, {b}, 0.0, 0.0])\nnorm = np.linalg.norm(user_vec)\nprint(norm)",
       "stem_variables": {
-        "case_a": {"a": "3.0", "b": "4.0", "answer": "5.0", "wrong1": "7.0", "wrong2": "25.0", "wrong3": "4.0"},
-        "case_b": {"a": "5.0", "b": "12.0", "answer": "13.0", "wrong1": "17.0", "wrong2": "169.0", "wrong3": "12.0"},
-        "case_c": {"a": "8.0", "b": "6.0", "answer": "10.0", "wrong1": "14.0", "wrong2": "100.0", "wrong3": "8.0"}
+        "case_a": {
+          "a": "3.0",
+          "b": "4.0",
+          "answer": "5.0",
+          "wrong1": "7.0",
+          "wrong2": "25.0",
+          "wrong3": "4.0"
+        },
+        "case_b": {
+          "a": "5.0",
+          "b": "12.0",
+          "answer": "13.0",
+          "wrong1": "17.0",
+          "wrong2": "169.0",
+          "wrong3": "12.0"
+        },
+        "case_c": {
+          "a": "8.0",
+          "b": "6.0",
+          "answer": "10.0",
+          "wrong1": "14.0",
+          "wrong2": "100.0",
+          "wrong3": "8.0"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤算為 L1 範數(絕對值和)"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "忘記開根號"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤取最大絕對值(L∞)"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤算為 L1 範數(絕對值和)"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "忘記開根號"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤取最大絕對值(L∞)"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -107,9 +235,19 @@
         },
         "hook": "linalg.norm 預設 L2 = 平方和開根號"
       },
-      "misconceptions": ["以為 norm 預設是 L1", "忘記 L2 要開根號"],
-      "related_node_ids": ["n_L23103_006", "n_L23103_005"],
-      "tags": ["numpy", "範數", "正規化"]
+      "misconceptions": [
+        "以為 norm 預設是 L1",
+        "忘記 L2 要開根號"
+      ],
+      "related_node_ids": [
+        "n_L23103_006",
+        "n_L23103_005"
+      ],
+      "tags": [
+        "numpy",
+        "範數",
+        "正規化"
+      ]
     },
     {
       "id": "q_pa_004",
@@ -122,15 +260,48 @@
       "stem": "在類神經權重更新時,工程師對兩個一維權重向量做運算,但混用了 dot 與 *。請問下列程式輸出形狀(shape)為何?",
       "code_block": "import numpy as np\nw1 = np.arange(1, {n}+1)\nw2 = np.arange({n}+1, 2*{n}+1)\na = np.dot(w1, w2)\nb = w1 * w2\nprint(np.shape(a), np.shape(b))",
       "stem_variables": {
-        "case_a": {"n": "3", "answer": "() (3,)", "wrong1": "(1,) (3,)", "wrong2": "(3,) (3,)", "wrong3": "(3,) ()"},
-        "case_b": {"n": "4", "answer": "() (4,)", "wrong1": "(1,) (4,)", "wrong2": "(4,) (4,)", "wrong3": "(4,) ()"},
-        "case_c": {"n": "5", "answer": "() (5,)", "wrong1": "(1,) (5,)", "wrong2": "(5,) (5,)", "wrong3": "(5,) ()"}
+        "case_a": {
+          "n": "3",
+          "answer": "() (3,)",
+          "wrong1": "(1,) (3,)",
+          "wrong2": "(3,) (3,)",
+          "wrong3": "(3,) ()"
+        },
+        "case_b": {
+          "n": "4",
+          "answer": "() (4,)",
+          "wrong1": "(1,) (4,)",
+          "wrong2": "(4,) (4,)",
+          "wrong3": "(4,) ()"
+        },
+        "case_c": {
+          "n": "5",
+          "answer": "() (5,)",
+          "wrong1": "(1,) (5,)",
+          "wrong2": "(5,) (5,)",
+          "wrong3": "(5,) ()"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為純量是 (1,)"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為 dot 也回傳向量"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "搞反 dot 與 elementwise"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤以為純量是 (1,)"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤以為 dot 也回傳向量"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "搞反 dot 與 elementwise"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -142,9 +313,19 @@
         },
         "hook": "1D dot 1D = 純量(shape=());* 是逐元素保形狀"
       },
-      "misconceptions": ["把 dot 與 * 混用", "以為純量 shape 是 (1,)"],
-      "related_node_ids": ["n_L23103_007", "n_L23103_008"],
-      "tags": ["numpy", "內積", "shape"]
+      "misconceptions": [
+        "把 dot 與 * 混用",
+        "以為純量 shape 是 (1,)"
+      ],
+      "related_node_ids": [
+        "n_L23103_007",
+        "n_L23103_008"
+      ],
+      "tags": [
+        "numpy",
+        "內積",
+        "shape"
+      ]
     },
     {
       "id": "q_pa_005",
@@ -157,15 +338,54 @@
       "stem": "在 Transformer attention 計算中,工程師使用 einsum 對 batch 矩陣做縮並。請問下列程式輸出形狀為何?",
       "code_block": "import numpy as np\nnp.random.seed(0)\nQ = np.random.rand({batch}, {seq}, {d})  # batch={batch}, seq={seq}, d={d}\nK = np.random.rand({batch}, {seq}, {d})\nscores = np.einsum('bid,bjd->bij', Q, K)\nprint(scores.shape)",
       "stem_variables": {
-        "case_a": {"batch": "2", "seq": "4", "d": "8", "answer": "(2, 4, 4)", "wrong1": "(2, 8, 8)", "wrong2": "(2, 4, 8)", "wrong3": "(4, 4)"},
-        "case_b": {"batch": "3", "seq": "5", "d": "16", "answer": "(3, 5, 5)", "wrong1": "(3, 16, 16)", "wrong2": "(3, 5, 16)", "wrong3": "(5, 5)"},
-        "case_c": {"batch": "4", "seq": "6", "d": "32", "answer": "(4, 6, 6)", "wrong1": "(4, 32, 32)", "wrong2": "(4, 6, 32)", "wrong3": "(6, 6)"}
+        "case_a": {
+          "batch": "2",
+          "seq": "4",
+          "d": "8",
+          "answer": "(2, 4, 4)",
+          "wrong1": "(2, 8, 8)",
+          "wrong2": "(2, 4, 8)",
+          "wrong3": "(4, 4)"
+        },
+        "case_b": {
+          "batch": "3",
+          "seq": "5",
+          "d": "16",
+          "answer": "(3, 5, 5)",
+          "wrong1": "(3, 16, 16)",
+          "wrong2": "(3, 5, 16)",
+          "wrong3": "(5, 5)"
+        },
+        "case_c": {
+          "batch": "4",
+          "seq": "6",
+          "d": "32",
+          "answer": "(4, 6, 6)",
+          "wrong1": "(4, 32, 32)",
+          "wrong2": "(4, 6, 32)",
+          "wrong3": "(6, 6)"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤把 d 當輸出維度"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "未理解縮並"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "忽略 batch 維"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤把 d 當輸出維度"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "未理解縮並"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "忽略 batch 維"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -177,9 +397,19 @@
         },
         "hook": "einsum 右側沒出現的字母 = 被縮並(消去);共享字母 = 保留"
       },
-      "misconceptions": ["不熟 einsum 字母對應", "忽略左右側差異判斷縮並維"],
-      "related_node_ids": ["n_L23103_008", "n_L23103_007"],
-      "tags": ["numpy", "einsum", "矩陣縮並"]
+      "misconceptions": [
+        "不熟 einsum 字母對應",
+        "忽略左右側差異判斷縮並維"
+      ],
+      "related_node_ids": [
+        "n_L23103_008",
+        "n_L23103_007"
+      ],
+      "tags": [
+        "numpy",
+        "einsum",
+        "矩陣縮並"
+      ]
     },
     {
       "id": "q_pa_006",
@@ -192,15 +422,54 @@
       "stem": "在多維基因表現資料的降維專案中,資料科學家保留若干個主成分。請問下列程式輸出 X_pca 的形狀為何?",
       "code_block": "from sklearn.decomposition import PCA\nimport numpy as np\nnp.random.seed(0)\nX = np.random.rand({n}, {d})\npca = PCA(n_components={k})\nX_pca = pca.fit_transform(X)\nprint(X_pca.shape)",
       "stem_variables": {
-        "case_a": {"n": "120", "d": "5", "k": "2", "answer": "(120, 2)", "wrong1": "(120,)", "wrong2": "(120, 5)", "wrong3": "(2, 5)"},
-        "case_b": {"n": "200", "d": "8", "k": "3", "answer": "(200, 3)", "wrong1": "(200,)", "wrong2": "(200, 8)", "wrong3": "(3, 8)"},
-        "case_c": {"n": "150", "d": "10", "k": "4", "answer": "(150, 4)", "wrong1": "(150,)", "wrong2": "(150, 10)", "wrong3": "(4, 10)"}
+        "case_a": {
+          "n": "120",
+          "d": "5",
+          "k": "2",
+          "answer": "(120, 2)",
+          "wrong1": "(120,)",
+          "wrong2": "(120, 5)",
+          "wrong3": "(2, 5)"
+        },
+        "case_b": {
+          "n": "200",
+          "d": "8",
+          "k": "3",
+          "answer": "(200, 3)",
+          "wrong1": "(200,)",
+          "wrong2": "(200, 8)",
+          "wrong3": "(3, 8)"
+        },
+        "case_c": {
+          "n": "150",
+          "d": "10",
+          "k": "4",
+          "answer": "(150, 4)",
+          "wrong1": "(150,)",
+          "wrong2": "(150, 10)",
+          "wrong3": "(4, 10)"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為 PCA 結果是一維(每筆樣本只剩單一分數)"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為原維度保留"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "把 components_ 形狀當成 transform 輸出"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤以為 PCA 結果是一維(每筆樣本只剩單一分數)"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤以為原維度保留"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "把 components_ 形狀當成 transform 輸出"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -212,9 +481,18 @@
         },
         "hook": "fit_transform 後形狀 = (樣本數, n_components)"
       },
-      "misconceptions": ["把 components_ 與 transform 結果混淆", "搞反 sklearn 的列欄慣例"],
-      "related_node_ids": ["n_L23102_001"],
-      "tags": ["sklearn", "PCA", "降維"]
+      "misconceptions": [
+        "把 components_ 與 transform 結果混淆",
+        "搞反 sklearn 的列欄慣例"
+      ],
+      "related_node_ids": [
+        "n_L23102_001"
+      ],
+      "tags": [
+        "sklearn",
+        "PCA",
+        "降維"
+      ]
     },
     {
       "id": "q_pa_007",
@@ -227,15 +505,51 @@
       "stem": "在電商點擊率預測模型,工程師用 KFold 做交叉驗證。下列程式印出『迴圈執行次數、所有測試集大小去重後的個數、第一折的測試集大小』,請問輸出為何?",
       "code_block": "from sklearn.model_selection import KFold\nimport numpy as np\nX = np.arange({n}).reshape(-1, 1)\nkf = KFold(n_splits={k}, shuffle=True, random_state=0)\ncount = 0\ntest_sizes = []\nfor _, test_idx in kf.split(X):\n    count += 1\n    test_sizes.append(len(test_idx))\nprint(count, len(set(test_sizes)), test_sizes[0])",
       "stem_variables": {
-        "case_a": {"n": "1000", "k": "5", "answer": "5 1 200", "wrong1": "1 1 1000", "wrong2": "5 1 800", "wrong3": "10 1 100"},
-        "case_b": {"n": "1200", "k": "4", "answer": "4 1 300", "wrong1": "1 1 1200", "wrong2": "4 1 900", "wrong3": "8 1 150"},
-        "case_c": {"n": "800", "k": "8", "answer": "8 1 100", "wrong1": "1 1 800", "wrong2": "8 1 700", "wrong3": "16 1 50"}
+        "case_a": {
+          "n": "1000",
+          "k": "5",
+          "answer": "5 1 200",
+          "wrong1": "1 1 1000",
+          "wrong2": "5 1 800",
+          "wrong3": "10 1 100"
+        },
+        "case_b": {
+          "n": "1200",
+          "k": "4",
+          "answer": "4 1 300",
+          "wrong1": "1 1 1200",
+          "wrong2": "4 1 900",
+          "wrong3": "8 1 150"
+        },
+        "case_c": {
+          "n": "800",
+          "k": "8",
+          "answer": "8 1 100",
+          "wrong1": "1 1 800",
+          "wrong2": "8 1 700",
+          "wrong3": "16 1 50"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為只 split 一次"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "搞反訓練/測試大小"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為 split 數翻倍"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤以為只 split 一次"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "搞反訓練/測試大小"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤以為 split 數翻倍"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -247,9 +561,18 @@
         },
         "hook": "KFold n_splits = K → 跑 K 次,每折 test = n/K"
       },
-      "misconceptions": ["搞反訓練/測試比例", "以為 KFold 是隨機抽一次"],
-      "related_node_ids": ["n_L23303_005"],
-      "tags": ["sklearn", "交叉驗證", "KFold"]
+      "misconceptions": [
+        "搞反訓練/測試比例",
+        "以為 KFold 是隨機抽一次"
+      ],
+      "related_node_ids": [
+        "n_L23303_005"
+      ],
+      "tags": [
+        "sklearn",
+        "交叉驗證",
+        "KFold"
+      ]
     },
     {
       "id": "q_pa_008",
@@ -262,15 +585,60 @@
       "stem": "醫療影像團隊用 StandardScaler 對特徵向量做 fit。請問下列程式列印的 ss.mean_[0] 值最接近?",
       "code_block": "from sklearn.preprocessing import StandardScaler\nimport numpy as np\nx = np.array([[{v1}],[{v2}],[{v3}],[{v4}],[{v5}]], dtype=float)\nss = StandardScaler()\nss.fit(x)\nprint(round(float(ss.mean_[0]), 2))",
       "stem_variables": {
-        "case_a": {"v1": "10", "v2": "20", "v3": "30", "v4": "40", "v5": "50", "answer": "30.0", "wrong1": "0.0", "wrong2": "14.14", "wrong3": "10.0"},
-        "case_b": {"v1": "5", "v2": "15", "v3": "25", "v4": "35", "v5": "45", "answer": "25.0", "wrong1": "0.0", "wrong2": "14.14", "wrong3": "5.0"},
-        "case_c": {"v1": "20", "v2": "40", "v3": "60", "v4": "80", "v5": "100", "answer": "60.0", "wrong1": "0.0", "wrong2": "28.28", "wrong3": "20.0"}
+        "case_a": {
+          "v1": "10",
+          "v2": "20",
+          "v3": "30",
+          "v4": "40",
+          "v5": "50",
+          "answer": "30.0",
+          "wrong1": "0.0",
+          "wrong2": "14.14",
+          "wrong3": "10.0"
+        },
+        "case_b": {
+          "v1": "5",
+          "v2": "15",
+          "v3": "25",
+          "v4": "35",
+          "v5": "45",
+          "answer": "25.0",
+          "wrong1": "0.0",
+          "wrong2": "14.14",
+          "wrong3": "5.0"
+        },
+        "case_c": {
+          "v1": "20",
+          "v2": "40",
+          "v3": "60",
+          "v4": "80",
+          "v5": "100",
+          "answer": "60.0",
+          "wrong1": "0.0",
+          "wrong2": "28.28",
+          "wrong3": "20.0"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為 ss.mean_ 是標準化後的均值(0)"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "把 ss.scale_(擬合標準差)誤當成 ss.mean_"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "把第一筆樣本值誤當成擬合平均"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤以為 ss.mean_ 是標準化後的均值(0)"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "把 ss.scale_(擬合標準差)誤當成 ss.mean_"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "把第一筆樣本值誤當成擬合平均"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -282,9 +650,18 @@
         },
         "hook": "ss.mean_ = 原始資料平均;ss.scale_ = 原始資料標準差;transform 後資料平均 = 0、標準差 = 1"
       },
-      "misconceptions": ["分不清 ss.mean_ 與 transform 後資料的均值", "把 ss.scale_ 當成 ss.mean_"],
-      "related_node_ids": ["n_L23301_001"],
-      "tags": ["sklearn", "標準化", "StandardScaler"]
+      "misconceptions": [
+        "分不清 ss.mean_ 與 transform 後資料的均值",
+        "把 ss.scale_ 當成 ss.mean_"
+      ],
+      "related_node_ids": [
+        "n_L23301_001"
+      ],
+      "tags": [
+        "sklearn",
+        "標準化",
+        "StandardScaler"
+      ]
     },
     {
       "id": "q_pa_009",
@@ -297,15 +674,51 @@
       "stem": "在二元客戶流失預測中,工程師訓練 LogisticRegression。請問下列程式輸出 model.coef_ 形狀為何?",
       "code_block": "from sklearn.linear_model import LogisticRegression\nimport numpy as np\nnp.random.seed(0)\nX = np.random.rand({n}, {d})\ny = (X.sum(axis=1) > {d}/2).astype(int)\nmodel = LogisticRegression()\nmodel.fit(X, y)\nprint(model.coef_.shape)",
       "stem_variables": {
-        "case_a": {"n": "200", "d": "2", "answer": "(1, 2)", "wrong1": "(2,)", "wrong2": "(2, 1)", "wrong3": "(2, 2)"},
-        "case_b": {"n": "300", "d": "3", "answer": "(1, 3)", "wrong1": "(3,)", "wrong2": "(3, 1)", "wrong3": "(2, 3)"},
-        "case_c": {"n": "250", "d": "4", "answer": "(1, 4)", "wrong1": "(4,)", "wrong2": "(4, 1)", "wrong3": "(2, 4)"}
+        "case_a": {
+          "n": "200",
+          "d": "2",
+          "answer": "(1, 2)",
+          "wrong1": "(2,)",
+          "wrong2": "(2, 1)",
+          "wrong3": "(2, 2)"
+        },
+        "case_b": {
+          "n": "300",
+          "d": "3",
+          "answer": "(1, 3)",
+          "wrong1": "(3,)",
+          "wrong2": "(3, 1)",
+          "wrong3": "(2, 3)"
+        },
+        "case_c": {
+          "n": "250",
+          "d": "4",
+          "answer": "(1, 4)",
+          "wrong1": "(4,)",
+          "wrong2": "(4, 1)",
+          "wrong3": "(2, 4)"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為 coef 是一維"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "搞反列與欄"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為兩類各有兩列"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤以為 coef 是一維"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "搞反列與欄"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤以為兩類各有兩列"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -317,9 +730,18 @@
         },
         "hook": "coef_ 永遠 2D:(類別數或1, 特徵數)"
       },
-      "misconceptions": ["以為 coef_ 是 1D", "搞反軸的順序"],
-      "related_node_ids": ["n_L23202_003"],
-      "tags": ["sklearn", "邏輯回歸", "係數"]
+      "misconceptions": [
+        "以為 coef_ 是 1D",
+        "搞反軸的順序"
+      ],
+      "related_node_ids": [
+        "n_L23202_003"
+      ],
+      "tags": [
+        "sklearn",
+        "邏輯回歸",
+        "係數"
+      ]
     },
     {
       "id": "q_pa_010",
@@ -332,15 +754,54 @@
       "stem": "在語音辨識前處理,工程師用 nn.Linear(in={in_dim}, out={out_dim}) 實作神經元的加權求和公式 y = xW^T + b,輸入 batch={batch} 的特徵。請問下列程式輸出形狀為何?",
       "code_block": "import torch\nimport torch.nn as nn\ntorch.manual_seed(0)\nlayer = nn.Linear({in_dim}, {out_dim})\nx = torch.randn({batch}, {in_dim})\ny = layer(x)\nprint(y.shape)",
       "stem_variables": {
-        "case_a": {"in_dim": "64", "out_dim": "16", "batch": "8", "answer": "torch.Size([8, 16])", "wrong1": "torch.Size([8, 64])", "wrong2": "torch.Size([16, 8])", "wrong3": "torch.Size([64, 16])"},
-        "case_b": {"in_dim": "128", "out_dim": "32", "batch": "4", "answer": "torch.Size([4, 32])", "wrong1": "torch.Size([4, 128])", "wrong2": "torch.Size([32, 4])", "wrong3": "torch.Size([128, 32])"},
-        "case_c": {"in_dim": "256", "out_dim": "64", "batch": "16", "answer": "torch.Size([16, 64])", "wrong1": "torch.Size([16, 256])", "wrong2": "torch.Size([64, 16])", "wrong3": "torch.Size([256, 64])"}
+        "case_a": {
+          "in_dim": "64",
+          "out_dim": "16",
+          "batch": "8",
+          "answer": "torch.Size([8, 16])",
+          "wrong1": "torch.Size([8, 64])",
+          "wrong2": "torch.Size([16, 8])",
+          "wrong3": "torch.Size([64, 16])"
+        },
+        "case_b": {
+          "in_dim": "128",
+          "out_dim": "32",
+          "batch": "4",
+          "answer": "torch.Size([4, 32])",
+          "wrong1": "torch.Size([4, 128])",
+          "wrong2": "torch.Size([32, 4])",
+          "wrong3": "torch.Size([128, 32])"
+        },
+        "case_c": {
+          "in_dim": "256",
+          "out_dim": "64",
+          "batch": "16",
+          "answer": "torch.Size([16, 64])",
+          "wrong1": "torch.Size([16, 256])",
+          "wrong2": "torch.Size([64, 16])",
+          "wrong3": "torch.Size([256, 64])"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為輸入維不變"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "搞反 batch 與特徵軸"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤把權重形狀當輸出"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤以為輸入維不變"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "搞反 batch 與特徵軸"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤把權重形狀當輸出"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -352,9 +813,19 @@
         },
         "hook": "nn.Linear 只改最後一軸:in→out,batch 不變"
       },
-      "misconceptions": ["搞反 weight 與輸出形狀", "以為 Linear 改 batch"],
-      "related_node_ids": ["n_L23203_003"],
-      "tags": ["pytorch", "nn.Linear", "shape", "加權求和"]
+      "misconceptions": [
+        "搞反 weight 與輸出形狀",
+        "以為 Linear 改 batch"
+      ],
+      "related_node_ids": [
+        "n_L23203_003"
+      ],
+      "tags": [
+        "pytorch",
+        "nn.Linear",
+        "shape",
+        "加權求和"
+      ]
     },
     {
       "id": "q_pa_013",
@@ -367,15 +838,54 @@
       "stem": "保險理賠資料含缺值,分析師比較『刪除缺值列(dropna)』與『以 0 填補(fillna(0))』兩策略對平均的影響。下列程式 `print(round(drop_mean, 1), round(zero_mean, 1))` 的實際輸出為何?",
       "code_block": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'claim': [{x1}, np.nan, {x2}, np.nan, {x3}]})\ndrop_mean = df['claim'].dropna().mean()     # 策略 A:刪除缺值列\nzero_mean = df['claim'].fillna(0).mean()    # 策略 B:以 0 填補\nprint(round(drop_mean, 1), round(zero_mean, 1))",
       "stem_variables": {
-        "case_a": {"x1": "100", "x2": "50", "x3": "150", "answer": "100.0 60.0", "wrong1": "60.0 100.0", "wrong2": "100.0 100.0", "wrong3": "nan nan"},
-        "case_b": {"x1": "80", "x2": "60", "x3": "100", "answer": "80.0 48.0", "wrong1": "48.0 80.0", "wrong2": "80.0 80.0", "wrong3": "nan nan"},
-        "case_c": {"x1": "200", "x2": "100", "x3": "300", "answer": "200.0 120.0", "wrong1": "120.0 200.0", "wrong2": "200.0 200.0", "wrong3": "nan nan"}
+        "case_a": {
+          "x1": "100",
+          "x2": "50",
+          "x3": "150",
+          "answer": "100.0 60.0",
+          "wrong1": "60.0 100.0",
+          "wrong2": "100.0 100.0",
+          "wrong3": "nan nan"
+        },
+        "case_b": {
+          "x1": "80",
+          "x2": "60",
+          "x3": "100",
+          "answer": "80.0 48.0",
+          "wrong1": "48.0 80.0",
+          "wrong2": "80.0 80.0",
+          "wrong3": "nan nan"
+        },
+        "case_c": {
+          "x1": "200",
+          "x2": "100",
+          "x3": "300",
+          "answer": "200.0 120.0",
+          "wrong1": "120.0 200.0",
+          "wrong2": "200.0 200.0",
+          "wrong3": "nan nan"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤把策略順序倒置"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為 fillna(0) 不改變平均值"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為 NaN 會污染整個 mean 運算"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤把策略順序倒置"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤以為 fillna(0) 不改變平均值"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤以為 NaN 會污染整個 mean 運算"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -387,9 +897,20 @@
         },
         "hook": "口訣『非負數據 fillna(0) 必拉低 mean』:dropna 算 k 筆真實平均;fillna(0) 把 NaN 換 0 但分母還是 n,所以 mean 縮成 k/n 倍。對應 MCAR/MAR/MNAR 機制選不同策略才對"
       },
-      "misconceptions": ["以為 fillna(0) 不會影響統計量", "忽略缺值機制(MCAR/MAR/MNAR)與處理策略的對應", "以為 dropna 與 fillna 兩策略 mean 必相同"],
-      "related_node_ids": ["n_L22201_002"],
-      "tags": ["pandas", "缺值處理", "imputation", "MCAR"]
+      "misconceptions": [
+        "以為 fillna(0) 不會影響統計量",
+        "忽略缺值機制(MCAR/MAR/MNAR)與處理策略的對應",
+        "以為 dropna 與 fillna 兩策略 mean 必相同"
+      ],
+      "related_node_ids": [
+        "n_L22201_002"
+      ],
+      "tags": [
+        "pandas",
+        "缺值處理",
+        "imputation",
+        "MCAR"
+      ]
     },
     {
       "id": "q_pa_014",
@@ -402,15 +923,51 @@
       "stem": "在零售營收分析中,分析師用 groupby 對地區同時計算兩種統計量。請問下列程式 `print(list(result.columns))` 的實際輸出為何?",
       "code_block": "import pandas as pd\ndf = pd.DataFrame({\n    'region': ['N', 'S', 'N', 'S', 'N'],\n    'sales': [100, 80, 120, 90, 110]\n})\nresult = df.groupby('region')['sales'].agg(['{f1}', '{f2}'])\nprint(list(result.columns))",
       "stem_variables": {
-        "case_a": {"f1": "sum", "f2": "mean", "answer": "['sum', 'mean']", "wrong1": "['sales']", "wrong2": "['sales_sum', 'sales_mean']", "wrong3": "[('sales', 'sum'), ('sales', 'mean')]"},
-        "case_b": {"f1": "min", "f2": "max", "answer": "['min', 'max']", "wrong1": "['sales']", "wrong2": "['sales_min', 'sales_max']", "wrong3": "[('sales', 'min'), ('sales', 'max')]"},
-        "case_c": {"f1": "count", "f2": "std", "answer": "['count', 'std']", "wrong1": "['sales']", "wrong2": "['sales_count', 'sales_std']", "wrong3": "[('sales', 'count'), ('sales', 'std')]"}
+        "case_a": {
+          "f1": "sum",
+          "f2": "mean",
+          "answer": "['sum', 'mean']",
+          "wrong1": "['sales']",
+          "wrong2": "['sales_sum', 'sales_mean']",
+          "wrong3": "[('sales', 'sum'), ('sales', 'mean')]"
+        },
+        "case_b": {
+          "f1": "min",
+          "f2": "max",
+          "answer": "['min', 'max']",
+          "wrong1": "['sales']",
+          "wrong2": "['sales_min', 'sales_max']",
+          "wrong3": "[('sales', 'min'), ('sales', 'max')]"
+        },
+        "case_c": {
+          "f1": "count",
+          "f2": "std",
+          "answer": "['count', 'std']",
+          "wrong1": "['sales']",
+          "wrong2": "['sales_count', 'sales_std']",
+          "wrong3": "[('sales', 'count'), ('sales', 'std')]"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為只保留欄名"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為自動加前綴"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤以為 MultiIndex(SeriesGroupBy vs DataFrameGroupBy 混淆)"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤以為只保留欄名"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤以為自動加前綴"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤以為 MultiIndex(SeriesGroupBy vs DataFrameGroupBy 混淆)"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -422,9 +979,2873 @@
         },
         "hook": "口訣『先選 Series,後不分層』:`['sales']` 後 agg(list) → 單層 columns;不選則 → MultiIndex"
       },
-      "misconceptions": ["以為 SeriesGroupBy 與 DataFrameGroupBy 的 agg 輸出 columns 結構相同", "以為 agg 自動帶上原欄名", "以為 groupby key 留在欄"],
-      "related_node_ids": ["n_L22201_007", "n_L22201_001"],
-      "tags": ["pandas", "groupby", "agg"]
+      "misconceptions": [
+        "以為 SeriesGroupBy 與 DataFrameGroupBy 的 agg 輸出 columns 結構相同",
+        "以為 agg 自動帶上原欄名",
+        "以為 groupby key 留在欄"
+      ],
+      "related_node_ids": [
+        "n_L22201_007",
+        "n_L22201_001"
+      ],
+      "tags": [
+        "pandas",
+        "groupby",
+        "agg"
+      ]
+    },
+    {
+      "id": "q_pa_np_001",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_007",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "金融風控工程師要把每位客戶 {m} 筆風險特徵的偏移向量(長度 {n})加到一張 {m}x{n} 的零矩陣上,以快速建立每客戶相同的基準偏移。請問下列程式輸出的所有元素總和為何?",
+      "code_block": "import numpy as np\nbase = np.zeros(({m}, {n}))\nbias = np.arange({n})\nresult = base + bias\nprint(result.sum())",
+      "stem_variables": {
+        "case_a": {
+          "m": "3",
+          "n": "4",
+          "answer": "18.0",
+          "wrong1": "6.0",
+          "wrong2": "12.0",
+          "wrong3": "ValueError"
+        },
+        "case_b": {
+          "m": "4",
+          "n": "5",
+          "answer": "40.0",
+          "wrong1": "10.0",
+          "wrong2": "20.0",
+          "wrong3": "ValueError"
+        },
+        "case_c": {
+          "m": "5",
+          "n": "3",
+          "answer": "15.0",
+          "wrong1": "3.0",
+          "wrong2": "9.0",
+          "wrong3": "ValueError"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "只算單列偏移和忽略廣播到 m 列"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤把廣播倍數算成 m-1"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤以為形狀不相容會報錯"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** base 形狀為 ({m},{n}),全為 0;bias = np.arange({n}) 形狀為 ({n},)。 **Step 2:** 廣播規則由右對齊,bias 自動擴張為 ({m},{n}),每一列都是 [0,1,...,{n}-1]。 **Step 3:** 一列的和為 0+1+...+({n}-1) = {n}*({n}-1)/2,共 {m} 列,總和 = {m} * {n}*({n}-1)/2 = {answer}。",
+        "wrong": {
+          "{wrong1}": "此值僅為一列 bias 之和,忽略了廣播後共 {m} 列都帶有相同偏移,需再乘 {m}。",
+          "{wrong2}": "此值疑似把行數誤算為 (m-1)*單列和;廣播是完整擴張到 {m} 列,不會少一列。",
+          "{wrong3}": "({m},{n}) 與 ({n},) 在 NumPy 廣播規則下相容(右側對齊維度匹配),不會丟例外。"
+        },
+        "hook": "Broadcasting:由右對齊,缺維補 1,可放大但不可縮小"
+      },
+      "misconceptions": [
+        "以為一維 array 不能加到二維 array",
+        "忘記廣播會把單列複製到所有列"
+      ],
+      "related_node_ids": [
+        "n_L23103_007"
+      ],
+      "tags": [
+        "numpy",
+        "broadcasting",
+        "shape"
+      ]
+    },
+    {
+      "id": "q_pa_np_002",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_007",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "醫療影像工程師將一張 {n} 個像素的灰階向量 reshape 為 {r}x{c} 影像後做局部標記,卻發現原向量也被改動。請問執行下列程式後 a[0] 之值為何?",
+      "code_block": "import numpy as np\na = np.arange({n})\nb = a.reshape({r}, {c})\nb[0, 0] = {v}\nprint(a[0])",
+      "stem_variables": {
+        "case_a": {
+          "n": "12",
+          "r": "3",
+          "c": "4",
+          "v": "99",
+          "answer": "99",
+          "wrong1": "0",
+          "wrong2": "12",
+          "wrong3": "ValueError"
+        },
+        "case_b": {
+          "n": "20",
+          "r": "4",
+          "c": "5",
+          "v": "77",
+          "answer": "77",
+          "wrong1": "0",
+          "wrong2": "20",
+          "wrong3": "ValueError"
+        },
+        "case_c": {
+          "n": "9",
+          "r": "3",
+          "c": "3",
+          "v": "55",
+          "answer": "55",
+          "wrong1": "0",
+          "wrong2": "9",
+          "wrong3": "ValueError"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤以為 reshape 產生 copy 不會影響 a"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤把 a 的長度當答案"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤以為 reshape 後不能修改"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** a = np.arange({n}) 是連續記憶體一維陣列。 **Step 2:** a.reshape({r},{c}) 在資料連續且不需要 transpose 重排時,回傳 **view** 而非 copy,b 與 a 共享底層 buffer。 **Step 3:** 修改 b[0,0] = {v} 等同修改 a[0],所以 a[0] = {v} = {answer}。要強制 copy 須改寫 a.reshape({r},{c}).copy()。",
+        "wrong": {
+          "{wrong1}": "若 reshape 回傳 copy,a[0] 才會維持原值 0;但 reshape 預設回 view,a 與 b 共享記憶體,修改會同步。",
+          "{wrong2}": "{wrong2} 是陣列總長度,與第一個元素的值無關。",
+          "{wrong3}": "reshape 之後仍可正常 indexing 與賦值,不會丟例外。"
+        },
+        "hook": "reshape 通常回 view(共享記憶體);要獨立資料用 .copy()"
+      },
+      "misconceptions": [
+        "以為 reshape 一定是 copy",
+        "把 view 與 copy 行為混淆"
+      ],
+      "related_node_ids": [
+        "n_L23103_007"
+      ],
+      "tags": [
+        "numpy",
+        "reshape",
+        "view"
+      ]
+    },
+    {
+      "id": "q_pa_np_003",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_005",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "製造業資料科學家在做感測器訊號白化前,需先把對角化的共變異數矩陣求反矩陣再取跡。請問下列程式輸出為何?",
+      "code_block": "import numpy as np\nC = np.diag([{a}, {b}, {c}])\nC_inv = np.linalg.inv(C)\nprint(round(np.trace(C_inv), 4))",
+      "stem_variables": {
+        "case_a": {
+          "a": "2.0",
+          "b": "4.0",
+          "c": "5.0",
+          "answer": "0.95",
+          "wrong1": "11.0",
+          "wrong2": "0.025",
+          "wrong3": "ValueError"
+        },
+        "case_b": {
+          "a": "1.0",
+          "b": "2.0",
+          "c": "4.0",
+          "answer": "1.75",
+          "wrong1": "7.0",
+          "wrong2": "0.125",
+          "wrong3": "ValueError"
+        },
+        "case_c": {
+          "a": "2.0",
+          "b": "5.0",
+          "c": "10.0",
+          "answer": "0.8",
+          "wrong1": "17.0",
+          "wrong2": "0.01",
+          "wrong3": "ValueError"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤算成原矩陣的跡"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤算為 1/(abc) 行列式倒數"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤以為對角矩陣不可逆"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** C = diag({a},{b},{c}) 為對角矩陣。 **Step 2:** 對角矩陣的反矩陣為各對角元素取倒數,故 C_inv = diag(1/{a}, 1/{b}, 1/{c})。 **Step 3:** np.trace 取對角和 = 1/{a} + 1/{b} + 1/{c} = {answer}(四捨五入到 4 位)。",
+        "wrong": {
+          "{wrong1}": "此值為原矩陣 C 的跡({a}+{b}+{c}),題目問的是 C_inv 的跡。",
+          "{wrong2}": "此值疑似行列式 |C|=abc 的倒數 1/({a}*{b}*{c}),這是純量不是對角和。",
+          "{wrong3}": "對角矩陣只要對角元素皆非零即可逆,本題對角元素皆 > 0。"
+        },
+        "hook": "對角反矩陣:每個對角元取倒數;跡是對角和"
+      },
+      "misconceptions": [
+        "把跡與行列式混用",
+        "以為對角矩陣不可逆"
+      ],
+      "related_node_ids": [
+        "n_L23103_005"
+      ],
+      "tags": [
+        "numpy",
+        "反矩陣",
+        "跡"
+      ]
+    },
+    {
+      "id": "q_pa_np_004",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_005",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "零售推薦團隊用 PCA 前,需驗證對稱矩陣特徵值總和等於跡的性質。請問下列程式輸出值最接近?",
+      "code_block": "import numpy as np\nM = np.array([[{a}, {b}],\n              [{b}, {a}]])\neigvals = np.linalg.eigvals(M)\nresult = float(np.sum(eigvals).real)\nprint(round(result, 2))",
+      "stem_variables": {
+        "case_a": {
+          "a": "5.0",
+          "b": "2.0",
+          "answer": "10.0",
+          "wrong1": "21.0",
+          "wrong2": "25.0",
+          "wrong3": "7.0"
+        },
+        "case_b": {
+          "a": "6.0",
+          "b": "3.0",
+          "answer": "12.0",
+          "wrong1": "27.0",
+          "wrong2": "36.0",
+          "wrong3": "9.0"
+        },
+        "case_c": {
+          "a": "8.0",
+          "b": "3.0",
+          "answer": "16.0",
+          "wrong1": "55.0",
+          "wrong2": "64.0",
+          "wrong3": "11.0"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤算為特徵值乘積(=行列式)"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤算為對角線之積"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤算為 a+b 單一特徵值"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** M 為對稱矩陣 [[{a},{b}],[{b},{a}]],其特徵值為 {a}+{b} 與 {a}-{b}。 **Step 2:** 由跡-特徵值定理,Σλ = trace(M) = {a}+{a} = 2*{a}。 **Step 3:** 故 np.sum(eigvals) = 2*{a} = {answer}。即使 eigvals 順序不定,總和恆等於跡。",
+        "wrong": {
+          "{wrong1}": "此值為特徵值乘積({a}²-{b}²),對應行列式 |M|;題目問的是和不是積。",
+          "{wrong2}": "此值是對角元素之積 {a}*{a},既不是跡也不是行列式。",
+          "{wrong3}": "{wrong3} 看似 a+b 為單一特徵值,但題目要兩個特徵值的總和。"
+        },
+        "hook": "特徵值總和 = 跡;特徵值乘積 = 行列式"
+      },
+      "misconceptions": [
+        "把和與積對應的不變量混淆",
+        "以為對稱矩陣特徵值需手算公式"
+      ],
+      "related_node_ids": [
+        "n_L23103_005"
+      ],
+      "tags": [
+        "numpy",
+        "特徵值",
+        "跡"
+      ]
+    },
+    {
+      "id": "q_pa_np_005",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_006",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "社群平台工程師要分別計算使用者嵌入向量的 L1、L2、L∞ 範數以做不同正規化。請問下列程式三個輸出依序為何?",
+      "code_block": "import numpy as np\nv = np.array([{a}, {b}, {c}])\nprint(np.linalg.norm(v, ord=1))\nprint(round(np.linalg.norm(v, ord=2), 2))\nprint(np.linalg.norm(v, ord=np.inf))",
+      "stem_variables": {
+        "case_a": {
+          "a": "3.0",
+          "b": "-4.0",
+          "c": "0.0",
+          "answer": "7.0, 5.0, 4.0",
+          "wrong1": "5.0, 7.0, 4.0",
+          "wrong2": "7.0, 25.0, 4.0",
+          "wrong3": "7.0, 5.0, 3.0"
+        },
+        "case_b": {
+          "a": "1.0",
+          "b": "-2.0",
+          "c": "2.0",
+          "answer": "5.0, 3.0, 2.0",
+          "wrong1": "3.0, 5.0, 2.0",
+          "wrong2": "5.0, 9.0, 2.0",
+          "wrong3": "5.0, 3.0, 1.0"
+        },
+        "case_c": {
+          "a": "6.0",
+          "b": "0.0",
+          "c": "-8.0",
+          "answer": "14.0, 10.0, 8.0",
+          "wrong1": "10.0, 14.0, 8.0",
+          "wrong2": "14.0, 100.0, 8.0",
+          "wrong3": "14.0, 10.0, 6.0"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "L1 與 L2 順序互換"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "L2 忘記開根號"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "L∞ 沒取絕對值"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** ord=1 為 L1 = Σ|v_i| = |{a}|+|{b}|+|{c}|。 **Step 2:** ord=2 為 L2 = sqrt(Σv_i²) = sqrt({a}²+{b}²+{c}²)。 **Step 3:** ord=np.inf 為 max(|v_i|),取絕對值後的最大;故三個值依序為 {answer}。",
+        "wrong": {
+          "{wrong1}": "此選項把 L1 與 L2 順序互換;L1 為絕對值總和(較大),L2 為平方和開根號。",
+          "{wrong2}": "此選項中間值 (Σv_i²) 忘記開根號;L2 範數要 sqrt。",
+          "{wrong3}": "L∞ 必先取絕對值再取 max,不能保留負號或忽略符號。"
+        },
+        "hook": "L1=絕對值和、L2=平方和開根、L∞=最大絕對值"
+      },
+      "misconceptions": [
+        "以為 norm 預設 L1",
+        "L∞ 忘記取絕對值"
+      ],
+      "related_node_ids": [
+        "n_L23103_006"
+      ],
+      "tags": [
+        "numpy",
+        "範數",
+        "L1",
+        "L2"
+      ]
+    },
+    {
+      "id": "q_pa_np_006",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_007",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "物流公司資料工程師將 {m}x{k} 的路線特徵矩陣與 {k}x{n} 的成本權重矩陣相乘以求總成本矩陣。請問下列程式輸出的 shape 為何?",
+      "code_block": "import numpy as np\nA = np.ones(({m}, {k}))\nB = np.ones(({k}, {n}))\nC = np.dot(A, B)\nprint(C.shape)",
+      "stem_variables": {
+        "case_a": {
+          "m": "3",
+          "k": "4",
+          "n": "5",
+          "answer": "(3, 5)",
+          "wrong1": "(3, 4)",
+          "wrong2": "(4, 5)",
+          "wrong3": "(5, 3)"
+        },
+        "case_b": {
+          "m": "2",
+          "k": "6",
+          "n": "3",
+          "answer": "(2, 3)",
+          "wrong1": "(2, 6)",
+          "wrong2": "(6, 3)",
+          "wrong3": "(3, 2)"
+        },
+        "case_c": {
+          "m": "5",
+          "k": "2",
+          "n": "4",
+          "answer": "(5, 4)",
+          "wrong1": "(5, 2)",
+          "wrong2": "(2, 4)",
+          "wrong3": "(4, 5)"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤把 A 的 shape 直接當輸出"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤把 B 的 shape 直接當輸出"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤把 (m,n) 順序倒置"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** np.dot 對二維陣列等同矩陣乘法,需內維匹配。 **Step 2:** A 形狀 ({m},{k})、B 形狀 ({k},{n}),內維 {k} 匹配。 **Step 3:** 輸出形狀為 (外維1, 外維2) = ({m},{n}) = {answer}。",
+        "wrong": {
+          "{wrong1}": "此為 A 原 shape,並非乘積結果;np.dot 必去掉內維只留外維。",
+          "{wrong2}": "此為 B 原 shape,並非乘積結果;乘法需 A 外維與 B 外維。",
+          "{wrong3}": "({n},{m}) 把列與行倒置,矩陣乘法輸出第一維是 A 的列數,第二維是 B 的行數。"
+        },
+        "hook": "(m,k) @ (k,n) → (m,n);內維消去外維保留"
+      },
+      "misconceptions": [
+        "矩陣乘法形狀記反",
+        "把 np.dot 誤為逐元素乘"
+      ],
+      "related_node_ids": [
+        "n_L23103_007"
+      ],
+      "tags": [
+        "numpy",
+        "矩陣乘法",
+        "dot"
+      ]
+    },
+    {
+      "id": "q_pa_np_007",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_008",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "智慧城市分析師用 np.einsum 串接交通流向量與時段權重矩陣。下列程式輸出的 shape 為何?",
+      "code_block": "import numpy as np\nA = np.ones(({i}, {j}))\nB = np.ones(({j}, {k}))\nC = np.einsum('ij,jk->ik', A, B)\nprint(C.shape)",
+      "stem_variables": {
+        "case_a": {
+          "i": "3",
+          "j": "4",
+          "k": "5",
+          "answer": "(3, 5)",
+          "wrong1": "(3, 4)",
+          "wrong2": "(4, 5)",
+          "wrong3": "(3, 4, 5)"
+        },
+        "case_b": {
+          "i": "2",
+          "j": "5",
+          "k": "3",
+          "answer": "(2, 3)",
+          "wrong1": "(2, 5)",
+          "wrong2": "(5, 3)",
+          "wrong3": "(2, 5, 3)"
+        },
+        "case_c": {
+          "i": "6",
+          "j": "2",
+          "k": "4",
+          "answer": "(6, 4)",
+          "wrong1": "(6, 2)",
+          "wrong2": "(2, 4)",
+          "wrong3": "(6, 2, 4)"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤把 A 形狀當結果"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤把 B 形狀當結果"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤以為 einsum 不縮並 j 軸"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** einsum 字串 'ij,jk->ik' 表示 A 的軸標 (i,j)、B 的軸標 (j,k),輸出軸標 (i,k)。 **Step 2:** 字串左側出現但右側沒出現的 j 軸會被加總(縮並),即標準矩陣乘法。 **Step 3:** 故輸出 shape = ({i},{k}) = {answer}。",
+        "wrong": {
+          "{wrong1}": "此為 A 形狀;einsum 已把 j 軸縮並,結果第二維是 k 不是 j。",
+          "{wrong2}": "此為 B 形狀;結果第一維是 A 的 i 不是 j。",
+          "{wrong3}": "若字串為 'ij,jk->ijk' 才會保留 j 軸成三維;'ij,jk->ik' 明確縮並 j。"
+        },
+        "hook": "einsum:左右都出現=保留,只在左=縮並"
+      },
+      "misconceptions": [
+        "以為 einsum 不會自動加總",
+        "把 einsum 軸標當變數名"
+      ],
+      "related_node_ids": [
+        "n_L23103_008",
+        "n_L23103_007"
+      ],
+      "tags": [
+        "numpy",
+        "einsum",
+        "矩陣乘法"
+      ]
+    },
+    {
+      "id": "q_pa_np_008",
+      "knowledge_code": "L23102",
+      "node_id": "n_L23102_001",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "教育研究者收集學生兩科成績資料,兩科呈現完美正相關(資料點皆落在 y=x 直線上),想用 PCA 找主成分方向。下列程式中 pc1 的兩個分量比例最接近?",
+      "code_block": "import numpy as np\nX = np.array([[{p}, {p}], [{q}, {q}], [{r}, {r}]], dtype=float)\nX = X - X.mean(axis=0)\ncov = np.cov(X.T)\nvals, vecs = np.linalg.eigh(cov)\npc1 = vecs[:, np.argmax(vals)]\nprint(round(pc1[0] / pc1[1], 2))",
+      "stem_variables": {
+        "case_a": {
+          "p": "1.0",
+          "q": "2.0",
+          "r": "3.0",
+          "answer": "1.0",
+          "wrong1": "-1.0",
+          "wrong2": "0.0",
+          "wrong3": "2.0"
+        },
+        "case_b": {
+          "p": "2.0",
+          "q": "4.0",
+          "r": "6.0",
+          "answer": "1.0",
+          "wrong1": "-1.0",
+          "wrong2": "0.0",
+          "wrong3": "2.0"
+        },
+        "case_c": {
+          "p": "1.0",
+          "q": "3.0",
+          "r": "5.0",
+          "answer": "1.0",
+          "wrong1": "-1.0",
+          "wrong2": "0.0",
+          "wrong3": "2.0"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤以為第一主成分垂直於資料"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤以為主成分沿單軸"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "把資料值比當主成分比"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 兩科完全正相關,所有資料點落在 y=x 直線上,變異最大的方向沿此直線。 **Step 2:** np.cov 算出共變異數矩陣形如 [[s,s],[s,s]],其最大特徵值對應特徵向量正比於 (1,1)。 **Step 3:** eigh 回傳的單位向量分量為 (1/√2, 1/√2),比值 pc1[0]/pc1[1] = 1.0 = {answer}。注意 eigh 可能整體取負,但比值仍為 1。",
+        "wrong": {
+          "{wrong1}": "比值為 -1 對應 y=-x 方向,即第二主成分(變異為 0),不是最大特徵值對應的方向。",
+          "{wrong2}": "若 pc1=(1,0) 或 (0,1) 表示主成分沿單軸,但本題資料對角化的最大方向是 (1,1) 線。",
+          "{wrong3}": "比值 2 看似 p/(p/2) 的資料原值比,但主成分為單位向量,只看方向不看資料絕對值。"
+        },
+        "hook": "PCA 第一主成分 = 變異最大方向(完全正相關 → 對角線)"
+      },
+      "misconceptions": [
+        "以為 PCA 方向沿座標軸",
+        "忽略 PCA 取單位向量"
+      ],
+      "related_node_ids": [
+        "n_L23102_001",
+        "n_L23103_005"
+      ],
+      "tags": [
+        "numpy",
+        "PCA",
+        "主成分"
+      ]
+    },
+    {
+      "id": "q_pa_np_009",
+      "knowledge_code": "L23102",
+      "node_id": "n_L23102_001",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "能源管理工程師對用電資料做 PCA,觀察到共變異數矩陣為對角矩陣 diag({a},{b}),分別代表兩個獨立用電指標的變異。請問下列程式列印的第一主成分對應的特徵值為何?",
+      "code_block": "import numpy as np\ncov = np.diag([{a}, {b}])\nvals, vecs = np.linalg.eigh(cov)\nprint(round(vals.max(), 2))",
+      "stem_variables": {
+        "case_a": {
+          "a": "3.0",
+          "b": "9.0",
+          "answer": "9.0",
+          "wrong1": "3.0",
+          "wrong2": "12.0",
+          "wrong3": "27.0"
+        },
+        "case_b": {
+          "a": "2.0",
+          "b": "8.0",
+          "answer": "8.0",
+          "wrong1": "2.0",
+          "wrong2": "10.0",
+          "wrong3": "16.0"
+        },
+        "case_c": {
+          "a": "5.0",
+          "b": "11.0",
+          "answer": "11.0",
+          "wrong1": "5.0",
+          "wrong2": "16.0",
+          "wrong3": "55.0"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "取較小的特徵值(第二主成分)"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤算為兩特徵值總和"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤算為兩特徵值乘積"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 對角矩陣 diag({a},{b}) 的特徵值即為對角元素 {a} 與 {b}。 **Step 2:** PCA 中第一主成分對應最大特徵值,它即為該主軸上的變異量(variance)。 **Step 3:** max({a},{b}) = {answer},代表第一主成分解釋了此變異量。",
+        "wrong": {
+          "{wrong1}": "此值為較小的特徵值({a}),對應第二主成分,不是最大者。",
+          "{wrong2}": "此值為兩特徵值之和(=跡),代表總變異量,不是最大特徵值。",
+          "{wrong3}": "此值為兩特徵值乘積(=行列式),沒有單一主成分意義。"
+        },
+        "hook": "PCA 特徵值 = 該主成分軸上的變異量;最大 → 第一主成分"
+      },
+      "misconceptions": [
+        "把特徵值和當第一主成分",
+        "以為對角矩陣特徵值還要再計算"
+      ],
+      "related_node_ids": [
+        "n_L23102_001",
+        "n_L23103_005"
+      ],
+      "tags": [
+        "numpy",
+        "PCA",
+        "特徵值"
+      ]
+    },
+    {
+      "id": "q_pa_np_010",
+      "knowledge_code": "L23102",
+      "node_id": "n_L23102_004",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "通訊工程師用 SVD 經濟版(full_matrices=False)對 {m}x{n}({m}>{n})的接收訊號矩陣做降維。下列程式輸出的三個 shape 依序為何?",
+      "code_block": "import numpy as np\nM = np.ones(({m}, {n}))\nU, S, Vt = np.linalg.svd(M, full_matrices=False)\nprint(U.shape, S.shape, Vt.shape)",
+      "stem_variables": {
+        "case_a": {
+          "m": "5",
+          "n": "3",
+          "answer": "(5, 3) (3,) (3, 3)",
+          "wrong1": "(5, 5) (3,) (3, 3)",
+          "wrong2": "(5, 3) (3, 3) (3, 3)",
+          "wrong3": "(5, 3) (3,) (5, 3)"
+        },
+        "case_b": {
+          "m": "6",
+          "n": "2",
+          "answer": "(6, 2) (2,) (2, 2)",
+          "wrong1": "(6, 6) (2,) (2, 2)",
+          "wrong2": "(6, 2) (2, 2) (2, 2)",
+          "wrong3": "(6, 2) (2,) (6, 2)"
+        },
+        "case_c": {
+          "m": "8",
+          "n": "4",
+          "answer": "(8, 4) (4,) (4, 4)",
+          "wrong1": "(8, 8) (4,) (4, 4)",
+          "wrong2": "(8, 4) (4, 4) (4, 4)",
+          "wrong3": "(8, 4) (4,) (8, 4)"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤取完整版 U 形狀 (m,m)"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤把 S 當二維對角矩陣"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤把 Vt 形狀寫成 (m,n)"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** SVD 經濟版令 k = min(m,n) = {n}。 **Step 2:** U 形狀為 (m,k)=({m},{n});S 為一維奇異值向量 shape (k,)=({n},);Vt 為 (k,n)=({n},{n})。 **Step 3:** 三者依序輸出為 {answer}。注意 S 並非二維對角矩陣,需用 np.diag(S) 才能還原矩陣形式。",
+        "wrong": {
+          "{wrong1}": "完整版(full_matrices=True)時 U 才會是 (m,m);經濟版 U 只保留 k 個左奇異向量。",
+          "{wrong2}": "np.linalg.svd 回傳的 S 一律是一維 array(只存奇異值),不是對角矩陣。",
+          "{wrong3}": "Vt 形狀為 (k,n) 而非 (m,n);Vt 行數來自 min(m,n) 不是 m。"
+        },
+        "hook": "SVD 經濟版:U=(m,k), S=(k,), Vt=(k,n),k=min(m,n)"
+      },
+      "misconceptions": [
+        "把 S 當對角矩陣使用",
+        "經濟版與完整版 U 形狀混淆"
+      ],
+      "related_node_ids": [
+        "n_L23102_004",
+        "n_L23102_001"
+      ],
+      "tags": [
+        "numpy",
+        "SVD",
+        "降維"
+      ]
+    },
+    {
+      "id": "q_pa_sk_001",
+      "knowledge_code": "L23301",
+      "node_id": "n_L23301_001",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "金融資料工程師對信貸客戶的「月收入」欄位做標準化處理。下列程式執行後,X_scaled 各欄位的「平均值」與「標準差」分別為何?",
+      "code_block": "import numpy as np\nfrom sklearn.preprocessing import StandardScaler\nX = np.array([[{a}], [{b}], [{c}], [{d}]], dtype=float)\nscaler = StandardScaler()\nX_scaled = scaler.fit_transform(X)\nprint(round(X_scaled.mean(), 4), round(X_scaled.std(), 4))",
+      "stem_variables": {
+        "case_a": {
+          "a": "30000",
+          "b": "50000",
+          "c": "70000",
+          "d": "90000",
+          "answer": "0.0 1.0",
+          "wrong1": "60000.0 22360.68",
+          "wrong2": "0.0 22360.68",
+          "wrong3": "60000.0 1.0"
+        },
+        "case_b": {
+          "a": "20000",
+          "b": "40000",
+          "c": "60000",
+          "d": "80000",
+          "answer": "0.0 1.0",
+          "wrong1": "50000.0 22360.68",
+          "wrong2": "0.0 22360.68",
+          "wrong3": "50000.0 1.0"
+        },
+        "case_c": {
+          "a": "10000",
+          "b": "30000",
+          "c": "50000",
+          "d": "70000",
+          "answer": "0.0 1.0",
+          "wrong1": "40000.0 22360.68",
+          "wrong2": "0.0 22360.68",
+          "wrong3": "40000.0 1.0"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤以為輸出仍是原始尺度"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤以為僅平移未縮放"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤以為僅縮放未平移"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Step 1: StandardScaler 套用 Z-score 公式 z = (x - μ) / σ,先計算欄位平均與母體標準差。Step 2: 平移後新平均必為 0;再除以 σ 後新標準差必為 1。Step 3: 故 fit_transform 後的 X_scaled.mean() = 0.0、.std() = 1.0,與原始尺度({a}~{d})無關。",
+        "wrong": {
+          "{wrong1}": "此選項仍是原始月收入尺度的平均與標準差,代表完全沒套用 scaler。StandardScaler 的目的就是消去原尺度。",
+          "{wrong2}": "此選項僅做了平移(平均歸 0),但忽略了除以 σ 的縮放,標準差仍會被縮為 1。",
+          "{wrong3}": "此選項保留了原始平均但縮放為 1,但 Z-score 是先減平均再除 σ,平均必歸 0,不會殘留原值。"
+        },
+        "hook": "StandardScaler fit_transform 後 mean=0、std=1"
+      },
+      "misconceptions": [
+        "以為 StandardScaler 只縮放不平移",
+        "把原始尺度與標準化後尺度混淆"
+      ],
+      "related_node_ids": [
+        "n_L23301_001"
+      ],
+      "tags": [
+        "sklearn",
+        "StandardScaler",
+        "特徵縮放"
+      ]
+    },
+    {
+      "id": "q_pa_sk_002",
+      "knowledge_code": "L23301",
+      "node_id": "n_L23301_001",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "零售業者要將商品銷量壓縮到固定區間,以便餵入神經網路。下列程式中 X_scaled 的「最小值」與「最大值」分別為何?",
+      "code_block": "import numpy as np\nfrom sklearn.preprocessing import MinMaxScaler\nX = np.array([[{a}], [{b}], [{c}], [{d}]], dtype=float)\nscaler = MinMaxScaler()\nX_scaled = scaler.fit_transform(X)\nprint(X_scaled.min(), X_scaled.max())",
+      "stem_variables": {
+        "case_a": {
+          "a": "100",
+          "b": "300",
+          "c": "500",
+          "d": "900",
+          "answer": "0.0 1.0",
+          "wrong1": "100.0 900.0",
+          "wrong2": "-1.0 1.0",
+          "wrong3": "0.0 0.5"
+        },
+        "case_b": {
+          "a": "50",
+          "b": "150",
+          "c": "250",
+          "d": "450",
+          "answer": "0.0 1.0",
+          "wrong1": "50.0 450.0",
+          "wrong2": "-1.0 1.0",
+          "wrong3": "0.0 0.5"
+        },
+        "case_c": {
+          "a": "200",
+          "b": "400",
+          "c": "600",
+          "d": "1000",
+          "answer": "0.0 1.0",
+          "wrong1": "200.0 1000.0",
+          "wrong2": "-1.0 1.0",
+          "wrong3": "0.0 0.5"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤以為輸出仍是原始範圍"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤以為預設區間為 [-1, 1]"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤算為樣本中位數的相對位置"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Step 1: MinMaxScaler 預設 feature_range=(0, 1),公式為 x' = (x - min) / (max - min)。Step 2: 原始最小值 {a} 對應到 0,最大值 {d} 對應到 1,中間值線性內插。Step 3: 故 X_scaled.min() = 0.0、X_scaled.max() = 1.0,與原始尺度無關。",
+        "wrong": {
+          "{wrong1}": "此選項仍是原始銷量尺度,代表 scaler 完全沒被套用。MinMaxScaler 的目的就是把範圍壓到 [0,1]。",
+          "{wrong2}": "[-1, 1] 不是 MinMaxScaler 預設區間;若需此區間需顯式設 feature_range=(-1, 1)。",
+          "{wrong3}": "此值並非 min/max 而是某個內插點。min/max 必為 0 與 1,中間值才會出現 0.x 的小數。"
+        },
+        "hook": "MinMaxScaler 預設 feature_range=(0,1),min→0、max→1"
+      },
+      "misconceptions": [
+        "把 MinMaxScaler 預設區間誤記為 [-1,1]",
+        "以為 MinMaxScaler 與 StandardScaler 輸出相同"
+      ],
+      "related_node_ids": [
+        "n_L23301_001"
+      ],
+      "tags": [
+        "sklearn",
+        "MinMaxScaler",
+        "特徵縮放"
+      ]
+    },
+    {
+      "id": "q_pa_sk_003",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_008",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "零售業者用 KMeans 對顧客分群,訓練完成後想拿 labels_ 與 predict 對相同訓練資料的結果比對。下列程式輸出 True/False 的結果為何?",
+      "code_block": "import numpy as np\nfrom sklearn.cluster import KMeans\nrng = np.random.RandomState({seed})\nX = rng.rand({n}, 2)\nkm = KMeans(n_clusters={k}, n_init=10, random_state=0).fit(X)\nprint(np.array_equal(km.labels_, km.predict(X)))",
+      "stem_variables": {
+        "case_a": {
+          "seed": "0",
+          "n": "100",
+          "k": "3",
+          "answer": "True",
+          "wrong1": "False",
+          "wrong2": "AttributeError",
+          "wrong3": "ValueError"
+        },
+        "case_b": {
+          "seed": "1",
+          "n": "80",
+          "k": "4",
+          "answer": "True",
+          "wrong1": "False",
+          "wrong2": "AttributeError",
+          "wrong3": "ValueError"
+        },
+        "case_c": {
+          "seed": "2",
+          "n": "120",
+          "k": "5",
+          "answer": "True",
+          "wrong1": "False",
+          "wrong2": "AttributeError",
+          "wrong3": "ValueError"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤以為 predict 會重新分群"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤以為 KMeans 沒有 labels_"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤以為 predict 對訓練資料不可用"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Step 1: KMeans.fit() 訓練完成後 labels_ 屬性儲存的就是「訓練資料」每筆所屬群集索引。Step 2: predict(X) 對任意資料計算到各中心的距離,指派最近的中心。Step 3: 對於同一份訓練資料 X,labels_ 與 predict(X) 的指派必定相同(中心不變、距離不變),故結果為 True。",
+        "wrong": {
+          "{wrong1}": "predict 並不會重新分群、不會重新迭代中心;它只是用已固定的 cluster_centers_ 做最近鄰指派,結果與 labels_ 一致。",
+          "{wrong2}": "KMeans 物件在 fit 後就具備 labels_ 屬性,直接讀取不會丟 AttributeError。",
+          "{wrong3}": "predict 對訓練資料、新資料皆可用,不會丟 ValueError。"
+        },
+        "hook": "KMeans.labels_ == predict(X_train);DBSCAN 才沒有 predict"
+      },
+      "misconceptions": [
+        "以為 predict 會重新跑 KMeans 迭代",
+        "把 KMeans 與 DBSCAN 的 API 混淆"
+      ],
+      "related_node_ids": [
+        "n_L23202_008",
+        "n_L23202_002"
+      ],
+      "tags": [
+        "sklearn",
+        "KMeans",
+        "分群"
+      ]
+    },
+    {
+      "id": "q_pa_sk_004",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_003",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "信貸風控團隊用 LogisticRegression 做「違約 / 不違約」二元分類,訓練完成後想印出 coef_ 的形狀。下列程式輸出為何?",
+      "code_block": "import numpy as np\nfrom sklearn.linear_model import LogisticRegression\nrng = np.random.RandomState(0)\nX = rng.rand({n}, {p})\ny = (X[:, 0] > 0.5).astype(int)\nclf = LogisticRegression().fit(X, y)\nprint(clf.coef_.shape)",
+      "stem_variables": {
+        "case_a": {
+          "n": "200",
+          "p": "5",
+          "answer": "(1, 5)",
+          "wrong1": "(5,)",
+          "wrong2": "(2, 5)",
+          "wrong3": "(5, 1)"
+        },
+        "case_b": {
+          "n": "300",
+          "p": "8",
+          "answer": "(1, 8)",
+          "wrong1": "(8,)",
+          "wrong2": "(2, 8)",
+          "wrong3": "(8, 1)"
+        },
+        "case_c": {
+          "n": "150",
+          "p": "4",
+          "answer": "(1, 4)",
+          "wrong1": "(4,)",
+          "wrong2": "(2, 4)",
+          "wrong3": "(4, 1)"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤以為 coef_ 是 1D 向量"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤以為二元也會有 2 列(每類各一列)"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "把行列維度顛倒"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Step 1: sklearn 的 LogisticRegression 為了統一介面,coef_ 一律是 2D ndarray。Step 2: 二元分類時 shape = (1, n_features);多元(n_classes > 2)時 shape = (n_classes, n_features)。Step 3: 本題 n_features = {p}、二元分類,故 coef_.shape = (1, {p})。",
+        "wrong": {
+          "{wrong1}": "coef_ 在 sklearn 不是 1D;即使二元也會包成 2D,讓 multinomial 介面一致。要取 1D 向量需 .ravel() 或 [0]。",
+          "{wrong2}": "二元分類僅產生 1 列係數(對應正類別 logit);只有當類別數 > 2 才會出現多列。",
+          "{wrong3}": "sklearn coef_ 的形狀是 (n_classes, n_features),不是 (n_features, n_classes),維度別搞反。"
+        },
+        "hook": "LogisticRegression.coef_ shape = (n_classes_or_1, n_features),永遠 2D"
+      },
+      "misconceptions": [
+        "以為二元分類 coef_ 是 1D",
+        "把 (n_classes, n_features) 維度搞反"
+      ],
+      "related_node_ids": [
+        "n_L23202_003"
+      ],
+      "tags": [
+        "sklearn",
+        "LogisticRegression",
+        "coef_"
+      ]
+    },
+    {
+      "id": "q_pa_sk_005",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_005",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "能源公司用 cross_val_score 評估「用電量預測」模型,搭配 KFold 切分。下列程式輸出陣列的長度為何?",
+      "code_block": "import numpy as np\nfrom sklearn.model_selection import cross_val_score, KFold\nfrom sklearn.linear_model import LinearRegression\nrng = np.random.RandomState(0)\nX = rng.rand({n}, 3)\ny = rng.rand({n})\ncv = KFold(n_splits={k}, shuffle=True, random_state=0)\nscores = cross_val_score(LinearRegression(), X, y, cv=cv)\nprint(len(scores))",
+      "stem_variables": {
+        "case_a": {
+          "n": "100",
+          "k": "5",
+          "answer": "5",
+          "wrong1": "100",
+          "wrong2": "1",
+          "wrong3": "20"
+        },
+        "case_b": {
+          "n": "120",
+          "k": "6",
+          "answer": "6",
+          "wrong1": "120",
+          "wrong2": "1",
+          "wrong3": "20"
+        },
+        "case_c": {
+          "n": "150",
+          "k": "10",
+          "answer": "10",
+          "wrong1": "150",
+          "wrong2": "1",
+          "wrong3": "15"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤以為每筆樣本各一個分數"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤以為只回傳平均分數"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤算為樣本數除以 fold 數"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Step 1: KFold(n_splits={k}) 把資料切成 {k} 折,每折輪流當驗證集。Step 2: cross_val_score 對每折訓練一次、驗證一次,各得到一個分數。Step 3: 故輸出陣列長度等於 n_splits = {k},與樣本數 {n} 無關。",
+        "wrong": {
+          "{wrong1}": "cross_val_score 並非每筆樣本一個分數,而是每折一個分數;此值是樣本數而非折數。",
+          "{wrong2}": "cross_val_score 回傳的是每折分數的陣列,平均需自己呼叫 .mean();它不會自動聚合。",
+          "{wrong3}": "此值是每折驗證集大小(n / k),不是分數陣列長度。"
+        },
+        "hook": "cross_val_score 長度 = cv 的 n_splits"
+      },
+      "misconceptions": [
+        "以為 cross_val_score 回傳純量平均",
+        "把折數與每折樣本數混淆"
+      ],
+      "related_node_ids": [
+        "n_L23303_005"
+      ],
+      "tags": [
+        "sklearn",
+        "cross_val_score",
+        "KFold"
+      ]
+    },
+    {
+      "id": "q_pa_sk_006",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_005",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "醫療影像分類專案中,陽性樣本只占約 10%。資料科學家比較 KFold 與 StratifiedKFold 在每折驗證集的「陽性比例變異」。下列程式輸出 True/False 為何?",
+      "code_block": "import numpy as np\nfrom sklearn.model_selection import KFold, StratifiedKFold\nrng = np.random.RandomState({seed})\ny = np.array([1]*{pos} + [0]*{neg})\nrng.shuffle(y)\nkf = KFold(n_splits=5, shuffle=True, random_state=0)\nskf = StratifiedKFold(n_splits=5, shuffle=True, random_state=0)\nkf_ratios = [y[v].mean() for _, v in kf.split(y)]\nskf_ratios = [y[v].mean() for _, v in skf.split(np.zeros_like(y), y)]\nprint(np.std(kf_ratios) > np.std(skf_ratios))",
+      "stem_variables": {
+        "case_a": {
+          "seed": "0",
+          "pos": "50",
+          "neg": "450",
+          "answer": "True",
+          "wrong1": "False",
+          "wrong2": "AttributeError",
+          "wrong3": "ValueError"
+        },
+        "case_b": {
+          "seed": "1",
+          "pos": "30",
+          "neg": "270",
+          "answer": "True",
+          "wrong1": "False",
+          "wrong2": "AttributeError",
+          "wrong3": "ValueError"
+        },
+        "case_c": {
+          "seed": "2",
+          "pos": "40",
+          "neg": "360",
+          "answer": "True",
+          "wrong1": "False",
+          "wrong2": "AttributeError",
+          "wrong3": "ValueError"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤以為 KFold 也會保比例"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤以為 KFold 沒有 split 方法"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤以為 StratifiedKFold 需要 numeric y"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Step 1: 不平衡資料下,KFold 隨機切分各折陽性比例會浮動,某些折可能極端偏少。Step 2: StratifiedKFold 會在切分時「強制」每折維持原始陽性 / 陰性比例。Step 3: 故 KFold 的陽性比例標準差 > StratifiedKFold 的標準差,程式輸出 True。",
+        "wrong": {
+          "{wrong1}": "KFold 不保證類別比例;只有 StratifiedKFold 才強制每折比例一致。在不平衡資料尤其明顯。",
+          "{wrong2}": "KFold 與 StratifiedKFold 都有 split 方法,不會丟 AttributeError;只是 stratified 版多需要 y 參數。",
+          "{wrong3}": "StratifiedKFold 支援整數類別標籤(本題 0/1),不會丟 ValueError。"
+        },
+        "hook": "StratifiedKFold 保比例;KFold 不保。不平衡資料一定用 Stratified"
+      },
+      "misconceptions": [
+        "以為 KFold 自動保類別比例",
+        "在不平衡資料用 KFold 而非 StratifiedKFold"
+      ],
+      "related_node_ids": [
+        "n_L23303_005",
+        "n_L23301_003"
+      ],
+      "tags": [
+        "sklearn",
+        "StratifiedKFold",
+        "不平衡資料"
+      ]
+    },
+    {
+      "id": "q_pa_sk_007",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_001",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "社群輿情三分類(正面 / 中立 / 負面)中,各類 F1 為 [{f1_pos}, {f1_neu}, {f1_neg}],各類 support 為 [{s_pos}, {s_neu}, {s_neg}]。下列程式中 macro 與 weighted F1 分別為何(四捨五入到小數 2 位)?",
+      "code_block": "import numpy as np\nf1 = np.array([{f1_pos}, {f1_neu}, {f1_neg}])\nsupport = np.array([{s_pos}, {s_neu}, {s_neg}])\nmacro = f1.mean()\nweighted = (f1 * support).sum() / support.sum()\nprint(round(macro, 2), round(weighted, 2))",
+      "stem_variables": {
+        "case_a": {
+          "f1_pos": "0.8",
+          "f1_neu": "0.6",
+          "f1_neg": "0.4",
+          "s_pos": "100",
+          "s_neu": "100",
+          "s_neg": "800",
+          "answer": "0.6 0.46",
+          "wrong1": "0.6 0.6",
+          "wrong2": "0.46 0.6",
+          "wrong3": "0.8 0.4"
+        },
+        "case_b": {
+          "f1_pos": "0.9",
+          "f1_neu": "0.7",
+          "f1_neg": "0.5",
+          "s_pos": "200",
+          "s_neu": "200",
+          "s_neg": "600",
+          "answer": "0.7 0.62",
+          "wrong1": "0.7 0.7",
+          "wrong2": "0.62 0.7",
+          "wrong3": "0.9 0.5"
+        },
+        "case_c": {
+          "f1_pos": "0.7",
+          "f1_neu": "0.5",
+          "f1_neg": "0.3",
+          "s_pos": "100",
+          "s_neu": "300",
+          "s_neg": "600",
+          "answer": "0.5 0.4",
+          "wrong1": "0.5 0.5",
+          "wrong2": "0.4 0.5",
+          "wrong3": "0.7 0.3"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤以為 macro 等於 weighted"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "把 macro 與 weighted 順序搞反"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤以為取最大 / 最小類 F1"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Step 1: macro F1 是各類 F1 的「算術平均」,不考慮 support;= ({f1_pos}+{f1_neu}+{f1_neg})/3。Step 2: weighted F1 以各類 support 為權重做加權平均;= Σ(F1ᵢ × supportᵢ) / Σsupportᵢ。Step 3: 故 macro 與 weighted 分別為 {answer}。在類別不平衡下兩者差距會明顯。",
+        "wrong": {
+          "{wrong1}": "macro 與 weighted 在類別不平衡時必定不同;此選項假設它們相同,忽略了 support 加權的差異。",
+          "{wrong2}": "順序搞反:題目先 macro 後 weighted,此選項把兩值對調。",
+          "{wrong3}": "此選項取了個別類別 F1 的極值,並非平均值;macro/weighted 都是聚合而非極值。"
+        },
+        "hook": "macro = 算術平均(類別等權);weighted = 以 support 加權"
+      },
+      "misconceptions": [
+        "以為 macro 與 weighted 等價",
+        "把 support 權重忽略"
+      ],
+      "related_node_ids": [
+        "n_L23303_001",
+        "n_L23303_002"
+      ],
+      "tags": [
+        "sklearn",
+        "classification_report",
+        "F1"
+      ]
+    },
+    {
+      "id": "q_pa_sk_008",
+      "knowledge_code": "L23302",
+      "node_id": "n_L23302_001",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "製造業瑕疵分類團隊用 GridSearchCV 對 SVC 的 C 參數調優。下列程式中 grid.best_estimator_ 的型別名稱為何?",
+      "code_block": "from sklearn.svm import SVC\nfrom sklearn.model_selection import GridSearchCV\nimport numpy as np\nrng = np.random.RandomState(0)\nX = rng.rand({n}, 4)\ny = (X[:, 0] > 0.5).astype(int)\nparam_grid = {{'C': [0.1, 1, {c}]}}\ngrid = GridSearchCV(SVC(), param_grid, cv=3).fit(X, y)\nresult = grid.best_estimator_\nprint(type(result).__name__)",
+      "stem_variables": {
+        "case_a": {
+          "n": "100",
+          "c": "10",
+          "answer": "SVC",
+          "wrong1": "GridSearchCV",
+          "wrong2": "dict",
+          "wrong3": "float"
+        },
+        "case_b": {
+          "n": "150",
+          "c": "5",
+          "answer": "SVC",
+          "wrong1": "GridSearchCV",
+          "wrong2": "dict",
+          "wrong3": "float"
+        },
+        "case_c": {
+          "n": "120",
+          "c": "20",
+          "answer": "SVC",
+          "wrong1": "GridSearchCV",
+          "wrong2": "dict",
+          "wrong3": "float"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤以為回傳 GridSearchCV 自己"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "把 best_estimator_ 與 best_params_ 混淆"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "把 best_estimator_ 與 best_score_ 混淆"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Step 1: GridSearchCV.fit() 後會在所有 param 組合中挑出 CV 平均分數最高者。Step 2: best_estimator_ 屬性會以最佳超參重新 fit 在「整份訓練資料」上,回傳一個已訓練好的「基底估計器」物件。Step 3: 本題基底估計器是 SVC,故 type 為 'SVC'。best_params_ 才回傳 dict,best_score_ 才回傳 float。",
+        "wrong": {
+          "{wrong1}": "best_estimator_ 不是 GridSearchCV 本身;它是內層被選中的估計器物件(這裡是 SVC)。",
+          "{wrong2}": "dict 是 best_params_ 的型別(如 {'C': 1});best_estimator_ 回傳的是估計器物件而非超參字典。",
+          "{wrong3}": "float 是 best_score_(最佳 CV 平均分數);best_estimator_ 不是分數而是模型。"
+        },
+        "hook": "best_estimator_=已 fit 好的模型物件;best_params_=dict;best_score_=float"
+      },
+      "misconceptions": [
+        "把 best_estimator_ / best_params_ / best_score_ 混淆",
+        "以為 best_estimator_ 還需要再 fit 一次"
+      ],
+      "related_node_ids": [
+        "n_L23302_001",
+        "n_L23202_004"
+      ],
+      "tags": [
+        "sklearn",
+        "GridSearchCV",
+        "超參調優"
+      ]
+    },
+    {
+      "id": "q_pa_pt_001",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_003",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "醫院影像 AI 團隊建構 X-ray 分類模型最後一層全連接層。下列程式中 fc.weight 的 shape 為何?",
+      "code_block": "import torch\nimport torch.nn as nn\nfc = nn.Linear(in_features={a}, out_features={b}, bias=True)\nprint(tuple(fc.weight.shape))",
+      "stem_variables": {
+        "case_a": {
+          "a": "256",
+          "b": "10",
+          "answer": "(10, 256)",
+          "wrong1": "(256, 10)",
+          "wrong2": "(10,)",
+          "wrong3": "(256, 256)"
+        },
+        "case_b": {
+          "a": "512",
+          "b": "4",
+          "answer": "(4, 512)",
+          "wrong1": "(512, 4)",
+          "wrong2": "(4,)",
+          "wrong3": "(512, 512)"
+        },
+        "case_c": {
+          "a": "128",
+          "b": "3",
+          "answer": "(3, 128)",
+          "wrong1": "(128, 3)",
+          "wrong2": "(3,)",
+          "wrong3": "(128, 128)"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤把輸入維度放前面"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤以為是 bias shape"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤以為是方陣權重"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Step 1: nn.Linear(in, out) 內部運算為 y = x W^T + b,其中 W 的 shape 必須能讓 x(batch, in) 乘 W^T(in, out) 得到 (batch, out)。 Step 2: 因此 W 本身 shape = (out_features, in_features) = ({b}, {a})。 Step 3: 印出 fc.weight.shape 得 {answer}。",
+        "wrong": {
+          "{wrong1}": "此選項把 (in, out) 順序搞反。PyTorch 內部存的 weight shape 是 (out, in) 不是 (in, out)。",
+          "{wrong2}": "此選項是 bias 的 shape({b},)。題目問的是 weight 不是 bias。",
+          "{wrong3}": "此選項是方陣,但 nn.Linear 的 weight 只有在 in=out 時才為方陣,此題 in≠out。"
+        },
+        "hook": "Linear weight shape = (out, in),反過來"
+      },
+      "misconceptions": [
+        "以為 weight shape 是 (in, out)",
+        "把 weight 與 bias shape 混淆"
+      ],
+      "related_node_ids": [
+        "n_L23203_003"
+      ],
+      "tags": [
+        "pytorch",
+        "nn.Linear",
+        "weight shape"
+      ]
+    },
+    {
+      "id": "q_pa_pt_002",
+      "knowledge_code": "L21102",
+      "node_id": "n_L21102_001",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "製造廠瑕疵檢測 CNN 第一層卷積處理 RGB 工件影像,輸出特徵圖通道數為 {b}。下列程式中 conv.weight 的 shape 為何?",
+      "code_block": "import torch\nimport torch.nn as nn\nconv = nn.Conv2d(in_channels={a}, out_channels={b}, kernel_size={k})\nprint(tuple(conv.weight.shape))",
+      "stem_variables": {
+        "case_a": {
+          "a": "3",
+          "b": "16",
+          "k": "3",
+          "answer": "(16, 3, 3, 3)",
+          "wrong1": "(3, 16, 3, 3)",
+          "wrong2": "(16, 3, 3)",
+          "wrong3": "(3, 3, 16, 16)"
+        },
+        "case_b": {
+          "a": "3",
+          "b": "32",
+          "k": "5",
+          "answer": "(32, 3, 5, 5)",
+          "wrong1": "(3, 32, 5, 5)",
+          "wrong2": "(32, 5, 5)",
+          "wrong3": "(5, 5, 3, 32)"
+        },
+        "case_c": {
+          "a": "3",
+          "b": "64",
+          "k": "3",
+          "answer": "(64, 3, 3, 3)",
+          "wrong1": "(3, 64, 3, 3)",
+          "wrong2": "(64, 3, 3)",
+          "wrong3": "(3, 3, 64, 64)"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤把 in/out 順序顛倒"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "漏掉 in_channels 維度"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤用 TensorFlow NHWC 排列"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Step 1: nn.Conv2d 的 weight shape 為 (out_channels, in_channels, kernel_h, kernel_w)。 Step 2: 代入 out={b}, in={a}, kernel={k}x{k}。 Step 3: 因此 conv.weight.shape = {answer}。",
+        "wrong": {
+          "{wrong1}": "此選項把 in 與 out 順序顛倒。PyTorch Conv2d 是 (out, in, kH, kW),out 在前。",
+          "{wrong2}": "此選項漏掉 in_channels 維度,Conv2d weight 是 4D tensor 不是 3D。",
+          "{wrong3}": "此選項看似 TensorFlow NHWC 風格排列;PyTorch 一律 NCHW,weight 是 (out, in, kH, kW)。"
+        },
+        "hook": "Conv2d weight = (out, in, kH, kW),共 4 維"
+      },
+      "misconceptions": [
+        "以為 Conv2d weight 是 3D",
+        "套用 TensorFlow NHWC 順序"
+      ],
+      "related_node_ids": [
+        "n_L21102_001",
+        "n_L23203_003"
+      ],
+      "tags": [
+        "pytorch",
+        "Conv2d",
+        "CNN"
+      ]
+    },
+    {
+      "id": "q_pa_pt_003",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_001",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "金融時序模型開發者比較兩種寫法的 ReLU 激活輸出。輸入張量 x = torch.tensor([{a}, {b}, {c}]),下列程式輸出為何?",
+      "code_block": "import torch\nimport torch.nn as nn\nimport torch.nn.functional as F\nx = torch.tensor([{a}, {b}, {c}])\nout1 = nn.ReLU()(x)\nout2 = F.relu(x)\nprint(torch.equal(out1, out2), out1.tolist())",
+      "stem_variables": {
+        "case_a": {
+          "a": "-2.0",
+          "b": "0.0",
+          "c": "3.0",
+          "answer": "True [0.0, 0.0, 3.0]",
+          "wrong1": "False [0.0, 0.0, 3.0]",
+          "wrong2": "True [-2.0, 0.0, 3.0]",
+          "wrong3": "True [0.0, 0.0, 0.0]"
+        },
+        "case_b": {
+          "a": "-1.0",
+          "b": "2.0",
+          "c": "-4.0",
+          "answer": "True [0.0, 2.0, 0.0]",
+          "wrong1": "False [0.0, 2.0, 0.0]",
+          "wrong2": "True [-1.0, 2.0, -4.0]",
+          "wrong3": "True [1.0, 2.0, 4.0]"
+        },
+        "case_c": {
+          "a": "1.0",
+          "b": "-3.0",
+          "c": "5.0",
+          "answer": "True [1.0, 0.0, 5.0]",
+          "wrong1": "False [1.0, 0.0, 5.0]",
+          "wrong2": "True [1.0, -3.0, 5.0]",
+          "wrong3": "True [0.0, 0.0, 0.0]"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤以為 module 與 functional 結果不同"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤以為 ReLU 不裁負值"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤以為 ReLU 取絕對值或全歸零"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Step 1: nn.ReLU() 與 F.relu 在 forward 行為完全相同,皆為 max(0, x)。 Step 2: 對 [{a}, {b}, {c}] 套 max(0, ·) 後負值歸零、非負保留。 Step 3: torch.equal 比較兩者元素皆相同回傳 True,輸出 {answer}。",
+        "wrong": {
+          "{wrong1}": "此選項誤判 nn.ReLU 與 F.relu 結果不同。兩者計算等價,僅 OOP 寫法與 functional 寫法之別。",
+          "{wrong2}": "此選項保留了負值。ReLU 定義為 max(0, x),負輸入必須被裁為 0。",
+          "{wrong3}": "此選項把所有值歸零或取絕對值;ReLU 只截斷負值,正值原封不動。"
+        },
+        "hook": "nn.ReLU == F.relu;負值歸零、正值不變"
+      },
+      "misconceptions": [
+        "以為 module 與 functional 結果不同",
+        "把 ReLU 當絕對值函數"
+      ],
+      "related_node_ids": [
+        "n_L23203_001"
+      ],
+      "tags": [
+        "pytorch",
+        "ReLU",
+        "激活函數"
+      ]
+    },
+    {
+      "id": "q_pa_pt_004",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_001",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "物流公司路徑預測模型用 nn.Sequential 串接全連接層與激活。給定輸入 x = torch.tensor([{a}]),下列程式輸出為何?",
+      "code_block": "import torch\nimport torch.nn as nn\ntorch.manual_seed(0)\nnet = nn.Sequential(\n    nn.Linear(1, 1, bias=False),\n    nn.ReLU()\n)\nwith torch.no_grad():\n    net[0].weight.fill_({w})\nx = torch.tensor([[{a}]], dtype=torch.float32)\nprint(net(x).item())",
+      "stem_variables": {
+        "case_a": {
+          "a": "2.0",
+          "w": "-3.0",
+          "answer": "0.0",
+          "wrong1": "-6.0",
+          "wrong2": "6.0",
+          "wrong3": "2.0"
+        },
+        "case_b": {
+          "a": "4.0",
+          "w": "2.0",
+          "answer": "8.0",
+          "wrong1": "-8.0",
+          "wrong2": "0.0",
+          "wrong3": "4.0"
+        },
+        "case_c": {
+          "a": "-3.0",
+          "w": "2.0",
+          "answer": "0.0",
+          "wrong1": "-6.0",
+          "wrong2": "6.0",
+          "wrong3": "-3.0"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "忘記 ReLU 裁負值"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤以為 ReLU 取絕對值"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "忽略 Linear 乘權重"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Step 1: nn.Sequential 依索引順序執行 forward,先 Linear 再 ReLU。 Step 2: Linear 輸出 = x * w = {a} * {w}。 Step 3: 再經 ReLU = max(0, x*w),最終輸出 {answer}。",
+        "wrong": {
+          "{wrong1}": "此選項是 Linear 後的中間結果(未過 ReLU),Sequential 還會繼續執行 ReLU 把負值歸零。",
+          "{wrong2}": "此選項把 ReLU 當絕對值函數;ReLU 是 max(0,·),負值變 0 而非取正號。",
+          "{wrong3}": "此選項只回傳 x 本身,忽略了 Linear 層的乘權重運算。"
+        },
+        "hook": "Sequential 依索引順序前向;先線性再激活"
+      },
+      "misconceptions": [
+        "以為 ReLU 取絕對值",
+        "忽略 Sequential 內層執行順序"
+      ],
+      "related_node_ids": [
+        "n_L23203_001",
+        "n_L23203_003"
+      ],
+      "tags": [
+        "pytorch",
+        "Sequential",
+        "前向傳播"
+      ]
+    },
+    {
+      "id": "q_pa_pt_005",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_001",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "零售推薦評分模型訓練迴圈中,工程師忘記呼叫 zero_grad。下列程式連跑 {n} 個 mini-batch 後,w.grad 的值為何?(每個 batch backward 後產生的梯度皆為 {g})",
+      "code_block": "import torch\nw = torch.tensor([1.0], requires_grad=True)\nfor i in range({n}):\n    loss = w * {g}  # 假設每次 backward 產生 grad = {g}\n    loss.backward()\n    # 注意:此處沒有呼叫 optimizer.zero_grad() 或 w.grad.zero_()\nprint(w.grad.item())",
+      "stem_variables": {
+        "case_a": {
+          "n": "3",
+          "g": "2.0",
+          "answer": "6.0",
+          "wrong1": "2.0",
+          "wrong2": "0.0",
+          "wrong3": "8.0"
+        },
+        "case_b": {
+          "n": "4",
+          "g": "1.5",
+          "answer": "6.0",
+          "wrong1": "1.5",
+          "wrong2": "0.0",
+          "wrong3": "5.5"
+        },
+        "case_c": {
+          "n": "5",
+          "g": "3.0",
+          "answer": "15.0",
+          "wrong1": "3.0",
+          "wrong2": "0.0",
+          "wrong3": "8.0"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤以為每次 backward 會覆蓋舊梯度"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤以為 PyTorch 自動清梯度"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "胡亂相加數字"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Step 1: PyTorch 的 backward() 預設將新梯度「累加」到 .grad 上,不會自動清零。 Step 2: 每次 backward 加入 {g} 的梯度,共執行 {n} 次。 Step 3: 因此 w.grad = {n} * {g} = {answer}。這就是為何訓練迴圈必須呼叫 optimizer.zero_grad() 重置梯度。",
+        "wrong": {
+          "{wrong1}": "此選項假設 backward 會覆蓋舊梯度。PyTorch 預設是 accumulate,不是 overwrite。",
+          "{wrong2}": "此選項假設框架自動清梯度。PyTorch 不會自動清零,必須手動呼叫 zero_grad()。",
+          "{wrong3}": "此選項是隨意湊出的數值,與梯度累加機制無關。"
+        },
+        "hook": "PyTorch backward 預設累加梯度;必須呼叫 zero_grad()"
+      },
+      "misconceptions": [
+        "以為 backward 自動清梯度",
+        "忘記 zero_grad 的必要性"
+      ],
+      "related_node_ids": [
+        "n_L23103_001"
+      ],
+      "tags": [
+        "pytorch",
+        "zero_grad",
+        "梯度累加"
+      ]
+    },
+    {
+      "id": "q_pa_pt_006",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_001",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "能源公司用電量預測 LSTM 訓練迴圈片段如下。請問下列哪一個敘述正確描述了單一 mini-batch 內的執行順序?",
+      "code_block": "# 訓練迴圈片段(初始學習率 lr={lr},batch_size={bs})\nfor x, y in loader:\n    optimizer.zero_grad()\n    pred = model(x)\n    loss = criterion(pred, y)\n    loss.backward()\n    optimizer.step()",
+      "stem_variables": {
+        "case_a": {
+          "lr": "0.001",
+          "bs": "32",
+          "answer": "zero_grad 清梯度 → forward → loss → backward 算梯度 → step 更新參數",
+          "wrong1": "forward → backward → step → zero_grad",
+          "wrong2": "zero_grad → forward → step → backward",
+          "wrong3": "step → backward → zero_grad → forward"
+        },
+        "case_b": {
+          "lr": "0.0005",
+          "bs": "64",
+          "answer": "zero_grad 清梯度 → forward → loss → backward 算梯度 → step 更新參數",
+          "wrong1": "forward → backward → step → zero_grad",
+          "wrong2": "zero_grad → forward → step → backward",
+          "wrong3": "step → backward → zero_grad → forward"
+        },
+        "case_c": {
+          "lr": "0.01",
+          "bs": "16",
+          "answer": "zero_grad 清梯度 → forward → loss → backward 算梯度 → step 更新參數",
+          "wrong1": "forward → backward → step → zero_grad",
+          "wrong2": "zero_grad → forward → step → backward",
+          "wrong3": "step → backward → zero_grad → forward"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "zero_grad 放最後造成本 batch 累加上 batch 梯度"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "把 backward 放在 step 之後"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "完全亂序"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Step 1: 一個標準的 PyTorch 訓練迴圈先呼叫 optimizer.zero_grad() 清除上一輪的梯度。 Step 2: 接著 forward 計算 pred 與 loss,再呼叫 loss.backward() 反向傳播算出新梯度。 Step 3: 最後呼叫 optimizer.step() 根據梯度更新參數。順序為 {answer}。",
+        "wrong": {
+          "{wrong1}": "此順序把 zero_grad 放在最後,會導致下一個 batch 的 backward 把舊梯度也累進來,結果不正確。",
+          "{wrong2}": "step 必須在 backward 之後;沒有梯度就無法更新參數,此順序邏輯不通。",
+          "{wrong3}": "此順序完全錯亂,連 forward 都還沒做就 backward 與 step,無法執行。"
+        },
+        "hook": "zero_grad → forward → backward → step,四步固定順序"
+      },
+      "misconceptions": [
+        "把 step 放在 backward 之前",
+        "忘記 zero_grad 必須在 backward 之前"
+      ],
+      "related_node_ids": [
+        "n_L23103_001"
+      ],
+      "tags": [
+        "pytorch",
+        "訓練迴圈",
+        "backward",
+        "step"
+      ]
+    },
+    {
+      "id": "q_pa_pt_007",
+      "knowledge_code": "L23304",
+      "node_id": "n_L23304_003",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "社群平台留言情緒分類模型在驗證階段執行推論。下列程式中,y.requires_grad 與 y.grad_fn 的值為何?",
+      "code_block": "import torch\nx = torch.tensor([{a}], requires_grad=True)\nwith torch.no_grad():\n    y = x * {b}\nprint(y.requires_grad, y.grad_fn)",
+      "stem_variables": {
+        "case_a": {
+          "a": "2.0",
+          "b": "3.0",
+          "answer": "False None",
+          "wrong1": "True <MulBackward0>",
+          "wrong2": "False <MulBackward0>",
+          "wrong3": "True None"
+        },
+        "case_b": {
+          "a": "5.0",
+          "b": "4.0",
+          "answer": "False None",
+          "wrong1": "True <MulBackward0>",
+          "wrong2": "False <MulBackward0>",
+          "wrong3": "True None"
+        },
+        "case_c": {
+          "a": "1.5",
+          "b": "2.0",
+          "answer": "False None",
+          "wrong1": "True <MulBackward0>",
+          "wrong2": "False <MulBackward0>",
+          "wrong3": "True None"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤以為 no_grad 不影響 requires_grad"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤以為 no_grad 仍會建構 grad_fn"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "只清 grad_fn 不改 requires_grad"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Step 1: torch.no_grad() 區塊內所有運算都不會建構計算圖。 Step 2: 因此區塊內由 x 衍生出的 y 不會記錄 grad_fn,且 requires_grad 自動為 False。 Step 3: 最終 y.requires_grad = False,y.grad_fn = None,輸出 {answer}。no_grad 常用於推論階段以節省記憶體與加速。",
+        "wrong": {
+          "{wrong1}": "此選項誤以為 no_grad 不影響輸出 tensor;實際上 no_grad 內產生的 tensor requires_grad 強制為 False。",
+          "{wrong2}": "此選項保留 grad_fn;no_grad 內運算不建計算圖,grad_fn 必為 None。",
+          "{wrong3}": "此選項 requires_grad 仍為 True,但 grad_fn 是 None,兩者狀態不一致。no_grad 兩者同時關閉。"
+        },
+        "hook": "no_grad 內 requires_grad=False 且 grad_fn=None"
+      },
+      "misconceptions": [
+        "以為 no_grad 只是節省記憶體不影響 autograd flag",
+        "把 no_grad 與 detach 混淆"
+      ],
+      "related_node_ids": [
+        "n_L23304_003",
+        "n_L23103_001"
+      ],
+      "tags": [
+        "pytorch",
+        "torch.no_grad",
+        "推論"
+      ]
+    },
+    {
+      "id": "q_pa_pt_008",
+      "knowledge_code": "L23304",
+      "node_id": "n_L23304_004",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "智慧城市交通流量預測模型在訓練與驗證之間切換模式。下列程式中,a 與 b 的值為何?",
+      "code_block": "import torch\nimport torch.nn as nn\nmodel = nn.Linear({i}, {o})\nmodel.train()\na = model.training\nmodel.eval()\nb = model.training\nprint(a, b)",
+      "stem_variables": {
+        "case_a": {
+          "i": "10",
+          "o": "2",
+          "answer": "True False",
+          "wrong1": "False True",
+          "wrong2": "True True",
+          "wrong3": "False False"
+        },
+        "case_b": {
+          "i": "20",
+          "o": "5",
+          "answer": "True False",
+          "wrong1": "False True",
+          "wrong2": "True True",
+          "wrong3": "False False"
+        },
+        "case_c": {
+          "i": "32",
+          "o": "8",
+          "answer": "True False",
+          "wrong1": "False True",
+          "wrong2": "True True",
+          "wrong3": "False False"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "把 train/eval 對 training flag 影響顛倒"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤以為 eval 不改 training flag"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤以為 train 不改 training flag"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Step 1: model.train() 會把 model.training 設為 True。 Step 2: model.eval() 會把 model.training 設為 False。 Step 3: 因此先讀到 a=True,切換 eval 後讀到 b=False,輸出 {answer}。此 flag 是 PyTorch 區分訓練/推論行為的核心開關。",
+        "wrong": {
+          "{wrong1}": "此選項把兩種模式對 training flag 的效果顛倒。train() → True,eval() → False。",
+          "{wrong2}": "此選項假設 eval() 不改變 training。實際上 eval() 必定把 training 設為 False。",
+          "{wrong3}": "此選項假設 train() 不改變 training。實際上 train() 必定把 training 設為 True。"
+        },
+        "hook": "model.train() ↔ training=True;model.eval() ↔ training=False"
+      },
+      "misconceptions": [
+        "搞反 train/eval 對 training flag 的效果",
+        "以為 training flag 與 requires_grad 等價"
+      ],
+      "related_node_ids": [
+        "n_L23304_004",
+        "n_L23304_003"
+      ],
+      "tags": [
+        "pytorch",
+        "model.eval",
+        "model.train"
+      ]
+    },
+    {
+      "id": "q_pa_pt_009",
+      "knowledge_code": "L23103",
+      "node_id": "n_L23103_003",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "通訊基地台訊號強度回歸模型比較不同 reduction 設定的 MSE。給定 pred 與 target,下列程式輸出為何?",
+      "code_block": "import torch\nimport torch.nn as nn\npred = torch.tensor([{p1}, {p2}, {p3}, {p4}])\ntarget = torch.tensor([{t1}, {t2}, {t3}, {t4}])\nmse_mean = nn.MSELoss(reduction='mean')(pred, target).item()\nmse_sum = nn.MSELoss(reduction='sum')(pred, target).item()\nprint(mse_mean, mse_sum)",
+      "stem_variables": {
+        "case_a": {
+          "p1": "1.0",
+          "p2": "2.0",
+          "p3": "3.0",
+          "p4": "4.0",
+          "t1": "2.0",
+          "t2": "2.0",
+          "t3": "4.0",
+          "t4": "6.0",
+          "answer": "1.5 6.0",
+          "wrong1": "6.0 1.5",
+          "wrong2": "1.5 1.5",
+          "wrong3": "6.0 6.0"
+        },
+        "case_b": {
+          "p1": "2.0",
+          "p2": "4.0",
+          "p3": "6.0",
+          "p4": "8.0",
+          "t1": "1.0",
+          "t2": "5.0",
+          "t3": "5.0",
+          "t4": "8.0",
+          "answer": "0.75 3.0",
+          "wrong1": "3.0 0.75",
+          "wrong2": "0.75 0.75",
+          "wrong3": "3.0 3.0"
+        },
+        "case_c": {
+          "p1": "0.0",
+          "p2": "1.0",
+          "p3": "2.0",
+          "p4": "3.0",
+          "t1": "1.0",
+          "t2": "1.0",
+          "t3": "1.0",
+          "t4": "1.0",
+          "answer": "1.5 6.0",
+          "wrong1": "6.0 1.5",
+          "wrong2": "1.5 1.5",
+          "wrong3": "6.0 6.0"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "把 mean 與 sum 結果互換"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤以為 sum 也會除 N"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤以為 mean 不除 N"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Step 1: MSE 對每個元素計算 (pred - target)^2,本題逐元素平方差總和為 sum=N*mean 關係。 Step 2: reduction='sum' 直接相加所有平方差;reduction='mean' 再除以元素數 N=4。 Step 3: 因此輸出為 mean sum = {answer},兩者比值正好是 1/N。",
+        "wrong": {
+          "{wrong1}": "此選項把 mean 與 sum 的位置互換。print 的順序是 mean 在前 sum 在後,且 sum > mean。",
+          "{wrong2}": "此選項假設 sum 也會除以 N,實際上 sum 不除,只是把平方差累加。",
+          "{wrong3}": "此選項假設 mean 不除以 N,實際上 mean = sum / N,兩者數值會不同。"
+        },
+        "hook": "MSE reduction='sum' 不除 N;'mean' 除 N"
+      },
+      "misconceptions": [
+        "以為 sum 與 mean 結果相同",
+        "誤以為 reduction 預設是 sum"
+      ],
+      "related_node_ids": [
+        "n_L23103_003",
+        "n_L23103_001"
+      ],
+      "tags": [
+        "pytorch",
+        "MSELoss",
+        "reduction"
+      ]
+    },
+    {
+      "id": "q_pa_pt_010",
+      "knowledge_code": "L21102",
+      "node_id": "n_L21102_002",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "教育平台學生分級分類模型輸出 logits,使用 argmax 取預測類別。下列程式輸出為何?",
+      "code_block": "import torch\nlogits = torch.tensor([[{a}, {b}, {c}, {d}]])\npred_class = torch.argmax(logits, dim=1)\nprint(pred_class.item())",
+      "stem_variables": {
+        "case_a": {
+          "a": "0.1",
+          "b": "2.3",
+          "c": "0.5",
+          "d": "1.8",
+          "answer": "1",
+          "wrong1": "2.3",
+          "wrong2": "3",
+          "wrong3": "0"
+        },
+        "case_b": {
+          "a": "1.2",
+          "b": "0.4",
+          "c": "3.5",
+          "d": "2.1",
+          "answer": "2",
+          "wrong1": "3.5",
+          "wrong2": "0",
+          "wrong3": "3"
+        },
+        "case_c": {
+          "a": "0.2",
+          "b": "0.7",
+          "c": "1.1",
+          "d": "4.0",
+          "answer": "3",
+          "wrong1": "4.0",
+          "wrong2": "0",
+          "wrong3": "2"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤回傳最大值而非索引"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤指向其他元素索引"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤取最小值索引"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Step 1: torch.argmax 沿指定 dim 找出最大值的「索引」而非值本身。 Step 2: logits 第一列為 [{a}, {b}, {c}, {d}],dim=1 沿類別軸找最大值的索引。 Step 3: 最大值位置的索引為 {answer},即預測類別。",
+        "wrong": {
+          "{wrong1}": "此選項是最大值本身,不是其索引。argmax 回傳索引(整數),max 才回傳值。",
+          "{wrong2}": "此選項指向其他索引位置,但其對應的 logit 並非最大值。",
+          "{wrong3}": "此選項取的是最小值的索引(argmin),題目用的是 argmax。"
+        },
+        "hook": "argmax 回傳索引整數,max 回傳值"
+      },
+      "misconceptions": [
+        "把 argmax 與 max 混淆",
+        "忘記 argmax 沿 dim 取索引而非值"
+      ],
+      "related_node_ids": [
+        "n_L21102_002",
+        "n_L21102_001"
+      ],
+      "tags": [
+        "pytorch",
+        "argmax",
+        "分類預測"
+      ]
+    },
+    {
+      "id": "q_pa_pd_001",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_002",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "金融分析師處理當日股票交易缺值資料,使用平均值填補 NaN 後,請問 close 欄位填補完成後的平均值最接近?",
+      "code_block": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'close': [{a}, np.nan, {b}, np.nan, {c}]})\ndf['close'] = df['close'].fillna(df['close'].mean())\nprint(round(df['close'].mean(), 2))",
+      "stem_variables": {
+        "case_a": {
+          "a": "10.0",
+          "b": "20.0",
+          "c": "30.0",
+          "answer": "20.0",
+          "wrong1": "12.0",
+          "wrong2": "60.0",
+          "wrong3": "nan"
+        },
+        "case_b": {
+          "a": "6.0",
+          "b": "9.0",
+          "c": "15.0",
+          "answer": "10.0",
+          "wrong1": "6.0",
+          "wrong2": "30.0",
+          "wrong3": "nan"
+        },
+        "case_c": {
+          "a": "4.0",
+          "b": "8.0",
+          "c": "12.0",
+          "answer": "8.0",
+          "wrong1": "4.8",
+          "wrong2": "24.0",
+          "wrong3": "nan"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤把 NaN 當 0 計入分母"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤算為三值總和而非平均"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤以為 NaN 殘留會傳染"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Step 1: pandas 的 mean() 預設 skipna=True,只用 3 個非 NaN 值算原始平均 = ({a}+{b}+{c})/3 = {answer}。Step 2: fillna 用此平均值補回 2 個 NaN,因此 5 個值全部變成相同的平均數 {answer}。Step 3: 用平均值填補後再算平均仍是 {answer},因為填補不改變原樣本的均值(MCAR 假設下無偏)。",
+        "wrong": {
+          "{wrong1}": "此值是把 NaN 當 0 計入分母({a}+{b}+{c})/5 的錯誤算法,但 pandas mean 預設 skipna,不會把 NaN 當 0。",
+          "{wrong2}": "此值是三個非缺值的總和而非平均;mean 是 sum/count,需除以 count。",
+          "{wrong3}": "fillna 已把所有 NaN 用平均值填回,後續再算 mean 不會回傳 NaN。"
+        },
+        "hook": "fillna(mean) 不改變原均值;pandas mean 預設 skipna 不算 NaN"
+      },
+      "misconceptions": [
+        "以為 mean 會把 NaN 當 0",
+        "以為 NaN 會傳染整個欄位"
+      ],
+      "related_node_ids": [
+        "n_L22201_002",
+        "n_L22201_003"
+      ],
+      "tags": [
+        "pandas",
+        "缺值處理",
+        "fillna",
+        "金融"
+      ]
+    },
+    {
+      "id": "q_pa_pd_002",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_003",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "醫療資訊團隊匯入多家醫院的病歷,需依病歷號(patient_id)去重,只保留首次出現的紀錄。請問下列程式輸出的列數為何?",
+      "code_block": "import pandas as pd\ndf = pd.DataFrame({\n    'patient_id': [{a}, {b}, {a}, {c}, {b}, {d}],\n    'diagnosis': ['A', 'B', 'A', 'C', 'B', 'D']\n})\nresult = df.drop_duplicates(subset=['patient_id'])\nprint(len(result))",
+      "stem_variables": {
+        "case_a": {
+          "a": "101",
+          "b": "102",
+          "c": "103",
+          "d": "104",
+          "answer": "4",
+          "wrong1": "6",
+          "wrong2": "2",
+          "wrong3": "3"
+        },
+        "case_b": {
+          "a": "201",
+          "b": "202",
+          "c": "203",
+          "d": "204",
+          "answer": "4",
+          "wrong1": "6",
+          "wrong2": "2",
+          "wrong3": "3"
+        },
+        "case_c": {
+          "a": "301",
+          "b": "302",
+          "c": "303",
+          "d": "304",
+          "answer": "4",
+          "wrong1": "6",
+          "wrong2": "2",
+          "wrong3": "3"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤以為 drop_duplicates 不去重"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤以為只保留重複出現的列"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤以為只算重複的兩個 id"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Step 1: 原始 6 列的 patient_id 為 [{a},{b},{a},{c},{b},{d}],其中 {a} 與 {b} 各出現 2 次,{c} 與 {d} 各 1 次。Step 2: drop_duplicates(subset=['patient_id']) 預設 keep='first',保留首次出現的列,因此 6 列扣除 2 個重複列 = {answer} 列。Step 3: 去重後 unique id 為 [{a},{b},{c},{d}] 共 {answer} 個,符合 subset 去重後的列數。",
+        "wrong": {
+          "{wrong1}": "此值是原始未去重的列數;drop_duplicates 預設會去掉重複的後續出現列。",
+          "{wrong2}": "此值是重複出現過的 id 數量(2 個 id 各重複 1 次);drop_duplicates 保留首次而非只保留重複者。",
+          "{wrong3}": "此值是重複次數,不是去重後的總列數;需用 unique id 數量計算。"
+        },
+        "hook": "drop_duplicates 預設 keep='first';去重後列數 = unique 值數"
+      },
+      "misconceptions": [
+        "以為 drop_duplicates 只刪重複者全部",
+        "搞混 keep='first' 與 keep=False"
+      ],
+      "related_node_ids": [
+        "n_L22201_003",
+        "n_L22201_002"
+      ],
+      "tags": [
+        "pandas",
+        "去重",
+        "drop_duplicates",
+        "醫療"
+      ]
+    },
+    {
+      "id": "q_pa_pd_003",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_007",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "零售資料工程師對線上用戶行為按 category 分組加總 spend,需檢視聚合輸出。請問下列程式輸出的 result shape 為何?",
+      "code_block": "import pandas as pd\ndf = pd.DataFrame({\n    'category': ['{x}', '{y}', '{x}', '{z}', '{y}', '{x}'],\n    'spend':    [100, 200, 150, 300, 250, 120]\n})\nresult = df.groupby('category').agg({'spend': 'sum'})\nprint(result.shape)",
+      "stem_variables": {
+        "case_a": {
+          "x": "food",
+          "y": "book",
+          "z": "toy",
+          "answer": "(3, 1)",
+          "wrong1": "(6, 1)",
+          "wrong2": "(3, 2)",
+          "wrong3": "(3,)"
+        },
+        "case_b": {
+          "x": "tea",
+          "y": "milk",
+          "z": "soda",
+          "answer": "(3, 1)",
+          "wrong1": "(6, 1)",
+          "wrong2": "(3, 2)",
+          "wrong3": "(3,)"
+        },
+        "case_c": {
+          "x": "shoe",
+          "y": "bag",
+          "z": "hat",
+          "answer": "(3, 1)",
+          "wrong1": "(6, 1)",
+          "wrong2": "(3, 2)",
+          "wrong3": "(3,)"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤以為 groupby 不聚合"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤把 group key 也算欄位"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤以為 agg dict 回傳 Series"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Step 1: 三個 unique category({x},{y},{z})分組後,索引變成 group key,共 3 列。Step 2: agg({'spend':'sum'}) 用 dict 形式聚合,回傳 DataFrame 並保留 1 個欄位 spend,因此 shape = (3, 1)。Step 3: 注意 dict 形式回 DataFrame;若改用 df.groupby('category')['spend'].sum() 才會得到 Series 形狀 (3,)。",
+        "wrong": {
+          "{wrong1}": "此值是原始未聚合的列數;groupby + sum 後每組僅剩 1 列,共 unique 數 3 列。",
+          "{wrong2}": "category 是 index 不是欄位,agg 後欄位只剩被聚合的 spend 1 個。",
+          "{wrong3}": "agg 用 dict 一律回 DataFrame(2D);Series 形狀 (3,) 只在 ['spend'].sum() 這種寫法才會出現。"
+        },
+        "hook": "agg(dict) 回 DataFrame;['col'].sum() 回 Series"
+      },
+      "misconceptions": [
+        "把 group key 當欄位",
+        "agg dict 與 Series 寫法混用"
+      ],
+      "related_node_ids": [
+        "n_L22201_007",
+        "n_L22201_001"
+      ],
+      "tags": [
+        "pandas",
+        "groupby",
+        "agg",
+        "零售"
+      ]
+    },
+    {
+      "id": "q_pa_pd_004",
+      "knowledge_code": "L22201",
+      "node_id": "n_L22201_001",
+      "subject": 2,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "製造業 MES 工程師合併「批號良率表」與「批號檢測表」,以 inner join 找出兩表共有批號的資料。請問下列程式輸出的列數為何?",
+      "code_block": "import pandas as pd\nyield_df = pd.DataFrame({\n    'lot': [{a}, {b}, {c}, {d}],\n    'yield': [0.95, 0.90, 0.88, 0.92]\n})\nqc_df = pd.DataFrame({\n    'lot':   [{a}, {a}, {c}, {e}],\n    'defect': [2, 1, 3, 5]\n})\nresult = yield_df.merge(qc_df, on='lot', how='inner')\nprint(len(result))",
+      "stem_variables": {
+        "case_a": {
+          "a": "1001",
+          "b": "1002",
+          "c": "1003",
+          "d": "1004",
+          "e": "1099",
+          "answer": "3",
+          "wrong1": "4",
+          "wrong2": "2",
+          "wrong3": "8"
+        },
+        "case_b": {
+          "a": "2001",
+          "b": "2002",
+          "c": "2003",
+          "d": "2004",
+          "e": "2099",
+          "answer": "3",
+          "wrong1": "4",
+          "wrong2": "2",
+          "wrong3": "8"
+        },
+        "case_c": {
+          "a": "3001",
+          "b": "3002",
+          "c": "3003",
+          "d": "3004",
+          "e": "3099",
+          "answer": "3",
+          "wrong1": "4",
+          "wrong2": "2",
+          "wrong3": "8"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤以為 unique 共有批號數"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤以為左表去重後共有批號"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤以為笛卡兒積"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Step 1: 找出兩表共有 lot:yield_df 有 [{a},{b},{c},{d}],qc_df 有 [{a},{a},{c},{e}],交集為 {a} 與 {c}。Step 2: inner merge 對每一個左右匹配生成一列,{a} 在左 1 次右 2 次 → 1×2=2 列;{c} 在左右各 1 次 → 1 列;{b}、{d}、{e} 無匹配捨棄。Step 3: 合計 2+1 = {answer} 列。",
+        "wrong": {
+          "{wrong1}": "此值是兩表 unique 共有 lot 數,但 merge 會按匹配次數展開,{a} 在右表出現 2 次會產出 2 列。",
+          "{wrong2}": "此值是 unique 共有 lot 數(2 個),沒考慮 {a} 在右表重複造成的展開。",
+          "{wrong3}": "此值是 4×4=16 的笛卡兒部分;inner join 僅匹配相同 key,不會做全笛卡兒積。"
+        },
+        "hook": "inner merge 列數 = 每個 key 在左右出現次數的乘積總和"
+      },
+      "misconceptions": [
+        "以為 inner join = unique 交集數",
+        "忽略 key 在某側重複會展開"
+      ],
+      "related_node_ids": [
+        "n_L22201_001",
+        "n_L22201_007"
+      ],
+      "tags": [
+        "pandas",
+        "merge",
+        "inner join",
+        "製造"
+      ]
+    },
+    {
+      "id": "q_pa_mc_001",
+      "knowledge_code": "L23101",
+      "node_id": "n_L23101_002",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "物流公司資料科學家用蒙地卡羅模擬估計 π:在 1×1 正方形內隨機投 N 點,計算落入單位四分之一圓(x²+y²≤1)的比例。已知 N 次投點中有 k 點落入圓內,請問 π 的估計值為?",
+      "code_block": "# Monte Carlo estimate of pi\n# N = {N}, points inside quarter circle: k = {k}\nimport math\nN = {N}\nk = {k}\npi_est = 4 * k / N\nprint(round(pi_est, 4))",
+      "stem_variables": {
+        "case_a": {
+          "N": "1000",
+          "k": "785",
+          "answer": "3.14",
+          "wrong1": "0.785",
+          "wrong2": "6.28",
+          "wrong3": "0.7854"
+        },
+        "case_b": {
+          "N": "10000",
+          "k": "7850",
+          "answer": "3.14",
+          "wrong1": "0.785",
+          "wrong2": "6.28",
+          "wrong3": "0.7850"
+        },
+        "case_c": {
+          "N": "2000",
+          "k": "1572",
+          "answer": "3.144",
+          "wrong1": "0.786",
+          "wrong2": "6.288",
+          "wrong3": "0.7860"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤輸出 k/N 比例本身"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤乘 8 倍(整圓周長)"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤算為四分之一圓面積"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Step 1: 1×1 正方形面積 = 1,單位四分之一圓面積 = π/4。Step 2: 隨機投點均勻分布,k/N 期望值收斂於面積比 π/4,故 π ≈ 4·(k/N) = 4·({k}/{N})。Step 3: 代入 4·{k}/{N} = {answer},這就是 π 的蒙地卡羅估計值,N 越大估計越準(誤差約 O(1/√N))。",
+        "wrong": {
+          "{wrong1}": "此值是 k/N 比例本身(≈ π/4 = 0.785),需再乘 4 才是 π 估計。",
+          "{wrong2}": "此值是 8·k/N,多乘了 2 倍;單位四分之一圓需乘 4,不是 8。",
+          "{wrong3}": "此值是四分之一圓的面積(≈π/4),不是 π 本身。"
+        },
+        "hook": "MC 估 π:在四分之一圓場景下 π ≈ 4·(k/N)"
+      },
+      "misconceptions": [
+        "忘記乘 4 倍",
+        "整圓 vs 四分之一圓搞混"
+      ],
+      "related_node_ids": [
+        "n_L23101_002",
+        "n_L23101_003"
+      ],
+      "tags": [
+        "monte carlo",
+        "模擬",
+        "π 估計",
+        "物流"
+      ]
+    },
+    {
+      "id": "q_pa_mc_002",
+      "knowledge_code": "L23101",
+      "node_id": "n_L23101_001",
+      "subject": 3,
+      "format": "code_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "醫院利用貝氏定理評估某病罕見度與檢測結果。已知盛行率 P(D)={pD},患病者陽性率 P(+|D)={pPosD},健康者誤判陽性率 P(+|~D)={pPosND}。請問檢測為陽性時實際患病的後驗機率 P(D|+) 最接近?",
+      "code_block": "# Bayes' theorem\npD     = {pD}     # prior: prevalence\npPosD  = {pPosD}  # sensitivity P(+|D)\npPosND = {pPosND} # false positive rate P(+|~D)\nnum = pPosD * pD\nden = pPosD * pD + pPosND * (1 - pD)\nposterior = num / den\nprint(round(posterior, 4))",
+      "stem_variables": {
+        "case_a": {
+          "pD": "0.01",
+          "pPosD": "0.99",
+          "pPosND": "0.05",
+          "answer": "0.1667",
+          "wrong1": "0.99",
+          "wrong2": "0.0099",
+          "wrong3": "0.5"
+        },
+        "case_b": {
+          "pD": "0.02",
+          "pPosD": "0.95",
+          "pPosND": "0.10",
+          "answer": "0.1624",
+          "wrong1": "0.95",
+          "wrong2": "0.019",
+          "wrong3": "0.5"
+        },
+        "case_c": {
+          "pD": "0.05",
+          "pPosD": "0.90",
+          "pPosND": "0.10",
+          "answer": "0.3214",
+          "wrong1": "0.90",
+          "wrong2": "0.045",
+          "wrong3": "0.5"
+        }
+      },
+      "options": [
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤把概似 P(+|D) 當後驗"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "只算分子忘記正規化"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤以為陽性即五五波"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Step 1: 貝氏公式 P(D|+) = P(+|D)·P(D) / P(+),分母 P(+) = P(+|D)·P(D) + P(+|~D)·P(~D)。Step 2: 代入分子 = {pPosD}·{pD},分母 = {pPosD}·{pD} + {pPosND}·(1−{pD})。Step 3: 計算結果 ≈ {answer}。雖然檢測準確度高,但因盛行率低(基底比率謬誤),後驗仍遠低於 P(+|D)。",
+        "wrong": {
+          "{wrong1}": "此值是概似 P(+|D),不是後驗 P(D|+);兩者方向相反,易因基底比率謬誤混淆。",
+          "{wrong2}": "此值是 P(+|D)·P(D) 分子,缺少分母 P(+) 的正規化;貝氏分母不可省。",
+          "{wrong3}": "0.5 是無資訊先驗下的盲猜;實際盛行率 {pD} 偏低,後驗應遠小於 0.5。"
+        },
+        "hook": "P(D|+) ≠ P(+|D);分母 P(+) 含 P(+|~D)·P(~D)"
+      },
+      "misconceptions": [
+        "把概似當後驗",
+        "忘記用全機率公式算分母"
+      ],
+      "related_node_ids": [
+        "n_L23101_001",
+        "n_L23101_002"
+      ],
+      "tags": [
+        "貝氏定理",
+        "後驗機率",
+        "基底比率",
+        "醫療"
+      ]
     }
   ]
 }

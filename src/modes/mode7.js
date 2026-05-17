@@ -172,6 +172,68 @@
       this.renderSetup();
     },
 
+    // ===== 2026-05-17 新入口:接收外部預過濾題池,跳過 setup 直接開戰 =====
+    // 由 Mode 6(卡牌圖鑑)「篩選後模擬考」按鈕呼叫:
+    //   Mode7.startWithCustomPool(questionList, { qcount, minutes, label })
+    //   - questionList: 已預過濾的 question 物件陣列(來自 Mode 6 _filterCards → 對應 codes 篩 QUESTIONS)
+    //   - opts.qcount: 玩家選的題數(若 > pool size 則自動截至 pool size)
+    //   - opts.minutes: 玩家選的時長分鐘
+    //   - opts.label: history 顯示用標籤(e.g. "卡牌:科三-已解鎖")
+    // 設計理由(2026-05-17 §8 合規):
+    //   - 100% 複用 _startBattle 後的所有流程(_installPlayEngineHook / _showCurrentQuestion / _startTimer / 結算 / fullLog 回顧 / Wrongbook 寫入)
+    //   - 用 state.source = 'mode6_codex' 區隔 history,避免污染原 Mode 7 模考紀錄
+    //   - 不動 _drawQuestions / scope / difficulty 邏輯,僅 bypass setup
+    startWithCustomPool(questionList, opts) {
+      this.cleanup();
+      RNG.set(Date.now());
+      opts = opts || {};
+      if (!Array.isArray(questionList) || questionList.length === 0) {
+        showToast('⚠️ 卡牌池為空,無法開戰', 3000);
+        return;
+      }
+      // 夾在 [1, pool.length] 之間;預設依池大小推估
+      const maxPool = questionList.length;
+      const requestedQ = Math.max(1, parseInt(opts.qcount || Math.min(30, maxPool), 10));
+      const qcount = Math.min(requestedQ, maxPool);
+      // 時長:opts.minutes 優先;否則對齊真考 ~1.2 min/題,最低 10 分鐘
+      const minutes = Math.max(1, parseInt(opts.minutes || Math.max(10, Math.round(qcount * 1.2)), 10));
+      const totalSeconds = minutes * 60;
+      // 構建 lineup:隨機洗牌 + npcIdx 輪轉(對齊 _drawQuestions 出來的結構)
+      const shuffled = RNG.shuffle(questionList.slice()).slice(0, qcount);
+      const lineup = shuffled.map((q, i) => ({ q: q, npcIdx: i % NPCS.length }));
+
+      this.state = {
+        source: 'mode6_codex',                    // 區隔 history 來源
+        sourceLabel: opts.label || '卡牌模擬',     // 結算 / history 顯示
+        config: { qcount: qcount, minutes: minutes, scope: 'codex', difficulty: 'mixed' },
+        lineup: lineup,
+        idx: 0,
+        total: lineup.length,
+        correct: 0,
+        wrongs: [],
+        perQuestionTime: [],
+        questionStartTs: 0,
+        startedAt: Date.now(),
+        totalSeconds: totalSeconds,
+        remainSeconds: totalSeconds,
+        finished: false,
+        outcomeRendered: false,
+        currentNpcIdx: -1,
+        markedIds: new Set(),
+        answers: {},
+        draft: {},
+        locked: new Set(),
+        reviewMode: false,
+        reviewIdx: 0,
+        reviewedSet: new Set()
+      };
+
+      this._applyFontScale(this._loadFontScale());
+      this._installPlayEngineHook();
+      this._showCurrentQuestion();
+      this._startTimer();
+    },
+
     // ===== Step 1:設定畫面 =====
     renderSetup() {
       const view = document.getElementById('view-play');
@@ -298,10 +360,10 @@
       const recent = data.history.slice(-10).reverse();
       const allQ = (typeof QUESTIONS !== 'undefined' ? QUESTIONS : []);
 
-      // scope label 對照
+      // scope label 對照(2026-05-17 §8 follow-up:加 codex 對應)
       const scopeLabel = (k) => ({
         all: '全主題', s1: '科一', s2: '科二', s3: '科三',
-        wrongbook: '錯題本', weak: '弱點優先'
+        wrongbook: '錯題本', weak: '弱點優先', codex: '🃏 卡牌篩選'
       }[k] || (k || '?'));
       // difficulty label
       const diffLabel = (k) => ({ easy: '簡單', medium: '中等', hard: '困難', mixed: '混合' }[k] || '?');
@@ -384,7 +446,7 @@
           <summary style="cursor:pointer;padding:10px 14px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
             <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex:1;min-width:0">
               <span style="font-size:0.85rem;color:var(--fg-dim);font-family:monospace">${ds}</span>
-              <span style="font-size:0.78rem;color:var(--fg-dim)">${scopeLabel(c.scope)} · ${diffLabel(c.difficulty)} · ${c.qcount || '?'}題</span>
+              <span style="font-size:0.78rem;color:var(--fg-dim)">${h.sourceLabel ? this._esc(h.sourceLabel) : scopeLabel(c.scope)} · ${diffLabel(c.difficulty)} · ${c.qcount || '?'}題</span>
               <strong style="color:${lvlColor};font-size:1rem">${lvlEmoji} ${r.correct || 0}/${r.total || 0}</strong>
               <span style="color:${lvlColor};font-weight:700">${pct}%</span>
               <span style="font-size:0.78rem;color:var(--fg-dim)">⏱ ${tuStr}</span>
@@ -1636,6 +1698,10 @@
       });
       data.history.push({
         ts: Date.now(),
+        // 2026-05-17 §8 follow-up:卡牌模擬考(Mode 6)發起的場次,寫入 source/sourceLabel 區隔
+        // 讓 _renderHistory 能顯示「🃏 卡牌:科三-已解鎖」而非原始字串 "codex"
+        source: this.state.source || 'mode7',
+        sourceLabel: this.state.sourceLabel || null,
         config: this.state.config,
         result: {
           correct: result.correct, total: result.total,
