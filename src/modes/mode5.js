@@ -762,7 +762,7 @@
         return showToast('⚠️ 此節點變化型不足');
       }
       DrillSession.start(q.node_id || this.state.boss.nodeId, variations, q, () => {
-        // DrillSession 完成 → drillBonus 已自動 +20 → 重建戰鬥
+        // DrillSession 完成 → drillBonus 依 ratio 差異化 +0~+25 → 重建戰鬥(2026-05-17 規則更新)
         this.renderBattle();
         // 若已過門檻,直接勝利
         const m = Mastery.get(this.state.boss.nodeId);
