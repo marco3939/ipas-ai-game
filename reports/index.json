@@ -35,6 +35,26 @@
         "low": 2,
         "info": 2
       }
+    },
+    {
+      "phase": 2,
+      "artifact_path": "reports/phase2-tests.md",
+      "sha256": "5281539b7d0a2d7c8144a96531e8dc719d2ec1da764bc79a74ef1a06db255985",
+      "generated_at": "2026-05-17T10:35:55.703Z",
+      "tool": "node-vm-sandbox-harness",
+      "tool_version": "project-builtin (audit-tests/_helpers.js)",
+      "command": "node scripts/audit-tests/*.test.js + node scripts/audit-*.js (in /tmp/wt-main worktree at origin/main)",
+      "host_id": "linux-x86_64-node22.22.2",
+      "executor_id": "claude-opus-4-7[1m]",
+      "auditor_id": null,
+      "verdict": "PASS",
+      "totals": {
+        "test_files": 5,
+        "audit_scripts": 7,
+        "assertions_passed": 250,
+        "violations": 0,
+        "exit_codes_nonzero": 0
+      }
     }
   ]
 }
