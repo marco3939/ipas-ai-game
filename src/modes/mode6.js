@@ -294,11 +294,131 @@
         </div>
         <div class="actions">
           <button class="btn btn-ghost" onclick="goHome()">🏠 回主頁</button>
+          <button class="btn btn-primary" onclick="Mode6.startMockExam()" style="background:linear-gradient(90deg,#60a5fa,#fbbf24)">📋 對篩選範圍模擬考</button>
           <button class="btn btn-ghost" onclick="Mode6.shareProgress()">📤 分享收藏進度</button>
           <button class="btn btn-ghost" onclick="if(confirm('重置圖鑑進度?(只清本案計數,不影響全域 Mastery / 錯題本)'))Mode6.resetCodex()">🔄 重置圖鑑</button>
         </div>
       `;
       show('view-play');
+    },
+
+    // === 2026-05-17:卡牌篩選後模擬考 ===
+    // 設計:
+    //   1. 抓目前 filters 範圍的卡(visible cards)
+    //   2. 預設只考「已解鎖」(tier ≥ 1);若使用者明確選 tier=0 則用該層
+    //   3. 卡 → knowledge_codes → 從 QUESTIONS 過濾題目池
+    //   4. 跳對話框:題數選 5 / 10 / 25 / 全打;時長依題數推估
+    //   5. 確認 → 呼叫 Mode7.startWithCustomPool(pool, opts)(共用 Mode 7 引擎)
+    startMockExam() {
+      const cards = _allowList || [];
+      const filters = (this.state && this.state.filters) || { subject: 'all', code: 'all', tier: 'all', q: '' };
+
+      // 1) 抓 visible cards
+      let visible = _filterCards(cards, filters);
+
+      // 2) 若 tier=all,進一步篩「已解鎖」(tier ≥ 1)— 灰卡(0)不對玩家當練習資源
+      //    若使用者明確選 tier=0,提示:沒題目可考
+      if (filters.tier === '0') {
+        showToast('⚠️ 灰卡(未接觸)沒有解鎖任何題目,請選其他階級或全階級', 4000);
+        return;
+      }
+      if (filters.tier === 'all') {
+        visible = visible.filter(c => _computeTier(c.id) >= TIER.TOUCHED);
+      }
+
+      if (visible.length === 0) {
+        showToast('⚠️ 目前篩選範圍內沒有已解鎖卡牌,請先做幾道題目再回來', 4000);
+        return;
+      }
+
+      // 3) 抓 codes,從 QUESTIONS 過濾題目池
+      const codes = new Set(visible.map(c => c.knowledge_code));
+      const pool = (typeof QUESTIONS !== 'undefined' ? QUESTIONS : []).filter(q =>
+        q && q.knowledge_code && codes.has(q.knowledge_code)
+      );
+
+      if (pool.length < 5) {
+        showToast(`⚠️ 篩選後題池僅 ${pool.length} 題,至少需要 5 題才能開模擬`, 4000);
+        return;
+      }
+
+      // 4) 跳對話框:依池大小提供題數選項
+      this._renderMockExamModal(visible.length, pool, filters);
+    },
+
+    _renderMockExamModal(cardCount, pool, filters) {
+      const poolSize = pool.length;
+      // 動態題數選項:[5, 10, 25, 全打] 過濾掉超過 pool size 的
+      const baseOpts = [
+        { qcount: 5,  minutes: 6,  label: '🥉 速戰 5 題' },
+        { qcount: 10, minutes: 12, label: '🥈 中場 10 題' },
+        { qcount: 25, minutes: 30, label: '🥇 完整 25 題' }
+      ];
+      const options = baseOpts.filter(o => o.qcount <= poolSize);
+      if (poolSize > 25 && poolSize <= 60) {
+        options.push({ qcount: poolSize, minutes: Math.round(poolSize * 1.2), label: '🌟 全打 ' + poolSize + ' 題' });
+      } else if (poolSize > 60) {
+        options.push({ qcount: 50, minutes: 60, label: '🌟 完全模考 50 題' });
+      }
+
+      // 範圍標籤
+      const scopeParts = [];
+      if (filters.subject !== 'all') scopeParts.push('科' + (filters.subject==='1'?'一':filters.subject==='2'?'二':'三'));
+      if (filters.code !== 'all') scopeParts.push(filters.code);
+      if (filters.tier !== 'all') scopeParts.push(['未接觸','接觸過','熟練中','精通'][parseInt(filters.tier,10)] || '');
+      if (filters.q) scopeParts.push('搜:' + filters.q);
+      const scopeLabel = scopeParts.length ? scopeParts.join(' / ') : '全部已解鎖';
+
+      const view = document.getElementById('view-play');
+      const html = `
+        <div class="card" style="max-width:560px;margin:40px auto;border:2px solid #fbbf24;box-shadow:0 0 24px rgba(251,191,36,0.3)">
+          <h2 style="color:#fbbf24">📋 卡牌篩選模擬考</h2>
+          <div style="background:rgba(96,165,250,0.10);border-left:4px solid #60a5fa;padding:10px;border-radius:6px;margin-top:10px">
+            <div style="font-size:0.9rem;color:var(--fg-dim)">
+              🎯 範圍:<strong style="color:var(--fg)">${esc(scopeLabel)}</strong><br>
+              🃏 涵蓋 <strong style="color:var(--fg)">${cardCount}</strong> 張卡 → 題池 <strong style="color:#4ade80">${poolSize}</strong> 題<br>
+              📝 介面與「考古題模擬劇場」一致(倒數計時 + NPC 輪流 + 結算 Top 5 錯題下鑽)
+            </div>
+          </div>
+          <h3 style="margin-top:18px">選擇場次規格</h3>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:10px">
+            ${options.map((o, i) => `
+              <button class="btn btn-primary" style="padding:14px;text-align:left;background:var(--bg-3);border:2px solid var(--border);color:var(--fg)"
+                      onclick="Mode6._confirmMockExam(${o.qcount}, ${o.minutes})">
+                <div style="font-weight:700">${o.label}</div>
+                <div style="font-size:0.8rem;color:var(--fg-dim);margin-top:4px">${o.minutes} 分鐘 / 約 ${Math.round(o.minutes * 60 / o.qcount)}s 一題</div>
+              </button>
+            `).join('')}
+          </div>
+          <div class="actions" style="margin-top:18px;justify-content:center">
+            <button class="btn btn-ghost" onclick="Mode6.renderGrid()">⬅️ 取消</button>
+          </div>
+        </div>
+      `;
+      view.innerHTML = html;
+      // 暫存 pool 供 _confirmMockExam 取用
+      this._pendingMockPool = pool;
+      this._pendingMockScopeLabel = scopeLabel;
+    },
+
+    _confirmMockExam(qcount, minutes) {
+      const pool = this._pendingMockPool;
+      const scopeLabel = this._pendingMockScopeLabel || '卡牌篩選';
+      this._pendingMockPool = null;
+      this._pendingMockScopeLabel = null;
+      if (!pool || pool.length === 0) {
+        showToast('⚠️ 題池資料遺失,請重新選擇', 3000);
+        this.renderGrid();
+        return;
+      }
+      if (typeof Mode7 === 'undefined' || !Mode7.startWithCustomPool) {
+        showToast('⚠️ 模擬考引擎未載入', 3000);
+        return;
+      }
+      // 還原 Mode 6 PlayEngine hook 殘留(避免污染 Mode 7)
+      this.cleanup();
+      // 切到 Mode 7 引擎
+      Mode7.startWithCustomPool(pool, { qcount: qcount, minutes: minutes, label: '🃏 ' + scopeLabel });
     },
 
     // 單張卡片 HTML

@@ -172,6 +172,68 @@
       this.renderSetup();
     },
 
+    // ===== 2026-05-17 新入口:接收外部預過濾題池,跳過 setup 直接開戰 =====
+    // 由 Mode 6(卡牌圖鑑)「篩選後模擬考」按鈕呼叫:
+    //   Mode7.startWithCustomPool(questionList, { qcount, minutes, label })
+    //   - questionList: 已預過濾的 question 物件陣列(來自 Mode 6 _filterCards → 對應 codes 篩 QUESTIONS)
+    //   - opts.qcount: 玩家選的題數(若 > pool size 則自動截至 pool size)
+    //   - opts.minutes: 玩家選的時長分鐘
+    //   - opts.label: history 顯示用標籤(e.g. "卡牌:科三-已解鎖")
+    // 設計理由(2026-05-17 §8 合規):
+    //   - 100% 複用 _startBattle 後的所有流程(_installPlayEngineHook / _showCurrentQuestion / _startTimer / 結算 / fullLog 回顧 / Wrongbook 寫入)
+    //   - 用 state.source = 'mode6_codex' 區隔 history,避免污染原 Mode 7 模考紀錄
+    //   - 不動 _drawQuestions / scope / difficulty 邏輯,僅 bypass setup
+    startWithCustomPool(questionList, opts) {
+      this.cleanup();
+      RNG.set(Date.now());
+      opts = opts || {};
+      if (!Array.isArray(questionList) || questionList.length === 0) {
+        showToast('⚠️ 卡牌池為空,無法開戰', 3000);
+        return;
+      }
+      // 夾在 [1, pool.length] 之間;預設依池大小推估
+      const maxPool = questionList.length;
+      const requestedQ = Math.max(1, parseInt(opts.qcount || Math.min(30, maxPool), 10));
+      const qcount = Math.min(requestedQ, maxPool);
+      // 時長:opts.minutes 優先;否則對齊真考 ~1.2 min/題,最低 10 分鐘
+      const minutes = Math.max(1, parseInt(opts.minutes || Math.max(10, Math.round(qcount * 1.2)), 10));
+      const totalSeconds = minutes * 60;
+      // 構建 lineup:隨機洗牌 + npcIdx 輪轉(對齊 _drawQuestions 出來的結構)
+      const shuffled = RNG.shuffle(questionList.slice()).slice(0, qcount);
+      const lineup = shuffled.map((q, i) => ({ q: q, npcIdx: i % NPCS.length }));
+
+      this.state = {
+        source: 'mode6_codex',                    // 區隔 history 來源
+        sourceLabel: opts.label || '卡牌模擬',     // 結算 / history 顯示
+        config: { qcount: qcount, minutes: minutes, scope: 'codex', difficulty: 'mixed' },
+        lineup: lineup,
+        idx: 0,
+        total: lineup.length,
+        correct: 0,
+        wrongs: [],
+        perQuestionTime: [],
+        questionStartTs: 0,
+        startedAt: Date.now(),
+        totalSeconds: totalSeconds,
+        remainSeconds: totalSeconds,
+        finished: false,
+        outcomeRendered: false,
+        currentNpcIdx: -1,
+        markedIds: new Set(),
+        answers: {},
+        draft: {},
+        locked: new Set(),
+        reviewMode: false,
+        reviewIdx: 0,
+        reviewedSet: new Set()
+      };
+
+      this._applyFontScale(this._loadFontScale());
+      this._installPlayEngineHook();
+      this._showCurrentQuestion();
+      this._startTimer();
+    },
+
     // ===== Step 1:設定畫面 =====
     renderSetup() {
       const view = document.getElementById('view-play');

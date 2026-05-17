@@ -4,7 +4,10 @@
   "purpose": "原創含完整視覺資料的表格判讀題庫(VGG16 全表 / Transformer / 混淆矩陣 / ROC 曲線)",
   "iron_rule_compliance": "all 3 iron rules met: (1) 每題含 explanation.correct/wrong/hook + misconceptions + related_node_ids;(2) shuffle_options:true;(3) 全部原創,非 114-2 複製",
   "generated_at": "2026-05-09",
-  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "exam_target": {
+    "name": "IPAS AI 應用規劃師中級",
+    "date": "2026-05-23"
+  },
   "iron_rule_1_compliance": "every question has explanation.correct + explanation.wrong + explanation.hook + misconceptions + related_node_ids",
   "iron_rule_2_compliance": "shuffle_options:true on every question",
   "iron_rule_3_compliance": "no question reuses the 114-2 stem, options or scenario; topic differs and traps are reconstructed",
@@ -19,53 +22,230 @@
       "source_level": "L2",
       "stem": "下表為某團隊將 VGG16 用於『工廠 PCB 瑕疵分類』的 torchsummary 完整輸出(輸入 224×224×3,輸出 1000 類)。請判斷:**單一層**參數量最多者為下列何者?",
       "table_data": [
-        {"Layer": "Conv2d-1", "OutputShape": "[64, 224, 224]", "Params": 1792},
-        {"Layer": "ReLU-2", "OutputShape": "[64, 224, 224]", "Params": 0},
-        {"Layer": "Conv2d-3", "OutputShape": "[64, 224, 224]", "Params": 36928},
-        {"Layer": "ReLU-4", "OutputShape": "[64, 224, 224]", "Params": 0},
-        {"Layer": "MaxPool2d-5", "OutputShape": "[64, 112, 112]", "Params": 0},
-        {"Layer": "Conv2d-6", "OutputShape": "[128, 112, 112]", "Params": 73856},
-        {"Layer": "ReLU-7", "OutputShape": "[128, 112, 112]", "Params": 0},
-        {"Layer": "Conv2d-8", "OutputShape": "[128, 112, 112]", "Params": 147584},
-        {"Layer": "ReLU-9", "OutputShape": "[128, 112, 112]", "Params": 0},
-        {"Layer": "MaxPool2d-10", "OutputShape": "[128, 56, 56]", "Params": 0},
-        {"Layer": "Conv2d-11", "OutputShape": "[256, 56, 56]", "Params": 295168},
-        {"Layer": "ReLU-12", "OutputShape": "[256, 56, 56]", "Params": 0},
-        {"Layer": "Conv2d-13", "OutputShape": "[256, 56, 56]", "Params": 590080},
-        {"Layer": "ReLU-14", "OutputShape": "[256, 56, 56]", "Params": 0},
-        {"Layer": "Conv2d-15", "OutputShape": "[256, 56, 56]", "Params": 590080},
-        {"Layer": "ReLU-16", "OutputShape": "[256, 56, 56]", "Params": 0},
-        {"Layer": "MaxPool2d-17", "OutputShape": "[256, 28, 28]", "Params": 0},
-        {"Layer": "Conv2d-18", "OutputShape": "[512, 28, 28]", "Params": 1180160},
-        {"Layer": "ReLU-19", "OutputShape": "[512, 28, 28]", "Params": 0},
-        {"Layer": "Conv2d-20", "OutputShape": "[512, 28, 28]", "Params": 2359808},
-        {"Layer": "ReLU-21", "OutputShape": "[512, 28, 28]", "Params": 0},
-        {"Layer": "Conv2d-22", "OutputShape": "[512, 28, 28]", "Params": 2359808},
-        {"Layer": "ReLU-23", "OutputShape": "[512, 28, 28]", "Params": 0},
-        {"Layer": "MaxPool2d-24", "OutputShape": "[512, 14, 14]", "Params": 0},
-        {"Layer": "Conv2d-25", "OutputShape": "[512, 14, 14]", "Params": 2359808},
-        {"Layer": "ReLU-26", "OutputShape": "[512, 14, 14]", "Params": 0},
-        {"Layer": "Conv2d-27", "OutputShape": "[512, 14, 14]", "Params": 2359808},
-        {"Layer": "ReLU-28", "OutputShape": "[512, 14, 14]", "Params": 0},
-        {"Layer": "Conv2d-29", "OutputShape": "[512, 14, 14]", "Params": 2359808},
-        {"Layer": "ReLU-30", "OutputShape": "[512, 14, 14]", "Params": 0},
-        {"Layer": "MaxPool2d-31", "OutputShape": "[512, 7, 7]", "Params": 0},
-        {"Layer": "AdaptiveAvgPool2d-32", "OutputShape": "[512, 7, 7]", "Params": 0},
-        {"Layer": "Linear-33", "OutputShape": "[4096]", "Params": 102764544},
-        {"Layer": "ReLU-34", "OutputShape": "[4096]", "Params": 0},
-        {"Layer": "Dropout-35", "OutputShape": "[4096]", "Params": 0},
-        {"Layer": "Linear-36", "OutputShape": "[4096]", "Params": 16781312},
-        {"Layer": "ReLU-37", "OutputShape": "[4096]", "Params": 0},
-        {"Layer": "Dropout-38", "OutputShape": "[4096]", "Params": 0},
-        {"Layer": "Linear-39", "OutputShape": "[1000]", "Params": 4097000}
+        {
+          "Layer": "Conv2d-1",
+          "OutputShape": "[64, 224, 224]",
+          "Params": 1792
+        },
+        {
+          "Layer": "ReLU-2",
+          "OutputShape": "[64, 224, 224]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-3",
+          "OutputShape": "[64, 224, 224]",
+          "Params": 36928
+        },
+        {
+          "Layer": "ReLU-4",
+          "OutputShape": "[64, 224, 224]",
+          "Params": 0
+        },
+        {
+          "Layer": "MaxPool2d-5",
+          "OutputShape": "[64, 112, 112]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-6",
+          "OutputShape": "[128, 112, 112]",
+          "Params": 73856
+        },
+        {
+          "Layer": "ReLU-7",
+          "OutputShape": "[128, 112, 112]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-8",
+          "OutputShape": "[128, 112, 112]",
+          "Params": 147584
+        },
+        {
+          "Layer": "ReLU-9",
+          "OutputShape": "[128, 112, 112]",
+          "Params": 0
+        },
+        {
+          "Layer": "MaxPool2d-10",
+          "OutputShape": "[128, 56, 56]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-11",
+          "OutputShape": "[256, 56, 56]",
+          "Params": 295168
+        },
+        {
+          "Layer": "ReLU-12",
+          "OutputShape": "[256, 56, 56]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-13",
+          "OutputShape": "[256, 56, 56]",
+          "Params": 590080
+        },
+        {
+          "Layer": "ReLU-14",
+          "OutputShape": "[256, 56, 56]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-15",
+          "OutputShape": "[256, 56, 56]",
+          "Params": 590080
+        },
+        {
+          "Layer": "ReLU-16",
+          "OutputShape": "[256, 56, 56]",
+          "Params": 0
+        },
+        {
+          "Layer": "MaxPool2d-17",
+          "OutputShape": "[256, 28, 28]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-18",
+          "OutputShape": "[512, 28, 28]",
+          "Params": 1180160
+        },
+        {
+          "Layer": "ReLU-19",
+          "OutputShape": "[512, 28, 28]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-20",
+          "OutputShape": "[512, 28, 28]",
+          "Params": 2359808
+        },
+        {
+          "Layer": "ReLU-21",
+          "OutputShape": "[512, 28, 28]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-22",
+          "OutputShape": "[512, 28, 28]",
+          "Params": 2359808
+        },
+        {
+          "Layer": "ReLU-23",
+          "OutputShape": "[512, 28, 28]",
+          "Params": 0
+        },
+        {
+          "Layer": "MaxPool2d-24",
+          "OutputShape": "[512, 14, 14]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-25",
+          "OutputShape": "[512, 14, 14]",
+          "Params": 2359808
+        },
+        {
+          "Layer": "ReLU-26",
+          "OutputShape": "[512, 14, 14]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-27",
+          "OutputShape": "[512, 14, 14]",
+          "Params": 2359808
+        },
+        {
+          "Layer": "ReLU-28",
+          "OutputShape": "[512, 14, 14]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-29",
+          "OutputShape": "[512, 14, 14]",
+          "Params": 2359808
+        },
+        {
+          "Layer": "ReLU-30",
+          "OutputShape": "[512, 14, 14]",
+          "Params": 0
+        },
+        {
+          "Layer": "MaxPool2d-31",
+          "OutputShape": "[512, 7, 7]",
+          "Params": 0
+        },
+        {
+          "Layer": "AdaptiveAvgPool2d-32",
+          "OutputShape": "[512, 7, 7]",
+          "Params": 0
+        },
+        {
+          "Layer": "Linear-33",
+          "OutputShape": "[4096]",
+          "Params": 102764544
+        },
+        {
+          "Layer": "ReLU-34",
+          "OutputShape": "[4096]",
+          "Params": 0
+        },
+        {
+          "Layer": "Dropout-35",
+          "OutputShape": "[4096]",
+          "Params": 0
+        },
+        {
+          "Layer": "Linear-36",
+          "OutputShape": "[4096]",
+          "Params": 16781312
+        },
+        {
+          "Layer": "ReLU-37",
+          "OutputShape": "[4096]",
+          "Params": 0
+        },
+        {
+          "Layer": "Dropout-38",
+          "OutputShape": "[4096]",
+          "Params": 0
+        },
+        {
+          "Layer": "Linear-39",
+          "OutputShape": "[1000]",
+          "Params": 4097000
+        }
       ],
-      "table_columns": ["Layer", "OutputShape", "Params"],
-      "highlight_cells": ["Linear-33|Params"],
+      "table_columns": [
+        "Layer",
+        "OutputShape",
+        "Params"
+      ],
+      "highlight_cells": [
+        "Linear-33|Params"
+      ],
       "options": [
-        {"text": "Conv2d-29(最後一個 3×3×512 卷積層)", "is_correct": false, "trap_type": "誤以為深層卷積參數最多"},
-        {"text": "Linear-33(7×7×512 → 4096 全連接層)", "is_correct": true},
-        {"text": "Linear-36(4096 → 4096 全連接層)", "is_correct": false, "trap_type": "與 Linear-33 混淆,但前者輸入由 25088 攤平,參數遠多"},
-        {"text": "Linear-39(4096 → 1000 分類層)", "is_correct": false, "trap_type": "輸出維度小,參數量約 4M"}
+        {
+          "text": "Conv2d-29(最後一個 3×3×512 卷積層)",
+          "is_correct": false,
+          "trap_type": "誤以為深層卷積參數最多"
+        },
+        {
+          "text": "Linear-33(7×7×512 → 4096 全連接層)",
+          "is_correct": true
+        },
+        {
+          "text": "Linear-36(4096 → 4096 全連接層)",
+          "is_correct": false,
+          "trap_type": "與 Linear-33 混淆,但前者輸入由 25088 攤平,參數遠多"
+        },
+        {
+          "text": "Linear-39(4096 → 1000 分類層)",
+          "is_correct": false,
+          "trap_type": "輸出維度小,參數量約 4M"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -81,8 +261,17 @@
         "誤以為網路越深的卷積參數越多(其實 3×3 共享權重很省)",
         "把 25088×4096 與 4096×4096 等同看待"
       ],
-      "related_node_ids": ["n_L21102_004", "n_L21102_001"],
-      "tags": ["VGG16", "CNN", "參數量", "FC層", "PCB瑕疵"]
+      "related_node_ids": [
+        "n_L21102_004",
+        "n_L21102_001"
+      ],
+      "tags": [
+        "VGG16",
+        "CNN",
+        "參數量",
+        "FC層",
+        "PCB瑕疵"
+      ]
     },
     {
       "id": "q_pb_002",
@@ -94,53 +283,231 @@
       "source_level": "L2",
       "stem": "同一份 VGG16 表格,某團隊將其應用於『胸部 X 光肺炎篩檢』,訓練時發現某層在反向傳播計算時最耗 GPU 時間。**FLOPs(浮點運算數)最多**的層為下列何者?(提示:FLOPs ≈ Params × OutputSpatial 對 Conv 而言)",
       "table_data": [
-        {"Layer": "Conv2d-1", "OutputShape": "[64, 224, 224]", "Params": 1792},
-        {"Layer": "ReLU-2", "OutputShape": "[64, 224, 224]", "Params": 0},
-        {"Layer": "Conv2d-3", "OutputShape": "[64, 224, 224]", "Params": 36928},
-        {"Layer": "ReLU-4", "OutputShape": "[64, 224, 224]", "Params": 0},
-        {"Layer": "MaxPool2d-5", "OutputShape": "[64, 112, 112]", "Params": 0},
-        {"Layer": "Conv2d-6", "OutputShape": "[128, 112, 112]", "Params": 73856},
-        {"Layer": "ReLU-7", "OutputShape": "[128, 112, 112]", "Params": 0},
-        {"Layer": "Conv2d-8", "OutputShape": "[128, 112, 112]", "Params": 147584},
-        {"Layer": "ReLU-9", "OutputShape": "[128, 112, 112]", "Params": 0},
-        {"Layer": "MaxPool2d-10", "OutputShape": "[128, 56, 56]", "Params": 0},
-        {"Layer": "Conv2d-11", "OutputShape": "[256, 56, 56]", "Params": 295168},
-        {"Layer": "ReLU-12", "OutputShape": "[256, 56, 56]", "Params": 0},
-        {"Layer": "Conv2d-13", "OutputShape": "[256, 56, 56]", "Params": 590080},
-        {"Layer": "ReLU-14", "OutputShape": "[256, 56, 56]", "Params": 0},
-        {"Layer": "Conv2d-15", "OutputShape": "[256, 56, 56]", "Params": 590080},
-        {"Layer": "ReLU-16", "OutputShape": "[256, 56, 56]", "Params": 0},
-        {"Layer": "MaxPool2d-17", "OutputShape": "[256, 28, 28]", "Params": 0},
-        {"Layer": "Conv2d-18", "OutputShape": "[512, 28, 28]", "Params": 1180160},
-        {"Layer": "ReLU-19", "OutputShape": "[512, 28, 28]", "Params": 0},
-        {"Layer": "Conv2d-20", "OutputShape": "[512, 28, 28]", "Params": 2359808},
-        {"Layer": "ReLU-21", "OutputShape": "[512, 28, 28]", "Params": 0},
-        {"Layer": "Conv2d-22", "OutputShape": "[512, 28, 28]", "Params": 2359808},
-        {"Layer": "ReLU-23", "OutputShape": "[512, 28, 28]", "Params": 0},
-        {"Layer": "MaxPool2d-24", "OutputShape": "[512, 14, 14]", "Params": 0},
-        {"Layer": "Conv2d-25", "OutputShape": "[512, 14, 14]", "Params": 2359808},
-        {"Layer": "ReLU-26", "OutputShape": "[512, 14, 14]", "Params": 0},
-        {"Layer": "Conv2d-27", "OutputShape": "[512, 14, 14]", "Params": 2359808},
-        {"Layer": "ReLU-28", "OutputShape": "[512, 14, 14]", "Params": 0},
-        {"Layer": "Conv2d-29", "OutputShape": "[512, 14, 14]", "Params": 2359808},
-        {"Layer": "ReLU-30", "OutputShape": "[512, 14, 14]", "Params": 0},
-        {"Layer": "MaxPool2d-31", "OutputShape": "[512, 7, 7]", "Params": 0},
-        {"Layer": "AdaptiveAvgPool2d-32", "OutputShape": "[512, 7, 7]", "Params": 0},
-        {"Layer": "Linear-33", "OutputShape": "[4096]", "Params": 102764544},
-        {"Layer": "ReLU-34", "OutputShape": "[4096]", "Params": 0},
-        {"Layer": "Dropout-35", "OutputShape": "[4096]", "Params": 0},
-        {"Layer": "Linear-36", "OutputShape": "[4096]", "Params": 16781312},
-        {"Layer": "ReLU-37", "OutputShape": "[4096]", "Params": 0},
-        {"Layer": "Dropout-38", "OutputShape": "[4096]", "Params": 0},
-        {"Layer": "Linear-39", "OutputShape": "[1000]", "Params": 4097000}
+        {
+          "Layer": "Conv2d-1",
+          "OutputShape": "[64, 224, 224]",
+          "Params": 1792
+        },
+        {
+          "Layer": "ReLU-2",
+          "OutputShape": "[64, 224, 224]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-3",
+          "OutputShape": "[64, 224, 224]",
+          "Params": 36928
+        },
+        {
+          "Layer": "ReLU-4",
+          "OutputShape": "[64, 224, 224]",
+          "Params": 0
+        },
+        {
+          "Layer": "MaxPool2d-5",
+          "OutputShape": "[64, 112, 112]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-6",
+          "OutputShape": "[128, 112, 112]",
+          "Params": 73856
+        },
+        {
+          "Layer": "ReLU-7",
+          "OutputShape": "[128, 112, 112]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-8",
+          "OutputShape": "[128, 112, 112]",
+          "Params": 147584
+        },
+        {
+          "Layer": "ReLU-9",
+          "OutputShape": "[128, 112, 112]",
+          "Params": 0
+        },
+        {
+          "Layer": "MaxPool2d-10",
+          "OutputShape": "[128, 56, 56]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-11",
+          "OutputShape": "[256, 56, 56]",
+          "Params": 295168
+        },
+        {
+          "Layer": "ReLU-12",
+          "OutputShape": "[256, 56, 56]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-13",
+          "OutputShape": "[256, 56, 56]",
+          "Params": 590080
+        },
+        {
+          "Layer": "ReLU-14",
+          "OutputShape": "[256, 56, 56]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-15",
+          "OutputShape": "[256, 56, 56]",
+          "Params": 590080
+        },
+        {
+          "Layer": "ReLU-16",
+          "OutputShape": "[256, 56, 56]",
+          "Params": 0
+        },
+        {
+          "Layer": "MaxPool2d-17",
+          "OutputShape": "[256, 28, 28]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-18",
+          "OutputShape": "[512, 28, 28]",
+          "Params": 1180160
+        },
+        {
+          "Layer": "ReLU-19",
+          "OutputShape": "[512, 28, 28]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-20",
+          "OutputShape": "[512, 28, 28]",
+          "Params": 2359808
+        },
+        {
+          "Layer": "ReLU-21",
+          "OutputShape": "[512, 28, 28]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-22",
+          "OutputShape": "[512, 28, 28]",
+          "Params": 2359808
+        },
+        {
+          "Layer": "ReLU-23",
+          "OutputShape": "[512, 28, 28]",
+          "Params": 0
+        },
+        {
+          "Layer": "MaxPool2d-24",
+          "OutputShape": "[512, 14, 14]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-25",
+          "OutputShape": "[512, 14, 14]",
+          "Params": 2359808
+        },
+        {
+          "Layer": "ReLU-26",
+          "OutputShape": "[512, 14, 14]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-27",
+          "OutputShape": "[512, 14, 14]",
+          "Params": 2359808
+        },
+        {
+          "Layer": "ReLU-28",
+          "OutputShape": "[512, 14, 14]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-29",
+          "OutputShape": "[512, 14, 14]",
+          "Params": 2359808
+        },
+        {
+          "Layer": "ReLU-30",
+          "OutputShape": "[512, 14, 14]",
+          "Params": 0
+        },
+        {
+          "Layer": "MaxPool2d-31",
+          "OutputShape": "[512, 7, 7]",
+          "Params": 0
+        },
+        {
+          "Layer": "AdaptiveAvgPool2d-32",
+          "OutputShape": "[512, 7, 7]",
+          "Params": 0
+        },
+        {
+          "Layer": "Linear-33",
+          "OutputShape": "[4096]",
+          "Params": 102764544
+        },
+        {
+          "Layer": "ReLU-34",
+          "OutputShape": "[4096]",
+          "Params": 0
+        },
+        {
+          "Layer": "Dropout-35",
+          "OutputShape": "[4096]",
+          "Params": 0
+        },
+        {
+          "Layer": "Linear-36",
+          "OutputShape": "[4096]",
+          "Params": 16781312
+        },
+        {
+          "Layer": "ReLU-37",
+          "OutputShape": "[4096]",
+          "Params": 0
+        },
+        {
+          "Layer": "Dropout-38",
+          "OutputShape": "[4096]",
+          "Params": 0
+        },
+        {
+          "Layer": "Linear-39",
+          "OutputShape": "[1000]",
+          "Params": 4097000
+        }
       ],
-      "table_columns": ["Layer", "OutputShape", "Params"],
-      "highlight_cells": ["Conv2d-20|Params", "Conv2d-22|Params"],
+      "table_columns": [
+        "Layer",
+        "OutputShape",
+        "Params"
+      ],
+      "highlight_cells": [
+        "Conv2d-20|Params",
+        "Conv2d-22|Params"
+      ],
       "options": [
-        {"text": "Linear-33(參數量最多者)", "is_correct": false, "trap_type": "誤把 FLOPs 等同 Params"},
-        {"text": "Conv2d-3(輸入特徵圖最大 224×224)", "is_correct": false, "trap_type": "Params 太小,僅 36,928"},
-        {"text": "Conv2d-20 / Conv2d-22(stage4 中段,Params=2.36M × 28×28 ≈ 1.85G FLOPs)", "is_correct": true},
-        {"text": "Conv2d-29(最深層 14×14)", "is_correct": false, "trap_type": "OutputSpatial=14×14 較小,FLOPs ≈ 462M"}
+        {
+          "text": "Linear-33(參數量最多者)",
+          "is_correct": false,
+          "trap_type": "誤把 FLOPs 等同 Params"
+        },
+        {
+          "text": "Conv2d-3(輸入特徵圖最大 224×224)",
+          "is_correct": false,
+          "trap_type": "Params 太小,僅 36,928"
+        },
+        {
+          "text": "Conv2d-20 / Conv2d-22(stage4 中段,Params=2.36M × 28×28 ≈ 1.85G FLOPs)",
+          "is_correct": true
+        },
+        {
+          "text": "Conv2d-29(最深層 14×14)",
+          "is_correct": false,
+          "trap_type": "OutputSpatial=14×14 較小,FLOPs ≈ 462M"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -156,8 +523,17 @@
         "把 Params 與 FLOPs 視為同一指標",
         "誤以為最深層 Conv 一定 FLOPs 最高"
       ],
-      "related_node_ids": ["n_L21102_004", "n_L21102_001"],
-      "tags": ["VGG16", "FLOPs", "計算量", "GPU", "醫療影像"]
+      "related_node_ids": [
+        "n_L21102_004",
+        "n_L21102_001"
+      ],
+      "tags": [
+        "VGG16",
+        "FLOPs",
+        "計算量",
+        "GPU",
+        "醫療影像"
+      ]
     },
     {
       "id": "q_pb_003",
@@ -169,53 +545,230 @@
       "source_level": "L2",
       "stem": "**遷移學習**情境:某新創欲將 ImageNet 預訓練 VGG16 微調至『貓狗 2 分類』,但資料集僅 800 張影像。下列**凍結策略**何者最合適,可避免過擬合並節省訓練時間?",
       "table_data": [
-        {"Layer": "Conv2d-1", "OutputShape": "[64, 224, 224]", "Params": 1792},
-        {"Layer": "ReLU-2", "OutputShape": "[64, 224, 224]", "Params": 0},
-        {"Layer": "Conv2d-3", "OutputShape": "[64, 224, 224]", "Params": 36928},
-        {"Layer": "ReLU-4", "OutputShape": "[64, 224, 224]", "Params": 0},
-        {"Layer": "MaxPool2d-5", "OutputShape": "[64, 112, 112]", "Params": 0},
-        {"Layer": "Conv2d-6", "OutputShape": "[128, 112, 112]", "Params": 73856},
-        {"Layer": "ReLU-7", "OutputShape": "[128, 112, 112]", "Params": 0},
-        {"Layer": "Conv2d-8", "OutputShape": "[128, 112, 112]", "Params": 147584},
-        {"Layer": "ReLU-9", "OutputShape": "[128, 112, 112]", "Params": 0},
-        {"Layer": "MaxPool2d-10", "OutputShape": "[128, 56, 56]", "Params": 0},
-        {"Layer": "Conv2d-11", "OutputShape": "[256, 56, 56]", "Params": 295168},
-        {"Layer": "ReLU-12", "OutputShape": "[256, 56, 56]", "Params": 0},
-        {"Layer": "Conv2d-13", "OutputShape": "[256, 56, 56]", "Params": 590080},
-        {"Layer": "ReLU-14", "OutputShape": "[256, 56, 56]", "Params": 0},
-        {"Layer": "Conv2d-15", "OutputShape": "[256, 56, 56]", "Params": 590080},
-        {"Layer": "ReLU-16", "OutputShape": "[256, 56, 56]", "Params": 0},
-        {"Layer": "MaxPool2d-17", "OutputShape": "[256, 28, 28]", "Params": 0},
-        {"Layer": "Conv2d-18", "OutputShape": "[512, 28, 28]", "Params": 1180160},
-        {"Layer": "ReLU-19", "OutputShape": "[512, 28, 28]", "Params": 0},
-        {"Layer": "Conv2d-20", "OutputShape": "[512, 28, 28]", "Params": 2359808},
-        {"Layer": "ReLU-21", "OutputShape": "[512, 28, 28]", "Params": 0},
-        {"Layer": "Conv2d-22", "OutputShape": "[512, 28, 28]", "Params": 2359808},
-        {"Layer": "ReLU-23", "OutputShape": "[512, 28, 28]", "Params": 0},
-        {"Layer": "MaxPool2d-24", "OutputShape": "[512, 14, 14]", "Params": 0},
-        {"Layer": "Conv2d-25", "OutputShape": "[512, 14, 14]", "Params": 2359808},
-        {"Layer": "ReLU-26", "OutputShape": "[512, 14, 14]", "Params": 0},
-        {"Layer": "Conv2d-27", "OutputShape": "[512, 14, 14]", "Params": 2359808},
-        {"Layer": "ReLU-28", "OutputShape": "[512, 14, 14]", "Params": 0},
-        {"Layer": "Conv2d-29", "OutputShape": "[512, 14, 14]", "Params": 2359808},
-        {"Layer": "ReLU-30", "OutputShape": "[512, 14, 14]", "Params": 0},
-        {"Layer": "MaxPool2d-31", "OutputShape": "[512, 7, 7]", "Params": 0},
-        {"Layer": "AdaptiveAvgPool2d-32", "OutputShape": "[512, 7, 7]", "Params": 0},
-        {"Layer": "Linear-33", "OutputShape": "[4096]", "Params": 102764544},
-        {"Layer": "ReLU-34", "OutputShape": "[4096]", "Params": 0},
-        {"Layer": "Dropout-35", "OutputShape": "[4096]", "Params": 0},
-        {"Layer": "Linear-36", "OutputShape": "[4096]", "Params": 16781312},
-        {"Layer": "ReLU-37", "OutputShape": "[4096]", "Params": 0},
-        {"Layer": "Dropout-38", "OutputShape": "[4096]", "Params": 0},
-        {"Layer": "Linear-39", "OutputShape": "[1000]", "Params": 4097000}
+        {
+          "Layer": "Conv2d-1",
+          "OutputShape": "[64, 224, 224]",
+          "Params": 1792
+        },
+        {
+          "Layer": "ReLU-2",
+          "OutputShape": "[64, 224, 224]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-3",
+          "OutputShape": "[64, 224, 224]",
+          "Params": 36928
+        },
+        {
+          "Layer": "ReLU-4",
+          "OutputShape": "[64, 224, 224]",
+          "Params": 0
+        },
+        {
+          "Layer": "MaxPool2d-5",
+          "OutputShape": "[64, 112, 112]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-6",
+          "OutputShape": "[128, 112, 112]",
+          "Params": 73856
+        },
+        {
+          "Layer": "ReLU-7",
+          "OutputShape": "[128, 112, 112]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-8",
+          "OutputShape": "[128, 112, 112]",
+          "Params": 147584
+        },
+        {
+          "Layer": "ReLU-9",
+          "OutputShape": "[128, 112, 112]",
+          "Params": 0
+        },
+        {
+          "Layer": "MaxPool2d-10",
+          "OutputShape": "[128, 56, 56]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-11",
+          "OutputShape": "[256, 56, 56]",
+          "Params": 295168
+        },
+        {
+          "Layer": "ReLU-12",
+          "OutputShape": "[256, 56, 56]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-13",
+          "OutputShape": "[256, 56, 56]",
+          "Params": 590080
+        },
+        {
+          "Layer": "ReLU-14",
+          "OutputShape": "[256, 56, 56]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-15",
+          "OutputShape": "[256, 56, 56]",
+          "Params": 590080
+        },
+        {
+          "Layer": "ReLU-16",
+          "OutputShape": "[256, 56, 56]",
+          "Params": 0
+        },
+        {
+          "Layer": "MaxPool2d-17",
+          "OutputShape": "[256, 28, 28]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-18",
+          "OutputShape": "[512, 28, 28]",
+          "Params": 1180160
+        },
+        {
+          "Layer": "ReLU-19",
+          "OutputShape": "[512, 28, 28]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-20",
+          "OutputShape": "[512, 28, 28]",
+          "Params": 2359808
+        },
+        {
+          "Layer": "ReLU-21",
+          "OutputShape": "[512, 28, 28]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-22",
+          "OutputShape": "[512, 28, 28]",
+          "Params": 2359808
+        },
+        {
+          "Layer": "ReLU-23",
+          "OutputShape": "[512, 28, 28]",
+          "Params": 0
+        },
+        {
+          "Layer": "MaxPool2d-24",
+          "OutputShape": "[512, 14, 14]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-25",
+          "OutputShape": "[512, 14, 14]",
+          "Params": 2359808
+        },
+        {
+          "Layer": "ReLU-26",
+          "OutputShape": "[512, 14, 14]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-27",
+          "OutputShape": "[512, 14, 14]",
+          "Params": 2359808
+        },
+        {
+          "Layer": "ReLU-28",
+          "OutputShape": "[512, 14, 14]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-29",
+          "OutputShape": "[512, 14, 14]",
+          "Params": 2359808
+        },
+        {
+          "Layer": "ReLU-30",
+          "OutputShape": "[512, 14, 14]",
+          "Params": 0
+        },
+        {
+          "Layer": "MaxPool2d-31",
+          "OutputShape": "[512, 7, 7]",
+          "Params": 0
+        },
+        {
+          "Layer": "AdaptiveAvgPool2d-32",
+          "OutputShape": "[512, 7, 7]",
+          "Params": 0
+        },
+        {
+          "Layer": "Linear-33",
+          "OutputShape": "[4096]",
+          "Params": 102764544
+        },
+        {
+          "Layer": "ReLU-34",
+          "OutputShape": "[4096]",
+          "Params": 0
+        },
+        {
+          "Layer": "Dropout-35",
+          "OutputShape": "[4096]",
+          "Params": 0
+        },
+        {
+          "Layer": "Linear-36",
+          "OutputShape": "[4096]",
+          "Params": 16781312
+        },
+        {
+          "Layer": "ReLU-37",
+          "OutputShape": "[4096]",
+          "Params": 0
+        },
+        {
+          "Layer": "Dropout-38",
+          "OutputShape": "[4096]",
+          "Params": 0
+        },
+        {
+          "Layer": "Linear-39",
+          "OutputShape": "[1000]",
+          "Params": 4097000
+        }
       ],
-      "table_columns": ["Layer", "OutputShape", "Params"],
-      "highlight_cells": ["Linear-39|Params"],
+      "table_columns": [
+        "Layer",
+        "OutputShape",
+        "Params"
+      ],
+      "highlight_cells": [
+        "Linear-39|Params"
+      ],
       "options": [
-        {"text": "解凍全部 39 層,end-to-end 重新訓練", "is_correct": false, "trap_type": "資料太少,138M 參數會嚴重過擬合"},
-        {"text": "凍結 Conv2d-1 至 MaxPool2d-31(全部卷積),只重新訓練 FC 部分(Linear-33/36/39),並把 Linear-39 改為 2 類輸出", "is_correct": true},
-        {"text": "凍結 Linear-33/36/39,只訓練前段 Conv 層", "is_correct": false, "trap_type": "顛倒;前段學的是 ImageNet 通用低階特徵應該保留"},
-        {"text": "只訓練 Conv2d-1 與 Linear-39,中間層全凍結", "is_correct": false, "trap_type": "杜撰策略,跳層訓練會破壞特徵流"}
+        {
+          "text": "解凍全部 39 層,end-to-end 重新訓練",
+          "is_correct": false,
+          "trap_type": "資料太少,138M 參數會嚴重過擬合"
+        },
+        {
+          "text": "凍結 Conv2d-1 至 MaxPool2d-31(全部卷積),只重新訓練 FC 部分(Linear-33/36/39),並把 Linear-39 改為 2 類輸出",
+          "is_correct": true
+        },
+        {
+          "text": "凍結 Linear-33/36/39,只訓練前段 Conv 層",
+          "is_correct": false,
+          "trap_type": "顛倒;前段學的是 ImageNet 通用低階特徵應該保留"
+        },
+        {
+          "text": "只訓練 Conv2d-1 與 Linear-39,中間層全凍結",
+          "is_correct": false,
+          "trap_type": "杜撰策略,跳層訓練會破壞特徵流"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -231,8 +784,17 @@
         "誤以為遷移學習就是『重新訓練全部』",
         "顛倒『前段通用 / 後段專屬』的角色"
       ],
-      "related_node_ids": ["n_L21102_004", "n_L21102_001"],
-      "tags": ["VGG16", "遷移學習", "微調", "凍結", "貓狗分類"]
+      "related_node_ids": [
+        "n_L21102_004",
+        "n_L21102_001"
+      ],
+      "tags": [
+        "VGG16",
+        "遷移學習",
+        "微調",
+        "凍結",
+        "貓狗分類"
+      ]
     },
     {
       "id": "q_pb_004",
@@ -244,19 +806,66 @@
       "source_level": "L2",
       "stem": "某學生想用『**1 GB 顯卡**』(如 GTX 1050)訓練上表 VGG16,batch size = 32、FP32(每參數 4 bytes)、Adam optimizer。預估訓練時 GPU 記憶體是否足夠?",
       "table_data": [
-        {"Item": "Total Params", "Count": 138357544, "BytesFP32": 553430176, "Note": "≈ 0.55 GB(只儲存權重)"},
-        {"Item": "Gradients (同參數量)", "Count": 138357544, "BytesFP32": 553430176, "Note": "≈ 0.55 GB(反向傳播需要)"},
-        {"Item": "Adam optimizer states (m, v)", "Count": 276715088, "BytesFP32": 1106860352, "Note": "≈ 1.10 GB(每參數另需 2 個 state)"},
-        {"Item": "Activations (batch=32)", "Count": "≈ 800M floats", "BytesFP32": 3200000000, "Note": "≈ 3.20 GB(中間特徵圖,被 Conv2d-3 224×224 主導)"},
-        {"Item": "Total estimated", "Count": "—", "BytesFP32": 5413720704, "Note": "≈ 5.41 GB"}
+        {
+          "Item": "Total Params",
+          "Count": 138357544,
+          "BytesFP32": 553430176,
+          "Note": "≈ 0.55 GB(只儲存權重)"
+        },
+        {
+          "Item": "Gradients (同參數量)",
+          "Count": 138357544,
+          "BytesFP32": 553430176,
+          "Note": "≈ 0.55 GB(反向傳播需要)"
+        },
+        {
+          "Item": "Adam optimizer states (m, v)",
+          "Count": 276715088,
+          "BytesFP32": 1106860352,
+          "Note": "≈ 1.10 GB(每參數另需 2 個 state)"
+        },
+        {
+          "Item": "Activations (batch=32)",
+          "Count": "≈ 800M floats",
+          "BytesFP32": 3200000000,
+          "Note": "≈ 3.20 GB(中間特徵圖,被 Conv2d-3 224×224 主導)"
+        },
+        {
+          "Item": "Total estimated",
+          "Count": "—",
+          "BytesFP32": 5413720704,
+          "Note": "≈ 5.41 GB"
+        }
       ],
-      "table_columns": ["Item", "Count", "BytesFP32", "Note"],
-      "highlight_cells": ["Total estimated|BytesFP32"],
+      "table_columns": [
+        "Item",
+        "Count",
+        "BytesFP32",
+        "Note"
+      ],
+      "highlight_cells": [
+        "Total estimated|BytesFP32"
+      ],
       "options": [
-        {"text": "夠,因為 VGG16 模型權重只有 553 MB,小於 1 GB", "is_correct": false, "trap_type": "只算權重,忽略 gradient/optimizer/activation"},
-        {"text": "夠,只要把 batch size 調為 1 即可", "is_correct": false, "trap_type": "活動記憶體會降低但 optimizer state(1.1 GB)就已超過 1 GB"},
-        {"text": "不夠;**僅 weights+gradients+Adam states 就需 ≈ 2.2 GB,加上 activations 約 5.4 GB,須改用更大 GPU 或 mixed-precision/gradient checkpointing**", "is_correct": true},
-        {"text": "不夠,因為 activations 部分至少需 8 GB", "is_correct": false, "trap_type": "高估 activations,但結論方向對"}
+        {
+          "text": "夠,因為 VGG16 模型權重只有 553 MB,小於 1 GB",
+          "is_correct": false,
+          "trap_type": "只算權重,忽略 gradient/optimizer/activation"
+        },
+        {
+          "text": "夠,只要把 batch size 調為 1 即可",
+          "is_correct": false,
+          "trap_type": "活動記憶體會降低但 optimizer state(1.1 GB)就已超過 1 GB"
+        },
+        {
+          "text": "不夠;**僅 weights+gradients+Adam states 就需 ≈ 2.2 GB,加上 activations 約 5.4 GB,須改用更大 GPU 或 mixed-precision/gradient checkpointing**",
+          "is_correct": true
+        },
+        {
+          "text": "不夠,因為 activations 部分至少需 8 GB",
+          "is_correct": false,
+          "trap_type": "高估 activations,但結論方向對"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -273,8 +882,17 @@
         "忽略 Adam optimizer 額外占用 2 倍參數量",
         "忘記 activations 隨 batch size 線性成長"
       ],
-      "related_node_ids": ["n_L21302_006", "n_L21102_004"],
-      "tags": ["VGG16", "GPU記憶體", "訓練成本", "Adam", "mixed-precision"]
+      "related_node_ids": [
+        "n_L21302_006",
+        "n_L21102_004"
+      ],
+      "tags": [
+        "VGG16",
+        "GPU記憶體",
+        "訓練成本",
+        "Adam",
+        "mixed-precision"
+      ]
     },
     {
       "id": "q_pb_005",
@@ -286,24 +904,85 @@
       "source_level": "L2",
       "stem": "某 NLP 團隊使用標準 Transformer Encoder(d_model=512,heads=8,FFN_dim=2048,layers=6)做機器翻譯。下表顯示**單一 Encoder Layer 內各子模組的參數量**。請問**整個 Encoder(6 層)的總參數量**最接近哪一個?(不含 embedding 與 positional encoding)",
       "table_data": [
-        {"Submodule": "Multi-Head Attention: W_Q (512×512)", "Params": 262144, "Formula": "d_model²"},
-        {"Submodule": "Multi-Head Attention: W_K (512×512)", "Params": 262144, "Formula": "d_model²"},
-        {"Submodule": "Multi-Head Attention: W_V (512×512)", "Params": 262144, "Formula": "d_model²"},
-        {"Submodule": "Multi-Head Attention: W_O (512×512)", "Params": 262144, "Formula": "d_model²"},
-        {"Submodule": "MHA bias (4×512)", "Params": 2048, "Formula": "4·d_model"},
-        {"Submodule": "FFN: Linear-1 (512×2048)", "Params": 1048576, "Formula": "d_model·FFN_dim"},
-        {"Submodule": "FFN: Linear-2 (2048×512)", "Params": 1048576, "Formula": "FFN_dim·d_model"},
-        {"Submodule": "FFN bias (2048+512)", "Params": 2560, "Formula": "FFN_dim+d_model"},
-        {"Submodule": "LayerNorm × 2 (各 1024)", "Params": 2048, "Formula": "2·(2·d_model)"},
-        {"Submodule": "Per-layer total", "Params": 3152384, "Formula": "≈ 3.15M"}
+        {
+          "Submodule": "Multi-Head Attention: W_Q (512×512)",
+          "Params": 262144,
+          "Formula": "d_model²"
+        },
+        {
+          "Submodule": "Multi-Head Attention: W_K (512×512)",
+          "Params": 262144,
+          "Formula": "d_model²"
+        },
+        {
+          "Submodule": "Multi-Head Attention: W_V (512×512)",
+          "Params": 262144,
+          "Formula": "d_model²"
+        },
+        {
+          "Submodule": "Multi-Head Attention: W_O (512×512)",
+          "Params": 262144,
+          "Formula": "d_model²"
+        },
+        {
+          "Submodule": "MHA bias (4×512)",
+          "Params": 2048,
+          "Formula": "4·d_model"
+        },
+        {
+          "Submodule": "FFN: Linear-1 (512×2048)",
+          "Params": 1048576,
+          "Formula": "d_model·FFN_dim"
+        },
+        {
+          "Submodule": "FFN: Linear-2 (2048×512)",
+          "Params": 1048576,
+          "Formula": "FFN_dim·d_model"
+        },
+        {
+          "Submodule": "FFN bias (2048+512)",
+          "Params": 2560,
+          "Formula": "FFN_dim+d_model"
+        },
+        {
+          "Submodule": "LayerNorm × 2 (各 1024)",
+          "Params": 2048,
+          "Formula": "2·(2·d_model)"
+        },
+        {
+          "Submodule": "Per-layer total",
+          "Params": 3152384,
+          "Formula": "≈ 3.15M"
+        }
       ],
-      "table_columns": ["Submodule", "Params", "Formula"],
-      "highlight_cells": ["Per-layer total|Params"],
+      "table_columns": [
+        "Submodule",
+        "Params",
+        "Formula"
+      ],
+      "highlight_cells": [
+        "Per-layer total|Params"
+      ],
       "options": [
-        {"text": "約 3.15M(只算 1 層)", "is_correct": false, "trap_type": "忘了乘以 6 層"},
-        {"text": "約 18.9M(3.15M × 6 層)", "is_correct": true},
-        {"text": "約 9.5M(誤把 FFN 算成單一 Linear)", "is_correct": false, "trap_type": "漏算 FFN 第 2 個 Linear"},
-        {"text": "約 110M(誤把 d_model² 算為 d_model⁴)", "is_correct": false, "trap_type": "公式記錯"}
+        {
+          "text": "約 3.15M(只算 1 層)",
+          "is_correct": false,
+          "trap_type": "忘了乘以 6 層"
+        },
+        {
+          "text": "約 18.9M(3.15M × 6 層)",
+          "is_correct": true
+        },
+        {
+          "text": "約 9.5M(誤把 FFN 算成單一 Linear)",
+          "is_correct": false,
+          "trap_type": "漏算 FFN 第 2 個 Linear"
+        },
+        {
+          "text": "約 110M(誤把 d_model² 算為 d_model⁴)",
+          "is_correct": false,
+          "trap_type": "公式記錯"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -320,8 +999,17 @@
         "漏算 FFN 的兩段 Linear",
         "把『每層』與『總層數』混淆"
       ],
-      "related_node_ids": ["n_L21101_002", "n_L21101_001"],
-      "tags": ["Transformer", "Self-Attention", "FFN", "參數量", "NLP"]
+      "related_node_ids": [
+        "n_L21101_002",
+        "n_L21101_001"
+      ],
+      "tags": [
+        "Transformer",
+        "Self-Attention",
+        "FFN",
+        "參數量",
+        "NLP"
+      ]
     },
     {
       "id": "q_pb_006",
@@ -333,21 +1021,95 @@
       "source_level": "L2",
       "stem": "下表為某『中文摘要 Transformer Decoder』的 6 層每層運算延遲(ms),架構 d_model=512、heads=8、FFN=2048,輸入序列長度 L=512。團隊想知道**哪個子模組是延遲瓶頸**並可被最佳化(例如 FlashAttention)。",
       "table_data": [
-        {"Layer": "Layer 1", "MaskedSelfAttn_ms": 4.8, "CrossAttn_ms": 5.1, "FFN_ms": 2.3, "LayerNorm_ms": 0.2, "Total_ms": 12.4},
-        {"Layer": "Layer 2", "MaskedSelfAttn_ms": 4.7, "CrossAttn_ms": 5.0, "FFN_ms": 2.3, "LayerNorm_ms": 0.2, "Total_ms": 12.2},
-        {"Layer": "Layer 3", "MaskedSelfAttn_ms": 4.8, "CrossAttn_ms": 5.2, "FFN_ms": 2.4, "LayerNorm_ms": 0.2, "Total_ms": 12.6},
-        {"Layer": "Layer 4", "MaskedSelfAttn_ms": 4.7, "CrossAttn_ms": 5.1, "FFN_ms": 2.3, "LayerNorm_ms": 0.2, "Total_ms": 12.3},
-        {"Layer": "Layer 5", "MaskedSelfAttn_ms": 4.9, "CrossAttn_ms": 5.0, "FFN_ms": 2.3, "LayerNorm_ms": 0.2, "Total_ms": 12.4},
-        {"Layer": "Layer 6", "MaskedSelfAttn_ms": 4.8, "CrossAttn_ms": 5.1, "FFN_ms": 2.3, "LayerNorm_ms": 0.2, "Total_ms": 12.4},
-        {"Layer": "Sum (6 layers)", "MaskedSelfAttn_ms": 28.7, "CrossAttn_ms": 30.5, "FFN_ms": 13.9, "LayerNorm_ms": 1.2, "Total_ms": 74.3}
+        {
+          "Layer": "Layer 1",
+          "MaskedSelfAttn_ms": 4.8,
+          "CrossAttn_ms": 5.1,
+          "FFN_ms": 2.3,
+          "LayerNorm_ms": 0.2,
+          "Total_ms": 12.4
+        },
+        {
+          "Layer": "Layer 2",
+          "MaskedSelfAttn_ms": 4.7,
+          "CrossAttn_ms": 5,
+          "FFN_ms": 2.3,
+          "LayerNorm_ms": 0.2,
+          "Total_ms": 12.2
+        },
+        {
+          "Layer": "Layer 3",
+          "MaskedSelfAttn_ms": 4.8,
+          "CrossAttn_ms": 5.2,
+          "FFN_ms": 2.4,
+          "LayerNorm_ms": 0.2,
+          "Total_ms": 12.6
+        },
+        {
+          "Layer": "Layer 4",
+          "MaskedSelfAttn_ms": 4.7,
+          "CrossAttn_ms": 5.1,
+          "FFN_ms": 2.3,
+          "LayerNorm_ms": 0.2,
+          "Total_ms": 12.3
+        },
+        {
+          "Layer": "Layer 5",
+          "MaskedSelfAttn_ms": 4.9,
+          "CrossAttn_ms": 5,
+          "FFN_ms": 2.3,
+          "LayerNorm_ms": 0.2,
+          "Total_ms": 12.4
+        },
+        {
+          "Layer": "Layer 6",
+          "MaskedSelfAttn_ms": 4.8,
+          "CrossAttn_ms": 5.1,
+          "FFN_ms": 2.3,
+          "LayerNorm_ms": 0.2,
+          "Total_ms": 12.4
+        },
+        {
+          "Layer": "Sum (6 layers)",
+          "MaskedSelfAttn_ms": 28.7,
+          "CrossAttn_ms": 30.5,
+          "FFN_ms": 13.9,
+          "LayerNorm_ms": 1.2,
+          "Total_ms": 74.3
+        }
       ],
-      "table_columns": ["Layer", "MaskedSelfAttn_ms", "CrossAttn_ms", "FFN_ms", "LayerNorm_ms", "Total_ms"],
-      "highlight_cells": ["Sum (6 layers)|CrossAttn_ms", "Sum (6 layers)|MaskedSelfAttn_ms"],
+      "table_columns": [
+        "Layer",
+        "MaskedSelfAttn_ms",
+        "CrossAttn_ms",
+        "FFN_ms",
+        "LayerNorm_ms",
+        "Total_ms"
+      ],
+      "highlight_cells": [
+        "Sum (6 layers)|CrossAttn_ms",
+        "Sum (6 layers)|MaskedSelfAttn_ms"
+      ],
       "options": [
-        {"text": "FFN(13.9 ms),因 FFN 維度 2048 是 d_model 的 4 倍", "is_correct": false, "trap_type": "誤以為大維度就是最慢"},
-        {"text": "**Attention(Self+Cross 合計 59.2 ms,佔 80%)**,因 O(L²·d) 隨序列長度平方成長,L=512 時最痛", "is_correct": true},
-        {"text": "LayerNorm(1.2 ms),因每層用了 3 次", "is_correct": false, "trap_type": "LN 數值最小,反而是次要"},
-        {"text": "都差不多,無瓶頸,需橫向擴充 GPU", "is_correct": false, "trap_type": "未細看比例"}
+        {
+          "text": "FFN(13.9 ms),因 FFN 維度 2048 是 d_model 的 4 倍",
+          "is_correct": false,
+          "trap_type": "誤以為大維度就是最慢"
+        },
+        {
+          "text": "**Attention(Self+Cross 合計 59.2 ms,佔 80%)**,因 O(L²·d) 隨序列長度平方成長,L=512 時最痛",
+          "is_correct": true
+        },
+        {
+          "text": "LayerNorm(1.2 ms),因每層用了 3 次",
+          "is_correct": false,
+          "trap_type": "LN 數值最小,反而是次要"
+        },
+        {
+          "text": "都差不多,無瓶頸,需橫向擴充 GPU",
+          "is_correct": false,
+          "trap_type": "未細看比例"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -363,8 +1125,17 @@
         "誤以為 FFN(4× hidden)是最慢的子模組",
         "忽略 Attention 的時間複雜度是 O(L²)"
       ],
-      "related_node_ids": ["n_L21101_002", "n_L21101_001"],
-      "tags": ["Transformer", "Decoder", "FlashAttention", "瓶頸分析", "L²"]
+      "related_node_ids": [
+        "n_L21101_002",
+        "n_L21101_001"
+      ],
+      "tags": [
+        "Transformer",
+        "Decoder",
+        "FlashAttention",
+        "瓶頸分析",
+        "L²"
+      ]
     },
     {
       "id": "q_pb_007",
@@ -376,16 +1147,47 @@
       "source_level": "L1",
       "stem": "某『癌症篩檢 AI』在 10,000 筆**極不平衡測試集**(實際陽性 200 筆、陰性 9,800 筆)的混淆矩陣如下。請計算 **F1-Score 最接近**的數值。",
       "table_data": [
-        {"_label": "預測 Positive", "Actual_Positive": 160, "Actual_Negative": 1840},
-        {"_label": "預測 Negative", "Actual_Positive": 40, "Actual_Negative": 7960}
+        {
+          "_label": "預測 Positive",
+          "Actual_Positive": 160,
+          "Actual_Negative": 1840
+        },
+        {
+          "_label": "預測 Negative",
+          "Actual_Positive": 40,
+          "Actual_Negative": 7960
+        }
       ],
-      "table_columns": ["_label", "Actual_Positive", "Actual_Negative"],
-      "highlight_cells": ["預測 Positive|Actual_Positive", "預測 Positive|Actual_Negative", "預測 Negative|Actual_Positive"],
+      "table_columns": [
+        "_label",
+        "Actual_Positive",
+        "Actual_Negative"
+      ],
+      "highlight_cells": [
+        "預測 Positive|Actual_Positive",
+        "預測 Positive|Actual_Negative",
+        "預測 Negative|Actual_Positive"
+      ],
       "options": [
-        {"text": "0.146(Precision=0.080, Recall=0.800, F1=2·0.08·0.80/0.88)", "is_correct": true},
-        {"text": "0.812(等同 Accuracy=(160+7960)/10000)", "is_correct": false, "trap_type": "把 Accuracy 當 F1"},
-        {"text": "0.440(算術平均 (0.080+0.800)/2)", "is_correct": false, "trap_type": "誤用算術平均"},
-        {"text": "0.800(只看 Recall)", "is_correct": false, "trap_type": "只用單一指標"}
+        {
+          "text": "0.146(Precision=0.080, Recall=0.800, F1=2·0.08·0.80/0.88)",
+          "is_correct": true
+        },
+        {
+          "text": "0.812(等同 Accuracy=(160+7960)/10000)",
+          "is_correct": false,
+          "trap_type": "把 Accuracy 當 F1"
+        },
+        {
+          "text": "0.440(算術平均 (0.080+0.800)/2)",
+          "is_correct": false,
+          "trap_type": "誤用算術平均"
+        },
+        {
+          "text": "0.800(只看 Recall)",
+          "is_correct": false,
+          "trap_type": "只用單一指標"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -402,8 +1204,17 @@
         "F1 用算術平均代替調和平均",
         "誤以為高 Recall 就是好模型"
       ],
-      "related_node_ids": ["n_L23303_001", "n_L23303_002"],
-      "tags": ["混淆矩陣", "F1", "不平衡", "醫療AI", "Precision-Recall"]
+      "related_node_ids": [
+        "n_L23303_001",
+        "n_L23303_002"
+      ],
+      "tags": [
+        "混淆矩陣",
+        "F1",
+        "不平衡",
+        "醫療AI",
+        "Precision-Recall"
+      ]
     },
     {
       "id": "q_pb_008",
@@ -415,16 +1226,46 @@
       "source_level": "L1",
       "stem": "某『**信用卡盜刷偵測 AI**』(每月 100,000 筆交易、實際盜刷 50 筆、合法 99,950 筆)上線後混淆矩陣如下。資安主管在意的是『**漏掉的盜刷成本(每筆 NT$ 30,000)** 與『**誤判合法為盜刷的客訴成本(每筆 NT$ 200)**』。下列何者為**最佳的營運判讀**?",
       "table_data": [
-        {"_label": "預測 詐欺", "Actual_詐欺": 45, "Actual_合法": 1500},
-        {"_label": "預測 合法", "Actual_詐欺": 5, "Actual_合法": 98450}
+        {
+          "_label": "預測 詐欺",
+          "Actual_詐欺": 45,
+          "Actual_合法": 1500
+        },
+        {
+          "_label": "預測 合法",
+          "Actual_詐欺": 5,
+          "Actual_合法": 98450
+        }
       ],
-      "table_columns": ["_label", "Actual_詐欺", "Actual_合法"],
-      "highlight_cells": ["預測 合法|Actual_詐欺", "預測 詐欺|Actual_合法"],
+      "table_columns": [
+        "_label",
+        "Actual_詐欺",
+        "Actual_合法"
+      ],
+      "highlight_cells": [
+        "預測 合法|Actual_詐欺",
+        "預測 詐欺|Actual_合法"
+      ],
       "options": [
-        {"text": "Recall=90%、Precision=2.9%、Accuracy=98.5%,模型很好;誤判成本 NT$ 30 萬 vs 漏網成本 NT$ 15 萬,平衡可接受", "is_correct": false, "trap_type": "成本估算錯誤(漏網其實 NT$ 15 萬?其實是 5×30000=15 萬,但下方比較才是重點)"},
-        {"text": "**Recall=90%(45/50)、Precision=2.9%(45/1545);漏網成本=5×30000=NT$ 15 萬,客訴成本=1500×200=NT$ 30 萬。客訴成本超漏網成本,應**提高判定閾值**降低 FP**", "is_correct": true},
-        {"text": "Accuracy 98.5% 已達成 SLA,無須調整", "is_correct": false, "trap_type": "Accuracy 陷阱(極不平衡)"},
-        {"text": "應降低閾值,提高 Recall 至 100%(漏網成本最小化)", "is_correct": false, "trap_type": "忽略 FP 客訴成本會以 N 倍增長"}
+        {
+          "text": "Recall=90%、Precision=2.9%、Accuracy=98.5%,模型很好;誤判成本 NT$ 30 萬 vs 漏網成本 NT$ 15 萬,平衡可接受",
+          "is_correct": false,
+          "trap_type": "成本估算錯誤(漏網其實 NT$ 15 萬?其實是 5×30000=15 萬,但下方比較才是重點)"
+        },
+        {
+          "text": "**Recall=90%(45/50)、Precision=2.9%(45/1545);漏網成本=5×30000=NT$ 15 萬,客訴成本=1500×200=NT$ 30 萬。客訴成本超漏網成本,應**提高判定閾值**降低 FP**",
+          "is_correct": true
+        },
+        {
+          "text": "Accuracy 98.5% 已達成 SLA,無須調整",
+          "is_correct": false,
+          "trap_type": "Accuracy 陷阱(極不平衡)"
+        },
+        {
+          "text": "應降低閾值,提高 Recall 至 100%(漏網成本最小化)",
+          "is_correct": false,
+          "trap_type": "忽略 FP 客訴成本會以 N 倍增長"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -441,8 +1282,17 @@
         "只看 Recall 不看 FP 的成本",
         "忽略商業成本的雙向不對稱"
       ],
-      "related_node_ids": ["n_L23303_002", "n_L23303_003"],
-      "tags": ["混淆矩陣", "成本敏感學習", "閾值", "信用卡盜刷", "Precision-Recall"]
+      "related_node_ids": [
+        "n_L23303_002",
+        "n_L23303_003"
+      ],
+      "tags": [
+        "混淆矩陣",
+        "成本敏感學習",
+        "閾值",
+        "信用卡盜刷",
+        "Precision-Recall"
+      ]
     },
     {
       "id": "q_pb_009",
@@ -454,24 +1304,86 @@
       "source_level": "L1",
       "stem": "某『流失客戶預測模型』在驗證集上,以下表為**不同分類閾值**對應的 (TPR, FPR)。請判斷 ROC 曲線下面積(**AUC**)約落在哪個範圍?(可用梯形法則粗估)",
       "table_data": [
-        {"threshold": 0.95, "TPR": 0.10, "FPR": 0.01},
-        {"threshold": 0.90, "TPR": 0.30, "FPR": 0.03},
-        {"threshold": 0.80, "TPR": 0.55, "FPR": 0.08},
-        {"threshold": 0.70, "TPR": 0.72, "FPR": 0.15},
-        {"threshold": 0.60, "TPR": 0.83, "FPR": 0.25},
-        {"threshold": 0.50, "TPR": 0.90, "FPR": 0.38},
-        {"threshold": 0.40, "TPR": 0.94, "FPR": 0.52},
-        {"threshold": 0.30, "TPR": 0.97, "FPR": 0.68},
-        {"threshold": 0.20, "TPR": 0.99, "FPR": 0.82},
-        {"threshold": 0.10, "TPR": 1.00, "FPR": 0.95}
+        {
+          "threshold": 0.95,
+          "TPR": 0.1,
+          "FPR": 0.01
+        },
+        {
+          "threshold": 0.9,
+          "TPR": 0.3,
+          "FPR": 0.03
+        },
+        {
+          "threshold": 0.8,
+          "TPR": 0.55,
+          "FPR": 0.08
+        },
+        {
+          "threshold": 0.7,
+          "TPR": 0.72,
+          "FPR": 0.15
+        },
+        {
+          "threshold": 0.6,
+          "TPR": 0.83,
+          "FPR": 0.25
+        },
+        {
+          "threshold": 0.5,
+          "TPR": 0.9,
+          "FPR": 0.38
+        },
+        {
+          "threshold": 0.4,
+          "TPR": 0.94,
+          "FPR": 0.52
+        },
+        {
+          "threshold": 0.3,
+          "TPR": 0.97,
+          "FPR": 0.68
+        },
+        {
+          "threshold": 0.2,
+          "TPR": 0.99,
+          "FPR": 0.82
+        },
+        {
+          "threshold": 0.1,
+          "TPR": 1,
+          "FPR": 0.95
+        }
       ],
-      "table_columns": ["threshold", "TPR", "FPR"],
-      "highlight_cells": ["0.70|TPR", "0.70|FPR"],
+      "table_columns": [
+        "threshold",
+        "TPR",
+        "FPR"
+      ],
+      "highlight_cells": [
+        "0.70|TPR",
+        "0.70|FPR"
+      ],
       "options": [
-        {"text": "AUC ≈ 0.50(隨機猜測等級)", "is_correct": false, "trap_type": "誤判,因 TPR>FPR 顯著"},
-        {"text": "AUC ≈ 0.65(略優於隨機)", "is_correct": false, "trap_type": "低估"},
-        {"text": "**AUC ≈ 0.85(良好)**", "is_correct": true},
-        {"text": "AUC ≈ 0.99(近完美,商業可直接落地)", "is_correct": false, "trap_type": "高估,曲線並未『緊貼』左上角"}
+        {
+          "text": "AUC ≈ 0.50(隨機猜測等級)",
+          "is_correct": false,
+          "trap_type": "誤判,因 TPR>FPR 顯著"
+        },
+        {
+          "text": "AUC ≈ 0.65(略優於隨機)",
+          "is_correct": false,
+          "trap_type": "低估"
+        },
+        {
+          "text": "**AUC ≈ 0.85(良好)**",
+          "is_correct": true
+        },
+        {
+          "text": "AUC ≈ 0.99(近完美,商業可直接落地)",
+          "is_correct": false,
+          "trap_type": "高估,曲線並未『緊貼』左上角"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -488,8 +1400,17 @@
         "忽略梯形法則的累積效應",
         "高估曲線的『拱起』程度"
       ],
-      "related_node_ids": ["n_L23303_004", "n_L23303_005"],
-      "tags": ["ROC", "AUC", "閾值", "客戶流失", "梯形法則"]
+      "related_node_ids": [
+        "n_L23303_004",
+        "n_L23303_005"
+      ],
+      "tags": [
+        "ROC",
+        "AUC",
+        "閾值",
+        "客戶流失",
+        "梯形法則"
+      ]
     },
     {
       "id": "q_pb_010",
@@ -501,24 +1422,97 @@
       "source_level": "L1",
       "stem": "延續上題 ROC 曲線數據。某團隊欲找出**最佳分類閾值**(以 **Youden's J statistic = TPR − FPR** 為決策準則)。下列哪個閾值最佳?",
       "table_data": [
-        {"threshold": 0.95, "TPR": 0.10, "FPR": 0.01, "J=TPR-FPR": 0.09},
-        {"threshold": 0.90, "TPR": 0.30, "FPR": 0.03, "J=TPR-FPR": 0.27},
-        {"threshold": 0.80, "TPR": 0.55, "FPR": 0.08, "J=TPR-FPR": 0.47},
-        {"threshold": 0.70, "TPR": 0.72, "FPR": 0.15, "J=TPR-FPR": 0.57},
-        {"threshold": 0.60, "TPR": 0.83, "FPR": 0.25, "J=TPR-FPR": 0.58},
-        {"threshold": 0.50, "TPR": 0.90, "FPR": 0.38, "J=TPR-FPR": 0.52},
-        {"threshold": 0.40, "TPR": 0.94, "FPR": 0.52, "J=TPR-FPR": 0.42},
-        {"threshold": 0.30, "TPR": 0.97, "FPR": 0.68, "J=TPR-FPR": 0.29},
-        {"threshold": 0.20, "TPR": 0.99, "FPR": 0.82, "J=TPR-FPR": 0.17},
-        {"threshold": 0.10, "TPR": 1.00, "FPR": 0.95, "J=TPR-FPR": 0.05}
+        {
+          "threshold": 0.95,
+          "TPR": 0.1,
+          "FPR": 0.01,
+          "J=TPR-FPR": 0.09
+        },
+        {
+          "threshold": 0.9,
+          "TPR": 0.3,
+          "FPR": 0.03,
+          "J=TPR-FPR": 0.27
+        },
+        {
+          "threshold": 0.8,
+          "TPR": 0.55,
+          "FPR": 0.08,
+          "J=TPR-FPR": 0.47
+        },
+        {
+          "threshold": 0.7,
+          "TPR": 0.72,
+          "FPR": 0.15,
+          "J=TPR-FPR": 0.57
+        },
+        {
+          "threshold": 0.6,
+          "TPR": 0.83,
+          "FPR": 0.25,
+          "J=TPR-FPR": 0.58
+        },
+        {
+          "threshold": 0.5,
+          "TPR": 0.9,
+          "FPR": 0.38,
+          "J=TPR-FPR": 0.52
+        },
+        {
+          "threshold": 0.4,
+          "TPR": 0.94,
+          "FPR": 0.52,
+          "J=TPR-FPR": 0.42
+        },
+        {
+          "threshold": 0.3,
+          "TPR": 0.97,
+          "FPR": 0.68,
+          "J=TPR-FPR": 0.29
+        },
+        {
+          "threshold": 0.2,
+          "TPR": 0.99,
+          "FPR": 0.82,
+          "J=TPR-FPR": 0.17
+        },
+        {
+          "threshold": 0.1,
+          "TPR": 1,
+          "FPR": 0.95,
+          "J=TPR-FPR": 0.05
+        }
       ],
-      "table_columns": ["threshold", "TPR", "FPR", "J=TPR-FPR"],
-      "highlight_cells": ["0.60|J=TPR-FPR", "0.70|J=TPR-FPR"],
+      "table_columns": [
+        "threshold",
+        "TPR",
+        "FPR",
+        "J=TPR-FPR"
+      ],
+      "highlight_cells": [
+        "0.60|J=TPR-FPR",
+        "0.70|J=TPR-FPR"
+      ],
       "options": [
-        {"text": "threshold = 0.95(門檻最嚴,最 'precise')", "is_correct": false, "trap_type": "Recall 極低 J=0.09"},
-        {"text": "threshold = 0.50(預設值,合直覺)", "is_correct": false, "trap_type": "Youden's J=0.52,非最大"},
-        {"text": "**threshold = 0.60(J=TPR−FPR=0.58 最大)**", "is_correct": true},
-        {"text": "threshold = 0.10(Recall 接近 1,接住所有客戶)", "is_correct": false, "trap_type": "FPR=0.95 極高,等同全判流失"}
+        {
+          "text": "threshold = 0.95(門檻最嚴,最 'precise')",
+          "is_correct": false,
+          "trap_type": "Recall 極低 J=0.09"
+        },
+        {
+          "text": "threshold = 0.50(預設值,合直覺)",
+          "is_correct": false,
+          "trap_type": "Youden's J=0.52,非最大"
+        },
+        {
+          "text": "**threshold = 0.60(J=TPR−FPR=0.58 最大)**",
+          "is_correct": true
+        },
+        {
+          "text": "threshold = 0.10(Recall 接近 1,接住所有客戶)",
+          "is_correct": false,
+          "trap_type": "FPR=0.95 極高,等同全判流失"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -535,8 +1529,768 @@
         "用單一指標(只看 Recall 或 Precision)選閾值",
         "忽略 ROC 曲線上『離對角線最遠點』的幾何意義"
       ],
-      "related_node_ids": ["n_L23303_004", "n_L23303_005"],
-      "tags": ["ROC", "Youden's J", "閾值最佳化", "客戶流失", "決策閾值"]
+      "related_node_ids": [
+        "n_L23303_004",
+        "n_L23303_005"
+      ],
+      "tags": [
+        "ROC",
+        "Youden's J",
+        "閾值最佳化",
+        "客戶流失",
+        "決策閾值"
+      ]
+    },
+    {
+      "id": "q_pb_011",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_002",
+      "subject": 3,
+      "format": "table_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "下表為某醫院乳房 X 光攝影 AI 對 1000 張影像的『癌症檢測』混淆矩陣(正類=惡性)。請判斷:模型對『惡性』的 **Recall(召回率)** 為多少?(四捨五入到小數第三位)",
+      "table_data": [
+        {
+          "分類": "預測=惡性",
+          "實際=惡性 (TP/FN)": 72,
+          "實際=良性 (FP/TN)": 48
+        },
+        {
+          "分類": "預測=良性",
+          "實際=惡性 (TP/FN)": 18,
+          "實際=良性 (FP/TN)": 862
+        }
+      ],
+      "table_columns": [
+        "分類",
+        "實際=惡性 (TP/FN)",
+        "實際=良性 (FP/TN)"
+      ],
+      "options": [
+        {
+          "text": "0.800(72 / (72 + 18))",
+          "is_correct": true
+        },
+        {
+          "text": "0.600(72 / (72 + 48))",
+          "is_correct": false,
+          "trap_type": "把 Precision 公式誤套到 Recall"
+        },
+        {
+          "text": "0.934(934 / 1000 整體正確率)",
+          "is_correct": false,
+          "trap_type": "用 Accuracy 取代 Recall"
+        },
+        {
+          "text": "0.073(72 / 982 預測良性中惡性比)",
+          "is_correct": false,
+          "trap_type": "分母錯選為負類預測總數"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** Recall 公式 = TP / (TP + FN),分母是所有『實際為惡性』的樣本。**Step 2:** 從表中讀出 TP=72(預測惡性且實際惡性)、FN=18(預測良性但實際惡性),實際惡性合計 90 例。**Step 3:** Recall = 72 / 90 = 0.800。在癌症檢測場景下 Recall 比 Precision 更重要,因為漏診(FN)的代價是延誤治療。",
+        "wrong": {
+          "0.600(72 / (72 + 48))": "這是 Precision = TP/(TP+FP) = 72/120,分母用『預測為惡性的總數』,不是 Recall",
+          "0.934(934 / 1000 整體正確率)": "這是 Accuracy = (TP+TN)/Total = (72+862)/1000,在類別嚴重不平衡時 Accuracy 不能取代 Recall",
+          "0.073(72 / 982 預測良性中惡性比)": "分母錯把 TN+FN=880 或預測良性類當底,完全脫離 Recall 定義"
+        },
+        "hook": "口訣:Recall『實際正類中,我抓到幾個』→ 分母看『實際=正類』那一欄(TP+FN);Precision『預測正類中,真的對幾個』→ 分母看『預測=正類』那一列(TP+FP)。"
+      },
+      "misconceptions": [
+        "把 Precision 與 Recall 公式背反(分母張冠李戴)",
+        "在不平衡資料用 Accuracy 取代 Recall 評估癌症檢測"
+      ],
+      "related_node_ids": [
+        "n_L23303_002",
+        "n_L23303_001"
+      ],
+      "tags": [
+        "混淆矩陣",
+        "Recall",
+        "Precision",
+        "醫療AI",
+        "乳癌檢測"
+      ]
+    },
+    {
+      "id": "q_pb_012",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_001",
+      "subject": 3,
+      "format": "table_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "下表為某社群平台輿情分類模型對 4 類情緒(正面 / 中性 / 負面 / 諷刺)的 sklearn classification_report 輸出。請判斷:**macro avg F1** 與 **weighted avg F1** 差異最主要反映何種現象?",
+      "table_data": [
+        {
+          "類別": "正面",
+          "Precision": 0.92,
+          "Recall": 0.94,
+          "F1": 0.93,
+          "Support": 4200
+        },
+        {
+          "類別": "中性",
+          "Precision": 0.88,
+          "Recall": 0.86,
+          "F1": 0.87,
+          "Support": 3100
+        },
+        {
+          "類別": "負面",
+          "Precision": 0.75,
+          "Recall": 0.7,
+          "F1": 0.72,
+          "Support": 1500
+        },
+        {
+          "類別": "諷刺",
+          "Precision": 0.45,
+          "Recall": 0.3,
+          "F1": 0.36,
+          "Support": 200
+        },
+        {
+          "類別": "macro avg",
+          "Precision": 0.75,
+          "Recall": 0.7,
+          "F1": 0.72,
+          "Support": 9000
+        },
+        {
+          "類別": "weighted avg",
+          "Precision": 0.87,
+          "Recall": 0.87,
+          "F1": 0.87,
+          "Support": 9000
+        }
+      ],
+      "table_columns": [
+        "類別",
+        "Precision",
+        "Recall",
+        "F1",
+        "Support"
+      ],
+      "options": [
+        {
+          "text": "macro avg 對每類同權平均;weighted avg 用 support 加權,差距大代表類別樣本嚴重不平衡且少數類表現差",
+          "is_correct": true
+        },
+        {
+          "text": "macro avg 永遠大於 weighted avg,因為它考慮所有指標的平均",
+          "is_correct": false,
+          "trap_type": "顛倒兩者大小關係,且邏輯錯誤"
+        },
+        {
+          "text": "weighted avg 偏高是因為它額外加入 Accuracy 分數加權,所以更可靠",
+          "is_correct": false,
+          "trap_type": "捏造 weighted avg 計算方式"
+        },
+        {
+          "text": "兩者差異純粹是 sklearn 版本差異造成的計算誤差,無實質意義",
+          "is_correct": false,
+          "trap_type": "歸因到工具 bug,迴避概念"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** macro avg = (0.93+0.87+0.72+0.36)/4 = 0.72,每類同權。**Step 2:** weighted avg = (0.93×4200+0.87×3100+0.72×1500+0.36×200)/9000 ≈ 0.87,大樣本類(正面 4200 / 中性 3100 = 81%)主導加權結果。**Step 3:** 差距 0.87−0.72=0.15 顯示『諷刺』類(200 樣本,F1=0.36)被 weighted avg 稀釋忽略,但在 macro avg 中暴露。少數類嚴重表現差時應優先看 macro。",
+        "wrong": {
+          "macro avg 永遠大於 weighted avg,因為它考慮所有指標的平均": "兩者大小關係取決於少數類表現,此題反而 macro 較小;『考慮所有指標』的描述也與公式無關",
+          "weighted avg 偏高是因為它額外加入 Accuracy 分數加權,所以更可靠": "weighted avg 只用 support 加權各類 F1,不會加入 Accuracy;『更可靠』結論恰好相反",
+          "兩者差異純粹是 sklearn 版本差異造成的計算誤差,無實質意義": "差距 0.15 遠超浮點誤差,反映真實的類別不平衡問題"
+        },
+        "hook": "口訣:macro『一類一票』揭露少數類問題;weighted『樣本多的說話大聲』掩蓋少數類。看 imbalanced data 必看 macro。"
+      },
+      "misconceptions": [
+        "把 weighted avg 當作唯一指標,忽略少數類災難",
+        "誤以為 macro 與 weighted 差距是計算誤差"
+      ],
+      "related_node_ids": [
+        "n_L23303_001",
+        "n_L23303_002"
+      ],
+      "tags": [
+        "classification_report",
+        "F1",
+        "macro",
+        "weighted",
+        "輿情分析"
+      ]
+    },
+    {
+      "id": "q_pb_013",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_003",
+      "subject": 3,
+      "format": "table_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "下表為某物流公司用三種模型預測『包裹送達時效(小時)』在測試集上的 R² 與 RMSE 對照。請判斷:**綜合表現最佳**的模型,並指出選擇依據。",
+      "table_data": [
+        {
+          "模型": "Linear Regression",
+          "R²": 0.62,
+          "RMSE (hr)": 4.8,
+          "訓練秒數": 3
+        },
+        {
+          "模型": "Random Forest",
+          "R²": 0.88,
+          "RMSE (hr)": 2.45,
+          "訓練秒數": 42
+        },
+        {
+          "模型": "Gradient Boosting",
+          "R²": 0.91,
+          "RMSE (hr)": 2.1,
+          "訓練秒數": 120
+        },
+        {
+          "模型": "目標基準(業務需求)",
+          "R²": "≥0.85",
+          "RMSE (hr)": "≤2.50",
+          "訓練秒數": "—"
+        }
+      ],
+      "table_columns": [
+        "模型",
+        "R²",
+        "RMSE (hr)",
+        "訓練秒數"
+      ],
+      "options": [
+        {
+          "text": "Gradient Boosting:R²=0.91 與 RMSE=2.10 同時最佳,兩指標一致達標,代表性最強",
+          "is_correct": true
+        },
+        {
+          "text": "Linear Regression:訓練最快(3 秒),雖然 R² 較低但效率優先",
+          "is_correct": false,
+          "trap_type": "用無關指標(訓練速度)取代精度評估"
+        },
+        {
+          "text": "Random Forest:R²=0.88 剛好達標,屬最節省成本選項",
+          "is_correct": false,
+          "trap_type": "達標非最佳,且未對比 RMSE 數值差距"
+        },
+        {
+          "text": "三者表現相同,因為 R² 越大代表 RMSE 越大,兩指標互相抵銷",
+          "is_correct": false,
+          "trap_type": "誤把 R² 與 RMSE 視為正相關"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** R² 越大越好(解釋變異比例),RMSE 越小越好(平均誤差小時數)。**Step 2:** 比對三模型:GB(0.91 / 2.10)> RF(0.88 / 2.45)> LR(0.62 / 4.80),GB 在兩指標上都是最佳。**Step 3:** 對照業務基準 R²≥0.85 與 RMSE≤2.50,GB 與 RF 皆達標,但 GB 多項指標均優於 RF,故為最佳選擇(若需考慮訓練成本另論)。",
+        "wrong": {
+          "Linear Regression:訓練最快(3 秒),雖然 R² 較低但效率優先": "R²=0.62 未達 0.85 業務基準,且 RMSE 4.8 小時遠超 2.5,即便快也不能用",
+          "Random Forest:R²=0.88 剛好達標,屬最節省成本選項": "達標只是底線,GB 的 RMSE 比 RF 少 0.35 小時(改善 14%),精度顯著更佳",
+          "三者表現相同,因為 R² 越大代表 RMSE 越大,兩指標互相抵銷": "R² 與 RMSE 通常負相關(同一模型 R² 越高 RMSE 越低),此題三筆數據完全證明這點"
+        },
+        "hook": "口訣:R² 看『解釋力』(越接近 1 越好),RMSE 看『誤差絕對值』(越小越好),兩者通常同向變化;選模型必先對齊業務基準。"
+      },
+      "misconceptions": [
+        "以為 R² 與 RMSE 互相抵銷",
+        "用訓練速度取代預測精度判斷"
+      ],
+      "related_node_ids": [
+        "n_L23303_003",
+        "n_L23303_001"
+      ],
+      "tags": [
+        "R²",
+        "RMSE",
+        "迴歸評估",
+        "物流時效"
+      ]
+    },
+    {
+      "id": "q_pb_014",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_005",
+      "subject": 3,
+      "format": "table_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "下表為某金融機構用 5-Fold cross_val_score 評估『信貸違約預測』模型(ROC-AUC),5 折結果如下。請計算 **平均 AUC ± 標準差**,並判斷模型穩定性。",
+      "table_data": [
+        {
+          "Fold": "Fold 1",
+          "ROC-AUC": 0.82
+        },
+        {
+          "Fold": "Fold 2",
+          "ROC-AUC": 0.85
+        },
+        {
+          "Fold": "Fold 3",
+          "ROC-AUC": 0.83
+        },
+        {
+          "Fold": "Fold 4",
+          "ROC-AUC": 0.86
+        },
+        {
+          "Fold": "Fold 5",
+          "ROC-AUC": 0.84
+        }
+      ],
+      "table_columns": [
+        "Fold",
+        "ROC-AUC"
+      ],
+      "options": [
+        {
+          "text": "0.840 ± 0.014:平均高且標準差小,模型表現穩定",
+          "is_correct": true
+        },
+        {
+          "text": "0.840 ± 0.040:標準差大代表模型嚴重過擬合,不可上線",
+          "is_correct": false,
+          "trap_type": "標準差計算錯誤且過度解讀"
+        },
+        {
+          "text": "0.860 ± 0.020:應取最佳 Fold 作為最終指標",
+          "is_correct": false,
+          "trap_type": "誤把最大值當平均"
+        },
+        {
+          "text": "0.820 ± 0.014:應取最差 Fold 作為保守估計",
+          "is_correct": false,
+          "trap_type": "誤把最小值當平均"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 平均 = (0.82+0.85+0.83+0.86+0.84)/5 = 4.20/5 = 0.840。**Step 2:** 計算各折與平均的差:−0.02, +0.01, −0.01, +0.02, 0;平方和 = 0.0004+0.0001+0.0001+0.0004+0 = 0.0010;母體標準差 = √(0.0010/5) = √0.0002 ≈ 0.014。**Step 3:** 0.840±0.014,各折範圍 0.82~0.86 落差僅 0.04,屬高度穩定,可放心進入超參數調校階段。",
+        "wrong": {
+          "0.840 ± 0.040:標準差大代表模型嚴重過擬合,不可上線": "標準差被算大 3 倍,且 cross-val 高標準差只意味方差大,不必然代表過擬合",
+          "0.860 ± 0.020:應取最佳 Fold 作為最終指標": "Cross-val 的目的就是要看平均與離散,只看最佳 Fold 等於白做交叉驗證",
+          "0.820 ± 0.014:應取最差 Fold 作為保守估計": "0.820 是 Fold 1 最小值,平均應該對所有折一視同仁取算術平均"
+        },
+        "hook": "口訣:K-Fold 報告必寫『mean ± std』兩個數字,mean 看絕對精度,std 看跨折穩定性;std 小於 mean 的 5% 通常算穩。"
+      },
+      "misconceptions": [
+        "K-Fold 結果只看最佳 Fold,忽略其他折",
+        "把 std 大小直接等同過擬合"
+      ],
+      "related_node_ids": [
+        "n_L23303_005",
+        "n_L23303_001"
+      ],
+      "tags": [
+        "交叉驗證",
+        "K-Fold",
+        "ROC-AUC",
+        "信貸風險"
+      ]
+    },
+    {
+      "id": "q_pb_015",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_007",
+      "subject": 3,
+      "format": "table_reading",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "下表為某零售業者用線性迴歸預測『週末銷售額』後,對殘差(residual)做統計診斷。請判斷:殘差是否符合線性迴歸假設(零均值、同方差、近似常態)?",
+      "table_data": [
+        {
+          "統計量": "殘差均值",
+          "數值": 0.02,
+          "理想值": "≈ 0"
+        },
+        {
+          "統計量": "殘差標準差",
+          "數值": 152.3,
+          "理想值": "穩定不隨 X 變化"
+        },
+        {
+          "統計量": "偏度 (Skewness)",
+          "數值": 1.85,
+          "理想值": "≈ 0(常態)"
+        },
+        {
+          "統計量": "峰度 (Kurtosis)",
+          "數值": 6.4,
+          "理想值": "≈ 3(常態)"
+        },
+        {
+          "統計量": "Shapiro-Wilk p-value",
+          "數值": 0.001,
+          "理想值": "> 0.05"
+        }
+      ],
+      "table_columns": [
+        "統計量",
+        "數值",
+        "理想值"
+      ],
+      "options": [
+        {
+          "text": "殘差均值接近 0 通過,但偏度 1.85、峰度 6.40、Shapiro p=0.001 三項共同顯示殘差『右偏且重尾』,違反常態假設,應考慮對 Y 做 log 轉換或改用樹模型",
+          "is_correct": true
+        },
+        {
+          "text": "殘差均值=0.02 接近 0,所有假設均通過,模型可直接上線",
+          "is_correct": false,
+          "trap_type": "只看均值就下結論,忽略形狀檢定"
+        },
+        {
+          "text": "Shapiro-Wilk p=0.001 接近 0 代表強烈支持常態假設,模型完美",
+          "is_correct": false,
+          "trap_type": "p-value 解讀方向相反"
+        },
+        {
+          "text": "峰度 6.40 大於 3 代表分布過於平坦,應增加樣本量解決",
+          "is_correct": false,
+          "trap_type": "峰度方向判讀錯誤"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 殘差均值 0.02 ≈ 0 通過零均值假設。**Step 2:** 偏度 1.85 > 1 屬高度右偏(理想 0);峰度 6.40 遠大於常態 3,屬重尾;Shapiro-Wilk p=0.001 < 0.05 拒絕『殘差為常態』虛無假設,三項一致指向非常態。**Step 3:** 違反常態假設會使 t 檢定、信賴區間失效,實務上應對 Y 做 log/Box-Cox 轉換,或改用對殘差分布不敏感的樹模型(RF/GB)。",
+        "wrong": {
+          "殘差均值=0.02 接近 0,所有假設均通過,模型可直接上線": "零均值只是其中一個假設,常態與同方差仍須單獨檢定,此題後三項全失敗",
+          "Shapiro-Wilk p=0.001 接近 0 代表強烈支持常態假設,模型完美": "p 越小越是拒絕虛無假設(『殘差為常態』),p=0.001 是強烈反對常態",
+          "峰度 6.40 大於 3 代表分布過於平坦,應增加樣本量解決": "峰度 > 3 是『重尾/尖峰』而非平坦(平坦是 < 3);且增加樣本不會改變分布形狀"
+        },
+        "hook": "口訣:殘差診斷三看『均值、偏度、Shapiro』;p < 0.05 = 拒絕常態,p > 0.05 才是『無法拒絕,可視為近常態』。"
+      },
+      "misconceptions": [
+        "p-value 解讀方向相反(把 p<0.05 當作支持虛無)",
+        "只看殘差均值就斷言模型 OK"
+      ],
+      "related_node_ids": [
+        "n_L23303_007",
+        "n_L23303_003"
+      ],
+      "tags": [
+        "殘差診斷",
+        "Shapiro-Wilk",
+        "偏度",
+        "峰度",
+        "零售銷售預測"
+      ]
+    },
+    {
+      "id": "q_pb_016",
+      "knowledge_code": "L21102",
+      "node_id": "n_L21102_003",
+      "subject": 3,
+      "format": "table_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "下表為某半導體廠 PCB 瑕疵偵測模型(YOLOv5)在不同 IoU 閾值下的 mAP 結果。請判斷:**從 IoU=0.5 提升至 IoU=0.75 時 mAP 大幅下降**的最可能原因為何?",
+      "table_data": [
+        {
+          "指標": "mAP@IoU=0.50",
+          "瑕疵-短路": 0.92,
+          "瑕疵-斷路": 0.88,
+          "瑕疵-沾錫": 0.85,
+          "整體 mAP": 0.883
+        },
+        {
+          "指標": "mAP@IoU=0.75",
+          "瑕疵-短路": 0.62,
+          "瑕疵-斷路": 0.55,
+          "瑕疵-沾錫": 0.48,
+          "整體 mAP": 0.55
+        },
+        {
+          "指標": "mAP@IoU=0.50:0.95",
+          "瑕疵-短路": 0.71,
+          "瑕疵-斷路": 0.66,
+          "瑕疵-沾錫": 0.58,
+          "整體 mAP": 0.65
+        }
+      ],
+      "table_columns": [
+        "指標",
+        "瑕疵-短路",
+        "瑕疵-斷路",
+        "瑕疵-沾錫",
+        "整體 mAP"
+      ],
+      "options": [
+        {
+          "text": "IoU 閾值越高代表對框定位精度要求越嚴,模型雖能『大致框中』瑕疵但邊界貼合度不足,故 0.75 下 mAP 顯著下滑",
+          "is_correct": true
+        },
+        {
+          "text": "IoU 0.75 必然小於 IoU 0.5 的 mAP 是 sklearn 計算 bug,應改用 macro-F1 評估",
+          "is_correct": false,
+          "trap_type": "把指標行為歸因到工具錯誤,且 mAP 與 sklearn 無關"
+        },
+        {
+          "text": "瑕疵分類錯誤導致 IoU 0.75 mAP 下降,應重新訓練分類頭",
+          "is_correct": false,
+          "trap_type": "把分類錯誤與定位精度混為一談"
+        },
+        {
+          "text": "因為 IoU 0.75 過嚴,所有偵測都被算作 False Positive,故 mAP 應為 0",
+          "is_correct": false,
+          "trap_type": "誇大效果,實際仍有 0.55"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** IoU(Intersection over Union)= 預測框與真實框的交集 / 聯集,門檻越高代表越要求邊界貼合。**Step 2:** IoU=0.5 容忍框稍微偏移(整體 0.883);IoU=0.75 要求框邊界相當精準(整體 0.550),差距 0.333 直接反映『定位精度』不足。**Step 3:** mAP@0.5:0.95 是 COCO 標準(平均 10 個閾值),0.650 介於兩者間屬合理。改善方向:加入更精細的 anchor、提高輸入解析度、用 GIoU/CIoU loss 強化邊界回歸。",
+        "wrong": {
+          "IoU 0.75 必然小於 IoU 0.5 的 mAP 是 sklearn 計算 bug,應改用 macro-F1 評估": "IoU 是物件偵測的 ground truth 門檻設定,不是 bug;且 mAP 由 pycocotools 計算與 sklearn 無關",
+          "瑕疵分類錯誤導致 IoU 0.75 mAP 下降,應重新訓練分類頭": "若是分類問題,IoU=0.5 也會低分;此題分類正確但定位偏差才符合『隨 IoU 上升大幅下降』",
+          "因為 IoU 0.75 過嚴,所有偵測都被算作 False Positive,故 mAP 應為 0": "若全 FP 應為 0,但實際 0.55 還有相當多偵測通過 0.75 門檻"
+        },
+        "hook": "口訣:mAP@0.5 看『有沒有找到』,mAP@0.75 看『框得準不準』;COCO mAP@0.5:0.95 才是業界完整指標。"
+      },
+      "misconceptions": [
+        "把 IoU 視為分類指標,不知它是定位門檻",
+        "誤以為 mAP@0.5 就足夠評估生產用偵測模型"
+      ],
+      "related_node_ids": [
+        "n_L21102_003",
+        "n_L21102_002"
+      ],
+      "tags": [
+        "mAP",
+        "IoU",
+        "物件偵測",
+        "YOLOv5",
+        "PCB瑕疵"
+      ]
+    },
+    {
+      "id": "q_pb_017",
+      "knowledge_code": "L21102",
+      "node_id": "n_L21102_004",
+      "subject": 3,
+      "format": "table_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "下表為某智慧城市團隊將輕量 CNN 用於『交通流影像分類』(輸入 64×64×3,8 類)的逐層輸出 shape 與參數量。請判斷:**參數量最多**的單層為何?",
+      "table_data": [
+        {
+          "Layer": "Conv2d-1 (3→32, 3×3)",
+          "OutputShape": "[32, 64, 64]",
+          "Params": 896
+        },
+        {
+          "Layer": "ReLU",
+          "OutputShape": "[32, 64, 64]",
+          "Params": 0
+        },
+        {
+          "Layer": "MaxPool2d-1 (2×2)",
+          "OutputShape": "[32, 32, 32]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-2 (32→64, 3×3)",
+          "OutputShape": "[64, 32, 32]",
+          "Params": 18496
+        },
+        {
+          "Layer": "ReLU",
+          "OutputShape": "[64, 32, 32]",
+          "Params": 0
+        },
+        {
+          "Layer": "MaxPool2d-2 (2×2)",
+          "OutputShape": "[64, 16, 16]",
+          "Params": 0
+        },
+        {
+          "Layer": "Conv2d-3 (64→128, 3×3)",
+          "OutputShape": "[128, 16, 16]",
+          "Params": 73856
+        },
+        {
+          "Layer": "ReLU",
+          "OutputShape": "[128, 16, 16]",
+          "Params": 0
+        },
+        {
+          "Layer": "MaxPool2d-3 (2×2)",
+          "OutputShape": "[128, 8, 8]",
+          "Params": 0
+        },
+        {
+          "Layer": "Flatten",
+          "OutputShape": "[8192]",
+          "Params": 0
+        },
+        {
+          "Layer": "Linear-1 (8192→256)",
+          "OutputShape": "[256]",
+          "Params": 2097408
+        },
+        {
+          "Layer": "Linear-2 (256→8)",
+          "OutputShape": "[8]",
+          "Params": 2056
+        }
+      ],
+      "table_columns": [
+        "Layer",
+        "OutputShape",
+        "Params"
+      ],
+      "options": [
+        {
+          "text": "Linear-1(8192→256)約 2.10M 參數,佔網路總參數 95% 以上,是攤平瓶頸所在",
+          "is_correct": true
+        },
+        {
+          "text": "Conv2d-3(64→128)73,856 參數最多,因為通道數最大",
+          "is_correct": false,
+          "trap_type": "誤以為通道大就參數多,忽略 FC 層的爆參數"
+        },
+        {
+          "text": "Linear-2(256→8)是最後一層,需學分類權重故參數最多",
+          "is_correct": false,
+          "trap_type": "把最後一層誤當參數最多"
+        },
+        {
+          "text": "Conv2d-1(3→32)輸入解析度最大,參數最多",
+          "is_correct": false,
+          "trap_type": "把解析度與參數量混為一談"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 逐層比對 Params 欄:Conv2d 系列最大為 73,856(Conv2d-3),Linear 系列為 Linear-1 = 8192×256 + 256 = 2,097,408。**Step 2:** Linear-1 約 2.10M,比 Conv2d-3 多約 28 倍。**Step 3:** 攤平後 FC 全連接是經典 CNN 的『參數炸彈』,改善作法為加 GlobalAveragePooling 取代 Flatten,可把 8192 降到 128,FC 參數從 2M 降到 33K。",
+        "wrong": {
+          "Conv2d-3(64→128)73,856 參數最多,因為通道數最大": "Conv 透過 3×3 權重共享省參數,即使通道翻倍仍遠少於 FC",
+          "Linear-2(256→8)是最後一層,需學分類權重故參數最多": "Linear-2 = 256×8+8 = 2,056,只有 Linear-1 的 0.1%",
+          "Conv2d-1(3→32)輸入解析度最大,參數最多": "Conv 參數量取決於 kernel × 輸入通道 × 輸出通道,不取決於空間解析度;此題僅 896"
+        },
+        "hook": "口訣:Conv 參數『kernel × Cin × Cout』,FC 參數『輸入×輸出』;CNN 最大參數通常在 Flatten 後第一層 FC。"
+      },
+      "misconceptions": [
+        "以為通道數最大的 Conv 就是參數最多",
+        "以為 CNN 參數隨網路深度線性成長"
+      ],
+      "related_node_ids": [
+        "n_L21102_004",
+        "n_L21102_001"
+      ],
+      "tags": [
+        "CNN",
+        "參數量",
+        "FC層",
+        "智慧城市",
+        "交通流分類"
+      ]
+    },
+    {
+      "id": "q_pb_018",
+      "knowledge_code": "L22303",
+      "node_id": "n_L22303_005",
+      "subject": 3,
+      "format": "table_reading",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "下表為某能源公司公布的『2026 上半年用電量年增率』長條圖兩種版本對照(原始版 vs Y 軸截斷版)。請判斷:**Y 軸截斷版**屬於哪一種誤導視覺化手法?",
+      "table_data": [
+        {
+          "月份": "1 月",
+          "年增率 %": 2.1,
+          "原始版 Y 軸下限": 0,
+          "截斷版 Y 軸下限": 2,
+          "截斷版視覺長條高度比": "1.0×"
+        },
+        {
+          "月份": "2 月",
+          "年增率 %": 2.3,
+          "原始版 Y 軸下限": 0,
+          "截斷版 Y 軸下限": 2,
+          "截斷版視覺長條高度比": "3.0×"
+        },
+        {
+          "月份": "3 月",
+          "年增率 %": 2.5,
+          "原始版 Y 軸下限": 0,
+          "截斷版 Y 軸下限": 2,
+          "截斷版視覺長條高度比": "5.0×"
+        },
+        {
+          "月份": "4 月",
+          "年增率 %": 2.4,
+          "原始版 Y 軸下限": 0,
+          "截斷版 Y 軸下限": 2,
+          "截斷版視覺長條高度比": "4.0×"
+        },
+        {
+          "月份": "5 月",
+          "年增率 %": 2.7,
+          "原始版 Y 軸下限": 0,
+          "截斷版 Y 軸下限": 2,
+          "截斷版視覺長條高度比": "7.0×"
+        },
+        {
+          "月份": "6 月",
+          "年增率 %": 2.6,
+          "原始版 Y 軸下限": 0,
+          "截斷版 Y 軸下限": 2,
+          "截斷版視覺長條高度比": "6.0×"
+        }
+      ],
+      "table_columns": [
+        "月份",
+        "年增率 %",
+        "原始版 Y 軸下限",
+        "截斷版 Y 軸下限",
+        "截斷版視覺長條高度比"
+      ],
+      "options": [
+        {
+          "text": "Y 軸截斷(truncated axis):透過將起點由 0 改為 2.0,把 0.6 個百分點的差距視覺放大成 7 倍長條落差,誇大成長",
+          "is_correct": true
+        },
+        {
+          "text": "Cherry-picking:只挑出對自己有利的月份呈現,刻意隱藏不利數據",
+          "is_correct": false,
+          "trap_type": "誤套到另一種手法,實際所有月份都呈現"
+        },
+        {
+          "text": "3D 透視扭曲:利用立體視角讓近側長條看起來更高",
+          "is_correct": false,
+          "trap_type": "本題無 3D,屬不同手法"
+        },
+        {
+          "text": "雙軸對比:用兩個不同單位的 Y 軸製造虛假相關性",
+          "is_correct": false,
+          "trap_type": "本題只有一個 Y 軸,屬另一手法"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 原始版 Y 軸從 0 開始,1 月 2.1% 與 5 月 2.7% 的長條高度比約 2.1:2.7 ≈ 1:1.3,視覺差距小。**Step 2:** 截斷版把 Y 軸下限改為 2.0,1 月剩下 0.1 單位、5 月剩下 0.7 單位,視覺高度比變 1:7,差距被誇大 7 倍。**Step 3:** 此即『Y 軸截斷』(truncated axis / non-zero baseline),是誤導視覺化七大手法中最常見的一種,常見於新聞圖卡與投資簡報。修正方式為強制 Y 軸從 0 起,或明確標註截斷符號。",
+        "wrong": {
+          "Cherry-picking:只挑出對自己有利的月份呈現,刻意隱藏不利數據": "Cherry-picking 是『抽樣偏誤』,本題完整呈現 6 個月,並非選擇性顯示",
+          "3D 透視扭曲:利用立體視角讓近側長條看起來更高": "本題為平面長條圖,Y 軸截斷與透視無關",
+          "雙軸對比:用兩個不同單位的 Y 軸製造虛假相關性": "雙軸對比通常用於『折線疊圖』比較兩組變數,本題只有一組年增率"
+        },
+        "hook": "口訣:長條圖必看『Y 軸起點』,起點不是 0 就是在騙人;判讀視覺化先問『若 Y 軸從 0 開始,差距還這麼大嗎?』"
+      },
+      "misconceptions": [
+        "誤把所有誤導手法都歸到『Cherry-picking』",
+        "忽略 Y 軸起點而被長條高度差距誤導"
+      ],
+      "related_node_ids": [
+        "n_L22303_005",
+        "n_L22303_002"
+      ],
+      "tags": [
+        "誤導視覺化",
+        "Y軸截斷",
+        "長條圖",
+        "能源用電"
+      ]
     }
   ]
 }
