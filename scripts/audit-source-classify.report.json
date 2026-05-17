@@ -1,11 +1,21 @@
 {
   "summary": {
-    "total_violations": 0,
+    "total_violations": 1,
     "A_illegitimate_codes": 0,
-    "B_kb_incomplete": 0,
+    "B_kb_incomplete": 1,
     "C_excluded_codes": 0
   },
   "A_must_fix": [],
-  "B_kb_to_add": [],
+  "B_kb_to_add": [
+    {
+      "file": "questions-batch-n1-nlp.json",
+      "id": "q_n1_nlp_001",
+      "stem": "下列關於 NLP 四階段演進的{descriptor}描述,何者正確?",
+      "issues": [
+        "node_id \"evil_node_999\" 不存在於 kb"
+      ],
+      "codes": []
+    }
+  ],
   "C_excluded_in_scope": []
 }

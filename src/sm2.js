@@ -22,9 +22,12 @@ const SM2 = {
   // === 計算下次狀態(純函數;state 可為 null/undefined,fallback 初始值)===
   computeNext(state, grade) {
     let { ef, interval, repetition } = state || { ef: this.INITIAL_EF, interval: 0, repetition: 0 };
-    if (typeof ef !== 'number') ef = this.INITIAL_EF;
-    if (typeof interval !== 'number') interval = 0;
-    if (typeof repetition !== 'number') repetition = 0;
+    if (typeof ef !== 'number' || !Number.isFinite(ef)) ef = this.INITIAL_EF;
+    if (typeof interval !== 'number' || !Number.isFinite(interval)) interval = 0;
+    if (typeof repetition !== 'number' || !Number.isFinite(repetition)) repetition = 0;
+    // 案例 10 deep-audit Agent D D-1:grade=NaN 不防會讓 ef 變 NaN 寫入 storage
+    if (!Number.isFinite(grade)) grade = 0;  // 落到 fail 路徑
+    grade = Math.max(0, Math.min(5, grade));  // clamp [0,5]
     if (grade < 3) {
       // 答錯:重置 repetition,interval=1(明天再考)
       repetition = 0;
@@ -38,7 +41,7 @@ const SM2 = {
     }
     // EF' = EF + (0.1 - (5-q) * (0.08 + (5-q)*0.02))
     ef = ef + (0.1 - (5 - grade) * (0.08 + (5 - grade) * 0.02));
-    if (ef < this.MIN_EF) ef = this.MIN_EF;
+    if (!Number.isFinite(ef) || ef < this.MIN_EF) ef = this.MIN_EF;   // double-safe
     const now = Date.now();
     return {
       ef: Number(ef.toFixed(3)),
