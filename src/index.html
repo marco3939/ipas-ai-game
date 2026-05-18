@@ -456,6 +456,39 @@
       <input type="file" id="progressio-file-input" accept="application/json,.json" style="display:none" onchange="ProgressIO.onFileSelected(this)">
     </div>
 
+    <div class="card" style="border-left:4px solid #fbbf24;background:linear-gradient(135deg,rgba(251,191,36,0.05),rgba(96,165,250,0.05))">
+      <details open>
+        <summary style="cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">
+          <h2 style="margin:0;display:flex;align-items:center;gap:8px">
+            <span style="font-size:1.1rem">✨ 最新功能</span>
+            <span style="font-size:0.75rem;color:var(--fg-mute);font-weight:normal">2026-05-17</span>
+          </h2>
+          <span style="color:var(--fg-dim);font-size:0.85rem">點此展開 / 收合 ▾</span>
+        </summary>
+        <ul style="margin:12px 0 4px;padding-left:22px;line-height:1.85;color:var(--fg-dim);font-size:0.92rem">
+          <li>
+            <strong style="color:#fbbf24">🃏 卡牌圖鑑大全</strong> 新增「📋 對篩選範圍模擬考」按鈕(圖鑑頂橘藍漸層)—
+            篩選科目/編碼/階級後對<strong style="color:var(--fg)">已解鎖卡牌</strong>開模擬考。
+            複用考古題模擬劇場引擎(倒數計時 + NPC 輪流 + Pace Heatmap),題池 ≥5 才可開,
+            動態提供 5/10/25/全打 場次選擇。
+          </li>
+          <li>
+            <strong style="color:#60a5fa">📝 Code Trace 道場</strong> 題庫從 27 → <strong style="color:var(--fg)">57 題</strong>:
+            L22 補齊儲存/處理工具/視覺化 +6 題;L23 部分 ×3 擴增(NumPy 線代 6→18 / ML 演算法 4→12 / 序列激活 2→6)。
+            新題解說採「<strong style="color:var(--fg)">Step 1 → 2 → 3</strong>」逐步詳解格式,答完更易理解。
+          </li>
+          <li>
+            <strong style="color:#f87171">💻 程式判讀道場 BOSS</strong> 6 個 L23 BOSS 題庫各擴 ×3(總計 18→<strong style="color:var(--fg)">60 題</strong>),
+            改為「<strong style="color:var(--fg)">每場 5 題隨機抽</strong>」— 多次挑戰同一 BOSS 都有新鮮感。
+            順帶清掉 PyTorch BOSS 歷史殘存的 dangling 題目參照(q_pa_011/012)。
+          </li>
+        </ul>
+        <p style="font-size:0.78rem;color:var(--fg-mute);margin:8px 0 0;padding-top:8px;border-top:1px dashed var(--bg-3)">
+          📋 +72 新題 / 4 mode 改動 / 全鐵律 1-6 合規 / 案例 10 §8 code-review 0 風險
+        </p>
+      </details>
+    </div>
+
     <div class="card">
       <h2>🎮 選擇模式</h2>
       <div class="modes-grid">
@@ -468,8 +501,8 @@
         <button class="mode-card" onclick="enterMode(2)">
           <div class="mode-num">案 2</div>
           <div class="mode-title">💻 程式判讀道場</div>
-          <div class="mode-desc">numpy / sklearn / PyTorch 程式碼題</div>
-          <div class="mode-stats">中級 · VGG16 連戰</div>
+          <div class="mode-desc">numpy / sklearn / PyTorch / Pandas / 視覺化 / Monte Carlo 程式碼題 <span style="color:#fbbf24">✨ L23 題庫 ×3</span></div>
+          <div class="mode-stats">中級 · 6 BOSS · 每場 5 題隨機</div>
         </button>
         <button class="mode-card" onclick="enterMode(5)">
           <div class="mode-num">案 5</div>
@@ -486,8 +519,8 @@
         <button class="mode-card" onclick="enterMode(6)">
           <div class="mode-num">案 6</div>
           <div class="mode-title">🃏 卡牌圖鑑大全</div>
-          <div class="mode-desc">94 張 kb 節點圖鑑(87 可挑戰),封印挑戰解鎖(教學預習段)</div>
-          <div class="mode-stats">圖鑑 · 預習</div>
+          <div class="mode-desc">179 張 kb 節點圖鑑封印挑戰(教學預習段)<span style="color:#fbbf24">✨ 新增「篩選後模擬考」</span></div>
+          <div class="mode-stats">圖鑑 · 預習 · 卡牌模擬</div>
         </button>
         <button class="mode-card" onclick="enterMode(7)">
           <div class="mode-num">案 7</div>
@@ -504,8 +537,8 @@
         <button class="mode-card" onclick="enterMode(8)">
           <div class="mode-num">案 8</div>
           <div class="mode-title">📝 Code Trace 道場</div>
-          <div class="mode-desc">逐行追蹤 Python 程式變數狀態(中間值不只看最終輸出)</div>
-          <div class="mode-stats">進階 · 程式</div>
+          <div class="mode-desc">逐行追蹤 Python 變數狀態(中間值不只看最終輸出) <span style="color:#fbbf24">✨ L23 ×3</span></div>
+          <div class="mode-stats">進階 · 程式 · 57 題 · Step 1/2/3 詳解</div>
         </button>
         <button class="mode-card" onclick="enterMode('review')">
           <div class="mode-num">📝</div>
