@@ -1,0 +1,327 @@
+{
+  "version": "1.0",
+  "schema_version": "iron-rule-1+2+6",
+  "generated_at": "2026-05-18",
+  "batch": "N29 — 科三 L23203 深度學習:Transformer(W-δ T)+ CNN(W-δ C)合併批次",
+  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "iron_rule_compliance": {
+    "rule_1_drill_explanation": "每題皆有 explanation.correct/wrong/hook + misconceptions ≥ 1 + related_node_ids",
+    "rule_2_shuffle_and_cases": "shuffle_options:true;概念辨析題以靜態情境呈現(本批次概念題為主、無需 case 變數)",
+    "rule_3_original": "100% 原創跨產業情境;未照抄考古題,僅以 KB 節點 n_L23203_004(Transformer)/ n_L23203_005(CNN)為素材",
+    "rule_4_option_length": "4 選項長度差異 ≤ 20%;正解非永遠最長",
+    "rule_5_source_fidelity": "knowledge_code = L23203;node_id ∈ {n_L23203_004 Transformer, n_L23203_005 CNN};related_node_ids 全部對應 kb 真實節點",
+    "rule_6_isolation": "本檔合併 Transformer(5 題)+ CNN(5 題)兩主題;不改其他既有題目檔或共享層"
+  },
+  "subject": 3,
+  "knowledge_codes": ["L23203"],
+  "batch_num": 29,
+  "distribution": {
+    "L23203_count": 10,
+    "by_node": {"n_L23203_004": 5, "n_L23203_005": 5},
+    "by_format": {"single_choice": 10},
+    "by_difficulty": {"easy": 1, "medium": 7, "hard": 2}
+  },
+  "source_pdf": ["機器學習模型圖卡(全).pdf page 47 Transformer(q_n29_001-005)", "機器學習模型圖卡(全).pdf page 44 CNN(q_n29_006-010)"],
+  "questions": [
+    {
+      "id": "q_n29_001",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_004",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某 NLP 團隊在解釋 Transformer 為何能取代 RNN 時,主管要求一句話講清楚 Self-Attention 機制的核心特性。下列描述何者最為精確?",
+      "options": [
+        {"key": "A", "text": "序列裡每個位置同時關注所有其他位置形成全域關聯;不靠循環隱藏狀態做局部相鄰傳遞動作", "is_correct": true, "trap_type": "正解:全域同時關注 + 取代循環"},
+        {"key": "B", "text": "Self-Attention 是改良 RNN 循環結構;只是把隱藏狀態傳遞改為向量化加速的版本", "is_correct": false, "trap_type": "誤以為仍依賴 RNN 循環結構"},
+        {"key": "C", "text": "Self-Attention 僅關注前後相鄰位置;與 RNN 滑動窗口本質一致只是改個名稱說法", "is_correct": false, "trap_type": "誤以為僅看局部相鄰位置"},
+        {"key": "D", "text": "Self-Attention 是用來加深網路層數的技巧;對位置關係處理方式與 RNN 等同無異", "is_correct": false, "trap_type": "把功能弄反為加深網路"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Self-Attention 的核心是『序列中每個位置都同時計算對所有位置的注意力權重(Q×Kᵀ → Softmax → 加權 V)』形成全域關聯,完全脫離 RNN 的循環隱藏狀態傳遞。這正是它取代 RNN 三大瓶頸(長依賴消失/不可平行/順序傳遞慢)的根本原因。",
+        "wrong": {
+          "Self-Attention 是改良版的 RNN 循環結構;只是把隱藏狀態傳遞改為向量化加速版本": "Transformer 完全捨棄循環結構,純靠 Attention;這是與 RNN 的本質差異,並非加速版本。",
+          "Self-Attention 僅關注前後相鄰位置;與 RNN 滑動窗口本質一致只是改名不同說法": "Self-Attention 是『全域關聯』,每個位置可看到序列中任意遠的位置;這正是它解決長距離依賴的關鍵。",
+          "Self-Attention 是用來加深網路層數的技巧;對序列中位置關係處理方式與 RNN 完全相同": "Self-Attention 不是加深技巧,而是同層內的全域關注機制;與 RNN 的循序傳遞處理方式完全不同。"
+        },
+        "hook": "口訣:Self-Attention = 全域同時看 + 取代循環;絕對不是 RNN 改良版"
+      },
+      "misconceptions": ["以為 Transformer 仍依賴 RNN 循環", "誤以為 Self-Attention 僅看相鄰位置"],
+      "related_node_ids": ["n_L23203_004", "n_L23203_002"],
+      "tags": ["transformer", "self-attention", "nlp"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n29_002",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_004",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某資工系教授在比較 Transformer Encoder 與 RNN 訓練時的運算模式差異,下列敘述何者正確?",
+      "options": [
+        {"key": "A", "text": "Transformer Encoder 可平行運算整個序列;RNN 必須逐步處理前後相依無法平行訓練", "is_correct": true, "trap_type": "正解:Transformer 平行 vs RNN 序列"},
+        {"key": "B", "text": "Transformer 必須序列逐步處理一步一步算;RNN 因隱藏狀態獨立反而能完全平行訓練", "is_correct": false, "trap_type": "把平行/序列方向弄反"},
+        {"key": "C", "text": "兩者效率本質完全相同;Transformer 只是改用更大模型參數量;訓練模式與 RNN 完全等同", "is_correct": false, "trap_type": "誤以為效率相同"},
+        {"key": "D", "text": "Transformer 只能用 GPU 訓練;RNN 只能用 CPU 訓練;這是兩者訓練速度差異的真正原因", "is_correct": false, "trap_type": "把硬體當成本質差異"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Transformer Encoder 對整個輸入序列可同時計算(矩陣化運算),GPU 可完全平行;RNN 必須等前一時間步隱藏狀態算完才能算下一步,本質上序列相依無法平行。這是 Transformer 在大模型時代得以擴展(GPT/BERT/ViT)的關鍵原因。",
+        "wrong": {
+          "Transformer 必須序列逐步處理;RNN 因隱藏狀態獨立反而能完全平行訓練速度更快": "方向完全相反 — RNN 的隱藏狀態本來就是序列相依的核心,不可能平行;Transformer 才是平行的代表。",
+          "兩者效率本質相同;Transformer 只是改用更大模型參數量;訓練模式與 RNN 完全等同": "訓練模式本質不同 — 平行 vs 序列是架構層面差異,並非參數量大小問題。",
+          "Transformer 只能用 GPU 訓練;RNN 只能用 CPU 訓練;這是兩者訓練速度差異的真正根本原因": "硬體限制不存在 — 兩者都可在 GPU/CPU 上跑;差異在演算法平行性,不在硬體規定。"
+        },
+        "hook": "記憶:Transformer Encoder 平行(矩陣化)、RNN 序列(隱藏狀態相依);Decoder 自迴歸生成才部分序列"
+      },
+      "misconceptions": ["把平行/序列方向弄反", "把硬體差異當成本質"],
+      "related_node_ids": ["n_L23203_004", "n_L23203_002"],
+      "tags": ["transformer", "rnn", "parallel"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n29_003",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_004",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "Transformer 論文中採用 Multi-Head Attention(典型 8 或 16 head)而非單一 Self-Attention,下列敘述何者最能說明 Multi-Head 的用途?",
+      "options": [
+        {"key": "A", "text": "用多組並行的注意力子空間同時捕捉不同層面語意關係(語法 / 語義 / 長距離依賴等)", "is_correct": true, "trap_type": "正解:多子空間平行捕捉多面關係"},
+        {"key": "B", "text": "用來加深網路層數使模型表達能力變得更強;每多一個 head 等同多加一層 Encoder", "is_correct": false, "trap_type": "誤解為加深網路層數"},
+        {"key": "C", "text": "用來替代 Feed Forward 層的非線性變換功能;能減少模型訓練所需參數量約八成", "is_correct": false, "trap_type": "替代 FFN + 減參誤判"},
+        {"key": "D", "text": "用來自動學習位置編碼相關資訊;不需要再另外加 Positional Encoding 即可保留詞序", "is_correct": false, "trap_type": "誤以為可替代位置編碼"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Multi-Head 在同一層 Self-Attention 內並行多組(典型 8 或 16)注意力子空間,每組 head 學不同的關注模式(如某 head 學語法相鄰、某 head 學長距離指涉、某 head 學語義關係),最後 concat 起來。比喻:多個專家同時看文章不同角度,綜合判斷比單一視角強。",
+        "wrong": {
+          "用來加深網路層數使模型表達能力更強;每多一個 head 等同多加一層 Encoder 結構": "Multi-Head 是『同一層內』並行,不是『多加一層』;加深網路靠堆疊 Encoder/Decoder 層數,不是加 head。",
+          "用來替代 Feed Forward 層的非線性變換功能;能減少模型訓練所需參數量約八成左右": "Multi-Head 不替代 FFN — Transformer 每層仍有 Multi-Head Attention + FFN 兩個子模組;且 Multi-Head 通常不大幅減參。",
+          "用來自動學位置編碼資訊;不需要再另外加 Positional Encoding 即可保留詞序": "Multi-Head 仍然是 Self-Attention,本質對位置不敏感,仍需 Positional Encoding 補位置資訊。"
+        },
+        "hook": "比喻:Multi-Head = 8/16 個專家同時看不同角度;不是加深網路、不是替代 FFN、不是替代位置編碼"
+      },
+      "misconceptions": ["把 Multi-Head 當作加深網路", "誤以為可替代 Positional Encoding"],
+      "related_node_ids": ["n_L23203_004", "n_L23203_002"],
+      "tags": ["transformer", "multi-head-attention"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n29_004",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_004",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "Transformer 的 Encoder-Decoder 架構主要用於何種任務情境?",
+      "options": [
+        {"key": "A", "text": "Encoder 編碼輸入語意 → Decoder 解碼輸出目標;翻譯/摘要/生成等序列轉序列任務", "is_correct": true, "trap_type": "正解:seq2seq 任務典型結構"},
+        {"key": "B", "text": "Encoder 做影像特徵抽取 → Decoder 做語音合成;專門用於跨模態多媒體生成任務", "is_correct": false, "trap_type": "張冠李戴跨模態"},
+        {"key": "C", "text": "Encoder 與 Decoder 互為損失函數監督對象;主要用於強化學習控制決策回饋任務", "is_correct": false, "trap_type": "強化學習張冠李戴"},
+        {"key": "D", "text": "Encoder Decoder 是兩個獨立模型串接;前者做分類後者做迴歸完全不共享任何資訊", "is_correct": false, "trap_type": "誤解為獨立模型"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Transformer Encoder-Decoder 是經典 seq2seq 架構:Encoder 將輸入序列(如英文句子)編碼成上下文向量,Decoder 自迴歸地生成目標序列(如中文翻譯)。典型應用為機器翻譯、文本摘要、對話生成;原 paper《Attention Is All You Need》就是為翻譯任務設計。",
+        "wrong": {
+          "Encoder 做影像特徵抽取 → Decoder 做語音合成;專門用於跨模態多媒體生成任務": "Transformer 原設計為 NLP seq2seq;雖然後來衍生 ViT(影像)等,但典型 Encoder-Decoder 仍是文本到文本任務。",
+          "Encoder 與 Decoder 互為損失函數監督對象;主要用於強化學習控制決策回饋任務": "Encoder-Decoder 是監督式 seq2seq 訓練,並非互為損失或強化學習控制任務。",
+          "Encoder Decoder 是兩個獨立模型串接;前者做分類後者做迴歸完全不共享任何資訊": "兩者透過 Cross-Attention 緊密耦合 — Decoder 每步生成都會 attend 到 Encoder 輸出;絕非獨立。"
+        },
+        "hook": "口訣:Encoder 編碼 → Decoder 解碼;翻譯/摘要/生成的 seq2seq 鐵打架構"
+      },
+      "misconceptions": ["以為 Encoder-Decoder 是獨立串接", "把架構張冠李戴到強化學習"],
+      "related_node_ids": ["n_L23203_004", "n_L23203_002"],
+      "tags": ["transformer", "encoder-decoder", "seq2seq"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n29_005",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_004",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "Transformer 為何必須額外加入 Positional Encoding(位置編碼)?下列何者最能說明其必要性?",
+      "options": [
+        {"key": "A", "text": "Self-Attention 為集合運算對輸入順序完全不敏感;需位置編碼補回詞序資訊讓模型分辨前後", "is_correct": true, "trap_type": "正解:Attention 集合運算本身無位置概念"},
+        {"key": "B", "text": "位置編碼用於替代 Self-Attention 主機制;沒有它模型就完全無法計算注意力分數權重", "is_correct": false, "trap_type": "誤以為替代主機制"},
+        {"key": "C", "text": "Self-Attention 已自帶位置感知;沒有位置編碼也能保留詞序語義無實質影響", "is_correct": false, "trap_type": "誤以為 Self-Attention 自帶位置"},
+        {"key": "D", "text": "位置編碼與 RNN 隱藏狀態功能完全等價;只是換個名稱呈現的循環結構並非新概念設計", "is_correct": false, "trap_type": "誤將位置編碼等同 RNN 循環"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Self-Attention 的數學本質是『對所有位置的 V 加權求和』,如果打亂輸入順序,結果完全一樣(它把序列當『集合』看)。但語言/序列有強烈的詞序語義(『狗咬人』vs『人咬狗』),所以必須用 Positional Encoding(正弦/餘弦或可學習)『把位置編進向量裡』,讓模型分得出『誰在前誰在後』。",
+        "wrong": {
+          "位置編碼用於替代 Self-Attention 主機制;沒有它模型就完全無法計算注意力分數權重": "Positional Encoding 是『補充』而非『替代』— Self-Attention 主機制(Q×Kᵀ/√d × V)在沒有位置編碼時仍能計算,只是失去詞序敏感性。",
+          "Self-Attention 已自帶位置資訊;Positional Encoding 只是優化技巧無實質作用可省略": "Self-Attention 本身是『置換不變(permutation invariant)』的集合運算,絕對沒有位置感知;省略 Positional Encoding 會讓詞序資訊完全消失。",
+          "位置編碼與 RNN 隱藏狀態功能完全等價;只是換個名字的循環結構並非新概念": "兩者完全不同 — RNN 隱藏狀態是『循序傳遞的動態狀態』,Positional Encoding 是『靜態加在輸入向量上的位置標記』;機制與循環性質完全不同。"
+        },
+        "hook": "口訣:Self-Attention = 集合運算(打亂順序結果一樣)→ 必須 Positional Encoding 補位置"
+      },
+      "misconceptions": ["以為 Self-Attention 自帶位置感知", "把 Positional Encoding 等同 RNN 隱藏狀態"],
+      "related_node_ids": ["n_L23203_004", "n_L23203_002"],
+      "tags": ["transformer", "positional-encoding"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n29_006",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_005",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某 AI 工程師在解釋 CNN 卷積層為何適合影像處理時,下列何者最能完整描述卷積層的關鍵特性?",
+      "options": [
+        {"key": "A", "text": "局部連接(感受野內像素)+ 權重共享(同核掃整圖)+ 空間平移不變性三大核心特性架構機制", "is_correct": true, "trap_type": "正解:卷積層三大核心特性"},
+        {"key": "B", "text": "全連接每像素 + 獨立權重每位置 + 喪失空間結構;與傳統 DNN 處理影像方式完全相同一致", "is_correct": false, "trap_type": "把 DNN 特性誤當 CNN"},
+        {"key": "C", "text": "循環隱藏狀態傳遞 + 時間步序列處理 + 長距離依賴記憶;與 RNN 處理序列方式本質完全相同", "is_correct": false, "trap_type": "把 RNN 特性誤當 CNN"},
+        {"key": "D", "text": "全域注意力機制 + 位置編碼 + 多頭注意力子空間;與 Transformer 主機制借用相同", "is_correct": false, "trap_type": "把 Transformer 特性誤當 CNN"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "CNN 卷積層三大關鍵特性:(1) 局部連接 — 每個神經元只看感受野內的像素,不是全連接;(2) 權重共享 — 同一個卷積核(filter)在整張圖上掃過,所有位置共用同一組權重,大幅降參數量;(3) 空間平移不變性 — 相同的紋理/特徵不論出現在影像哪個位置都能被同一卷積核偵測到。這三項與影像的『空間相關性 + 平移不變性』天然對應。",
+        "wrong": {
+          "全連接每像素 + 獨立權重每位置 + 喪失空間結構;與傳統 DNN 處理影像方式完全相同": "這正是 CNN 要解決的傳統 DNN 問題 — DNN 全連接導致參數爆炸且喪失空間結構;CNN 才用局部連接 + 權重共享解決。",
+          "循環隱藏狀態傳遞 + 時間步序列處理 + 長距離依賴記憶;與 RNN 處理序列方式本質相同": "RNN 處理時序資料,CNN 處理空間資料,兩者擅長領域完全不同;CNN 沒有循環隱藏狀態。",
+          "Self-Attention 全域關聯機制 + 位置編碼補位置 + 多頭注意力子空間;Transformer 主機制借用": "這是 Transformer 機制,不是 CNN 卷積層機制;CNN 用卷積核局部掃描,不是注意力全域關聯。"
+        },
+        "hook": "口訣:CNN 卷積層三大特性 = 局部連接 + 權重共享 + 平移不變(對應影像三大性質)"
+      },
+      "misconceptions": ["把 CNN 特性與 DNN 弄反", "把 CNN 與 RNN 機制弄混"],
+      "related_node_ids": ["n_L23203_005", "n_L23203_002"],
+      "tags": ["cnn", "convolution", "weight-sharing"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n29_007",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_005",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "CNN 架構中池化層(Pooling Layer,如 Max/Average Pooling)的主要用途為何?",
+      "options": [
+        {"key": "A", "text": "降維(減少特徵圖尺寸與後續計算量)+ 抗位移(對小幅平移 / 變形不敏感),參數量為零", "is_correct": true, "trap_type": "正解:降維 + 抗位移"},
+        {"key": "B", "text": "增加大量參數量提升模型表達能力;池化層內含大量可訓練權重類似卷積核訓練流程", "is_correct": false, "trap_type": "誤以為池化層有參數"},
+        {"key": "C", "text": "做最終的監督式分類決策輸出;池化層直接產生 Softmax 機率分佈作為最終預測結果", "is_correct": false, "trap_type": "把池化當分類層"},
+        {"key": "D", "text": "做序列預測時間步傳遞;池化層在時序資料中扮演 RNN 隱藏狀態的角色傳遞長距離訊息", "is_correct": false, "trap_type": "張冠李戴 RNN"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "池化層兩大主要用途:(1) 降維 — 將特徵圖尺寸縮小(如 2×2 Max Pooling 把長寬各砍一半,特徵數降為 1/4),減少後續計算量;(2) 抗位移 — Max Pooling 取小區域內最強訊號,影像稍微平移不會改變池化輸出,提升模型對小幅變形的魯棒性。重要:池化層『參數量為零』,不需訓練。",
+        "wrong": {
+          "增加參數量提升模型表達能力;池化層內含大量可訓練權重類似卷積核訓練流程": "池化層沒有可訓練參數 — Max Pooling 只取最大、Average Pooling 只取平均,沒有任何可學習的權重。",
+          "做最終的監督式分類決策輸出;池化層直接產生 Softmax 機率分佈作為最終預測結果": "最終分類由 Fully Connected + Softmax 完成;池化層只在 Conv 之後做降維/抗位移,不負責分類決策。",
+          "做序列預測時間步傳遞;池化層在時序資料中扮演 RNN 隱藏狀態的角色傳遞長距離資訊": "池化層處理空間資料(2D 特徵圖),不是時序傳遞;RNN 隱藏狀態與池化機制完全不同。"
+        },
+        "hook": "口訣:池化層 = 降維 + 抗位移,參數量為零(不訓練);不是分類層、不是時序傳遞"
+      },
+      "misconceptions": ["以為池化層有可訓練參數", "把池化層當分類層"],
+      "related_node_ids": ["n_L23203_005", "n_L23203_002"],
+      "tags": ["cnn", "pooling", "max-pooling"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n29_008",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_005",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "在 CNN 與 RNN 的適用領域比較中,下列敘述何者正確?",
+      "options": [
+        {"key": "A", "text": "CNN 主處理影像 / 靜態格狀空間相關資料;RNN 主處理文字 / 時序時間相關資料兩者分工", "is_correct": true, "trap_type": "正解:CNN 空間 vs RNN 時序"},
+        {"key": "B", "text": "CNN 主處理時序序列(文字翻譯);RNN 主處理影像辨識(物件偵測);兩者領域剛好相反", "is_correct": false, "trap_type": "領域弄反"},
+        {"key": "C", "text": "兩者皆專門做影像辨識(ImageNet 分類);只是 CNN 用卷積、RNN 用循環架構處理同類任務", "is_correct": false, "trap_type": "兩者皆做影像誤判"},
+        {"key": "D", "text": "CNN 處理結構化表格資料效果最佳;RNN 處理非結構化影像資料效果最佳依資料結構分", "is_correct": false, "trap_type": "結構化/非結構化誤判"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "CNN 擅長處理『空間相關性』的資料(影像、聲音頻譜圖等格狀資料),透過卷積核掃描捕捉局部紋理特徵;RNN/LSTM/GRU 擅長處理『時間/序列相關性』的資料(文字、語音、時序),透過隱藏狀態傳遞捕捉前後依賴。兩者擅長領域涇渭分明 — 看到影像分類 → CNN;看到時序預測或文字 → RNN(或 Transformer)。",
+        "wrong": {
+          "CNN 主處理時序序列(文字翻譯);RNN 主處理影像辨識(物件偵測);兩者領域剛好相反": "方向完全顛倒 — 正確是 CNN 影像、RNN 時序;這是 IPAS 高頻陷阱選項。",
+          "兩者皆專門做影像辨識(ImageNet 分類);只是 CNN 用卷積、RNN 用循環架構處理同類任務": "ImageNet 影像分類是 CNN 主場(AlexNet/VGG/ResNet);RNN 在影像分類上很少用,因影像沒有強時序性。",
+          "CNN 處理結構化表格資料效果最佳;RNN 處理非結構化影像資料效果最佳;選型依資料結構而定": "結構化表格資料一般用 XGBoost/MLP 更好,CNN 對表格無空間相關性效果差;且 RNN 處理影像也不合適。"
+        },
+        "hook": "口訣:CNN 看圖(空間)、RNN 看序(時序);不要弄反"
+      },
+      "misconceptions": ["把 CNN/RNN 領域弄反", "誤以為 CNN 適合表格資料"],
+      "related_node_ids": ["n_L23203_005", "n_L23203_002"],
+      "tags": ["cnn", "rnn", "domain-comparison"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n29_009",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_005",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "下列何者最不適合作為 CNN 模型的應用任務情境?",
+      "options": [
+        {"key": "A", "text": "純表格資料的客戶信用評分任務情境(欄位皆為年收入 / 年齡 / 負債等結構化獨立特徵欄位)", "is_correct": true, "trap_type": "正解:純表格資料 CNN 不適合"},
+        {"key": "B", "text": "ImageNet 大規模影像分類(1000 類物件辨識);AlexNet 與 ResNet 經典任務", "is_correct": false, "trap_type": "CNN 經典場景"},
+        {"key": "C", "text": "醫療影像中 X 光片與 MRI 病灶偵測任務情境;典型空間相關性影像分析的常見應用情境", "is_correct": false, "trap_type": "CNN 經典場景"},
+        {"key": "D", "text": "物件偵測 YOLO 或 Faster R-CNN 應用情境;車牌辨識 / 人臉偵測等空間定位任務", "is_correct": false, "trap_type": "CNN 經典場景"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "純表格資料(結構化欄位如年收入、年齡、負債比)中,各欄位之間沒有『空間相關性』或『平移不變性』(把年齡欄移到年收入欄不會有意義),CNN 的局部連接 + 權重共享優勢蕩然無存。此類任務 XGBoost/LightGBM 等樹模型或 MLP 通常效果遠優於 CNN;這是 IPAS 高頻陷阱題型。",
+        "wrong": {
+          "ImageNet 大規模影像分類(1000 類物件辨識);AlexNet/ResNet 經典任務場景": "這是 CNN 最經典應用場景 — AlexNet 2012 ImageNet 突破啟動深度學習浪潮;CNN 完美對應此任務。",
+          "醫療影像 X 光與 MRI 病灶偵測;典型空間相關性影像分析任務應用": "醫療影像有強空間相關性與平移不變性,正是 CNN 主場應用;許多臨床 AI 都用 CNN 架構。",
+          "物件偵測 YOLO 或 Faster R-CNN 應用;車牌辨識/人臉偵測等空間定位任務": "YOLO/Faster R-CNN 本身就是 CNN 衍生架構 — 物件偵測典型用 CNN backbone 抽特徵;完美匹配。"
+        },
+        "hook": "口訣:CNN 適合『有空間相關性』資料;表格資料 → XGBoost/MLP,不要硬套 CNN"
+      },
+      "misconceptions": ["以為 CNN 萬能可處理任何資料", "把表格資料硬套用 CNN"],
+      "related_node_ids": ["n_L23203_005", "n_L22402_007"],
+      "tags": ["cnn", "use-case", "tabular-data"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n29_010",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_005",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "深度學習教科書中常說『CNN 適合影像辨識的根本原因在於影像本身的兩個性質』。下列何者最能精確描述此兩大性質與 CNN 對應特性的關係?",
+      "options": [
+        {"key": "A", "text": "影像有空間相關性(相鄰像素關聯強)+ 平移不變性(同物移位仍同物);對應 CNN 兩特性", "is_correct": true, "trap_type": "正解:兩性質對應 CNN 兩特性"},
+        {"key": "B", "text": "影像有時序相關性(像素隨時間變化)+ 循環依賴性(後像素依前像素);對應 CNN 隱藏狀態", "is_correct": false, "trap_type": "把 RNN 性質誤套 CNN"},
+        {"key": "C", "text": "影像有全域關聯性(每像素影響所有像素)+ 注意力需求;對應 CNN 內建 Self-Attention", "is_correct": false, "trap_type": "把 Transformer 性質誤套 CNN"},
+        {"key": "D", "text": "影像有獨立性(像素間完全無關)+ 隨機性(無規律可循);對應 CNN 隨機獨立權重每位置", "is_correct": false, "trap_type": "把獨立性誤當影像性質"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "影像兩大性質與 CNN 兩大特性是『完美對應』:(1) 空間相關性 — 相鄰像素高度相關(構成邊緣/紋理/物件),對應 CNN 局部連接(感受野內像素一起看);(2) 平移不變性 — 貓在影像左上或右下都是貓,對應 CNN 權重共享(同一卷積核掃所有位置)+ 池化層抗位移。這正是 CNN 三大特性(局部連接 + 權重共享 + 平移不變)被設計出來的根本理由。",
+        "wrong": {
+          "影像有時序相關性(像素隨時間變化)+ 循環依賴性(後像素依前像素);對應 CNN 隱藏狀態循環": "靜態影像不是時序資料 — 像素間是『空間』相關,不是『時間』相關;循環依賴是 RNN 性質,不是 CNN。",
+          "影像有全域關聯性(每像素影響所有像素)+ 注意力機制需求;對應 CNN 內建 Self-Attention": "CNN 本身使用『局部』連接而非全域;Self-Attention 是 Transformer/ViT 機制,經典 CNN(如 ResNet)沒有內建 Self-Attention。",
+          "影像有獨立性(像素間完全無關)+ 隨機性(無規律可循);對應 CNN 隨機獨立權重每位置": "影像像素絕非獨立 — 相鄰像素高度相關正是 CNN 設計的基礎假設;若像素獨立 CNN 就毫無優勢可言。"
+        },
+        "hook": "口訣:影像兩性質(空間相關 + 平移不變)= CNN 兩特性(局部連接 + 權重共享)完美對應"
+      },
+      "misconceptions": ["以為影像有時序相關性", "誤以為像素是獨立的"],
+      "related_node_ids": ["n_L23203_005", "n_L23203_002"],
+      "tags": ["cnn", "spatial-correlation", "translation-invariance"],
+      "errata_critical": false
+    }
+  ]
+}

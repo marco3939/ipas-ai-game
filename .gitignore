@@ -52,3 +52,10 @@ desktop.ini
 
 # Ad-hoc mock script outputs
 scripts/_mock_*.txt
+
+# Subject-3 PDF scratch files (do not commit)
+scripts/_main_page_*.png
+scripts/_main_pdf.txt
+scripts/_extract-*.py
+scripts/_render-*.py
+scripts/_find_*.js

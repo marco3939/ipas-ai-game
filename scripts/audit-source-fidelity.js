@@ -25,6 +25,10 @@ const Q_FILES = [
   'questions-batch-n22-L22-code-data.json', 'questions-batch-n23-L22-code-ml.json', 'questions-batch-n24-L22-code-gen.json',
   'questions-batch-boss-fill.json',
   'questions-batch-n25-L23-ml-core.json',
+  'questions-batch-n26-L23-classical.json',
+  'questions-batch-n27-L23-clustering-reg.json',
+  'questions-batch-n28-L23-RL-biz.json',
+  'questions-batch-n29-L23-DL.json',
   'questions-confusion-matrix.json',
   'questions-mode8-trace.json',
 ];

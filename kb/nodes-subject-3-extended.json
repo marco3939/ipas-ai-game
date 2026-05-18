@@ -863,23 +863,395 @@
         {"context": "California Housing AveRooms<10 過濾原因", "trap_options": ["為了增加樣本數", "為了讓所有樣本維度一致", "為了符合 Scikit-learn API 規格"]}
       ],
       "related_node_ids": ["n_L23202_003", "n_L23303_003", "n_L23303_007"]
+    },
+    {
+      "node_id": "n_L23202_014",
+      "knowledge_code": "L23202",
+      "title": "Naive Bayes 樸素貝氏 — 條件機率 + 屬性獨立假設",
+      "category": "algorithm",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習模型圖卡(全).pdf", "section": "page 16 — 樸素貝氏 Naive Bayes"}],
+      "summary": "Naive Bayes 為基於貝氏定理的機率分類模型,核心假設『所有屬性條件獨立』(naive 之名來自此假設);適合『預測類別』與『文本特徵』的場景(垃圾郵件、情感分析);訓練速度快、適合即時應用、可處理高維稀疏文本特徵",
+      "key_points": [
+        "核心公式:P(類別|特徵) ∝ P(特徵|類別) × P(類別),透過貝氏定理倒推後驗機率",
+        "屬性獨立假設:假設給定類別下,所有特徵彼此條件獨立(naive 一詞的由來);實務上很少嚴格成立但效果仍佳",
+        "適用情境:預測『類別』+『文本特徵』,典型如垃圾郵件分類、情感分析、新聞主題分類",
+        "對照決策樹:NB 用機率推論(快、適合高維文本);DT 用 if-else 條件分割(可解釋、適合表格資料)",
+        "三大變種:Gaussian NB(連續特徵)、Multinomial NB(計數特徵如詞頻)、Bernoulli NB(二元出現/不出現)",
+        "Laplace 平滑:避免某特徵在某類別訓練集中未出現時,條件機率為 0 導致整個後驗機率歸零"
+      ],
+      "common_misconceptions": [
+        "把 Naive Bayes 的 naive 誤解為『方法簡陋』,實為『假設特徵獨立』的稱呼",
+        "誤以為 NB 需要特徵獨立才能用(實際即使違反獨立假設,NB 在文本分類仍表現良好)",
+        "把 NB 與 Bayes 網路(Bayesian Network)混淆,後者建模特徵間依賴關係"
+      ],
+      "explanation_hooks": [
+        "口訣:NB『天真假設』— 假設所有特徵彼此獨立,把聯合機率拆成乘積簡化計算",
+        "垃圾郵件實例:看到『中獎』『匯款』『點擊』獨立計算各詞在垃圾/非垃圾下的條件機率"
+      ],
+      "variation_seeds": [
+        {"context": "naive 一詞的真正含義", "trap_options": ["演算法本身簡陋落後", "需大量訓練資料才能用", "預測精度天生較低"]},
+        {"context": "NB vs 決策樹適用場景", "trap_options": ["NB 適合表格結構化資料", "DT 適合高維文本", "兩者完全等價"]},
+        {"context": "違反獨立假設後 NB 是否失效", "trap_options": ["完全失效不可用", "需先做特徵獨立性檢定才能用", "必須改用 Bayes 網路替代"]}
+      ],
+      "related_node_ids": ["n_L23101_001", "n_L23202_005", "n_L23202_010"]
+    },
+    {
+      "node_id": "n_L23202_015",
+      "knowledge_code": "L23202",
+      "title": "GMM 高斯混合模型 — 軟性分群 + EM 演算法",
+      "category": "algorithm",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習模型圖卡(全).pdf", "section": "page 29 — Gaussian Mixture Model"}],
+      "summary": "GMM 為多個高斯分布加權組合的非監督式『軟性分群』模型;每筆資料『屬於每群的機率』而非硬性指派單一群;以 EM 演算法迭代估參:E-step 計算歸屬機率、M-step 更新各高斯參數;適合橢圓形群、用 AIC/BIC 決定 K",
+      "key_points": [
+        "核心公式:P(x) = Σₖ wₖ × N(x | μₖ, Σₖ),即多個高斯加權混合(wₖ 為混合權重,和為 1)",
+        "軟性分群(soft clustering):每筆資料屬於每群的『機率』(如 [0.7, 0.2, 0.1]),非 K-means 的硬性 0/1 指派",
+        "EM 演算法兩步迭代:E-step(Expectation)計算每點屬於各群的後驗機率;M-step(Maximization)用加權方式更新各高斯的 μ、Σ、w",
+        "適合橢圓形群:每個高斯有獨立的 Σ(協方差矩陣)可塑造任意橢圓形狀,比 K-means(僅球狀)更靈活",
+        "K 值選擇:用 AIC(Akaike)或 BIC(Bayesian)資訊準則平衡擬合度與複雜度,選最小值對應的 K",
+        "對比 K-means:K-means 是 GMM 的特例(假設各群協方差為單位矩陣 × 相同變異);GMM 給機率、K-means 給硬指派"
+      ],
+      "common_misconceptions": [
+        "以為 GMM 也是硬性分群(實為軟性,給機率不是單一群編號)",
+        "把 EM 演算法當作 GMM 專屬(實際上 EM 是通用最大概似估計框架,只是在 GMM 上常見)",
+        "誤以為 GMM 也只能處理球狀群(實際各群可有獨立協方差矩陣,擅長橢圓)",
+        "把 GMM 的 K 與 K-means 的 K 視為完全相同(GMM 用 AIC/BIC 選 K,K-means 用手肘法 WCSS)"
+      ],
+      "explanation_hooks": [
+        "口訣:GMM『軟分群』— 每筆資料給『屬於每群的機率』,K-means 只給單一群編號",
+        "EM 兩步循環:E-step 算機率(soft assignment)→ M-step 更新參數,重複到收斂"
+      ],
+      "variation_seeds": [
+        {"context": "GMM vs K-means 最關鍵差異", "trap_options": ["GMM 監督式 / K-means 非監督式", "GMM 速度較快", "GMM 不需指定 K"]},
+        {"context": "EM 演算法兩步的順序", "trap_options": ["先 M-step 再 E-step", "M-step 算機率 / E-step 更新參數", "EM 是 GMM 獨有"]},
+        {"context": "GMM 選 K 用什麼方法", "trap_options": ["手肘法 WCSS", "Silhouette 係數", "DB index"]}
+      ],
+      "related_node_ids": ["n_L23202_008", "n_L23202_012", "n_L23101_001"]
+    },
+    {
+      "node_id": "n_L23202_018",
+      "knowledge_code": "L23202",
+      "title": "Polynomial Regression 多項式迴歸 — N 次方擬合曲線 + 次數選擇",
+      "category": "algorithm",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習模型圖卡(全).pdf", "section": "page 6 — Polynomial Regression"}],
+      "summary": "多項式迴歸藉自變數的 N 次方項(x, x², ..., xⁿ)擬合『曲線型』資料,擬合公式 ŷ = β₀ + β₁x + β₂x² + ... + βₙxⁿ;線性迴歸無法描述的非線性關係(如預測物質隨溫度溶解度)可用多項式迴歸;**考試重點:次數 N 太低欠擬合、太高過擬合,N 的合理解釋**",
+      "key_points": [
+        "擬合公式:ŷ = β₀ + β₁x + β₂x² + ... + βₙxⁿ,本質仍是 β 係數的線性模型(對 β 線性、對 x 非線性)",
+        "適用情境:資料散佈呈曲線型(物質溶解度 vs 溫度、拋物線軌跡),線性迴歸無法捕捉",
+        "次數選擇(Degree of Polynomial):N=1 線性、N=2 拋物線、N=3 三次曲線;次數太低 → 欠擬合(Underfit)、次數太高 → 過擬合(Overfit)",
+        "目標:找『最小誤差』+『最佳擬合曲線』(The Best-Fit Curve)平衡點,常用交叉驗證選 N",
+        "與線性迴歸對比:線性迴歸假設關係為直線(欠擬合曲線資料);多項式迴歸用 N 次轉換特徵後仍用線性方法擬合",
+        "**主檔強調**:不考公式記憶,考 N 次數的合理解釋(為何選 N=3 而不選 N=10)"
+      ],
+      "common_misconceptions": [
+        "誤以為多項式迴歸不是線性模型(實為對 β 線性,只是對 x 做 N 次方轉換)",
+        "以為次數 N 越高越好(實際 N 過高會嚴重過擬合,曲線會穿過每個訓練點但泛化失敗)",
+        "把多項式迴歸與『非線性迴歸』完全混淆(非線性迴歸指對 β 也非線性,如 y = e^(βx))",
+        "誤以為一定要做特徵選擇才能用(實際是次數 N 的選擇問題,非特徵刪減)"
+      ],
+      "explanation_hooks": [
+        "口訣:多項式迴歸『N 次方擬合曲線』,本質仍是 β 線性 — 只是把 x 轉成 x²、x³ 後再線性擬合",
+        "選 N 原則:N=2 拋物線、N=3 三次曲線;太低欠擬合(直線描述彎曲)、太高過擬合(曲線穿過每點失泛化)"
+      ],
+      "variation_seeds": [
+        {"context": "次數 N 太高的後果", "trap_options": ["欠擬合", "減少訓練誤差就一定是好的", "與 N 太低相同"]},
+        {"context": "多項式迴歸本質是否為線性模型", "trap_options": ["完全非線性模型", "與神經網路同類", "對 x 線性"]},
+        {"context": "多項式迴歸的考試重點", "trap_options": ["記憶 N 次方展開公式", "計算 β 係數矩陣", "推導梯度公式"]}
+      ],
+      "related_node_ids": ["n_L23202_013", "n_L23304_002", "n_L23303_003"]
+    },
+    {
+      "node_id": "n_L23203_004",
+      "knowledge_code": "L23203",
+      "title": "Transformer 架構 + Self-Attention — 平行處理取代 RNN 序列",
+      "category": "concept",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習模型圖卡(全).pdf", "section": "page 47 — Transformer 架構"}],
+      "summary": "Transformer 為革命性深度學習架構,以 Self-Attention 機制取代 RNN 的循環結構,實現『平行處理』長距離序列;Encoder-Decoder 雙塔架構是 NLP 翻譯/生成任務基礎;『Attention Is All You Need』論文奠基,徹底取代 RNN 在 NLP 的地位;Multi-Head Attention 捕捉文字間的複雜全域關係;Positional Encoding 補回自注意機制本身缺乏的位置資訊",
+      "key_points": [
+        "核心機制:Self-Attention 讓序列中每個位置同時關注所有其他位置(全域關係),取代 RNN 循序傳遞的隱藏狀態",
+        "平行 vs 序列:Transformer Encoder 可平行運算(打破 RNN 必須逐步處理的瓶頸);Decoder 因自迴歸生成仍部分序列",
+        "Encoder-Decoder 架構:Encoder 編碼輸入語意 → Decoder 解碼輸出目標(典型 NLP 翻譯、摘要、生成任務)",
+        "Multi-Head Attention:用多組(典型 8 或 16 head)並行的注意力子空間,捕捉不同層面的語意關係(語法、語義、長距離依賴),不是用來加深網路",
+        "Positional Encoding 必要性:Self-Attention 本身無位置概念(對輸入順序不敏感),需以正弦/餘弦或可學習位置編碼補回詞序資訊",
+        "突破 RNN 三大瓶頸:(1) 長距離依賴消失 (2) 無法平行訓練 (3) 順序傳遞訓練速度慢;Transformer 三者全解",
+        "使用情境判斷卡:看到自然語言處理(NLP)/ 文字翻譯生成 / 高效處理長文本 → 想到 Transformer;若是時序簡單任務或資源極受限,RNN 仍可考慮",
+        "易混淆對照:Transformer 平行運算 vs RNN 序列運算;Transformer 全域關聯(看所有位置)vs RNN 局部依賴(主要看相鄰位置)"
+      ],
+      "common_misconceptions": [
+        "誤以為 Transformer 仍依賴 RNN 的循環結構(實際完全捨棄循環,純靠 Attention)",
+        "把『平行處理』方向弄反 — 誤認 Transformer 序列、RNN 平行(實際相反)",
+        "把 Multi-Head Attention 誤解為『加深網路層數』(實際是同一層內並行多組注意力子空間)",
+        "誤以為 Self-Attention 內建位置感知(實際無位置概念,需 Positional Encoding 補)",
+        "把 Transformer 視為只能用於翻譯(實際 BERT/GPT/ViT 等都是 Transformer 衍生,適用 NLP、CV、多模態)",
+        "誤以為 Transformer 處理短序列也比 RNN 慢(實際短序列也因平行計算優勢通常更快)"
+      ],
+      "explanation_hooks": [
+        "口訣:看到 Transformer 或注意力機制,核心絕對是『平行處理序列資料』",
+        "Multi-Head 比喻:多個專家同時看文章不同角度(語法、語意、長距離),最後綜合判斷",
+        "為何要 Positional Encoding:Self-Attention 是『集合運算』而非『序列運算』,打亂詞序結果一樣 → 需位置編碼告訴模型『誰在前誰在後』",
+        "Attention 公式直覺:Q×Kᵀ 算相似度 → Softmax 歸一化 → 加權求和 V;每個位置的輸出 = 所有位置 V 的加權平均"
+      ],
+      "variation_seeds": [
+        {"context": "Transformer 取代 RNN 的核心原因", "trap_options": ["Transformer 也是循環結構只是更深", "Transformer 不能處理長序列", "Transformer 序列、RNN 平行"]},
+        {"context": "Multi-Head Attention 的用途", "trap_options": ["加深網路層數", "替代 Feed Forward", "減少參數量"]},
+        {"context": "Positional Encoding 為何必要", "trap_options": ["Self-Attention 自帶位置資訊", "只是優化技巧可省略", "與 RNN 隱藏狀態等價"]},
+        {"context": "Transformer Encoder 訓練時的運算模式", "trap_options": ["必須序列逐步處理", "與 RNN 相同效率", "只能用 GPU 而 RNN 只能用 CPU"]},
+        {"context": "Self-Attention 全域 vs RNN 局部對照", "trap_options": ["Self-Attention 也只看相鄰位置", "RNN 才是全域關聯", "兩者皆只看 5 個位置內"]}
+      ],
+      "related_node_ids": ["n_L23203_002", "n_L23203_001", "n_L23203_005"]
+    },
+    {
+      "node_id": "n_L23203_005",
+      "knowledge_code": "L23203",
+      "title": "CNN 卷積神經網路 — 空間特徵 + 影像辨識核心",
+      "category": "concept",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習模型圖卡(全).pdf", "section": "page 44 — CNN 卷積神經網路"}],
+      "summary": "CNN(Convolutional Neural Network)為處理格狀數據(影像、聲音頻譜)的深度學習架構;核心三件套『卷積層(局部連接 + 權重共享)+ 池化層(降維 + 抗位移)+ 非線性激活』堆疊;解決傳統 NN 對影像旋轉/平移失效、資料量爆炸問題;ImageNet/AlexNet/ResNet 等視覺里程碑皆 CNN 基底;**關鍵口訣:看到影像辨識分類問題,就要想到 CNN**",
+      "key_points": [
+        "卷積層三大特性:(1) 局部連接(僅看感受野內像素,非全連接)(2) 權重共享(同一卷積核掃過整張圖,大幅降參數)(3) 空間平移不變性(同樣花紋在不同位置都可偵測)",
+        "池化層(Pooling)用途:(1) 降維(減少特徵圖尺寸與後續計算量)(2) 抗位移/抗微小變形(Max/Average Pooling 對小幅度平移不敏感)",
+        "典型架構堆疊:Conv → ReLU → Pool → Conv → ReLU → Pool → ... → Flatten → FC → Softmax;前段提取空間特徵、後段做分類決策",
+        "感受野(Receptive Field):每深一層卷積,單一神經元能看到的原圖區域變大,逐層『局部特徵 → 紋理 → 物件部位 → 整體物件』",
+        "與 RNN 區別:CNN 主處理『空間相關性』(影像、靜態格狀);RNN 處理『時間/序列相關性』(文字、時序);兩者擅長領域不同",
+        "與 DNN(全連接)區別:DNN 對每像素獨立加權,參數爆炸且喪失空間結構;CNN 用權重共享 + 局部連接保留空間關係",
+        "經典應用:ImageNet 分類、物件偵測(YOLO/Faster R-CNN)、語意分割、人臉辨識、醫療影像(X 光、MRI)",
+        "使用情境判斷卡:看到『影像辨識分類』『複雜數據建模需空間特徵』→ 立即考慮 CNN;不要誤判:針對純表格數據用 CNN 通常不適合(該用 XGBoost/MLP)"
+      ],
+      "common_misconceptions": [
+        "誤以為 CNN 只能處理影像(實際聲音頻譜、文字 1D 卷積、時序資料也可用,凡有局部結構即可)",
+        "把 CNN 與 RNN 應用領域弄反(CNN 影像/空間、RNN 序列/時間)",
+        "誤以為池化層是用來『提高準確率』(實際主目的是降維 + 抗位移,參數量為零)",
+        "以為卷積核是隨機固定的(實際卷積核權重是訓練學出來的,即特徵偵測器)",
+        "把『權重共享』誤解為『所有層共享一組權重』(實際是同一卷積層內、同一卷積核掃整張圖時共享)",
+        "在表格資料(結構化欄位)上強用 CNN(空間關係不存在,效果通常不如 XGBoost/MLP)",
+        "誤以為 CNN 適合純『序列預測』(那是 RNN/LSTM/Transformer 領域)"
+      ],
+      "explanation_hooks": [
+        "口訣:看到『影像辨識』『分類』『阿塔里遊戲』,優先想到卷積神經網路 CNN",
+        "為何 CNN 適合影像:影像有『空間相關性』(相鄰像素關聯強)+『平移不變性』(貓在左上 vs 右下都是貓),CNN 三大特性完美對應",
+        "卷積比喻:用一張小濾鏡掃整張圖找特徵(邊緣、紋理),掃到哪都用同一張濾鏡 = 權重共享",
+        "池化直覺:Max Pooling 等於『一小區域內保留最強訊號』,稍微移動圖片不會改變整體判斷"
+      ],
+      "variation_seeds": [
+        {"context": "CNN 卷積層的關鍵特性", "trap_options": ["全連接 + 獨立權重", "循環隱藏狀態", "Self-Attention 機制"]},
+        {"context": "池化層的主要用途", "trap_options": ["增加參數量提升表達力", "做序列預測", "做監督式分類最終決策"]},
+        {"context": "CNN vs RNN 適用領域對照", "trap_options": ["CNN 處理時序、RNN 處理影像", "兩者皆做影像辨識", "CNN 處理文字、RNN 處理影像"]},
+        {"context": "ImageNet 經典任務類型", "trap_options": ["時序預測", "強化學習控制", "聚類分析"]},
+        {"context": "為何 CNN 適合影像而非表格", "trap_options": ["表格資料的維度更高", "CNN 速度比 XGBoost 快", "影像沒有空間相關性"]}
+      ],
+      "related_node_ids": ["n_L23203_002", "n_L23203_001", "n_L23203_004"]
+    },
+    {
+      "node_id": "n_L23202_016",
+      "knowledge_code": "L23202",
+      "title": "分層聚類 Hierarchical Clustering — 樹狀圖 + 不需預設 K",
+      "category": "algorithm",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習模型圖卡(全).pdf", "section": "page 30"}],
+      "summary": "用合併式(Agglomerative)由下而上或分裂式(Divisive)由上而下建立樹狀圖(Dendrogram),不需預設 K;從 Dendrogram 高度切割線決定群數;計算成本高 O(n²),適合小資料集",
+      "key_points": [
+        "兩種模式:合併式(Agglomerative,由下而上)/ 分裂式(Divisive,由上而下)",
+        "用 Dendrogram 樹狀圖視覺化階層結構",
+        "決定群數:在 Dendrogram 高度上畫水平切割線",
+        "不需預設 K(對比 K-means)",
+        "計算複雜度 O(n²),小資料集才用",
+        "距離度量:Euclidean、Manhattan、cosine 等"
+      ],
+      "common_misconceptions": [
+        "以為所有聚類方法都需預設 K(分層聚類不用)",
+        "誤以為 Dendrogram 切割線位置不重要(實為決定群數關鍵)",
+        "把分層聚類用在大資料集(O(n²) 會爆)",
+        "誤以為合併式與分裂式結果一定相同"
+      ],
+      "explanation_hooks": [
+        "口訣:「畫樹再切線,群數自己看」",
+        "決策心法:小資料 + 不知道 K 多少 → 用分層聚類看 Dendrogram"
+      ],
+      "variation_seeds": [
+        {"context": "客戶分層分析 用 Dendrogram", "trap_options": ["K-means", "DBSCAN", "光譜聚類"]},
+        {"context": "為何不適合大資料", "trap_options": ["記憶體不足", "演算法不收斂", "結果不穩定"]}
+      ],
+      "related_node_ids": ["n_L23202_008", "n_L23202_012", "n_L23202_017"]
+    },
+    {
+      "node_id": "n_L23202_017",
+      "knowledge_code": "L23202",
+      "title": "光譜聚類 Spectral Clustering — 圖論 + 拉普拉斯矩陣",
+      "category": "algorithm",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習模型圖卡(全).pdf", "section": "page 32"}],
+      "summary": "用相似度建立圖(graph),計算拉普拉斯矩陣特徵向量,將資料投影到新空間後再用 K-means;能處理非球形群(月牙、環形等),解決 K-means 只擅長球狀的限制",
+      "key_points": [
+        "三步:建相似度圖 → 計算拉普拉斯矩陣特徵向量 → 在特徵空間用 K-means",
+        "處理非球形群(月牙、環形、螺旋等)",
+        "拉普拉斯矩陣 L = D - W(D 度數矩陣,W 鄰接權重矩陣)",
+        "解決 K-means 只擅長球狀分佈的限制",
+        "計算成本高,需設定相似度核函數(常用 Gaussian RBF)"
+      ],
+      "common_misconceptions": [
+        "以為光譜聚類就是 K-means(實為「先做圖嵌入再聚類」)",
+        "把光譜聚類用在球狀資料(殺雞用牛刀,K-means 更快)",
+        "誤以為「光譜」與電磁波有關(實為線代特徵譜 spectrum)"
+      ],
+      "explanation_hooks": [
+        "口訣:「畫圖、算特徵、再聚類」三步",
+        "決策心法:資料看起來像月牙或環形 → 光譜聚類;球狀 → K-means"
+      ],
+      "variation_seeds": [
+        {"context": "月牙形資料分群", "trap_options": ["K-means", "DBSCAN(需密度可分)", "GMM"]},
+        {"context": "光譜聚類核心數學物件", "trap_options": ["相關係數矩陣", "共變異數矩陣", "梯度矩陣"]}
+      ],
+      "related_node_ids": ["n_L23202_008", "n_L23202_012", "n_L23202_016"]
+    },
+    {
+      "node_id": "n_L23304_006",
+      "knowledge_code": "L23304",
+      "title": "ElasticNet 彈性網路迴歸 — L1+L2 綜合正則化",
+      "category": "algorithm",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習模型圖卡(全).pdf", "section": "page 9"}],
+      "summary": "結合 LASSO(L1)的特徵選擇能力與 Ridge(L2)的權重穩定性;對高度相關的特徵組(grouping effect)有獨特優勢,LASSO 通常只挑一個 ElasticNet 會全選並穩定權重;需調 λ₁ + λ₂ 雙超參數",
+      "key_points": [
+        "損失函數 = MSE + λ₁|w| + λ₂w²(L1 與 L2 線性組合)",
+        "兩個超參數:λ₁(L1 強度,特徵選擇)+ λ₂(L2 強度,權重穩定)",
+        "Grouping Effect:高相關特徵組能一起被選,而非 LASSO 只挑一個",
+        "適合:特徵數 > 樣本數 且 特徵高度相關 的情境",
+        "退化情況:λ₁=0 → Ridge;λ₂=0 → LASSO"
+      ],
+      "common_misconceptions": [
+        "以為 ElasticNet 等於「LASSO 或 Ridge 二選一」(實為兩者線性組合)",
+        "忽略 Grouping Effect(高相關特徵組唯一解)",
+        "誤以為單一超參數可控(實需調 λ₁ 與 λ₂ 雙超參)"
+      ],
+      "explanation_hooks": [
+        "口訣:「L1 選特徵 + L2 穩權重 = 雙保險」",
+        "決策心法:特徵多且互相高度相關 → 用 ElasticNet 而非單純 LASSO"
+      ],
+      "variation_seeds": [
+        {"context": "基因表達高相關特徵組篩選", "trap_options": ["LASSO 只選 1 個", "Ridge 全留下", "PCA 降維"]},
+        {"context": "ElasticNet 退化條件", "trap_options": ["λ₁=λ₂ 等同 OLS", "λ₁ 大就是 Ridge", "λ₂ 為 0 自動 Ridge"]}
+      ],
+      "related_node_ids": ["n_L23304_002", "n_L23202_013", "n_L23202_018"]
+    },
+    {
+      "node_id": "n_L23201_005",
+      "knowledge_code": "L23201",
+      "title": "Q-Learning + SARSA — On-policy vs Off-policy 強化學習對照",
+      "category": "algorithm",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習模型圖卡(全).pdf", "section": "page 35-36"}],
+      "summary": "Q-Learning(Off-policy)用「下一狀態最大 Q 值」更新,激進探索最優;SARSA(On-policy)用「實際採取的下一動作」更新,保守符合當前策略;兩者均為表格式 Q-Table,適合小狀態空間",
+      "key_points": [
+        "Q-Learning 更新:Q(s,a) ← Q(s,a) + α[r + γ·**max** Q(s',a') − Q(s,a)](Off-policy,用 max)",
+        "SARSA 更新:Q(s,a) ← Q(s,a) + α[r + γ·Q(s',**a_實際**) − Q(s,a)](On-policy,用實際 a)",
+        "Off-policy 與 On-policy 命名來自「更新時用的策略」vs「執行時的策略」",
+        "Q-Learning 激進(追最大 Q),SARSA 保守(跟著實際走)",
+        "兩者均需 ε-greedy 探索,小狀態空間用 Q-Table 表示",
+        "在懸崖行走(Cliff Walking)經典案例:Q-Learning 走險路、SARSA 走遠路"
+      ],
+      "common_misconceptions": [
+        "把 On-policy / Off-policy 顛倒(SARSA 是 On,Q-Learning 是 Off)",
+        "以為 Q-Learning 一定比 SARSA 好(實為任務取捨,SARSA 在風險環境更安全)",
+        "誤以為兩者都需要環境模型(實為 Model-Free)",
+        "把更新公式中的 max / 實際 a 混淆"
+      ],
+      "explanation_hooks": [
+        "口訣:「Q 取 max 激進,SARSA 跟實際保守」",
+        "命名來源:On-policy = 用『目前策略』更新;Off-policy = 用『最佳策略』更新"
+      ],
+      "variation_seeds": [
+        {"context": "懸崖行走 Cliff Walking 對照", "trap_options": ["Q-Learning 保守 / SARSA 激進", "兩者結果相同", "都需環境模型"]},
+        {"context": "Q-Learning 更新公式", "trap_options": ["用實際下一動作 a", "用隨機動作", "用平均 Q"]}
+      ],
+      "related_node_ids": ["n_L23201_004", "n_L23201_006"]
+    },
+    {
+      "node_id": "n_L23201_006",
+      "knowledge_code": "L23201",
+      "title": "DQN 深度 Q 網路 — Q-Learning + Neural Network",
+      "category": "algorithm",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習模型圖卡(全).pdf", "section": "page 40"}],
+      "summary": "DQN 用神經網路近似 Q 函數 Q(s,a;θ),取代 Q-Learning 的 Q-Table,能處理大狀態空間(如 Atari 像素輸入);加入 Experience Replay(經驗回放)與 Target Network(目標網路)穩定訓練,屬 Model-Free 深度強化學習",
+      "key_points": [
+        "用 NN 取代 Q-Table:Q(s,a;θ),θ 為網路權重",
+        "Experience Replay:儲存 (s,a,r,s') 經驗,隨機抽 batch 訓練,打破時序相關",
+        "Target Network:固定 θ⁻ 一段時間後更新,避免追逐自身目標導致發散",
+        "適用:大狀態空間(如 Atari 像素 84×84×4)、連續特徵",
+        "Model-Free:不需學環境轉移機率 P(s'|s,a),從交互經驗學",
+        "DeepMind 2013/2015 Atari 突破"
+      ],
+      "common_misconceptions": [
+        "把 DQN 誤為 Model-Based(實為 Model-Free)",
+        "以為 DQN = Q-Learning 直接套 NN(忽略 Experience Replay + Target Network 兩大改進)",
+        "誤以為 DQN 能處理連續動作空間(實為離散動作;連續用 DDPG)",
+        "把 Experience Replay 誤為串行回放(實為隨機抽樣)"
+      ],
+      "explanation_hooks": [
+        "口訣:「NN 近似 Q,回放 + 目標雙穩定」",
+        "DQN 三件套:NN 替代 Q-Table、Experience Replay、Target Network"
+      ],
+      "variation_seeds": [
+        {"context": "Atari 遊戲 84×84 像素為何用 DQN", "trap_options": ["Q-Table 也夠用", "需要環境模型", "只能處理連續動作"]},
+        {"context": "Experience Replay 解決什麼問題", "trap_options": ["訓練速度太慢", "獎勵稀疏", "動作空間太大"]}
+      ],
+      "related_node_ids": ["n_L23201_004", "n_L23201_005", "n_L23203_005"]
+    },
+    {
+      "node_id": "n_L22402_007",
+      "knowledge_code": "L22402",
+      "title": "ML 模型 × 業務情境對映表 — 5 大領域選型",
+      "category": "concept",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習模型圖卡(全).pdf", "section": "page 2 心智圖右下角"}],
+      "summary": "IPAS 高頻題型「給情境選模型」的業界共識對映:生產營運/股票預測用 XGBoost/CNN/RNN;銷售管理/信用評分用 LASSO/分類;人事/詐欺偵測用 KMeans/SVM/DL;研發/資產配置用 DL/RL;財務管理/財務預測用 LSTM/GRU/ElasticNet",
+      "key_points": [
+        "生產營運 / 股票預測 → XGBoost、CNN、RNN(時序 + 結構化)",
+        "銷售管理 / 信用評分 → LASSO、分類模型(可解釋 + 特徵選擇)",
+        "人事資源 / 詐欺偵測 → KMeans、SVM、深度學習(分群 + 異常)",
+        "研發創新 / 資產配置 → 深度學習、強化學習(動態決策)",
+        "財務管理 / 財務預測 → LSTM、GRU、ElasticNet(時序 + 多元變數)",
+        "選型核心邏輯:資料型態(時序/結構化/影像)+ 任務(分類/迴歸/分群)+ 解釋需求"
+      ],
+      "common_misconceptions": [
+        "以為深度學習適合所有情境(實為小資料 / 表格資料 樹模型更好)",
+        "把分類任務套到迴歸模型(信用評分若連續分數應用迴歸,若 Y/N 應用分類)",
+        "誤以為 SVM 適合大規模資料(O(n²) 訓練成本高)",
+        "把 LSTM 用在純表格資料(無時序意義,浪費)"
+      ],
+      "explanation_hooks": [
+        "口訣:「時序找 RNN/LSTM,結構化用 XGBoost,情境給 SVM 或 RL」",
+        "選型五步:(1)資料型 (2)任務 (3)資料量 (4)解釋需求 (5)上線延遲"
+      ],
+      "variation_seeds": [
+        {"context": "詐欺偵測首選", "trap_options": ["XGBoost(可)", "LSTM(時序若有)", "VAE(異常檢測)"]},
+        {"context": "信用評分模型(可解釋 + 特徵選擇)", "trap_options": ["LSTM", "Random Forest", "Naive Bayes"]},
+        {"context": "股票價格預測(短期)", "trap_options": ["線性迴歸", "K-means", "決策樹"]}
+      ],
+      "related_node_ids": ["n_L22402_001", "n_L23202_006", "n_L23203_002", "n_L23304_006"]
     }
   ],
   "summary": {
-    "total_nodes": 47,
+    "total_nodes": 58,
     "by_code": {
       "L23101_ProbStat": 3,
       "L23103_NumOpt": 8,
       "L23202_Algorithms": 12,
-      "L23203_DeepLearning": 3,
+      "L23203_DeepLearning": 5,
       "L23301_DataPrep": 4,
       "L23302_ModelSelect": 2,
       "L23303_EvalValid": 8,
       "L23401_Privacy": 3,
       "L23402_Fairness": 4
     },
-    "by_source_level_note": "actual node count 47 (was misstated as 39/41/45 in prior summaries; pre-existing L23301 miscount 3→4 corrected this round); source levels not re-tallied this round",
-    "iron_rule_compliance_check": "all 47 nodes have misconceptions, explanation_hooks, variation_seeds",
+    "by_source_level_note": "actual node count 52 (was 50, batch N29 added 2 new L23203 nodes — Transformer + CNN); source levels not re-tallied this round",
+    "iron_rule_compliance_check": "all 52 nodes have misconceptions, explanation_hooks, variation_seeds",
+    "extension_2026-05-18_N29": "Added 2 L23203 (Transformer + Self-Attention n_L23203_004, CNN 卷積神經網路 n_L23203_005) for batch N29 — source: 機器學習模型圖卡(全).pdf page 47/44 — W9 worker",
+    "extension_2026-05-18_N26": "Added 3 L23202 (Naive Bayes n_L23202_014, GMM n_L23202_015, Polynomial Regression n_L23202_018) for batch N26 — source: 機器學習模型圖卡(全).pdf page 16/29/6 — W6 worker; n_L23202_018 編號避開 W7 用 015/016/017",
     "errata_critical_count": 2,
     "extension_2026-05-16": "Added 4 L23103 (numpy core) + 1 L23302 (AutoML pipeline) = 5 nodes for deferred questions (q_pa_001/002/003/004/005, q_m8_001, q_pc_seq_004) — Agent 1A scope",
     "extension_2026-05-18": "Added 1 L23202 (KNN — n_L23202_010) for batch N25 KNN 6 題 — source: 機器學習進階:從KNN到SVM的高維度對決.pdf p.3,14,17-19,25-26 + 1 L23202 (K-means full — n_L23202_012) for batch N25 K-means 7 題 — source: 非監督式學習:K-means.pdf p.8-12,15 + 1 L23202 (Random Forest — n_L23202_011) for batch N25 RF 6 題 + 1 L23402 (Feature Importance/XAI — n_L23402_004) for batch N25 XAI 2 題 — source: 集成學習:隨機森林.pdf p.4,8-11,16,18 + 1 L23202 (Linear Regression OLS — n_L23202_013) for batch N25 OLS 6 題 — source: 監督式學習:線性迴歸.pdf p.4-9,11,14,19;同時補強 n_L23202_005(決策樹)key_points 2 條(預剪枝參數、後剪枝 CCP)+ common_misceptions 1 條(ccp_alpha 誤為預剪枝) — source: 決策樹與過擬合處理.pdf p.5-6,13-14"
