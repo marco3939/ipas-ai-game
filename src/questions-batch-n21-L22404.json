@@ -3,7 +3,10 @@
   "schema_version": "iron-rule-1+2+6",
   "generated_at": "2026-05-16",
   "batch": "N21 — 科二大數據 L22404 隱私保護、安全與合規",
-  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "exam_target": {
+    "name": "IPAS AI 應用規劃師中級",
+    "date": "2026-05-23"
+  },
   "iron_rule_compliance": {
     "rule_1": "every question has explanation.correct + explanation.wrong + explanation.hook + misconceptions",
     "rule_2": "shuffle_options=true on every item; calculation item carries stem_variables multi-case",
@@ -28,8 +31,16 @@
       "n_L22404_005": 3,
       "n_L22404_006": 3
     },
-    "by_format": {"single_choice": 15, "scenario": 4, "calculation": 1},
-    "by_difficulty": {"easy": 5, "medium": 11, "hard": 4}
+    "by_format": {
+      "single_choice": 15,
+      "scenario": 4,
+      "calculation": 1
+    },
+    "by_difficulty": {
+      "easy": 5,
+      "medium": 11,
+      "hard": 4
+    }
   },
   "questions": [
     {
@@ -42,10 +53,25 @@
       "source_level": "L1",
       "stem": "某線上學習平台在用戶註冊時依台灣個人資料保護法第 8 條進行事前告知。下列何項『不在』法定六項事前告知義務範圍內?",
       "options": [
-        {"text": "事前揭露用戶可自由選擇是否提供個資,以及不提供將對其權益造成的影響說明", "is_correct": false, "trap_type": "屬法定六項之一"},
-        {"text": "明確列出蒐集機關或機構的名稱,讓當事人能清楚知道究竟由哪一方在蒐集個資", "is_correct": false, "trap_type": "屬法定六項之一"},
-        {"text": "向當事人主動揭露所採用之資料庫加密演算法名稱與儲存伺服器所在的實體地點", "is_correct": true},
-        {"text": "說明個人資料的利用期間、地區、對象與方式,讓使用者掌握資料後續流向的全貌", "is_correct": false, "trap_type": "屬法定六項之一"}
+        {
+          "text": "事前揭露用戶可自由選擇是否提供個資,以及不提供將對其權益造成的影響說明",
+          "is_correct": false,
+          "trap_type": "屬法定六項之一"
+        },
+        {
+          "text": "明確列出蒐集機關或機構的名稱,讓當事人能清楚知道究竟由哪一方在蒐集個資",
+          "is_correct": false,
+          "trap_type": "屬法定六項之一"
+        },
+        {
+          "text": "向當事人主動揭露所採用之資料庫加密演算法名稱與儲存伺服器所在的實體地點",
+          "is_correct": true
+        },
+        {
+          "text": "說明個人資料的利用期間、地區、對象與方式,讓使用者掌握資料後續流向的全貌",
+          "is_correct": false,
+          "trap_type": "屬法定六項之一"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -57,9 +83,22 @@
         },
         "hook": "六項口訣:誰(機關)、為何(目的)、什麼(類別)、怎麼用(期間地區對象方式)、有何權利、可否選擇"
       },
-      "misconceptions": ["把資安內部措施與告知義務混淆", "誤以為加密細節需對外揭露"],
-      "related_node_ids": ["n_L22404_002"],
-      "tags": ["PDPA", "事前告知", "個資法"]
+      "misconceptions": [
+        "把資安內部措施與告知義務混淆",
+        "誤以為加密細節需對外揭露"
+      ],
+      "related_node_ids": [
+        "n_L22404_002"
+      ],
+      "tags": [
+        "PDPA",
+        "事前告知",
+        "個資法"
+      ],
+      "boss_topics": [
+        "privacy",
+        "education"
+      ]
     },
     {
       "id": "q_n21_002",
@@ -71,10 +110,25 @@
       "source_level": "L1",
       "stem": "某保險公司原以『核保用途』合法蒐集了客戶 5 年的健保理賠紀錄。現在資料科學部門想用同一批資料訓練保費 AI 動態定價模型。從個資法事前告知義務角度,下列處理方式何者最為適當?",
       "options": [
-        {"text": "屬於原蒐集目的外利用,需重新告知並取得當事人對新目的的同意後才可用於 AI 訓練", "is_correct": true},
-        {"text": "由於資料已合法蒐集且仍在保險業範圍內,可直接用於 AI 訓練無需再執行任何告知程序", "is_correct": false, "trap_type": "目的外利用需再告知"},
-        {"text": "只要訓練前進行去識別化處理,即可視為脫離個資範圍,因此不需要再次履行任何告知義務", "is_correct": false, "trap_type": "假名化仍屬個資"},
-        {"text": "依個資法只需於官網公告新用途滿三十日,即視同已盡告知義務,無需個別通知任何當事人", "is_correct": false, "trap_type": "公告非法定替代方式"}
+        {
+          "text": "屬於原蒐集目的外利用,需重新告知並取得當事人對新目的的同意後才可用於 AI 訓練",
+          "is_correct": true
+        },
+        {
+          "text": "由於資料已合法蒐集且仍在保險業範圍內,可直接用於 AI 訓練無需再執行任何告知程序",
+          "is_correct": false,
+          "trap_type": "目的外利用需再告知"
+        },
+        {
+          "text": "只要訓練前進行去識別化處理,即可視為脫離個資範圍,因此不需要再次履行任何告知義務",
+          "is_correct": false,
+          "trap_type": "假名化仍屬個資"
+        },
+        {
+          "text": "依個資法只需於官網公告新用途滿三十日,即視同已盡告知義務,無需個別通知任何當事人",
+          "is_correct": false,
+          "trap_type": "公告非法定替代方式"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -86,9 +140,22 @@
         },
         "hook": "AI 訓練資料合規重點:原蒐集目的 vs 新用途,目的變更 → 再告知 + 取得同意"
       },
-      "misconceptions": ["把已蒐集資料當成可任意再利用", "誤以為去識別化自動免除告知義務"],
-      "related_node_ids": ["n_L22404_003"],
-      "tags": ["PDPA", "目的外利用", "AI 訓練"]
+      "misconceptions": [
+        "把已蒐集資料當成可任意再利用",
+        "誤以為去識別化自動免除告知義務"
+      ],
+      "related_node_ids": [
+        "n_L22404_003"
+      ],
+      "tags": [
+        "PDPA",
+        "目的外利用",
+        "AI 訓練"
+      ],
+      "boss_topics": [
+        "privacy",
+        "finance"
+      ]
     },
     {
       "id": "q_n21_003",
@@ -100,10 +167,25 @@
       "source_level": "L1",
       "stem": "某連鎖餐飲導入 AI 智慧客服,於對話開頭以彈窗告知:『本對話將被錄音並用以改善服務品質』。法務檢視後認為此告知尚不完整。依個資法第 8 條,下列應補強的告知資訊何者最為關鍵?",
       "options": [
-        {"text": "補上個資類別、利用期間地區對象方式、當事人權利、可否選擇提供及不提供之影響等項目", "is_correct": true},
-        {"text": "補上 AI 模型所採用的演算法種類、訓練樣本數量規模,以及預期模型上線後的準確率指標", "is_correct": false, "trap_type": "技術細節非告知義務"},
-        {"text": "補上資料中心實體位置、防火牆與入侵偵測系統型號,以及備份伺服器的具體網段配置資訊", "is_correct": false, "trap_type": "資安細節非告知義務"},
-        {"text": "補上模型訓練成本、雲端運算服務商合約金額,以及未來上線後預期創造之營收貢獻數據", "is_correct": false, "trap_type": "商業資訊與告知無關"}
+        {
+          "text": "補上個資類別、利用期間地區對象方式、當事人權利、可否選擇提供及不提供之影響等項目",
+          "is_correct": true
+        },
+        {
+          "text": "補上 AI 模型所採用的演算法種類、訓練樣本數量規模,以及預期模型上線後的準確率指標",
+          "is_correct": false,
+          "trap_type": "技術細節非告知義務"
+        },
+        {
+          "text": "補上資料中心實體位置、防火牆與入侵偵測系統型號,以及備份伺服器的具體網段配置資訊",
+          "is_correct": false,
+          "trap_type": "資安細節非告知義務"
+        },
+        {
+          "text": "補上模型訓練成本、雲端運算服務商合約金額,以及未來上線後預期創造之營收貢獻數據",
+          "is_correct": false,
+          "trap_type": "商業資訊與告知無關"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -115,9 +197,21 @@
         },
         "hook": "事前告知聚焦於『讓當事人理解資料如何被用、可如何主張權利』,不是技術或商業內部資訊"
       },
-      "misconceptions": ["把告知義務當成技術揭露", "誤以為單一目的描述就足夠"],
-      "related_node_ids": ["n_L22404_002"],
-      "tags": ["PDPA", "告知義務", "AI 客服"]
+      "misconceptions": [
+        "把告知義務當成技術揭露",
+        "誤以為單一目的描述就足夠"
+      ],
+      "related_node_ids": [
+        "n_L22404_002"
+      ],
+      "tags": [
+        "PDPA",
+        "告知義務",
+        "AI 客服"
+      ],
+      "boss_topics": [
+        "privacy"
+      ]
     },
     {
       "id": "q_n21_004",
@@ -129,10 +223,25 @@
       "source_level": "L1",
       "stem": "某零售業導入 AI 會員分群系統。下列何者最能體現個資法事前告知義務六項中『當事人權利及行使方式』之具體實踐?",
       "options": [
-        {"text": "在會員專區提供查詢、更正、停止處理、請求刪除個資的入口,並標示處理時限與聯絡窗口", "is_correct": true},
-        {"text": "在公司官網首頁底部以較小字體提供隱私權政策連結,標明蒐集目的與資料保存期間之說明", "is_correct": false, "trap_type": "僅符合『目的/期間』非權利行使"},
-        {"text": "在會員註冊頁面要求勾選『已閱讀並同意』隱私權政策,以此作為履行所有告知義務的證明", "is_correct": false, "trap_type": "勾選同意 ≠ 權利行使管道"},
-        {"text": "於門市公告張貼個資保護法全文,並要求所有員工每年完成一次線上資安與法遵教育訓練", "is_correct": false, "trap_type": "員工訓練屬內部管理"}
+        {
+          "text": "在會員專區提供查詢、更正、停止處理、請求刪除個資的入口,並標示處理時限與聯絡窗口",
+          "is_correct": true
+        },
+        {
+          "text": "在公司官網首頁底部以較小字體提供隱私權政策連結,標明蒐集目的與資料保存期間之說明",
+          "is_correct": false,
+          "trap_type": "僅符合『目的/期間』非權利行使"
+        },
+        {
+          "text": "在會員註冊頁面要求勾選『已閱讀並同意』隱私權政策,以此作為履行所有告知義務的證明",
+          "is_correct": false,
+          "trap_type": "勾選同意 ≠ 權利行使管道"
+        },
+        {
+          "text": "於門市公告張貼個資保護法全文,並要求所有員工每年完成一次線上資安與法遵教育訓練",
+          "is_correct": false,
+          "trap_type": "員工訓練屬內部管理"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -144,9 +253,22 @@
         },
         "hook": "權利行使 = 提供『可點擊 / 可申請 / 有窗口 / 有時限』的真實管道"
       },
-      "misconceptions": ["把同意與行使權利混為一談", "認為宣告權利等於提供行使方式"],
-      "related_node_ids": ["n_L22404_002"],
-      "tags": ["PDPA", "當事人權利", "會員系統"]
+      "misconceptions": [
+        "把同意與行使權利混為一談",
+        "認為宣告權利等於提供行使方式"
+      ],
+      "related_node_ids": [
+        "n_L22404_002"
+      ],
+      "tags": [
+        "PDPA",
+        "當事人權利",
+        "會員系統"
+      ],
+      "boss_topics": [
+        "privacy",
+        "ecommerce"
+      ]
     },
     {
       "id": "q_n21_005",
@@ -158,10 +280,25 @@
       "source_level": "L1",
       "stem": "某跨境電商在歐盟銷售商品,蒐集了大量歐盟消費者個資。其法遵部門在盤點 GDPR 七大原則時,下列何項『不屬於』七大原則之內?",
       "options": [
-        {"text": "資料保存應採用 256 位元 AES 加密,且金鑰須由 HSM 硬體安全模組獨立保管", "is_correct": true},
-        {"text": "應只蒐集為達成處理目的所必要的最少量資料,避免過度蒐集而擴大個資風險", "is_correct": false, "trap_type": "屬資料最小化原則"},
-        {"text": "資料控管者應能證明其符合各項原則並對處理活動負責,落實全程之治理機制", "is_correct": false, "trap_type": "屬課責原則"},
-        {"text": "資料處理應以合法、公平、透明方式進行,讓當事人能清楚理解資料的使用過程", "is_correct": false, "trap_type": "屬合法公平透明原則"}
+        {
+          "text": "資料保存應採用 256 位元 AES 加密,且金鑰須由 HSM 硬體安全模組獨立保管",
+          "is_correct": true
+        },
+        {
+          "text": "應只蒐集為達成處理目的所必要的最少量資料,避免過度蒐集而擴大個資風險",
+          "is_correct": false,
+          "trap_type": "屬資料最小化原則"
+        },
+        {
+          "text": "資料控管者應能證明其符合各項原則並對處理活動負責,落實全程之治理機制",
+          "is_correct": false,
+          "trap_type": "屬課責原則"
+        },
+        {
+          "text": "資料處理應以合法、公平、透明方式進行,讓當事人能清楚理解資料的使用過程",
+          "is_correct": false,
+          "trap_type": "屬合法公平透明原則"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -173,9 +310,22 @@
         },
         "hook": "七大原則容易漏掉『課責』;具體加密規格屬於完整保密性『下』的實作,不是原則本身"
       },
-      "misconceptions": ["把技術控制當成原則", "漏掉課責原則"],
-      "related_node_ids": ["n_L22404_001"],
-      "tags": ["GDPR", "七大原則", "法遵"]
+      "misconceptions": [
+        "把技術控制當成原則",
+        "漏掉課責原則"
+      ],
+      "related_node_ids": [
+        "n_L22404_001"
+      ],
+      "tags": [
+        "GDPR",
+        "七大原則",
+        "法遵"
+      ],
+      "boss_topics": [
+        "privacy",
+        "ecommerce"
+      ]
     },
     {
       "id": "q_n21_006",
@@ -187,10 +337,25 @@
       "source_level": "L1",
       "stem": "某金融科技公司導入 AI 信用評分系統後,歐盟客戶對自動化拒貸結果不服。依 GDPR 賦予的資料主體權利,該客戶最有力的主張為下列何者?",
       "options": [
-        {"text": "依不受自動化決定拘束之權利,要求提供人工複核管道與決策邏輯之有意義解釋", "is_correct": true},
-        {"text": "依資料可攜權利,要求公司將其全部模型參數與訓練資料以結構化格式轉移到另一家銀行", "is_correct": false, "trap_type": "可攜權限於個資非模型"},
-        {"text": "依被遺忘權利,要求公司立即刪除該 AI 評分模型在所有伺服器與備份儲存裝置上之副本", "is_correct": false, "trap_type": "被遺忘權對象是個資非模型"},
-        {"text": "依存取權利,主張取得該銀行所有其他客戶之信用評分與相關歷史紀錄以便進行比對", "is_correct": false, "trap_type": "存取權限於本人個資"}
+        {
+          "text": "依不受自動化決定拘束之權利,要求提供人工複核管道與決策邏輯之有意義解釋",
+          "is_correct": true
+        },
+        {
+          "text": "依資料可攜權利,要求公司將其全部模型參數與訓練資料以結構化格式轉移到另一家銀行",
+          "is_correct": false,
+          "trap_type": "可攜權限於個資非模型"
+        },
+        {
+          "text": "依被遺忘權利,要求公司立即刪除該 AI 評分模型在所有伺服器與備份儲存裝置上之副本",
+          "is_correct": false,
+          "trap_type": "被遺忘權對象是個資非模型"
+        },
+        {
+          "text": "依存取權利,主張取得該銀行所有其他客戶之信用評分與相關歷史紀錄以便進行比對",
+          "is_correct": false,
+          "trap_type": "存取權限於本人個資"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -202,9 +367,22 @@
         },
         "hook": "GDPR 七大權利各有適用範圍;『不受自動化決定拘束』是 AI 治理最常被引用之條文"
       },
-      "misconceptions": ["把可攜權誤用到模型", "把存取權擴大到他人資料"],
-      "related_node_ids": ["n_L22404_003"],
-      "tags": ["GDPR", "自動化決定", "信用評分"]
+      "misconceptions": [
+        "把可攜權誤用到模型",
+        "把存取權擴大到他人資料"
+      ],
+      "related_node_ids": [
+        "n_L22404_003"
+      ],
+      "tags": [
+        "GDPR",
+        "自動化決定",
+        "信用評分"
+      ],
+      "boss_topics": [
+        "privacy",
+        "finance"
+      ]
     },
     {
       "id": "q_n21_007",
@@ -216,10 +394,25 @@
       "source_level": "L1",
       "stem": "某美國 SaaS 公司並未在歐盟設立任何辦公室或伺服器,但其線上服務之使用者中有約 15% 為居住於歐盟的個人用戶。法務團隊評估 GDPR 適用性,下列判斷何者最為正確?",
       "options": [
-        {"text": "GDPR 依資料主體所在地適用,本公司處理歐盟居民個資仍受 GDPR 規範,須建立法遵機制", "is_correct": true},
-        {"text": "因公司主體位於美國境內且無歐盟實體據點,GDPR 屬地原則不及於本公司,完全不須遵循", "is_correct": false, "trap_type": "GDPR 不以資料控管者地址判斷"},
-        {"text": "由於歐盟用戶比例不到 50%,本公司可主張屬於偶發性處理,不受 GDPR 任何條文約束", "is_correct": false, "trap_type": "無 50% 門檻"},
-        {"text": "只要公司以英文或美式介面提供服務即可免除適用,因為未針對歐盟市場進行行銷推廣活動", "is_correct": false, "trap_type": "語言非唯一判斷依據"}
+        {
+          "text": "GDPR 依資料主體所在地適用,本公司處理歐盟居民個資仍受 GDPR 規範,須建立法遵機制",
+          "is_correct": true
+        },
+        {
+          "text": "因公司主體位於美國境內且無歐盟實體據點,GDPR 屬地原則不及於本公司,完全不須遵循",
+          "is_correct": false,
+          "trap_type": "GDPR 不以資料控管者地址判斷"
+        },
+        {
+          "text": "由於歐盟用戶比例不到 50%,本公司可主張屬於偶發性處理,不受 GDPR 任何條文約束",
+          "is_correct": false,
+          "trap_type": "無 50% 門檻"
+        },
+        {
+          "text": "只要公司以英文或美式介面提供服務即可免除適用,因為未針對歐盟市場進行行銷推廣活動",
+          "is_correct": false,
+          "trap_type": "語言非唯一判斷依據"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -231,9 +424,22 @@
         },
         "hook": "GDPR 域外效力:看『服務對象是誰』,不是『公司在哪裡』"
       },
-      "misconceptions": ["以地址判斷適用範圍", "誤以為有比例門檻"],
-      "related_node_ids": ["n_L22404_001"],
-      "tags": ["GDPR", "域外效力", "適用範圍"]
+      "misconceptions": [
+        "以地址判斷適用範圍",
+        "誤以為有比例門檻"
+      ],
+      "related_node_ids": [
+        "n_L22404_001"
+      ],
+      "tags": [
+        "GDPR",
+        "域外效力",
+        "適用範圍"
+      ],
+      "boss_topics": [
+        "privacy",
+        "legal"
+      ]
     },
     {
       "id": "q_n21_008",
@@ -245,10 +451,25 @@
       "source_level": "L1",
       "stem": "某醫療研究機構欲對外公開部分資料給合作學界。資安長提醒『假名化』與『匿名化』在法律上完全不同。下列敘述何者最正確地描述兩者之核心差異?",
       "options": [
-        {"text": "匿名化不可逆且脫離個資法範圍,假名化保留還原對照表故仍屬個資受規範", "is_correct": true},
-        {"text": "假名化是更嚴格的隱私技術,而匿名化只是初階去識別,兩者皆完全脫離個資法管轄範圍", "is_correct": false, "trap_type": "嚴格度顛倒"},
-        {"text": "匿名化保留還原對照表以便日後查詢,假名化則完全銷毀對照表使資料永遠無法復原", "is_correct": false, "trap_type": "定義對調"},
-        {"text": "兩者皆需經主管機關核發認證標章方可生效,缺一不可,差別僅在於申請流程與費用不同", "is_correct": false, "trap_type": "並無認證標章制度"}
+        {
+          "text": "匿名化不可逆且脫離個資法範圍,假名化保留還原對照表故仍屬個資受規範",
+          "is_correct": true
+        },
+        {
+          "text": "假名化是更嚴格的隱私技術,而匿名化只是初階去識別,兩者皆完全脫離個資法管轄範圍",
+          "is_correct": false,
+          "trap_type": "嚴格度顛倒"
+        },
+        {
+          "text": "匿名化保留還原對照表以便日後查詢,假名化則完全銷毀對照表使資料永遠無法復原",
+          "is_correct": false,
+          "trap_type": "定義對調"
+        },
+        {
+          "text": "兩者皆需經主管機關核發認證標章方可生效,缺一不可,差別僅在於申請流程與費用不同",
+          "is_correct": false,
+          "trap_type": "並無認證標章制度"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -260,9 +481,22 @@
         },
         "hook": "區分要訣:能否還原 → 不能還原為匿名化;能還原為假名化"
       },
-      "misconceptions": ["把假名化當匿名化", "誤以為移除姓名就等於匿名化"],
-      "related_node_ids": ["n_L22404_001"],
-      "tags": ["匿名化", "假名化", "去識別化"]
+      "misconceptions": [
+        "把假名化當匿名化",
+        "誤以為移除姓名就等於匿名化"
+      ],
+      "related_node_ids": [
+        "n_L22404_001"
+      ],
+      "tags": [
+        "匿名化",
+        "假名化",
+        "去識別化"
+      ],
+      "boss_topics": [
+        "privacy",
+        "medical"
+      ]
     },
     {
       "id": "q_n21_009",
@@ -274,10 +508,25 @@
       "source_level": "L1",
       "stem": "某影音平台對外公布『匿名化的使用者觀影紀錄』(僅以亂數編號取代姓名 + ID),卻仍被研究人員以外部公開影評資料庫成功還原部分使用者身份。此現象在隱私文獻中最常被稱為下列何種攻擊?",
       "options": [
-        {"text": "資料連結攻擊(linkage attack),透過外部輔助資料交叉比對重識別個體", "is_correct": true},
-        {"text": "中間人攻擊(MITM),於資料傳輸過程中竊聽並竊取明文以還原使用者身份識別資訊", "is_correct": false, "trap_type": "MITM 為通訊層攻擊"},
-        {"text": "SQL 隱碼攻擊,於應用程式查詢介面注入惡意指令並竊取資料庫內部全部使用者明細表", "is_correct": false, "trap_type": "SQL injection 為注入式攻擊"},
-        {"text": "緩衝區溢位攻擊,透過超長輸入覆寫記憶體取得管理員權限以解開資料庫之加密保護", "is_correct": false, "trap_type": "Buffer overflow 為記憶體攻擊"}
+        {
+          "text": "資料連結攻擊(linkage attack),透過外部輔助資料交叉比對重識別個體",
+          "is_correct": true
+        },
+        {
+          "text": "中間人攻擊(MITM),於資料傳輸過程中竊聽並竊取明文以還原使用者身份識別資訊",
+          "is_correct": false,
+          "trap_type": "MITM 為通訊層攻擊"
+        },
+        {
+          "text": "SQL 隱碼攻擊,於應用程式查詢介面注入惡意指令並竊取資料庫內部全部使用者明細表",
+          "is_correct": false,
+          "trap_type": "SQL injection 為注入式攻擊"
+        },
+        {
+          "text": "緩衝區溢位攻擊,透過超長輸入覆寫記憶體取得管理員權限以解開資料庫之加密保護",
+          "is_correct": false,
+          "trap_type": "Buffer overflow 為記憶體攻擊"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -289,9 +538,22 @@
         },
         "hook": "去識別化資料的最大威脅 = linkage attack,需評估『輔助資料 + 準識別欄位』風險"
       },
-      "misconceptions": ["把所有攻擊歸類為網路攻擊", "忽略外部輔助資料風險"],
-      "related_node_ids": ["n_L22404_004"],
-      "tags": ["linkage attack", "重識別", "去識別化"]
+      "misconceptions": [
+        "把所有攻擊歸類為網路攻擊",
+        "忽略外部輔助資料風險"
+      ],
+      "related_node_ids": [
+        "n_L22404_004"
+      ],
+      "tags": [
+        "linkage attack",
+        "重識別",
+        "去識別化"
+      ],
+      "boss_topics": [
+        "privacy",
+        "media"
+      ]
     },
     {
       "id": "q_n21_010",
@@ -303,10 +565,25 @@
       "source_level": "L1",
       "stem": "某銀行擬將客戶交易資料分享給外部 AI 顧問公司進行模型開發,專案經理提議『將身分證號做 SHA-256 雜湊處理後再分享,即為匿名化資料可任意流通』。資安長應如何最妥適地回應?",
       "options": [
-        {"text": "Hash 仍屬假名化非匿名化,身分證號可透過彩虹表反查,且仍須遵守個資法各項規範", "is_correct": true},
-        {"text": "SHA-256 為單向函數因此完全不可逆,確實已達匿名化標準,顧問可不受任何個資法之拘束", "is_correct": false, "trap_type": "單向 ≠ 不可重識別"},
-        {"text": "只要顧問公司簽署保密協議 NDA,即可將任何個資以原始明文形式直接傳輸給對方使用", "is_correct": false, "trap_type": "NDA 非個資法替代"},
-        {"text": "Hash 後資料的法律地位等同於完全公開資訊,可直接上傳至公開資料平台供任何研究者下載", "is_correct": false, "trap_type": "Hash 不等於公開"}
+        {
+          "text": "Hash 仍屬假名化非匿名化,身分證號可透過彩虹表反查,且仍須遵守個資法各項規範",
+          "is_correct": true
+        },
+        {
+          "text": "SHA-256 為單向函數因此完全不可逆,確實已達匿名化標準,顧問可不受任何個資法之拘束",
+          "is_correct": false,
+          "trap_type": "單向 ≠ 不可重識別"
+        },
+        {
+          "text": "只要顧問公司簽署保密協議 NDA,即可將任何個資以原始明文形式直接傳輸給對方使用",
+          "is_correct": false,
+          "trap_type": "NDA 非個資法替代"
+        },
+        {
+          "text": "Hash 後資料的法律地位等同於完全公開資訊,可直接上傳至公開資料平台供任何研究者下載",
+          "is_correct": false,
+          "trap_type": "Hash 不等於公開"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -318,9 +595,22 @@
         },
         "hook": "Hash + 有限值域 = 可彩虹表還原;真正匿名化需確保『以合理方法無法還原』"
       },
-      "misconceptions": ["把 hash 當匿名化", "依賴契約替代法令遵循"],
-      "related_node_ids": ["n_L22404_001"],
-      "tags": ["hash", "假名化", "資料分享"]
+      "misconceptions": [
+        "把 hash 當匿名化",
+        "依賴契約替代法令遵循"
+      ],
+      "related_node_ids": [
+        "n_L22404_001"
+      ],
+      "tags": [
+        "hash",
+        "假名化",
+        "資料分享"
+      ],
+      "boss_topics": [
+        "privacy",
+        "finance"
+      ]
     },
     {
       "id": "q_n21_011",
@@ -332,10 +622,25 @@
       "source_level": "L1",
       "stem": "某健保資料釋出供研究使用,採 k-匿名 k=10 處理。研究員發現某個 quasi-identifier 群組內 10 人皆罹患同一罕見疾病。此情境最直接揭露 k-匿名的下列何種已知缺陷?",
       "options": [
-        {"text": "敏感屬性同質性攻擊,k-匿名僅保護身份,無法防止群內敏感屬性過於一致之洩漏", "is_correct": true},
-        {"text": "差分攻擊風險,加入或移除單一筆記錄可使統計結果出現顯著差異藉以推論個體", "is_correct": false, "trap_type": "差分攻擊屬 DP 範疇"},
-        {"text": "成員推論攻擊,模型對訓練樣本之預測信心顯著高於非訓練樣本據此推測訓練集成員", "is_correct": false, "trap_type": "MIA 屬模型攻擊範疇"},
-        {"text": "模型逆向工程,利用模型輸出反推訓練樣本之原始特徵以還原樣本之識別欄位內容", "is_correct": false, "trap_type": "Model inversion 屬模型攻擊範疇"}
+        {
+          "text": "敏感屬性同質性攻擊,k-匿名僅保護身份,無法防止群內敏感屬性過於一致之洩漏",
+          "is_correct": true
+        },
+        {
+          "text": "差分攻擊風險,加入或移除單一筆記錄可使統計結果出現顯著差異藉以推論個體",
+          "is_correct": false,
+          "trap_type": "差分攻擊屬 DP 範疇"
+        },
+        {
+          "text": "成員推論攻擊,模型對訓練樣本之預測信心顯著高於非訓練樣本據此推測訓練集成員",
+          "is_correct": false,
+          "trap_type": "MIA 屬模型攻擊範疇"
+        },
+        {
+          "text": "模型逆向工程,利用模型輸出反推訓練樣本之原始特徵以還原樣本之識別欄位內容",
+          "is_correct": false,
+          "trap_type": "Model inversion 屬模型攻擊範疇"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -347,9 +652,22 @@
         },
         "hook": "k-匿名漏洞:k 再大,只要群內敏感屬性同質 → 隱私仍洩漏 → 需 l-多樣性"
       },
-      "misconceptions": ["以為 k 越大就萬無一失", "把模型攻擊與表格匿名化攻擊混淆"],
-      "related_node_ids": ["n_L22404_003"],
-      "tags": ["k-匿名", "同質性攻擊", "l-多樣性"]
+      "misconceptions": [
+        "以為 k 越大就萬無一失",
+        "把模型攻擊與表格匿名化攻擊混淆"
+      ],
+      "related_node_ids": [
+        "n_L22404_003"
+      ],
+      "tags": [
+        "k-匿名",
+        "同質性攻擊",
+        "l-多樣性"
+      ],
+      "boss_topics": [
+        "privacy",
+        "medical"
+      ]
     },
     {
       "id": "q_n21_012",
@@ -361,10 +679,25 @@
       "source_level": "L1",
       "stem": "某去識別化專案將 k-匿名 k 值從 5 提高至 100。下列何者最準確地描述此調整對『隱私保護強度』與『資料效用』的影響趨勢?",
       "options": [
-        {"text": "隱私保護強度提升,但因泛化或抑制範圍擴大,資料的分析效用顯著下降", "is_correct": true},
-        {"text": "隱私保護強度提升,且因群組變大反而能保留更多細節資料,效用亦會明顯同步上升", "is_correct": false, "trap_type": "效用方向錯誤"},
-        {"text": "隱私保護強度不變,僅是統計上的敘述形式調整,對重識別風險與資料效用毫無實際影響", "is_correct": false, "trap_type": "k 改變顯然影響隱私"},
-        {"text": "隱私保護強度下降,因 k 變大會使準識別欄位之分組更稀疏進而提高重識別之成功機會", "is_correct": false, "trap_type": "方向倒轉"}
+        {
+          "text": "隱私保護強度提升,但因泛化或抑制範圍擴大,資料的分析效用顯著下降",
+          "is_correct": true
+        },
+        {
+          "text": "隱私保護強度提升,且因群組變大反而能保留更多細節資料,效用亦會明顯同步上升",
+          "is_correct": false,
+          "trap_type": "效用方向錯誤"
+        },
+        {
+          "text": "隱私保護強度不變,僅是統計上的敘述形式調整,對重識別風險與資料效用毫無實際影響",
+          "is_correct": false,
+          "trap_type": "k 改變顯然影響隱私"
+        },
+        {
+          "text": "隱私保護強度下降,因 k 變大會使準識別欄位之分組更稀疏進而提高重識別之成功機會",
+          "is_correct": false,
+          "trap_type": "方向倒轉"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -376,9 +709,21 @@
         },
         "hook": "隱私技術通用律:隱私 ↑ ⇒ 效用 ↓,需依場景找平衡點"
       },
-      "misconceptions": ["以為 k 越大效用越好", "忽略泛化代價"],
-      "related_node_ids": ["n_L22404_005"],
-      "tags": ["k-匿名", "trade-off", "資料效用"]
+      "misconceptions": [
+        "以為 k 越大效用越好",
+        "忽略泛化代價"
+      ],
+      "related_node_ids": [
+        "n_L22404_005"
+      ],
+      "tags": [
+        "k-匿名",
+        "trade-off",
+        "資料效用"
+      ],
+      "boss_topics": [
+        "privacy"
+      ]
     },
     {
       "id": "q_n21_013",
@@ -390,15 +735,57 @@
       "source_level": "L1",
       "stem": "某醫院釋出去識別化資料,以 [年齡群, 性別, 郵遞區號] 為 quasi-identifier。檢查某資料集後得到各 QI 群組大小如下:Group_X={x_size} 筆、Group_Y={y_size} 筆、Group_Z={z_size} 筆。若該資料集欲符合 k-匿名(k={k}),則『最小可達 k 值』為下列何者?",
       "stem_variables": {
-        "case_a": {"x_size": "5", "y_size": "3", "z_size": "8", "k": "3", "answer": "3", "wrong1": "5", "wrong2": "8", "wrong3": "16"},
-        "case_b": {"x_size": "10", "y_size": "7", "z_size": "12", "k": "5", "answer": "7", "wrong1": "10", "wrong2": "12", "wrong3": "29"},
-        "case_c": {"x_size": "6", "y_size": "9", "z_size": "4", "k": "4", "answer": "4", "wrong1": "6", "wrong2": "9", "wrong3": "19"}
+        "case_a": {
+          "x_size": "5",
+          "y_size": "3",
+          "z_size": "8",
+          "k": "3",
+          "answer": "3",
+          "wrong1": "5",
+          "wrong2": "8",
+          "wrong3": "16"
+        },
+        "case_b": {
+          "x_size": "10",
+          "y_size": "7",
+          "z_size": "12",
+          "k": "5",
+          "answer": "7",
+          "wrong1": "10",
+          "wrong2": "12",
+          "wrong3": "29"
+        },
+        "case_c": {
+          "x_size": "6",
+          "y_size": "9",
+          "z_size": "4",
+          "k": "4",
+          "answer": "4",
+          "wrong1": "6",
+          "wrong2": "9",
+          "wrong3": "19"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤取其中一群大小"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤取最大群大小"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤把總筆數當 k"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤取其中一群大小"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤取最大群大小"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤把總筆數當 k"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -410,9 +797,22 @@
         },
         "hook": "k-匿名 = min(每群大小);如同水桶最短板決定容量"
       },
-      "misconceptions": ["以最大群推估 k", "把總筆數當 k"],
-      "related_node_ids": ["n_L22404_003"],
-      "tags": ["k-匿名", "計算", "quasi-identifier"]
+      "misconceptions": [
+        "以最大群推估 k",
+        "把總筆數當 k"
+      ],
+      "related_node_ids": [
+        "n_L22404_003"
+      ],
+      "tags": [
+        "k-匿名",
+        "計算",
+        "quasi-identifier"
+      ],
+      "boss_topics": [
+        "privacy",
+        "medical"
+      ]
     },
     {
       "id": "q_n21_014",
@@ -424,10 +824,25 @@
       "source_level": "L1",
       "stem": "某去識別化資料集已通過 k-匿名(k=8)且 l-多樣性(l=3)。資安顧問仍指出『分佈逼近攻擊』風險,並建議再導入 t-接近性。下列何者最能解釋為何 l-多樣性仍不足、需 t-接近性補強?",
       "options": [
-        {"text": "群內敏感屬性若種類夠但分佈仍極度偏斜,攻擊者仍能高機率推論個體屬性", "is_correct": true},
-        {"text": "l-多樣性會自動限制 k 值之上限,因此需 t-接近性放寬 k 值之限制以提升資料效用", "is_correct": false, "trap_type": "三者無此因果關係"},
-        {"text": "t-接近性可消除所有 quasi-identifier 之資訊保留,使資料完全不可重識別且維持效用", "is_correct": false, "trap_type": "誇大 t-接近性能力"},
-        {"text": "l-多樣性需依靠隨機加噪實現,t-接近性可改用泛化避免雜訊干擾後續模型訓練流程", "is_correct": false, "trap_type": "錯誤的實作描述"}
+        {
+          "text": "群內敏感屬性若種類夠但分佈仍極度偏斜,攻擊者仍能高機率推論個體屬性",
+          "is_correct": true
+        },
+        {
+          "text": "l-多樣性會自動限制 k 值之上限,因此需 t-接近性放寬 k 值之限制以提升資料效用",
+          "is_correct": false,
+          "trap_type": "三者無此因果關係"
+        },
+        {
+          "text": "t-接近性可消除所有 quasi-identifier 之資訊保留,使資料完全不可重識別且維持效用",
+          "is_correct": false,
+          "trap_type": "誇大 t-接近性能力"
+        },
+        {
+          "text": "l-多樣性需依靠隨機加噪實現,t-接近性可改用泛化避免雜訊干擾後續模型訓練流程",
+          "is_correct": false,
+          "trap_type": "錯誤的實作描述"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -439,9 +854,21 @@
         },
         "hook": "k → 防重識別;l → 防同質性;t → 防分佈逼近;三層遞進補強"
       },
-      "misconceptions": ["以為 l-多樣性足以擋所有屬性洩漏", "把三者誤當不同類別技術"],
-      "related_node_ids": ["n_L22404_003"],
-      "tags": ["t-接近性", "l-多樣性", "屬性洩漏"]
+      "misconceptions": [
+        "以為 l-多樣性足以擋所有屬性洩漏",
+        "把三者誤當不同類別技術"
+      ],
+      "related_node_ids": [
+        "n_L22404_003"
+      ],
+      "tags": [
+        "t-接近性",
+        "l-多樣性",
+        "屬性洩漏"
+      ],
+      "boss_topics": [
+        "privacy"
+      ]
     },
     {
       "id": "q_n21_015",
@@ -453,10 +880,25 @@
       "source_level": "L1",
       "stem": "某市政府考慮以差分隱私(Differential Privacy)發布公開統計資料。市長詢問 ε(epsilon)隱私預算的方向意義。下列敘述何者最為正確?",
       "options": [
-        {"text": "ε 越小代表隱私保護越強,但統計結果雜訊較大導致資料效用相對下降", "is_correct": true},
-        {"text": "ε 越大代表隱私保護越強,因為預算更充裕可以加入更多雜訊以全面增強隱私防護", "is_correct": false, "trap_type": "方向倒轉"},
-        {"text": "ε 為一線性比例尺,數值與隱私保護強度互不相關,僅用於控制統計輸出之單位刻度", "is_correct": false, "trap_type": "ε 並非無關"},
-        {"text": "ε 為計算上的常數,固定為 1.0 無法調整,主要用以維持 DP 機制之數學一致性需求", "is_correct": false, "trap_type": "ε 為可調參數"}
+        {
+          "text": "ε 越小代表隱私保護越強,但統計結果雜訊較大導致資料效用相對下降",
+          "is_correct": true
+        },
+        {
+          "text": "ε 越大代表隱私保護越強,因為預算更充裕可以加入更多雜訊以全面增強隱私防護",
+          "is_correct": false,
+          "trap_type": "方向倒轉"
+        },
+        {
+          "text": "ε 為一線性比例尺,數值與隱私保護強度互不相關,僅用於控制統計輸出之單位刻度",
+          "is_correct": false,
+          "trap_type": "ε 並非無關"
+        },
+        {
+          "text": "ε 為計算上的常數,固定為 1.0 無法調整,主要用以維持 DP 機制之數學一致性需求",
+          "is_correct": false,
+          "trap_type": "ε 為可調參數"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -468,9 +910,22 @@
         },
         "hook": "DP 口訣:ε 小 → 隱私強、效用低;ε 大 → 隱私弱、效用高"
       },
-      "misconceptions": ["把 ε 方向搞反", "誤以為 ε 是固定值"],
-      "related_node_ids": ["n_L22404_004"],
-      "tags": ["差分隱私", "epsilon", "隱私預算"]
+      "misconceptions": [
+        "把 ε 方向搞反",
+        "誤以為 ε 是固定值"
+      ],
+      "related_node_ids": [
+        "n_L22404_004"
+      ],
+      "tags": [
+        "差分隱私",
+        "epsilon",
+        "隱私預算"
+      ],
+      "boss_topics": [
+        "privacy",
+        "smartcity"
+      ]
     },
     {
       "id": "q_n21_016",
@@ -482,10 +937,25 @@
       "source_level": "L1",
       "stem": "某科技公司在收集使用者匿名統計時,於『查詢結果端』加入校準雜訊以達成差分隱私。下列何種雜訊分布為差分隱私文獻中最常被引用的兩種加噪機制名稱?",
       "options": [
-        {"text": "Laplace 雜訊與 Gaussian 雜訊,分別對應 ε-DP 與 (ε, δ)-DP", "is_correct": true},
-        {"text": "Binomial 雜訊與 Poisson 雜訊,分別對應離散事件與連續事件之差分隱私統計實作", "is_correct": false, "trap_type": "非 DP 主流機制"},
-        {"text": "均勻雜訊與三角雜訊,因為兩者數值範圍有限可確保隱私預算永遠不會被耗盡風險", "is_correct": false, "trap_type": "非 DP 標準機制"},
-        {"text": "白噪音與粉紅噪音,均源於訊號處理領域並可直接應用於差分隱私的查詢加噪流程", "is_correct": false, "trap_type": "為訊號處理術語非 DP 名稱"}
+        {
+          "text": "Laplace 雜訊與 Gaussian 雜訊,分別對應 ε-DP 與 (ε, δ)-DP",
+          "is_correct": true
+        },
+        {
+          "text": "Binomial 雜訊與 Poisson 雜訊,分別對應離散事件與連續事件之差分隱私統計實作",
+          "is_correct": false,
+          "trap_type": "非 DP 主流機制"
+        },
+        {
+          "text": "均勻雜訊與三角雜訊,因為兩者數值範圍有限可確保隱私預算永遠不會被耗盡風險",
+          "is_correct": false,
+          "trap_type": "非 DP 標準機制"
+        },
+        {
+          "text": "白噪音與粉紅噪音,均源於訊號處理領域並可直接應用於差分隱私的查詢加噪流程",
+          "is_correct": false,
+          "trap_type": "為訊號處理術語非 DP 名稱"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -497,9 +967,21 @@
         },
         "hook": "DP 兩大加噪機制名稱:Laplace ↔ ε-DP;Gaussian ↔ (ε, δ)-DP"
       },
-      "misconceptions": ["把訊號處理術語套到 DP", "不熟 Laplace/Gaussian 兩大機制"],
-      "related_node_ids": ["n_L22404_004"],
-      "tags": ["差分隱私", "Laplace", "Gaussian"]
+      "misconceptions": [
+        "把訊號處理術語套到 DP",
+        "不熟 Laplace/Gaussian 兩大機制"
+      ],
+      "related_node_ids": [
+        "n_L22404_004"
+      ],
+      "tags": [
+        "差分隱私",
+        "Laplace",
+        "Gaussian"
+      ],
+      "boss_topics": [
+        "privacy"
+      ]
     },
     {
       "id": "q_n21_017",
@@ -511,10 +993,25 @@
       "source_level": "L1",
       "stem": "某行銷分析團隊欲對同一份客戶資料庫連續發出多個 DP 統計查詢。資料治理長警告應留意『隱私預算耗盡』。下列何項策略最能反映差分隱私概念層之正確實踐方向?",
       "options": [
-        {"text": "規劃總 ε 預算上限並依查詢重要性分配,累計使用後即停止對該資料庫之新查詢", "is_correct": true},
-        {"text": "每次查詢都重新設定 ε 為相同的固定數值,因為 ε 在每次獨立查詢之間互不累加影響", "is_correct": false, "trap_type": "ε 累加為 DP 核心性質"},
-        {"text": "只要將每次查詢結果單獨加密儲存,即可避免 ε 預算累計,使團隊可任意增加查詢次數", "is_correct": false, "trap_type": "加密不能解決預算累計"},
-        {"text": "改採 k-匿名化處理後再查詢,即可完全取代 DP 預算管理進而避免任何隱私參數規劃需求", "is_correct": false, "trap_type": "兩者不可互相取代"}
+        {
+          "text": "規劃總 ε 預算上限並依查詢重要性分配,累計使用後即停止對該資料庫之新查詢",
+          "is_correct": true
+        },
+        {
+          "text": "每次查詢都重新設定 ε 為相同的固定數值,因為 ε 在每次獨立查詢之間互不累加影響",
+          "is_correct": false,
+          "trap_type": "ε 累加為 DP 核心性質"
+        },
+        {
+          "text": "只要將每次查詢結果單獨加密儲存,即可避免 ε 預算累計,使團隊可任意增加查詢次數",
+          "is_correct": false,
+          "trap_type": "加密不能解決預算累計"
+        },
+        {
+          "text": "改採 k-匿名化處理後再查詢,即可完全取代 DP 預算管理進而避免任何隱私參數規劃需求",
+          "is_correct": false,
+          "trap_type": "兩者不可互相取代"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -526,9 +1023,21 @@
         },
         "hook": "DP 預算如帳戶餘額,每查一次扣一份;規劃上限是治理重點"
       },
-      "misconceptions": ["以為 ε 不累加", "認為加密能取代隱私預算管理"],
-      "related_node_ids": ["n_L22404_004"],
-      "tags": ["差分隱私", "predicate budget", "治理"]
+      "misconceptions": [
+        "以為 ε 不累加",
+        "認為加密能取代隱私預算管理"
+      ],
+      "related_node_ids": [
+        "n_L22404_004"
+      ],
+      "tags": [
+        "差分隱私",
+        "predicate budget",
+        "治理"
+      ],
+      "boss_topics": [
+        "privacy"
+      ]
     },
     {
       "id": "q_n21_018",
@@ -540,10 +1049,25 @@
       "source_level": "L1",
       "stem": "某跨國醫療聯盟欲共同訓練疾病早期偵測模型,但因法規限制各醫院病歷資料不得跨機構傳輸。下列何種技術組合架構最能滿足『資料留各醫院 + 共同學習一個模型』之需求?",
       "options": [
-        {"text": "聯邦學習(Federated Learning),由各醫院本地訓練並由中央伺服器聚合模型參數", "is_correct": true},
-        {"text": "雲端集中式訓練,各醫院先將原始病歷上傳至共用雲端資料湖泊統一進行模型訓練流程", "is_correct": false, "trap_type": "違反資料不出域"},
-        {"text": "資料倉儲整合架構,以 ETL 流程把多家醫院之資料整合進共同資料倉儲後執行模型訓練", "is_correct": false, "trap_type": "違反資料不出域"},
-        {"text": "區塊鏈共享儲存,將病歷以加密形式寫入公鏈以便所有醫院節點皆可同步存取訓練資料", "is_correct": false, "trap_type": "公鏈仍需原始資料離開機構"}
+        {
+          "text": "聯邦學習(Federated Learning),由各醫院本地訓練並由中央伺服器聚合模型參數",
+          "is_correct": true
+        },
+        {
+          "text": "雲端集中式訓練,各醫院先將原始病歷上傳至共用雲端資料湖泊統一進行模型訓練流程",
+          "is_correct": false,
+          "trap_type": "違反資料不出域"
+        },
+        {
+          "text": "資料倉儲整合架構,以 ETL 流程把多家醫院之資料整合進共同資料倉儲後執行模型訓練",
+          "is_correct": false,
+          "trap_type": "違反資料不出域"
+        },
+        {
+          "text": "區塊鏈共享儲存,將病歷以加密形式寫入公鏈以便所有醫院節點皆可同步存取訓練資料",
+          "is_correct": false,
+          "trap_type": "公鏈仍需原始資料離開機構"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -555,9 +1079,22 @@
         },
         "hook": "FL 口訣:Data stays, model travels;模型走、資料留"
       },
-      "misconceptions": ["把雲端集中當成 FL", "誤以為公鏈可取代 FL"],
-      "related_node_ids": ["n_L22404_005"],
-      "tags": ["聯邦學習", "資料不出域", "醫療"]
+      "misconceptions": [
+        "把雲端集中當成 FL",
+        "誤以為公鏈可取代 FL"
+      ],
+      "related_node_ids": [
+        "n_L22404_005"
+      ],
+      "tags": [
+        "聯邦學習",
+        "資料不出域",
+        "醫療"
+      ],
+      "boss_topics": [
+        "privacy",
+        "medical"
+      ]
     },
     {
       "id": "q_n21_019",
@@ -569,10 +1106,25 @@
       "source_level": "L1",
       "stem": "某金融機構評估『同態加密(HE)』與『多方安全計算(MPC)』兩種隱私計算技術。下列何者最準確地描述兩者在概念層面的核心差異?",
       "options": [
-        {"text": "HE 在加密狀態下直接運算結果解密仍正確,MPC 由多方協作運算且過程不揭露各自輸入", "is_correct": true},
-        {"text": "HE 為單機資料壓縮技術,MPC 為硬碟分片儲存技術,兩者皆為儲存層之資料保護方法", "is_correct": false, "trap_type": "誤分類為儲存技術"},
-        {"text": "HE 是區塊鏈共識演算法,MPC 是分散式資料庫之異地備援機制,兩者用於資料災難復原", "is_correct": false, "trap_type": "誤分類為其他領域"},
-        {"text": "HE 與 MPC 完全等同,只是同一技術在不同學術社群中的不同英文縮寫名稱表達差別", "is_correct": false, "trap_type": "兩者並非等同"}
+        {
+          "text": "HE 在加密狀態下直接運算結果解密仍正確,MPC 由多方協作運算且過程不揭露各自輸入",
+          "is_correct": true
+        },
+        {
+          "text": "HE 為單機資料壓縮技術,MPC 為硬碟分片儲存技術,兩者皆為儲存層之資料保護方法",
+          "is_correct": false,
+          "trap_type": "誤分類為儲存技術"
+        },
+        {
+          "text": "HE 是區塊鏈共識演算法,MPC 是分散式資料庫之異地備援機制,兩者用於資料災難復原",
+          "is_correct": false,
+          "trap_type": "誤分類為其他領域"
+        },
+        {
+          "text": "HE 與 MPC 完全等同,只是同一技術在不同學術社群中的不同英文縮寫名稱表達差別",
+          "is_correct": false,
+          "trap_type": "兩者並非等同"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -584,9 +1136,22 @@
         },
         "hook": "HE = 一方密文上算;MPC = 多方協作算且不洩各自輸入"
       },
-      "misconceptions": ["把 HE / MPC 當成儲存技術", "誤以為兩者等同"],
-      "related_node_ids": ["n_L22404_005"],
-      "tags": ["同態加密", "MPC", "隱私計算"]
+      "misconceptions": [
+        "把 HE / MPC 當成儲存技術",
+        "誤以為兩者等同"
+      ],
+      "related_node_ids": [
+        "n_L22404_005"
+      ],
+      "tags": [
+        "同態加密",
+        "MPC",
+        "隱私計算"
+      ],
+      "boss_topics": [
+        "privacy",
+        "finance"
+      ]
     },
     {
       "id": "q_n21_020",
@@ -598,10 +1163,25 @@
       "source_level": "L1",
       "stem": "某銀行採用聯邦學習與多家分行共訓詐欺偵測模型,資安顧問仍建議在 FL 之上『再疊加 DP + HE』形成多層架構。下列何項為此多層堆疊最主要的設計理由?",
       "options": [
-        {"text": "FL 本身不保證模型更新無法洩漏,DP 限制個體影響、HE 保護傳輸中參數機密性", "is_correct": true},
-        {"text": "FL 的計算速度太慢,需 DP 與 HE 兩種加速技術以提升訓練效能並降低運算之延遲", "is_correct": false, "trap_type": "DP / HE 非加速技術"},
-        {"text": "FL 已涵蓋所有隱私保護需求,但合規要求形式上必須堆疊三層才能通過監理機關之審查", "is_correct": false, "trap_type": "並非形式合規問題"},
-        {"text": "DP 與 HE 可使 FL 模型聚合演算法變更為非聯邦架構從而簡化中央伺服器之系統複雜度", "is_correct": false, "trap_type": "兩者不會改變 FL 架構本質"}
+        {
+          "text": "FL 本身不保證模型更新無法洩漏,DP 限制個體影響、HE 保護傳輸中參數機密性",
+          "is_correct": true
+        },
+        {
+          "text": "FL 的計算速度太慢,需 DP 與 HE 兩種加速技術以提升訓練效能並降低運算之延遲",
+          "is_correct": false,
+          "trap_type": "DP / HE 非加速技術"
+        },
+        {
+          "text": "FL 已涵蓋所有隱私保護需求,但合規要求形式上必須堆疊三層才能通過監理機關之審查",
+          "is_correct": false,
+          "trap_type": "並非形式合規問題"
+        },
+        {
+          "text": "DP 與 HE 可使 FL 模型聚合演算法變更為非聯邦架構從而簡化中央伺服器之系統複雜度",
+          "is_correct": false,
+          "trap_type": "兩者不會改變 FL 架構本質"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -613,9 +1193,22 @@
         },
         "hook": "現代隱私 ML 常見堆疊:FL(資料不出域)+ DP(個體影響上限)+ HE(密文聚合)"
       },
-      "misconceptions": ["以為 FL 已足以保護隱私", "把 DP / HE 當成加速技術"],
-      "related_node_ids": ["n_L22404_005"],
-      "tags": ["聯邦學習", "隱私堆疊", "DP+HE"]
+      "misconceptions": [
+        "以為 FL 已足以保護隱私",
+        "把 DP / HE 當成加速技術"
+      ],
+      "related_node_ids": [
+        "n_L22404_005"
+      ],
+      "tags": [
+        "聯邦學習",
+        "隱私堆疊",
+        "DP+HE"
+      ],
+      "boss_topics": [
+        "privacy",
+        "finance"
+      ]
     }
   ]
 }

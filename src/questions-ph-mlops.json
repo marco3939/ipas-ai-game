@@ -67,6 +67,9 @@
         "ModelRegistry",
         "供應商鎖定",
         "選型決策"
+      ],
+      "boss_topics": [
+        "finance"
       ]
     },
     {
@@ -124,6 +127,9 @@
         "ChampionChallenger",
         "回滾策略",
         "版本控制"
+      ],
+      "boss_topics": [
+        "finance"
       ]
     },
     {
@@ -182,6 +188,9 @@
         "Canary",
         "ABTesting",
         "AML"
+      ],
+      "boss_topics": [
+        "finance"
       ]
     },
     {
@@ -240,7 +249,8 @@
         "Wasserstein",
         "embedding監控",
         "工具選型"
-      ]
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_ph_008",
@@ -298,6 +308,9 @@
         "KStest",
         "Wasserstein",
         "統計判讀"
+      ],
+      "boss_topics": [
+        "finance"
       ]
     },
     {
@@ -356,6 +369,9 @@
         "公平性",
         "後處理",
         "EqualizedOdds"
+      ],
+      "boss_topics": [
+        "finance"
       ]
     }
   ]

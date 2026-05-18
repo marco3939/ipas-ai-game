@@ -3,7 +3,10 @@
   "schema_version": "iron-rule-1+2+6",
   "generated_at": "2026-05-16",
   "batch": "N19 — 科二大數據 L22402 鑑別式 AI 應用",
-  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "exam_target": {
+    "name": "IPAS AI 應用規劃師中級",
+    "date": "2026-05-23"
+  },
   "iron_rule_compliance": {
     "rule_1": "every question has explanation.correct + explanation.wrong + explanation.hook + misconceptions",
     "rule_2": "shuffle_options=true on every item; calculation items carry stem_variables multi-case",
@@ -14,9 +17,24 @@
   },
   "distribution": {
     "L22402_count": 20,
-    "by_node": {"n_L22402_001": 4, "n_L22402_002": 3, "n_L22402_003": 4, "n_L22402_004": 3, "n_L22402_005": 3, "n_L22402_006": 3},
-    "by_format": {"single_choice_text": 14, "single_choice_scenario": 4, "calculation": 2},
-    "by_difficulty": {"easy": 5, "medium": 11, "hard": 4}
+    "by_node": {
+      "n_L22402_001": 4,
+      "n_L22402_002": 3,
+      "n_L22402_003": 4,
+      "n_L22402_004": 3,
+      "n_L22402_005": 3,
+      "n_L22402_006": 3
+    },
+    "by_format": {
+      "single_choice_text": 14,
+      "single_choice_scenario": 4,
+      "calculation": 2
+    },
+    "by_difficulty": {
+      "easy": 5,
+      "medium": 11,
+      "hard": 4
+    }
   },
   "questions": [
     {
@@ -29,10 +47,25 @@
       "source_level": "L1",
       "stem": "某不動產平台想預測『下個月成交房屋的實際售價(以萬元為單位)』,並要求結果為連續數值。下列何種鑑別式 AI 任務型態最為適當?",
       "options": [
-        {"text": "迴歸(Regression),輸出為連續數值,評估常用 MAE / RMSE / R² 等指標", "is_correct": true},
-        {"text": "二元分類(Binary Classification),輸出為兩個類別,評估常用 Accuracy 與 F1 指標", "is_correct": false, "trap_type": "把數值預測硬塞成分類"},
-        {"text": "排序(Learning to Rank),輸出為相對順序,評估常用 NDCG 與 MAP 等指標", "is_correct": false, "trap_type": "排序輸出順序非絕對值"},
-        {"text": "推薦(Recommendation),輸出為個人化清單,評估常用 Hit Rate 與 NDCG@K 等", "is_correct": false, "trap_type": "推薦關注個人化排序非數值"}
+        {
+          "text": "迴歸(Regression),輸出為連續數值,評估常用 MAE / RMSE / R² 等指標",
+          "is_correct": true
+        },
+        {
+          "text": "二元分類(Binary Classification),輸出為兩個類別,評估常用 Accuracy 與 F1 指標",
+          "is_correct": false,
+          "trap_type": "把數值預測硬塞成分類"
+        },
+        {
+          "text": "排序(Learning to Rank),輸出為相對順序,評估常用 NDCG 與 MAP 等指標",
+          "is_correct": false,
+          "trap_type": "排序輸出順序非絕對值"
+        },
+        {
+          "text": "推薦(Recommendation),輸出為個人化清單,評估常用 Hit Rate 與 NDCG@K 等",
+          "is_correct": false,
+          "trap_type": "推薦關注個人化排序非數值"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -44,9 +77,19 @@
         },
         "hook": "輸出型態決定任務:數值→迴歸、類別→分類、順序→排序、個人清單→推薦"
       },
-      "misconceptions": ["把數值預測硬切閾值改成分類", "誤以為所有預測都叫迴歸"],
-      "related_node_ids": ["n_L22402_002"],
-      "tags": ["任務分類", "迴歸", "房價"]
+      "misconceptions": [
+        "把數值預測硬切閾值改成分類",
+        "誤以為所有預測都叫迴歸"
+      ],
+      "related_node_ids": [
+        "n_L22402_002"
+      ],
+      "tags": [
+        "任務分類",
+        "迴歸",
+        "房價"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n19_002",
@@ -58,10 +101,25 @@
       "source_level": "L1",
       "stem": "搜尋引擎針對使用者查詢『AI 中級證照』,需從上萬筆文章中回傳最相關的前 10 筆並決定其呈現順序。此問題最適合歸類為下列何種鑑別式 AI 任務?",
       "options": [
-        {"text": "排序(Learning to Rank),關注文件相對相關度順序,評估常用 NDCG 與 MAP 指標", "is_correct": true},
-        {"text": "多類別分類(Multi-class Classification),把每筆文章分到固定類別,再依類別呈現結果", "is_correct": false, "trap_type": "多類分類無法決定文件間相對順序"},
-        {"text": "迴歸(Regression),為每篇文章預測連續分數後直接依分數高低排序回傳前 10 筆", "is_correct": false, "trap_type": "迴歸非排序專用評估"},
-        {"text": "群集(Clustering),把所有文章自動分群後從最大群取出前 10 筆作為搜尋結果回應", "is_correct": false, "trap_type": "群集屬非監督非鑑別式"}
+        {
+          "text": "排序(Learning to Rank),關注文件相對相關度順序,評估常用 NDCG 與 MAP 指標",
+          "is_correct": true
+        },
+        {
+          "text": "多類別分類(Multi-class Classification),把每筆文章分到固定類別,再依類別呈現結果",
+          "is_correct": false,
+          "trap_type": "多類分類無法決定文件間相對順序"
+        },
+        {
+          "text": "迴歸(Regression),為每篇文章預測連續分數後直接依分數高低排序回傳前 10 筆",
+          "is_correct": false,
+          "trap_type": "迴歸非排序專用評估"
+        },
+        {
+          "text": "群集(Clustering),把所有文章自動分群後從最大群取出前 10 筆作為搜尋結果回應",
+          "is_correct": false,
+          "trap_type": "群集屬非監督非鑑別式"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -73,9 +131,19 @@
         },
         "hook": "問題只要關心『誰前誰後』就要想到 Learning to Rank,而不是分類或迴歸"
       },
-      "misconceptions": ["把搜尋排序當成分類", "把排序與群集混淆"],
-      "related_node_ids": ["n_L22402_005"],
-      "tags": ["任務分類", "排序", "搜尋"]
+      "misconceptions": [
+        "把搜尋排序當成分類",
+        "把排序與群集混淆"
+      ],
+      "related_node_ids": [
+        "n_L22402_005"
+      ],
+      "tags": [
+        "任務分類",
+        "排序",
+        "搜尋"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n19_003",
@@ -87,10 +155,25 @@
       "source_level": "L1",
       "stem": "某保險公司原本將『理賠金額預測』設計為迴歸任務,主管要求改為『高 / 中 / 低 三類風險分類』以便客服話術設計。此改動最主要的訊息損失為下列何者?",
       "options": [
-        {"text": "把連續金額離散成三類會損失數值精度,跨閾值附近樣本變得難以區分", "is_correct": true},
-        {"text": "改成分類後無法使用任何監督式學習演算法,只能訴諸於非監督式群集分析", "is_correct": false, "trap_type": "分類仍屬監督式"},
-        {"text": "分類問題完全無需準備標籤資料,等同於失去整個監督學習所需歷史資訊", "is_correct": false, "trap_type": "分類仍需標籤"},
-        {"text": "分類模型必定比迴歸模型更耗時訓練,業務交期將因此延後達數倍以上", "is_correct": false, "trap_type": "與訊息損失無關"}
+        {
+          "text": "把連續金額離散成三類會損失數值精度,跨閾值附近樣本變得難以區分",
+          "is_correct": true
+        },
+        {
+          "text": "改成分類後無法使用任何監督式學習演算法,只能訴諸於非監督式群集分析",
+          "is_correct": false,
+          "trap_type": "分類仍屬監督式"
+        },
+        {
+          "text": "分類問題完全無需準備標籤資料,等同於失去整個監督學習所需歷史資訊",
+          "is_correct": false,
+          "trap_type": "分類仍需標籤"
+        },
+        {
+          "text": "分類模型必定比迴歸模型更耗時訓練,業務交期將因此延後達數倍以上",
+          "is_correct": false,
+          "trap_type": "與訊息損失無關"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -102,9 +185,21 @@
         },
         "hook": "迴歸→分類 = 切閾值 = 訊息損失;反向(分類→迴歸)則需要連續標籤,通常不可行"
       },
-      "misconceptions": ["以為分類比迴歸萬能", "誤以為分類無需標籤"],
-      "related_node_ids": ["n_L22402_006"],
-      "tags": ["任務分類", "離散化", "保險"]
+      "misconceptions": [
+        "以為分類比迴歸萬能",
+        "誤以為分類無需標籤"
+      ],
+      "related_node_ids": [
+        "n_L22402_006"
+      ],
+      "tags": [
+        "任務分類",
+        "離散化",
+        "保險"
+      ],
+      "boss_topics": [
+        "finance"
+      ]
     },
     {
       "id": "q_n19_004",
@@ -116,10 +211,25 @@
       "source_level": "L1",
       "stem": "某影音平台想預測使用者『接下來最可能觀看的 10 部影片』,並依個人喜好排出順序。下列何種任務型態與評估指標組合最為適當?",
       "options": [
-        {"text": "推薦任務,以 Hit Rate@K 與 NDCG@K 評估前 K 名相關性與排序品質", "is_correct": true},
-        {"text": "二元分類,以 Accuracy 評估『使用者是否會看任何影片』之整體準確度", "is_correct": false, "trap_type": "推薦用 accuracy 無視排序"},
-        {"text": "迴歸,以 RMSE 評估『預測觀看時長』與真實觀看時長之間的平均誤差大小", "is_correct": false, "trap_type": "問題是清單推薦非時長預測"},
-        {"text": "群集分析,以輪廓係數(Silhouette)評估『影片自然分群』之內聚與分離程度", "is_correct": false, "trap_type": "推薦非群集"}
+        {
+          "text": "推薦任務,以 Hit Rate@K 與 NDCG@K 評估前 K 名相關性與排序品質",
+          "is_correct": true
+        },
+        {
+          "text": "二元分類,以 Accuracy 評估『使用者是否會看任何影片』之整體準確度",
+          "is_correct": false,
+          "trap_type": "推薦用 accuracy 無視排序"
+        },
+        {
+          "text": "迴歸,以 RMSE 評估『預測觀看時長』與真實觀看時長之間的平均誤差大小",
+          "is_correct": false,
+          "trap_type": "問題是清單推薦非時長預測"
+        },
+        {
+          "text": "群集分析,以輪廓係數(Silhouette)評估『影片自然分群』之內聚與分離程度",
+          "is_correct": false,
+          "trap_type": "推薦非群集"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -131,9 +241,21 @@
         },
         "hook": "推薦任務的常見指標:Hit Rate@K、NDCG@K、Recall@K、Precision@K"
       },
-      "misconceptions": ["推薦用 accuracy 評估", "把推薦當成單純分類"],
-      "related_node_ids": ["n_L22402_005"],
-      "tags": ["推薦", "評估指標", "影音"]
+      "misconceptions": [
+        "推薦用 accuracy 評估",
+        "把推薦當成單純分類"
+      ],
+      "related_node_ids": [
+        "n_L22402_005"
+      ],
+      "tags": [
+        "推薦",
+        "評估指標",
+        "影音"
+      ],
+      "boss_topics": [
+        "media"
+      ]
     },
     {
       "id": "q_n19_005",
@@ -145,10 +267,25 @@
       "source_level": "L1",
       "stem": "某銀行設計企業信用評分模型時,將『標籤(違約)』定義為下列哪一項最符合產業常見實務(對應 Basel 之觀察期定義)?",
       "options": [
-        {"text": "觀察期(如 12 個月)內逾期超過 90 天視為違約,作為模型訓練的二元標籤", "is_correct": true},
-        {"text": "客戶只要曾經逾期一天即視為違約,以提早攔截任何潛在繳款風險之客戶", "is_correct": false, "trap_type": "1 天逾期雜訊太大"},
-        {"text": "客戶帳戶餘額在月底低於信用額度的 5% 即視為違約,作為違約之代理變數", "is_correct": false, "trap_type": "額度使用率非違約定義"},
-        {"text": "客戶過去 5 年內任一筆信用卡未繳清即永久視為違約,用以提升保守程度", "is_correct": false, "trap_type": "永久標籤不符 Basel"}
+        {
+          "text": "觀察期(如 12 個月)內逾期超過 90 天視為違約,作為模型訓練的二元標籤",
+          "is_correct": true
+        },
+        {
+          "text": "客戶只要曾經逾期一天即視為違約,以提早攔截任何潛在繳款風險之客戶",
+          "is_correct": false,
+          "trap_type": "1 天逾期雜訊太大"
+        },
+        {
+          "text": "客戶帳戶餘額在月底低於信用額度的 5% 即視為違約,作為違約之代理變數",
+          "is_correct": false,
+          "trap_type": "額度使用率非違約定義"
+        },
+        {
+          "text": "客戶過去 5 年內任一筆信用卡未繳清即永久視為違約,用以提升保守程度",
+          "is_correct": false,
+          "trap_type": "永久標籤不符 Basel"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -160,9 +297,21 @@
         },
         "hook": "信用評分標籤的黃金定義:觀察期 + 嚴重程度閾值(常見 12 個月 / 逾期 90 天)"
       },
-      "misconceptions": ["把『逾期 1 天』當違約", "用『額度使用率』當違約代理"],
-      "related_node_ids": ["n_L22402_001"],
-      "tags": ["信用評分", "標籤定義", "Basel"]
+      "misconceptions": [
+        "把『逾期 1 天』當違約",
+        "用『額度使用率』當違約代理"
+      ],
+      "related_node_ids": [
+        "n_L22402_001"
+      ],
+      "tags": [
+        "信用評分",
+        "標籤定義",
+        "Basel"
+      ],
+      "boss_topics": [
+        "finance"
+      ]
     },
     {
       "id": "q_n19_006",
@@ -174,10 +323,25 @@
       "source_level": "L1",
       "stem": "某銀行評分卡模型在違約率僅 3% 的資料集上達 Accuracy 97%,但業務團隊抱怨『高風險戶幾乎沒抓到』。下列何種評估指標切換最能反映該模型在不平衡資料下的判別能力?",
       "options": [
-        {"text": "改採 AUC 與 KS 統計量,兩者皆不受多數類比例影響且能反映好壞客戶區分能力", "is_correct": true},
-        {"text": "改採整體錯誤率(1 - Accuracy),只要錯誤率低於 5% 即代表模型表現良好穩定", "is_correct": false, "trap_type": "錯誤率與 Accuracy 同樣被多數類稀釋"},
-        {"text": "改採訓練集 Loss 數值,以最低 Loss 為模型上線之核心驗收標準與依據", "is_correct": false, "trap_type": "Loss 非業務指標且訓練集會過擬合"},
-        {"text": "改採 R² 決定係數,以越接近 1 之 R² 視為信用模型判別能力越強之證據", "is_correct": false, "trap_type": "R² 是迴歸指標"}
+        {
+          "text": "改採 AUC 與 KS 統計量,兩者皆不受多數類比例影響且能反映好壞客戶區分能力",
+          "is_correct": true
+        },
+        {
+          "text": "改採整體錯誤率(1 - Accuracy),只要錯誤率低於 5% 即代表模型表現良好穩定",
+          "is_correct": false,
+          "trap_type": "錯誤率與 Accuracy 同樣被多數類稀釋"
+        },
+        {
+          "text": "改採訓練集 Loss 數值,以最低 Loss 為模型上線之核心驗收標準與依據",
+          "is_correct": false,
+          "trap_type": "Loss 非業務指標且訓練集會過擬合"
+        },
+        {
+          "text": "改採 R² 決定係數,以越接近 1 之 R² 視為信用模型判別能力越強之證據",
+          "is_correct": false,
+          "trap_type": "R² 是迴歸指標"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -189,9 +353,21 @@
         },
         "hook": "信用評分常用三大指標:AUC、KS、Gini;均對不平衡穩健"
       },
-      "misconceptions": ["不平衡資料仍用 Accuracy", "把 R² 拿來評估分類"],
-      "related_node_ids": ["n_L22402_003"],
-      "tags": ["信用評分", "AUC", "KS"]
+      "misconceptions": [
+        "不平衡資料仍用 Accuracy",
+        "把 R² 拿來評估分類"
+      ],
+      "related_node_ids": [
+        "n_L22402_003"
+      ],
+      "tags": [
+        "信用評分",
+        "AUC",
+        "KS"
+      ],
+      "boss_topics": [
+        "finance"
+      ]
     },
     {
       "id": "q_n19_007",
@@ -203,10 +379,25 @@
       "source_level": "L1",
       "stem": "某銀行為符合公平性原則,在信用評分模型中『移除性別欄位』,但稽核仍發現男女客戶通過率差距顯著。下列何種解釋最為合理?",
       "options": [
-        {"text": "其他特徵與性別高度相關,造成間接歧視(Proxy Discrimination)", "is_correct": true},
-        {"text": "性別本來就不會影響任何信用模型結果,該差距純屬抽樣造成的統計誤差影響", "is_correct": false, "trap_type": "差距顯著非隨機誤差"},
-        {"text": "稽核計算時誤用了測試集而非訓練集,只要改用訓練集差距就會完全消失", "is_correct": false, "trap_type": "拿訓練集當稽核更糟糕"},
-        {"text": "移除欄位後模型 AUC 必然下降至 0.5,使任何輸出皆等於隨機猜測之結果", "is_correct": false, "trap_type": "AUC 不會直接降到 0.5"}
+        {
+          "text": "其他特徵與性別高度相關,造成間接歧視(Proxy Discrimination)",
+          "is_correct": true
+        },
+        {
+          "text": "性別本來就不會影響任何信用模型結果,該差距純屬抽樣造成的統計誤差影響",
+          "is_correct": false,
+          "trap_type": "差距顯著非隨機誤差"
+        },
+        {
+          "text": "稽核計算時誤用了測試集而非訓練集,只要改用訓練集差距就會完全消失",
+          "is_correct": false,
+          "trap_type": "拿訓練集當稽核更糟糕"
+        },
+        {
+          "text": "移除欄位後模型 AUC 必然下降至 0.5,使任何輸出皆等於隨機猜測之結果",
+          "is_correct": false,
+          "trap_type": "AUC 不會直接降到 0.5"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -218,9 +409,21 @@
         },
         "hook": "公平性審查不能只看是否移除敏感欄位,還要看『代理變數』與群組差距指標(DI / EO)"
       },
-      "misconceptions": ["以為刪除性別欄位即達公平性", "誤把 proxy discrimination 當隨機誤差"],
-      "related_node_ids": ["n_L22402_006"],
-      "tags": ["信用評分", "公平性", "Proxy"]
+      "misconceptions": [
+        "以為刪除性別欄位即達公平性",
+        "誤把 proxy discrimination 當隨機誤差"
+      ],
+      "related_node_ids": [
+        "n_L22402_006"
+      ],
+      "tags": [
+        "信用評分",
+        "公平性",
+        "Proxy"
+      ],
+      "boss_topics": [
+        "finance"
+      ]
     },
     {
       "id": "q_n19_008",
@@ -232,10 +435,25 @@
       "source_level": "L1",
       "stem": "某第三方支付公司每日交易 1000 萬筆,其中詐欺僅約 5000 筆(0.05%)。資料科學主管最不建議在此情境下作為主要評估指標的選項為下列何者?",
       "options": [
-        {"text": "Accuracy 整體正確率,因為極端不平衡下,全部預測為正常即可達 99.95% 高分", "is_correct": true},
-        {"text": "Recall 找回率,衡量被偵測到的詐欺占實際詐欺比例,直接反映漏抓風險之多寡", "is_correct": false, "trap_type": "Recall 是合適指標"},
-        {"text": "Precision-Recall 曲線,在極不平衡情境下比 ROC 更能凸顯模型對少數正類的判別能力", "is_correct": false, "trap_type": "PR 曲線在不平衡下優於 ROC"},
-        {"text": "成本敏感矩陣(Cost Matrix),把 FN 與 FP 的業務成本納入評估之中的決策框架", "is_correct": false, "trap_type": "Cost matrix 是合適框架"}
+        {
+          "text": "Accuracy 整體正確率,因為極端不平衡下,全部預測為正常即可達 99.95% 高分",
+          "is_correct": true
+        },
+        {
+          "text": "Recall 找回率,衡量被偵測到的詐欺占實際詐欺比例,直接反映漏抓風險之多寡",
+          "is_correct": false,
+          "trap_type": "Recall 是合適指標"
+        },
+        {
+          "text": "Precision-Recall 曲線,在極不平衡情境下比 ROC 更能凸顯模型對少數正類的判別能力",
+          "is_correct": false,
+          "trap_type": "PR 曲線在不平衡下優於 ROC"
+        },
+        {
+          "text": "成本敏感矩陣(Cost Matrix),把 FN 與 FP 的業務成本納入評估之中的決策框架",
+          "is_correct": false,
+          "trap_type": "Cost matrix 是合適框架"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -247,9 +465,21 @@
         },
         "hook": "不平衡資料指標選擇:不用 Accuracy,優先 Recall / PR-AUC / Cost-sensitive"
       },
-      "misconceptions": ["在 99% 不平衡下仍看 Accuracy", "誤以為 ROC-AUC 在極不平衡下最佳"],
-      "related_node_ids": ["n_L22402_002"],
-      "tags": ["詐欺偵測", "不平衡", "評估"]
+      "misconceptions": [
+        "在 99% 不平衡下仍看 Accuracy",
+        "誤以為 ROC-AUC 在極不平衡下最佳"
+      ],
+      "related_node_ids": [
+        "n_L22402_002"
+      ],
+      "tags": [
+        "詐欺偵測",
+        "不平衡",
+        "評估"
+      ],
+      "boss_topics": [
+        "finance"
+      ]
     },
     {
       "id": "q_n19_009",
@@ -261,10 +491,25 @@
       "source_level": "L1",
       "stem": "某行動支付廠商規劃線上詐欺攔截系統,要求所有交易判斷需在 100 毫秒內完成,且攻擊手法每月演化。下列哪一個系統設計最不符合此情境之核心需求?",
       "options": [
-        {"text": "採用每日批次離線推論並於隔日匯出黑名單,讓系統不受實時運算壓力之影響", "is_correct": true},
-        {"text": "採用兩階段架構,即時粗略攔截可疑交易、再由後台精細模型進行深度審查", "is_correct": false, "trap_type": "兩階段是常見良方"},
-        {"text": "建立每月模型 retrain pipeline,以追蹤詐欺手法演化造成之概念漂移", "is_correct": false, "trap_type": "retrain 是核心對策"},
-        {"text": "在推論層使用低延遲特徵工程(in-memory 快取),確保延遲穩定低於要求閾值", "is_correct": false, "trap_type": "低延遲特徵符合需求"}
+        {
+          "text": "採用每日批次離線推論並於隔日匯出黑名單,讓系統不受實時運算壓力之影響",
+          "is_correct": true
+        },
+        {
+          "text": "採用兩階段架構,即時粗略攔截可疑交易、再由後台精細模型進行深度審查",
+          "is_correct": false,
+          "trap_type": "兩階段是常見良方"
+        },
+        {
+          "text": "建立每月模型 retrain pipeline,以追蹤詐欺手法演化造成之概念漂移",
+          "is_correct": false,
+          "trap_type": "retrain 是核心對策"
+        },
+        {
+          "text": "在推論層使用低延遲特徵工程(in-memory 快取),確保延遲穩定低於要求閾值",
+          "is_correct": false,
+          "trap_type": "低延遲特徵符合需求"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -276,9 +521,21 @@
         },
         "hook": "即時推論場景核心三件事:低延遲推論、即時特徵、定期 retrain"
       },
-      "misconceptions": ["把即時詐欺偵測當成批次任務", "忽略概念漂移"],
-      "related_node_ids": ["n_L22402_004"],
-      "tags": ["詐欺偵測", "即時推論", "概念漂移"]
+      "misconceptions": [
+        "把即時詐欺偵測當成批次任務",
+        "忽略概念漂移"
+      ],
+      "related_node_ids": [
+        "n_L22402_004"
+      ],
+      "tags": [
+        "詐欺偵測",
+        "即時推論",
+        "概念漂移"
+      ],
+      "boss_topics": [
+        "finance"
+      ]
     },
     {
       "id": "q_n19_010",
@@ -290,10 +547,25 @@
       "source_level": "L1",
       "stem": "某銀行詐欺偵測模型上線首月 Recall 高達 99%,但客服每天收到上千通『正常消費被攔截』的客訴。下列最佳的下一步調整為何?",
       "options": [
-        {"text": "提高決策閾值並導入成本敏感矩陣,在 Recall 與 Precision 之間找最低總成本平衡點", "is_correct": true},
-        {"text": "強制把模型輸出機率乘上 0.5,讓所有預測值都減半即可顯著降低誤攔截事件之頻率", "is_correct": false, "trap_type": "亂改機率無理論基礎"},
-        {"text": "下架模型回到純規則式系統,直到使用者完全停止抱怨後再評估是否重新導入新模型", "is_correct": false, "trap_type": "下架過度反應"},
-        {"text": "把資料集再加倍重新訓練模型,規模擴大後 Precision 將自動提升並改善客訴", "is_correct": false, "trap_type": "資料量無法直接解決閾值問題"}
+        {
+          "text": "提高決策閾值並導入成本敏感矩陣,在 Recall 與 Precision 之間找最低總成本平衡點",
+          "is_correct": true
+        },
+        {
+          "text": "強制把模型輸出機率乘上 0.5,讓所有預測值都減半即可顯著降低誤攔截事件之頻率",
+          "is_correct": false,
+          "trap_type": "亂改機率無理論基礎"
+        },
+        {
+          "text": "下架模型回到純規則式系統,直到使用者完全停止抱怨後再評估是否重新導入新模型",
+          "is_correct": false,
+          "trap_type": "下架過度反應"
+        },
+        {
+          "text": "把資料集再加倍重新訓練模型,規模擴大後 Precision 將自動提升並改善客訴",
+          "is_correct": false,
+          "trap_type": "資料量無法直接解決閾值問題"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -305,9 +577,21 @@
         },
         "hook": "Recall ↔ Precision tradeoff 看 cost matrix:FN_cost × #FN + FP_cost × #FP 最小"
       },
-      "misconceptions": ["追求 100% Recall 不顧 Precision", "忽略誤擾成本"],
-      "related_node_ids": ["n_L22402_002"],
-      "tags": ["詐欺偵測", "閾值", "成本"]
+      "misconceptions": [
+        "追求 100% Recall 不顧 Precision",
+        "忽略誤擾成本"
+      ],
+      "related_node_ids": [
+        "n_L22402_002"
+      ],
+      "tags": [
+        "詐欺偵測",
+        "閾值",
+        "成本"
+      ],
+      "boss_topics": [
+        "finance"
+      ]
     },
     {
       "id": "q_n19_011",
@@ -319,10 +603,25 @@
       "source_level": "L1",
       "stem": "某電商觀察:詐欺偵測模型剛上線時 AUC 0.95,但 3 個月後跌到 0.72,離線重新評估也是 0.72。下列何項『最不應作為』主要解釋?",
       "options": [
-        {"text": "訓練資料量已嚴重不足,需把樣本數量再次擴大數倍以恢復模型先前的判別水準", "is_correct": true},
-        {"text": "攻擊者學習模型決策模式並調整詐欺手法,造成資料分佈與訓練時期顯著不同", "is_correct": false, "trap_type": "概念漂移是合理解釋"},
-        {"text": "詐欺手法每月演化形成概念漂移,訓練時的特徵與新樣態關聯性已大幅降低", "is_correct": false, "trap_type": "概念漂移是合理解釋"},
-        {"text": "未建立定期 retrain pipeline,模型權重停留在 3 個月前的舊資料分佈狀態", "is_correct": false, "trap_type": "缺 retrain 是合理解釋"}
+        {
+          "text": "訓練資料量已嚴重不足,需把樣本數量再次擴大數倍以恢復模型先前的判別水準",
+          "is_correct": true
+        },
+        {
+          "text": "攻擊者學習模型決策模式並調整詐欺手法,造成資料分佈與訓練時期顯著不同",
+          "is_correct": false,
+          "trap_type": "概念漂移是合理解釋"
+        },
+        {
+          "text": "詐欺手法每月演化形成概念漂移,訓練時的特徵與新樣態關聯性已大幅降低",
+          "is_correct": false,
+          "trap_type": "概念漂移是合理解釋"
+        },
+        {
+          "text": "未建立定期 retrain pipeline,模型權重停留在 3 個月前的舊資料分佈狀態",
+          "is_correct": false,
+          "trap_type": "缺 retrain 是合理解釋"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -334,9 +633,22 @@
         },
         "hook": "性能衰減先檢查『分佈是否變了』(概念漂移),再考慮樣本量 / 模型容量"
       },
-      "misconceptions": ["看到模型變差就要求加資料", "忽略攻擊者適應"],
-      "related_node_ids": ["n_L22402_004"],
-      "tags": ["詐欺偵測", "概念漂移", "retrain"]
+      "misconceptions": [
+        "看到模型變差就要求加資料",
+        "忽略攻擊者適應"
+      ],
+      "related_node_ids": [
+        "n_L22402_004"
+      ],
+      "tags": [
+        "詐欺偵測",
+        "概念漂移",
+        "retrain"
+      ],
+      "boss_topics": [
+        "ecommerce",
+        "finance"
+      ]
     },
     {
       "id": "q_n19_012",
@@ -348,10 +660,25 @@
       "source_level": "L1",
       "stem": "某工廠 CNC 機台預測性維護專案,工程師打算用過去 2 年感測器資料訓練『未來 72 小時是否會故障』模型。下列何種資料切分方法最為合適?",
       "options": [
-        {"text": "Time-based split,前 18 個月為訓練集、後 6 個月為測試集,模擬上線時的時間順序", "is_correct": true},
-        {"text": "Random split,將全部資料以 80/20 比例隨機切分,確保樣本完全均勻分佈於兩集合", "is_correct": false, "trap_type": "時序資料 random split 嚴重洩漏"},
-        {"text": "Stratified split,依照故障 / 正常比例分層後隨機抽樣,以保持類別比例一致", "is_correct": false, "trap_type": "Stratified 對時序仍是隨機"},
-        {"text": "K-fold cross validation 隨機 5 折,以最大化資料使用效率並降低評估方差表現", "is_correct": false, "trap_type": "隨機 KFold 在時序上洩漏"}
+        {
+          "text": "Time-based split,前 18 個月為訓練集、後 6 個月為測試集,模擬上線時的時間順序",
+          "is_correct": true
+        },
+        {
+          "text": "Random split,將全部資料以 80/20 比例隨機切分,確保樣本完全均勻分佈於兩集合",
+          "is_correct": false,
+          "trap_type": "時序資料 random split 嚴重洩漏"
+        },
+        {
+          "text": "Stratified split,依照故障 / 正常比例分層後隨機抽樣,以保持類別比例一致",
+          "is_correct": false,
+          "trap_type": "Stratified 對時序仍是隨機"
+        },
+        {
+          "text": "K-fold cross validation 隨機 5 折,以最大化資料使用效率並降低評估方差表現",
+          "is_correct": false,
+          "trap_type": "隨機 KFold 在時序上洩漏"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -363,9 +690,21 @@
         },
         "hook": "時序資料切分鐵則:時間早→早集合;Time-based split / TimeSeriesSplit"
       },
-      "misconceptions": ["對時序資料做 random split", "用 Stratified 解決時序洩漏"],
-      "related_node_ids": ["n_L22402_006"],
-      "tags": ["預測性維護", "切分", "時序"]
+      "misconceptions": [
+        "對時序資料做 random split",
+        "用 Stratified 解決時序洩漏"
+      ],
+      "related_node_ids": [
+        "n_L22402_006"
+      ],
+      "tags": [
+        "預測性維護",
+        "切分",
+        "時序"
+      ],
+      "boss_topics": [
+        "manufacturing"
+      ]
     },
     {
       "id": "q_n19_013",
@@ -377,10 +716,25 @@
       "source_level": "L1",
       "stem": "某風力發電廠對齒輪箱故障設計『提前預測窗口』。若窗口設為『未來 1 小時』與『未來 7 天』,下列何種比較最為正確?",
       "options": [
-        {"text": "1 小時太短不利及時派工,7 天太長易誤報疲勞,實務常取 24~72 小時作為折衷", "is_correct": true},
-        {"text": "1 小時窗口必然優於 7 天,因為時間越短的預測難度越低且模型容易達到最佳表現", "is_correct": false, "trap_type": "短窗口未必必然優於長"},
-        {"text": "7 天窗口必然優於 1 小時,因為時間越長感測訊號越強烈也越能準確預測故障狀態", "is_correct": false, "trap_type": "長窗口訊號未必更強"},
-        {"text": "兩者完全等價,因為預測窗口長短並不會影響模型訓練樣本與標籤的定義方式", "is_correct": false, "trap_type": "窗口影響標籤定義"}
+        {
+          "text": "1 小時太短不利及時派工,7 天太長易誤報疲勞,實務常取 24~72 小時作為折衷",
+          "is_correct": true
+        },
+        {
+          "text": "1 小時窗口必然優於 7 天,因為時間越短的預測難度越低且模型容易達到最佳表現",
+          "is_correct": false,
+          "trap_type": "短窗口未必必然優於長"
+        },
+        {
+          "text": "7 天窗口必然優於 1 小時,因為時間越長感測訊號越強烈也越能準確預測故障狀態",
+          "is_correct": false,
+          "trap_type": "長窗口訊號未必更強"
+        },
+        {
+          "text": "兩者完全等價,因為預測窗口長短並不會影響模型訓練樣本與標籤的定義方式",
+          "is_correct": false,
+          "trap_type": "窗口影響標籤定義"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -392,9 +746,21 @@
         },
         "hook": "預測窗口設計兩端不要極端:誤報疲勞 vs 來不及反應之間找折衷"
       },
-      "misconceptions": ["窗口越長越好", "窗口設計與業務無關"],
-      "related_node_ids": ["n_L22402_001"],
-      "tags": ["預測性維護", "窗口", "風電"]
+      "misconceptions": [
+        "窗口越長越好",
+        "窗口設計與業務無關"
+      ],
+      "related_node_ids": [
+        "n_L22402_001"
+      ],
+      "tags": [
+        "預測性維護",
+        "窗口",
+        "風電"
+      ],
+      "boss_topics": [
+        "energy"
+      ]
     },
     {
       "id": "q_n19_014",
@@ -406,10 +772,25 @@
       "source_level": "L1",
       "stem": "某半導體廠在預測性維護模型中,工程師發現『單用振動感測器』預測效能不理想。下列何種改進方向最符合工業實務?",
       "options": [
-        {"text": "融合多感測器(振動、溫度、電流、聲學),以多模態時序特徵提升故障判別能力", "is_correct": true},
-        {"text": "把振動感測器之單一變數欄位重複貼入特徵矩陣 10 次,以放大其於模型內部的權重", "is_correct": false, "trap_type": "重複貼欄位不會增資訊"},
-        {"text": "把『未來故障與否的標籤』反向當成輸入特徵之一,藉此提升模型預測能力到上限", "is_correct": false, "trap_type": "把標籤當輸入即 target leakage"},
-        {"text": "對振動原始訊號做 PCA 降到 1 維後,直接作為唯一輸入餵入分類器即可大幅改善", "is_correct": false, "trap_type": "PCA 到 1 維資訊損失"}
+        {
+          "text": "融合多感測器(振動、溫度、電流、聲學),以多模態時序特徵提升故障判別能力",
+          "is_correct": true
+        },
+        {
+          "text": "把振動感測器之單一變數欄位重複貼入特徵矩陣 10 次,以放大其於模型內部的權重",
+          "is_correct": false,
+          "trap_type": "重複貼欄位不會增資訊"
+        },
+        {
+          "text": "把『未來故障與否的標籤』反向當成輸入特徵之一,藉此提升模型預測能力到上限",
+          "is_correct": false,
+          "trap_type": "把標籤當輸入即 target leakage"
+        },
+        {
+          "text": "對振動原始訊號做 PCA 降到 1 維後,直接作為唯一輸入餵入分類器即可大幅改善",
+          "is_correct": false,
+          "trap_type": "PCA 到 1 維資訊損失"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -421,9 +802,21 @@
         },
         "hook": "預測性維護的工程訊號融合:多感測器 ≫ 單感測器"
       },
-      "misconceptions": ["重複欄位以為增資訊", "把標籤當輸入特徵"],
-      "related_node_ids": ["n_L22402_006"],
-      "tags": ["預測性維護", "多感測器", "半導體"]
+      "misconceptions": [
+        "重複欄位以為增資訊",
+        "把標籤當輸入特徵"
+      ],
+      "related_node_ids": [
+        "n_L22402_006"
+      ],
+      "tags": [
+        "預測性維護",
+        "多感測器",
+        "半導體"
+      ],
+      "boss_topics": [
+        "manufacturing"
+      ]
     },
     {
       "id": "q_n19_015",
@@ -435,10 +828,25 @@
       "source_level": "L1",
       "stem": "某線上書店上架一本全新書籍,目前尚無任何使用者購買或評分紀錄。下列哪種推薦派典最適合處理此『新物品冷啟動』情境?",
       "options": [
-        {"text": "內容過濾(Content-based),依書籍類別、作者、摘要等屬性匹配相似偏好之使用者", "is_correct": true},
-        {"text": "純使用者協同過濾(User-based CF),從相似使用者的歷史購買行為直接決定推薦結果", "is_correct": false, "trap_type": "新物品無協同訊號"},
-        {"text": "純物品協同過濾(Item-based CF),從共購書籍鄰居清單中為使用者挑選推薦書目", "is_correct": false, "trap_type": "新物品無共購紀錄"},
-        {"text": "Matrix Factorization 隱因子模型,從歷史評分矩陣分解出物品的潛在向量並做匹配", "is_correct": false, "trap_type": "MF 對新物品無向量"}
+        {
+          "text": "內容過濾(Content-based),依書籍類別、作者、摘要等屬性匹配相似偏好之使用者",
+          "is_correct": true
+        },
+        {
+          "text": "純使用者協同過濾(User-based CF),從相似使用者的歷史購買行為直接決定推薦結果",
+          "is_correct": false,
+          "trap_type": "新物品無協同訊號"
+        },
+        {
+          "text": "純物品協同過濾(Item-based CF),從共購書籍鄰居清單中為使用者挑選推薦書目",
+          "is_correct": false,
+          "trap_type": "新物品無共購紀錄"
+        },
+        {
+          "text": "Matrix Factorization 隱因子模型,從歷史評分矩陣分解出物品的潛在向量並做匹配",
+          "is_correct": false,
+          "trap_type": "MF 對新物品無向量"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -450,9 +858,21 @@
         },
         "hook": "新物品冷啟動 → 內容過濾;新使用者冷啟動 → 人口統計 / 熱門榜"
       },
-      "misconceptions": ["以為協同過濾萬能", "新物品也能算共購相似度"],
-      "related_node_ids": ["n_L22402_001"],
-      "tags": ["推薦", "冷啟動", "內容過濾"]
+      "misconceptions": [
+        "以為協同過濾萬能",
+        "新物品也能算共購相似度"
+      ],
+      "related_node_ids": [
+        "n_L22402_001"
+      ],
+      "tags": [
+        "推薦",
+        "冷啟動",
+        "內容過濾"
+      ],
+      "boss_topics": [
+        "ecommerce"
+      ]
     },
     {
       "id": "q_n19_016",
@@ -464,15 +884,54 @@
       "source_level": "L1",
       "stem": "某音樂串流平台對使用者推薦前 K = {k} 首歌曲,事後比對該名使用者實際喜歡的歌共有 {liked} 首,其中模型推薦的清單命中其中 {hit} 首。請計算 Precision@K 為下列何者(取小數第 2 位)?",
       "stem_variables": {
-        "case_a": {"k": "10", "liked": "8", "hit": "4", "answer": "0.40", "wrong1": "0.50", "wrong2": "0.32", "wrong3": "0.80"},
-        "case_b": {"k": "5", "liked": "10", "hit": "3", "answer": "0.60", "wrong1": "0.30", "wrong2": "0.50", "wrong3": "1.50"},
-        "case_c": {"k": "20", "liked": "15", "hit": "9", "answer": "0.45", "wrong1": "0.60", "wrong2": "0.40", "wrong3": "0.75"}
+        "case_a": {
+          "k": "10",
+          "liked": "8",
+          "hit": "4",
+          "answer": "0.40",
+          "wrong1": "0.50",
+          "wrong2": "0.32",
+          "wrong3": "0.80"
+        },
+        "case_b": {
+          "k": "5",
+          "liked": "10",
+          "hit": "3",
+          "answer": "0.60",
+          "wrong1": "0.30",
+          "wrong2": "0.50",
+          "wrong3": "1.50"
+        },
+        "case_c": {
+          "k": "20",
+          "liked": "15",
+          "hit": "9",
+          "answer": "0.45",
+          "wrong1": "0.60",
+          "wrong2": "0.40",
+          "wrong3": "0.75"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤算成 Recall@K(hit / liked)"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤算成 F1@K"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤把 hit / liked 倒寫或誤代值"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤算成 Recall@K(hit / liked)"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤算成 F1@K"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤把 hit / liked 倒寫或誤代值"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -484,9 +943,22 @@
         },
         "hook": "P@K 分母是『K』、R@K 分母是『實際相關項數』;不要記反"
       },
-      "misconceptions": ["把 P@K 與 R@K 公式記反", "誤以為 hit / liked 是 Precision"],
-      "related_node_ids": ["n_L22402_001"],
-      "tags": ["推薦", "Precision@K", "計算"]
+      "misconceptions": [
+        "把 P@K 與 R@K 公式記反",
+        "誤以為 hit / liked 是 Precision"
+      ],
+      "related_node_ids": [
+        "n_L22402_001"
+      ],
+      "tags": [
+        "推薦",
+        "Precision@K",
+        "計算"
+      ],
+      "boss_topics": [
+        "media",
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n19_017",
@@ -498,10 +970,25 @@
       "source_level": "L1",
       "stem": "某影音平台採『協同過濾 + 內容過濾』混合推薦,A/B test 發現點擊率上升但留存率反而下降。下列哪一項解釋與調整方向最為合理?",
       "options": [
-        {"text": "推薦過度同質化使多樣性不足,需加入 diversity 機制平衡留存", "is_correct": true},
-        {"text": "點擊率與留存率毫無關係,可直接忽略留存指標,以點擊率單一指標作為唯一驗收標準", "is_correct": false, "trap_type": "留存是核心業務指標"},
-        {"text": "由於混合推薦演算法太過複雜,需立即退回單一純協同過濾架構即可解決所有問題", "is_correct": false, "trap_type": "退回單一非合理對策"},
-        {"text": "把內容過濾權重設為 0、完全只看協同過濾結果即可,系統會自動修復留存率的下降趨勢", "is_correct": false, "trap_type": "去掉內容過濾不解決同質化"}
+        {
+          "text": "推薦過度同質化使多樣性不足,需加入 diversity 機制平衡留存",
+          "is_correct": true
+        },
+        {
+          "text": "點擊率與留存率毫無關係,可直接忽略留存指標,以點擊率單一指標作為唯一驗收標準",
+          "is_correct": false,
+          "trap_type": "留存是核心業務指標"
+        },
+        {
+          "text": "由於混合推薦演算法太過複雜,需立即退回單一純協同過濾架構即可解決所有問題",
+          "is_correct": false,
+          "trap_type": "退回單一非合理對策"
+        },
+        {
+          "text": "把內容過濾權重設為 0、完全只看協同過濾結果即可,系統會自動修復留存率的下降趨勢",
+          "is_correct": false,
+          "trap_type": "去掉內容過濾不解決同質化"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -513,9 +1000,21 @@
         },
         "hook": "推薦評估別只看 CTR,要看 retention / diversity / serendipity"
       },
-      "misconceptions": ["把 CTR 當唯一驗收指標", "忽略 filter bubble"],
-      "related_node_ids": ["n_L22402_001"],
-      "tags": ["推薦", "多樣性", "留存"]
+      "misconceptions": [
+        "把 CTR 當唯一驗收指標",
+        "忽略 filter bubble"
+      ],
+      "related_node_ids": [
+        "n_L22402_001"
+      ],
+      "tags": [
+        "推薦",
+        "多樣性",
+        "留存"
+      ],
+      "boss_topics": [
+        "media"
+      ]
     },
     {
       "id": "q_n19_018",
@@ -527,10 +1026,25 @@
       "source_level": "L1",
       "stem": "某電信公司預測客戶流失,模型加入『最近 7 天客服電話次數』作為特徵後 AUC 從 0.72 升至 0.97,但上線後完全失準。下列何項是最可能的根因?",
       "options": [
-        {"text": "Target Leakage,客戶『要解約前才打客服』,該特徵變相含未來標籤資訊", "is_correct": true},
-        {"text": "模型訓練輪數過少所致,只要把訓練週期再延長 10 倍 AUC 上線後自然恢復", "is_correct": false, "trap_type": "延長訓練不解決洩漏"},
-        {"text": "由於 AUC 計算只用測試集樣本,而測試集規模太小才會出現如此顯著之變動", "is_correct": false, "trap_type": "測試集小不解釋上線失準"},
-        {"text": "模型過度擬合於正則化係數,只要 L2 強度加倍即可顯著恢復上線時泛化表現", "is_correct": false, "trap_type": "L2 不修洩漏"}
+        {
+          "text": "Target Leakage,客戶『要解約前才打客服』,該特徵變相含未來標籤資訊",
+          "is_correct": true
+        },
+        {
+          "text": "模型訓練輪數過少所致,只要把訓練週期再延長 10 倍 AUC 上線後自然恢復",
+          "is_correct": false,
+          "trap_type": "延長訓練不解決洩漏"
+        },
+        {
+          "text": "由於 AUC 計算只用測試集樣本,而測試集規模太小才會出現如此顯著之變動",
+          "is_correct": false,
+          "trap_type": "測試集小不解釋上線失準"
+        },
+        {
+          "text": "模型過度擬合於正則化係數,只要 L2 強度加倍即可顯著恢復上線時泛化表現",
+          "is_correct": false,
+          "trap_type": "L2 不修洩漏"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -542,9 +1056,21 @@
         },
         "hook": "離線 AUC 從 0.7 跳到 0.95+ 但上線崩盤 → 99% 是 leakage,先找『未來資訊』特徵"
       },
-      "misconceptions": ["AUC 大幅提升就以為是好特徵", "用 L2 修 leakage"],
-      "related_node_ids": ["n_L22402_001"],
-      "tags": ["資料洩漏", "Target leakage", "電信"]
+      "misconceptions": [
+        "AUC 大幅提升就以為是好特徵",
+        "用 L2 修 leakage"
+      ],
+      "related_node_ids": [
+        "n_L22402_001"
+      ],
+      "tags": [
+        "資料洩漏",
+        "Target leakage",
+        "電信"
+      ],
+      "boss_topics": [
+        "telecom"
+      ]
     },
     {
       "id": "q_n19_019",
@@ -556,15 +1082,51 @@
       "source_level": "L1",
       "stem": "某不平衡分類資料集共 {total} 筆,正類僅 {pos} 筆。模型『不論輸入一律預測為負類』。請計算此模型在該測試集的 Accuracy(取小數第 4 位)為下列何者?",
       "stem_variables": {
-        "case_a": {"total": "1000", "pos": "10", "answer": "0.9900", "wrong1": "0.0100", "wrong2": "0.5000", "wrong3": "1.0000"},
-        "case_b": {"total": "5000", "pos": "100", "answer": "0.9800", "wrong1": "0.0200", "wrong2": "0.5000", "wrong3": "0.9500"},
-        "case_c": {"total": "10000", "pos": "5", "answer": "0.9995", "wrong1": "0.0005", "wrong2": "0.5000", "wrong3": "0.9000"}
+        "case_a": {
+          "total": "1000",
+          "pos": "10",
+          "answer": "0.9900",
+          "wrong1": "0.0100",
+          "wrong2": "0.5000",
+          "wrong3": "1.0000"
+        },
+        "case_b": {
+          "total": "5000",
+          "pos": "100",
+          "answer": "0.9800",
+          "wrong1": "0.0200",
+          "wrong2": "0.5000",
+          "wrong3": "0.9500"
+        },
+        "case_c": {
+          "total": "10000",
+          "pos": "5",
+          "answer": "0.9995",
+          "wrong1": "0.0005",
+          "wrong2": "0.5000",
+          "wrong3": "0.9000"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤算 pos / total 當 accuracy"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為 baseline 永遠是 0.5"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤代值或誤算"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤算 pos / total 當 accuracy"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤以為 baseline 永遠是 0.5"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤代值或誤算"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -576,9 +1138,21 @@
         },
         "hook": "不平衡分類『全猜多數類 Accuracy = 多數類比例』;此時 Recall / F1 = 0 才是真實能力"
       },
-      "misconceptions": ["用 Accuracy 評估不平衡資料", "誤以為 baseline 永遠是 0.5"],
-      "related_node_ids": ["n_L22402_003"],
-      "tags": ["不平衡", "Accuracy", "計算"]
+      "misconceptions": [
+        "用 Accuracy 評估不平衡資料",
+        "誤以為 baseline 永遠是 0.5"
+      ],
+      "related_node_ids": [
+        "n_L22402_003"
+      ],
+      "tags": [
+        "不平衡",
+        "Accuracy",
+        "計算"
+      ],
+      "boss_topics": [
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n19_020",
@@ -590,10 +1164,25 @@
       "source_level": "L1",
       "stem": "某醫院皮膚癌影像 AI 模型離線 AUC 0.98,但部署到合作醫院後 AUC 跌至 0.62。資料審查發現:同一位病人多張不同部位的照片被『隨機』分到 train 與 test。下列何種解釋與修補組合最為正確?",
       "options": [
-        {"text": "群組跨集造成資料洩漏,改用 GroupKFold(以病人 ID 分組)並用外部醫院驗證集", "is_correct": true},
-        {"text": "影像解析度不足,訓練集是高解析、測試集則是低解析,須將兩者解析度全部統一規格", "is_correct": false, "trap_type": "與群組跨集問題不符"},
-        {"text": "模型容量過低,需要加倍 Conv 層數量並把訓練 epoch 倍增即可解決所有泛化問題", "is_correct": false, "trap_type": "加容量不修洩漏"},
-        {"text": "資料正規化方法錯誤,需要把全部影像像素由 [0,1] 改成 [-1,1] 才能完整恢復離線表現", "is_correct": false, "trap_type": "正規化非根因"}
+        {
+          "text": "群組跨集造成資料洩漏,改用 GroupKFold(以病人 ID 分組)並用外部醫院驗證集",
+          "is_correct": true
+        },
+        {
+          "text": "影像解析度不足,訓練集是高解析、測試集則是低解析,須將兩者解析度全部統一規格",
+          "is_correct": false,
+          "trap_type": "與群組跨集問題不符"
+        },
+        {
+          "text": "模型容量過低,需要加倍 Conv 層數量並把訓練 epoch 倍增即可解決所有泛化問題",
+          "is_correct": false,
+          "trap_type": "加容量不修洩漏"
+        },
+        {
+          "text": "資料正規化方法錯誤,需要把全部影像像素由 [0,1] 改成 [-1,1] 才能完整恢復離線表現",
+          "is_correct": false,
+          "trap_type": "正規化非根因"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -605,9 +1194,21 @@
         },
         "hook": "醫療 / 推薦 / 客戶情境的切分黃金法則:以『實體 ID(病人 / 客戶 / 機台)』分組,不可同 ID 散落"
       },
-      "misconceptions": ["把醫療影像隨機切分", "看到泛化差就加模型容量"],
-      "related_node_ids": ["n_L22402_001"],
-      "tags": ["資料洩漏", "GroupKFold", "醫療"]
+      "misconceptions": [
+        "把醫療影像隨機切分",
+        "看到泛化差就加模型容量"
+      ],
+      "related_node_ids": [
+        "n_L22402_001"
+      ],
+      "tags": [
+        "資料洩漏",
+        "GroupKFold",
+        "醫療"
+      ],
+      "boss_topics": [
+        "medical"
+      ]
     }
   ]
 }

@@ -3,7 +3,10 @@
   "schema_version": "iron-rule-1+2+6",
   "generated_at": "2026-05-16",
   "batch": "N13 — 科二大數據 L22202 數據儲存與管理(v2 解禁概念題)",
-  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "exam_target": {
+    "name": "IPAS AI 應用規劃師中級",
+    "date": "2026-05-23"
+  },
   "iron_rule_compliance": {
     "rule_1": "every question has explanation.correct + explanation.wrong + explanation.hook + misconceptions",
     "rule_2": "shuffle_options=true on every item; 純概念題本批無 calculation",
@@ -15,9 +18,24 @@
   },
   "distribution": {
     "L22202_count": 20,
-    "by_node": {"n_L22202_001": 4, "n_L22202_002": 4, "n_L22202_003": 3, "n_L22202_004": 3, "n_L22202_005": 3, "n_L22202_006": 3},
-    "by_format": {"single_choice": 16, "scenario": 4, "calculation": 0},
-    "by_difficulty": {"easy": 5, "medium": 12, "hard": 3}
+    "by_node": {
+      "n_L22202_001": 4,
+      "n_L22202_002": 4,
+      "n_L22202_003": 3,
+      "n_L22202_004": 3,
+      "n_L22202_005": 3,
+      "n_L22202_006": 3
+    },
+    "by_format": {
+      "single_choice": 16,
+      "scenario": 4,
+      "calculation": 0
+    },
+    "by_difficulty": {
+      "easy": 5,
+      "medium": 12,
+      "hard": 3
+    }
   },
   "questions": [
     {
@@ -30,10 +48,25 @@
       "source_level": "L1",
       "stem": "某連鎖超市資訊長盤點企業內部三套儲存架構:Warehouse、Lake、Lakehouse。下列關於這三種架構定位的描述,何者最為正確?",
       "options": [
-        {"text": "Warehouse 偏結構化 BI 報表、Lake 偏多型態原始資料、Lakehouse 在 Lake 之上加上 Warehouse 等級治理", "is_correct": true},
-        {"text": "Warehouse 偏多型態原始資料、Lake 偏結構化 BI 報表、Lakehouse 為兩者輕量化合併的簡化版本架構", "is_correct": false, "trap_type": "Warehouse 與 Lake 定位顛倒"},
-        {"text": "三者皆為強 schema 架構,差異僅在儲存規模大小,Lake 是中型、Lakehouse 是大型 Warehouse", "is_correct": false, "trap_type": "Lake 並非強 schema"},
-        {"text": "Lakehouse 是把 Warehouse 與 Lake 兩套系統實體堆疊在同一機房,本質仍是兩份重複資料", "is_correct": false, "trap_type": "把 Lakehouse 視為兩套堆疊"}
+        {
+          "text": "Warehouse 偏結構化 BI 報表、Lake 偏多型態原始資料、Lakehouse 在 Lake 之上加上 Warehouse 等級治理",
+          "is_correct": true
+        },
+        {
+          "text": "Warehouse 偏多型態原始資料、Lake 偏結構化 BI 報表、Lakehouse 為兩者輕量化合併的簡化版本架構",
+          "is_correct": false,
+          "trap_type": "Warehouse 與 Lake 定位顛倒"
+        },
+        {
+          "text": "三者皆為強 schema 架構,差異僅在儲存規模大小,Lake 是中型、Lakehouse 是大型 Warehouse",
+          "is_correct": false,
+          "trap_type": "Lake 並非強 schema"
+        },
+        {
+          "text": "Lakehouse 是把 Warehouse 與 Lake 兩套系統實體堆疊在同一機房,本質仍是兩份重複資料",
+          "is_correct": false,
+          "trap_type": "把 Lakehouse 視為兩套堆疊"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -45,9 +78,23 @@
         },
         "hook": "Warehouse 像圖書館(分類上架);Lake 像倉庫(原箱堆放);Lakehouse 是『倉庫加上圖書館等級的索引』"
       },
-      "misconceptions": ["把 Lake 與 Warehouse 定位顛倒", "誤以為 Lakehouse 是兩套系統堆疊"],
-      "related_node_ids": ["n_L22202_002", "n_L22202_005"],
-      "tags": ["儲存架構", "Lakehouse", "選型"]
+      "misconceptions": [
+        "把 Lake 與 Warehouse 定位顛倒",
+        "誤以為 Lakehouse 是兩套系統堆疊"
+      ],
+      "related_node_ids": [
+        "n_L22202_002",
+        "n_L22202_005"
+      ],
+      "tags": [
+        "儲存架構",
+        "Lakehouse",
+        "選型"
+      ],
+      "boss_topics": [
+        "ecommerce",
+        "data_eng"
+      ]
     },
     {
       "id": "q_n13_002",
@@ -59,10 +106,25 @@
       "source_level": "L1",
       "stem": "某醫療影像中心要建立一份資料平台:同時保存『原始 DICOM 影像檔』(非結構化)、『放射師標註的病灶座標 JSON』(半結構化)與『病患就診紀錄表』(結構化),且日後 ML 訓練須直接讀取原始影像。下列儲存架構選型最為合適者為何?",
       "options": [
-        {"text": "以 Lake 或 Lakehouse 為主要平台,容納三種型態資料,ML 直接從 Lake 讀原始影像進行訓練", "is_correct": true},
-        {"text": "全數匯入傳統 Warehouse,影像欄位以 BLOB 儲存於關聯表後再以 BI 工具進行 ML 模型訓練", "is_correct": false, "trap_type": "Warehouse 不擅長非結構化"},
-        {"text": "三類資料分別存於三套互不互通的本地檔案系統,確保最高安全性與最低治理複雜度負擔", "is_correct": false, "trap_type": "三套獨立反而治理困難"},
-        {"text": "全數丟入 Key-Value 快取以追求毫秒級延遲,病歷與影像皆以單一鍵直接讀寫回應使用者", "is_correct": false, "trap_type": "KV 不適合長期歸檔"}
+        {
+          "text": "以 Lake 或 Lakehouse 為主要平台,容納三種型態資料,ML 直接從 Lake 讀原始影像進行訓練",
+          "is_correct": true
+        },
+        {
+          "text": "全數匯入傳統 Warehouse,影像欄位以 BLOB 儲存於關聯表後再以 BI 工具進行 ML 模型訓練",
+          "is_correct": false,
+          "trap_type": "Warehouse 不擅長非結構化"
+        },
+        {
+          "text": "三類資料分別存於三套互不互通的本地檔案系統,確保最高安全性與最低治理複雜度負擔",
+          "is_correct": false,
+          "trap_type": "三套獨立反而治理困難"
+        },
+        {
+          "text": "全數丟入 Key-Value 快取以追求毫秒級延遲,病歷與影像皆以單一鍵直接讀寫回應使用者",
+          "is_correct": false,
+          "trap_type": "KV 不適合長期歸檔"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -74,9 +136,23 @@
         },
         "hook": "選型口訣:多型態 + ML 訓練要原始資料 → 自然走 Lake / Lakehouse"
       },
-      "misconceptions": ["把影像強塞 Warehouse BLOB", "把長期儲存與 KV 快取混為一談"],
-      "related_node_ids": ["n_L22202_002", "n_L22202_006"],
-      "tags": ["Lake", "醫療影像", "選型情境"]
+      "misconceptions": [
+        "把影像強塞 Warehouse BLOB",
+        "把長期儲存與 KV 快取混為一談"
+      ],
+      "related_node_ids": [
+        "n_L22202_002",
+        "n_L22202_006"
+      ],
+      "tags": [
+        "Lake",
+        "醫療影像",
+        "選型情境"
+      ],
+      "boss_topics": [
+        "medical",
+        "data_eng"
+      ]
     },
     {
       "id": "q_n13_003",
@@ -88,10 +164,25 @@
       "source_level": "L1",
       "stem": "某零售集團導入資料湖一年後,發現資料雖然都進來了,但沒人知道哪份資料代表什麼、誰是負責人、品質如何,分析師抓出來的數字常彼此矛盾。下列何者最能描述此現象,以及應該強化的方向?",
       "options": [
-        {"text": "資料湖缺乏治理而退化為 Data Swamp(資料沼澤),應補上 catalog、lineage、owner 與品質規則", "is_correct": true},
-        {"text": "屬於 Lakehouse 必經的中期陣痛,只要把所有資料再複製一份到 Warehouse,問題即會自然消失", "is_correct": false, "trap_type": "複製到 Warehouse 不解治理根因"},
-        {"text": "代表資料湖技術已過時,應立即全面遷移至傳統關聯式資料庫以恢復一致性與可信度", "is_correct": false, "trap_type": "把架構選錯歸咎技術過時"},
-        {"text": "這是 schema-on-read 架構的固有缺陷,只有 schema-on-write 才能避免任何資料品質問題", "is_correct": false, "trap_type": "把治理問題歸咎讀寫時機"}
+        {
+          "text": "資料湖缺乏治理而退化為 Data Swamp(資料沼澤),應補上 catalog、lineage、owner 與品質規則",
+          "is_correct": true
+        },
+        {
+          "text": "屬於 Lakehouse 必經的中期陣痛,只要把所有資料再複製一份到 Warehouse,問題即會自然消失",
+          "is_correct": false,
+          "trap_type": "複製到 Warehouse 不解治理根因"
+        },
+        {
+          "text": "代表資料湖技術已過時,應立即全面遷移至傳統關聯式資料庫以恢復一致性與可信度",
+          "is_correct": false,
+          "trap_type": "把架構選錯歸咎技術過時"
+        },
+        {
+          "text": "這是 schema-on-read 架構的固有缺陷,只有 schema-on-write 才能避免任何資料品質問題",
+          "is_correct": false,
+          "trap_type": "把治理問題歸咎讀寫時機"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -103,9 +194,23 @@
         },
         "hook": "Lake 不治理就成 Swamp;治理三件套:catalog、lineage、owner"
       },
-      "misconceptions": ["把 Lake 當無治理垃圾場", "誤以為治理問題能靠複製解決"],
-      "related_node_ids": ["n_L22202_002", "n_L22202_005"],
-      "tags": ["資料沼澤", "治理", "Lakehouse"]
+      "misconceptions": [
+        "把 Lake 當無治理垃圾場",
+        "誤以為治理問題能靠複製解決"
+      ],
+      "related_node_ids": [
+        "n_L22202_002",
+        "n_L22202_005"
+      ],
+      "tags": [
+        "資料沼澤",
+        "治理",
+        "Lakehouse"
+      ],
+      "boss_topics": [
+        "ecommerce",
+        "data_eng"
+      ]
     },
     {
       "id": "q_n13_004",
@@ -117,10 +222,25 @@
       "source_level": "L1",
       "stem": "某政府公開資料平台原本只用 Warehouse 服務 BI 報表,近年開始要支援研究機構訓練 ML 模型,需要保存原始 PDF、地圖向量與感測器時序。資料長提議導入 Lakehouse 取代既有 Warehouse,下列考量何者最為合理?",
       "options": [
-        {"text": "Lakehouse 可在 Lake 底層之上提供 Warehouse 等級治理,讓 BI 與 ML 共享同一份資料而不需重複搬遷", "is_correct": true},
-        {"text": "Lakehouse 必能完全取代 Warehouse,實務上沒有任何使用情境會建議兩者並存或互補運行", "is_correct": false, "trap_type": "誤以為 Lakehouse 完全取代"},
-        {"text": "Lakehouse 等同 Lake 與 Warehouse 簡單堆疊,因此 BI 與 ML 仍須各自維護獨立副本與權限機制", "is_correct": false, "trap_type": "把 Lakehouse 視為堆疊"},
-        {"text": "Lakehouse 僅適合純粹串流資料而不接受批次寫入,故對歷史 PDF 與向量地圖完全無法支援", "is_correct": false, "trap_type": "把 Lakehouse 誤限為串流"}
+        {
+          "text": "Lakehouse 可在 Lake 底層之上提供 Warehouse 等級治理,讓 BI 與 ML 共享同一份資料而不需重複搬遷",
+          "is_correct": true
+        },
+        {
+          "text": "Lakehouse 必能完全取代 Warehouse,實務上沒有任何使用情境會建議兩者並存或互補運行",
+          "is_correct": false,
+          "trap_type": "誤以為 Lakehouse 完全取代"
+        },
+        {
+          "text": "Lakehouse 等同 Lake 與 Warehouse 簡單堆疊,因此 BI 與 ML 仍須各自維護獨立副本與權限機制",
+          "is_correct": false,
+          "trap_type": "把 Lakehouse 視為堆疊"
+        },
+        {
+          "text": "Lakehouse 僅適合純粹串流資料而不接受批次寫入,故對歷史 PDF 與向量地圖完全無法支援",
+          "is_correct": false,
+          "trap_type": "把 Lakehouse 誤限為串流"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -132,9 +252,22 @@
         },
         "hook": "Lakehouse 核心訴求:不複製資料就能做 BI + ML"
       },
-      "misconceptions": ["誤以為 Lakehouse 完全取代 Warehouse", "把 Lakehouse 視為簡單堆疊"],
-      "related_node_ids": ["n_L22202_002", "n_L22202_005"],
-      "tags": ["Lakehouse", "選型權衡", "BI vs ML"]
+      "misconceptions": [
+        "誤以為 Lakehouse 完全取代 Warehouse",
+        "把 Lakehouse 視為簡單堆疊"
+      ],
+      "related_node_ids": [
+        "n_L22202_002",
+        "n_L22202_005"
+      ],
+      "tags": [
+        "Lakehouse",
+        "選型權衡",
+        "BI vs ML"
+      ],
+      "boss_topics": [
+        "data_eng"
+      ]
     },
     {
       "id": "q_n13_005",
@@ -146,10 +279,25 @@
       "source_level": "L1",
       "stem": "某電商網站需要把使用者登入後的『session token』暫存,使前後端能在毫秒內以 session_id 取出使用者狀態,且資料只需短期保存。下列資料庫類型何者最為合適?",
       "options": [
-        {"text": "Key-Value 型 NoSQL,以鍵查值極快、結構單純,正是 session / cache 場景的典型選擇", "is_correct": true},
-        {"text": "圖資料庫(Graph DB),以節點與邊建模可有效率地表達使用者之間的多跳社交關係", "is_correct": false, "trap_type": "Graph 不適合單純 session 查找"},
-        {"text": "傳統關聯式資料庫,使用嚴格 schema 與 ACID 交易確保每筆 session 都絕對不會遺失", "is_correct": false, "trap_type": "RDBMS 處理 session 過重"},
-        {"text": "Column-family 寬欄資料庫,對時序資料具高吞吐優勢,可儲存大量歷史 session 軌跡", "is_correct": false, "trap_type": "Column 適合時序非單鍵"}
+        {
+          "text": "Key-Value 型 NoSQL,以鍵查值極快、結構單純,正是 session / cache 場景的典型選擇",
+          "is_correct": true
+        },
+        {
+          "text": "圖資料庫(Graph DB),以節點與邊建模可有效率地表達使用者之間的多跳社交關係",
+          "is_correct": false,
+          "trap_type": "Graph 不適合單純 session 查找"
+        },
+        {
+          "text": "傳統關聯式資料庫,使用嚴格 schema 與 ACID 交易確保每筆 session 都絕對不會遺失",
+          "is_correct": false,
+          "trap_type": "RDBMS 處理 session 過重"
+        },
+        {
+          "text": "Column-family 寬欄資料庫,對時序資料具高吞吐優勢,可儲存大量歷史 session 軌跡",
+          "is_correct": false,
+          "trap_type": "Column 適合時序非單鍵"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -161,9 +309,22 @@
         },
         "hook": "選型口訣:查鍵極快 → KV;靈活欄位 → Document;寬欄高吞吐 → Column;多跳關係 → Graph"
       },
-      "misconceptions": ["session 用 RDBMS 過重", "把所有 NoSQL 視為同類"],
-      "related_node_ids": ["n_L22202_003"],
-      "tags": ["NoSQL", "Key-Value", "session"]
+      "misconceptions": [
+        "session 用 RDBMS 過重",
+        "把所有 NoSQL 視為同類"
+      ],
+      "related_node_ids": [
+        "n_L22202_003"
+      ],
+      "tags": [
+        "NoSQL",
+        "Key-Value",
+        "session"
+      ],
+      "boss_topics": [
+        "ecommerce",
+        "data_eng"
+      ]
     },
     {
       "id": "q_n13_006",
@@ -175,10 +336,25 @@
       "source_level": "L1",
       "stem": "某內容管理平台儲存大量文章,每篇文章包含標題、作者、巢狀標籤、自訂屬性,且不同欄位常依專題追加而頻繁變動。下列資料模型何者最能匹配此情境?",
       "options": [
-        {"text": "Document 型 NoSQL,以 JSON 文件保存每篇文章,欄位可變並能輕鬆容納巢狀結構與自訂屬性", "is_correct": true},
-        {"text": "強 schema 的關聯式資料表,每次新增自訂欄位都觸發 schema 變更與全表重建以維持一致性", "is_correct": false, "trap_type": "強 schema 不適合多變欄位"},
-        {"text": "純粹 Key-Value 資料庫,以文章 ID 為鍵將整篇 JSON 字串放在值,完全不支援欄位層查詢", "is_correct": false, "trap_type": "KV 無欄位查詢"},
-        {"text": "Graph 資料庫,將每篇文章以節點儲存且把所有屬性建模成節點與節點之間的連結邊", "is_correct": false, "trap_type": "Graph 不擅長半結構化文件"}
+        {
+          "text": "Document 型 NoSQL,以 JSON 文件保存每篇文章,欄位可變並能輕鬆容納巢狀結構與自訂屬性",
+          "is_correct": true
+        },
+        {
+          "text": "強 schema 的關聯式資料表,每次新增自訂欄位都觸發 schema 變更與全表重建以維持一致性",
+          "is_correct": false,
+          "trap_type": "強 schema 不適合多變欄位"
+        },
+        {
+          "text": "純粹 Key-Value 資料庫,以文章 ID 為鍵將整篇 JSON 字串放在值,完全不支援欄位層查詢",
+          "is_correct": false,
+          "trap_type": "KV 無欄位查詢"
+        },
+        {
+          "text": "Graph 資料庫,將每篇文章以節點儲存且把所有屬性建模成節點與節點之間的連結邊",
+          "is_correct": false,
+          "trap_type": "Graph 不擅長半結構化文件"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -190,9 +366,22 @@
         },
         "hook": "靈活欄位 + 巢狀 → 自然走 Document"
       },
-      "misconceptions": ["把 Document 與 KV 視為同一類", "用 RDBMS 硬塞變動欄位"],
-      "related_node_ids": ["n_L22202_001"],
-      "tags": ["NoSQL", "Document", "內容管理"]
+      "misconceptions": [
+        "把 Document 與 KV 視為同一類",
+        "用 RDBMS 硬塞變動欄位"
+      ],
+      "related_node_ids": [
+        "n_L22202_001"
+      ],
+      "tags": [
+        "NoSQL",
+        "Document",
+        "內容管理"
+      ],
+      "boss_topics": [
+        "media",
+        "data_eng"
+      ]
     },
     {
       "id": "q_n13_007",
@@ -204,10 +393,25 @@
       "source_level": "L1",
       "stem": "某社群平台希望強化『朋友的朋友推薦』『共同好友』『可能認識的人』等多跳關係查詢功能,既有架構使用關聯式資料庫卻每次 JOIN 多層後嚴重變慢。資料架構師建議導入哪一類資料庫最能解決此瓶頸?",
       "options": [
-        {"text": "Graph 資料庫,以節點與邊原生建模人際關係,多跳關係查詢效能遠勝多層 JOIN", "is_correct": true},
-        {"text": "Document 型 NoSQL,把每個好友 ID 巢狀儲存在使用者文件中即可解決所有多跳關係查詢", "is_correct": false, "trap_type": "巢狀無法解多跳"},
-        {"text": "更高規格的關聯式資料庫,純粹擴大硬體並增加 JOIN 索引即可避免多跳查詢的效能衰退", "is_correct": false, "trap_type": "硬擴不解模型不匹配"},
-        {"text": "Column-family 寬欄資料庫,將每位好友視為一個欄位以高吞吐方式快取所有多跳路徑結果", "is_correct": false, "trap_type": "Column 非關係查詢設計"}
+        {
+          "text": "Graph 資料庫,以節點與邊原生建模人際關係,多跳關係查詢效能遠勝多層 JOIN",
+          "is_correct": true
+        },
+        {
+          "text": "Document 型 NoSQL,把每個好友 ID 巢狀儲存在使用者文件中即可解決所有多跳關係查詢",
+          "is_correct": false,
+          "trap_type": "巢狀無法解多跳"
+        },
+        {
+          "text": "更高規格的關聯式資料庫,純粹擴大硬體並增加 JOIN 索引即可避免多跳查詢的效能衰退",
+          "is_correct": false,
+          "trap_type": "硬擴不解模型不匹配"
+        },
+        {
+          "text": "Column-family 寬欄資料庫,將每位好友視為一個欄位以高吞吐方式快取所有多跳路徑結果",
+          "is_correct": false,
+          "trap_type": "Column 非關係查詢設計"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -219,9 +423,22 @@
         },
         "hook": "關係多跳 → Graph 是不二之選"
       },
-      "misconceptions": ["以為 RDBMS JOIN 永遠夠用", "把多跳關係硬塞文件結構"],
-      "related_node_ids": ["n_L22202_001"],
-      "tags": ["NoSQL", "Graph", "推薦"]
+      "misconceptions": [
+        "以為 RDBMS JOIN 永遠夠用",
+        "把多跳關係硬塞文件結構"
+      ],
+      "related_node_ids": [
+        "n_L22202_001"
+      ],
+      "tags": [
+        "NoSQL",
+        "Graph",
+        "推薦"
+      ],
+      "boss_topics": [
+        "media",
+        "data_eng"
+      ]
     },
     {
       "id": "q_n13_008",
@@ -233,10 +450,25 @@
       "source_level": "L1",
       "stem": "某工廠 IoT 平台需保存來自數千個感測器、每秒持續寫入的時序資料,讀取多為依設備 ID + 時間區間範圍掃描。下列資料庫類型何者最適合此情境?",
       "options": [
-        {"text": "Column-family 寬欄型 NoSQL,擅長高速寫入與寬欄結構,適合大規模時序資料儲存", "is_correct": true},
-        {"text": "Graph 資料庫,把每個感測器與每筆讀數都建模為節點與邊以強化查詢路徑追蹤能力", "is_correct": false, "trap_type": "Graph 不適合時序"},
-        {"text": "Key-Value 資料庫,以(設備 ID, 時間)複合鍵儲存每筆讀數,可一律走單點查詢以加速", "is_correct": false, "trap_type": "KV 不擅長範圍掃描"},
-        {"text": "強 schema 關聯式資料庫,使用嚴格 ACID 交易確保每筆感測器讀數的寫入次序完全正確", "is_correct": false, "trap_type": "RDBMS 對高頻寫入吃力"}
+        {
+          "text": "Column-family 寬欄型 NoSQL,擅長高速寫入與寬欄結構,適合大規模時序資料儲存",
+          "is_correct": true
+        },
+        {
+          "text": "Graph 資料庫,把每個感測器與每筆讀數都建模為節點與邊以強化查詢路徑追蹤能力",
+          "is_correct": false,
+          "trap_type": "Graph 不適合時序"
+        },
+        {
+          "text": "Key-Value 資料庫,以(設備 ID, 時間)複合鍵儲存每筆讀數,可一律走單點查詢以加速",
+          "is_correct": false,
+          "trap_type": "KV 不擅長範圍掃描"
+        },
+        {
+          "text": "強 schema 關聯式資料庫,使用嚴格 ACID 交易確保每筆感測器讀數的寫入次序完全正確",
+          "is_correct": false,
+          "trap_type": "RDBMS 對高頻寫入吃力"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -248,9 +480,22 @@
         },
         "hook": "寬欄高吞吐時序 → Column-family"
       },
-      "misconceptions": ["以為 IoT 一律放關聯式", "把時序當單點查詢"],
-      "related_node_ids": ["n_L22202_005"],
-      "tags": ["NoSQL", "Column-family", "IoT"]
+      "misconceptions": [
+        "以為 IoT 一律放關聯式",
+        "把時序當單點查詢"
+      ],
+      "related_node_ids": [
+        "n_L22202_005"
+      ],
+      "tags": [
+        "NoSQL",
+        "Column-family",
+        "IoT"
+      ],
+      "boss_topics": [
+        "manufacturing",
+        "data_eng"
+      ]
     },
     {
       "id": "q_n13_009",
@@ -262,10 +507,25 @@
       "source_level": "L1",
       "stem": "CAP 定理常被簡述為『三選二』。對於一個跨資料中心的分散式系統,下列敘述何者最為正確?",
       "options": [
-        {"text": "網路分區(P)在分散式幾乎必選,實務取捨多落在 Consistency 與 Availability 之間", "is_correct": true},
-        {"text": "現代雲端架構已克服 CAP 限制,可在分區發生時同時保證一致性、可用性、分區容忍三項", "is_correct": false, "trap_type": "違反定理基本前提"},
-        {"text": "可用性(A)在分散式系統可完全捨棄,因為跨中心架構本來就接受長時間 timeout 回應", "is_correct": false, "trap_type": "可用性不可隨意丟"},
-        {"text": "CAP 是平時就會發生的取捨,即使網路完全暢通仍需三選二並隨時放棄其中一項保證", "is_correct": false, "trap_type": "CAP 是分區當下取捨"}
+        {
+          "text": "網路分區(P)在分散式幾乎必選,實務取捨多落在 Consistency 與 Availability 之間",
+          "is_correct": true
+        },
+        {
+          "text": "現代雲端架構已克服 CAP 限制,可在分區發生時同時保證一致性、可用性、分區容忍三項",
+          "is_correct": false,
+          "trap_type": "違反定理基本前提"
+        },
+        {
+          "text": "可用性(A)在分散式系統可完全捨棄,因為跨中心架構本來就接受長時間 timeout 回應",
+          "is_correct": false,
+          "trap_type": "可用性不可隨意丟"
+        },
+        {
+          "text": "CAP 是平時就會發生的取捨,即使網路完全暢通仍需三選二並隨時放棄其中一項保證",
+          "is_correct": false,
+          "trap_type": "CAP 是分區當下取捨"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -277,9 +537,20 @@
         },
         "hook": "CAP 真相:P 幾乎必選,實際是 CP 或 AP 二選一"
       },
-      "misconceptions": ["以為平時就要三選二", "誤以為 CAP 已被克服"],
-      "related_node_ids": ["n_L22202_004"],
-      "tags": ["CAP", "分散式"]
+      "misconceptions": [
+        "以為平時就要三選二",
+        "誤以為 CAP 已被克服"
+      ],
+      "related_node_ids": [
+        "n_L22202_004"
+      ],
+      "tags": [
+        "CAP",
+        "分散式"
+      ],
+      "boss_topics": [
+        "data_eng"
+      ]
     },
     {
       "id": "q_n13_010",
@@ -291,10 +562,25 @@
       "source_level": "L1",
       "stem": "某銀行的跨行轉帳系統與某全球社群平台的 like 計數,雖然都是分散式系統,但在 CAP 取捨上方向不同。下列搭配最為合理者為何?",
       "options": [
-        {"text": "銀行轉帳偏 CP(寧可暫停也不能不一致);社群 like 計數偏 AP(可接受短暫差幾秒)", "is_correct": true},
-        {"text": "銀行轉帳偏 AP(寧可數字錯也要回應);社群 like 計數偏 CP(每次點讚都需強一致鎖定)", "is_correct": false, "trap_type": "兩者取捨方向顛倒"},
-        {"text": "兩者皆應選 CP,所有面向使用者的服務都需強一致,可用性可視業務退讓予以放棄", "is_correct": false, "trap_type": "忽略可用性需求差異"},
-        {"text": "兩者皆應選 AP,因為現代分散式都已最終一致,連金融交易也可接受可逆事後校正帳目", "is_correct": false, "trap_type": "金融不接受最終一致"}
+        {
+          "text": "銀行轉帳偏 CP(寧可暫停也不能不一致);社群 like 計數偏 AP(可接受短暫差幾秒)",
+          "is_correct": true
+        },
+        {
+          "text": "銀行轉帳偏 AP(寧可數字錯也要回應);社群 like 計數偏 CP(每次點讚都需強一致鎖定)",
+          "is_correct": false,
+          "trap_type": "兩者取捨方向顛倒"
+        },
+        {
+          "text": "兩者皆應選 CP,所有面向使用者的服務都需強一致,可用性可視業務退讓予以放棄",
+          "is_correct": false,
+          "trap_type": "忽略可用性需求差異"
+        },
+        {
+          "text": "兩者皆應選 AP,因為現代分散式都已最終一致,連金融交易也可接受可逆事後校正帳目",
+          "is_correct": false,
+          "trap_type": "金融不接受最終一致"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -306,9 +592,23 @@
         },
         "hook": "金融偏 CP;社群偏 AP — 看業務對不一致的容忍度"
       },
-      "misconceptions": ["把 CP/AP 取捨方向記反", "以為所有場景都該強一致"],
-      "related_node_ids": ["n_L22202_004"],
-      "tags": ["CAP", "金融 vs 社群", "選型情境"]
+      "misconceptions": [
+        "把 CP/AP 取捨方向記反",
+        "以為所有場景都該強一致"
+      ],
+      "related_node_ids": [
+        "n_L22202_004"
+      ],
+      "tags": [
+        "CAP",
+        "金融 vs 社群",
+        "選型情境"
+      ],
+      "boss_topics": [
+        "finance",
+        "media",
+        "data_eng"
+      ]
     },
     {
       "id": "q_n13_011",
@@ -320,10 +620,25 @@
       "source_level": "L1",
       "stem": "某工程師宣稱『我們系統是 AP 系統,所以資料永遠不一致,使用者必須自行承擔風險。』對此宣稱的精確修正,下列敘述何者最為正確?",
       "options": [
-        {"text": "AP 系統並非永遠不一致,而是允許短暫不一致但給予足夠時間後最終會收斂(最終一致)", "is_correct": true},
-        {"text": "AP 系統其實等同 CP 系統,差別只是行銷說法不同,使用者實際感受到的一致性完全相同", "is_correct": false, "trap_type": "AP 與 CP 並非同義"},
-        {"text": "AP 系統代表完全放棄一致性,所有節點資料各自獨立,系統無責任進行任何資料收斂處理", "is_correct": false, "trap_type": "完全放棄一致不正確"},
-        {"text": "AP 系統的 A 指的是 ACID 的 Atomicity,並不是 CAP 的 Availability,工程師概念混淆", "is_correct": false, "trap_type": "把 A 解錯字"}
+        {
+          "text": "AP 系統並非永遠不一致,而是允許短暫不一致但給予足夠時間後最終會收斂(最終一致)",
+          "is_correct": true
+        },
+        {
+          "text": "AP 系統其實等同 CP 系統,差別只是行銷說法不同,使用者實際感受到的一致性完全相同",
+          "is_correct": false,
+          "trap_type": "AP 與 CP 並非同義"
+        },
+        {
+          "text": "AP 系統代表完全放棄一致性,所有節點資料各自獨立,系統無責任進行任何資料收斂處理",
+          "is_correct": false,
+          "trap_type": "完全放棄一致不正確"
+        },
+        {
+          "text": "AP 系統的 A 指的是 ACID 的 Atomicity,並不是 CAP 的 Availability,工程師概念混淆",
+          "is_correct": false,
+          "trap_type": "把 A 解錯字"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -335,9 +650,20 @@
         },
         "hook": "AP 不是『永遠不一致』,而是『最終一致』"
       },
-      "misconceptions": ["把 AP 視為永遠不一致", "把 CAP 的 A 誤認為 ACID 的 A"],
-      "related_node_ids": ["n_L22202_004"],
-      "tags": ["CAP", "最終一致"]
+      "misconceptions": [
+        "把 AP 視為永遠不一致",
+        "把 CAP 的 A 誤認為 ACID 的 A"
+      ],
+      "related_node_ids": [
+        "n_L22202_004"
+      ],
+      "tags": [
+        "CAP",
+        "最終一致"
+      ],
+      "boss_topics": [
+        "data_eng"
+      ]
     },
     {
       "id": "q_n13_012",
@@ -349,10 +675,25 @@
       "source_level": "L1",
       "stem": "傳統關聯式資料庫常以 ACID 描述其交易特性。下列何者『不屬於』ACID 四項特性?",
       "options": [
-        {"text": "Scalability(可擴展性),系統能依負載彈性增減節點以維持效能水準", "is_correct": true},
-        {"text": "Atomicity(原子性),交易內所有操作全做或全不做,不允許部分成功遺留中間狀態", "is_correct": false, "trap_type": "Atomicity 屬於 ACID"},
-        {"text": "Isolation(隔離性),並行交易彼此互不影響,結果與依序執行相同不會互相覆蓋", "is_correct": false, "trap_type": "Isolation 屬於 ACID"},
-        {"text": "Durability(持久性),交易一旦提交即永久保存,系統故障重啟後資料不會遺失消滅", "is_correct": false, "trap_type": "Durability 屬於 ACID"}
+        {
+          "text": "Scalability(可擴展性),系統能依負載彈性增減節點以維持效能水準",
+          "is_correct": true
+        },
+        {
+          "text": "Atomicity(原子性),交易內所有操作全做或全不做,不允許部分成功遺留中間狀態",
+          "is_correct": false,
+          "trap_type": "Atomicity 屬於 ACID"
+        },
+        {
+          "text": "Isolation(隔離性),並行交易彼此互不影響,結果與依序執行相同不會互相覆蓋",
+          "is_correct": false,
+          "trap_type": "Isolation 屬於 ACID"
+        },
+        {
+          "text": "Durability(持久性),交易一旦提交即永久保存,系統故障重啟後資料不會遺失消滅",
+          "is_correct": false,
+          "trap_type": "Durability 屬於 ACID"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -364,9 +705,20 @@
         },
         "hook": "ACID = A原子 / C一致 / I隔離 / D持久;Scalability 是另一個維度"
       },
-      "misconceptions": ["把 Scalability 塞進 ACID", "把 ACID 與 CAP 混為一談"],
-      "related_node_ids": ["n_L22202_003"],
-      "tags": ["ACID", "交易"]
+      "misconceptions": [
+        "把 Scalability 塞進 ACID",
+        "把 ACID 與 CAP 混為一談"
+      ],
+      "related_node_ids": [
+        "n_L22202_003"
+      ],
+      "tags": [
+        "ACID",
+        "交易"
+      ],
+      "boss_topics": [
+        "data_eng"
+      ]
     },
     {
       "id": "q_n13_013",
@@ -378,10 +730,25 @@
       "source_level": "L1",
       "stem": "BASE 模型常與 ACID 對照。對於 BASE 三個字母的精確意涵與適用場景,下列敘述何者最為正確?",
       "options": [
-        {"text": "Basically Available / Soft state / Eventually consistent,適合高吞吐、可接受短暫不一致的場景", "is_correct": true},
-        {"text": "Backup Available / Strong state / Exactly consistent,適合金融交易等需要強一致的關鍵任務系統", "is_correct": false, "trap_type": "字義錯誤且場景錯"},
-        {"text": "Balanced Atomic Stable Environment,描述一種介於 ACID 與分散式之間的中型企業內部架構", "is_correct": false, "trap_type": "字義誤解"},
-        {"text": "Batch Asynchronous State Engine,代表一種僅適用於離線批次處理而非線上服務的儲存模型", "is_correct": false, "trap_type": "字義誤解"}
+        {
+          "text": "Basically Available / Soft state / Eventually consistent,適合高吞吐、可接受短暫不一致的場景",
+          "is_correct": true
+        },
+        {
+          "text": "Backup Available / Strong state / Exactly consistent,適合金融交易等需要強一致的關鍵任務系統",
+          "is_correct": false,
+          "trap_type": "字義錯誤且場景錯"
+        },
+        {
+          "text": "Balanced Atomic Stable Environment,描述一種介於 ACID 與分散式之間的中型企業內部架構",
+          "is_correct": false,
+          "trap_type": "字義誤解"
+        },
+        {
+          "text": "Batch Asynchronous State Engine,代表一種僅適用於離線批次處理而非線上服務的儲存模型",
+          "is_correct": false,
+          "trap_type": "字義誤解"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -393,9 +760,20 @@
         },
         "hook": "BASE 偏鹼寬鬆;ACID 偏酸嚴謹 — 化學取名梗"
       },
-      "misconceptions": ["把 BASE 拼字錯解", "以為 BASE 等於離線批次"],
-      "related_node_ids": ["n_L22202_003"],
-      "tags": ["BASE", "最終一致"]
+      "misconceptions": [
+        "把 BASE 拼字錯解",
+        "以為 BASE 等於離線批次"
+      ],
+      "related_node_ids": [
+        "n_L22202_003"
+      ],
+      "tags": [
+        "BASE",
+        "最終一致"
+      ],
+      "boss_topics": [
+        "data_eng"
+      ]
     },
     {
       "id": "q_n13_014",
@@ -407,10 +785,25 @@
       "source_level": "L1",
       "stem": "某金融科技公司同時經營『核心交易系統』(轉帳、扣款)與『使用者行為分析平台』(瀏覽、推薦)。架構師建議兩者採不同一致性模型,下列搭配何者最為合理?",
       "options": [
-        {"text": "核心交易採 ACID(強一致);行為分析採 BASE(最終一致),依業務容忍度分流配置", "is_correct": true},
-        {"text": "核心交易採 BASE(最終一致);行為分析採 ACID(強一致),以利推薦結果絕對精確不變", "is_correct": false, "trap_type": "兩者搭配顛倒"},
-        {"text": "兩者皆採 ACID,核心與分析使用同一資料庫,所有讀寫一律走強一致避免出現延遲差異", "is_correct": false, "trap_type": "不分流會無謂犧牲擴展"},
-        {"text": "兩者皆採 BASE,以擴展性為最優先目標,即使核心交易扣款也可接受最終一致與短暫錯帳", "is_correct": false, "trap_type": "金融不能接受最終一致"}
+        {
+          "text": "核心交易採 ACID(強一致);行為分析採 BASE(最終一致),依業務容忍度分流配置",
+          "is_correct": true
+        },
+        {
+          "text": "核心交易採 BASE(最終一致);行為分析採 ACID(強一致),以利推薦結果絕對精確不變",
+          "is_correct": false,
+          "trap_type": "兩者搭配顛倒"
+        },
+        {
+          "text": "兩者皆採 ACID,核心與分析使用同一資料庫,所有讀寫一律走強一致避免出現延遲差異",
+          "is_correct": false,
+          "trap_type": "不分流會無謂犧牲擴展"
+        },
+        {
+          "text": "兩者皆採 BASE,以擴展性為最優先目標,即使核心交易扣款也可接受最終一致與短暫錯帳",
+          "is_correct": false,
+          "trap_type": "金融不能接受最終一致"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -422,9 +815,22 @@
         },
         "hook": "金融核心 ACID;分析 / 行為 BASE — 看業務對不一致的容忍度"
       },
-      "misconceptions": ["把 ACID/BASE 搭配方向記反", "把單一模型套用到所有業務"],
-      "related_node_ids": ["n_L22202_003"],
-      "tags": ["ACID", "BASE", "金融"]
+      "misconceptions": [
+        "把 ACID/BASE 搭配方向記反",
+        "把單一模型套用到所有業務"
+      ],
+      "related_node_ids": [
+        "n_L22202_003"
+      ],
+      "tags": [
+        "ACID",
+        "BASE",
+        "金融"
+      ],
+      "boss_topics": [
+        "finance",
+        "data_eng"
+      ]
     },
     {
       "id": "q_n13_015",
@@ -436,10 +842,25 @@
       "source_level": "L1",
       "stem": "對資料分區(Partition)與索引(Index)的核心目的與代價,下列敘述何者最為正確?",
       "options": [
-        {"text": "兩者皆為提升查詢效能,但分區改變實體分佈、索引佔額外空間且使寫入需同步更新", "is_correct": true},
-        {"text": "兩者皆為節省儲存空間,差異僅在分區壓縮率較高、索引壓縮率較低與查詢效能無關", "is_correct": false, "trap_type": "目的錯解為壓縮"},
-        {"text": "分區是邏輯分組不改實體分佈;索引完全無代價可對所有欄位無限建立而不影響寫入吞吐", "is_correct": false, "trap_type": "忽略索引代價"},
-        {"text": "兩者皆會犧牲查詢效能換取資料安全性,因此實務常建議盡量不要建立任何分區或索引", "is_correct": false, "trap_type": "目的與效益顛倒"}
+        {
+          "text": "兩者皆為提升查詢效能,但分區改變實體分佈、索引佔額外空間且使寫入需同步更新",
+          "is_correct": true
+        },
+        {
+          "text": "兩者皆為節省儲存空間,差異僅在分區壓縮率較高、索引壓縮率較低與查詢效能無關",
+          "is_correct": false,
+          "trap_type": "目的錯解為壓縮"
+        },
+        {
+          "text": "分區是邏輯分組不改實體分佈;索引完全無代價可對所有欄位無限建立而不影響寫入吞吐",
+          "is_correct": false,
+          "trap_type": "忽略索引代價"
+        },
+        {
+          "text": "兩者皆會犧牲查詢效能換取資料安全性,因此實務常建議盡量不要建立任何分區或索引",
+          "is_correct": false,
+          "trap_type": "目的與效益顛倒"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -451,9 +872,21 @@
         },
         "hook": "分區像書架分樓層、索引像書末檢索表 — 兩者都加速但有代價"
       },
-      "misconceptions": ["以為索引無代價", "以為分區只是邏輯分組"],
-      "related_node_ids": ["n_L22202_006"],
-      "tags": ["分區", "索引", "效能"]
+      "misconceptions": [
+        "以為索引無代價",
+        "以為分區只是邏輯分組"
+      ],
+      "related_node_ids": [
+        "n_L22202_006"
+      ],
+      "tags": [
+        "分區",
+        "索引",
+        "效能"
+      ],
+      "boss_topics": [
+        "data_eng"
+      ]
     },
     {
       "id": "q_n13_016",
@@ -465,10 +898,25 @@
       "source_level": "L1",
       "stem": "某電信公司客戶通話紀錄表已累積數百億列,絕大多數查詢都是『某段日期區間內某地區的通話量』。資料工程師討論分區策略,下列建議何者最為合理?",
       "options": [
-        {"text": "依日期(時間)分區為主,並可二級按地區分區,讓查詢可 partition pruning 跳過無關區塊", "is_correct": true},
-        {"text": "依客戶姓氏首字母分區,可讓不同姓氏的查詢均勻分散到所有分區之中以平均負載分佈", "is_correct": false, "trap_type": "分區鍵與查詢模式不符"},
-        {"text": "完全不分區但對每個欄位都建索引,讓任意組合查詢都能透過 index seek 直達答案位置", "is_correct": false, "trap_type": "全欄位索引成本爆"},
-        {"text": "以隨機 hash 分區並完全不依日期或地區,可確保資料絕對均勻而與查詢模式完全脫鉤", "is_correct": false, "trap_type": "完全脫鉤就無法 pruning"}
+        {
+          "text": "依日期(時間)分區為主,並可二級按地區分區,讓查詢可 partition pruning 跳過無關區塊",
+          "is_correct": true
+        },
+        {
+          "text": "依客戶姓氏首字母分區,可讓不同姓氏的查詢均勻分散到所有分區之中以平均負載分佈",
+          "is_correct": false,
+          "trap_type": "分區鍵與查詢模式不符"
+        },
+        {
+          "text": "完全不分區但對每個欄位都建索引,讓任意組合查詢都能透過 index seek 直達答案位置",
+          "is_correct": false,
+          "trap_type": "全欄位索引成本爆"
+        },
+        {
+          "text": "以隨機 hash 分區並完全不依日期或地區,可確保資料絕對均勻而與查詢模式完全脫鉤",
+          "is_correct": false,
+          "trap_type": "完全脫鉤就無法 pruning"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -480,9 +928,22 @@
         },
         "hook": "分區鍵要對齊主要查詢過濾條件,才能 partition pruning"
       },
-      "misconceptions": ["分區鍵與查詢模式脫鉤", "對所有欄位建索引"],
-      "related_node_ids": ["n_L22202_006"],
-      "tags": ["分區", "查詢效能", "電信"]
+      "misconceptions": [
+        "分區鍵與查詢模式脫鉤",
+        "對所有欄位建索引"
+      ],
+      "related_node_ids": [
+        "n_L22202_006"
+      ],
+      "tags": [
+        "分區",
+        "查詢效能",
+        "電信"
+      ],
+      "boss_topics": [
+        "telecom",
+        "data_eng"
+      ]
     },
     {
       "id": "q_n13_017",
@@ -494,10 +955,25 @@
       "source_level": "L1",
       "stem": "某 DBA 對訂單表所有欄位都加上索引,理由是『反正查詢都會用到』。下列對該決策的批評,何者最為精準?",
       "options": [
-        {"text": "全欄位索引會導致寫入嚴重變慢與儲存膨脹,且低基數欄位(性別)幾乎無查詢加速效果", "is_correct": true},
-        {"text": "全欄位索引完全沒有缺點,該 DBA 的做法是業界最佳實踐,只要硬碟空間足夠便應持續執行", "is_correct": false, "trap_type": "忽略全欄位索引代價"},
-        {"text": "索引會破壞 ACID 性質中的 Atomicity,因此所有交易都會因此失敗造成嚴重的資料一致問題", "is_correct": false, "trap_type": "索引與 ACID 無直接抵觸"},
-        {"text": "索引僅能加速 INSERT 與 DELETE 操作,而對於 SELECT 查詢類完全沒有任何加速幫助效果", "is_correct": false, "trap_type": "索引主要加速 SELECT"}
+        {
+          "text": "全欄位索引會導致寫入嚴重變慢與儲存膨脹,且低基數欄位(性別)幾乎無查詢加速效果",
+          "is_correct": true
+        },
+        {
+          "text": "全欄位索引完全沒有缺點,該 DBA 的做法是業界最佳實踐,只要硬碟空間足夠便應持續執行",
+          "is_correct": false,
+          "trap_type": "忽略全欄位索引代價"
+        },
+        {
+          "text": "索引會破壞 ACID 性質中的 Atomicity,因此所有交易都會因此失敗造成嚴重的資料一致問題",
+          "is_correct": false,
+          "trap_type": "索引與 ACID 無直接抵觸"
+        },
+        {
+          "text": "索引僅能加速 INSERT 與 DELETE 操作,而對於 SELECT 查詢類完全沒有任何加速幫助效果",
+          "is_correct": false,
+          "trap_type": "索引主要加速 SELECT"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -509,9 +985,21 @@
         },
         "hook": "Index 對低基數欄位幫助有限;全欄位索引寫入變慢 + 儲存膨脹"
       },
-      "misconceptions": ["以為索引越多越好", "把索引與 ACID 性質混淆"],
-      "related_node_ids": ["n_L22202_001"],
-      "tags": ["索引", "效能取捨", "低基數"]
+      "misconceptions": [
+        "以為索引越多越好",
+        "把索引與 ACID 性質混淆"
+      ],
+      "related_node_ids": [
+        "n_L22202_001"
+      ],
+      "tags": [
+        "索引",
+        "效能取捨",
+        "低基數"
+      ],
+      "boss_topics": [
+        "data_eng"
+      ]
     },
     {
       "id": "q_n13_018",
@@ -523,10 +1011,25 @@
       "source_level": "L1",
       "stem": "某企業導入儲存階層管理,將資料分為 Hot / Warm / Cold / Archive 四層。對於各層特性的描述,下列何者最為正確?",
       "options": [
-        {"text": "Hot 最貴但延遲最低、Archive 最便宜但取回慢,層級依存取頻率向下漸冷且成本漸低", "is_correct": true},
-        {"text": "Hot 最便宜且延遲最低、Archive 最貴但取回最快,層級依存取頻率向下漸冷且成本漸高", "is_correct": false, "trap_type": "貴與便宜記反"},
-        {"text": "四層皆為同等價格與延遲,差異僅在標籤命名以方便資料治理人員劃分歸檔的時序順序", "is_correct": false, "trap_type": "誤以為無價差"},
-        {"text": "Archive 等同立即刪除,資料一旦下沉至此層即無法在任何時點取回供後續查詢使用", "is_correct": false, "trap_type": "Archive 非刪除"}
+        {
+          "text": "Hot 最貴但延遲最低、Archive 最便宜但取回慢,層級依存取頻率向下漸冷且成本漸低",
+          "is_correct": true
+        },
+        {
+          "text": "Hot 最便宜且延遲最低、Archive 最貴但取回最快,層級依存取頻率向下漸冷且成本漸高",
+          "is_correct": false,
+          "trap_type": "貴與便宜記反"
+        },
+        {
+          "text": "四層皆為同等價格與延遲,差異僅在標籤命名以方便資料治理人員劃分歸檔的時序順序",
+          "is_correct": false,
+          "trap_type": "誤以為無價差"
+        },
+        {
+          "text": "Archive 等同立即刪除,資料一旦下沉至此層即無法在任何時點取回供後續查詢使用",
+          "is_correct": false,
+          "trap_type": "Archive 非刪除"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -538,9 +1041,20 @@
         },
         "hook": "越冷越便宜 → 取回越慢;Archive ≠ 刪除"
       },
-      "misconceptions": ["把 Archive 等同刪除", "誤以為四層同價"],
-      "related_node_ids": ["n_L22202_001"],
-      "tags": ["儲存階層", "成本"]
+      "misconceptions": [
+        "把 Archive 等同刪除",
+        "誤以為四層同價"
+      ],
+      "related_node_ids": [
+        "n_L22202_001"
+      ],
+      "tags": [
+        "儲存階層",
+        "成本"
+      ],
+      "boss_topics": [
+        "data_eng"
+      ]
     },
     {
       "id": "q_n13_019",
@@ -552,10 +1066,25 @@
       "source_level": "L1",
       "stem": "某保險公司因法規須保存客戶 7 年前的理賠紀錄,平時幾乎不查詢但稽核時可能調閱;另須提供即時推薦模型的客戶特徵資料以毫秒級回應。財務長要求資料長給出儲存階層分配建議,下列何者最為合理?",
       "options": [
-        {"text": "7 年前理賠紀錄放 Archive 層、即時推薦特徵放 Hot 層,以 ILM 規則自動下沉冷資料降低成本", "is_correct": true},
-        {"text": "兩者皆放 Hot 層以確保毫秒級回應,所有歷史理賠紀錄即使數年內毫無查詢需求也維持最高層", "is_correct": false, "trap_type": "全 Hot 成本爆炸"},
-        {"text": "兩者皆放 Archive 層以追求最低儲存成本,即使即時推薦模型也容忍數小時級取回的延遲時間", "is_correct": false, "trap_type": "Archive 不適合即時"},
-        {"text": "兩者皆放 Cold 層作為折衷,既不會太貴也不會太慢,可省去設計多層 ILM 的維護管理工作", "is_correct": false, "trap_type": "折衷未對齊需求"}
+        {
+          "text": "7 年前理賠紀錄放 Archive 層、即時推薦特徵放 Hot 層,以 ILM 規則自動下沉冷資料降低成本",
+          "is_correct": true
+        },
+        {
+          "text": "兩者皆放 Hot 層以確保毫秒級回應,所有歷史理賠紀錄即使數年內毫無查詢需求也維持最高層",
+          "is_correct": false,
+          "trap_type": "全 Hot 成本爆炸"
+        },
+        {
+          "text": "兩者皆放 Archive 層以追求最低儲存成本,即使即時推薦模型也容忍數小時級取回的延遲時間",
+          "is_correct": false,
+          "trap_type": "Archive 不適合即時"
+        },
+        {
+          "text": "兩者皆放 Cold 層作為折衷,既不會太貴也不會太慢,可省去設計多層 ILM 的維護管理工作",
+          "is_correct": false,
+          "trap_type": "折衷未對齊需求"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -567,9 +1096,23 @@
         },
         "hook": "ILM 自動下沉:Hot 服務即時、Archive 收法規長尾"
       },
-      "misconceptions": ["全部資料放 Hot 不分流", "Archive 用於即時查詢"],
-      "related_node_ids": ["n_L22202_001"],
-      "tags": ["ILM", "Archive", "Hot", "保險"]
+      "misconceptions": [
+        "全部資料放 Hot 不分流",
+        "Archive 用於即時查詢"
+      ],
+      "related_node_ids": [
+        "n_L22202_001"
+      ],
+      "tags": [
+        "ILM",
+        "Archive",
+        "Hot",
+        "保險"
+      ],
+      "boss_topics": [
+        "finance",
+        "data_eng"
+      ]
     },
     {
       "id": "q_n13_020",
@@ -581,10 +1124,25 @@
       "source_level": "L1",
       "stem": "某新創導入雲端物件儲存後發現帳單暴增,進一步分析發現大量 3 年以上幾無存取的影片仍放在最貴的層級。下列改善方向何者最為有效?",
       "options": [
-        {"text": "設定 ILM 規則,依存取頻率將冷資料自動下沉至 Cold 或 Archive 以平衡效能與成本", "is_correct": true},
-        {"text": "立即刪除所有 3 年以上的影片,既能釋放儲存空間又能完全省下未來所有層級的儲存費用", "is_correct": false, "trap_type": "刪除違反保存需求"},
-        {"text": "把所有資料統一搬到 Archive 層,即使近期熱門影片也接受數小時取回時間以追求成本最低化", "is_correct": false, "trap_type": "未分流會傷使用者體驗"},
-        {"text": "增加 Hot 層的儲存配額並調漲使用者訂閱費,以收入彌補日益膨脹的儲存成本支出", "is_correct": false, "trap_type": "未解根因只轉嫁"}
+        {
+          "text": "設定 ILM 規則,依存取頻率將冷資料自動下沉至 Cold 或 Archive 以平衡效能與成本",
+          "is_correct": true
+        },
+        {
+          "text": "立即刪除所有 3 年以上的影片,既能釋放儲存空間又能完全省下未來所有層級的儲存費用",
+          "is_correct": false,
+          "trap_type": "刪除違反保存需求"
+        },
+        {
+          "text": "把所有資料統一搬到 Archive 層,即使近期熱門影片也接受數小時取回時間以追求成本最低化",
+          "is_correct": false,
+          "trap_type": "未分流會傷使用者體驗"
+        },
+        {
+          "text": "增加 Hot 層的儲存配額並調漲使用者訂閱費,以收入彌補日益膨脹的儲存成本支出",
+          "is_correct": false,
+          "trap_type": "未解根因只轉嫁"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -596,9 +1154,21 @@
         },
         "hook": "未設 ILM → 所有資料卡在 Hot 層 → 成本爆炸;設 ILM 自動下沉是標準解"
       },
-      "misconceptions": ["以為刪除是唯一方式", "全資料統一階層忽略冷熱差異"],
-      "related_node_ids": ["n_L22202_001"],
-      "tags": ["ILM", "成本優化", "雲端儲存"]
+      "misconceptions": [
+        "以為刪除是唯一方式",
+        "全資料統一階層忽略冷熱差異"
+      ],
+      "related_node_ids": [
+        "n_L22202_001"
+      ],
+      "tags": [
+        "ILM",
+        "成本優化",
+        "雲端儲存"
+      ],
+      "boss_topics": [
+        "data_eng"
+      ]
     }
   ]
 }

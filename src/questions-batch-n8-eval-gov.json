@@ -129,6 +129,9 @@
         "Precision",
         "Recall",
         "混淆矩陣"
+      ],
+      "boss_topics": [
+        "ml_bigdata"
       ]
     },
     {
@@ -228,6 +231,9 @@
         "errata",
         "勘誤",
         "癌症篩檢"
+      ],
+      "boss_topics": [
+        "medical"
       ]
     },
     {
@@ -326,7 +332,8 @@
         "Precision",
         "垃圾郵件",
         "公式辨識"
-      ]
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n8_004",
@@ -416,6 +423,9 @@
         "F1",
         "調和平均",
         "公式應用"
+      ],
+      "boss_topics": [
+        "ml_bigdata"
       ]
     },
     {
@@ -514,7 +524,8 @@
         "Accuracy",
         "不平衡資料",
         "Recall對照"
-      ]
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n8_006",
@@ -570,7 +581,8 @@
         "Stratified",
         "LOOCV",
         "Time Series CV"
-      ]
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n8_007",
@@ -626,6 +638,9 @@
         "Stratified LOOCV",
         "極小樣本",
         "情境決策"
+      ],
+      "boss_topics": [
+        "medical"
       ]
     },
     {
@@ -682,6 +697,9 @@
         "Accuracy陷阱",
         "Recall優先",
         "盜刷偵測"
+      ],
+      "boss_topics": [
+        "finance"
       ]
     },
     {
@@ -738,7 +756,8 @@
         "線性迴歸",
         "欠擬合",
         "非線性"
-      ]
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n8_010",
@@ -794,6 +813,9 @@
         "業務目標",
         "Precision-Recall權衡",
         "搜尋系統"
+      ],
+      "boss_topics": [
+        "ecommerce"
       ]
     },
     {
@@ -851,6 +873,9 @@
         "Ridge",
         "Lasso",
         "共線性"
+      ],
+      "boss_topics": [
+        "finance"
       ]
     },
     {
@@ -907,7 +932,8 @@
         "驗證集",
         "patience",
         "過擬合"
-      ]
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n8_013",
@@ -963,7 +989,8 @@
         "正則化",
         "神經網路",
         "推論模式"
-      ]
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n8_014",
@@ -1019,7 +1046,8 @@
         "欠擬合",
         "防過擬合策略",
         "判讀"
-      ]
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n8_015",
@@ -1077,7 +1105,8 @@
         "資料增強",
         "Dropout",
         "L2"
-      ]
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n8_016",
@@ -1133,6 +1162,9 @@
         "Lasso",
         "特徵選擇",
         "稀疏解"
+      ],
+      "boss_topics": [
+        "medical"
       ]
     },
     {
@@ -1190,6 +1222,10 @@
         "GDPR",
         "PDPA",
         "銀行協作"
+      ],
+      "boss_topics": [
+        "finance",
+        "privacy"
       ]
     },
     {
@@ -1248,6 +1284,10 @@
         "雜湊",
         "對稱加密",
         "隱私技術組合"
+      ],
+      "boss_topics": [
+        "finance",
+        "privacy"
       ]
     },
     {
@@ -1304,6 +1344,9 @@
         "DP",
         "公開資料匿名",
         "結合攻擊"
+      ],
+      "boss_topics": [
+        "privacy"
       ]
     },
     {
@@ -1360,6 +1403,10 @@
         "FL",
         "分散式學習",
         "醫療AI"
+      ],
+      "boss_topics": [
+        "medical",
+        "privacy"
       ]
     },
     {
@@ -1418,6 +1465,9 @@
         "MPC",
         "同態加密",
         "技術對比"
+      ],
+      "boss_topics": [
+        "privacy"
       ]
     },
     {
@@ -1474,6 +1524,9 @@
         "Sampling Bias",
         "Label Bias",
         "Feature Bias"
+      ],
+      "boss_topics": [
+        "finance"
       ]
     },
     {
@@ -1530,7 +1583,8 @@
         "Demographic Parity",
         "Equal Opportunity",
         "Equalized Odds"
-      ]
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n8_024",
@@ -1586,7 +1640,8 @@
         "隱式偏誤",
         "跨語言失準",
         "去偏方法"
-      ]
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n8_025",
@@ -1642,6 +1697,9 @@
         "Demographic Parity",
         "Equal Opportunity",
         "業務目標"
+      ],
+      "boss_topics": [
+        "finance"
       ]
     }
   ],

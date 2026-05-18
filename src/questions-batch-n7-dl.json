@@ -35,10 +35,25 @@
       "source_level": "L1",
       "stem": "某學員在複習神經元基本運算時,看到課本寫著「神經元先做加權求和再經激活函數」。下列哪一個式子最完整且正確地表達『加權求和』Z 的計算公式(其中 wᵢ 為權重、xᵢ 為輸入、b 為偏置項)?",
       "options": [
-        {"text": "Z = Σᵢ wᵢ·xᵢ + b,索引 i 遍歷所有輸入特徵後再加偏置項即為加權求和", "is_correct": true},
-        {"text": "Z = w₁·x₁ + b,僅針對第一個輸入計算乘積後再加偏置項即為完整公式", "is_correct": false, "trap_type": "原 PDF 誤植為僅 w₁x₁,實為 errata 重點;真正公式應遍歷所有 i"},
-        {"text": "Z = Σᵢ wᵢ + xᵢ + b,將所有權重與輸入分別加總後再加偏置項即為加權求和", "is_correct": false, "trap_type": "把『相乘後加總』誤寫成『相加再加總』,不符加權概念"},
-        {"text": "Z = Σᵢ (wᵢ + xᵢ)·b,以偏置項作為共同乘數套用於所有輸入加權項上", "is_correct": false, "trap_type": "偏置項應為加項而非乘項,且加權應乘非加"}
+        {
+          "text": "Z = Σᵢ wᵢ·xᵢ + b,索引 i 遍歷所有輸入特徵後再加偏置項即為加權求和",
+          "is_correct": true
+        },
+        {
+          "text": "Z = w₁·x₁ + b,僅針對第一個輸入計算乘積後再加偏置項即為完整公式",
+          "is_correct": false,
+          "trap_type": "原 PDF 誤植為僅 w₁x₁,實為 errata 重點;真正公式應遍歷所有 i"
+        },
+        {
+          "text": "Z = Σᵢ wᵢ + xᵢ + b,將所有權重與輸入分別加總後再加偏置項即為加權求和",
+          "is_correct": false,
+          "trap_type": "把『相乘後加總』誤寫成『相加再加總』,不符加權概念"
+        },
+        {
+          "text": "Z = Σᵢ (wᵢ + xᵢ)·b,以偏置項作為共同乘數套用於所有輸入加權項上",
+          "is_correct": false,
+          "trap_type": "偏置項應為加項而非乘項,且加權應乘非加"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -50,9 +65,22 @@
         },
         "hook": "加權求和記憶口訣:『權重乘輸入、總和加偏置、索引要遍歷』;errata 重點:索引是 i 不是 1"
       },
-      "misconceptions": ["把求和索引固定為 1(原 PDF 誤植版)", "把『加權』誤解成單純加法", "誤把偏置項放成乘數"],
-      "related_node_ids": ["n_L23203_003", "n_L23203_001"],
-      "tags": ["加權求和", "神經元", "errata", "感知器"]
+      "misconceptions": [
+        "把求和索引固定為 1(原 PDF 誤植版)",
+        "把『加權』誤解成單純加法",
+        "誤把偏置項放成乘數"
+      ],
+      "related_node_ids": [
+        "n_L23203_003",
+        "n_L23203_001"
+      ],
+      "tags": [
+        "加權求和",
+        "神經元",
+        "errata",
+        "感知器"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n7_dl_002",
@@ -64,10 +92,25 @@
       "source_level": "L1",
       "stem": "某 AI 學員在訓練一個 5 層全連接神經網路時,發現訓練到第 30 個 epoch 後 loss 完全不下降,進一步檢查發現他在每一層之間都使用線性激活函數(Identity)。下列哪一項說明最能解釋『訓練停滯』的根本原因?",
       "options": [
-        {"text": "線性激活疊加多層後仍等同單層線性映射,模型表達能力不變,改用 ReLU 等非線性激活即可引入非線性能力", "is_correct": true},
-        {"text": "線性激活函數會導致梯度爆炸,讓權重數值溢位無法更新,改用 Sigmoid 限制輸出在 (0,1) 即可解決", "is_correct": false, "trap_type": "線性激活問題是表達力不足而非梯度爆炸,且 Sigmoid 易飽和反而造成梯度消失"},
-        {"text": "線性激活的計算複雜度過高,GPU 無法處理大量矩陣連乘,應改用 Tanh 來降低運算負荷加速收斂", "is_correct": false, "trap_type": "Tanh 計算量並未較線性低,且非線性引入才是關鍵,計算量並非主因"},
-        {"text": "線性激活在反向傳播時會自動關閉所有神經元,使網路喪失學習能力,改用更深的網路架構即可恢復學習", "is_correct": false, "trap_type": "線性激活反向傳播仍可運作,只是表達力等同單層;加深層數無法解決『線性疊加仍線性』的本質"}
+        {
+          "text": "線性激活疊加多層後仍等同單層線性映射,模型表達能力不變,改用 ReLU 等非線性激活即可引入非線性能力",
+          "is_correct": true
+        },
+        {
+          "text": "線性激活函數會導致梯度爆炸,讓權重數值溢位無法更新,改用 Sigmoid 限制輸出在 (0,1) 即可解決",
+          "is_correct": false,
+          "trap_type": "線性激活問題是表達力不足而非梯度爆炸,且 Sigmoid 易飽和反而造成梯度消失"
+        },
+        {
+          "text": "線性激活的計算複雜度過高,GPU 無法處理大量矩陣連乘,應改用 Tanh 來降低運算負荷加速收斂",
+          "is_correct": false,
+          "trap_type": "Tanh 計算量並未較線性低,且非線性引入才是關鍵,計算量並非主因"
+        },
+        {
+          "text": "線性激活在反向傳播時會自動關閉所有神經元,使網路喪失學習能力,改用更深的網路架構即可恢復學習",
+          "is_correct": false,
+          "trap_type": "線性激活反向傳播仍可運作,只是表達力等同單層;加深層數無法解決『線性疊加仍線性』的本質"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -79,9 +122,22 @@
         },
         "hook": "ReLU 兩大優點:『引入非線性』+『計算便宜不飽和』;線性激活致命傷:多層仍線性,加深無用"
       },
-      "misconceptions": ["以為加深層數可解決線性退化", "把 Sigmoid 當作改進線性的安全選擇", "誤把表達力問題當作梯度爆炸"],
-      "related_node_ids": ["n_L23203_001", "n_L23203_003"],
-      "tags": ["ReLU", "激活函數", "線性退化", "非線性"]
+      "misconceptions": [
+        "以為加深層數可解決線性退化",
+        "把 Sigmoid 當作改進線性的安全選擇",
+        "誤把表達力問題當作梯度爆炸"
+      ],
+      "related_node_ids": [
+        "n_L23203_001",
+        "n_L23203_003"
+      ],
+      "tags": [
+        "ReLU",
+        "激活函數",
+        "線性退化",
+        "非線性"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n7_dl_003",
@@ -93,10 +149,25 @@
       "source_level": "L1",
       "stem": "某資料科學新人在比較 Sigmoid、Tanh、ReLU 三種激活函數時,整理了下列四項敘述。請挑出『完全正確且與中級教材一致』的一項。",
       "options": [
-        {"text": "Sigmoid 輸出範圍 (0,1) 適合二元分類輸出層;Tanh 輸出範圍 (-1,1) 中心化於 0;ReLU 在正區間無飽和且計算便宜,常用於現代模型隱藏層", "is_correct": true},
-        {"text": "Sigmoid 與 Tanh 在多類別分類輸出層皆優於 Softmax,因 Sigmoid 提供獨立機率;Tanh 因負範圍可表『反對』,故為多類別最佳選擇", "is_correct": false, "trap_type": "多類別輸出應用 Softmax 確保總和為 1,Sigmoid 機率彼此獨立會超過 1,Tanh 更不適合多類別"},
-        {"text": "ReLU 在輸入為負時輸出仍為原值,故沒有梯度為零的死區可避免訓練停滯,故為優於 Sigmoid 與 Tanh 的關鍵原因之一現代主流", "is_correct": false, "trap_type": "ReLU 負區間輸出為 0、梯度為 0(Dying ReLU 問題),不是『輸出仍為原值』"},
-        {"text": "Tanh 的飽和區間比 Sigmoid 更廣,梯度消失問題比 Sigmoid 更嚴重,業界已完全棄用 Tanh 並推薦一律改用 Sigmoid 替代各層使用", "is_correct": false, "trap_type": "Tanh 在 0 附近梯度比 Sigmoid 大,實務上常優於 Sigmoid;『業界完全棄用 Tanh』為錯誤敘述"}
+        {
+          "text": "Sigmoid 輸出範圍 (0,1) 適合二元分類輸出層;Tanh 輸出範圍 (-1,1) 中心化於 0;ReLU 在正區間無飽和且計算便宜,常用於現代模型隱藏層",
+          "is_correct": true
+        },
+        {
+          "text": "Sigmoid 與 Tanh 在多類別分類輸出層皆優於 Softmax,因 Sigmoid 提供獨立機率;Tanh 因負範圍可表『反對』,故為多類別最佳選擇",
+          "is_correct": false,
+          "trap_type": "多類別輸出應用 Softmax 確保總和為 1,Sigmoid 機率彼此獨立會超過 1,Tanh 更不適合多類別"
+        },
+        {
+          "text": "ReLU 在輸入為負時輸出仍為原值,故沒有梯度為零的死區可避免訓練停滯,故為優於 Sigmoid 與 Tanh 的關鍵原因之一現代主流",
+          "is_correct": false,
+          "trap_type": "ReLU 負區間輸出為 0、梯度為 0(Dying ReLU 問題),不是『輸出仍為原值』"
+        },
+        {
+          "text": "Tanh 的飽和區間比 Sigmoid 更廣,梯度消失問題比 Sigmoid 更嚴重,業界已完全棄用 Tanh 並推薦一律改用 Sigmoid 替代各層使用",
+          "is_correct": false,
+          "trap_type": "Tanh 在 0 附近梯度比 Sigmoid 大,實務上常優於 Sigmoid;『業界完全棄用 Tanh』為錯誤敘述"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -108,9 +179,22 @@
         },
         "hook": "激活函數三選一:輸出層二元 → Sigmoid;輸出層多元 → Softmax;隱藏層主流 → ReLU"
       },
-      "misconceptions": ["以為 Sigmoid 適用多類別", "誤以為 ReLU 無死區", "誤以為 Tanh 比 Sigmoid 差"],
-      "related_node_ids": ["n_L23203_001"],
-      "tags": ["激活函數", "Sigmoid", "Tanh", "ReLU", "Softmax"]
+      "misconceptions": [
+        "以為 Sigmoid 適用多類別",
+        "誤以為 ReLU 無死區",
+        "誤以為 Tanh 比 Sigmoid 差"
+      ],
+      "related_node_ids": [
+        "n_L23203_001"
+      ],
+      "tags": [
+        "激活函數",
+        "Sigmoid",
+        "Tanh",
+        "ReLU",
+        "Softmax"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n7_dl_004",
@@ -122,10 +206,25 @@
       "source_level": "L1",
       "stem": "某電力公司資料科學團隊要建立『未來七天每小時電力需求預測』模型,輸入為過去 30 天每小時的氣溫、用電量與是否假日(168 步序列)。下列哪一個架構最匹配此任務的特性,且能合理處理長距離時序依賴?",
       "options": [
-        {"text": "LSTM,因其 Input/Forget/Output 三閘控與 Cell State 設計可保留長序列關鍵資訊,專為時序預測任務而生", "is_correct": true},
-        {"text": "全連接神經網路 FCNN,把 168 步全部展平輸入即可,FC 層之間的密集連結會自動學會時序順序與週期模式", "is_correct": false, "trap_type": "FCNN 缺少時序歸納偏差,展平後失去時間順序語意,且參數量爆炸難以訓練"},
-        {"text": "卷積神經網路 CNN,用 1D 卷積掃過序列即可完美捕捉時序,且 CNN 權重共享比 LSTM 參數更少訓練最快", "is_correct": false, "trap_type": "1D CNN 雖可處理短時序,但長距離依賴不如 LSTM,且本題重點是『長距離時序』"},
-        {"text": "決策樹迴歸器,因樹模型對特徵尺度不敏感且可處理混合特徵,168 步直接當作 168 個獨立特徵輸入即可", "is_correct": false, "trap_type": "樹模型不具時序語意,把 168 步當獨立特徵會喪失順序資訊,且難捕捉長距離依賴"}
+        {
+          "text": "LSTM,因其 Input/Forget/Output 三閘控與 Cell State 設計可保留長序列關鍵資訊,專為時序預測任務而生",
+          "is_correct": true
+        },
+        {
+          "text": "全連接神經網路 FCNN,把 168 步全部展平輸入即可,FC 層之間的密集連結會自動學會時序順序與週期模式",
+          "is_correct": false,
+          "trap_type": "FCNN 缺少時序歸納偏差,展平後失去時間順序語意,且參數量爆炸難以訓練"
+        },
+        {
+          "text": "卷積神經網路 CNN,用 1D 卷積掃過序列即可完美捕捉時序,且 CNN 權重共享比 LSTM 參數更少訓練最快",
+          "is_correct": false,
+          "trap_type": "1D CNN 雖可處理短時序,但長距離依賴不如 LSTM,且本題重點是『長距離時序』"
+        },
+        {
+          "text": "決策樹迴歸器,因樹模型對特徵尺度不敏感且可處理混合特徵,168 步直接當作 168 個獨立特徵輸入即可",
+          "is_correct": false,
+          "trap_type": "樹模型不具時序語意,把 168 步當獨立特徵會喪失順序資訊,且難捕捉長距離依賴"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -137,9 +236,23 @@
         },
         "hook": "時序預測選架構速查:短序列 → ARIMA;中等序列 + 多變量 → LSTM/GRU;極長序列 + 全局依賴 → Transformer"
       },
-      "misconceptions": ["以為 FCNN 可代替 LSTM 處理時序", "把 CNN 等同 LSTM 處理長距離依賴", "忽視時序模型的歸納偏差價值"],
-      "related_node_ids": ["n_L23203_002"],
-      "tags": ["LSTM", "時序預測", "深度學習架構", "情境決策"]
+      "misconceptions": [
+        "以為 FCNN 可代替 LSTM 處理時序",
+        "把 CNN 等同 LSTM 處理長距離依賴",
+        "忽視時序模型的歸納偏差價值"
+      ],
+      "related_node_ids": [
+        "n_L23203_002"
+      ],
+      "tags": [
+        "LSTM",
+        "時序預測",
+        "深度學習架構",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "energy"
+      ]
     },
     {
       "id": "q_n7_dl_005",
@@ -151,10 +264,25 @@
       "source_level": "L1",
       "stem": "某 NLP 工程師在實作雙向情感分析模型時,猶豫使用 LSTM 還是 GRU。團隊技術主管要求列出兩者最關鍵的『結構差異』。下列哪一項對 LSTM 與 GRU 結構差異的描述最為正確?",
       "options": [
-        {"text": "LSTM 有三個閘(Input/Forget/Output)加獨立 Cell State,GRU 只有兩個閘(Update/Reset)無獨立 Cell State,GRU 是簡化版參數較少", "is_correct": true},
-        {"text": "LSTM 有四個閘(Input/Forget/Output/Update),GRU 有三個閘(Update/Reset/Output),GRU 比 LSTM 多一個輸出層精準但參數較多", "is_correct": false, "trap_type": "LSTM 為 3 閘非 4 閘,GRU 為 2 閘非 3 閘;且 GRU 應為簡化版而非更複雜版"},
-        {"text": "LSTM 與 GRU 結構完全相同,僅是命名差異實作上可隨意互換,差別僅在框架支援度,TensorFlow 用 LSTM、PyTorch 則用 GRU", "is_correct": false, "trap_type": "兩者結構不同(閘數與 Cell State 設計皆異),框架支援也並無此分配"},
-        {"text": "LSTM 沒有任何閘只有 Cell State,GRU 才是『有閘』的架構,故 GRU 表達力遠強於 LSTM,在所有任務皆全面優於 LSTM 系列", "is_correct": false, "trap_type": "LSTM 三閘是核心設計,『無閘』完全錯誤;且 GRU 並非處處優於 LSTM"}
+        {
+          "text": "LSTM 有三個閘(Input/Forget/Output)加獨立 Cell State,GRU 只有兩個閘(Update/Reset)無獨立 Cell State,GRU 是簡化版參數較少",
+          "is_correct": true
+        },
+        {
+          "text": "LSTM 有四個閘(Input/Forget/Output/Update),GRU 有三個閘(Update/Reset/Output),GRU 比 LSTM 多一個輸出層精準但參數較多",
+          "is_correct": false,
+          "trap_type": "LSTM 為 3 閘非 4 閘,GRU 為 2 閘非 3 閘;且 GRU 應為簡化版而非更複雜版"
+        },
+        {
+          "text": "LSTM 與 GRU 結構完全相同,僅是命名差異實作上可隨意互換,差別僅在框架支援度,TensorFlow 用 LSTM、PyTorch 則用 GRU",
+          "is_correct": false,
+          "trap_type": "兩者結構不同(閘數與 Cell State 設計皆異),框架支援也並無此分配"
+        },
+        {
+          "text": "LSTM 沒有任何閘只有 Cell State,GRU 才是『有閘』的架構,故 GRU 表達力遠強於 LSTM,在所有任務皆全面優於 LSTM 系列",
+          "is_correct": false,
+          "trap_type": "LSTM 三閘是核心設計,『無閘』完全錯誤;且 GRU 並非處處優於 LSTM"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -166,9 +294,23 @@
         },
         "hook": "LSTM 三閘:Input/Forget/Output + Cell State;GRU 兩閘:Update/Reset 合併 Cell;GRU 是 LSTM 的簡化版"
       },
-      "misconceptions": ["把 LSTM 閘數記成 4 閘", "誤以為 GRU 比 LSTM 複雜", "誤以為 LSTM 與 GRU 結構相同"],
-      "related_node_ids": ["n_L23203_002"],
-      "tags": ["LSTM", "GRU", "閘控機制", "RNN"]
+      "misconceptions": [
+        "把 LSTM 閘數記成 4 閘",
+        "誤以為 GRU 比 LSTM 複雜",
+        "誤以為 LSTM 與 GRU 結構相同"
+      ],
+      "related_node_ids": [
+        "n_L23203_002"
+      ],
+      "tags": [
+        "LSTM",
+        "GRU",
+        "閘控機制",
+        "RNN"
+      ],
+      "boss_topics": [
+        "legal"
+      ]
     },
     {
       "id": "q_n7_dl_006",
@@ -180,10 +322,25 @@
       "source_level": "L1",
       "stem": "某影像分類模型訓練到第 50 epoch 後 loss 高原停滯,工程師檢查發現第一隱藏層使用 Sigmoid 激活,且輸入未做標準化導致部分輸入絕對值大於 10。下列哪一項解釋『梯度為何幾乎消失』最為合理?",
       "options": [
-        {"text": "Sigmoid 在輸入絕對值大時進入飽和區(σ'(x)→0),反向傳播鏈式法則連乘多個極小梯度,深層權重更新量趨近零造成停滯", "is_correct": true},
-        {"text": "Sigmoid 在輸入大時會輸出負值,讓權重更新方向反轉,導致梯度互相抵消後變成接近零的小值,故無法收斂訓練停滯", "is_correct": false, "trap_type": "Sigmoid 輸出永遠在 (0,1),不會輸出負值,『方向反轉抵消』是錯誤機制"},
-        {"text": "Sigmoid 對輸入未標準化的資料會自動觸發 dropout,讓 50% 神經元輸出歸零,所以梯度自然消失而屬於正常現象", "is_correct": false, "trap_type": "Sigmoid 不含 dropout 機制,兩者完全獨立;dropout 也並非 Sigmoid 副作用"},
-        {"text": "Sigmoid 把輸入映射到 (-1,1) 後,正反向傳播取絕對值會變得極大,實際是『梯度爆炸』而非梯度消失,工程師應降低學習率", "is_correct": false, "trap_type": "Sigmoid 輸出範圍是 (0,1) 不含負值,且問題是梯度消失而非梯度爆炸"}
+        {
+          "text": "Sigmoid 在輸入絕對值大時進入飽和區(σ'(x)→0),反向傳播鏈式法則連乘多個極小梯度,深層權重更新量趨近零造成停滯",
+          "is_correct": true
+        },
+        {
+          "text": "Sigmoid 在輸入大時會輸出負值,讓權重更新方向反轉,導致梯度互相抵消後變成接近零的小值,故無法收斂訓練停滯",
+          "is_correct": false,
+          "trap_type": "Sigmoid 輸出永遠在 (0,1),不會輸出負值,『方向反轉抵消』是錯誤機制"
+        },
+        {
+          "text": "Sigmoid 對輸入未標準化的資料會自動觸發 dropout,讓 50% 神經元輸出歸零,所以梯度自然消失而屬於正常現象",
+          "is_correct": false,
+          "trap_type": "Sigmoid 不含 dropout 機制,兩者完全獨立;dropout 也並非 Sigmoid 副作用"
+        },
+        {
+          "text": "Sigmoid 把輸入映射到 (-1,1) 後,正反向傳播取絕對值會變得極大,實際是『梯度爆炸』而非梯度消失,工程師應降低學習率",
+          "is_correct": false,
+          "trap_type": "Sigmoid 輸出範圍是 (0,1) 不含負值,且問題是梯度消失而非梯度爆炸"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -195,9 +352,21 @@
         },
         "hook": "Sigmoid 飽和:|x| 大 → σ'→0 → 梯度連乘趨零 → 梯度消失;ReLU 在正區間 σ'=1 不飽和"
       },
-      "misconceptions": ["把 Sigmoid 輸出範圍記成 (-1,1)", "把梯度消失誤判為梯度爆炸", "誤以為 Sigmoid 自動含 Dropout"],
-      "related_node_ids": ["n_L23203_001"],
-      "tags": ["Sigmoid", "梯度消失", "激活飽和", "情境決策"]
+      "misconceptions": [
+        "把 Sigmoid 輸出範圍記成 (-1,1)",
+        "把梯度消失誤判為梯度爆炸",
+        "誤以為 Sigmoid 自動含 Dropout"
+      ],
+      "related_node_ids": [
+        "n_L23203_001"
+      ],
+      "tags": [
+        "Sigmoid",
+        "梯度消失",
+        "激活飽和",
+        "情境決策"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n7_dl_007",
@@ -210,15 +379,60 @@
       "stem": "某學員想用 numpy 驗證 ReLU 激活函數對輸入向量的轉換結果。請問下列程式輸出為何?",
       "code_block": "import numpy as np\nx = np.array([{x1}, {x2}, {x3}, {x4}, {x5}])\nrelu_out = np.maximum(0, x)\nprint(relu_out.sum())",
       "stem_variables": {
-        "case_a": {"x1": "-2.0", "x2": "-0.5", "x3": "0.0", "x4": "0.5", "x5": "2.0", "answer": "2.5", "wrong1": "0.0", "wrong2": "5.0", "wrong3": "-2.5"},
-        "case_b": {"x1": "-3.0", "x2": "-1.0", "x3": "0.5", "x4": "1.5", "x5": "3.0", "answer": "5.0", "wrong1": "0.0", "wrong2": "9.0", "wrong3": "-4.0"},
-        "case_c": {"x1": "-4.0", "x2": "-0.5", "x3": "0.0", "x4": "1.0", "x5": "2.5", "answer": "3.5", "wrong1": "0.0", "wrong2": "8.0", "wrong3": "-4.5"}
+        "case_a": {
+          "x1": "-2.0",
+          "x2": "-0.5",
+          "x3": "0.0",
+          "x4": "0.5",
+          "x5": "2.0",
+          "answer": "2.5",
+          "wrong1": "0.0",
+          "wrong2": "5.0",
+          "wrong3": "-2.5"
+        },
+        "case_b": {
+          "x1": "-3.0",
+          "x2": "-1.0",
+          "x3": "0.5",
+          "x4": "1.5",
+          "x5": "3.0",
+          "answer": "5.0",
+          "wrong1": "0.0",
+          "wrong2": "9.0",
+          "wrong3": "-4.0"
+        },
+        "case_c": {
+          "x1": "-4.0",
+          "x2": "-0.5",
+          "x3": "0.0",
+          "x4": "1.0",
+          "x5": "2.5",
+          "answer": "3.5",
+          "wrong1": "0.0",
+          "wrong2": "8.0",
+          "wrong3": "-4.5"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤以為 ReLU 把所有輸入歸零"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤把絕對值當作 ReLU 結果"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤算成負區間總和"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤以為 ReLU 把所有輸入歸零"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤把絕對值當作 ReLU 結果"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤算成負區間總和"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -230,9 +444,21 @@
         },
         "hook": "ReLU 速記:正則保留、零則保留、負則歸零;numpy 用 np.maximum(0, x) 向量化"
       },
-      "misconceptions": ["把 ReLU 與絕對值函數混淆", "以為 ReLU 把所有輸入歸零", "誤以為 ReLU 翻轉負值符號"],
-      "related_node_ids": ["n_L23203_001"],
-      "tags": ["numpy", "ReLU", "激活函數", "code_reading"]
+      "misconceptions": [
+        "把 ReLU 與絕對值函數混淆",
+        "以為 ReLU 把所有輸入歸零",
+        "誤以為 ReLU 翻轉負值符號"
+      ],
+      "related_node_ids": [
+        "n_L23203_001"
+      ],
+      "tags": [
+        "numpy",
+        "ReLU",
+        "激活函數",
+        "code_reading"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n7_dl_008",
@@ -245,15 +471,66 @@
       "stem": "下列 numpy 程式實作單一神經元的『加權求和 + ReLU 激活』。請問 `print(round(output, 2))` 的實際輸出為何?",
       "code_block": "import numpy as np\nx = np.array([{x1}, {x2}, {x3}])\nw = np.array([{w1}, {w2}, {w3}])\nb = {b}\nz = np.dot(w, x) + b\noutput = max(0.0, z)\nprint(round(output, 2))",
       "stem_variables": {
-        "case_a": {"x1": "1.0", "x2": "2.0", "x3": "3.0", "w1": "0.5", "w2": "-1.0", "w3": "0.5", "b": "-0.2", "answer": "0.0", "wrong1": "-0.2", "wrong2": "0.2", "wrong3": "1.0"},
-        "case_b": {"x1": "3.0", "x2": "2.0", "x3": "1.0", "w1": "2.0", "w2": "1.5", "w3": "1.0", "b": "1.0", "answer": "11.0", "wrong1": "1.0", "wrong2": "0.0", "wrong3": "-11.0"},
-        "case_c": {"x1": "2.0", "x2": "1.0", "x3": "3.0", "w1": "0.3", "w2": "0.4", "w3": "-0.2", "b": "0.1", "answer": "0.5", "wrong1": "0.0", "wrong2": "1.0", "wrong3": "-0.5"}
+        "case_a": {
+          "x1": "1.0",
+          "x2": "2.0",
+          "x3": "3.0",
+          "w1": "0.5",
+          "w2": "-1.0",
+          "w3": "0.5",
+          "b": "-0.2",
+          "answer": "0.0",
+          "wrong1": "-0.2",
+          "wrong2": "0.2",
+          "wrong3": "1.0"
+        },
+        "case_b": {
+          "x1": "3.0",
+          "x2": "2.0",
+          "x3": "1.0",
+          "w1": "2.0",
+          "w2": "1.5",
+          "w3": "1.0",
+          "b": "1.0",
+          "answer": "11.0",
+          "wrong1": "1.0",
+          "wrong2": "0.0",
+          "wrong3": "-11.0"
+        },
+        "case_c": {
+          "x1": "2.0",
+          "x2": "1.0",
+          "x3": "3.0",
+          "w1": "0.3",
+          "w2": "0.4",
+          "w3": "-0.2",
+          "b": "0.1",
+          "answer": "0.5",
+          "wrong1": "0.0",
+          "wrong2": "1.0",
+          "wrong3": "-0.5"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "忘了套用 ReLU,直接輸出 z(或符號錯誤)"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤套絕對值 |z| 或把 ReLU 對正值也歸零"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤把 ReLU 飽和到 1(混淆 Sigmoid 上限)"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "忘了套用 ReLU,直接輸出 z(或符號錯誤)"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤套絕對值 |z| 或把 ReLU 對正值也歸零"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤把 ReLU 飽和到 1(混淆 Sigmoid 上限)"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -265,9 +542,22 @@
         },
         "hook": "口訣『ReLU 三招』:負則零(case_a)、正則本身(case_c)、大正不飽和(case_b,對比 Sigmoid)。神經元 forward = Σwᵢxᵢ + b → activation"
       },
-      "misconceptions": ["把 ReLU 對負值誤套絕對值", "把 ReLU 與 Sigmoid 飽和行為混淆", "以為 ReLU 對所有值都會做某種非線性壓縮(實際只截斷負值)"],
-      "related_node_ids": ["n_L23203_003", "n_L23203_001"],
-      "tags": ["numpy", "加權求和", "ReLU", "code_reading"]
+      "misconceptions": [
+        "把 ReLU 對負值誤套絕對值",
+        "把 ReLU 與 Sigmoid 飽和行為混淆",
+        "以為 ReLU 對所有值都會做某種非線性壓縮(實際只截斷負值)"
+      ],
+      "related_node_ids": [
+        "n_L23203_003",
+        "n_L23203_001"
+      ],
+      "tags": [
+        "numpy",
+        "加權求和",
+        "ReLU",
+        "code_reading"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n7_dl_009",
@@ -279,10 +569,25 @@
       "source_level": "L1",
       "stem": "下列關於『反向傳播(Backpropagation, BP)』的敘述,何者最符合中級教材對 BP 的基本介紹?",
       "options": [
-        {"text": "BP 透過鏈式法則從輸出層反向計算誤差對各層權重的偏微分梯度,以此更新權重使損失函數逐步下降至最小值", "is_correct": true},
-        {"text": "BP 是一種正向傳播演算法,從輸入層向輸出層依序計算每一層輸出後即完成訓練,完全不涉及權重更新", "is_correct": false, "trap_type": "BP 是反向方向的演算法,且核心目的是更新權重而非僅計算輸出"},
-        {"text": "BP 不需要計算任何梯度,直接以隨機方式更新權重後比較訓練誤差,類似遺傳演算法的隨機搜尋策略", "is_correct": false, "trap_type": "BP 核心就是『計算梯度』,並非隨機更新;遺傳演算法為另一類最佳化方法"},
-        {"text": "BP 僅適用於單層感知器,多層神經網路必須使用 K-means 替代 BP,因為 BP 無法處理多層權重學習過程", "is_correct": false, "trap_type": "BP 設計初衷正是處理多層,K-means 與 BP 完全無關"}
+        {
+          "text": "BP 透過鏈式法則從輸出層反向計算誤差對各層權重的偏微分梯度,以此更新權重使損失函數逐步下降至最小值",
+          "is_correct": true
+        },
+        {
+          "text": "BP 是一種正向傳播演算法,從輸入層向輸出層依序計算每一層輸出後即完成訓練,完全不涉及權重更新",
+          "is_correct": false,
+          "trap_type": "BP 是反向方向的演算法,且核心目的是更新權重而非僅計算輸出"
+        },
+        {
+          "text": "BP 不需要計算任何梯度,直接以隨機方式更新權重後比較訓練誤差,類似遺傳演算法的隨機搜尋策略",
+          "is_correct": false,
+          "trap_type": "BP 核心就是『計算梯度』,並非隨機更新;遺傳演算法為另一類最佳化方法"
+        },
+        {
+          "text": "BP 僅適用於單層感知器,多層神經網路必須使用 K-means 替代 BP,因為 BP 無法處理多層權重學習過程",
+          "is_correct": false,
+          "trap_type": "BP 設計初衷正是處理多層,K-means 與 BP 完全無關"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -294,9 +599,22 @@
         },
         "hook": "BP 三步驟:前向傳播算 loss → 反向傳播算梯度 → 梯度下降更新權重"
       },
-      "misconceptions": ["把 BP 誤當成正向傳播", "誤以為 BP 隨機更新權重", "誤以為 BP 不適合多層網路"],
-      "related_node_ids": ["n_L23203_001", "n_L23203_003"],
-      "tags": ["反向傳播", "BP", "梯度下降", "鏈式法則"]
+      "misconceptions": [
+        "把 BP 誤當成正向傳播",
+        "誤以為 BP 隨機更新權重",
+        "誤以為 BP 不適合多層網路"
+      ],
+      "related_node_ids": [
+        "n_L23203_001",
+        "n_L23203_003"
+      ],
+      "tags": [
+        "反向傳播",
+        "BP",
+        "梯度下降",
+        "鏈式法則"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n7_dl_010",
@@ -308,10 +626,25 @@
       "source_level": "L1",
       "stem": "某 NLP 團隊比較 RNN、LSTM、Transformer 的『Self-Attention 機制』時,主管詢問:Transformer 相對於 RNN/LSTM 在處理長序列時,Self-Attention 的『主要優點』為何?下列哪一項最符合中級教材的核心論點?",
       "options": [
-        {"text": "Self-Attention 可平行計算所有位置之間的關聯權重,擺脫 RNN 必須序列遞迴的限制,且能直接捕捉任意距離 token 的關聯關係", "is_correct": true},
-        {"text": "Self-Attention 完全不需要任何權重矩陣,因為 Attention 機制可自動產生最佳輸出且訓練速度比 RNN 快百倍以上的速度", "is_correct": false, "trap_type": "Self-Attention 仍需 Q/K/V 三組權重矩陣,並非『無權重』"},
-        {"text": "Self-Attention 只能處理固定長度的序列,所以比 RNN 更為穩定,且每次只看一個 token 而不需考慮其他上下文 token", "is_correct": false, "trap_type": "Self-Attention 同時看所有 token,並非每次一個;且 Transformer 可處理變動長度"},
-        {"text": "Self-Attention 用單一線性層取代所有非線性運算,結構比 RNN 更為簡單許多,參數量極少且訓練資料需求很低易訓練", "is_correct": false, "trap_type": "Transformer 含 FFN、LayerNorm、殘差等多種運算,參數量極大且需大資料"}
+        {
+          "text": "Self-Attention 可平行計算所有位置之間的關聯權重,擺脫 RNN 必須序列遞迴的限制,且能直接捕捉任意距離 token 的關聯關係",
+          "is_correct": true
+        },
+        {
+          "text": "Self-Attention 完全不需要任何權重矩陣,因為 Attention 機制可自動產生最佳輸出且訓練速度比 RNN 快百倍以上的速度",
+          "is_correct": false,
+          "trap_type": "Self-Attention 仍需 Q/K/V 三組權重矩陣,並非『無權重』"
+        },
+        {
+          "text": "Self-Attention 只能處理固定長度的序列,所以比 RNN 更為穩定,且每次只看一個 token 而不需考慮其他上下文 token",
+          "is_correct": false,
+          "trap_type": "Self-Attention 同時看所有 token,並非每次一個;且 Transformer 可處理變動長度"
+        },
+        {
+          "text": "Self-Attention 用單一線性層取代所有非線性運算,結構比 RNN 更為簡單許多,參數量極少且訓練資料需求很低易訓練",
+          "is_correct": false,
+          "trap_type": "Transformer 含 FFN、LayerNorm、殘差等多種運算,參數量極大且需大資料"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -323,9 +656,23 @@
         },
         "hook": "Self-Attention 兩大優勢:(1)平行化(無時序遞迴);(2)長距離直接連結(無信號衰減)"
       },
-      "misconceptions": ["以為 Attention 不需權重矩陣", "把 Self-Attention 限制為固定長度", "誤以為 Transformer 結構簡單"],
-      "related_node_ids": ["n_L23203_002"],
-      "tags": ["Transformer", "Self-Attention", "RNN", "平行化"]
+      "misconceptions": [
+        "以為 Attention 不需權重矩陣",
+        "把 Self-Attention 限制為固定長度",
+        "誤以為 Transformer 結構簡單"
+      ],
+      "related_node_ids": [
+        "n_L23203_002"
+      ],
+      "tags": [
+        "Transformer",
+        "Self-Attention",
+        "RNN",
+        "平行化"
+      ],
+      "boss_topics": [
+        "legal"
+      ]
     },
     {
       "id": "q_n7_dl_011",
@@ -337,10 +684,25 @@
       "source_level": "L1",
       "stem": "下列關於 CNN(卷積神經網路)『最適合處理的資料類型』與『核心優勢』的敘述,何者最為正確?",
       "options": [
-        {"text": "CNN 適合處理具空間局部相關性的資料(如影像),透過權重共享與局部感受野大幅減少參數量並有效捕捉空間結構特徵", "is_correct": true},
-        {"text": "CNN 主要處理一維等長序列資料(如時序),透過全連接層的密集連結捕捉每一時間步的全域關聯,參數量越多效果越好", "is_correct": false, "trap_type": "CNN 主要為影像而生,非主要處理時序;且權重共享而非密集連結"},
-        {"text": "CNN 透過矩陣分解將原始影像降為低維向量再進行分類,屬於非監督學習方法,訓練時不需任何標籤即可運作", "is_correct": false, "trap_type": "CNN 是有監督的卷積運算,非矩陣分解;訓練需標籤"},
-        {"text": "CNN 與全連接神經網路完全相同,差異僅是名字不同,實作上隨意互換不會影響任何效能或運算邏輯結果", "is_correct": false, "trap_type": "CNN 與 FCNN 結構與優勢完全不同,實作不可互換"}
+        {
+          "text": "CNN 適合處理具空間局部相關性的資料(如影像),透過權重共享與局部感受野大幅減少參數量並有效捕捉空間結構特徵",
+          "is_correct": true
+        },
+        {
+          "text": "CNN 主要處理一維等長序列資料(如時序),透過全連接層的密集連結捕捉每一時間步的全域關聯,參數量越多效果越好",
+          "is_correct": false,
+          "trap_type": "CNN 主要為影像而生,非主要處理時序;且權重共享而非密集連結"
+        },
+        {
+          "text": "CNN 透過矩陣分解將原始影像降為低維向量再進行分類,屬於非監督學習方法,訓練時不需任何標籤即可運作",
+          "is_correct": false,
+          "trap_type": "CNN 是有監督的卷積運算,非矩陣分解;訓練需標籤"
+        },
+        {
+          "text": "CNN 與全連接神經網路完全相同,差異僅是名字不同,實作上隨意互換不會影響任何效能或運算邏輯結果",
+          "is_correct": false,
+          "trap_type": "CNN 與 FCNN 結構與優勢完全不同,實作不可互換"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -352,9 +714,21 @@
         },
         "hook": "CNN 三特性:局部感受野 + 權重共享 + 平移不變性 → 適合影像 2D 空間結構"
       },
-      "misconceptions": ["以為 CNN 主要為時序", "把 CNN 與矩陣分解混淆", "誤以為 CNN 與 FCNN 可互換"],
-      "related_node_ids": ["n_L23203_001"],
-      "tags": ["CNN", "卷積", "權重共享", "影像辨識"]
+      "misconceptions": [
+        "以為 CNN 主要為時序",
+        "把 CNN 與矩陣分解混淆",
+        "誤以為 CNN 與 FCNN 可互換"
+      ],
+      "related_node_ids": [
+        "n_L23203_001"
+      ],
+      "tags": [
+        "CNN",
+        "卷積",
+        "權重共享",
+        "影像辨識"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n7_dl_012",
@@ -366,10 +740,25 @@
       "source_level": "L1",
       "stem": "某語音識別研究團隊收到三個任務,需依特性挑選最合適的深度學習基礎架構:任務 A:即時語音轉文字(序列輸入、序列輸出、需要捕捉語音長距離前後文);任務 B:醫學影像腫瘤分割(2D 影像輸入、像素級分類);任務 C:長篇文章摘要(數千字輸入、需要全域語意整合)。下列哪一個架構配對最為合理?",
       "options": [
-        {"text": "A:LSTM/GRU 序列建模(序列性);B:CNN 空間結構(2D 平移不變);C:Transformer 長距離全域依賴(上下文整合)", "is_correct": true},
-        {"text": "A:CNN;B:LSTM;C:全連接神經網路 — 三任務皆改用最簡單模型可避免過擬合且訓練最快達最佳效能", "is_correct": false, "trap_type": "三任務性質互換錯誤,且全連接無法處理長文章"},
-        {"text": "A:全連接神經網路;B:Transformer;C:CNN — 其中 Transformer 適 2D 影像、CNN 適長文,為最先進選擇", "is_correct": false, "trap_type": "Transformer 主要在 NLP,Vision Transformer 為後續應用;CNN 不適長文"},
-        {"text": "三任務皆使用同一個 LSTM 架構,因為 LSTM 是萬用模型可處理影像、語音、文本三領域,所有任務皆達最佳效能", "is_correct": false, "trap_type": "LSTM 不適合 2D 影像分割,且 Transformer 在長文本上更強"}
+        {
+          "text": "A:LSTM/GRU 序列建模(序列性);B:CNN 空間結構(2D 平移不變);C:Transformer 長距離全域依賴(上下文整合)",
+          "is_correct": true
+        },
+        {
+          "text": "A:CNN;B:LSTM;C:全連接神經網路 — 三任務皆改用最簡單模型可避免過擬合且訓練最快達最佳效能",
+          "is_correct": false,
+          "trap_type": "三任務性質互換錯誤,且全連接無法處理長文章"
+        },
+        {
+          "text": "A:全連接神經網路;B:Transformer;C:CNN — 其中 Transformer 適 2D 影像、CNN 適長文,為最先進選擇",
+          "is_correct": false,
+          "trap_type": "Transformer 主要在 NLP,Vision Transformer 為後續應用;CNN 不適長文"
+        },
+        {
+          "text": "三任務皆使用同一個 LSTM 架構,因為 LSTM 是萬用模型可處理影像、語音、文本三領域,所有任務皆達最佳效能",
+          "is_correct": false,
+          "trap_type": "LSTM 不適合 2D 影像分割,且 Transformer 在長文本上更強"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -381,9 +770,25 @@
         },
         "hook": "三大架構速查:序列 → RNN/LSTM/GRU;影像 → CNN;長文/全域依賴 → Transformer"
       },
-      "misconceptions": ["以為單一模型萬用", "把 Transformer 與 CNN 任務性質倒置", "忽視任務性質與架構歸納偏差的匹配"],
-      "related_node_ids": ["n_L23203_002", "n_L23203_001"],
-      "tags": ["架構選擇", "CNN", "LSTM", "Transformer", "情境決策"]
+      "misconceptions": [
+        "以為單一模型萬用",
+        "把 Transformer 與 CNN 任務性質倒置",
+        "忽視任務性質與架構歸納偏差的匹配"
+      ],
+      "related_node_ids": [
+        "n_L23203_002",
+        "n_L23203_001"
+      ],
+      "tags": [
+        "架構選擇",
+        "CNN",
+        "LSTM",
+        "Transformer",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "medical"
+      ]
     },
     {
       "id": "q_n7_dl_013",
@@ -395,10 +800,25 @@
       "source_level": "L1",
       "stem": "資料科學家準備訓練 KNN 分類模型,輸入特徵包含『年齡(20~80)』與『年收入(萬元 30~3000)』兩個尺度差異極大的變數。下列哪一個敘述最符合中級教材對『特徵縮放必要性』的解釋?",
       "options": [
-        {"text": "KNN 使用距離度量,大尺度特徵會主導距離計算,需做特徵縮放(StandardScaler/MinMaxScaler)使各維度權重平等", "is_correct": true},
-        {"text": "KNN 是基於樹的分裂演算法,對特徵尺度完全不敏感,實務上完全不需做特徵縮放即可達到最佳分類效果且運算效率亦最佳", "is_correct": false, "trap_type": "KNN 不是樹模型,而是距離型模型;且距離型模型對尺度極度敏感"},
-        {"text": "KNN 模型內建自動標準化機制,訓練時會自動偵測尺度差異並逐步調整,因此資料工程師不需手動進行任何縮放處理流程動作", "is_correct": false, "trap_type": "KNN 沒有內建縮放,sklearn 的 KNeighborsClassifier 不會自動標準化"},
-        {"text": "KNN 的距離計算對大尺度特徵反而更有利,因為大尺度可提供更多區分資訊,做縮放反而會破壞此優勢應該徹底避免縮放動作", "is_correct": false, "trap_type": "大尺度主導會抹除小尺度特徵的貢獻,並非『提供更多區分資訊』"}
+        {
+          "text": "KNN 使用距離度量,大尺度特徵會主導距離計算,需做特徵縮放(StandardScaler/MinMaxScaler)使各維度權重平等",
+          "is_correct": true
+        },
+        {
+          "text": "KNN 是基於樹的分裂演算法,對特徵尺度完全不敏感,實務上完全不需做特徵縮放即可達到最佳分類效果且運算效率亦最佳",
+          "is_correct": false,
+          "trap_type": "KNN 不是樹模型,而是距離型模型;且距離型模型對尺度極度敏感"
+        },
+        {
+          "text": "KNN 模型內建自動標準化機制,訓練時會自動偵測尺度差異並逐步調整,因此資料工程師不需手動進行任何縮放處理流程動作",
+          "is_correct": false,
+          "trap_type": "KNN 沒有內建縮放,sklearn 的 KNeighborsClassifier 不會自動標準化"
+        },
+        {
+          "text": "KNN 的距離計算對大尺度特徵反而更有利,因為大尺度可提供更多區分資訊,做縮放反而會破壞此優勢應該徹底避免縮放動作",
+          "is_correct": false,
+          "trap_type": "大尺度主導會抹除小尺度特徵的貢獻,並非『提供更多區分資訊』"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -410,9 +830,21 @@
         },
         "hook": "需要縮放:KNN/SVM/K-means/線性迴歸/神經網路(距離+梯度型);不需縮放:決策樹/RF/XGBoost(分裂型)"
       },
-      "misconceptions": ["以為 KNN 是樹模型", "誤以為 sklearn 自動縮放", "誤以為大尺度提供更多區分力"],
-      "related_node_ids": ["n_L23301_001"],
-      "tags": ["特徵縮放", "KNN", "距離型模型", "StandardScaler"]
+      "misconceptions": [
+        "以為 KNN 是樹模型",
+        "誤以為 sklearn 自動縮放",
+        "誤以為大尺度提供更多區分力"
+      ],
+      "related_node_ids": [
+        "n_L23301_001"
+      ],
+      "tags": [
+        "特徵縮放",
+        "KNN",
+        "距離型模型",
+        "StandardScaler"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n7_dl_014",
@@ -424,10 +856,25 @@
       "source_level": "L1",
       "stem": "某數據工程師在比較 StandardScaler(Z-score)與 MinMaxScaler 兩種特徵縮放方法。下列哪一項對兩者結果範圍與適用情境的描述完全正確?",
       "options": [
-        {"text": "StandardScaler 將特徵轉為均值 0、標準差 1,輸出不限於 [0,1];MinMaxScaler 將特徵線性壓到 [0,1],適合需要明確上下界的場景", "is_correct": true},
-        {"text": "StandardScaler 與 MinMaxScaler 兩者最終都將特徵壓縮至 [0,1] 區間,差異僅是均值是否為 0,工程上可隨意完全互換而無任何結果差異", "is_correct": false, "trap_type": "StandardScaler 不會壓到 [0,1],這是常見陷阱;兩者結果範圍不同"},
-        {"text": "MinMaxScaler 將特徵轉為均值 0、標準差 1,StandardScaler 將特徵壓到 [-1,1] 區間,兩者命名容易混淆但結果剛好相反互調", "is_correct": false, "trap_type": "兩者定義對調,且 StandardScaler 不限於 [-1,1]"},
-        {"text": "兩種縮放方法皆只適用於分類任務,迴歸任務應使用 LogScaler 將所有特徵取對數後再做標準化,否則迴歸係數會嚴重失準失效", "is_correct": false, "trap_type": "兩種縮放方法皆適用分類與迴歸,且不存在『LogScaler 必用』的限制"}
+        {
+          "text": "StandardScaler 將特徵轉為均值 0、標準差 1,輸出不限於 [0,1];MinMaxScaler 將特徵線性壓到 [0,1],適合需要明確上下界的場景",
+          "is_correct": true
+        },
+        {
+          "text": "StandardScaler 與 MinMaxScaler 兩者最終都將特徵壓縮至 [0,1] 區間,差異僅是均值是否為 0,工程上可隨意完全互換而無任何結果差異",
+          "is_correct": false,
+          "trap_type": "StandardScaler 不會壓到 [0,1],這是常見陷阱;兩者結果範圍不同"
+        },
+        {
+          "text": "MinMaxScaler 將特徵轉為均值 0、標準差 1,StandardScaler 將特徵壓到 [-1,1] 區間,兩者命名容易混淆但結果剛好相反互調",
+          "is_correct": false,
+          "trap_type": "兩者定義對調,且 StandardScaler 不限於 [-1,1]"
+        },
+        {
+          "text": "兩種縮放方法皆只適用於分類任務,迴歸任務應使用 LogScaler 將所有特徵取對數後再做標準化,否則迴歸係數會嚴重失準失效",
+          "is_correct": false,
+          "trap_type": "兩種縮放方法皆適用分類與迴歸,且不存在『LogScaler 必用』的限制"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -439,9 +886,21 @@
         },
         "hook": "三大縮放方法:StandardScaler(Z-score:均值0、標準差1)/ MinMaxScaler([0,1])/ RobustScaler(對極端值穩健)"
       },
-      "misconceptions": ["以為 Z-score 結果範圍是 [0,1]", "把 StandardScaler 與 MinMaxScaler 對調", "誤以為縮放方法只適用分類"],
-      "related_node_ids": ["n_L23301_001"],
-      "tags": ["特徵縮放", "StandardScaler", "MinMaxScaler", "Z-score"]
+      "misconceptions": [
+        "以為 Z-score 結果範圍是 [0,1]",
+        "把 StandardScaler 與 MinMaxScaler 對調",
+        "誤以為縮放方法只適用分類"
+      ],
+      "related_node_ids": [
+        "n_L23301_001"
+      ],
+      "tags": [
+        "特徵縮放",
+        "StandardScaler",
+        "MinMaxScaler",
+        "Z-score"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n7_dl_015",
@@ -454,15 +913,60 @@
       "stem": "某資料分析師用 sklearn 將特徵向量做 Z-score 標準化。請問下列程式輸出最接近哪一組數值?(輸入為 1D 向量需 reshape 後再 fit_transform)",
       "code_block": "import numpy as np\nfrom sklearn.preprocessing import StandardScaler\nx = np.array([{v1}, {v2}, {v3}, {v4}, {v5}]).reshape(-1, 1)\nscaler = StandardScaler()\nz = scaler.fit_transform(x).flatten()\nprint(np.round(z, 3).tolist())",
       "stem_variables": {
-        "case_a": {"v1": "10.0", "v2": "20.0", "v3": "30.0", "v4": "40.0", "v5": "50.0", "answer": "[-1.414, -0.707, 0.0, 0.707, 1.414]", "wrong1": "[0.0, 0.25, 0.5, 0.75, 1.0]", "wrong2": "[10.0, 20.0, 30.0, 40.0, 50.0]", "wrong3": "[-1.265, -0.632, 0.0, 0.632, 1.265]"},
-        "case_b": {"v1": "10.0", "v2": "15.0", "v3": "30.0", "v4": "45.0", "v5": "50.0", "answer": "[-1.265, -0.949, 0.0, 0.949, 1.265]", "wrong1": "[0.0, 0.125, 0.5, 0.875, 1.0]", "wrong2": "[10.0, 15.0, 30.0, 45.0, 50.0]", "wrong3": "[-1.131, -0.849, 0.0, 0.849, 1.131]"},
-        "case_c": {"v1": "10.0", "v2": "25.0", "v3": "30.0", "v4": "35.0", "v5": "50.0", "answer": "[-1.534, -0.383, 0.0, 0.383, 1.534]", "wrong1": "[0.0, 0.375, 0.5, 0.625, 1.0]", "wrong2": "[10.0, 25.0, 30.0, 35.0, 50.0]", "wrong3": "[-1.372, -0.343, 0.0, 0.343, 1.372]"}
+        "case_a": {
+          "v1": "10.0",
+          "v2": "20.0",
+          "v3": "30.0",
+          "v4": "40.0",
+          "v5": "50.0",
+          "answer": "[-1.414, -0.707, 0.0, 0.707, 1.414]",
+          "wrong1": "[0.0, 0.25, 0.5, 0.75, 1.0]",
+          "wrong2": "[10.0, 20.0, 30.0, 40.0, 50.0]",
+          "wrong3": "[-1.265, -0.632, 0.0, 0.632, 1.265]"
+        },
+        "case_b": {
+          "v1": "10.0",
+          "v2": "15.0",
+          "v3": "30.0",
+          "v4": "45.0",
+          "v5": "50.0",
+          "answer": "[-1.265, -0.949, 0.0, 0.949, 1.265]",
+          "wrong1": "[0.0, 0.125, 0.5, 0.875, 1.0]",
+          "wrong2": "[10.0, 15.0, 30.0, 45.0, 50.0]",
+          "wrong3": "[-1.131, -0.849, 0.0, 0.849, 1.131]"
+        },
+        "case_c": {
+          "v1": "10.0",
+          "v2": "25.0",
+          "v3": "30.0",
+          "v4": "35.0",
+          "v5": "50.0",
+          "answer": "[-1.534, -0.383, 0.0, 0.383, 1.534]",
+          "wrong1": "[0.0, 0.375, 0.5, 0.625, 1.0]",
+          "wrong2": "[10.0, 25.0, 30.0, 35.0, 50.0]",
+          "wrong3": "[-1.372, -0.343, 0.0, 0.343, 1.372]"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤把 StandardScaler 當作 MinMaxScaler 結果"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為 fit_transform 不改值"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤把總體標準差當作 sample std(n-1)"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤把 StandardScaler 當作 MinMaxScaler 結果"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤以為 fit_transform 不改值"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤把總體標準差當作 sample std(n-1)"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -474,9 +978,21 @@
         },
         "hook": "StandardScaler:用母體 std(分母 n),公式 z=(x-μ)/σ;範圍可能超出 [-3,3] 但常見落在此區間"
       },
-      "misconceptions": ["把 StandardScaler 當 MinMaxScaler", "搞混樣本與母體標準差", "以為 fit_transform 不改值"],
-      "related_node_ids": ["n_L23301_001"],
-      "tags": ["sklearn", "StandardScaler", "Z-score", "code_reading"]
+      "misconceptions": [
+        "把 StandardScaler 當 MinMaxScaler",
+        "搞混樣本與母體標準差",
+        "以為 fit_transform 不改值"
+      ],
+      "related_node_ids": [
+        "n_L23301_001"
+      ],
+      "tags": [
+        "sklearn",
+        "StandardScaler",
+        "Z-score",
+        "code_reading"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n7_dl_016",
@@ -488,10 +1004,25 @@
       "source_level": "L1",
       "stem": "某資料工程師在處理顧客資料,其中『性別』欄位有三類(男/女/其他),需作為分類模型輸入。下列哪一項對 One-hot Encoding 與 Label Encoding 的對比敘述最為正確?",
       "options": [
-        {"text": "One-hot 把每類展開為獨立二元欄位避免引入次序關係,適合無序類別;Label 把類別映射為整數可能誤被模型解讀為大小順序,適合有序類別", "is_correct": true},
-        {"text": "One-hot 與 Label Encoding 兩者結果完全相同,差異僅是命名差異,工程上可隨意互換而不會影響任何模型訓練表現結果與精度", "is_correct": false, "trap_type": "兩者結構完全不同,One-hot 為向量、Label 為整數,模型表現差異顯著"},
-        {"text": "One-hot 適合任何模型且永遠是最佳選擇,Label Encoding 在現代機器學習中已被完全棄用,所有情境皆不應再使用此方法", "is_correct": false, "trap_type": "Label 在有序類別與樹模型上仍常用;One-hot 在高基數時會造成維度爆炸"},
-        {"text": "One-hot 是把類別轉為文字字串後再做雜湊壓縮;Label 是把類別轉為浮點數值,兩者皆不會擴增任何欄位數量也不引入次序", "is_correct": false, "trap_type": "One-hot 不是字串 hash 而是二元向量,且會擴增欄位數"}
+        {
+          "text": "One-hot 把每類展開為獨立二元欄位避免引入次序關係,適合無序類別;Label 把類別映射為整數可能誤被模型解讀為大小順序,適合有序類別",
+          "is_correct": true
+        },
+        {
+          "text": "One-hot 與 Label Encoding 兩者結果完全相同,差異僅是命名差異,工程上可隨意互換而不會影響任何模型訓練表現結果與精度",
+          "is_correct": false,
+          "trap_type": "兩者結構完全不同,One-hot 為向量、Label 為整數,模型表現差異顯著"
+        },
+        {
+          "text": "One-hot 適合任何模型且永遠是最佳選擇,Label Encoding 在現代機器學習中已被完全棄用,所有情境皆不應再使用此方法",
+          "is_correct": false,
+          "trap_type": "Label 在有序類別與樹模型上仍常用;One-hot 在高基數時會造成維度爆炸"
+        },
+        {
+          "text": "One-hot 是把類別轉為文字字串後再做雜湊壓縮;Label 是把類別轉為浮點數值,兩者皆不會擴增任何欄位數量也不引入次序",
+          "is_correct": false,
+          "trap_type": "One-hot 不是字串 hash 而是二元向量,且會擴增欄位數"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -503,9 +1034,22 @@
         },
         "hook": "編碼速查:無序類別 → One-hot;有序類別 → Ordinal/Label;高基數 → Target/Frequency Encoding"
       },
-      "misconceptions": ["以為 One-hot 與 Label 結果相同", "誤以為 Label Encoding 已淘汰", "把 One-hot 誤當字串 hash"],
-      "related_node_ids": ["n_L23301_001", "n_L23301_002"],
-      "tags": ["One-hot", "Label Encoding", "類別變數", "特徵工程"]
+      "misconceptions": [
+        "以為 One-hot 與 Label 結果相同",
+        "誤以為 Label Encoding 已淘汰",
+        "把 One-hot 誤當字串 hash"
+      ],
+      "related_node_ids": [
+        "n_L23301_001",
+        "n_L23301_002"
+      ],
+      "tags": [
+        "One-hot",
+        "Label Encoding",
+        "類別變數",
+        "特徵工程"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n7_dl_017",
@@ -517,10 +1061,25 @@
       "source_level": "L1",
       "stem": "某零售業數據團隊發現『商品價格』與『顧客滿意度』兩個特徵在線性迴歸模型中各自顯著,但業務假設『價格高時滿意度的影響更強烈』。下列哪一項屬於正確的『互動特徵(Interaction Feature)』建構方式?",
       "options": [
-        {"text": "新增一個特徵『價格 × 滿意度』(兩個原特徵相乘),讓模型可捕捉兩者的協同效應", "is_correct": true},
-        {"text": "新增一個特徵『價格 + 滿意度』(兩個原特徵相加),累加兩者數值即可表達互動", "is_correct": false, "trap_type": "相加不是互動特徵,只是線性組合,模型自有的權重已涵蓋"},
-        {"text": "新增一個特徵『價格²』(原特徵取平方),平方項即為兩特徵互動的標準形式", "is_correct": false, "trap_type": "平方是非線性轉換,屬於單特徵的多項式項而非互動"},
-        {"text": "新增一個特徵『log(價格)』(原特徵取對數),對數轉換可自動產生與其他特徵的互動", "is_correct": false, "trap_type": "log 是單變數轉換,不會與其他特徵自動產生互動"}
+        {
+          "text": "新增一個特徵『價格 × 滿意度』(兩個原特徵相乘),讓模型可捕捉兩者的協同效應",
+          "is_correct": true
+        },
+        {
+          "text": "新增一個特徵『價格 + 滿意度』(兩個原特徵相加),累加兩者數值即可表達互動",
+          "is_correct": false,
+          "trap_type": "相加不是互動特徵,只是線性組合,模型自有的權重已涵蓋"
+        },
+        {
+          "text": "新增一個特徵『價格²』(原特徵取平方),平方項即為兩特徵互動的標準形式",
+          "is_correct": false,
+          "trap_type": "平方是非線性轉換,屬於單特徵的多項式項而非互動"
+        },
+        {
+          "text": "新增一個特徵『log(價格)』(原特徵取對數),對數轉換可自動產生與其他特徵的互動",
+          "is_correct": false,
+          "trap_type": "log 是單變數轉換,不會與其他特徵自動產生互動"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -532,9 +1091,22 @@
         },
         "hook": "互動特徵 = 兩特徵相乘 (x₁·x₂);非線性 = 單特徵函數(平方、log);兩者目的不同"
       },
-      "misconceptions": ["把『相加』當互動特徵", "把『平方』誤為互動", "誤以為 log 自動產生互動"],
-      "related_node_ids": ["n_L23301_002"],
-      "tags": ["互動特徵", "特徵工程", "PolynomialFeatures"]
+      "misconceptions": [
+        "把『相加』當互動特徵",
+        "把『平方』誤為互動",
+        "誤以為 log 自動產生互動"
+      ],
+      "related_node_ids": [
+        "n_L23301_002"
+      ],
+      "tags": [
+        "互動特徵",
+        "特徵工程",
+        "PolynomialFeatures"
+      ],
+      "boss_topics": [
+        "ecommerce"
+      ]
     },
     {
       "id": "q_n7_dl_018",
@@ -546,10 +1118,26 @@
       "source_level": "L1",
       "stem": "某 AI 學員整理 PCA 與 LDA 兩種降維方法,做出以下對照表,但有一項描述完全錯誤。請挑出『不正確』的描述。",
       "options": [
-        {"text": "PCA 與 LDA 皆是非監督式線性降維,兩者都不需要類別標籤即可運算", "is_correct": true, "trap_type": "(此選項是不正確的描述,被選為答案)"},
-        {"text": "PCA 的目標是『最大化資料變異數』,選擇前 k 個最大特徵值對應的特徵向量", "is_correct": false, "trap_type": "(此為正確描述)"},
-        {"text": "LDA 的目標是『最大化類別間距 / 最小化類別內距』,需要類別標籤才能進行", "is_correct": false, "trap_type": "(此為正確描述)"},
-        {"text": "PCA 與 LDA 都假設資料可由線性投影分離,在非線性結構下表現可能不佳", "is_correct": false, "trap_type": "(此為正確描述)"}
+        {
+          "text": "PCA 與 LDA 皆是非監督式線性降維,兩者都不需要類別標籤即可運算",
+          "is_correct": true,
+          "trap_type": "(此選項是不正確的描述,被選為答案)"
+        },
+        {
+          "text": "PCA 的目標是『最大化資料變異數』,選擇前 k 個最大特徵值對應的特徵向量",
+          "is_correct": false,
+          "trap_type": "(此為正確描述)"
+        },
+        {
+          "text": "LDA 的目標是『最大化類別間距 / 最小化類別內距』,需要類別標籤才能進行",
+          "is_correct": false,
+          "trap_type": "(此為正確描述)"
+        },
+        {
+          "text": "PCA 與 LDA 都假設資料可由線性投影分離,在非線性結構下表現可能不佳",
+          "is_correct": false,
+          "trap_type": "(此為正確描述)"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -561,9 +1149,23 @@
         },
         "hook": "PCA vs LDA 一句話:PCA 看『整體變異』(非監督);LDA 看『類別分離』(監督);兩者都線性"
       },
-      "misconceptions": ["以為 LDA 不需標籤(高頻錯誤)", "把 PCA 與 LDA 都當監督", "忽視兩者目標函數差異"],
-      "related_node_ids": ["n_L23102_001", "n_L23102_002", "n_L23102_011"],
-      "tags": ["PCA", "LDA", "降維", "監督 vs 非監督"]
+      "misconceptions": [
+        "以為 LDA 不需標籤(高頻錯誤)",
+        "把 PCA 與 LDA 都當監督",
+        "忽視兩者目標函數差異"
+      ],
+      "related_node_ids": [
+        "n_L23102_001",
+        "n_L23102_002",
+        "n_L23102_011"
+      ],
+      "tags": [
+        "PCA",
+        "LDA",
+        "降維",
+        "監督 vs 非監督"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n7_dl_019",
@@ -575,16 +1177,67 @@
       "source_level": "L1",
       "stem": "某資料科學家以 PCA 對 4 維資料降維,計算得到 4 個特徵值依序為 λ₁={l1}、λ₂={l2}、λ₃={l3}、λ₄={l4}。若希望降維後保留至少 80% 的累計變異比例,請問至少要保留前幾個主成分?",
       "stem_variables": {
-        "case_a": {"l1": "20", "l2": "2", "l3": "2", "l4": "1", "answer": "1 個", "wrong1": "2 個", "wrong2": "3 個", "wrong3": "4 個"},
-        "case_b": {"l1": "8", "l2": "4", "l3": "2", "l4": "1", "answer": "2 個", "wrong1": "1 個", "wrong2": "3 個", "wrong3": "4 個"},
-        "case_c": {"l1": "10", "l2": "5", "l3": "3", "l4": "2", "answer": "3 個", "wrong1": "1 個", "wrong2": "2 個", "wrong3": "4 個"},
-        "case_d": {"l1": "5", "l2": "5", "l3": "5", "l4": "5", "answer": "4 個", "wrong1": "1 個", "wrong2": "2 個", "wrong3": "3 個"}
+        "case_a": {
+          "l1": "20",
+          "l2": "2",
+          "l3": "2",
+          "l4": "1",
+          "answer": "1 個",
+          "wrong1": "2 個",
+          "wrong2": "3 個",
+          "wrong3": "4 個"
+        },
+        "case_b": {
+          "l1": "8",
+          "l2": "4",
+          "l3": "2",
+          "l4": "1",
+          "answer": "2 個",
+          "wrong1": "1 個",
+          "wrong2": "3 個",
+          "wrong3": "4 個"
+        },
+        "case_c": {
+          "l1": "10",
+          "l2": "5",
+          "l3": "3",
+          "l4": "2",
+          "answer": "3 個",
+          "wrong1": "1 個",
+          "wrong2": "2 個",
+          "wrong3": "4 個"
+        },
+        "case_d": {
+          "l1": "5",
+          "l2": "5",
+          "l3": "5",
+          "l4": "5",
+          "answer": "4 個",
+          "wrong1": "1 個",
+          "wrong2": "2 個",
+          "wrong3": "3 個"
+        }
       },
       "options": [
-        {"text": "{answer},正確算法是把 λ 由大到小逐一累加,直到累計變異比例首次達到 ≥ 80% 門檻時對應的 k,即為應保留之最少主成分數量", "is_correct": true},
-        {"text": "{wrong1},錯把『單一最大特徵值占比 λ_max/Σλ』當作判斷依據,未進行累計只看個別貢獻,結果偏離累計達 80% 之題目要求", "is_correct": false, "trap_type": "PCA 主成分需累計計算,不是單一最大值"},
-        {"text": "{wrong2},混淆 Kaiser 法則(以特徵值大於平均數為主成分篩選門檻)與累計變異比例法,套用了不同的主成分選擇規則因此答案不符題意", "is_correct": false, "trap_type": "平均門檻是 Kaiser 法則但非變異比例法"},
-        {"text": "{wrong3},未實際計算累計比例,僅以直覺判斷『保留越多越安全』或『少一個應該也夠』,忽略題目所指定 80% 之精確累計門檻", "is_correct": false, "trap_type": "未實際計算累計比例,以多保留或少保留直覺取代精確 80% 門檻"}
+        {
+          "text": "{answer},正確算法是把 λ 由大到小逐一累加,直到累計變異比例首次達到 ≥ 80% 門檻時對應的 k,即為應保留之最少主成分數量",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1},錯把『單一最大特徵值占比 λ_max/Σλ』當作判斷依據,未進行累計只看個別貢獻,結果偏離累計達 80% 之題目要求",
+          "is_correct": false,
+          "trap_type": "PCA 主成分需累計計算,不是單一最大值"
+        },
+        {
+          "text": "{wrong2},混淆 Kaiser 法則(以特徵值大於平均數為主成分篩選門檻)與累計變異比例法,套用了不同的主成分選擇規則因此答案不符題意",
+          "is_correct": false,
+          "trap_type": "平均門檻是 Kaiser 法則但非變異比例法"
+        },
+        {
+          "text": "{wrong3},未實際計算累計比例,僅以直覺判斷『保留越多越安全』或『少一個應該也夠』,忽略題目所指定 80% 之精確累計門檻",
+          "is_correct": false,
+          "trap_type": "未實際計算累計比例,以多保留或少保留直覺取代精確 80% 門檻"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -596,9 +1249,21 @@
         },
         "hook": "PCA 變異比例三公式:單一比例 λ_k/Σλ;累計比例 (Σ前k λ)/Σλ;Kaiser 法則 λ ≥ 平均"
       },
-      "misconceptions": ["不累計只看單一比例", "把 Kaiser 法則與變異比例混淆", "誤以為要保留全部"],
-      "related_node_ids": ["n_L23102_001"],
-      "tags": ["PCA", "累計變異比例", "降維", "calculation"]
+      "misconceptions": [
+        "不累計只看單一比例",
+        "把 Kaiser 法則與變異比例混淆",
+        "誤以為要保留全部"
+      ],
+      "related_node_ids": [
+        "n_L23102_001"
+      ],
+      "tags": [
+        "PCA",
+        "累計變異比例",
+        "降維",
+        "calculation"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n7_dl_020",
@@ -610,10 +1275,25 @@
       "source_level": "L1",
       "stem": "某金融科技公司開發信用詐欺偵測模型,訓練資料中正樣本(詐欺)僅占 2%,模型直接訓練後 Recall 極低。資深資料科學家建議使用 SMOTE 處理。下列哪一項對 SMOTE 的描述最為正確?",
       "options": [
-        {"text": "SMOTE 在少數類樣本之間用 KNN 找鄰居後做線性插值合成新樣本,不是單純複製,可降低隨機過採樣的過擬合風險", "is_correct": true},
-        {"text": "SMOTE 隨機刪除多數類樣本至與少數類等量,屬於『欠採樣(Under-sampling)』方法,因此不需要產生任何新樣本", "is_correct": false, "trap_type": "SMOTE 是過採樣不是欠採樣;Tomek Links 才是欠採樣"},
-        {"text": "SMOTE 直接複製少數類樣本到與多數類相同數量,屬於最簡單的隨機過採樣,常因樣本完全重複造成嚴重過擬合", "is_correct": false, "trap_type": "SMOTE 是合成不是複製;隨機過採樣 ROS 才是複製"},
-        {"text": "SMOTE 將少數類資料用對抗式生成網路(GAN)合成,需要 GPU 訓練生成器與判別器,屬於深度學習方法", "is_correct": false, "trap_type": "SMOTE 是 KNN 線性插值,不是 GAN;兩者技術完全不同"}
+        {
+          "text": "SMOTE 在少數類樣本之間用 KNN 找鄰居後做線性插值合成新樣本,不是單純複製,可降低隨機過採樣的過擬合風險",
+          "is_correct": true
+        },
+        {
+          "text": "SMOTE 隨機刪除多數類樣本至與少數類等量,屬於『欠採樣(Under-sampling)』方法,因此不需要產生任何新樣本",
+          "is_correct": false,
+          "trap_type": "SMOTE 是過採樣不是欠採樣;Tomek Links 才是欠採樣"
+        },
+        {
+          "text": "SMOTE 直接複製少數類樣本到與多數類相同數量,屬於最簡單的隨機過採樣,常因樣本完全重複造成嚴重過擬合",
+          "is_correct": false,
+          "trap_type": "SMOTE 是合成不是複製;隨機過採樣 ROS 才是複製"
+        },
+        {
+          "text": "SMOTE 將少數類資料用對抗式生成網路(GAN)合成,需要 GPU 訓練生成器與判別器,屬於深度學習方法",
+          "is_correct": false,
+          "trap_type": "SMOTE 是 KNN 線性插值,不是 GAN;兩者技術完全不同"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -625,9 +1305,23 @@
         },
         "hook": "不平衡處理三層次:過採樣(ROS/SMOTE)/ 欠採樣(RUS/Tomek)/ 類別權重(class_weight)"
       },
-      "misconceptions": ["把 SMOTE 與 ROS 混淆", "把 SMOTE 與欠採樣混淆", "把 SMOTE 當作 GAN 生成"],
-      "related_node_ids": ["n_L23301_003"],
-      "tags": ["SMOTE", "不平衡資料", "過採樣", "KNN 插值"]
+      "misconceptions": [
+        "把 SMOTE 與 ROS 混淆",
+        "把 SMOTE 與欠採樣混淆",
+        "把 SMOTE 當作 GAN 生成"
+      ],
+      "related_node_ids": [
+        "n_L23301_003"
+      ],
+      "tags": [
+        "SMOTE",
+        "不平衡資料",
+        "過採樣",
+        "KNN 插值"
+      ],
+      "boss_topics": [
+        "finance"
+      ]
     },
     {
       "id": "q_n7_dl_021",
@@ -639,10 +1333,25 @@
       "source_level": "L1",
       "stem": "某資料科學新人在學完模型流程後,提出『模型選擇』與『超參數調校』兩個概念區分。下列哪一項最符合中級教材對兩者的明確界定?",
       "options": [
-        {"text": "模型選擇指決定『使用哪一種演算法架構』(如邏輯迴歸 vs 隨機森林);超參數調校指『同一模型內的參數設定值』(如 RF 的樹數量)", "is_correct": true},
-        {"text": "模型選擇與超參數調校完全相同,皆指挑選最佳模型,僅學界與業界的用詞習慣不同,實作上完全沒有任何區分需要考慮應用區別差異", "is_correct": false, "trap_type": "兩者層級不同,絕非同義"},
-        {"text": "模型選擇是訓練後挑最高 Accuracy 的模型;超參數調校是訓練中即時改寫權重值,兩者屬於模型內部運算的核心一部分流程處理機制", "is_correct": false, "trap_type": "權重值是訓練自動學習的,並非超參數;超參調校在訓練前定義"},
-        {"text": "模型選擇只考慮深度學習模型;超參數調校只用於傳統 ML 模型,兩者依模型類別嚴格分工而互不重疊應用兩個層次的任務及流程", "is_correct": false, "trap_type": "兩個概念皆適用所有模型類別,並無深度學習與傳統 ML 之分"}
+        {
+          "text": "模型選擇指決定『使用哪一種演算法架構』(如邏輯迴歸 vs 隨機森林);超參數調校指『同一模型內的參數設定值』(如 RF 的樹數量)",
+          "is_correct": true
+        },
+        {
+          "text": "模型選擇與超參數調校完全相同,皆指挑選最佳模型,僅學界與業界的用詞習慣不同,實作上完全沒有任何區分需要考慮應用區別差異",
+          "is_correct": false,
+          "trap_type": "兩者層級不同,絕非同義"
+        },
+        {
+          "text": "模型選擇是訓練後挑最高 Accuracy 的模型;超參數調校是訓練中即時改寫權重值,兩者屬於模型內部運算的核心一部分流程處理機制",
+          "is_correct": false,
+          "trap_type": "權重值是訓練自動學習的,並非超參數;超參調校在訓練前定義"
+        },
+        {
+          "text": "模型選擇只考慮深度學習模型;超參數調校只用於傳統 ML 模型,兩者依模型類別嚴格分工而互不重疊應用兩個層次的任務及流程",
+          "is_correct": false,
+          "trap_type": "兩個概念皆適用所有模型類別,並無深度學習與傳統 ML 之分"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -654,9 +1363,20 @@
         },
         "hook": "兩層決策:Model Selection(選架構)→ Hyperparameter Tuning(同架構內調參數)→ Training(自動學權重)"
       },
-      "misconceptions": ["把模型選擇與超參調校混為一談", "把權重誤當作超參數", "誤以為兩者依模型類別分工"],
-      "related_node_ids": ["n_L23302_001"],
-      "tags": ["模型選擇", "超參數調校", "ML 流程"]
+      "misconceptions": [
+        "把模型選擇與超參調校混為一談",
+        "把權重誤當作超參數",
+        "誤以為兩者依模型類別分工"
+      ],
+      "related_node_ids": [
+        "n_L23302_001"
+      ],
+      "tags": [
+        "模型選擇",
+        "超參數調校",
+        "ML 流程"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n7_dl_022",
@@ -668,10 +1388,25 @@
       "source_level": "L1",
       "stem": "某 AI 工程師收到三個任務:(A)房價預測迴歸;(B)信用卡客戶分群;(C)股價時序預測。請從下列選項挑出『模型架構選擇』最合理的配對。",
       "options": [
-        {"text": "(A)Linear Regression、Ridge、XGBoost(連續迴歸);(B)K-means、DBSCAN(非監督聚類);(C)ARIMA、LSTM(時序預測)", "is_correct": true},
-        {"text": "(A)K-means 處理迴歸;(B)Linear Regression 處理客戶分群;(C)DBSCAN 處理時序 — 三者通用模型可互換使用達最佳效果", "is_correct": false, "trap_type": "三任務性質與模型完全不對應,且模型不可互換"},
-        {"text": "(A)DBSCAN 預測房價;(B)ARIMA 處理客戶分群;(C)Linear Regression 預測時序 — 此配對為跨領域實踐達最佳效果", "is_correct": false, "trap_type": "DBSCAN 不能做迴歸,ARIMA 不適客戶分群"},
-        {"text": "三任務統一使用 K-means 聚類即可,因為 K-means 適用所有監督與非監督學習任務類型且訓練最快最便利", "is_correct": false, "trap_type": "K-means 是非監督聚類,不能做迴歸與時序預測"}
+        {
+          "text": "(A)Linear Regression、Ridge、XGBoost(連續迴歸);(B)K-means、DBSCAN(非監督聚類);(C)ARIMA、LSTM(時序預測)",
+          "is_correct": true
+        },
+        {
+          "text": "(A)K-means 處理迴歸;(B)Linear Regression 處理客戶分群;(C)DBSCAN 處理時序 — 三者通用模型可互換使用達最佳效果",
+          "is_correct": false,
+          "trap_type": "三任務性質與模型完全不對應,且模型不可互換"
+        },
+        {
+          "text": "(A)DBSCAN 預測房價;(B)ARIMA 處理客戶分群;(C)Linear Regression 預測時序 — 此配對為跨領域實踐達最佳效果",
+          "is_correct": false,
+          "trap_type": "DBSCAN 不能做迴歸,ARIMA 不適客戶分群"
+        },
+        {
+          "text": "三任務統一使用 K-means 聚類即可,因為 K-means 適用所有監督與非監督學習任務類型且訓練最快最便利",
+          "is_correct": false,
+          "trap_type": "K-means 是非監督聚類,不能做迴歸與時序預測"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -683,9 +1418,23 @@
         },
         "hook": "任務 → 模型 三步驟:看標籤性質(有/無/序) → 看輸出類型(類/值/群) → 看資料規模"
       },
-      "misconceptions": ["以為 K-means 可做迴歸", "把 ARIMA 當分群方法", "誤以為模型可互換"],
-      "related_node_ids": ["n_L23302_001"],
-      "tags": ["模型選擇", "迴歸", "聚類", "時序"]
+      "misconceptions": [
+        "以為 K-means 可做迴歸",
+        "把 ARIMA 當分群方法",
+        "誤以為模型可互換"
+      ],
+      "related_node_ids": [
+        "n_L23302_001"
+      ],
+      "tags": [
+        "模型選擇",
+        "迴歸",
+        "聚類",
+        "時序"
+      ],
+      "boss_topics": [
+        "finance"
+      ]
     },
     {
       "id": "q_n7_dl_023",
@@ -697,10 +1446,25 @@
       "source_level": "L1",
       "stem": "某資料工程師訓練一個 5 層神經網路,訓練前需要設定『超參數』與了解『參數』的差異。下列哪一項對『超參數 vs 參數』的描述最為準確?",
       "options": [
-        {"text": "超參數是訓練前人為決定的設定(如 learning_rate、batch_size、layers);參數是訓練中由梯度下降自動學得(如各層 W、b)", "is_correct": true},
-        {"text": "超參數與參數皆由訓練過程自動學習取得,差異僅是更新頻率不同,超參數每 100 個 epoch 才更新一次,參數則是每個 step 皆更新一次", "is_correct": false, "trap_type": "超參數不是自動學習,需人為設定或外部優化器決定"},
-        {"text": "超參數是模型輸出值的最小單位,參數是模型輸入的特徵向量本身,兩者分別是模型 I/O 端的不同階段參數設定機制與整體配置元素", "is_correct": false, "trap_type": "兩者皆是模型內部設定,並非 I/O"},
-        {"text": "超參數只在強化學習中存在,監督式學習只有參數而沒有任何超參數設定,神經網路訓練時也沒有任何超參數需要被調整或人為設定值", "is_correct": false, "trap_type": "監督式學習也大量使用超參數,神經網路尤其多"}
+        {
+          "text": "超參數是訓練前人為決定的設定(如 learning_rate、batch_size、layers);參數是訓練中由梯度下降自動學得(如各層 W、b)",
+          "is_correct": true
+        },
+        {
+          "text": "超參數與參數皆由訓練過程自動學習取得,差異僅是更新頻率不同,超參數每 100 個 epoch 才更新一次,參數則是每個 step 皆更新一次",
+          "is_correct": false,
+          "trap_type": "超參數不是自動學習,需人為設定或外部優化器決定"
+        },
+        {
+          "text": "超參數是模型輸出值的最小單位,參數是模型輸入的特徵向量本身,兩者分別是模型 I/O 端的不同階段參數設定機制與整體配置元素",
+          "is_correct": false,
+          "trap_type": "兩者皆是模型內部設定,並非 I/O"
+        },
+        {
+          "text": "超參數只在強化學習中存在,監督式學習只有參數而沒有任何超參數設定,神經網路訓練時也沒有任何超參數需要被調整或人為設定值",
+          "is_correct": false,
+          "trap_type": "監督式學習也大量使用超參數,神經網路尤其多"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -712,9 +1476,21 @@
         },
         "hook": "兩個層次:超參數(訓練前人決定:lr、batch、layers)→ 參數(訓練中自動學:W、b)"
       },
-      "misconceptions": ["以為超參數會自動學習", "把超參數誤當輸出值", "誤以為監督式無超參"],
-      "related_node_ids": ["n_L23302_001"],
-      "tags": ["超參數", "參數", "梯度下降", "模型訓練"]
+      "misconceptions": [
+        "以為超參數會自動學習",
+        "把超參數誤當輸出值",
+        "誤以為監督式無超參"
+      ],
+      "related_node_ids": [
+        "n_L23302_001"
+      ],
+      "tags": [
+        "超參數",
+        "參數",
+        "梯度下降",
+        "模型訓練"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n7_dl_024",
@@ -726,10 +1502,25 @@
       "source_level": "L1",
       "stem": "某影像分類團隊比較 CNN 與 FCNN 兩種架構處理 224×224 RGB 影像的差異。在參數量、訓練速度、分類準確率三個面向,下列哪一項描述最為正確?",
       "options": [
-        {"text": "CNN 透過卷積核權重共享大幅減少參數量,訓練比 FCNN 更快且影像分類準確率明顯更高,因 CNN 具空間結構歸納偏差", "is_correct": true},
-        {"text": "CNN 因卷積運算複雜參數量遠多於 FCNN,訓練速度更慢且分類準確率反而比 FCNN 略低,故已被 FCNN 全面取代", "is_correct": false, "trap_type": "CNN 參數量遠少於 FCNN,且影像準確率更高未被取代"},
-        {"text": "CNN 與 FCNN 在參數量、訓練速度、準確率三項上完全相同,差異僅是命名差異,實作上完全可互換無影響", "is_correct": false, "trap_type": "兩者在三個面向皆有顯著差異,並非命名差別"},
-        {"text": "CNN 只能處理灰階影像,RGB 影像必須使用 FCNN 處理,所以 RGB 影像分類任務 FCNN 才是業界首選", "is_correct": false, "trap_type": "CNN 多通道(如 RGB 3 通道)為標準支援,並無此限制"}
+        {
+          "text": "CNN 透過卷積核權重共享大幅減少參數量,訓練比 FCNN 更快且影像分類準確率明顯更高,因 CNN 具空間結構歸納偏差",
+          "is_correct": true
+        },
+        {
+          "text": "CNN 因卷積運算複雜參數量遠多於 FCNN,訓練速度更慢且分類準確率反而比 FCNN 略低,故已被 FCNN 全面取代",
+          "is_correct": false,
+          "trap_type": "CNN 參數量遠少於 FCNN,且影像準確率更高未被取代"
+        },
+        {
+          "text": "CNN 與 FCNN 在參數量、訓練速度、準確率三項上完全相同,差異僅是命名差異,實作上完全可互換無影響",
+          "is_correct": false,
+          "trap_type": "兩者在三個面向皆有顯著差異,並非命名差別"
+        },
+        {
+          "text": "CNN 只能處理灰階影像,RGB 影像必須使用 FCNN 處理,所以 RGB 影像分類任務 FCNN 才是業界首選",
+          "is_correct": false,
+          "trap_type": "CNN 多通道(如 RGB 3 通道)為標準支援,並無此限制"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -741,9 +1532,22 @@
         },
         "hook": "CNN vs FCNN:CNN 權重共享 → 參數少、訓練快、影像準確率高;FCNN 全連接 → 參數爆炸、適小型表格資料"
       },
-      "misconceptions": ["以為 CNN 參數比 FCNN 多", "誤以為 CNN 與 FCNN 可互換", "誤以為 CNN 只支援灰階"],
-      "related_node_ids": ["n_L23302_001", "n_L23203_001"],
-      "tags": ["CNN", "FCNN", "架構選擇", "權重共享"]
+      "misconceptions": [
+        "以為 CNN 參數比 FCNN 多",
+        "誤以為 CNN 與 FCNN 可互換",
+        "誤以為 CNN 只支援灰階"
+      ],
+      "related_node_ids": [
+        "n_L23302_001",
+        "n_L23203_001"
+      ],
+      "tags": [
+        "CNN",
+        "FCNN",
+        "架構選擇",
+        "權重共享"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n7_dl_025",
@@ -755,10 +1559,25 @@
       "source_level": "L1",
       "stem": "某金融機構研究團隊收到三種不同性質的資料:(A)歷史貸款資料 1 萬筆 + 25 個結構化特徵 + 二元違約標籤(B)客戶行為日誌 100 萬筆 + 50 個變數 + 無標籤(C)股價分鐘級時序 5 年資料 + 預測未來 10 分鐘漲跌標籤。資深數據科學家為三任務各配一個『模型架構 + 一個關鍵超參方向』。下列哪一項配置最為合理?",
       "options": [
-        {"text": "(A)邏輯迴歸/隨機森林/XGBoost 調樹深;(B)K-means/DBSCAN 調 K 或 ε+MinPts;(C)LSTM/Transformer 調 hidden 與序列長度", "is_correct": true},
-        {"text": "(A)K-means 調 K 值;(B)邏輯迴歸 調 C 值;(C)隨機森林 調 max_depth — 三任務皆採通用模型即可達最佳效果且無需任何特化即可", "is_correct": false, "trap_type": "三任務性質與模型完全錯配,K-means 不能做違約分類"},
-        {"text": "(A)Transformer 調 attention heads;(B)Linear Regression 調 alpha;(C)邏輯迴歸 調 C 值 — 此為前沿模型最佳配置與業界標準", "is_correct": false, "trap_type": "Transformer 對 1 萬筆結構化資料殺雞用牛刀,且其他兩任務也錯配"},
-        {"text": "三任務統一使用神經網路 MLP,只調整 layers 與 dropout 兩個超參數,即可一致涵蓋所有 ML 任務之需求並達標準的最佳效能與表現", "is_correct": false, "trap_type": "MLP 對結構化小資料、聚類、時序皆非最佳,且無法處理無標籤聚類"}
+        {
+          "text": "(A)邏輯迴歸/隨機森林/XGBoost 調樹深;(B)K-means/DBSCAN 調 K 或 ε+MinPts;(C)LSTM/Transformer 調 hidden 與序列長度",
+          "is_correct": true
+        },
+        {
+          "text": "(A)K-means 調 K 值;(B)邏輯迴歸 調 C 值;(C)隨機森林 調 max_depth — 三任務皆採通用模型即可達最佳效果且無需任何特化即可",
+          "is_correct": false,
+          "trap_type": "三任務性質與模型完全錯配,K-means 不能做違約分類"
+        },
+        {
+          "text": "(A)Transformer 調 attention heads;(B)Linear Regression 調 alpha;(C)邏輯迴歸 調 C 值 — 此為前沿模型最佳配置與業界標準",
+          "is_correct": false,
+          "trap_type": "Transformer 對 1 萬筆結構化資料殺雞用牛刀,且其他兩任務也錯配"
+        },
+        {
+          "text": "三任務統一使用神經網路 MLP,只調整 layers 與 dropout 兩個超參數,即可一致涵蓋所有 ML 任務之需求並達標準的最佳效能與表現",
+          "is_correct": false,
+          "trap_type": "MLP 對結構化小資料、聚類、時序皆非最佳,且無法處理無標籤聚類"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -770,9 +1589,23 @@
         },
         "hook": "模型選擇三步驟:(1)看標籤(監督/非監督)(2)看資料性質(結構化/序列/影像)(3)看資料量(少→ML / 多→DL)"
       },
-      "misconceptions": ["以為單一模型萬用", "把 Transformer 套用所有任務", "忽視資料量對模型選擇的影響"],
-      "related_node_ids": ["n_L23302_001"],
-      "tags": ["模型選擇", "情境決策", "超參方向", "任務匹配"]
+      "misconceptions": [
+        "以為單一模型萬用",
+        "把 Transformer 套用所有任務",
+        "忽視資料量對模型選擇的影響"
+      ],
+      "related_node_ids": [
+        "n_L23302_001"
+      ],
+      "tags": [
+        "模型選擇",
+        "情境決策",
+        "超參方向",
+        "任務匹配"
+      ],
+      "boss_topics": [
+        "finance"
+      ]
     }
   ],
   "self_validation": {

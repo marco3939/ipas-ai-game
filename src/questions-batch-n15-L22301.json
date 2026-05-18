@@ -3,7 +3,10 @@
   "schema_version": "iron-rule-1+2+6",
   "generated_at": "2026-05-16",
   "batch": "N15 — 科二大數據 L22301 統計學在大數據中的應用",
-  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "exam_target": {
+    "name": "IPAS AI 應用規劃師中級",
+    "date": "2026-05-23"
+  },
   "iron_rule_compliance": {
     "rule_1": "every question has explanation.correct + explanation.wrong + explanation.hook + misconceptions",
     "rule_2": "shuffle_options=true on every item; calculation item carries stem_variables 3-case pool with distinct answers",
@@ -23,8 +26,16 @@
       "n_L22301_005": 3,
       "n_L22301_006": 3
     },
-    "by_format": {"single_choice_text": 16, "single_choice_scenario": 3, "calculation": 1},
-    "by_difficulty": {"easy": 5, "medium": 11, "hard": 4}
+    "by_format": {
+      "single_choice_text": 16,
+      "single_choice_scenario": 3,
+      "calculation": 1
+    },
+    "by_difficulty": {
+      "easy": 5,
+      "medium": 11,
+      "hard": 4
+    }
   },
   "questions": [
     {
@@ -37,10 +48,25 @@
       "source_level": "L1",
       "stem": "某銀行欲從每日 80 億筆刷卡紀錄中抽出 200 萬筆作為盜刷偵測訓練資料,其中盜刷比例僅約 0.05%。為避免取樣後正類嚴重不足,下列何種取樣策略最為適當?",
       "options": [
-        {"text": "分層取樣(Stratified Sampling),依盜刷與正常標籤分層後依比例或調整比例抽樣,以確保稀有類別覆蓋", "is_correct": true},
-        {"text": "簡單隨機取樣(Simple Random Sampling),每筆刷卡紀錄賦予相同抽取機率以維持資料整體之自然分佈", "is_correct": false, "trap_type": "簡單隨機對極稀有類別覆蓋極差"},
-        {"text": "群集取樣(Cluster Sampling),依據刷卡日期分群後隨機抽幾個整群,可大幅節省 I/O 成本", "is_correct": false, "trap_type": "群集會放大群內相似度問題"},
-        {"text": "便利取樣(Convenience Sampling),從近期最容易取得的刷卡紀錄抽出固定筆數即可使用", "is_correct": false, "trap_type": "便利樣本非隨機且偏差大"}
+        {
+          "text": "分層取樣(Stratified Sampling),依盜刷與正常標籤分層後依比例或調整比例抽樣,以確保稀有類別覆蓋",
+          "is_correct": true
+        },
+        {
+          "text": "簡單隨機取樣(Simple Random Sampling),每筆刷卡紀錄賦予相同抽取機率以維持資料整體之自然分佈",
+          "is_correct": false,
+          "trap_type": "簡單隨機對極稀有類別覆蓋極差"
+        },
+        {
+          "text": "群集取樣(Cluster Sampling),依據刷卡日期分群後隨機抽幾個整群,可大幅節省 I/O 成本",
+          "is_correct": false,
+          "trap_type": "群集會放大群內相似度問題"
+        },
+        {
+          "text": "便利取樣(Convenience Sampling),從近期最容易取得的刷卡紀錄抽出固定筆數即可使用",
+          "is_correct": false,
+          "trap_type": "便利樣本非隨機且偏差大"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -52,9 +78,22 @@
         },
         "hook": "不平衡資料 → Stratified;串流不知總量 → Reservoir;成本敏感 → Cluster;最基本 → Simple Random"
       },
-      "misconceptions": ["以為樣本越大就一定具代表性", "把分層與群集取樣混為一談"],
-      "related_node_ids": ["n_L22301_005"],
-      "tags": ["取樣策略", "分層取樣", "不平衡資料"]
+      "misconceptions": [
+        "以為樣本越大就一定具代表性",
+        "把分層與群集取樣混為一談"
+      ],
+      "related_node_ids": [
+        "n_L22301_005"
+      ],
+      "tags": [
+        "取樣策略",
+        "分層取樣",
+        "不平衡資料"
+      ],
+      "boss_topics": [
+        "finance",
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n15_002",
@@ -66,10 +105,25 @@
       "source_level": "L1",
       "stem": "某新聞網站使用 Kafka 即時串流推播文章瀏覽事件,工程團隊需在無法預知當日總事件量的情況下,從整日串流中取出 10000 筆均勻代表性樣本供分析使用。最適合採用的取樣演算法是?",
       "options": [
-        {"text": "蓄水池取樣(Reservoir Sampling),單次掃過串流即可維持 k 筆均勻樣本,無須事先知道總筆數 N", "is_correct": true},
-        {"text": "分層取樣(Stratified Sampling),先依事件類別分層後再按各層樣本配額執行隨機抽取作業", "is_correct": false, "trap_type": "分層需先知道各層大小"},
-        {"text": "簡單隨機取樣(Simple Random Sampling),設定固定抽樣比例後對每筆事件以該比例獨立判斷抽取", "is_correct": false, "trap_type": "固定比例不知總量會超量或不足"},
-        {"text": "系統取樣(Systematic Sampling),依照固定間隔 k 從串流中每 k 筆抽出 1 筆作為樣本紀錄", "is_correct": false, "trap_type": "需事先決定 k 但 N 未知"}
+        {
+          "text": "蓄水池取樣(Reservoir Sampling),單次掃過串流即可維持 k 筆均勻樣本,無須事先知道總筆數 N",
+          "is_correct": true
+        },
+        {
+          "text": "分層取樣(Stratified Sampling),先依事件類別分層後再按各層樣本配額執行隨機抽取作業",
+          "is_correct": false,
+          "trap_type": "分層需先知道各層大小"
+        },
+        {
+          "text": "簡單隨機取樣(Simple Random Sampling),設定固定抽樣比例後對每筆事件以該比例獨立判斷抽取",
+          "is_correct": false,
+          "trap_type": "固定比例不知總量會超量或不足"
+        },
+        {
+          "text": "系統取樣(Systematic Sampling),依照固定間隔 k 從串流中每 k 筆抽出 1 筆作為樣本紀錄",
+          "is_correct": false,
+          "trap_type": "需事先決定 k 但 N 未知"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -81,9 +135,23 @@
         },
         "hook": "Reservoir 是 streaming sampling 的標配 — Twitter / Kafka / 日誌收集器皆採用"
       },
-      "misconceptions": ["串流場景硬套需要 N 的取樣法", "認為簡單隨機在串流上也適用"],
-      "related_node_ids": ["n_L22301_002"],
-      "tags": ["取樣策略", "Reservoir Sampling", "串流"]
+      "misconceptions": [
+        "串流場景硬套需要 N 的取樣法",
+        "認為簡單隨機在串流上也適用"
+      ],
+      "related_node_ids": [
+        "n_L22301_002"
+      ],
+      "tags": [
+        "取樣策略",
+        "Reservoir Sampling",
+        "串流"
+      ],
+      "boss_topics": [
+        "media",
+        "ml_bigdata",
+        "data_eng"
+      ]
     },
     {
       "id": "q_n15_003",
@@ -95,10 +163,25 @@
       "source_level": "L1",
       "stem": "某物流公司營運範圍橫跨北中南三區,各區業務量差異大(北:中:南 ≈ 6:3:1)。資料分析師欲抽取 5000 筆配送紀錄評估『各區』平均延誤時間並進行區間比較。下列取樣設計何者最為適切?",
       "options": [
-        {"text": "依三區分層取樣,各區獨立抽取相對等量樣本(如每區約 1600 筆),確保各區估計精度相當", "is_correct": true},
-        {"text": "對所有配送紀錄做簡單隨機取樣 5000 筆,完全依其自然分佈反映各區實際業務比例情形", "is_correct": false, "trap_type": "南區樣本過少,區間估計不穩"},
-        {"text": "依配送日期做群集取樣抽出若干整日,將該日全部紀錄納入分析以充分利用同日批次優勢", "is_correct": false, "trap_type": "整日抽樣可能某日無南區資料"},
-        {"text": "以蓄水池取樣維持 5000 筆均勻樣本,雖無須得知總量但能保證每筆等機率被納入分析", "is_correct": false, "trap_type": "與簡單隨機同樣使南區樣本不足"}
+        {
+          "text": "依三區分層取樣,各區獨立抽取相對等量樣本(如每區約 1600 筆),確保各區估計精度相當",
+          "is_correct": true
+        },
+        {
+          "text": "對所有配送紀錄做簡單隨機取樣 5000 筆,完全依其自然分佈反映各區實際業務比例情形",
+          "is_correct": false,
+          "trap_type": "南區樣本過少,區間估計不穩"
+        },
+        {
+          "text": "依配送日期做群集取樣抽出若干整日,將該日全部紀錄納入分析以充分利用同日批次優勢",
+          "is_correct": false,
+          "trap_type": "整日抽樣可能某日無南區資料"
+        },
+        {
+          "text": "以蓄水池取樣維持 5000 筆均勻樣本,雖無須得知總量但能保證每筆等機率被納入分析",
+          "is_correct": false,
+          "trap_type": "與簡單隨機同樣使南區樣本不足"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -110,9 +193,22 @@
         },
         "hook": "估計『各層』精度相當時用『等量分層』而非『比例分層』;比較整體則用比例分層"
       },
-      "misconceptions": ["比例分層誤用於精度相當的子群比較", "認為分層只有依比例一種方式"],
-      "related_node_ids": ["n_L22301_005"],
-      "tags": ["取樣策略", "分層設計", "情境"]
+      "misconceptions": [
+        "比例分層誤用於精度相當的子群比較",
+        "認為分層只有依比例一種方式"
+      ],
+      "related_node_ids": [
+        "n_L22301_005"
+      ],
+      "tags": [
+        "取樣策略",
+        "分層設計",
+        "情境"
+      ],
+      "boss_topics": [
+        "logistics",
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n15_004",
@@ -124,10 +220,25 @@
       "source_level": "L1",
       "stem": "某資料科學團隊主張『大數據時代有 N=10 億的母體資料,任意抽樣 1% 即得 1000 萬筆樣本,故樣本必具高代表性』。下列對此主張的評論何者最為正確?",
       "options": [
-        {"text": "代表性取決於『取樣設計』而非絕對樣本數;若取樣機制本身有偏,大樣本只會更精確地估計到偏誤值", "is_correct": true},
-        {"text": "1000 萬筆樣本量已超過中央極限定理門檻,因此無論取樣方式為何皆可視為近似母體分佈代表", "is_correct": false, "trap_type": "CLT 不修正設計偏誤"},
-        {"text": "1% 比例已遠大於常見民調 1067 筆樣本,顯示其精度遠優於民調故設計細節不再具關鍵影響力", "is_correct": false, "trap_type": "比例 ≠ 設計品質"},
-        {"text": "1000 萬樣本足以涵蓋所有可能子群體,故各種偏差會在大數法則作用下自然彼此抵銷歸零", "is_correct": false, "trap_type": "大數法則不修正系統性偏差"}
+        {
+          "text": "代表性取決於『取樣設計』而非絕對樣本數;若取樣機制本身有偏,大樣本只會更精確地估計到偏誤值",
+          "is_correct": true
+        },
+        {
+          "text": "1000 萬筆樣本量已超過中央極限定理門檻,因此無論取樣方式為何皆可視為近似母體分佈代表",
+          "is_correct": false,
+          "trap_type": "CLT 不修正設計偏誤"
+        },
+        {
+          "text": "1% 比例已遠大於常見民調 1067 筆樣本,顯示其精度遠優於民調故設計細節不再具關鍵影響力",
+          "is_correct": false,
+          "trap_type": "比例 ≠ 設計品質"
+        },
+        {
+          "text": "1000 萬樣本足以涵蓋所有可能子群體,故各種偏差會在大數法則作用下自然彼此抵銷歸零",
+          "is_correct": false,
+          "trap_type": "大數法則不修正系統性偏差"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -139,9 +250,21 @@
         },
         "hook": "Big data paradox:N 越大,有偏設計造成的『精確錯誤』越嚴重,而非自動正確"
       },
-      "misconceptions": ["以為大樣本可消除取樣偏誤", "把 N=All 當成必然事實"],
-      "related_node_ids": ["n_L22301_005"],
-      "tags": ["取樣策略", "大數據迷思", "Big data paradox"]
+      "misconceptions": [
+        "以為大樣本可消除取樣偏誤",
+        "把 N=All 當成必然事實"
+      ],
+      "related_node_ids": [
+        "n_L22301_005"
+      ],
+      "tags": [
+        "取樣策略",
+        "大數據迷思",
+        "Big data paradox"
+      ],
+      "boss_topics": [
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n15_005",
@@ -153,10 +276,25 @@
       "source_level": "L1",
       "stem": "某串流影音平台需要估計『過去 30 天內登入過的不重複使用者人數(去重 cardinality)』,允許 ±2% 誤差。考量帳號量達數億且記憶體有限,最適合採用的近似資料結構為下列何者?",
       "options": [
-        {"text": "HyperLogLog,以極小記憶體即可估算大量去重數量,誤差可調且工程上廣泛採用", "is_correct": true},
-        {"text": "Count-Min Sketch,以二維雜湊計數陣列估算各元素出現次數,適合 heavy hitter 排行分析", "is_correct": false, "trap_type": "CMS 估頻率非 cardinality"},
-        {"text": "Bloom Filter,以位元陣列判斷元素是否屬於某集合,可能偽陽性但不會偽陰性回報", "is_correct": false, "trap_type": "Bloom 判存在非計數"},
-        {"text": "B+ 樹索引,以平衡樹結構維護完整去重集合並支援快速搜尋,具有可預期之查詢效能", "is_correct": false, "trap_type": "B+ 樹需儲存所有元素"}
+        {
+          "text": "HyperLogLog,以極小記憶體即可估算大量去重數量,誤差可調且工程上廣泛採用",
+          "is_correct": true
+        },
+        {
+          "text": "Count-Min Sketch,以二維雜湊計數陣列估算各元素出現次數,適合 heavy hitter 排行分析",
+          "is_correct": false,
+          "trap_type": "CMS 估頻率非 cardinality"
+        },
+        {
+          "text": "Bloom Filter,以位元陣列判斷元素是否屬於某集合,可能偽陽性但不會偽陰性回報",
+          "is_correct": false,
+          "trap_type": "Bloom 判存在非計數"
+        },
+        {
+          "text": "B+ 樹索引,以平衡樹結構維護完整去重集合並支援快速搜尋,具有可預期之查詢效能",
+          "is_correct": false,
+          "trap_type": "B+ 樹需儲存所有元素"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -168,9 +306,22 @@
         },
         "hook": "HyperLogLog → cardinality;Bloom Filter → membership;Count-Min Sketch → frequency / heavy hitter"
       },
-      "misconceptions": ["混用三種近似結構的適用場景", "以為近似結構誤差不可控"],
-      "related_node_ids": ["n_L22301_001"],
-      "tags": ["近似計算", "HyperLogLog", "cardinality"]
+      "misconceptions": [
+        "混用三種近似結構的適用場景",
+        "以為近似結構誤差不可控"
+      ],
+      "related_node_ids": [
+        "n_L22301_001"
+      ],
+      "tags": [
+        "近似計算",
+        "HyperLogLog",
+        "cardinality"
+      ],
+      "boss_topics": [
+        "media",
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n15_006",
@@ -182,10 +333,25 @@
       "source_level": "L1",
       "stem": "某電商網站使用 Bloom Filter 攔截已下架商品 URL 的請求。當系統查詢某 URL 並回傳『不在 Bloom Filter 中』時,下列敘述何者最為正確?",
       "options": [
-        {"text": "可確定該 URL 確實不在已下架集合中,Bloom Filter 不會出現偽陰性(false negative)", "is_correct": true},
-        {"text": "可確定該 URL 確實在已下架集合中,Bloom Filter 的設計特性僅產生偽陰性回報訊息", "is_correct": false, "trap_type": "顛倒偽陽偽陰"},
-        {"text": "仍有可能該 URL 實際已下架,因為 Bloom Filter 同時可能出現偽陽性與偽陰性回報", "is_correct": false, "trap_type": "誤判 Bloom 兩種錯誤都會發生"},
-        {"text": "需另查精確資料庫才能確認狀態,因 Bloom Filter 之回報結果完全不具任何決定性意義", "is_correct": false, "trap_type": "negative 答案是確定的"}
+        {
+          "text": "可確定該 URL 確實不在已下架集合中,Bloom Filter 不會出現偽陰性(false negative)",
+          "is_correct": true
+        },
+        {
+          "text": "可確定該 URL 確實在已下架集合中,Bloom Filter 的設計特性僅產生偽陰性回報訊息",
+          "is_correct": false,
+          "trap_type": "顛倒偽陽偽陰"
+        },
+        {
+          "text": "仍有可能該 URL 實際已下架,因為 Bloom Filter 同時可能出現偽陽性與偽陰性回報",
+          "is_correct": false,
+          "trap_type": "誤判 Bloom 兩種錯誤都會發生"
+        },
+        {
+          "text": "需另查精確資料庫才能確認狀態,因 Bloom Filter 之回報結果完全不具任何決定性意義",
+          "is_correct": false,
+          "trap_type": "negative 答案是確定的"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -197,9 +363,22 @@
         },
         "hook": "Bloom Filter:『say no』可信、『say yes』需再確認(可能 false positive)"
       },
-      "misconceptions": ["把偽陽性偽陰性記反", "以為兩種錯誤都會發生"],
-      "related_node_ids": ["n_L22301_001"],
-      "tags": ["近似計算", "Bloom Filter", "偽陽性"]
+      "misconceptions": [
+        "把偽陽性偽陰性記反",
+        "以為兩種錯誤都會發生"
+      ],
+      "related_node_ids": [
+        "n_L22301_001"
+      ],
+      "tags": [
+        "近似計算",
+        "Bloom Filter",
+        "偽陽性"
+      ],
+      "boss_topics": [
+        "ecommerce",
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n15_007",
@@ -211,10 +390,25 @@
       "source_level": "L1",
       "stem": "某網路廣告平台每秒湧入百萬筆點擊事件,團隊欲即時找出『最熱門前 100 個廣告 ID(top-k heavy hitters)』而不需要逐一精確計數所有 ID。下列近似資料結構最為適合?",
       "options": [
-        {"text": "Count-Min Sketch,以多組雜湊計數陣列估算各元素頻率並取最小值以控制高估誤差", "is_correct": true},
-        {"text": "HyperLogLog,專為估算大量去重總數設計,適合用於即時統計熱門 top-k 排行清單", "is_correct": false, "trap_type": "HLL 估 cardinality 非頻率"},
-        {"text": "Bloom Filter,以位元陣列判斷某廣告 ID 是否曾出現,並回傳該 ID 之精確排名數字", "is_correct": false, "trap_type": "Bloom 不存頻率資訊"},
-        {"text": "Skip List,以多層連結串列維護全部廣告 ID 之點擊次數並支援快速排序查詢", "is_correct": false, "trap_type": "Skip List 仍需存全量"}
+        {
+          "text": "Count-Min Sketch,以多組雜湊計數陣列估算各元素頻率並取最小值以控制高估誤差",
+          "is_correct": true
+        },
+        {
+          "text": "HyperLogLog,專為估算大量去重總數設計,適合用於即時統計熱門 top-k 排行清單",
+          "is_correct": false,
+          "trap_type": "HLL 估 cardinality 非頻率"
+        },
+        {
+          "text": "Bloom Filter,以位元陣列判斷某廣告 ID 是否曾出現,並回傳該 ID 之精確排名數字",
+          "is_correct": false,
+          "trap_type": "Bloom 不存頻率資訊"
+        },
+        {
+          "text": "Skip List,以多層連結串列維護全部廣告 ID 之點擊次數並支援快速排序查詢",
+          "is_correct": false,
+          "trap_type": "Skip List 仍需存全量"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -226,9 +420,22 @@
         },
         "hook": "Heavy hitter / top-k → Count-Min Sketch;去重 → HLL;存在性 → Bloom"
       },
-      "misconceptions": ["混淆 HLL 與 CMS 的用途", "以為近似結構都能回答 top-k"],
-      "related_node_ids": ["n_L22301_001"],
-      "tags": ["近似計算", "Count-Min Sketch", "heavy hitter"]
+      "misconceptions": [
+        "混淆 HLL 與 CMS 的用途",
+        "以為近似結構都能回答 top-k"
+      ],
+      "related_node_ids": [
+        "n_L22301_001"
+      ],
+      "tags": [
+        "近似計算",
+        "Count-Min Sketch",
+        "heavy hitter"
+      ],
+      "boss_topics": [
+        "media",
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n15_008",
@@ -240,10 +447,25 @@
       "source_level": "L1",
       "stem": "某資安團隊欲建構即時惡意網址防護:(A) 判斷某 URL 是否屬於黑名單;(B) 估計每日不重複惡意請求來源 IP 總數;(C) 找出當日攻擊量前 50 大來源 IP。對三項需求最合適的近似資料結構組合為?",
       "options": [
-        {"text": "(A) Bloom Filter、(B) HyperLogLog、(C) Count-Min Sketch,各司其職並符合空間效率要求", "is_correct": true},
-        {"text": "(A) HyperLogLog、(B) Bloom Filter、(C) Count-Min Sketch,以去重結構先做黑名單成員判斷", "is_correct": false, "trap_type": "HLL 不能做 membership"},
-        {"text": "(A) Count-Min Sketch、(B) Bloom Filter、(C) HyperLogLog,以頻率結構直接代替黑名單成員查詢", "is_correct": false, "trap_type": "CMS 不能做 membership"},
-        {"text": "(A) Bloom Filter、(B) Count-Min Sketch、(C) HyperLogLog,以頻率結構估去重而以去重結構排名", "is_correct": false, "trap_type": "B、C 互換錯誤"}
+        {
+          "text": "(A) Bloom Filter、(B) HyperLogLog、(C) Count-Min Sketch,各司其職並符合空間效率要求",
+          "is_correct": true
+        },
+        {
+          "text": "(A) HyperLogLog、(B) Bloom Filter、(C) Count-Min Sketch,以去重結構先做黑名單成員判斷",
+          "is_correct": false,
+          "trap_type": "HLL 不能做 membership"
+        },
+        {
+          "text": "(A) Count-Min Sketch、(B) Bloom Filter、(C) HyperLogLog,以頻率結構直接代替黑名單成員查詢",
+          "is_correct": false,
+          "trap_type": "CMS 不能做 membership"
+        },
+        {
+          "text": "(A) Bloom Filter、(B) Count-Min Sketch、(C) HyperLogLog,以頻率結構估去重而以去重結構排名",
+          "is_correct": false,
+          "trap_type": "B、C 互換錯誤"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -255,9 +477,21 @@
         },
         "hook": "membership / cardinality / frequency 三項任務各對應一種近似結構,不可代入錯位"
       },
-      "misconceptions": ["三種近似結構功能交叉誤用", "以為近似結構之間可彼此替代"],
-      "related_node_ids": ["n_L22301_001"],
-      "tags": ["近似計算", "情境", "資料結構選型"]
+      "misconceptions": [
+        "三種近似結構功能交叉誤用",
+        "以為近似結構之間可彼此替代"
+      ],
+      "related_node_ids": [
+        "n_L22301_001"
+      ],
+      "tags": [
+        "近似計算",
+        "情境",
+        "資料結構選型"
+      ],
+      "boss_topics": [
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n15_009",
@@ -269,10 +503,25 @@
       "source_level": "L1",
       "stem": "某分散式運算平台將資料分散於 3 個節點,各節點筆數為 100、200、500,各節點分別算出『局部平均值』為 10、20、30。資料工程師欲計算全體平均,下列做法何者正確?",
       "options": [
-        {"text": "各節點上報 partial sum 與 partial count,匯總後相除得到全體平均,而非把三平均直接平均", "is_correct": true},
-        {"text": "把各節點局部平均直接算術平均 (10+20+30)/3 = 20,因為每節點僅計算了一次平均運算", "is_correct": false, "trap_type": "忽略各節點樣本數差異"},
-        {"text": "取最大節點(500 筆)的局部平均 30 為代表,因為最大節點具備最高之資料代表性意義", "is_correct": false, "trap_type": "丟棄其他節點資訊"},
-        {"text": "把各節點局部平均依節點筆數加權平均後再除以節點數 3,以平衡各節點樣本量之間差異", "is_correct": false, "trap_type": "已加權卻多除一次"}
+        {
+          "text": "各節點上報 partial sum 與 partial count,匯總後相除得到全體平均,而非把三平均直接平均",
+          "is_correct": true
+        },
+        {
+          "text": "把各節點局部平均直接算術平均 (10+20+30)/3 = 20,因為每節點僅計算了一次平均運算",
+          "is_correct": false,
+          "trap_type": "忽略各節點樣本數差異"
+        },
+        {
+          "text": "取最大節點(500 筆)的局部平均 30 為代表,因為最大節點具備最高之資料代表性意義",
+          "is_correct": false,
+          "trap_type": "丟棄其他節點資訊"
+        },
+        {
+          "text": "把各節點局部平均依節點筆數加權平均後再除以節點數 3,以平衡各節點樣本量之間差異",
+          "is_correct": false,
+          "trap_type": "已加權卻多除一次"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -284,9 +533,22 @@
         },
         "hook": "Mean 在分散式下要彙整 sum 與 count 再相除,直接平均平均是常見陷阱"
       },
-      "misconceptions": ["以為平均具加性可直接平均", "不知 Mean 須先合 sum 再除 count"],
-      "related_node_ids": ["n_L22301_002"],
-      "tags": ["分散式統計", "Mean 合併", "可結合性"]
+      "misconceptions": [
+        "以為平均具加性可直接平均",
+        "不知 Mean 須先合 sum 再除 count"
+      ],
+      "related_node_ids": [
+        "n_L22301_002"
+      ],
+      "tags": [
+        "分散式統計",
+        "Mean 合併",
+        "可結合性"
+      ],
+      "boss_topics": [
+        "ml_bigdata",
+        "data_eng"
+      ]
     },
     {
       "id": "q_n15_010",
@@ -298,10 +560,25 @@
       "source_level": "L1",
       "stem": "下列統計量在分散式運算中『無法』直接由各節點 partial 結果合併而得最為明顯者為下列何者?",
       "options": [
-        {"text": "中位數(Median)/ 任意分位數,因排序統計量不具可結合性,常以 t-digest / GK sketch 近似", "is_correct": true},
-        {"text": "總和(Sum),各節點 partial sum 可直接相加為全體總和,具備明確之可結合性", "is_correct": false, "trap_type": "Sum 可直接相加"},
-        {"text": "計數(Count),各節點 partial count 可直接相加為全體計數,具備標準之可結合性", "is_correct": false, "trap_type": "Count 可直接相加"},
-        {"text": "最大值(Max),各節點 partial max 取最大即為全體最大,具備自然之可結合性", "is_correct": false, "trap_type": "Max 可直接合併"}
+        {
+          "text": "中位數(Median)/ 任意分位數,因排序統計量不具可結合性,常以 t-digest / GK sketch 近似",
+          "is_correct": true
+        },
+        {
+          "text": "總和(Sum),各節點 partial sum 可直接相加為全體總和,具備明確之可結合性",
+          "is_correct": false,
+          "trap_type": "Sum 可直接相加"
+        },
+        {
+          "text": "計數(Count),各節點 partial count 可直接相加為全體計數,具備標準之可結合性",
+          "is_correct": false,
+          "trap_type": "Count 可直接相加"
+        },
+        {
+          "text": "最大值(Max),各節點 partial max 取最大即為全體最大,具備自然之可結合性",
+          "is_correct": false,
+          "trap_type": "Max 可直接合併"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -313,9 +590,22 @@
         },
         "hook": "Sum/Count/Max/Min 具結合性可直接合;Mean 須先合 sum/count;Median/分位數需近似結構"
       },
-      "misconceptions": ["以為所有統計量都能 partial 合併", "不知道分位數需要近似結構"],
-      "related_node_ids": ["n_L22301_002"],
-      "tags": ["分散式統計", "可結合性", "Median"]
+      "misconceptions": [
+        "以為所有統計量都能 partial 合併",
+        "不知道分位數需要近似結構"
+      ],
+      "related_node_ids": [
+        "n_L22301_002"
+      ],
+      "tags": [
+        "分散式統計",
+        "可結合性",
+        "Median"
+      ],
+      "boss_topics": [
+        "ml_bigdata",
+        "data_eng"
+      ]
     },
     {
       "id": "q_n15_011",
@@ -327,10 +617,25 @@
       "source_level": "L1",
       "stem": "某團隊在分散式 IoT 感測平台計算大規模溫度變異數時,沿用課本『Σx² - (Σx)²/n 後除以 n-1』公式,結果在數值非常大且彼此接近時出現負變異數。此現象的根因最可能為下列何者?",
       "options": [
-        {"text": "浮點災難性抵銷:兩個極接近的大數相減喪失有效位元而誤差爆炸", "is_correct": true},
-        {"text": "資料中存在負值溫度紀錄,經平方累加後抵銷正值平方項導致最後結果出現負變異數現象", "is_correct": false, "trap_type": "平方項恆為非負"},
-        {"text": "n-1 自由度修正不適用於分散式合併情境,應改採 n 為分母方能得到合理之非負估計值", "is_correct": false, "trap_type": "自由度與正負無關"},
-        {"text": "感測器讀數本身具有量測噪音,造成標準誤過大進而導致變異數估計值落於統計合理負區間", "is_correct": false, "trap_type": "變異數定義上非負"}
+        {
+          "text": "浮點災難性抵銷:兩個極接近的大數相減喪失有效位元而誤差爆炸",
+          "is_correct": true
+        },
+        {
+          "text": "資料中存在負值溫度紀錄,經平方累加後抵銷正值平方項導致最後結果出現負變異數現象",
+          "is_correct": false,
+          "trap_type": "平方項恆為非負"
+        },
+        {
+          "text": "n-1 自由度修正不適用於分散式合併情境,應改採 n 為分母方能得到合理之非負估計值",
+          "is_correct": false,
+          "trap_type": "自由度與正負無關"
+        },
+        {
+          "text": "感測器讀數本身具有量測噪音,造成標準誤過大進而導致變異數估計值落於統計合理負區間",
+          "is_correct": false,
+          "trap_type": "變異數定義上非負"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -342,9 +647,22 @@
         },
         "hook": "naïve variance 兩量級相近時必爆;大數據建議使用 Welford / pairwise 合併"
       },
-      "misconceptions": ["以為 Σx² - (Σx)²/n 公式在實務上總是穩定", "以為負變異數是統計現象"],
-      "related_node_ids": ["n_L22301_002"],
-      "tags": ["分散式統計", "數值穩定性", "catastrophic cancellation"]
+      "misconceptions": [
+        "以為 Σx² - (Σx)²/n 公式在實務上總是穩定",
+        "以為負變異數是統計現象"
+      ],
+      "related_node_ids": [
+        "n_L22301_002"
+      ],
+      "tags": [
+        "分散式統計",
+        "數值穩定性",
+        "catastrophic cancellation"
+      ],
+      "boss_topics": [
+        "manufacturing",
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n15_012",
@@ -356,10 +674,25 @@
       "source_level": "L1",
       "stem": "某城市資料分析發現『冰品銷售量』與『溺水事件數』高度相關(r = 0.87)。分析師欲對外公布結論時,下列敘述何者最為適切?",
       "options": [
-        {"text": "兩變數高度相關,但可能受共同因素(夏季氣溫)影響,不宜直接推論吃冰造成溺水", "is_correct": true},
-        {"text": "兩變數相關係數 0.87 已遠超 0.8 之強相關門檻,可宣告冰品銷售直接導致溺水案件激增", "is_correct": false, "trap_type": "把相關當因果"},
-        {"text": "因相關係數高於 0.85 之顯著閾值,可推論冰品銷售為溺水事件之主要可預測風險因子", "is_correct": false, "trap_type": "預測力 ≠ 因果力"},
-        {"text": "因兩變數同向變動,可建議市府禁售冰品以利降低當年度溺水事件之發生率與相關意外", "is_correct": false, "trap_type": "由偽相關推政策"}
+        {
+          "text": "兩變數高度相關,但可能受共同因素(夏季氣溫)影響,不宜直接推論吃冰造成溺水",
+          "is_correct": true
+        },
+        {
+          "text": "兩變數相關係數 0.87 已遠超 0.8 之強相關門檻,可宣告冰品銷售直接導致溺水案件激增",
+          "is_correct": false,
+          "trap_type": "把相關當因果"
+        },
+        {
+          "text": "因相關係數高於 0.85 之顯著閾值,可推論冰品銷售為溺水事件之主要可預測風險因子",
+          "is_correct": false,
+          "trap_type": "預測力 ≠ 因果力"
+        },
+        {
+          "text": "因兩變數同向變動,可建議市府禁售冰品以利降低當年度溺水事件之發生率與相關意外",
+          "is_correct": false,
+          "trap_type": "由偽相關推政策"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -371,9 +704,23 @@
         },
         "hook": "確認因果三條件:時序、共變、排除其他解釋;單看相關係數無法滿足後兩者"
       },
-      "misconceptions": ["把高相關直接視為因果", "誤以為預測力等同因果力"],
-      "related_node_ids": ["n_L22301_005", "n_L22301_006"],
-      "tags": ["相關 vs 因果", "共同原因", "偽相關"]
+      "misconceptions": [
+        "把高相關直接視為因果",
+        "誤以為預測力等同因果力"
+      ],
+      "related_node_ids": [
+        "n_L22301_005",
+        "n_L22301_006"
+      ],
+      "tags": [
+        "相關 vs 因果",
+        "共同原因",
+        "偽相關"
+      ],
+      "boss_topics": [
+        "smartcity",
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n15_013",
@@ -385,10 +732,25 @@
       "source_level": "L1",
       "stem": "某資料團隊在 10000 個變數兩兩相關矩陣中找出 200 對相關係數絕對值 > 0.5 的高相關欄位,並打算據此設計交叉特徵。下列對該結果的解讀何者最為正確?",
       "options": [
-        {"text": "高維欄位兩兩比較數量呈組合爆炸,即使全為獨立雜訊也會出現大量偶然高相關,需謹慎驗證", "is_correct": true},
-        {"text": "由於相關係數均超過 0.5 之中度相關門檻,顯示資料集本身具備豐富之內在因果結構與訊號", "is_correct": false, "trap_type": "把偶然當訊號"},
-        {"text": "200 對相關性已通過顯著檢定,因此可逕行採用為模型特徵以增強預測效能與業務應用價值", "is_correct": false, "trap_type": "未做多重比較校正"},
-        {"text": "相關係數絕對值大於 0.5 即代表線性關係穩定可重現,無須再以新樣本進行交叉驗證確認", "is_correct": false, "trap_type": "未驗證重現性"}
+        {
+          "text": "高維欄位兩兩比較數量呈組合爆炸,即使全為獨立雜訊也會出現大量偶然高相關,需謹慎驗證",
+          "is_correct": true
+        },
+        {
+          "text": "由於相關係數均超過 0.5 之中度相關門檻,顯示資料集本身具備豐富之內在因果結構與訊號",
+          "is_correct": false,
+          "trap_type": "把偶然當訊號"
+        },
+        {
+          "text": "200 對相關性已通過顯著檢定,因此可逕行採用為模型特徵以增強預測效能與業務應用價值",
+          "is_correct": false,
+          "trap_type": "未做多重比較校正"
+        },
+        {
+          "text": "相關係數絕對值大於 0.5 即代表線性關係穩定可重現,無須再以新樣本進行交叉驗證確認",
+          "is_correct": false,
+          "trap_type": "未驗證重現性"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -400,9 +762,22 @@
         },
         "hook": "高維 + 大數據 → 假關聯組合爆炸;務必搭配多重比較校正與獨立樣本驗證"
       },
-      "misconceptions": ["在高維資料中忽視假關聯", "不做多重比較校正"],
-      "related_node_ids": ["n_L22301_005", "n_L22301_006"],
-      "tags": ["相關 vs 因果", "假關聯", "高維"]
+      "misconceptions": [
+        "在高維資料中忽視假關聯",
+        "不做多重比較校正"
+      ],
+      "related_node_ids": [
+        "n_L22301_005",
+        "n_L22301_006"
+      ],
+      "tags": [
+        "相關 vs 因果",
+        "假關聯",
+        "高維"
+      ],
+      "boss_topics": [
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n15_014",
@@ -414,10 +789,25 @@
       "source_level": "L1",
       "stem": "某線上教育平台觀察到『有訂閱付費課程的學員』考試通過率比『未訂閱者』高出 35 個百分點。產品經理欲據此宣稱『付費課程造成通過率提升』,資料科學家應提出之關鍵反論為?",
       "options": [
-        {"text": "兩群學員可能本來就在自律性 / 學習動機上有差異,需用 A/B 隨機分派或匹配方法控制混淆變數", "is_correct": true},
-        {"text": "需先把通過率以百分比換算為機率再進行兩比例 z 檢定,僅統計顯著結果方可宣告為實質效果", "is_correct": false, "trap_type": "顯著性 ≠ 因果"},
-        {"text": "需把通過率調整為以百分點為單位之效應量呈現,以利下游業務報表進行視覺化使用展示", "is_correct": false, "trap_type": "單位呈現非因果問題"},
-        {"text": "需把樣本擴大至所有學員一年內紀錄,因樣本越大越能完整反映付費課程造成之直接因果效果", "is_correct": false, "trap_type": "規模不修正自選偏差"}
+        {
+          "text": "兩群學員可能本來就在自律性 / 學習動機上有差異,需用 A/B 隨機分派或匹配方法控制混淆變數",
+          "is_correct": true
+        },
+        {
+          "text": "需先把通過率以百分比換算為機率再進行兩比例 z 檢定,僅統計顯著結果方可宣告為實質效果",
+          "is_correct": false,
+          "trap_type": "顯著性 ≠ 因果"
+        },
+        {
+          "text": "需把通過率調整為以百分點為單位之效應量呈現,以利下游業務報表進行視覺化使用展示",
+          "is_correct": false,
+          "trap_type": "單位呈現非因果問題"
+        },
+        {
+          "text": "需把樣本擴大至所有學員一年內紀錄,因樣本越大越能完整反映付費課程造成之直接因果效果",
+          "is_correct": false,
+          "trap_type": "規模不修正自選偏差"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -429,9 +819,22 @@
         },
         "hook": "Self-selection bias:有意願付費者本身就有特質差異;需 RCT / 匹配 / 工具變數排除"
       },
-      "misconceptions": ["把觀察相關直接當作因果", "忽略自選擇偏差"],
-      "related_node_ids": ["n_L22301_005"],
-      "tags": ["相關 vs 因果", "自選擇", "情境"]
+      "misconceptions": [
+        "把觀察相關直接當作因果",
+        "忽略自選擇偏差"
+      ],
+      "related_node_ids": [
+        "n_L22301_005"
+      ],
+      "tags": [
+        "相關 vs 因果",
+        "自選擇",
+        "情境"
+      ],
+      "boss_topics": [
+        "education",
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n15_015",
@@ -443,10 +846,25 @@
       "source_level": "L1",
       "stem": "某基金研究公司只統計『目前仍在運作』的基金過去 10 年績效,得出『基金平均年化報酬 10%』。下列何種樣本偏差最直接導致此結論偏高?",
       "options": [
-        {"text": "倖存者偏差(Survivorship Bias),已倒閉或被清算的低績效基金被排除在統計樣本之外", "is_correct": true},
-        {"text": "選擇偏差(Selection Bias),因抽樣機制系統性偏向年化報酬較高之基金產業類別組合", "is_correct": false, "trap_type": "Selection 太籠統未抓到核心"},
-        {"text": "可得性偏差(Availability Bias),因分析者僅取得容易蒐集之公開募集型基金樣本紀錄", "is_correct": false, "trap_type": "Availability 偏向資料來源"},
-        {"text": "確認偏差(Confirmation Bias),因分析者只挑符合預設『基金高報酬』結論之歷史紀錄樣本", "is_correct": false, "trap_type": "Confirmation 為認知偏差"}
+        {
+          "text": "倖存者偏差(Survivorship Bias),已倒閉或被清算的低績效基金被排除在統計樣本之外",
+          "is_correct": true
+        },
+        {
+          "text": "選擇偏差(Selection Bias),因抽樣機制系統性偏向年化報酬較高之基金產業類別組合",
+          "is_correct": false,
+          "trap_type": "Selection 太籠統未抓到核心"
+        },
+        {
+          "text": "可得性偏差(Availability Bias),因分析者僅取得容易蒐集之公開募集型基金樣本紀錄",
+          "is_correct": false,
+          "trap_type": "Availability 偏向資料來源"
+        },
+        {
+          "text": "確認偏差(Confirmation Bias),因分析者只挑符合預設『基金高報酬』結論之歷史紀錄樣本",
+          "is_correct": false,
+          "trap_type": "Confirmation 為認知偏差"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -458,9 +876,22 @@
         },
         "hook": "二戰飛機補彈孔故事是 survivorship bias 經典教案:返航者的彈孔位置不是該補的位置"
       },
-      "misconceptions": ["把 survivorship 與 selection 混為一談", "忽略樣本退場機制"],
-      "related_node_ids": ["n_L22301_001", "n_L22301_004"],
-      "tags": ["樣本偏差", "倖存者偏差"]
+      "misconceptions": [
+        "把 survivorship 與 selection 混為一談",
+        "忽略樣本退場機制"
+      ],
+      "related_node_ids": [
+        "n_L22301_001",
+        "n_L22301_004"
+      ],
+      "tags": [
+        "樣本偏差",
+        "倖存者偏差"
+      ],
+      "boss_topics": [
+        "finance",
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n15_016",
@@ -472,10 +903,25 @@
       "source_level": "L1",
       "stem": "某市府以線上問卷蒐集『市民對數位政策滿意度』,以社群媒體廣告投放問卷連結並蒐集回應。後續發現結果偏向年輕族群且偏支持數位轉型。此偏差最主要來源為下列何者?",
       "options": [
-        {"text": "選擇偏差(Selection Bias),取樣機制系統性排除無社群媒體使用習慣之中高齡市民群體", "is_correct": true},
-        {"text": "倖存者偏差(Survivorship Bias),因問卷僅蒐集已成功完成填答之市民並排除中途退出回應者", "is_correct": false, "trap_type": "與『退場者』機制無關"},
-        {"text": "可得性偏差(Availability Bias),因市民回憶數位服務體驗時受最近一次經驗主導左右問卷答案", "is_correct": false, "trap_type": "屬認知層而非取樣層"},
-        {"text": "回憶偏差(Recall Bias),因市民對久遠數位服務經驗回憶失真導致整體滿意度估計被低估", "is_correct": false, "trap_type": "回憶問題非取樣機制"}
+        {
+          "text": "選擇偏差(Selection Bias),取樣機制系統性排除無社群媒體使用習慣之中高齡市民群體",
+          "is_correct": true
+        },
+        {
+          "text": "倖存者偏差(Survivorship Bias),因問卷僅蒐集已成功完成填答之市民並排除中途退出回應者",
+          "is_correct": false,
+          "trap_type": "與『退場者』機制無關"
+        },
+        {
+          "text": "可得性偏差(Availability Bias),因市民回憶數位服務體驗時受最近一次經驗主導左右問卷答案",
+          "is_correct": false,
+          "trap_type": "屬認知層而非取樣層"
+        },
+        {
+          "text": "回憶偏差(Recall Bias),因市民對久遠數位服務經驗回憶失真導致整體滿意度估計被低估",
+          "is_correct": false,
+          "trap_type": "回憶問題非取樣機制"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -487,9 +933,22 @@
         },
         "hook": "管道偏取樣 → Selection bias;退場者流失 → Survivorship;只取容易拿到 → Availability"
       },
-      "misconceptions": ["把三種樣本偏差名詞混用", "忽略取樣管道造成的系統性排除"],
-      "related_node_ids": ["n_L22301_001"],
-      "tags": ["樣本偏差", "選擇偏差", "問卷"]
+      "misconceptions": [
+        "把三種樣本偏差名詞混用",
+        "忽略取樣管道造成的系統性排除"
+      ],
+      "related_node_ids": [
+        "n_L22301_001"
+      ],
+      "tags": [
+        "樣本偏差",
+        "選擇偏差",
+        "問卷"
+      ],
+      "boss_topics": [
+        "smartcity",
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n15_017",
@@ -501,10 +960,25 @@
       "source_level": "L1",
       "stem": "某新聞輿情分析團隊主張『分析公開推文 5 億則即可代表全民對某議題態度』。對此主張,下列反論最為完整且核心?",
       "options": [
-        {"text": "公開推文僅來自會公開發文的平台用戶,排除沉默多數與其他平台,屬便利樣本而非全民代表", "is_correct": true},
-        {"text": "公開推文 5 億則之資料量超過全民人口數,因此其抽樣誤差已可在統計上完全忽略不需要校正", "is_correct": false, "trap_type": "量大不等於代表性"},
-        {"text": "公開推文之文字長度上限為 280 字元,因內容受限故無法完整描繪全民對議題之態度複雜性", "is_correct": false, "trap_type": "字元限制非核心問題"},
-        {"text": "公開推文已附帶時間戳與地理欄位,因此具備充分後設資訊可直接代表全民議題態度與意見", "is_correct": false, "trap_type": "後設資訊不修正偏差"}
+        {
+          "text": "公開推文僅來自會公開發文的平台用戶,排除沉默多數與其他平台,屬便利樣本而非全民代表",
+          "is_correct": true
+        },
+        {
+          "text": "公開推文 5 億則之資料量超過全民人口數,因此其抽樣誤差已可在統計上完全忽略不需要校正",
+          "is_correct": false,
+          "trap_type": "量大不等於代表性"
+        },
+        {
+          "text": "公開推文之文字長度上限為 280 字元,因內容受限故無法完整描繪全民對議題之態度複雜性",
+          "is_correct": false,
+          "trap_type": "字元限制非核心問題"
+        },
+        {
+          "text": "公開推文已附帶時間戳與地理欄位,因此具備充分後設資訊可直接代表全民議題態度與意見",
+          "is_correct": false,
+          "trap_type": "後設資訊不修正偏差"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -516,9 +990,22 @@
         },
         "hook": "『N=All』是工程理想而非事實;社群資料本質仍是便利樣本"
       },
-      "misconceptions": ["以為大數據自動 = 全民母體", "忽視沉默多數"],
-      "related_node_ids": ["n_L22301_004"],
-      "tags": ["樣本偏差", "便利樣本", "情境"]
+      "misconceptions": [
+        "以為大數據自動 = 全民母體",
+        "忽視沉默多數"
+      ],
+      "related_node_ids": [
+        "n_L22301_004"
+      ],
+      "tags": [
+        "樣本偏差",
+        "便利樣本",
+        "情境"
+      ],
+      "boss_topics": [
+        "media",
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n15_018",
@@ -530,10 +1017,25 @@
       "source_level": "L1",
       "stem": "某電商 A/B 測試以 500 萬筆瀏覽紀錄比較版本 A 與 B 之轉換率,結果版本 B 高出 0.02 個百分點,p-value = 0.0003。下列解讀何者最為適切?",
       "options": [
-        {"text": "結果統計顯著但效應量極小,需評估 0.02 個百分點是否值回開發 / 維運成本與業務意義", "is_correct": true},
-        {"text": "p-value 遠低於 0.05 之顯著閾值,顯示版本 B 對轉換率具有強烈之實務影響可立即全面切換", "is_correct": false, "trap_type": "p 小 ≠ 效應大"},
-        {"text": "因 p-value 越小代表效應量越大,B 比 A 提升效果可量化為相對於 p 值之倒數比例強度", "is_correct": false, "trap_type": "p 與效應大小無對應關係"},
-        {"text": "因樣本量過大造成顯著結果,應改採嚴格 α 為 0.0001 以下,使測試結論回歸不顯著保守決策", "is_correct": false, "trap_type": "亂改 α 非解法"}
+        {
+          "text": "結果統計顯著但效應量極小,需評估 0.02 個百分點是否值回開發 / 維運成本與業務意義",
+          "is_correct": true
+        },
+        {
+          "text": "p-value 遠低於 0.05 之顯著閾值,顯示版本 B 對轉換率具有強烈之實務影響可立即全面切換",
+          "is_correct": false,
+          "trap_type": "p 小 ≠ 效應大"
+        },
+        {
+          "text": "因 p-value 越小代表效應量越大,B 比 A 提升效果可量化為相對於 p 值之倒數比例強度",
+          "is_correct": false,
+          "trap_type": "p 與效應大小無對應關係"
+        },
+        {
+          "text": "因樣本量過大造成顯著結果,應改採嚴格 α 為 0.0001 以下,使測試結論回歸不顯著保守決策",
+          "is_correct": false,
+          "trap_type": "亂改 α 非解法"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -545,9 +1047,22 @@
         },
         "hook": "大數據時代:效應量為王、p-value 為輔;ASA 2016 聲明明確反對單看 p<0.05 下結論"
       },
-      "misconceptions": ["把 p-value 小等同實務重要", "以為調整 α 是解決大樣本問題的方法"],
-      "related_node_ids": ["n_L22301_004"],
-      "tags": ["p-value", "效應量", "A/B 測試"]
+      "misconceptions": [
+        "把 p-value 小等同實務重要",
+        "以為調整 α 是解決大樣本問題的方法"
+      ],
+      "related_node_ids": [
+        "n_L22301_004"
+      ],
+      "tags": [
+        "p-value",
+        "效應量",
+        "A/B 測試"
+      ],
+      "boss_topics": [
+        "ecommerce",
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n15_019",
@@ -559,10 +1074,25 @@
       "source_level": "L1",
       "stem": "某團隊對 1000 個產品特徵分別進行『與營收是否相關』之獨立假設檢定,以 α = 0.05 接受顯著。團隊發現有 60 個特徵顯著並打算全部納入模型。下列對此設計最關鍵之修正建議為?",
       "options": [
-        {"text": "需做多重比較校正(如 Bonferroni / FDR),否則 1000 次檢定下偽陽性數量會自然爆炸", "is_correct": true},
-        {"text": "需把 α 從 0.05 放寬為 0.10 以擴大顯著範圍,確保所有具預測潛力之特徵都能納入模型", "is_correct": false, "trap_type": "放寬 α 反讓偽陽更多"},
-        {"text": "需以效應量篩除小效應特徵,僅保留效應量最大之單一特徵作為模型核心預測欄位以求精簡", "is_correct": false, "trap_type": "效應量篩選非『多重比較』議題"},
-        {"text": "需將特徵彼此相關性納入考量做 PCA 降維,以避免共線特徵在後續建模上之數值穩定性問題", "is_correct": false, "trap_type": "共線性 ≠ 多重比較"}
+        {
+          "text": "需做多重比較校正(如 Bonferroni / FDR),否則 1000 次檢定下偽陽性數量會自然爆炸",
+          "is_correct": true
+        },
+        {
+          "text": "需把 α 從 0.05 放寬為 0.10 以擴大顯著範圍,確保所有具預測潛力之特徵都能納入模型",
+          "is_correct": false,
+          "trap_type": "放寬 α 反讓偽陽更多"
+        },
+        {
+          "text": "需以效應量篩除小效應特徵,僅保留效應量最大之單一特徵作為模型核心預測欄位以求精簡",
+          "is_correct": false,
+          "trap_type": "效應量篩選非『多重比較』議題"
+        },
+        {
+          "text": "需將特徵彼此相關性納入考量做 PCA 降維,以避免共線特徵在後續建模上之數值穩定性問題",
+          "is_correct": false,
+          "trap_type": "共線性 ≠ 多重比較"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -574,9 +1104,21 @@
         },
         "hook": "k 次獨立檢定下,期望偽陽 ≈ k×α;Bonferroni:用 α/k;FDR:控制偽陽比例"
       },
-      "misconceptions": ["不做多重比較校正", "把多重比較與共線性混為一談"],
-      "related_node_ids": ["n_L22301_004"],
-      "tags": ["p-value", "多重比較", "Bonferroni"]
+      "misconceptions": [
+        "不做多重比較校正",
+        "把多重比較與共線性混為一談"
+      ],
+      "related_node_ids": [
+        "n_L22301_004"
+      ],
+      "tags": [
+        "p-value",
+        "多重比較",
+        "Bonferroni"
+      ],
+      "boss_topics": [
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n15_020",
@@ -588,15 +1130,51 @@
       "source_level": "L1",
       "stem": "某金融科技公司針對某事件發生比例做大樣本估計,已知母體比例約為 p = {p},抽取 n = {n} 筆樣本。請估計樣本比例的『標準誤(Standard Error,取小數第 4 位)』為下列何者?(公式:SE = √(p(1-p)/n))",
       "stem_variables": {
-        "case_a": {"p": "0.2", "n": "10000", "answer": "0.0040", "wrong1": "0.0016", "wrong2": "0.0400", "wrong3": "0.0028"},
-        "case_b": {"p": "0.5", "n": "2500", "answer": "0.0100", "wrong1": "0.0001", "wrong2": "0.1000", "wrong3": "0.0050"},
-        "case_c": {"p": "0.5", "n": "625", "answer": "0.0200", "wrong1": "0.0004", "wrong2": "0.5000", "wrong3": "0.0008"}
+        "case_a": {
+          "p": "0.2",
+          "n": "10000",
+          "answer": "0.0040",
+          "wrong1": "0.0016",
+          "wrong2": "0.0400",
+          "wrong3": "0.0028"
+        },
+        "case_b": {
+          "p": "0.5",
+          "n": "2500",
+          "answer": "0.0100",
+          "wrong1": "0.0001",
+          "wrong2": "0.1000",
+          "wrong3": "0.0050"
+        },
+        "case_c": {
+          "p": "0.5",
+          "n": "625",
+          "answer": "0.0200",
+          "wrong1": "0.0004",
+          "wrong2": "0.5000",
+          "wrong3": "0.0008"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "忘記開根號(回傳變異數)"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "忘記除以 n(回傳 √(p(1-p)))"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤用 p/n 而非 p(1-p)/n"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "忘記開根號(回傳變異數)"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "忘記除以 n(回傳 √(p(1-p)))"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤用 p/n 而非 p(1-p)/n"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -608,9 +1186,22 @@
         },
         "hook": "SE = √(p(1-p)/n):n 變大 → SE 變小 → 微小差異也容易顯著(大樣本 p-value 失效根因)"
       },
-      "misconceptions": ["把變異數當標準誤", "忘記分母 n 對 SE 的影響"],
-      "related_node_ids": ["n_L22301_004"],
-      "tags": ["p-value", "標準誤", "計算"]
+      "misconceptions": [
+        "把變異數當標準誤",
+        "忘記分母 n 對 SE 的影響"
+      ],
+      "related_node_ids": [
+        "n_L22301_004"
+      ],
+      "tags": [
+        "p-value",
+        "標準誤",
+        "計算"
+      ],
+      "boss_topics": [
+        "finance",
+        "ml_bigdata"
+      ]
     }
   ]
 }

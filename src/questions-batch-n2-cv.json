@@ -5,15 +5,26 @@
   "subject": 1,
   "knowledge_code": "L21102",
   "topic": "電腦視覺",
-  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "exam_target": {
+    "name": "IPAS AI 應用規劃師中級",
+    "date": "2026-05-23"
+  },
   "node_distribution": {
     "n_L21102_001": 6,
     "n_L21102_002": 7,
     "n_L21102_003": 5,
     "n_L21102_004": 7
   },
-  "format_distribution": {"single_choice_text": 18, "single_choice_scenario": 5, "calculation": 2},
-  "difficulty_distribution": {"easy": 6, "medium": 14, "hard": 5},
+  "format_distribution": {
+    "single_choice_text": 18,
+    "single_choice_scenario": 5,
+    "calculation": 2
+  },
+  "difficulty_distribution": {
+    "easy": 6,
+    "medium": 14,
+    "hard": 5
+  },
   "questions": [
     {
       "id": "q_n2_cv_001",
@@ -25,10 +36,25 @@
       "source_level": "L1",
       "stem": "在影像辨識任務中,CNN(卷積神經網路)相較於傳統 FCNN(全連接神經網路)主要優勢為何?",
       "options": [
-        {"text": "透過區域感知與參數共享,大幅降低參數量並提升空間特徵抽取效率", "is_correct": true},
-        {"text": "天生具備旋轉與比例不變性,使模型不需任何資料增強即可泛化", "is_correct": false, "trap_type": "誤判 CNN 等變性"},
-        {"text": "完全免除非線性激活函數,因此能避免梯度消失與爆炸問題", "is_correct": false, "trap_type": "與激活函數混淆"},
-        {"text": "由於採用全連接結構,可保留所有像素間的全域關聯,提升分類精度", "is_correct": false, "trap_type": "與 FCNN 結構混淆"}
+        {
+          "text": "透過區域感知與參數共享,大幅降低參數量並提升空間特徵抽取效率",
+          "is_correct": true
+        },
+        {
+          "text": "天生具備旋轉與比例不變性,使模型不需任何資料增強即可泛化",
+          "is_correct": false,
+          "trap_type": "誤判 CNN 等變性"
+        },
+        {
+          "text": "完全免除非線性激活函數,因此能避免梯度消失與爆炸問題",
+          "is_correct": false,
+          "trap_type": "與激活函數混淆"
+        },
+        {
+          "text": "由於採用全連接結構,可保留所有像素間的全域關聯,提升分類精度",
+          "is_correct": false,
+          "trap_type": "與 FCNN 結構混淆"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -44,8 +70,17 @@
         "誤以為 CNN 天生具備旋轉/比例不變性",
         "把 CNN 的等變性與不變性混為一談"
       ],
-      "related_node_ids": ["n_L21102_001", "n_L21102_004"],
-      "tags": ["CV", "CNN", "FCNN", "概念"]
+      "related_node_ids": [
+        "n_L21102_001",
+        "n_L21102_004"
+      ],
+      "tags": [
+        "CV",
+        "CNN",
+        "FCNN",
+        "概念"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n2_cv_002",
@@ -57,10 +92,25 @@
       "source_level": "L1",
       "stem": "下列關於卷積神經網路(CNN)第一層卷積層所提取的特徵,何者描述最為正確?",
       "options": [
-        {"text": "通常為邊緣、紋理、顏色塊等低階局部視覺特徵", "is_correct": true},
-        {"text": "直接輸出影像最終的物件分類機率分佈", "is_correct": false, "trap_type": "與輸出層混淆"},
-        {"text": "對整張影像進行整合判斷,代表高階語意概念", "is_correct": false, "trap_type": "與深層特徵混淆"},
-        {"text": "僅作為降噪濾波器,不參與任何特徵抽取與訓練", "is_correct": false, "trap_type": "概念誤解"}
+        {
+          "text": "通常為邊緣、紋理、顏色塊等低階局部視覺特徵",
+          "is_correct": true
+        },
+        {
+          "text": "直接輸出影像最終的物件分類機率分佈",
+          "is_correct": false,
+          "trap_type": "與輸出層混淆"
+        },
+        {
+          "text": "對整張影像進行整合判斷,代表高階語意概念",
+          "is_correct": false,
+          "trap_type": "與深層特徵混淆"
+        },
+        {
+          "text": "僅作為降噪濾波器,不參與任何特徵抽取與訓練",
+          "is_correct": false,
+          "trap_type": "概念誤解"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -76,8 +126,16 @@
         "誤以為第一層直接做分類",
         "把卷積層當作不可訓練的固定濾波器"
       ],
-      "related_node_ids": ["n_L21102_001", "n_L21102_004"],
-      "tags": ["CV", "CNN", "層次化特徵"]
+      "related_node_ids": [
+        "n_L21102_001",
+        "n_L21102_004"
+      ],
+      "tags": [
+        "CV",
+        "CNN",
+        "層次化特徵"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n2_cv_003",
@@ -89,10 +147,25 @@
       "source_level": "L1",
       "stem": "在 CNN 的設計中,『參數共享(Parameter Sharing)』機制的核心精神為下列何者?",
       "options": [
-        {"text": "同一個卷積核權重在輸入特徵圖的不同空間位置重複使用", "is_correct": true},
-        {"text": "不同層之間共用一組相同的權重以節省顯卡記憶體", "is_correct": false, "trap_type": "與層間共享混淆"},
-        {"text": "同一張影像中所有像素直接共用一個全域純量權重", "is_correct": false, "trap_type": "過度簡化"},
-        {"text": "訓練多個模型時,各模型之間共享前幾層的特徵抽取器", "is_correct": false, "trap_type": "與遷移學習混淆"}
+        {
+          "text": "同一個卷積核權重在輸入特徵圖的不同空間位置重複使用",
+          "is_correct": true
+        },
+        {
+          "text": "不同層之間共用一組相同的權重以節省顯卡記憶體",
+          "is_correct": false,
+          "trap_type": "與層間共享混淆"
+        },
+        {
+          "text": "同一張影像中所有像素直接共用一個全域純量權重",
+          "is_correct": false,
+          "trap_type": "過度簡化"
+        },
+        {
+          "text": "訓練多個模型時,各模型之間共享前幾層的特徵抽取器",
+          "is_correct": false,
+          "trap_type": "與遷移學習混淆"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -108,8 +181,15 @@
         "把 CNN 的參數共享與遷移學習的特徵抽取器共享混淆",
         "誤以為參數共享代表所有像素一個權重"
       ],
-      "related_node_ids": ["n_L21102_001"],
-      "tags": ["CV", "CNN", "參數共享"]
+      "related_node_ids": [
+        "n_L21102_001"
+      ],
+      "tags": [
+        "CV",
+        "CNN",
+        "參數共享"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n2_cv_004",
@@ -121,10 +201,25 @@
       "source_level": "L1",
       "stem": "下列何者最能說明 CNN 中『池化層(Pooling Layer)』的主要作用?",
       "options": [
-        {"text": "降低特徵圖空間維度並提供局部平移容忍度,減少後續計算量", "is_correct": true},
-        {"text": "藉由額外的可訓練權重將特徵圖維度逐層提升,增強模型表達能力", "is_correct": false, "trap_type": "與卷積層混淆"},
-        {"text": "在訓練階段隨機關閉部分神經元以防止過擬合並提升泛化能力", "is_correct": false, "trap_type": "與 Dropout 混淆"},
-        {"text": "計算每張影像的全域均值並輸出單一純量作為分類結果", "is_correct": false, "trap_type": "與 GAP+輸出層混淆"}
+        {
+          "text": "降低特徵圖空間維度並提供局部平移容忍度,減少後續計算量",
+          "is_correct": true
+        },
+        {
+          "text": "藉由額外的可訓練權重將特徵圖維度逐層提升,增強模型表達能力",
+          "is_correct": false,
+          "trap_type": "與卷積層混淆"
+        },
+        {
+          "text": "在訓練階段隨機關閉部分神經元以防止過擬合並提升泛化能力",
+          "is_correct": false,
+          "trap_type": "與 Dropout 混淆"
+        },
+        {
+          "text": "計算每張影像的全域均值並輸出單一純量作為分類結果",
+          "is_correct": false,
+          "trap_type": "與 GAP+輸出層混淆"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -140,8 +235,15 @@
         "把 Pooling 與 Dropout 的功能混淆",
         "誤以為 Pooling 層含可訓練權重"
       ],
-      "related_node_ids": ["n_L21102_001"],
-      "tags": ["CV", "CNN", "Pooling"]
+      "related_node_ids": [
+        "n_L21102_001"
+      ],
+      "tags": [
+        "CV",
+        "CNN",
+        "Pooling"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n2_cv_005",
@@ -153,16 +255,67 @@
       "source_level": "L1",
       "stem": "若輸入特徵圖大小為 {in_size}×{in_size}、卷積核 {k}×{k}、Stride={s}、Padding={p},則輸出特徵圖大小為何?(公式:⌊(N+2P-K)/S⌋+1)",
       "stem_variables": {
-        "case_a": {"in_size": "32", "k": "3", "s": "1", "p": "1", "answer": "32", "wrong1": "30", "wrong2": "34", "wrong3": "31"},
-        "case_b": {"in_size": "224", "k": "7", "s": "2", "p": "3", "answer": "112", "wrong1": "109", "wrong2": "115", "wrong3": "111"},
-        "case_c": {"in_size": "28", "k": "5", "s": "1", "p": "0", "answer": "24", "wrong1": "25", "wrong2": "26", "wrong3": "23"},
-        "case_d": {"in_size": "64", "k": "3", "s": "2", "p": "0", "answer": "31", "wrong1": "33", "wrong2": "32", "wrong3": "30"}
+        "case_a": {
+          "in_size": "32",
+          "k": "3",
+          "s": "1",
+          "p": "1",
+          "answer": "32",
+          "wrong1": "30",
+          "wrong2": "34",
+          "wrong3": "31"
+        },
+        "case_b": {
+          "in_size": "224",
+          "k": "7",
+          "s": "2",
+          "p": "3",
+          "answer": "112",
+          "wrong1": "109",
+          "wrong2": "115",
+          "wrong3": "111"
+        },
+        "case_c": {
+          "in_size": "28",
+          "k": "5",
+          "s": "1",
+          "p": "0",
+          "answer": "24",
+          "wrong1": "25",
+          "wrong2": "26",
+          "wrong3": "23"
+        },
+        "case_d": {
+          "in_size": "64",
+          "k": "3",
+          "s": "2",
+          "p": "0",
+          "answer": "31",
+          "wrong1": "33",
+          "wrong2": "32",
+          "wrong3": "30"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "忽略 padding(將 N+2P 寫成 N)或 K 加減弄反"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "padding 計算錯誤(將 2P 算成 4P)"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "公式漏 +1(只取 floor((N+2P-K)/S))"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "忽略 padding(將 N+2P 寫成 N)或 K 加減弄反"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "padding 計算錯誤(將 2P 算成 4P)"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "公式漏 +1(只取 floor((N+2P-K)/S))"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -178,8 +331,16 @@
         "忽略 padding 對輸出尺寸的補償作用",
         "誤把卷積後尺寸公式記成 (N-K)/S 不加 1"
       ],
-      "related_node_ids": ["n_L21102_001"],
-      "tags": ["CV", "CNN", "公式", "計算"]
+      "related_node_ids": [
+        "n_L21102_001"
+      ],
+      "tags": [
+        "CV",
+        "CNN",
+        "公式",
+        "計算"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n2_cv_006",
@@ -191,10 +352,25 @@
       "source_level": "L1",
       "stem": "下列何者最正確描述卷積神經網路相對於全連接神經網路在『歸納偏置(Inductive Bias)』上的差異?",
       "options": [
-        {"text": "CNN 內建空間局部性與平移等變性的歸納偏置,FCNN 對空間結構無假設", "is_correct": true},
-        {"text": "CNN 與 FCNN 都假設特徵彼此條件獨立,因此學習效率相同", "is_correct": false, "trap_type": "與 Naive Bayes 混淆"},
-        {"text": "FCNN 內建旋轉不變性偏置,CNN 則需額外資料增強才具備", "is_correct": false, "trap_type": "顛倒事實"},
-        {"text": "CNN 假設輸入序列具備時間順序性,FCNN 假設輸入無序", "is_correct": false, "trap_type": "與 RNN 性質混淆"}
+        {
+          "text": "CNN 內建空間局部性與平移等變性的歸納偏置,FCNN 對空間結構無假設",
+          "is_correct": true
+        },
+        {
+          "text": "CNN 與 FCNN 都假設特徵彼此條件獨立,因此學習效率相同",
+          "is_correct": false,
+          "trap_type": "與 Naive Bayes 混淆"
+        },
+        {
+          "text": "FCNN 內建旋轉不變性偏置,CNN 則需額外資料增強才具備",
+          "is_correct": false,
+          "trap_type": "顛倒事實"
+        },
+        {
+          "text": "CNN 假設輸入序列具備時間順序性,FCNN 假設輸入無序",
+          "is_correct": false,
+          "trap_type": "與 RNN 性質混淆"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -210,8 +386,17 @@
         "把 CNN 的平移等變性與旋轉不變性混為一談",
         "誤以為所有神經網路都具備相同的歸納偏置"
       ],
-      "related_node_ids": ["n_L21102_001", "n_L21102_004"],
-      "tags": ["CV", "CNN", "Inductive Bias", "進階"]
+      "related_node_ids": [
+        "n_L21102_001",
+        "n_L21102_004"
+      ],
+      "tags": [
+        "CV",
+        "CNN",
+        "Inductive Bias",
+        "進階"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n2_cv_007",
@@ -223,10 +408,25 @@
       "source_level": "L1",
       "stem": "若任務目標為:給定一張影像,輸出整張影像所屬的單一類別標籤(例如『貓』或『狗』),屬於下列哪一種電腦視覺任務?",
       "options": [
-        {"text": "影像分類(Image Classification)", "is_correct": true},
-        {"text": "物件偵測(Object Detection)", "is_correct": false, "trap_type": "輸出層級混淆"},
-        {"text": "語意分割(Semantic Segmentation)", "is_correct": false, "trap_type": "像素級任務混淆"},
-        {"text": "實例分割(Instance Segmentation)", "is_correct": false, "trap_type": "像素級+實體混淆"}
+        {
+          "text": "影像分類(Image Classification)",
+          "is_correct": true
+        },
+        {
+          "text": "物件偵測(Object Detection)",
+          "is_correct": false,
+          "trap_type": "輸出層級混淆"
+        },
+        {
+          "text": "語意分割(Semantic Segmentation)",
+          "is_correct": false,
+          "trap_type": "像素級任務混淆"
+        },
+        {
+          "text": "實例分割(Instance Segmentation)",
+          "is_correct": false,
+          "trap_type": "像素級+實體混淆"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -241,8 +441,15 @@
       "misconceptions": [
         "把不同 CV 任務的輸出粒度混為一談"
       ],
-      "related_node_ids": ["n_L21102_002"],
-      "tags": ["CV", "任務分類", "基礎"]
+      "related_node_ids": [
+        "n_L21102_002"
+      ],
+      "tags": [
+        "CV",
+        "任務分類",
+        "基礎"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n2_cv_008",
@@ -254,10 +461,25 @@
       "source_level": "L1",
       "stem": "下列關於『語意分割(Semantic Segmentation)』與『實例分割(Instance Segmentation)』的差異,何者描述最為正確?",
       "options": [
-        {"text": "兩者皆為像素級任務,但實例分割會額外區分同類別下的不同實體", "is_correct": true},
-        {"text": "語意分割輸出物件邊界框與類別,實例分割才輸出像素遮罩", "is_correct": false, "trap_type": "與物件偵測混淆"},
-        {"text": "語意分割屬於監督式學習,而實例分割完全屬於非監督式學習", "is_correct": false, "trap_type": "學習範式混淆"},
-        {"text": "語意分割僅能用 CNN 實作,而實例分割只能採用 Transformer", "is_correct": false, "trap_type": "技術綁定錯誤"}
+        {
+          "text": "兩者皆為像素級任務,但實例分割會額外區分同類別下的不同實體",
+          "is_correct": true
+        },
+        {
+          "text": "語意分割輸出物件邊界框與類別,實例分割才輸出像素遮罩",
+          "is_correct": false,
+          "trap_type": "與物件偵測混淆"
+        },
+        {
+          "text": "語意分割屬於監督式學習,而實例分割完全屬於非監督式學習",
+          "is_correct": false,
+          "trap_type": "學習範式混淆"
+        },
+        {
+          "text": "語意分割僅能用 CNN 實作,而實例分割只能採用 Transformer",
+          "is_correct": false,
+          "trap_type": "技術綁定錯誤"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -273,8 +495,14 @@
         "誤以為語意分割不分像素",
         "把語意分割輸出當作邊界框"
       ],
-      "related_node_ids": ["n_L21102_002"],
-      "tags": ["CV", "Segmentation"]
+      "related_node_ids": [
+        "n_L21102_002"
+      ],
+      "tags": [
+        "CV",
+        "Segmentation"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n2_cv_009",
@@ -286,10 +514,25 @@
       "source_level": "L1",
       "stem": "全景分割(Panoptic Segmentation)與語意分割、實例分割的關係,何者描述最為正確?",
       "options": [
-        {"text": "結合語意分割對背景與實例分割對可數物件的標註,給每個像素類別與實體 ID", "is_correct": true},
-        {"text": "僅標註可數物件實體並給予 ID,完全不對天空、道路等背景做像素類別標註", "is_correct": false, "trap_type": "退化為 Instance"},
-        {"text": "僅輸出整張影像的單一場景類別標籤,屬於整圖分類任務的一種延伸應用", "is_correct": false, "trap_type": "退化為 Classification"},
-        {"text": "僅關注影像中可數物件的邊界框與類別,完全不涉及像素級的細部標註", "is_correct": false, "trap_type": "退化為 Detection"}
+        {
+          "text": "結合語意分割對背景與實例分割對可數物件的標註,給每個像素類別與實體 ID",
+          "is_correct": true
+        },
+        {
+          "text": "僅標註可數物件實體並給予 ID,完全不對天空、道路等背景做像素類別標註",
+          "is_correct": false,
+          "trap_type": "退化為 Instance"
+        },
+        {
+          "text": "僅輸出整張影像的單一場景類別標籤,屬於整圖分類任務的一種延伸應用",
+          "is_correct": false,
+          "trap_type": "退化為 Classification"
+        },
+        {
+          "text": "僅關注影像中可數物件的邊界框與類別,完全不涉及像素級的細部標註",
+          "is_correct": false,
+          "trap_type": "退化為 Detection"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -305,8 +548,15 @@
         "把全景分割誤以為只是語意分割的別名",
         "把全景分割退化成單一任務"
       ],
-      "related_node_ids": ["n_L21102_002"],
-      "tags": ["CV", "Panoptic", "Segmentation"]
+      "related_node_ids": [
+        "n_L21102_002"
+      ],
+      "tags": [
+        "CV",
+        "Panoptic",
+        "Segmentation"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n2_cv_010",
@@ -318,10 +568,25 @@
       "source_level": "L1",
       "stem": "下列哪一個任務的輸出形式包含『邊界框 + 類別標籤 + 信心分數』?",
       "options": [
-        {"text": "物件偵測(Object Detection)", "is_correct": true},
-        {"text": "影像分類(Image Classification)", "is_correct": false, "trap_type": "整圖層級混淆"},
-        {"text": "語意分割(Semantic Segmentation)", "is_correct": false, "trap_type": "像素級任務混淆"},
-        {"text": "影像生成(Image Generation)", "is_correct": false, "trap_type": "任務領域混淆"}
+        {
+          "text": "物件偵測(Object Detection)",
+          "is_correct": true
+        },
+        {
+          "text": "影像分類(Image Classification)",
+          "is_correct": false,
+          "trap_type": "整圖層級混淆"
+        },
+        {
+          "text": "語意分割(Semantic Segmentation)",
+          "is_correct": false,
+          "trap_type": "像素級任務混淆"
+        },
+        {
+          "text": "影像生成(Image Generation)",
+          "is_correct": false,
+          "trap_type": "任務領域混淆"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -336,8 +601,15 @@
       "misconceptions": [
         "把 Bounding Box 當作所有 CV 任務的標準輸出"
       ],
-      "related_node_ids": ["n_L21102_002", "n_L21102_003"],
-      "tags": ["CV", "Object Detection"]
+      "related_node_ids": [
+        "n_L21102_002",
+        "n_L21102_003"
+      ],
+      "tags": [
+        "CV",
+        "Object Detection"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n2_cv_011",
@@ -349,10 +621,25 @@
       "source_level": "L1",
       "stem": "下列哪一組任務,在輸出粒度由『粗到細』排列最為正確?",
       "options": [
-        {"text": "影像分類 → 物件偵測 → 語意分割 → 實例分割", "is_correct": true},
-        {"text": "實例分割 → 物件偵測 → 影像分類 → 語意分割", "is_correct": false, "trap_type": "順序顛倒"},
-        {"text": "語意分割 → 影像分類 → 物件偵測 → 實例分割", "is_correct": false, "trap_type": "中間跳躍"},
-        {"text": "物件偵測 → 影像分類 → 實例分割 → 語意分割", "is_correct": false, "trap_type": "兩兩交錯錯置"}
+        {
+          "text": "影像分類 → 物件偵測 → 語意分割 → 實例分割",
+          "is_correct": true
+        },
+        {
+          "text": "實例分割 → 物件偵測 → 影像分類 → 語意分割",
+          "is_correct": false,
+          "trap_type": "順序顛倒"
+        },
+        {
+          "text": "語意分割 → 影像分類 → 物件偵測 → 實例分割",
+          "is_correct": false,
+          "trap_type": "中間跳躍"
+        },
+        {
+          "text": "物件偵測 → 影像分類 → 實例分割 → 語意分割",
+          "is_correct": false,
+          "trap_type": "兩兩交錯錯置"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -368,8 +655,15 @@
         "誤把粒度與模型複雜度等同",
         "順序記反導致整體判斷錯誤"
       ],
-      "related_node_ids": ["n_L21102_002"],
-      "tags": ["CV", "任務階層", "順序"]
+      "related_node_ids": [
+        "n_L21102_002"
+      ],
+      "tags": [
+        "CV",
+        "任務階層",
+        "順序"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n2_cv_012",
@@ -381,10 +675,25 @@
       "source_level": "L1",
       "stem": "某團隊欲建構一套智慧城市監視系統,需在影像中標記每位行人輪廓並區分『同一畫面中不同行人個體』,同時也需對天空、道路等背景區域提供類別標註。下列哪種任務最契合此需求?",
       "options": [
-        {"text": "全景分割(Panoptic Segmentation)", "is_correct": true},
-        {"text": "影像分類(Image Classification)", "is_correct": false, "trap_type": "粒度過粗"},
-        {"text": "物件偵測(Object Detection)", "is_correct": false, "trap_type": "粒度不足"},
-        {"text": "語意分割(Semantic Segmentation)", "is_correct": false, "trap_type": "缺實體區分"}
+        {
+          "text": "全景分割(Panoptic Segmentation)",
+          "is_correct": true
+        },
+        {
+          "text": "影像分類(Image Classification)",
+          "is_correct": false,
+          "trap_type": "粒度過粗"
+        },
+        {
+          "text": "物件偵測(Object Detection)",
+          "is_correct": false,
+          "trap_type": "粒度不足"
+        },
+        {
+          "text": "語意分割(Semantic Segmentation)",
+          "is_correct": false,
+          "trap_type": "缺實體區分"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -400,8 +709,18 @@
         "把 Object Detection 與 Instance Segmentation 等同",
         "忽略 stuff 與 things 的差異"
       ],
-      "related_node_ids": ["n_L21102_002"],
-      "tags": ["CV", "情境", "Panoptic"]
+      "related_node_ids": [
+        "n_L21102_002"
+      ],
+      "tags": [
+        "CV",
+        "情境",
+        "Panoptic"
+      ],
+      "boss_topics": [
+        "smartcity",
+        "autonomous"
+      ]
     },
     {
       "id": "q_n2_cv_013",
@@ -413,10 +732,25 @@
       "source_level": "L1",
       "stem": "某廠房導入 AI 視覺檢測,需從輸送帶影像中找出每個瑕疵零件的『所在位置(框)』與『瑕疵類別』,但不需要像素級遮罩。在開發資源與標註成本受限下,下列任務選擇最合適?",
       "options": [
-        {"text": "物件偵測(Object Detection)", "is_correct": true},
-        {"text": "實例分割(Instance Segmentation)", "is_correct": false, "trap_type": "過度設計"},
-        {"text": "影像分類(Image Classification)", "is_correct": false, "trap_type": "粒度不足"},
-        {"text": "影像生成(Image Generation)", "is_correct": false, "trap_type": "任務性質完全不符"}
+        {
+          "text": "物件偵測(Object Detection)",
+          "is_correct": true
+        },
+        {
+          "text": "實例分割(Instance Segmentation)",
+          "is_correct": false,
+          "trap_type": "過度設計"
+        },
+        {
+          "text": "影像分類(Image Classification)",
+          "is_correct": false,
+          "trap_type": "粒度不足"
+        },
+        {
+          "text": "影像生成(Image Generation)",
+          "is_correct": false,
+          "trap_type": "任務性質完全不符"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -432,8 +766,18 @@
         "認為粒度越細模型一定越好",
         "忽略標註成本對任務選擇的影響"
       ],
-      "related_node_ids": ["n_L21102_002", "n_L21102_003"],
-      "tags": ["CV", "情境", "成本"]
+      "related_node_ids": [
+        "n_L21102_002",
+        "n_L21102_003"
+      ],
+      "tags": [
+        "CV",
+        "情境",
+        "成本"
+      ],
+      "boss_topics": [
+        "manufacturing"
+      ]
     },
     {
       "id": "q_n2_cv_014",
@@ -445,10 +789,25 @@
       "source_level": "L1",
       "stem": "在物件偵測任務中,IoU(Intersection over Union)的計算定義為下列何者?",
       "options": [
-        {"text": "預測框與真實框的交集面積除以兩者聯集面積", "is_correct": true},
-        {"text": "預測框的面積直接除以真實框的面積所得到的比例", "is_correct": false, "trap_type": "片面比例"},
-        {"text": "預測框中心點與真實框中心點之歐式距離的倒數", "is_correct": false, "trap_type": "與中心點距離混淆"},
-        {"text": "正確分類的像素數量直接除以影像中所有的像素總數", "is_correct": false, "trap_type": "與 Pixel Accuracy 混淆"}
+        {
+          "text": "預測框與真實框的交集面積除以兩者聯集面積",
+          "is_correct": true
+        },
+        {
+          "text": "預測框的面積直接除以真實框的面積所得到的比例",
+          "is_correct": false,
+          "trap_type": "片面比例"
+        },
+        {
+          "text": "預測框中心點與真實框中心點之歐式距離的倒數",
+          "is_correct": false,
+          "trap_type": "與中心點距離混淆"
+        },
+        {
+          "text": "正確分類的像素數量直接除以影像中所有的像素總數",
+          "is_correct": false,
+          "trap_type": "與 Pixel Accuracy 混淆"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -464,8 +823,15 @@
         "把 IoU 與面積比例或中心距離混淆",
         "誤把 IoU 套用到整圖分類任務"
       ],
-      "related_node_ids": ["n_L21102_003"],
-      "tags": ["CV", "IoU", "公式"]
+      "related_node_ids": [
+        "n_L21102_003"
+      ],
+      "tags": [
+        "CV",
+        "IoU",
+        "公式"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n2_cv_015",
@@ -477,16 +843,59 @@
       "source_level": "L1",
       "stem": "若預測框與真實框的交集面積為 {inter} 平方像素,聯集面積為 {union} 平方像素,則 IoU 約為多少?",
       "stem_variables": {
-        "case_a": {"inter": "60", "union": "100", "answer": "0.60", "wrong1": "0.40", "wrong2": "1.67", "wrong3": "0.38"},
-        "case_b": {"inter": "45", "union": "150", "answer": "0.30", "wrong1": "0.70", "wrong2": "3.33", "wrong3": "0.23"},
-        "case_c": {"inter": "120", "union": "160", "answer": "0.75", "wrong1": "0.25", "wrong2": "1.33", "wrong3": "0.43"},
-        "case_d": {"inter": "20", "union": "80", "answer": "0.25", "wrong1": "0.75", "wrong2": "4.00", "wrong3": "0.20"}
+        "case_a": {
+          "inter": "60",
+          "union": "100",
+          "answer": "0.60",
+          "wrong1": "0.40",
+          "wrong2": "1.67",
+          "wrong3": "0.38"
+        },
+        "case_b": {
+          "inter": "45",
+          "union": "150",
+          "answer": "0.30",
+          "wrong1": "0.70",
+          "wrong2": "3.33",
+          "wrong3": "0.23"
+        },
+        "case_c": {
+          "inter": "120",
+          "union": "160",
+          "answer": "0.75",
+          "wrong1": "0.25",
+          "wrong2": "1.33",
+          "wrong3": "0.43"
+        },
+        "case_d": {
+          "inter": "20",
+          "union": "80",
+          "answer": "0.25",
+          "wrong1": "0.75",
+          "wrong2": "4.00",
+          "wrong3": "0.20"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "用 (union-inter)/union(非重疊比例)誤當 IoU"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "分子分母顛倒(union/inter)"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "分母誤算為 union+inter(把交集多算一次)"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "用 (union-inter)/union(非重疊比例)誤當 IoU"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "分子分母顛倒(union/inter)"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "分母誤算為 union+inter(把交集多算一次)"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -502,8 +911,15 @@
         "顛倒 IoU 分子分母",
         "把 IoU 與其他比例公式混淆"
       ],
-      "related_node_ids": ["n_L21102_003"],
-      "tags": ["CV", "IoU", "計算"]
+      "related_node_ids": [
+        "n_L21102_003"
+      ],
+      "tags": [
+        "CV",
+        "IoU",
+        "計算"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n2_cv_016",
@@ -515,10 +931,25 @@
       "source_level": "L1",
       "stem": "下列關於 mAP(mean Average Precision)在物件偵測評估中的描述,何者最為正確?",
       "options": [
-        {"text": "對每個類別計算 Precision-Recall 曲線下面積得 AP,再對所有類別取平均", "is_correct": true},
-        {"text": "直接以分類任務 Top-5 Accuracy 衡量整圖分類正確率,作為偵測指標", "is_correct": false, "trap_type": "與分類指標混淆"},
-        {"text": "等於所有預測框 IoU 的算術平均值,該平均值越高就代表模型越好", "is_correct": false, "trap_type": "與 IoU 平均混淆"},
-        {"text": "等於 Recall 與 Precision 的算術平均,計算方式與 F1 分數類似", "is_correct": false, "trap_type": "與 F1 混淆"}
+        {
+          "text": "對每個類別計算 Precision-Recall 曲線下面積得 AP,再對所有類別取平均",
+          "is_correct": true
+        },
+        {
+          "text": "直接以分類任務 Top-5 Accuracy 衡量整圖分類正確率,作為偵測指標",
+          "is_correct": false,
+          "trap_type": "與分類指標混淆"
+        },
+        {
+          "text": "等於所有預測框 IoU 的算術平均值,該平均值越高就代表模型越好",
+          "is_correct": false,
+          "trap_type": "與 IoU 平均混淆"
+        },
+        {
+          "text": "等於 Recall 與 Precision 的算術平均,計算方式與 F1 分數類似",
+          "is_correct": false,
+          "trap_type": "與 F1 混淆"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -534,8 +965,15 @@
         "把 mAP 直接等同於平均 IoU",
         "把 mAP 與 F1 / Top-5 Accuracy 混為一談"
       ],
-      "related_node_ids": ["n_L21102_003"],
-      "tags": ["CV", "mAP", "評估"]
+      "related_node_ids": [
+        "n_L21102_003"
+      ],
+      "tags": [
+        "CV",
+        "mAP",
+        "評估"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n2_cv_017",
@@ -547,10 +985,25 @@
       "source_level": "L1",
       "stem": "若將判斷物件偵測 True Positive 的 IoU 閾值由 0.5 提高至 0.75,在其他條件不變下,模型的 mAP 通常會發生何種變化?",
       "options": [
-        {"text": "mAP 通常下降,因為對預測框與真實框的重疊精度要求變嚴", "is_correct": true},
-        {"text": "mAP 通常上升,因為高閾值會放寬判斷使更多框被視為正確", "is_correct": false, "trap_type": "因果顛倒"},
-        {"text": "mAP 不受任何影響,因為 IoU 閾值僅與 IoU 公式無關", "is_correct": false, "trap_type": "概念解離"},
-        {"text": "mAP 完全等同於 IoU 閾值的值,因此會跟著線性提升", "is_correct": false, "trap_type": "等價誤解"}
+        {
+          "text": "mAP 通常下降,因為對預測框與真實框的重疊精度要求變嚴",
+          "is_correct": true
+        },
+        {
+          "text": "mAP 通常上升,因為高閾值會放寬判斷使更多框被視為正確",
+          "is_correct": false,
+          "trap_type": "因果顛倒"
+        },
+        {
+          "text": "mAP 不受任何影響,因為 IoU 閾值僅與 IoU 公式無關",
+          "is_correct": false,
+          "trap_type": "概念解離"
+        },
+        {
+          "text": "mAP 完全等同於 IoU 閾值的值,因此會跟著線性提升",
+          "is_correct": false,
+          "trap_type": "等價誤解"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -566,8 +1019,16 @@
         "誤以為閾值越高越寬鬆",
         "把 mAP 與 IoU 閾值畫上等號"
       ],
-      "related_node_ids": ["n_L21102_003"],
-      "tags": ["CV", "mAP", "閾值", "進階"]
+      "related_node_ids": [
+        "n_L21102_003"
+      ],
+      "tags": [
+        "CV",
+        "mAP",
+        "閾值",
+        "進階"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n2_cv_018",
@@ -579,10 +1040,25 @@
       "source_level": "L1",
       "stem": "某交通管理單位部署車輛偵測模型,業務需求要求『不可漏報任何一輛違規車』,而對於誤報相對能接受。下列指標中,團隊應優先觀察哪一項?",
       "options": [
-        {"text": "Recall(召回率),確保真實違規車盡量被偵測到", "is_correct": true},
-        {"text": "Precision(精確率),確保被偵測的違規車中誤報越少越好", "is_correct": false, "trap_type": "需求方向相反"},
-        {"text": "FPS(每秒影格數),確保推論速度足夠即時", "is_correct": false, "trap_type": "效能指標非品質指標"},
-        {"text": "IoU 閾值,確保預測框完全貼合真實框", "is_correct": false, "trap_type": "閾值非評估指標"}
+        {
+          "text": "Recall(召回率),確保真實違規車盡量被偵測到",
+          "is_correct": true
+        },
+        {
+          "text": "Precision(精確率),確保被偵測的違規車中誤報越少越好",
+          "is_correct": false,
+          "trap_type": "需求方向相反"
+        },
+        {
+          "text": "FPS(每秒影格數),確保推論速度足夠即時",
+          "is_correct": false,
+          "trap_type": "效能指標非品質指標"
+        },
+        {
+          "text": "IoU 閾值,確保預測框完全貼合真實框",
+          "is_correct": false,
+          "trap_type": "閾值非評估指標"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -598,8 +1074,18 @@
         "在『不可漏報』情境誤選 Precision",
         "把效能指標當作品質指標"
       ],
-      "related_node_ids": ["n_L21102_003"],
-      "tags": ["CV", "情境", "Recall"]
+      "related_node_ids": [
+        "n_L21102_003"
+      ],
+      "tags": [
+        "CV",
+        "情境",
+        "Recall"
+      ],
+      "boss_topics": [
+        "smartcity",
+        "autonomous"
+      ]
     },
     {
       "id": "q_n2_cv_019",
@@ -611,10 +1097,25 @@
       "source_level": "L1",
       "stem": "下列哪一個經典 CNN 架構,首次在 ImageNet 大規模競賽中採用 ReLU 與 Dropout,並引發深度學習浪潮?",
       "options": [
-        {"text": "AlexNet:由 Krizhevsky 等人於 2012 年提出", "is_correct": true},
-        {"text": "LeNet-5:由 LeCun 等人於 1998 年提出", "is_correct": false, "trap_type": "時代與規模混淆"},
-        {"text": "ResNet-50:由 He 等人於 2015 年提出", "is_correct": false, "trap_type": "後續架構混淆"},
-        {"text": "MobileNet:由 Google 團隊於 2017 年提出", "is_correct": false, "trap_type": "邊緣模型混淆"}
+        {
+          "text": "AlexNet:由 Krizhevsky 等人於 2012 年提出",
+          "is_correct": true
+        },
+        {
+          "text": "LeNet-5:由 LeCun 等人於 1998 年提出",
+          "is_correct": false,
+          "trap_type": "時代與規模混淆"
+        },
+        {
+          "text": "ResNet-50:由 He 等人於 2015 年提出",
+          "is_correct": false,
+          "trap_type": "後續架構混淆"
+        },
+        {
+          "text": "MobileNet:由 Google 團隊於 2017 年提出",
+          "is_correct": false,
+          "trap_type": "邊緣模型混淆"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -630,8 +1131,15 @@
         "把 LeNet 與 AlexNet 的歷史地位混淆",
         "誤以為 ResNet 是 ImageNet 競賽起點"
       ],
-      "related_node_ids": ["n_L21102_004"],
-      "tags": ["CV", "AlexNet", "歷史"]
+      "related_node_ids": [
+        "n_L21102_004"
+      ],
+      "tags": [
+        "CV",
+        "AlexNet",
+        "歷史"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n2_cv_020",
@@ -643,10 +1151,25 @@
       "source_level": "L1",
       "stem": "下列關於 VGG 系列(以 VGG16 為例)的描述,何者最為正確?",
       "options": [
-        {"text": "以多個 3×3 小卷積核堆疊取代大卷積核,結構規則但 FC 層參數量極大", "is_correct": true},
-        {"text": "採用 1×1 卷積搭配多分支 Inception 模組架構,屬於 GoogLeNet 的核心思想", "is_correct": false, "trap_type": "與 Inception 混淆"},
-        {"text": "透過殘差連接(Skip Connection)讓網路可訓練至超過百層而不發生退化", "is_correct": false, "trap_type": "與 ResNet 混淆"},
-        {"text": "使用深度可分離卷積大幅降低參數與運算量,適合手機端等邊緣裝置部署", "is_correct": false, "trap_type": "與 MobileNet 混淆"}
+        {
+          "text": "以多個 3×3 小卷積核堆疊取代大卷積核,結構規則但 FC 層參數量極大",
+          "is_correct": true
+        },
+        {
+          "text": "採用 1×1 卷積搭配多分支 Inception 模組架構,屬於 GoogLeNet 的核心思想",
+          "is_correct": false,
+          "trap_type": "與 Inception 混淆"
+        },
+        {
+          "text": "透過殘差連接(Skip Connection)讓網路可訓練至超過百層而不發生退化",
+          "is_correct": false,
+          "trap_type": "與 ResNet 混淆"
+        },
+        {
+          "text": "使用深度可分離卷積大幅降低參數與運算量,適合手機端等邊緣裝置部署",
+          "is_correct": false,
+          "trap_type": "與 MobileNet 混淆"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -661,8 +1184,15 @@
       "misconceptions": [
         "把 VGG 與 Inception/ResNet/MobileNet 設計混為一談"
       ],
-      "related_node_ids": ["n_L21102_004"],
-      "tags": ["CV", "VGG", "架構"]
+      "related_node_ids": [
+        "n_L21102_004"
+      ],
+      "tags": [
+        "CV",
+        "VGG",
+        "架構"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n2_cv_021",
@@ -674,10 +1204,25 @@
       "source_level": "L1",
       "stem": "ResNet(殘差網路)透過殘差連接(Residual Connection)解決何種深層網路訓練問題?",
       "options": [
-        {"text": "深層網路訓練時的梯度消失與退化問題,使網路可訓練至上百層", "is_correct": true},
-        {"text": "輸入影像的旋轉與比例變化問題,使模型具備幾何不變性", "is_correct": false, "trap_type": "與資料增強混淆"},
-        {"text": "推論階段的延遲過高問題,使模型可在手機端即時運行", "is_correct": false, "trap_type": "與部署優化混淆"},
-        {"text": "標註成本過高問題,讓模型可在無標註資料下訓練", "is_correct": false, "trap_type": "與自監督混淆"}
+        {
+          "text": "深層網路訓練時的梯度消失與退化問題,使網路可訓練至上百層",
+          "is_correct": true
+        },
+        {
+          "text": "輸入影像的旋轉與比例變化問題,使模型具備幾何不變性",
+          "is_correct": false,
+          "trap_type": "與資料增強混淆"
+        },
+        {
+          "text": "推論階段的延遲過高問題,使模型可在手機端即時運行",
+          "is_correct": false,
+          "trap_type": "與部署優化混淆"
+        },
+        {
+          "text": "標註成本過高問題,讓模型可在無標註資料下訓練",
+          "is_correct": false,
+          "trap_type": "與自監督混淆"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -693,8 +1238,15 @@
         "把殘差連接當作幾何不變性技術",
         "誤以為殘差連接降低推論延遲"
       ],
-      "related_node_ids": ["n_L21102_004"],
-      "tags": ["CV", "ResNet", "Residual"]
+      "related_node_ids": [
+        "n_L21102_004"
+      ],
+      "tags": [
+        "CV",
+        "ResNet",
+        "Residual"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n2_cv_022",
@@ -706,10 +1258,25 @@
       "source_level": "L1",
       "stem": "下列關於 GoogLeNet(Inception)架構的描述,何者最為正確?",
       "options": [
-        {"text": "透過 Inception 模組並行多種卷積核尺寸,並以 1×1 卷積進行通道降維以控制計算量", "is_correct": true},
-        {"text": "完全避免使用 1×1 卷積,改用 7×7 等大卷積核堆疊以擴大整體網路感受野", "is_correct": false, "trap_type": "顛倒設計"},
-        {"text": "僅使用單一尺寸卷積核重複堆疊形成深層結構,整體設計與 VGG 完全相同", "is_correct": false, "trap_type": "與 VGG 混淆"},
-        {"text": "以 Transformer 自注意力機制完全取代卷積運算,屬於 Vision Transformer 譜系", "is_correct": false, "trap_type": "技術年代錯誤"}
+        {
+          "text": "透過 Inception 模組並行多種卷積核尺寸,並以 1×1 卷積進行通道降維以控制計算量",
+          "is_correct": true
+        },
+        {
+          "text": "完全避免使用 1×1 卷積,改用 7×7 等大卷積核堆疊以擴大整體網路感受野",
+          "is_correct": false,
+          "trap_type": "顛倒設計"
+        },
+        {
+          "text": "僅使用單一尺寸卷積核重複堆疊形成深層結構,整體設計與 VGG 完全相同",
+          "is_correct": false,
+          "trap_type": "與 VGG 混淆"
+        },
+        {
+          "text": "以 Transformer 自注意力機制完全取代卷積運算,屬於 Vision Transformer 譜系",
+          "is_correct": false,
+          "trap_type": "技術年代錯誤"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -725,8 +1292,15 @@
         "把 Inception 與 VGG 設計混為一談",
         "誤把 Inception 歸為 Transformer 譜系"
       ],
-      "related_node_ids": ["n_L21102_004"],
-      "tags": ["CV", "GoogLeNet", "Inception"]
+      "related_node_ids": [
+        "n_L21102_004"
+      ],
+      "tags": [
+        "CV",
+        "GoogLeNet",
+        "Inception"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n2_cv_023",
@@ -738,10 +1312,25 @@
       "source_level": "L1",
       "stem": "在 VGG16 中,參數量最大的層級類型,以及運算量(FLOPs)最大的層級類型,通常分別為下列何者?",
       "options": [
-        {"text": "參數量最大為 FC 層,FLOPs 最大為 Conv 層", "is_correct": true},
-        {"text": "參數量最大為 Conv 層,FLOPs 最大為 FC 層", "is_correct": false, "trap_type": "顛倒主從"},
-        {"text": "參數量與 FLOPs 最大皆為 Pooling 層", "is_correct": false, "trap_type": "Pooling 無權重"},
-        {"text": "參數量與 FLOPs 最大皆為輸入層", "is_correct": false, "trap_type": "輸入層概念誤用"}
+        {
+          "text": "參數量最大為 FC 層,FLOPs 最大為 Conv 層",
+          "is_correct": true
+        },
+        {
+          "text": "參數量最大為 Conv 層,FLOPs 最大為 FC 層",
+          "is_correct": false,
+          "trap_type": "顛倒主從"
+        },
+        {
+          "text": "參數量與 FLOPs 最大皆為 Pooling 層",
+          "is_correct": false,
+          "trap_type": "Pooling 無權重"
+        },
+        {
+          "text": "參數量與 FLOPs 最大皆為輸入層",
+          "is_correct": false,
+          "trap_type": "輸入層概念誤用"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -757,8 +1346,15 @@
         "誤以為 Conv 層因為層數多所以參數量最多",
         "忽略 FC 層的權重爆炸效應"
       ],
-      "related_node_ids": ["n_L21102_004"],
-      "tags": ["CV", "VGG16", "進階"]
+      "related_node_ids": [
+        "n_L21102_004"
+      ],
+      "tags": [
+        "CV",
+        "VGG16",
+        "進階"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n2_cv_024",
@@ -770,10 +1366,25 @@
       "source_level": "L1",
       "stem": "某團隊欲將既有 CNN 模型部署至工廠的邊緣運算裝置,該裝置 GPU 記憶體與算力都極其有限,且要求即時推論。下列哪種策略組合最為合適?",
       "options": [
-        {"text": "選用輕量化架構(MobileNet/EfficientNet)並搭配模型量化", "is_correct": true},
-        {"text": "改採超深 ResNet-152 架構並以 FP32 全精度推論,以提升整體準確率", "is_correct": false, "trap_type": "與資源限制矛盾"},
-        {"text": "繼續使用 VGG16 架構並擴大 FC 全連接層維度以增強模型表達能力", "is_correct": false, "trap_type": "與輕量化矛盾"},
-        {"text": "在邊緣裝置上即時進行完整 Online Training 以持續更新模型權重", "is_correct": false, "trap_type": "與算力受限矛盾"}
+        {
+          "text": "選用輕量化架構(MobileNet/EfficientNet)並搭配模型量化",
+          "is_correct": true
+        },
+        {
+          "text": "改採超深 ResNet-152 架構並以 FP32 全精度推論,以提升整體準確率",
+          "is_correct": false,
+          "trap_type": "與資源限制矛盾"
+        },
+        {
+          "text": "繼續使用 VGG16 架構並擴大 FC 全連接層維度以增強模型表達能力",
+          "is_correct": false,
+          "trap_type": "與輕量化矛盾"
+        },
+        {
+          "text": "在邊緣裝置上即時進行完整 Online Training 以持續更新模型權重",
+          "is_correct": false,
+          "trap_type": "與算力受限矛盾"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -789,8 +1400,19 @@
         "誤以為邊緣裝置能跑大型訓練",
         "把模型精度與架構大小直接劃上等號"
       ],
-      "related_node_ids": ["n_L21102_004", "n_L21102_001"],
-      "tags": ["CV", "邊緣部署", "情境", "進階"]
+      "related_node_ids": [
+        "n_L21102_004",
+        "n_L21102_001"
+      ],
+      "tags": [
+        "CV",
+        "邊緣部署",
+        "情境",
+        "進階"
+      ],
+      "boss_topics": [
+        "manufacturing"
+      ]
     },
     {
       "id": "q_n2_cv_025",
@@ -802,10 +1424,25 @@
       "source_level": "L1",
       "stem": "某新創團隊資料量有限,欲建構花卉影像分類器。下列做法何者最符合『遷移學習(Transfer Learning)』的常見實務?",
       "options": [
-        {"text": "載入 ImageNet 預訓練權重,凍結前段卷積層並微調末端分類層", "is_correct": true},
-        {"text": "完全從零隨機初始化模型所有層的權重,僅以手中小資料集訓練到完全收斂", "is_correct": false, "trap_type": "未利用預訓練"},
-        {"text": "使用未預訓練的隨機初始化網路,並把測試集當訓練集合併使用以提升準確率", "is_correct": false, "trap_type": "資料切割錯誤"},
-        {"text": "以未訓練的隨機權重卷積核作為固定特徵抽取器,完全不進行任何反向傳播", "is_correct": false, "trap_type": "未利用學習"}
+        {
+          "text": "載入 ImageNet 預訓練權重,凍結前段卷積層並微調末端分類層",
+          "is_correct": true
+        },
+        {
+          "text": "完全從零隨機初始化模型所有層的權重,僅以手中小資料集訓練到完全收斂",
+          "is_correct": false,
+          "trap_type": "未利用預訓練"
+        },
+        {
+          "text": "使用未預訓練的隨機初始化網路,並把測試集當訓練集合併使用以提升準確率",
+          "is_correct": false,
+          "trap_type": "資料切割錯誤"
+        },
+        {
+          "text": "以未訓練的隨機權重卷積核作為固定特徵抽取器,完全不進行任何反向傳播",
+          "is_correct": false,
+          "trap_type": "未利用學習"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -821,8 +1458,16 @@
         "把『不訓練』當成遷移學習",
         "用測試集訓練導致資料洩漏"
       ],
-      "related_node_ids": ["n_L21102_004", "n_L21102_001"],
-      "tags": ["CV", "Transfer Learning", "實務"]
+      "related_node_ids": [
+        "n_L21102_004",
+        "n_L21102_001"
+      ],
+      "tags": [
+        "CV",
+        "Transfer Learning",
+        "實務"
+      ],
+      "boss_topics": []
     }
   ]
 }

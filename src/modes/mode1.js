@@ -39,7 +39,7 @@
       attack: ['「秒殺人命的責任,你扛得起?」','「邊緣運算延遲超標!」'],
       defeat: ['「這就是自駕的下一步。」'] },
     { key: 'manufacturing', name: '張廠長(智慧製造)', avatar: '🏭', hp: 130,
-      desc: '瑕疵檢測 CNN + 邊緣運算',
+      desc: '瑕疵檢測 CNN + 預測性維護 + 邊緣運算',
       keywords: ['製造','智慧製造','生產線','瑕疵','感測器','故障','設備','預測'],
       intro: '「產線每分鐘 200 片 PCB,瑕疵檢測 CNN 在線上飄移了。我需要穩定方案。」',
       attack: ['「停線一分鐘損失 5 萬!」','「客戶要驗廠了!」'],
@@ -128,48 +128,39 @@
     return s;
   }
 
-  // 取題:keyword 直配 + subject=1 通用題池擴充
-  // 池擴展策略(2026-05-10 為 20 題場 + 真隨機重做):
-  //  1. keyword 直配池(boss-specific)
-  //  2. 池 < VARIATION_FLOOR 時補 subject=1 通用題,確保 RNG.pickN 有足夠變化空間
-  //     設 floor = 2n(n=20 時 = 40),讓「跨場 Jaccard IoU < 0.5」成立(平均一半題目不同)
-  //  3. 最終池仍 < n 時接受較短戰鬥(showToast 提醒)
-  // ※ 不可造題,僅用 QUESTIONS 內既有(鐵律 #5 來源忠實性)
-  // 2026-05-17:Mode 1 是商業情境決策題,排除純程式碼題(使用者反映:考 CNN 不該跳 np.array)
-  // 程式碼題仍會在 Mode 2(程式判讀道場)/ Mode 7(模考)/ Mode 8(Code Trace)/ Mode 6(卡牌)出現
-  function _isCodeQuestion(q) {
-    return q.format === 'code_reading' || q.format === 'code_trace';
-  }
-
+  // 取題:精準 boss_topics 篩選(2026-05-18 治本方案 C — 取代舊的 keyword 模糊匹配)
+  // 每題在 questions-*.json 內標記 boss_topics: ['ecommerce', 'manufacturing', ...] 或 []。
+  // []  = 純技術題 / 無情境,不適合 Mode 1(商業情境決策劇場),會被 Mode 2/7/8/6 接住
+  // 設計變更:
+  //   1. 篩選改用 boss_topics 精確匹配,不再用 stem/tags 字串模糊命中
+  //   2. 池小於 N(BOSS_QUESTIONS_PER_BATTLE)時,actualN = pool.length(允許短戰)
+  //      避免硬塞跨主題題目(舊邏輯用 general filler 兜底,會把 Weibull 故障率題塞給 CNN BOSS)
+  //   3. 池仍 ≥ 5 才開戰(< 5 過於倉促,提示玩家)
+  //   4. 鐵律 #5:不可造題,僅用 QUESTIONS 內 boss_topics 已標記題
+  // ※ 程式碼題(format=code_reading/code_trace)的 boss_topics 一律為 [](已預先標記)
   function pickQuestionsForBoss(boss, n = BOSS_QUESTIONS_PER_BATTLE) {
-    const matched = QUESTIONS.filter(q => {
-      if (_isCodeQuestion(q)) return false;  // 排除程式碼題
-      const text = (q.stem || '') + ' ' + (q.tags || []).join(' ');
-      return boss.keywords.some(k => text.includes(k));
-    });
+    const matched = QUESTIONS.filter(q =>
+      Array.isArray(q.boss_topics) && q.boss_topics.includes(boss.key)
+    );
     let pool = [...new Set(matched)];
-    // 抽樣空間目標:抽 n 題的 2 倍 = 至少 40 題
-    // 數學:從 pool=2n 抽 n,跨場最小 IoU = (2n-n)/(2n+n) ≈ 0.33,平均 < 0.5 達標
-    const VARIATION_FLOOR = n * 2;
-    if (pool.length < VARIATION_FLOOR) {
-      // 2026-05-16 H1 fix: subject 2 (L22 大數據) 與商業/產業 BOSS 主題天然相關
-      // (資料工程、隱私、生成式 AI 應用等);擴大 filler pool 涵蓋三科,
-      // 避免 L22 題目在 keyword pool 不足時被排除。
-      // 2026-05-17:兜底也排除程式碼題,保持商業情境純度
-      const general = QUESTIONS.filter(q =>
-        [1, 2, 3].includes(q.subject) && !pool.includes(q) && !_isCodeQuestion(q)
-      );
-      // 把缺口補到 floor,一次抽 (floor - pool.length) 題進池
-      pool = [...pool, ...RNG.pickN(general, Math.max(0, VARIATION_FLOOR - pool.length))];
+    // 2026-05-18 治本方案 C:不再用 general filler 兜底跨主題題目
+    // 池 < 5 不開戰(極小池玩家體驗差);否則 actualN = min(n, pool.length) 允許短戰
+    // 部分 BOSS(autonomous/telecom/education 等)題庫天然窄,接受短戰比硬塞跨主題好
+    if (pool.length < 5) {
+      // 由 caller(challenge / start)決定 UX,這裡只 toast 提示
+      showToast('「' + (boss.name||'本 BOSS') + '」題庫過小(' + pool.length + ' 題),建議練習其他 BOSS', 4000);
+      // 仍回傳剩餘的(讓 caller 決定要不要繼續)
     }
     // 跨關卡排除已答對(SeenCorrect):戰鬥模式不重複出已掌握題
     // 若 filter 後池 < n,fallback 回原池 + showToast 提醒
     if (typeof SeenCorrect !== 'undefined') {
-      const fr = SeenCorrect.filterForBattle(pool, n);
+      const fr = SeenCorrect.filterForBattle(pool, Math.min(n, pool.length));
       if (fr.fallback) showToast('本 BOSS 可用新題不足,允許重複出已答對的舊題');
       else pool = fr.pool;
     }
-    return RNG.pickN(pool, Math.min(n, pool.length));
+    // 池小時自動降階場次題數(autonomous/telecom 8 題 → 短戰 8 題)
+    const actualN = Math.min(n, pool.length);
+    return RNG.pickN(pool, actualN);
   }
 
   const Mode1 = {

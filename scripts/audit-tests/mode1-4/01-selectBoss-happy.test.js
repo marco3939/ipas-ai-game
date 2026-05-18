@@ -7,12 +7,18 @@ const indexSrc = readFile(INDEX);
 const A = makeAssert();
 
 function build() {
+  // 2026-05-18 治本方案 C 跟進:Mode 1 改用 boss_topics 精準篩,test 也輪流分配 15 BOSS
+  // 每 BOSS 至少 4 題(60/15=4),確保 selectBoss 對所有 BOSS 都能初始化 state
+  const ALL_BOSSES = ['ecommerce','finance','medical','autonomous','manufacturing',
+                       'energy','telecom','media','smartcity','education','logistics',
+                       'legal','data_eng','ml_bigdata','privacy'];
   const questions = [];
   for (let i = 0; i < 60; i++) {
     questions.push(fixtureQuestion({
       id: 'q_t_' + String(i).padStart(3, '0'),
       tags: ['電商', '推薦', '客戶', '金融', '醫療', '製造', '電信'],
-      knowledge_code: 'L21101'
+      knowledge_code: 'L21101',
+      boss_topics: [ALL_BOSSES[i % ALL_BOSSES.length]]
     }));
   }
   const sb = makeSandbox({ questions });
