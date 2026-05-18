@@ -518,7 +518,11 @@
 
     // ===== 抽題池 =====
     _buildPool(cfg) {
-      const all = (typeof QUESTIONS !== 'undefined' ? QUESTIONS : []).filter(q => q && q.id && q.options);
+      // 2026-05-18:排除 code_trace 題(雞肋:頂層 options 只有「全部步驟正確/任一錯誤」,
+      // 玩家永遠選 A 必對 — code_trace 真考點在 trace_steps,只有 Mode 8 道場才會逐步答)
+      const all = (typeof QUESTIONS !== 'undefined' ? QUESTIONS : []).filter(q =>
+        q && q.id && q.options && q.format !== 'code_trace'
+      );
       let pool = all;
 
       // 主題範圍

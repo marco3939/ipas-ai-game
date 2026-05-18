@@ -335,9 +335,12 @@
       }
 
       // 3) 抓 codes,從 QUESTIONS 過濾題目池
+      // 2026-05-18:排除 code_trace 題(雞肋:頂層 options 只有「全部步驟正確/任一錯誤」,
+      // Mode 7 引擎用 PlayEngine 不會走 Mode 8 的 renderTrace 逐步答邏輯 — 永遠選 A 必對)
+      // 玩家想練 code_trace 請去 Mode 8 道場(有逐步答邏輯)
       const codes = new Set(visible.map(c => c.knowledge_code));
       const pool = (typeof QUESTIONS !== 'undefined' ? QUESTIONS : []).filter(q =>
-        q && q.knowledge_code && codes.has(q.knowledge_code)
+        q && q.knowledge_code && codes.has(q.knowledge_code) && q.format !== 'code_trace'
       );
 
       if (pool.length < 5) {
