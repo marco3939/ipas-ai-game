@@ -1,0 +1,327 @@
+{
+  "version": "1.0",
+  "schema_version": "iron-rule-1+2+6",
+  "generated_at": "2026-05-18",
+  "batch": "N30 — 科三 L23203 LLM:BERT(W-ε B)+ GPT(W-ε G)合併批次",
+  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "iron_rule_compliance": {
+    "rule_1_drill_explanation": "每題皆有 explanation.correct/wrong/hook + misconceptions ≥ 1 + related_node_ids",
+    "rule_2_shuffle_and_cases": "shuffle_options:true;BERT vs GPT 對照辨析以靜態情境呈現",
+    "rule_3_original": "100% 原創跨產業情境;素材限 kb 節點 n_L23203_006(BERT)/ n_L23203_007(GPT)",
+    "rule_4_option_length": "4 選項長度差異 ≤ 20%;正解非永遠最長",
+    "rule_5_source_fidelity": "knowledge_code = L23203;node_id ∈ {n_L23203_006 BERT, n_L23203_007 GPT};related_node_ids 全部對應 kb 真實節點",
+    "rule_6_isolation": "本檔合併 BERT(5 題)+ GPT(5 題)兩主題;不改其他既有題目檔或共享層"
+  },
+  "subject": 3,
+  "knowledge_codes": ["L23203"],
+  "batch_num": 30,
+  "distribution": {
+    "L23203_count": 10,
+    "by_node": {"n_L23203_006": 5, "n_L23203_007": 5},
+    "by_format": {"single_choice": 10},
+    "by_difficulty": {"medium": 7, "hard": 3}
+  },
+  "source_pdf": ["機器學習模型圖卡(全).pdf page 52 BERT(q_n30_001-005)", "機器學習模型圖卡(全).pdf page 53 GPT(q_n30_006-010)"],
+  "questions": [
+    {
+      "id": "q_n30_001",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_006",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某金融科技團隊在內部讀書會比較 LLM 架構時,主管要求一句話說清楚 BERT 在 Transformer 架構上的取用方式。下列敘述何者正確?",
+      "options": [
+        {"key": "A", "text": "BERT 只取用 Transformer 的 Encoder 部分;以雙向自注意力同時看左右上下文做語言理解任務", "is_correct": true, "trap_type": "正解:Encoder + 雙向"},
+        {"key": "B", "text": "BERT 只取用 Transformer 的 Decoder 部分;以自迴歸方式由左到右單向生成新 token 序列", "is_correct": false, "trap_type": "把 BERT 架構誤為 Decoder 自迴歸"},
+        {"key": "C", "text": "BERT 同時取用 Encoder 與 Decoder 兩部分;架構與原始 Transformer 翻譯模型完全一致無異", "is_correct": false, "trap_type": "誤以為 BERT 是完整 Encoder-Decoder"},
+        {"key": "D", "text": "BERT 完全不基於 Transformer 架構;而是 RNN/LSTM 的進階雙向版本只是名稱相似而已", "is_correct": false, "trap_type": "誤把 BERT 當 RNN 系後代"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "BERT(Bidirectional Encoder Representations from Transformers)只取用 Transformer 的 Encoder 部分;雙向(同時看左右)自注意力是其核心特性,讓每個 token 都能在計算表示時同時看到序列中所有其他位置,專做語言理解任務(問答、情感、分類)。",
+        "wrong": {
+          "BERT 只取用 Transformer 的 Decoder 部分;以自迴歸方式由左到右單向生成新 token 序列": "Decoder + 自迴歸 + 單向是 GPT 的特性;BERT 完全相反,是 Encoder + 雙向 + 理解。",
+          "BERT 同時取用 Encoder 與 Decoder 兩部分;架構與原始 Transformer 翻譯模型完全一致無異": "BERT 捨棄 Decoder 只保留 Encoder;原始 Transformer(2017)是 Encoder-Decoder 翻譯架構,BERT 是縮減版。",
+          "BERT 完全不基於 Transformer 架構;而是 RNN/LSTM 的進階雙向版本只是名稱相似而已": "BERT 的『T』就是 Transformer;它徹底拋棄 RNN/LSTM 循環架構,純靠 Transformer Encoder。"
+        },
+        "hook": "口訣:BERT = Bidirectional Encoder;Encoder + 雙向 + 理解(對照 GPT = Decoder + 單向 + 生成)"
+      },
+      "misconceptions": ["把 BERT 架構誤為 Decoder 自迴歸", "誤以為 BERT 是雙向但用 Decoder"],
+      "related_node_ids": ["n_L23203_006", "n_L23203_004"],
+      "tags": ["bert", "encoder", "transformer"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n30_002",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_006",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某教育科技 PM 在向工程師說明 BERT 預訓練任務時,被問到 MLM(Masked Language Model)的本質。下列描述何者最為精確?",
+      "options": [
+        {"key": "A", "text": "隨機遮蔽序列中 15% 的 token;模型依雙向上下文預測被遮蔽位置原本的 token 是什麼字", "is_correct": true, "trap_type": "正解:遮蔽預測 + 雙向上下文"},
+        {"key": "B", "text": "輸入完整前文後逐字預測下一個 token;與 GPT 自迴歸訓練目標本質完全相同只是改名稱", "is_correct": false, "trap_type": "把 MLM 誤為 next-token"},
+        {"key": "C", "text": "把整段中文翻譯成英文後做反向翻譯比對品質差距;是一種跨語言對齊的翻譯預訓練任務目標", "is_correct": false, "trap_type": "誤把 MLM 當翻譯"},
+        {"key": "D", "text": "輸入問題後直接生成完整答案文字;以開放式問答方式做監督式預訓練學習一般語言理解能力", "is_correct": false, "trap_type": "誤把 MLM 當生成任務"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "MLM(Masked Language Model)是 BERT 兩大預訓練任務之一:隨機遮蔽輸入序列中約 15% 的 token(替換成 [MASK]),模型依該位置左右兩側的雙向上下文預測被遮蔽位置的原始 token。這是 BERT 雙向理解能力的訓練機制,與 GPT 的 next-token prediction 本質不同。",
+        "wrong": {
+          "輸入前文後預測下一個 token;與 GPT 自迴歸的訓練目標本質完全相同只是名稱不同": "Next-token prediction 是 GPT 的單向自迴歸目標;MLM 是雙向遮蔽預測,兩者完全不同。",
+          "把整段中文翻譯成英文後做反向翻譯比對;是一種跨語言對齊的翻譯預訓練任務": "翻譯不是 BERT 預訓練任務;MLM 不涉及語言對翻譯,僅在單一語言內遮蔽預測。",
+          "輸入問題後生成答案文字;以開放式問答方式做監督式預訓練學習一般語言理解能力": "生成式問答不是 BERT 預訓練;BERT 預訓練是自監督的 MLM + NSP,不需問答標籤。"
+        },
+        "hook": "口訣:MLM = Mask 15% 後雙向填空;不是預測下一字、不是翻譯、不是生成"
+      },
+      "misconceptions": ["把 MLM 與 next-token 混淆", "誤以為 BERT 預訓練可生成"],
+      "related_node_ids": ["n_L23203_006", "n_L23203_007"],
+      "tags": ["bert", "mlm", "pre-training"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n30_003",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_006",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某搜尋引擎公司在解釋 BERT 第二個預訓練任務 NSP(Next Sentence Prediction)的設計目的,下列敘述何者正確?",
+      "options": [
+        {"key": "A", "text": "判斷輸入的兩個句子在原始語料中是否為相連下一句的二元分類;讓模型學會句對關係建模", "is_correct": true, "trap_type": "正解:二元判斷句對是否相連"},
+        {"key": "B", "text": "將一句中文翻譯為英文後比對譯文品質;讓模型在預訓練階段同時學會雙語翻譯能力", "is_correct": false, "trap_type": "誤把 NSP 當翻譯"},
+        {"key": "C", "text": "從文章中抽取與問題最相關的句子段落;讓模型在預訓練階段直接學會抽取式問答能力", "is_correct": false, "trap_type": "誤把 NSP 當抽取式問答"},
+        {"key": "D", "text": "給定上一句後續寫下一句新生成文字;讓模型同時學會語言生成與長文續寫能力", "is_correct": false, "trap_type": "誤把 NSP 當生成"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "NSP(Next Sentence Prediction)是 BERT 的第二個預訓練任務:給定兩個句子 A 與 B,模型做二元分類判斷 B 是否為 A 在原始語料中的下一句(50% 是真正下一句,50% 是隨機句子)。這讓 BERT 學會句對之間的關係,有助於下游問答、自然語言推論等需要跨句理解的任務。",
+        "wrong": {
+          "將一句中文翻譯為英文後比對譯文品質;讓模型在預訓練階段同時學會雙語翻譯能力": "NSP 不涉及翻譯;它在同一語言內判斷句對是否相連,不做語言對齊。",
+          "從文章中抽取與問題最相關的句子段落;讓模型在預訓練階段直接學會抽取式問答能力": "抽取式問答是下游任務(微調階段);NSP 只是預訓練輔助任務,不直接做問答。",
+          "給定上一句後續寫下一句新生成文字;讓模型同時學會語言生成與長文續寫能力": "BERT 完全不做生成;NSP 是判斷『是否相連』的二元分類,不生成新句子。"
+        },
+        "hook": "口訣:NSP = 兩句是否相連的二元分類(不是翻譯、不是抽取、不是生成)"
+      },
+      "misconceptions": ["把 NSP 當成生成任務", "把 NSP 與抽取式問答混淆"],
+      "related_node_ids": ["n_L23203_006"],
+      "tags": ["bert", "nsp", "pre-training"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n30_004",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_006",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某零售業 AI 顧問被客戶問到「BERT 怎麼從通用模型變成可分類我們客服 ticket 的模型」。下列描述何者最完整正確?",
+      "options": [
+        {"key": "A", "text": "先在大規模語料上做 MLM+NSP 預訓練;再用少量標註客服資料做下游微調(Fine-tuning)更新權重", "is_correct": true, "trap_type": "正解:預訓練 + 微調兩階段"},
+        {"key": "B", "text": "客戶須準備大量人工標註資料從零開始重新訓練整套 BERT 權重;預訓練權重對下游分類沒有實際幫助", "is_correct": false, "trap_type": "只做 fine-tune(漏預訓練)"},
+        {"key": "C", "text": "完全不需任何下游標註資料與微調步驟;只要做完 MLM+NSP 大規模預訓練即可直接做客服分類任務", "is_correct": false, "trap_type": "只做 pre-train(漏微調)"},
+        {"key": "D", "text": "不需更新權重也不需任何標註資料;改用 prompt 工程在 BERT 上做 zero-shot 客服分類任務", "is_correct": false, "trap_type": "把 BERT 誤為 zero-shot prompt 範式"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "BERT 的核心範式是『預訓練 + 微調(Pre-training + Fine-tuning)』兩階段:第一階段在 BookCorpus + Wikipedia 等大規模無標註語料做 MLM + NSP 自監督預訓練;第二階段用少量帶標籤的下游資料(如客服 ticket 分類)更新權重,即可遷移到特定任務。這正是 BERT 在 NLP 落地的主要工作流程。",
+        "wrong": {
+          "客戶須提供大量標註資料從零開始訓練 BERT;預訓練權重對下游任務沒有實際幫助": "BERT 的價值就在於預訓練權重可遷移;從零訓練既無必要也成本過高,與設計初衷相反。",
+          "完全不需任何下游標註資料;只要做完 MLM+NSP 預訓練即可直接做客服分類任務": "預訓練只給通用語言理解能力;特定下游任務(分類)仍需少量標註資料做微調,才能對齊目標標籤空間。",
+          "不用權重也不用標註資料;以 prompt engineering 在 BERT 上做 zero-shot 客服分類任務": "Zero-shot prompt 是 GPT 大模型的範式;BERT 主流用法是微調,不是 prompt engineering。"
+        },
+        "hook": "口訣:BERT = 預訓練(自監督)+ 微調(少量標註);不是只 pre-train、不是只 fine-tune"
+      },
+      "misconceptions": ["誤以為 BERT 只需預訓練", "誤以為 BERT 主流是 prompt 範式"],
+      "related_node_ids": ["n_L23203_006"],
+      "tags": ["bert", "fine-tuning", "transfer-learning"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n30_005",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_006",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某輿情監測新創在選型時,團隊提案用 BERT 處理「中文評論情感分類(正/中/負)」。下列敘述何者最能說明為何 BERT 適合此任務?",
+      "options": [
+        {"key": "A", "text": "BERT 擅長雙向上下文理解類任務;情感分類屬於文本分類正是 BERT 微調後的強項應用", "is_correct": true, "trap_type": "正解:BERT 強於理解類任務"},
+        {"key": "B", "text": "BERT 擅長自迴歸文字生成;情感分類需要生成完整評論句子才能正確判斷情感類別", "is_correct": false, "trap_type": "把 BERT 強項誤為生成"},
+        {"key": "C", "text": "BERT 擅長即時對話互動;能像聊天機器人逐字產出對話作為情感分類的副產物", "is_correct": false, "trap_type": "把 BERT 強項誤為對話"},
+        {"key": "D", "text": "BERT 擅長無條件生成新文本;能自由發想創意內容並當作情感判斷的依據完成分類", "is_correct": false, "trap_type": "把 BERT 強項誤為創意生成"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "BERT 雙向 Encoder 架構擅長語言理解類任務(NLU):文本分類、情感分析、命名實體識別、抽取式問答、自然語言推論。中文評論情感分類本質是文本分類,屬於 BERT 微調後的典型強項應用;只需在分類標頭加 softmax 輸出層,用少量標註情感資料即可微調。",
+        "wrong": {
+          "BERT 擅長自迴歸文字生成;情感分類需要生成完整評論句子才能正確判斷情感類別": "自迴歸生成是 GPT 的強項;BERT 不做主動生成,且情感分類也不需生成新句,只需判斷標籤。",
+          "BERT 擅長即時對話互動;能像聊天機器人逐字產出對話作為情感分類的副產物": "對話互動是生成式 LLM(GPT、Claude)的範疇;BERT 不做對話,且情感分類不需對話過程。",
+          "BERT 擅長無條件生成新文本;能自由發想創意內容並當作情感判斷的依據完成分類": "創意生成是 GPT 系列的能力;BERT 完全不做生成,且情感分類也不依賴生成內容。"
+        },
+        "hook": "口訣:BERT 適合理解類(分類、抽取、推論);生成類選 GPT"
+      },
+      "misconceptions": ["把生成任務丟給 BERT", "誤以為情感分類需要生成"],
+      "related_node_ids": ["n_L23203_006", "n_L23203_007"],
+      "tags": ["bert", "sentiment", "classification"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n30_006",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_007",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某媒體業技術長在內部分享 GPT 的核心機制,被問到自迴歸(Autoregressive)生成方式的本質。下列描述何者正確?",
+      "options": [
+        {"key": "A", "text": "GPT 依前文已生成的 token 序列預測下一個 token;由左到右單向逐步產出整段文字", "is_correct": true, "trap_type": "正解:Decoder 自迴歸 + 單向"},
+        {"key": "B", "text": "GPT 同時看序列中左右兩側全部 token;雙向計算注意力後一次性產出整段文字輸出", "is_correct": false, "trap_type": "把 GPT 誤為雙向"},
+        {"key": "C", "text": "GPT 看完整輸入序列後做雙向理解;再以 BERT 同樣的 MLM 遮蔽方式填空輸出結果", "is_correct": false, "trap_type": "把 GPT 機制誤為 MLM"},
+        {"key": "D", "text": "GPT 平行生成整段所有位置的 token;每個位置同時且獨立輸出無前後順序相依關係", "is_correct": false, "trap_type": "把 GPT 誤為平行生成"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "GPT 採用 Transformer Decoder 的自迴歸(Autoregressive)機制:用已生成的前 N 個 token 作為輸入,預測第 N+1 個 token,然後將新 token 接回序列尾端再預測下一個,如此由左到右單向逐步產出整段文字。這正是它能做對話、續寫、程式碼生成的核心機制。",
+        "wrong": {
+          "GPT 同時看序列中左右兩側全部 token;雙向計算注意力後一次性產出整段文字輸出": "雙向是 BERT 的特性;GPT Decoder 用 causal mask 強制只能看前文,完全單向。",
+          "GPT 看完整輸入序列後做雙向理解;再以 BERT 同樣的 MLM 遮蔽方式填空輸出結果": "MLM 遮蔽填空是 BERT 預訓練任務;GPT 預訓練目標是 next-token prediction,不做 MLM。",
+          "GPT 平行生成整段所有位置的 token;每個位置同時且獨立輸出無前後順序相依關係": "平行生成違反自迴歸定義;GPT 推論時必須一個 token 接一個產出,前後順序相依。"
+        },
+        "hook": "口訣:GPT = Decoder + 自迴歸 + 單向(由左到右);BERT = Encoder + 雙向"
+      },
+      "misconceptions": ["把 GPT 誤為雙向", "把 GPT 推論誤為平行"],
+      "related_node_ids": ["n_L23203_007", "n_L23203_004"],
+      "tags": ["gpt", "decoder", "autoregressive"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n30_007",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_007",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某 AI 顧問在面試時被要求一句話講清楚 GPT 與 BERT 的核心架構差異。下列敘述何者完全正確?",
+      "options": [
+        {"key": "A", "text": "GPT 用 Decoder 單向自迴歸生成;BERT 用 Encoder 雙向理解;前者強於生成後者強於理解類任務", "is_correct": true, "trap_type": "正解:Decoder 單向生成 vs Encoder 雙向理解"},
+        {"key": "B", "text": "GPT 用 Encoder 雙向理解;BERT 用 Decoder 單向自迴歸生成;與業界普遍認知方向完全顛倒過來", "is_correct": false, "trap_type": "GPT/BERT 方向顛倒陷阱"},
+        {"key": "C", "text": "GPT 與 BERT 都用 Encoder;差別僅在 GPT 是雙向、BERT 是單向;這是兩者唯一架構差異", "is_correct": false, "trap_type": "誤以為兩者都 Encoder"},
+        {"key": "D", "text": "GPT 與 BERT 都用 Decoder;兩者都是自迴歸生成模型;差別僅在預訓練語料大小與模型參數規模", "is_correct": false, "trap_type": "誤以為兩者都 Decoder"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "GPT 與 BERT 的核心差異在三軸:架構(Decoder vs Encoder)、注意力方向(單向自迴歸 vs 雙向)、強項任務(生成 vs 理解)。GPT 用 Transformer Decoder 部分以 causal mask 強制單向自迴歸,適合對話、續寫、生成;BERT 用 Encoder 部分以雙向自注意力同時看左右,適合分類、抽取、問答。",
+        "wrong": {
+          "GPT 用 Encoder 雙向理解;BERT 用 Decoder 單向自迴歸生成;與業界普遍認知方向完全顛倒過來": "選項把方向完全顛倒了 — 正確是 GPT Decoder 單向 vs BERT Encoder 雙向,這是最常見的混淆陷阱。",
+          "GPT 與 BERT 都用 Encoder;差別僅在 GPT 是雙向、BERT 是單向;這是兩者唯一架構差異": "兩者架構本質不同 — GPT 用 Decoder、BERT 用 Encoder;不是同一架構下方向差異。",
+          "GPT 與 BERT 都用 Decoder;兩者都是自迴歸生成模型;差別僅在預訓練語料大小與模型參數規模": "BERT 不是 Decoder 也不是自迴歸生成;這混淆了 GPT 自迴歸與 BERT 雙向理解的本質區別。"
+        },
+        "hook": "口訣:GPT 自迴歸生成、BERT 雙向理解;Decoder 單向 vs Encoder 雙向,絕不可顛倒"
+      },
+      "misconceptions": ["把 GPT/BERT 方向顛倒", "誤以為兩者架構相同"],
+      "related_node_ids": ["n_L23203_007", "n_L23203_006"],
+      "tags": ["gpt", "bert", "comparison"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n30_008",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_007",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某客服平台在挑選底層 LLM 模型,需求是「24 小時即時聊天回覆並能依用戶提問續寫完整答案」。下列何者最適合做為底層生成模型?",
+      "options": [
+        {"key": "A", "text": "GPT 系列模型;Decoder 自迴歸特性正好適合對話續寫即時逐字生成回應給用戶看", "is_correct": true, "trap_type": "正解:GPT 適合對話生成"},
+        {"key": "B", "text": "BERT 模型;雙向 Encoder 可同時理解全段輸入後一次性即時生成完整對話回覆", "is_correct": false, "trap_type": "誤以為 BERT 可生成"},
+        {"key": "C", "text": "BERT 模型;以 MLM 遮蔽填空方式做對話續寫;比 GPT 更適合長對話的即時聊天場景", "is_correct": false, "trap_type": "把 BERT MLM 誤為對話續寫"},
+        {"key": "D", "text": "BERT 模型;NSP 任務本身就是學會生成下一句對話的訓練;天然適合即時聊天場景", "is_correct": false, "trap_type": "把 NSP 誤為生成下一句"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "即時對話續寫需要逐字產出回應,這正是 GPT Decoder 自迴歸的核心強項。GPT-2/3/4 系列(以及 ChatGPT、Claude 等)在對話、續寫、長文生成上是業界標準選擇;BERT 完全不做主動生成,只做理解類任務,不適合此場景。",
+        "wrong": {
+          "BERT 模型;雙向 Encoder 可同時理解全段輸入後一次性即時生成完整對話回覆": "BERT 不做生成 — 雙向 Encoder 設計目的是理解(分類、抽取),完全沒有自迴歸生成能力。",
+          "BERT 模型;以 MLM 遮蔽填空方式做對話續寫;比 GPT 更適合長對話的即時聊天場景": "MLM 是填空預訓練任務,不是對話續寫機制;BERT 也不適合長對話即時生成。",
+          "BERT 模型;NSP 任務本身就是學會生成下一句對話的訓練;天然適合即時聊天場景": "NSP 是判斷『兩句是否相連』的二元分類,不是生成下一句;BERT 不生成新文本。"
+        },
+        "hook": "口訣:對話、續寫、生成 → 選 GPT;理解、分類、抽取 → 選 BERT"
+      },
+      "misconceptions": ["把 BERT 誤用於對話", "把 NSP 誤為生成下一句"],
+      "related_node_ids": ["n_L23203_007", "n_L23203_006"],
+      "tags": ["gpt", "chatbot", "generation"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n30_009",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_007",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某研究團隊在解釋為何 GPT 從 GPT-2 到 GPT-4 出現 few-shot 學習等湧現能力(emergent abilities)。下列何者最符合 scaling laws 的核心觀察?",
+      "options": [
+        {"key": "A", "text": "模型參數量隨版本顯著放大;當規模達某閾值後出現 few-shot/zero-shot 等湧現能力", "is_correct": true, "trap_type": "正解:參數量擴展帶來湧現能力"},
+        {"key": "B", "text": "湧現能力來自模型深度比寬度更重要;只要把層數加深就會出現 few-shot 學習能力的提升", "is_correct": false, "trap_type": "把深度比寬度當核心(誤)"},
+        {"key": "C", "text": "GPT-2 到 GPT-4 的差異主要來自切換為 BERT Encoder 雙向架構;與參數規模無關", "is_correct": false, "trap_type": "把架構切換當主因(誤)"},
+        {"key": "D", "text": "湧現能力來自 RNN 循環結構的反向植入;GPT-4 重新使用 LSTM 於 Decoder 之後", "is_correct": false, "trap_type": "把 RNN 反向植入當主因(誤)"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "GPT 系列 scaling laws 的核心觀察是:模型參數量(以及訓練資料量、運算量)隨版本顯著放大(GPT-2 約 1.5B → GPT-3 約 175B → GPT-4 規模更大),當參數規模達某閾值後,模型出現未在小模型上觀察到的湧現能力(emergent abilities),如 few-shot/zero-shot 學習、in-context learning、Chain-of-Thought 推理等。",
+        "wrong": {
+          "湧現能力來自模型深度比寬度更重要;只要把層數加深就會出現 few-shot 學習能力的提升": "Scaling laws 的核心是『總參數量 + 資料量 + 運算量』三軸同步擴展,不是單純加深層數;深度與寬度的最佳比例反而有理論最優點。",
+          "GPT-2 到 GPT-4 的差異主要來自切換為 BERT Encoder 雙向架構;與參數規模無關": "GPT 從未切換為 BERT Encoder;GPT-2/3/4 都是 Decoder 自迴歸架構,差異在參數規模與訓練資料。",
+          "湧現能力來自 RNN 循環結構的反向植入;GPT-4 重新使用 LSTM 於 Decoder 之後": "GPT 系列徹底捨棄 RNN/LSTM,純靠 Transformer Decoder;沒有反向植入 RNN 的事實。"
+        },
+        "hook": "口訣:scaling = 參數 + 資料 + 運算同步擴展;規模到閾值才出現湧現能力"
+      },
+      "misconceptions": ["把深度單獨當核心因素", "誤以為 GPT 切換過架構"],
+      "related_node_ids": ["n_L23203_007"],
+      "tags": ["gpt", "scaling-laws", "emergent"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n30_010",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_007",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某 LLM 工程師被新進實習生問:「GPT 在推論時到底是怎麼產生一段完整文字的?」下列描述何者最為精確?",
+      "options": [
+        {"key": "A", "text": "用前文 token 預測下一個 token 並接回序列尾端;接著再預測下一個如此逐字遞迴直到終止符", "is_correct": true, "trap_type": "正解:逐字自迴歸接續"},
+        {"key": "B", "text": "從序列中間隨機挑出位置同時做雙向遮蔽填空;類似 BERT MLM 方式產出整段文字內容輸出", "is_correct": false, "trap_type": "把生成誤為中間填空"},
+        {"key": "C", "text": "一次性同步平行生成序列所有位置全部 token;每個位置同時且獨立輸出整段沒有前後順序相依關係", "is_correct": false, "trap_type": "把生成誤為平行輸出"},
+        {"key": "D", "text": "用 Encoder 對輸入做雙向編碼後;由 Decoder 一次性輸出完整翻譯結果無需逐 token 接續", "is_correct": false, "trap_type": "把 GPT 誤為 seq2seq 翻譯"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "GPT 推論時採自迴歸逐字產出:給定 prompt 後,模型依前文預測下一個 token 的機率分布(softmax),依採樣策略(greedy/top-k/top-p/temperature)取出 1 個 token,接回序列尾端;接著以新序列再預測下一個 token,如此遞迴直到生成終止符([EOS])或達 max_tokens 上限。",
+        "wrong": {
+          "從序列中間隨機挑出位置同時雙向填空;類似 BERT MLM 方式產出整段文字內容輸出": "中間填空是 BERT MLM 預訓練機制,不是 GPT 推論機制;GPT 是嚴格由左到右,不從中間生成。",
+          "一次性平行生成所有位置 token;每個位置同時且獨立輸出整段沒有前後順序相依關係": "平行生成違反自迴歸定義;每個 token 必須依賴前文已生成的所有 token,無法獨立平行。",
+          "用 Encoder 對輸入做雙向編碼後;由 Decoder 一次性輸出完整翻譯結果無需逐 token 接續": "這是原始 Transformer Encoder-Decoder 翻譯架構,不是 GPT;GPT 純 Decoder 且仍逐 token 自迴歸。"
+        },
+        "hook": "口訣:GPT 推論 = 前文預測下一字 → 接回序列 → 再預測下一字,直到終止符"
+      },
+      "misconceptions": ["把 GPT 生成誤為中間填空", "把 GPT 生成誤為平行輸出"],
+      "related_node_ids": ["n_L23203_007", "n_L23203_004"],
+      "tags": ["gpt", "inference", "autoregressive"],
+      "errata_critical": false
+    }
+  ]
+}

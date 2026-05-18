@@ -34,6 +34,8 @@ const FILES = [
   'questions-batch-n27-L23-clustering-reg.json',
   'questions-batch-n28-L23-RL-biz.json',
   'questions-batch-n29-L23-DL.json',
+  'questions-batch-n30-L23-LLM.json',
+  'questions-batch-n31-L23-generative.json',
   'questions-confusion-matrix.json',
   'questions-mode8-trace.json',
 ];

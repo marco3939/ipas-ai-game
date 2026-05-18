@@ -1233,10 +1233,138 @@
         {"context": "股票價格預測(短期)", "trap_options": ["線性迴歸", "K-means", "決策樹"]}
       ],
       "related_node_ids": ["n_L22402_001", "n_L23202_006", "n_L23203_002", "n_L23304_006"]
+    },
+    {
+      "node_id": "n_L23203_006",
+      "knowledge_code": "L23203",
+      "title": "BERT — Encoder-based 雙向理解模型(MLM + NSP 預訓練)",
+      "category": "algorithm",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習模型圖卡(全).pdf", "section": "page 52"}],
+      "summary": "BERT(Bidirectional Encoder Representations from Transformers)使用 Transformer Encoder 部分;雙向理解上下文;預訓練兩任務:MLM(遮蔽語言模型,Mask 15% token)+ NSP(下一句預測);微調少量標籤即達高效;適合 NLP 理解類任務(問答、情感、文本分類)",
+      "key_points": [
+        "Encoder-based:只用 Transformer 的 Encoder 部分",
+        "雙向(Bidirectional):同時看左右上下文(對比 GPT 單向)",
+        "預訓練兩任務:MLM(Mask 15% 預測) + NSP(下一句是否相連)",
+        "微調(Fine-tuning):凍結預訓練權重 + 少量標籤訓練下游任務",
+        "預訓練語料:BookCorpus + Wikipedia",
+        "適合理解類任務:問答 / 情感分析 / 命名實體識別 / 文本分類"
+      ],
+      "common_misconceptions": [
+        "把 BERT 誤為自迴歸生成(實為理解,不主動生成)",
+        "認為 BERT 可直接生成新文本(實為填空 / 理解,生成用 GPT)",
+        "把 MLM 與 NSP 任務混淆",
+        "誤以為 BERT 是單向(實為雙向是關鍵特點)"
+      ],
+      "explanation_hooks": [
+        "口訣:「BERT 雙向看全文,GPT 單向猜下一」",
+        "預訓練 + 微調是 LLM 兩階段範式"
+      ],
+      "variation_seeds": [
+        {"context": "情感分析任務首選", "trap_options": ["GPT-3 文字生成", "Word2Vec 詞向量", "T5 序列到序列"]},
+        {"context": "MLM 任務本質", "trap_options": ["預測下一句", "對話生成", "翻譯"]}
+      ],
+      "related_node_ids": ["n_L23203_004", "n_L23203_007"]
+    },
+    {
+      "node_id": "n_L23203_007",
+      "knowledge_code": "L23203",
+      "title": "GPT — Decoder-based 自迴歸生成模型",
+      "category": "algorithm",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習模型圖卡(全).pdf", "section": "page 53"}],
+      "summary": "GPT(Generative Pre-trained Transformer)使用 Transformer Decoder 部分;自迴歸(Autoregressive)用前文預測下一個 token;單向(從左到右);適合語言生成、對話、續寫;GPT-2/3/4 是 scaling 版本,參數量遞增帶來 emergent abilities",
+      "key_points": [
+        "Decoder-based:只用 Transformer 的 Decoder 部分",
+        "自迴歸(Autoregressive):用前文 tokens 預測下一個 token",
+        "單向(從左到右):對比 BERT 雙向",
+        "預訓練目標:next token prediction(語言模型)",
+        "GPT-2/3/4 scaling laws:參數量 ↑ → emergent abilities(few-shot 學習)",
+        "適合生成類任務:對話 / 續寫 / 程式碼生成 / 翻譯"
+      ],
+      "common_misconceptions": [
+        "把 GPT 誤為雙向理解(實為單向生成)",
+        "認為 GPT 不需 fine-tuning(實為大模型 few-shot/zero-shot,完整 RLHF 需後訓練)",
+        "把 BERT 跟 GPT 混(Encoder vs Decoder / 雙向 vs 單向 / 理解 vs 生成)",
+        "誤以為 GPT 看到完整序列(實為只看前文 token)"
+      ],
+      "explanation_hooks": [
+        "口訣:「GPT 自迴歸生成,BERT 雙向理解」",
+        "GPT 用前文預測下一字,是核心生成機制"
+      ],
+      "variation_seeds": [
+        {"context": "聊天機器人選型", "trap_options": ["BERT 雙向理解", "Word2Vec", "LSTM"]},
+        {"context": "GPT vs BERT 核心差異", "trap_options": ["GPT 雙向 BERT 單向(顛倒)", "兩者皆 Encoder", "兩者皆生成"]}
+      ],
+      "related_node_ids": ["n_L23203_004", "n_L23203_006"]
+    },
+    {
+      "node_id": "n_L23203_008",
+      "knowledge_code": "L23203",
+      "title": "VAE 變分自編碼器 — N(μ,σ²) 機率分布 + 重參數化 + KL 散度",
+      "category": "algorithm",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習模型圖卡(全).pdf", "section": "page 55"}],
+      "summary": "VAE(Variational Autoencoder)Encoder 輸出機率分布 N(μ, σ²) 而非單點;重參數化技巧 z = μ + σ·ε(ε~N(0,1))讓梯度可回傳;損失 = 重建損失 + KL 散度;連續潛在空間支援生成新樣本(對比 AE 離散空間只能壓縮重建)",
+      "key_points": [
+        "Encoder 輸出機率分布 N(μ, σ²)(對比傳統 AE 輸出單點)",
+        "重參數化技巧:z = μ + σ × ε,ε ~ N(0,1),保持梯度可微",
+        "損失函數 = 重建損失(Reconstruction)+ KL 散度(KL Divergence)",
+        "連續潛在空間 → 可從 z 採樣生成新樣本",
+        "屬於生成模型(對比 AE 只壓縮)",
+        "對比 AE 與 GAN:AE 壓縮 / VAE 變分生成 / GAN 對抗生成"
+      ],
+      "common_misconceptions": [
+        "把 VAE 誤為 Autoencoder(AE 只壓縮重建,VAE 是生成模型)",
+        "認為 z 是固定向量(實為從 N(μ, σ²) 採樣)",
+        "忽略 KL 散度(VAE 區別 AE 的核心)",
+        "把重參數化的 ε 誤為可學習參數(實為從標準常態抽)"
+      ],
+      "explanation_hooks": [
+        "口訣:「重參數化 + KL,VAE 開啟生成模式」",
+        "AE 學「壓縮表示」/ VAE 學「機率分布」"
+      ],
+      "variation_seeds": [
+        {"context": "VAE 與 AE 區別", "trap_options": ["VAE 速度較快", "AE 也能生成", "兩者相同"]},
+        {"context": "KL 散度用途", "trap_options": ["重建誤差", "對抗訓練", "正則化權重"]}
+      ],
+      "related_node_ids": ["n_L23102_007", "n_L23203_004", "n_L23203_009"]
+    },
+    {
+      "node_id": "n_L23203_009",
+      "knowledge_code": "L23203",
+      "title": "GAN 生成對抗網路 — Generator vs Discriminator 對抗訓練",
+      "category": "algorithm",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習模型圖卡(全).pdf", "section": "page 56"}],
+      "summary": "GAN(Generative Adversarial Network)由 Generator G(偽造者)與 Discriminator D(鑑識專家)對抗訓練;G 從雜訊 z 生成假樣本騙 D,D 學會辨真偽;直到兩者達 Nash 平衡;生成擬真樣本(影像、藝術、虛擬人)",
+      "key_points": [
+        "Generator G:輸入雜訊 z → 生成假樣本",
+        "Discriminator D:輸入樣本 → 判斷真假",
+        "對抗訓練:G 與 D 互相提高能力(Min-Max 賽局)",
+        "無監督學習:只需真實樣本(無需標籤)",
+        "訓練不穩定;常見問題:Mode Collapse(G 只產一種樣本)",
+        "經典應用:影像生成(StyleGAN)、Deepfake、藝術風格遷移"
+      ],
+      "common_misconceptions": [
+        "把 GAN 誤為純生成(實為對抗式生成)",
+        "認為 G 與 D 是合作關係(實為對抗,Min-Max)",
+        "把 GAN 與 VAE 混(GAN 對抗 vs VAE 變分 + KL)",
+        "誤以為 GAN 訓練穩定(實際易 Mode Collapse、訓練困難)"
+      ],
+      "explanation_hooks": [
+        "口訣:「對抗訓練是 GAN 靈魂,Min-Max 兩方共進步」",
+        "G 騙 D,D 識破,兩者達平衡 → 擬真生成"
+      ],
+      "variation_seeds": [
+        {"context": "Deepfake 影片生成原理", "trap_options": ["VAE 變分", "Autoencoder", "BERT"]},
+        {"context": "Mode Collapse 是什麼", "trap_options": ["D 太強", "資料不足", "學習率太低"]}
+      ],
+      "related_node_ids": ["n_L23203_004", "n_L23203_008", "n_L23402_001"]
     }
   ],
   "summary": {
-    "total_nodes": 58,
+    "total_nodes": 62,
     "by_code": {
       "L23101_ProbStat": 3,
       "L23103_NumOpt": 8,
