@@ -281,6 +281,30 @@
             ${visible.map(c => this._renderCard(c)).join('')}
           </div>`;
 
+      // 2026-05-18 批次挑戰面板(batchMode=true 時顯示)
+      const batchMode = this.state && this.state.batchMode;
+      const batchSelectedCount = (this.state && this.state.batchSelected) ? this.state.batchSelected.size : 0;
+      const batchNeededMp = batchSelectedCount * MP_COST_CHALLENGE;
+      const batchMpOk = player.mp >= batchNeededMp;
+      const batchPanel = batchMode ? `
+        <div class="card" style="padding:12px;border:2px solid #fbbf24;background:rgba(251,191,36,0.06)">
+          <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between">
+            <div>
+              <strong style="color:#fbbf24">🔥 批次挑戰模式</strong> ·
+              <span>已選 <strong style="color:${batchMpOk?'#4ade80':'#f87171'}">${batchSelectedCount}</strong> 張</span> ·
+              <span>需 <strong>${batchNeededMp}</strong> MP / 目前 ${player.mp}</span> ·
+              <span style="color:var(--fg-mute)">可選最多 ⌊${player.mp}/5⌋ = <strong>${Math.floor(player.mp / MP_COST_CHALLENGE)}</strong> 張</span>
+            </div>
+          </div>
+          <div class="actions" style="margin-top:10px;flex-wrap:wrap">
+            <button class="btn btn-ghost" onclick="Mode6.selectAllChallengeableInFilter()">✅ 全選 (依 MP 上限,排除金卡 + 無題卡)</button>
+            <button class="btn btn-ghost" onclick="Mode6.clearBatchSelection()">🗑 清空選擇</button>
+            <button class="btn btn-primary" onclick="Mode6.executeBatch()" ${batchSelectedCount===0?'disabled':''} style="background:linear-gradient(90deg,#f87171,#fbbf24)">🔥 執行批次挑戰</button>
+            <button class="btn btn-ghost" onclick="Mode6.toggleBatchMode()">⬅ 退出批次模式</button>
+          </div>
+        </div>
+      ` : '';
+
       const view = document.getElementById('view-play');
       view.innerHTML = `
         <div class="card">
@@ -292,11 +316,13 @@
         </div>
         ${statsBar}
         ${filterBar}
+        ${batchPanel}
         <div class="card" style="padding:12px">
           ${gridHtml}
         </div>
         <div class="actions">
           <button class="btn btn-ghost" onclick="goHome()">🏠 回主頁</button>
+          ${batchMode ? '' : `<button class="btn btn-primary" onclick="Mode6.toggleBatchMode()" style="background:linear-gradient(90deg,#f87171,#fbbf24)">🔥 批次挑戰模式(依 MP 多選解鎖)</button>`}
           <button class="btn btn-primary" onclick="Mode6.startMockExam()" style="background:linear-gradient(90deg,#60a5fa,#fbbf24)">📋 對篩選範圍模擬考</button>
           <button class="btn btn-ghost" onclick="Mode6.shareProgress()">📤 分享收藏進度</button>
           <button class="btn btn-ghost" onclick="if(confirm('重置圖鑑進度?(只清本案計數,不影響全域 Mastery / 錯題本)'))Mode6.resetCodex()">🔄 重置圖鑑</button>
@@ -462,7 +488,18 @@
       const masteryBar = (m.attempts || 0) > 0
         ? `<div class="hp-track" style="margin-top:6px;height:4px"><div class="hp-fill" style="width:${m.score}%;background:${tier===TIER.GOLD?'#fbbf24':tier===TIER.COLOR?'#60a5fa':'#94a3b8'}"></div></div>` : '';
 
-      return `<button class="mode-card" onclick="Mode6.openCard('${card.id}')" style="text-align:left;${style}">
+      // 2026-05-18 批次模式:卡片變 checkbox(點擊 toggle 而非 open)
+      const batchMode = this.state && this.state.batchMode;
+      const isSelected = batchMode && this.state.batchSelected && this.state.batchSelected.has(card.id);
+      const handler = batchMode
+        ? `Mode6.toggleBatchCard('${card.id}')`
+        : `Mode6.openCard('${card.id}')`;
+      const batchStyle = isSelected ? 'border-color:#fbbf24;box-shadow:0 0 10px rgba(251,191,36,0.5);background:rgba(251,191,36,0.08)' : '';
+      const batchBadge = batchMode
+        ? `<span style="position:absolute;top:6px;right:6px;font-size:1rem">${isSelected ? '✅' : '⬜'}</span>` : '';
+
+      return `<button class="mode-card" onclick="${handler}" style="text-align:left;position:relative;${style};${batchStyle}">
+        ${batchBadge}
         <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:4px">
           <span class="badge" style="font-size:0.7rem">${esc(card.knowledge_code)}</span>
           ${extraBadge || `<span style="font-size:0.7rem;color:var(--fg-mute)">${TIER_LABEL[tier]}</span>`}
@@ -668,6 +705,10 @@
           答對:Mastery +(共用層公式)· 連對 ${STREAK_GOLD_THRESHOLD} 題升金卡<br>
           答錯:走鐵律 #1 結構化下鑽變化型訓練
         </div>
+        <div style="margin-top:8px">
+          <button class="btn btn-ghost" style="font-size:0.78rem;padding:4px 10px;background:rgba(0,0,0,0.25);color:#fff;border:1px solid rgba(255,255,255,0.3)"
+                  onclick="Mode6.cancelChallenge()">⬅ 取消挑戰,回卡牌圖鑑(MP 已扣不退)</button>
+        </div>
       </div>`;
 
       // 攔截 PlayEngine.answer 與 onNext 以追蹤本次挑戰結果並控制下一步
@@ -724,15 +765,108 @@
             return;
           }
           DrillSession.start(nodeId, variations, lastQ, () => {
-            self.openCard(nodeId);
+            // 2026-05-18:批次模式下,DrillSession 結束接下一張
+            if (self.state && Array.isArray(self.state.batchQueue) && self.state.batchQueue.length > 0) {
+              self._runNextBatch();
+            } else {
+              self.openCard(nodeId);
+            }
           });
         } else {
-          // 答對 → 回卡片詳情(可能已升階)
-          self.openCard(nodeId);
+          // 答對 → 批次模式接下一張;否則回卡片詳情
+          if (self.state && Array.isArray(self.state.batchQueue) && self.state.batchQueue.length > 0) {
+            self._runNextBatch();
+          } else {
+            self.openCard(nodeId);
+          }
         }
       };
 
       PlayEngine.show(picked, { contextHTML: ctx });
+    },
+
+    // === 2026-05-18 新增:取消挑戰回卡牌圖鑑 ===
+    // 進入扣 MP 已扣不退(方案 A);若在批次中,清空 queue
+    cancelChallenge() {
+      this.cleanup();  // 還原 PlayEngine hook
+      if (this.state && Array.isArray(this.state.batchQueue) && this.state.batchQueue.length > 0) {
+        const remaining = this.state.batchQueue.length;
+        showToast(`⏸ 已結束批次挑戰,剩餘 ${remaining} 張卡未挑(MP 未扣)`, 3500);
+        this.state.batchQueue = [];
+        this.state.batchMode = false;
+      }
+      this.renderGrid();
+    },
+
+    // === 2026-05-18 新增:批次挑戰模式(依 MP 多選解鎖)===
+    toggleBatchMode() {
+      if (!this.state) this.state = { filters: { subject: 'all', code: 'all', tier: 'all', q: '' } };
+      this.state.batchMode = !this.state.batchMode;
+      this.state.batchSelected = new Set();
+      this.renderGrid();
+    },
+
+    toggleBatchCard(nodeId) {
+      if (!this.state.batchSelected) this.state.batchSelected = new Set();
+      if (this.state.batchSelected.has(nodeId)) this.state.batchSelected.delete(nodeId);
+      else this.state.batchSelected.add(nodeId);
+      this.renderGrid();
+    },
+
+    selectAllChallengeableInFilter() {
+      const visible = _filterCards(_allowList || [], this.state.filters);
+      const player = Player.load();
+      const maxByMp = Math.floor(player.mp / MP_COST_CHALLENGE);
+      const candidates = visible.filter(c => {
+        const tier = _computeTier(c.id);
+        if (tier >= TIER.GOLD) return false;  // 金卡不重複練
+        const pool = (typeof QUESTIONS !== 'undefined' ? QUESTIONS : []).filter(q => q.node_id === c.id);
+        return pool.length > 0;
+      });
+      this.state.batchSelected = new Set(candidates.slice(0, maxByMp).map(c => c.id));
+      this.renderGrid();
+      if (candidates.length > maxByMp) {
+        showToast(`MP 只夠選 ${maxByMp} 張(共 ${candidates.length} 張可選)`, 3500);
+      }
+    },
+
+    clearBatchSelection() {
+      if (!this.state) return;
+      this.state.batchSelected = new Set();
+      this.renderGrid();
+    },
+
+    executeBatch() {
+      if (!this.state || !this.state.batchSelected || this.state.batchSelected.size === 0) {
+        showToast('未選任何卡');
+        return;
+      }
+      const player = Player.load();
+      const want = this.state.batchSelected.size;
+      const needed = want * MP_COST_CHALLENGE;
+      let queue = [...this.state.batchSelected];
+      if (player.mp < needed) {
+        const can = Math.floor(player.mp / MP_COST_CHALLENGE);
+        if (can === 0) { showToast('MP 不足任何 1 張(需 5 MP/張)'); return; }
+        if (!confirm(`MP 不足(需 ${needed},目前 ${player.mp}),只能挑戰前 ${can} 張。繼續?`)) return;
+        queue = queue.slice(0, can);
+      }
+      this.state.batchQueue = queue;
+      this.state.batchSelected = new Set();
+      this.state.batchMode = false;
+      showToast(`🔥 批次挑戰開始(共 ${queue.length} 張)`, 2500);
+      this._runNextBatch();
+    },
+
+    _runNextBatch() {
+      if (!this.state || !this.state.batchQueue || this.state.batchQueue.length === 0) {
+        showToast('✓ 批次挑戰完成', 3500);
+        if (this.state) this.state.batchQueue = [];
+        this.renderGrid();
+        return;
+      }
+      const nodeId = this.state.batchQueue.shift();
+      this.challenge(nodeId);
     },
 
     // === 升階特效 + tier 同步 ===
