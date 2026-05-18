@@ -255,10 +255,10 @@
     {
       "node_id": "n_L23202_005", "knowledge_code": "L23202", "title": "決策樹 + 資訊增益(Information Gain)",
       "category": "concept", "source_level": "L1",
-      "source_refs": [{"file": "衝刺主檔", "section": "5.3"}, {"exam": "114-2 科三 Q8"}],
+      "source_refs": [{"file": "衝刺主檔", "section": "5.3"}, {"exam": "114-2 科三 Q8"}, {"file": "決策樹與過擬合處理.pdf", "section": "p.5-6,13-14"}],
       "summary": "Decision Tree 基於 Gini / Entropy / Information Gain 分裂;**資訊增益用於決策樹特徵選擇**",
-      "key_points": ["Gini = 1 - Σp²", "Entropy = -Σp·log p", "Information Gain = 父節點 Entropy - 子節點加權 Entropy", "演算法:CART(Gini)、ID3/C4.5(IG / IG Ratio)", "**資訊增益主要用於決策樹**(非神經網路、非 SVM、非 L1 模型)"],
-      "common_misconceptions": ["把資訊增益用於 L1 線性模型(實為決策樹專用)"],
+      "key_points": ["Gini = 1 - Σp²", "Entropy = -Σp·log p", "Information Gain = 父節點 Entropy - 子節點加權 Entropy", "演算法:CART(Gini)、ID3/C4.5(IG / IG Ratio)", "**資訊增益主要用於決策樹**(非神經網路、非 SVM、非 L1 模型)", "預剪枝參數:max_depth / min_samples_split / min_samples_leaf", "後剪枝 CCP(Cost Complexity Pruning):R_α(T) = R(T) + α|T|;α 越大樹越簡單"],
+      "common_misconceptions": ["把資訊增益用於 L1 線性模型(實為決策樹專用)", "把 ccp_alpha(後剪枝)誤為預剪枝參數"],
       "explanation_hooks": ["IG = 分裂後不確定性下降量", "決策樹過擬合對策:剪枝(前/後)、限制深度"],
       "variation_seeds": [{"context": "資訊增益用於哪類模型?", "answer": "決策樹"}],
       "related_node_ids": [], "exam_appearance": [{"exam": "114-2", "question_no": 8, "subject": 3}]
@@ -291,8 +291,14 @@
       "source_refs": [{"file": "衝刺主檔", "section": "3.3 對照"}],
       "summary": "K-means:球狀群、需指定 K、不能偵測雜訊;DBSCAN:密度群、可偵測雜訊、不需指定 K",
       "key_points": ["K-means:K + Centroid 迭代", "DBSCAN:ε + MinPts、自動決定群數", "Hierarchical:凝聚 / 分裂、Dendrogram"],
-      "common_misconceptions": ["K-means 與 DBSCAN 超參數混用"],
-      "explanation_hooks": ["K-means 假設球狀;DBSCAN 不假設形狀但需密度"],
+      "common_misconceptions": [
+        "K-means 與 DBSCAN 超參數混用",
+        "誤以為 K-means 適合任意形狀(實只擅長球狀,同心圓會切錯)"
+      ],
+      "explanation_hooks": [
+        "K-means 假設球狀;DBSCAN 不假設形狀但需密度",
+        "選擇心法:球狀均勻分佈用 K-means;任意形狀 + 雜訊偵測用 DBSCAN"
+      ],
       "variation_seeds": [{"context": "想偵測雜訊點", "answer": "DBSCAN"}, {"context": "需要指定群數", "answer": "K-means"}],
       "related_node_ids": ["n_L23202_002"]
     },
@@ -378,6 +384,41 @@
       "explanation_hooks": ["SMOTE 比隨機重複更不易過擬合"],
       "variation_seeds": [{"context": "正樣本僅 3% 該如何處理?", "answer": "SMOTE 或欠採樣或加權"}],
       "related_node_ids": ["n_L23303_002"]
+    },
+    {
+      "node_id": "n_L23301_004",
+      "knowledge_code": "L23301",
+      "title": "EDA(探索性資料分析)— 圖表選擇與 Anscombe 重要性",
+      "category": "flow",
+      "source_level": "L2",
+      "source_refs": [{"file": "資料視覺化與 EDA.pdf", "section": "p.3-6,15,17-18"}],
+      "summary": "EDA(Exploratory Data Analysis)是建模前必經流程,四階段:資料檢視→單變量分佈→雙變量關係→多變量;依資料型態選圖表,Anscombe 四重奏證明同統計量但畫圖才見真相",
+      "key_points": [
+        "EDA 四階段:資料檢視 / 單變量分佈 / 雙變量關係 / 多變量",
+        "圖表選擇:比較類別→長條圖、時序→折線圖、分佈→直方圖/KDE、組成≤6→圓餅圖、關係(雙數值)→散點圖、多變量相關→熱力圖",
+        "Anscombe 四重奏:同統計量但畫圖完全不同的故事 → 必須畫圖",
+        "盒鬚圖:四分位數(IQR)+ 離群點偵測",
+        "相關係數 r > 0.7 為強相關;只對數值型有效"
+      ],
+      "common_misconceptions": [
+        "跳過 EDA 直接建模",
+        "只看平均、變異數就下結論(Anscombe 反例)",
+        "在類別型資料上算 Pearson 相關",
+        "把圓餅圖用於太多類別(應 ≤ 5-6)",
+        "認為「相關 = 因果」"
+      ],
+      "explanation_hooks": [
+        "「先跟資料交朋友,不要急著寫演算法」",
+        "Anscombe 案例:同統計量 ≠ 同資料故事,只看 mean/var 會做出錯誤建模決策",
+        "圖表選擇心法:看『要回答什麼問題』而非『資料看起來像什麼』"
+      ],
+      "variation_seeds": [
+        {"context": "Anscombe 寓意", "trap_options": ["同統計量資料可省略 EDA", "Anscombe 證明圖表不可靠應只看數字", "Anscombe 四組統計量都不同"]},
+        {"context": "圖表選擇 — 時序資料", "trap_options": ["時序用圓餅圖", "時序用散點圖", "時序用熱力圖"]},
+        {"context": "盒鬚圖箱子代表", "trap_options": ["平均 ± 一倍標準差", "最小值到最大值", "中位數 ± 一倍標準差"]},
+        {"context": "相關係數適用範圍", "trap_options": ["所有資料類型皆適用", "適用於類別 vs 類別", "適用於名目尺度"]}
+      ],
+      "related_node_ids": ["n_L23301_001", "n_L23301_002", "n_L23303_007"]
     },
     {
       "node_id": "n_L23302_001", "knowledge_code": "L23302", "title": "模型架構選擇與超參數初始化",
@@ -644,24 +685,203 @@
       "explanation_hooks": ["跨文化文本訓練 → 隱式偏誤"],
       "variation_seeds": [{"context": "跨語言情感分析失準", "answer": "Implicit Bias / Sampling Bias"}],
       "related_node_ids": ["n_L23402_001"], "exam_appearance": [{"exam": "114-2", "question_no": 49, "subject": 1}]
+    },
+    {
+      "node_id": "n_L23202_010",
+      "knowledge_code": "L23202",
+      "title": "KNN(K-Nearest Neighbors)分類器 — 惰性學習與維度災難",
+      "category": "concept",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習進階:從KNN到SVM的高維度對決.pdf", "section": "p.3,14,17-19,25-26"}],
+      "summary": "KNN 為惰性學習(Lazy Learning),無訓練階段,預測時才計算 K 個鄰居並投票多數類;**必做特徵縮放**(否則大尺度特徵主導距離);K=1 過擬合、K=N 欠擬合;**高維維度災難**下所有點距離趨同使 KNN 失效",
+      "key_points": [
+        "惰性學習(Lazy Learning):無訓練階段,推論時才算距離,所有計算延後到查詢時",
+        "K 值權衡:K=1 過擬合(完全跟隨單一最近鄰、易受離群點)、K=N 退化為多數類分類(欠擬合、失去局部特性)",
+        "特徵縮放必要:KNN 依歐氏距離決策,未縮放時大尺度特徵(薪資 vs 年齡)主導所有距離計算",
+        "維度災難(Curse of Dimensionality):高維空間所有點距離趨同(距離集中現象),『最近鄰』失去判別力",
+        "經驗法則:K 通常取 √N 附近的奇數,避免投票平手;以驗證集調整最終 K 值",
+        "對比 SVM:KNN 屬 lazy(無訓練、推論慢),SVM 屬 eager(訓練慢、推論快只用支援向量)"
+      ],
+      "common_misconceptions": [
+        "把 KNN 與 K-means 混淆(KNN 監督分類、K-means 非監督分群,K 意義完全不同)",
+        "認為 KNN 也是 eager learning(實為 lazy,無訓練階段)",
+        "誤以為 K 越大越穩定(K 過大會退化為全資料多數類)",
+        "未做特徵縮放就跑 KNN(導致大尺度特徵主導距離、模型失準)",
+        "誤以為高維下增加特徵可提升 KNN(實際因維度災難反而下降)"
+      ],
+      "explanation_hooks": [
+        "口訣:KNN『懶人學習』— 不訓練、查詢時才算距離;K 是『投票鄰居數』",
+        "高維災難記憶點:85 維 ETF 上 KNN 0.53 ≈ 隨機猜,SVM 用核技巧仍可達 0.65"
+      ],
+      "variation_seeds": [
+        {"context": "K=1 vs K=N 差異?", "trap_options": ["K=1 過擬合、K=N 欠擬合"]},
+        {"context": "為何 KNN 需特徵縮放?", "trap_options": ["距離計算受大尺度特徵主導"]},
+        {"context": "KNN 與 K-means 差別?", "trap_options": ["前者監督分類、後者非監督分群"]}
+      ],
+      "related_node_ids": ["n_L23202_004", "n_L23301_001", "n_L23202_008"]
+    },
+    {
+      "node_id": "n_L23202_012",
+      "knowledge_code": "L23202",
+      "title": "K-means 完整版 — 迭代步驟、手肘法、四大限制",
+      "category": "algorithm",
+      "source_level": "L2",
+      "source_refs": [{"file": "非監督式學習:K-means.pdf", "section": "p.8-12,15"}],
+      "summary": "K-means 為球狀群聚演算法,四步迭代至收斂;以 WCSS 衡量緊密度,手肘法選最佳 K;四大限制:需事先定 K、對極端值敏感、僅擅球狀、需特徵縮放",
+      "key_points": [
+        "四步迭代:(1) 隨機選 K 個中心 (2) 依歐式距離將每點分配至最近中心 (3) 重算各群中心為群內平均 (4) 重複 (2)-(3) 至收斂(中心不再變動)",
+        "WCSS(Within-Cluster Sum of Squares)= Σᵢ Σ_{x∈Cᵢ} ||x-μᵢ||²,即各群內每點到該群中心歐式距離的平方和",
+        "手肘法(Elbow Method):繪 WCSS-K 曲線,K 增加 WCSS 必下降;選下降速率明顯趨緩的**轉折點**為最佳 K",
+        "四大限制:(1) 僅擅球狀凸群(同心圓 / 月牙失效)(2) 對極端值敏感(極端值拉偏中心)(3) 需事先決定 K(非自動)(4) 需特徵縮放(否則大尺度特徵主導距離)",
+        "k-means++ 初始化:依距離機率挑遠離既有中心的新初始中心,降低初始隨機性造成的局部最優風險"
+      ],
+      "common_misconceptions": [
+        "把 K-means 兩超參誤為「ε + MinPts」(那是 DBSCAN)",
+        "以為 K-means 能自動找最佳 K(實際需手肘法或 Silhouette 輔助)",
+        "以為 K-means 可處理任意形狀(實際只擅長球狀凸群,同心圓必失敗)",
+        "把 K-means(非監督)與 KNN(監督分類)混淆",
+        "WCSS 公式忘記平方,寫成 Σ||x-μ|| 或 Σ|x-μ|"
+      ],
+      "explanation_hooks": [
+        "「丟外星水果分類」— 無標籤、靠相似度自動分群",
+        "手肘判讀:看 WCSS 曲線從「快速下降」變為「平緩下降」的轉折位置就是最佳 K",
+        "K 越大 WCSS 越小,K=N(每點自成一群)時 WCSS=0,所以單看 WCSS 最小會選錯"
+      ],
+      "variation_seeds": [
+        {"context": "顧客分群 + 手肘曲線判讀", "trap_options": ["選 K=10 因 WCSS 最低", "選 K=2 因第一個轉折前", "選 K=N 因 WCSS=0"]},
+        {"context": "同心圓資料用 K-means 分群失敗", "trap_options": ["K-means 適用任意形狀", "加大 K 即可解決", "k-means++ 可救"]},
+        {"context": "WCSS 公式正確性", "trap_options": ["Σ||x-μ||(忘平方)", "Σ|x-μ|²(用絕對值)", "Σ(x-μ)(無距離)"]}
+      ],
+      "related_node_ids": ["n_L23202_008", "n_L23202_010", "n_L23301_001"]
+    },
+    {
+      "node_id": "n_L23202_011",
+      "knowledge_code": "L23202",
+      "title": "隨機森林(Random Forest)— 雙重隨機性 + 多數決 + 特徵重要性",
+      "category": "algorithm",
+      "source_level": "L2",
+      "source_refs": [{"file": "集成學習:隨機森林.pdf", "section": "p.4,8-11,16,18"}],
+      "summary": "隨機森林=Bagging+雙重隨機性(資料 bootstrap 抽樣+特徵子集隨機抽樣);分類用多數決、迴歸用平均;弱學習器為未剪枝決策樹;提供原生 feature_importances_ 量化特徵預測力,降低 variance、抗過擬合",
+      "key_points": [
+        "雙重隨機性:(1) 資料隨機(Bagging bootstrap 有放回抽樣建多棵樹)(2) 特徵隨機(每次分裂節點只看部分特徵子集)",
+        "聚合方式:分類用多數決投票(majority voting)、迴歸用平均值",
+        "弱學習器=單棵未剪枝決策樹(高 variance、低 bias);多樹平均後 variance 大幅下降",
+        "原生 feature_importances_:依據各特徵在分裂時對 Gini/Entropy 不純度下降的累積貢獻,量化「哪個變數最有預測力」",
+        "預設超參:scikit-learn n_estimators=100、max_features='sqrt'(分類)/'1.0'(迴歸)、無深度限制",
+        "屬於 Bagging 派(平行訓練),非 Boosting 派(序列訓練);與 XGBoost 訓練順序相反"
+      ],
+      "common_misconceptions": [
+        "以為 Random Forest 是 Boosting(實際屬 Bagging,樹間獨立平行訓練)",
+        "以為樹越多(n_estimators 越大)一定越好(實際到一定數量後 OOB error 收斂,徒增計算成本)",
+        "把特徵重要性誤判為「絕對因果關係」(實際只反映該模型內的預測貢獻度)",
+        "忘記「特徵隨機」與「資料隨機」是兩件獨立的隨機性,只記得 Bagging 一重",
+        "誤以為單棵決策樹加深就能達到 RF 效果(深樹過擬合;RF 靠多樹平均才降 variance)"
+      ],
+      "explanation_hooks": [
+        "「董事會投票」比喻:多位董事(樹)各看不同資料子集與不同特徵子集,獨立決策後綜合表決",
+        "雙重隨機口訣:「資料抽抽(bootstrap)+ 特徵抽抽(max_features)」",
+        "為何 RF 比單棵樹好:E[avg variance] = σ²/n,平均後 variance 下降至 1/n;而特徵隨機進一步降低樹間相關性"
+      ],
+      "variation_seeds": [
+        {"context": "RF vs 單棵決策樹差異", "trap_options": ["RF 等於加深單棵樹", "RF 僅資料隨機沒有特徵隨機", "RF 屬 Boosting 派序列訓練"]},
+        {"context": "RF vs XGBoost 訓練順序", "trap_options": ["RF 序列、XGBoost 平行", "兩者皆平行訓練", "兩者皆序列訓練"]},
+        {"context": "特徵重要性意義", "trap_options": ["直接代表因果關係", "代表特徵的標準差", "代表特徵與標籤的相關係數"]}
+      ],
+      "related_node_ids": ["n_L23202_001", "n_L23202_005", "n_L23202_006", "n_L23402_004"]
+    },
+    {
+      "node_id": "n_L23402_004",
+      "knowledge_code": "L23402",
+      "title": "特徵重要性(Feature Importance)與可解釋 AI(XAI)",
+      "category": "concept",
+      "source_level": "L2",
+      "source_refs": [{"file": "集成學習:隨機森林.pdf", "section": "p.11,16"}],
+      "summary": "Random Forest 等樹模型提供原生 feature_importances_ 屬性,量化各特徵對預測的貢獻度;為可解釋 AI(XAI)重要工具,使 ML 不再是「黑盒子」;**特徵重要性 ≠ 因果關係**,僅反映該模型內的預測貢獻",
+      "key_points": [
+        "Random Forest / Decision Tree / XGBoost 提供原生 feature_importances_ 屬性",
+        "鳶尾花範例(sklearn 預設):花瓣長度 0.440 > 花瓣寬度 0.422 > 花萼長度 0.108 > 花萼寬度 0.030",
+        "計算方式:依特徵在所有樹中分裂時造成的 Gini/Entropy 不純度下降之加權累積值",
+        "ML 不再是「黑盒子」:可解釋 AI(XAI)三大支柱之一(其餘為 SHAP、LIME)",
+        "侷限:線性迴歸需看「係數+標準化」、SVM(非線性核)無原生功能、神經網路需用 SHAP/LIME 外掛工具"
+      ],
+      "common_misconceptions": [
+        "把特徵重要性誤為因果關係(僅是該模型預測貢獻,非統計因果)",
+        "以為所有模型都有此屬性(線性迴歸用係數、SVM 無原生、神經網路需外掛)",
+        "誤以為重要性數值可跨模型比較(各模型計算邏輯不同,數值不可直接互換)",
+        "忽略相關特徵(collinearity)會被 RF 任意分配重要性,造成單一特徵被低估"
+      ],
+      "explanation_hooks": [
+        "特徵重要性 ≠ 因果,只是「對該模型預測的貢獻度」,因果需 RCT 或反事實分析",
+        "鳶尾花口訣:「花瓣 > 花萼」(花瓣長寬合計 0.86,花萼合計 0.14)",
+        "XAI 三件套:RF feature_importances_(全域)、SHAP(個體)、LIME(局部線性近似)"
+      ],
+      "variation_seeds": [
+        {"context": "鳶尾花花瓣寬 vs 花瓣長重要性對比", "trap_options": ["花萼長度最高", "花萼寬度最高", "四特徵重要性相等"]},
+        {"context": "特徵重要性 vs 因果關係", "trap_options": ["重要性=因果", "重要性=相關係數", "重要性=t 檢定 p 值"]}
+      ],
+      "related_node_ids": ["n_L23202_011", "n_L23402_001", "n_L23402_002"]
+    },
+    {
+      "node_id": "n_L23202_013",
+      "knowledge_code": "L23202",
+      "title": "線性迴歸(OLS)— y=wx+b、MSE 最小化、R² 解讀",
+      "category": "algorithm",
+      "source_level": "L2",
+      "source_refs": [{"file": "監督式學習:線性迴歸.pdf", "section": "p.4-9,11,14,19"}],
+      "summary": "監督式迴歸基線模型,以 y=wx+b 線性映射預測連續值,訓練目標為最小化 MSE(OLS 或梯度下降),評估以 R² Score 為主(0.8 以上優異),California Housing 為標準練習資料集",
+      "key_points": [
+        "模型:y = w₁x₁ + w₂x₂ + ... + wₙxₙ + b(w 為權重 Weight、b 為偏差 Bias)",
+        "損失函數:MSE = (1/n)Σ(y_true - y_pred)²(對 n 取平均、且取平方)",
+        "學習方法:OLS(普通最小平方法,有閉式解)或梯度下降(迭代逼近)",
+        "評估指標:R² Score(0~1,越接近 1 越好,>0.8 為 Excellent)、RMSE、MAE",
+        "R² 評價:0.8~1.0 Excellent / 0.6~0.8 Good / 0.4~0.6 Fair / <0.4 Weak",
+        "假設:殘差應為白噪音(常態、同變異、獨立);違反需診斷殘差圖",
+        "與邏輯迴歸區別:OLS 預測連續值(迴歸);邏輯迴歸雖名為『迴歸』但預測機率/類別(分類)",
+        "California Housing 範例:特徵 AveRooms vs 目標 Price,需先 `df[df['AveRooms'] < 10]` 過濾極端值降噪,提升擬合品質",
+        "資料切分:80% train / 20% test(典型),亦可 70/30"
+      ],
+      "common_misconceptions": [
+        "把 R² 誤為『準確率』(實為解釋變異比例,非分類正確率)",
+        "把 MSE 算成不開平方的總和而非『取平方再除以 n』",
+        "把 RMSE 與 MSE 混淆(RMSE = √MSE,單位與 y 一致)",
+        "把線性迴歸與邏輯迴歸名稱混淆(後者實為分類)",
+        "忽略離群值(California Housing 不做 AveRooms<10 過濾時 R² 顯著下降)",
+        "誤以為過濾 AveRooms<10 是為了增加樣本數(實際是『移除極端值降噪』,反而減少樣本)"
+      ],
+      "explanation_hooks": [
+        "幾何意義:找一條直線(或超平面)使所有點到線的垂直距離平方和最小(故名『最小平方』)",
+        "R²=0.85 的意義:模型解釋了目標變數中 85% 的變異,剩餘 15% 為殘差噪音",
+        "梯度下降目標:沿 MSE 的負梯度方向更新 w、b,使 MSE 逐步下降(非上升)",
+        "California Housing 過濾口訣:『去極端(AveRooms<10)→ 提升訊號比』,非增加樣本"
+      ],
+      "variation_seeds": [
+        {"context": "y=wx+b 各項意義 + w/b 角色顛倒陷阱", "trap_options": ["b 是權重 w 是偏差(顛倒)", "w 與 b 都是輸入變數", "w 為輸入、b 為輸出"]},
+        {"context": "MSE 公式正確性(不開平方 / 不除 n 陷阱)", "trap_options": ["MSE = Σ(y_true - y_pred)(不平方不除 n)", "MSE = Σ(y_true - y_pred)²(不除 n)", "MSE = (1/n)Σ|y_true - y_pred|(用絕對值即 MAE)"]},
+        {"context": "R² = 0.5 之評價分級", "trap_options": ["R²=0.5 屬 Excellent", "R²=0.5 屬 Good", "R²=0.5 越低越好"]},
+        {"context": "線性迴歸 vs 邏輯迴歸", "trap_options": ["線性迴歸用於二元分類", "邏輯迴歸預測連續值", "兩者皆預測連續值"]},
+        {"context": "梯度下降在 MSE 上的目標方向", "trap_options": ["最大化 MSE", "保持 MSE 不變", "MSE 不可微故無梯度"]},
+        {"context": "California Housing AveRooms<10 過濾原因", "trap_options": ["為了增加樣本數", "為了讓所有樣本維度一致", "為了符合 Scikit-learn API 規格"]}
+      ],
+      "related_node_ids": ["n_L23202_003", "n_L23303_003", "n_L23303_007"]
     }
   ],
   "summary": {
-    "total_nodes": 37,
+    "total_nodes": 47,
     "by_code": {
       "L23101_ProbStat": 3,
       "L23103_NumOpt": 8,
-      "L23202_Algorithms": 8,
+      "L23202_Algorithms": 12,
       "L23203_DeepLearning": 3,
-      "L23301_DataPrep": 3,
+      "L23301_DataPrep": 4,
       "L23302_ModelSelect": 2,
       "L23303_EvalValid": 8,
       "L23401_Privacy": 3,
-      "L23402_Fairness": 3
+      "L23402_Fairness": 4
     },
-    "by_source_level": {"L1": 37, "L2": 0, "L3": 0, "L4": 0},
-    "iron_rule_compliance_check": "all 37 nodes have misconceptions, explanation_hooks, variation_seeds",
+    "by_source_level_note": "actual node count 47 (was misstated as 39/41/45 in prior summaries; pre-existing L23301 miscount 3→4 corrected this round); source levels not re-tallied this round",
+    "iron_rule_compliance_check": "all 47 nodes have misconceptions, explanation_hooks, variation_seeds",
     "errata_critical_count": 2,
-    "extension_2026-05-16": "Added 4 L23103 (numpy core) + 1 L23302 (AutoML pipeline) = 5 nodes for deferred questions (q_pa_001/002/003/004/005, q_m8_001, q_pc_seq_004) — Agent 1A scope"
+    "extension_2026-05-16": "Added 4 L23103 (numpy core) + 1 L23302 (AutoML pipeline) = 5 nodes for deferred questions (q_pa_001/002/003/004/005, q_m8_001, q_pc_seq_004) — Agent 1A scope",
+    "extension_2026-05-18": "Added 1 L23202 (KNN — n_L23202_010) for batch N25 KNN 6 題 — source: 機器學習進階:從KNN到SVM的高維度對決.pdf p.3,14,17-19,25-26 + 1 L23202 (K-means full — n_L23202_012) for batch N25 K-means 7 題 — source: 非監督式學習:K-means.pdf p.8-12,15 + 1 L23202 (Random Forest — n_L23202_011) for batch N25 RF 6 題 + 1 L23402 (Feature Importance/XAI — n_L23402_004) for batch N25 XAI 2 題 — source: 集成學習:隨機森林.pdf p.4,8-11,16,18 + 1 L23202 (Linear Regression OLS — n_L23202_013) for batch N25 OLS 6 題 — source: 監督式學習:線性迴歸.pdf p.4-9,11,14,19;同時補強 n_L23202_005(決策樹)key_points 2 條(預剪枝參數、後剪枝 CCP)+ common_misceptions 1 條(ccp_alpha 誤為預剪枝) — source: 決策樹與過擬合處理.pdf p.5-6,13-14"
   }
 }

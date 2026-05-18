@@ -161,7 +161,9 @@
       "explanation_hooks": [
         "Bagging 重點:減少 variance(因平行投票)",
         "Boosting 重點:減少 bias(因每輪修正錯誤)",
-        "XGBoost = GBDT + 正則化 + 缺失值處理 + 平行化"
+        "XGBoost = GBDT + 正則化 + 缺失值處理 + 平行化",
+        "Bagging 平行降 variance / Boosting 序列降 bias / Stacking 加 meta-model",
+        "口訣:「平行抽抽 vs 序列加權 vs 雙層 stacking」"
       ],
       "variation_seeds": [
         {"context": "Random Forest 屬哪派?", "answer": "Bagging"},

@@ -1,0 +1,1111 @@
+{
+  "version": "1.0",
+  "schema_version": "iron-rule-1+2+6",
+  "generated_at": "2026-05-18",
+  "batch": "N25 — 科三 L23202 ML 核心:KNN(W1)+ K-means(W2)合併批次",
+  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "iron_rule_compliance": {
+    "rule_1_drill_explanation": "每題皆有 explanation.correct/wrong/hook + misconceptions ≥ 1 + related_node_ids",
+    "rule_2_shuffle_and_cases": "shuffle_options:true;W1 KNN 題每題 stem_variables 三 case(case_a/b/c)換情境/領域/數字;W2 K-means 題以靜態情境呈現概念 / 公式 / 計算辨析(本批次概念題為主、無需 case 變數)",
+    "rule_3_original": "100% 原創跨產業情境;未照抄考古題,僅以 PDF 概念為素材",
+    "rule_4_option_length": "4 選項長度差異 ≤ 20%;正解非永遠最長",
+    "rule_5_source_fidelity": "knowledge_code = L23202;node_id ∈ {n_L23202_010 KNN(W1), n_L23202_012 K-means(W2)};related_node_ids 全部對應 kb 真實節點",
+    "rule_6_isolation": "本檔合併 KNN(W1)+ K-means(W2)兩 worker 內容;不改其他既有題目檔或共享層"
+  },
+  "subject": 3,
+  "knowledge_codes": ["L23202"],
+  "distribution": {
+    "L23202_count": 13,
+    "by_node": {"n_L23202_010": 6, "n_L23202_012": 7},
+    "by_format": {"single_choice": 13},
+    "by_difficulty": {"easy": 1, "medium": 8, "hard": 4}
+  },
+  "source_pdf": ["機器學習進階:從KNN到SVM的高維度對決.pdf (W1 KNN q_n25_001-006)", "非監督式學習:K-means.pdf (W2 K-means q_n25_007-013)"],
+  "questions": [
+    {
+      "id": "q_n25_001",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_010",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "{scenario}的工程師以 KNN 進行分類,正在權衡 K 值。當資料規模 N={N}、K 從 1 提高到 N 的過程中,模型行為的最佳描述為下列何者?",
+      "stem_variables": {
+        "case_a": {"scenario": "電商商品分類", "N": "2000"},
+        "case_b": {"scenario": "醫院病患風險分群", "N": "500"},
+        "case_c": {"scenario": "工廠瑕疵類型辨識", "N": "1500"}
+      },
+      "options": [
+        {"key": "A", "text": "K=1 緊跟單一最近鄰易過擬合;K=N 退化為多數類預測屬欠擬合範疇行為", "is_correct": true, "trap_type": "正解:K 兩極端的過擬合 / 欠擬合對照"},
+        {"key": "B", "text": "K=1 因為鄰居數最少所以最穩定;K=N 結果包含所有資訊故能完美擬合測試集樣本", "is_correct": false, "trap_type": "兩端皆誤判為穩定/完美"},
+        {"key": "C", "text": "K=1 與 K=N 兩個極端在結果上等價;只有中間取值才有意義差異故無需特別調校", "is_correct": false, "trap_type": "極端等價誤判"},
+        {"key": "D", "text": "K=1 屬欠擬合因樣本太少;K=N 屬過擬合因吸收所有訓練樣本噪音資訊互動不平衡", "is_correct": false, "trap_type": "過擬合 / 欠擬合方向相反"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "K=1 只看單一最近鄰,模型決策邊界極度貼合訓練點(含離群點),屬典型過擬合;K=N 等於用『全資料多數類』回答任何查詢,失去局部特性,屬欠擬合。實務以驗證集找中庸 K(常見 √N 附近的奇數)。",
+        "wrong": {
+          "K=1 因為鄰居數最少所以最穩定;K=N 結果包含所有資訊故能完美擬合測試集樣本": "K=1 對單點變動極敏感,任何離群點都會改變決策,正是『不穩定』的典型;K=N 也不會『完美擬合測試集』,而是退化為常數預測。",
+          "K=1 與 K=N 兩個極端在結果上等價;只有中間取值才有意義差異故無需特別調校": "兩極端結果截然不同:K=1 給出複雜邊界、K=N 給出常數類別;K 是 KNN 最關鍵超參,務必以驗證調校。",
+          "K=1 屬欠擬合因樣本太少;K=N 屬過擬合因吸收所有訓練樣本噪音資訊互動不平衡": "方向完全相反 — K=1 是『過度貼合』屬過擬合;K=N 是『模型過於簡化』屬欠擬合,本選項把兩者顛倒。"
+        },
+        "hook": "口訣:K=1 過擬合(跟單點)、K=N 欠擬合(看多數);K 偏好 √N 附近的奇數"
+      },
+      "misconceptions": ["把 K=1 視為最穩定", "把 K 兩端的擬合方向弄反"],
+      "related_node_ids": ["n_L23202_010", "n_L23301_001"],
+      "tags": ["knn", "k-value", "overfitting", "underfitting"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_002",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_010",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "{scenario}的研究團隊用 KNN 對 {dim} 維特徵資料進行分類,結果準確率僅約隨機猜測水準。資深資料科學家指出『這是維度災難現象』。下列敘述何者最能解釋 KNN 在高維下失效的根本原因?",
+      "stem_variables": {
+        "case_a": {"scenario": "基因表現量癌症分類", "dim": "20000"},
+        "case_b": {"scenario": "ETF 多因子選股", "dim": "85"},
+        "case_c": {"scenario": "高解析影像像素分類", "dim": "10000"}
+      },
+      "options": [
+        {"key": "A", "text": "高維空間所有點對距離趨同;最近鄰失去判別力,投票結果接近隨機分類無資訊量", "is_correct": true, "trap_type": "正解:距離集中現象"},
+        {"key": "B", "text": "高維計算速度太慢使程式無法收斂;只要改用 GPU 加速計算後 KNN 準確率必能恢復", "is_correct": false, "trap_type": "把效能問題誤當準確問題"},
+        {"key": "C", "text": "高維特徵都是噪音資料;只要把全部高維資料先做標準化縮放就能完全消除維度詛咒", "is_correct": false, "trap_type": "誤以為縮放可解維度災難"},
+        {"key": "D", "text": "高維資料樣本永遠不足;只要再蒐集十倍以上樣本量即可讓 KNN 在任意維度下都穩定", "is_correct": false, "trap_type": "把樣本量當萬靈丹"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "維度災難下,隨著維度上升,任意兩點的歐氏距離分佈會集中(最近距離 ≈ 最遠距離),『最近鄰』失去判別力。KNN 的核心假設『近鄰標籤相似』在此崩潰,投票退化為隨機。PDF 案例:85 維 ETF 上 KNN 0.53、SVM 0.65,顯示距離型方法在高維特別脆弱。",
+        "wrong": {
+          "高維計算速度太慢使程式無法收斂;只要改用 GPU 加速計算後 KNN 準確率必能恢復": "速度與準確是兩回事 — GPU 加速可縮短查詢時間,但無法改變『距離趨同』這個幾何性質,準確率不會因此恢復。",
+          "高維特徵都是噪音資料;只要把全部高維資料先做標準化縮放就能完全消除維度詛咒": "特徵縮放只解決『各維度尺度不一』,不解決『高維距離集中』;消除維度災難需做降維(PCA / UMAP)或改用核方法。",
+          "高維資料樣本永遠不足;只要再蒐集十倍以上樣本量即可讓 KNN 在任意維度下都穩定": "樣本需求隨維度呈指數成長(curse of dimensionality 本義),十倍遠遠不夠;且即便樣本足夠,距離趨同問題仍在。"
+        },
+        "hook": "高維災難記憶:85 維 ETF KNN 0.53(≈ 隨機)、SVM 0.65;距離趨同 ≠ 缩放可解"
+      },
+      "misconceptions": ["以為加速計算可解決準確率", "把維度災難當作可由標準化消除"],
+      "related_node_ids": ["n_L23202_010", "n_L23202_004"],
+      "tags": ["knn", "curse-of-dimensionality", "distance-concentration"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_003",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_010",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "{scenario}的資料工程師欲導入 KNN 分類,資料含『{feat_big}(範圍 {range_big})』與『{feat_small}(範圍 {range_small})』兩特徵。下列關於前處理的描述何者最為合理?",
+      "stem_variables": {
+        "case_a": {"scenario": "銀行信用卡客戶分群", "feat_big": "年收入", "range_big": "20 萬 ~ 500 萬", "feat_small": "信用卡數量", "range_small": "1 ~ 8"},
+        "case_b": {"scenario": "電動車能耗分類", "feat_big": "車輛重量", "range_big": "1200 ~ 2800 公斤", "feat_small": "乘客人數", "range_small": "1 ~ 5"},
+        "case_c": {"scenario": "雲端主機異常偵測", "feat_big": "每秒網路傳輸量", "range_big": "10 ~ 50000 KB", "feat_small": "CPU 核心數", "range_small": "2 ~ 16"}
+      },
+      "options": [
+        {"key": "A", "text": "必先做特徵縮放(Z-score 或 Min-Max);否則大尺度特徵主導距離,小特徵被淹沒", "is_correct": true, "trap_type": "正解:KNN 距離計算的縮放必要性"},
+        {"key": "B", "text": "KNN 屬距離無關方法故不必縮放;直接訓練後再依預測結果調整輸入特徵的尺度與單位", "is_correct": false, "trap_type": "誤判 KNN 為距離無關"},
+        {"key": "C", "text": "只需對連續變數縮放即可;類別與整數特徵在 KNN 中不參與距離計算故不會構成影響", "is_correct": false, "trap_type": "誤判整數不影響距離"},
+        {"key": "D", "text": "縮放會破壞資料原始意義;KNN 內建距離正規化機制能自動處理任何不同量級的輸入特徵", "is_correct": false, "trap_type": "虛構內建機制"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "KNN 以歐氏距離(或其他 Lp 距離)決策。本題的『{feat_big}』與『{feat_small}』數值跨度相差數十倍以上,未縮放時距離幾乎完全由『{feat_big}』決定,『{feat_small}』被淹沒。Z-score 或 Min-Max 縮放使兩特徵貢獻相當,是 KNN 標準前處理。",
+        "wrong": {
+          "KNN 屬距離無關方法故不必縮放;直接訓練後再依預測結果調整輸入特徵的尺度與單位": "KNN 本質就是『以距離找鄰居』,是最依賴距離的方法之一;『不必縮放』與其原理直接矛盾。",
+          "只需對連續變數縮放即可;類別與整數特徵在 KNN 中不參與距離計算故不會構成影響": "整數特徵(如『{feat_small}』)同樣以數值參與距離,只是值域離散;在 KNN 中與連續變數無本質差別,仍需縮放。",
+          "縮放會破壞資料原始意義;KNN 內建距離正規化機制能自動處理任何不同量級的輸入特徵": "sklearn 等套件的 KNN 並無內建縮放(需自行接 StandardScaler);把『模型不自動處理』當作『會自動處理』是經典誤解。"
+        },
+        "hook": "口訣:KNN / SVM / 神經網路三大『距離 / 梯度型』模型必做特徵縮放"
+      },
+      "misconceptions": ["以為 KNN 不需縮放", "誤以為 sklearn KNN 內建縮放"],
+      "related_node_ids": ["n_L23202_010", "n_L23301_001"],
+      "tags": ["knn", "feature-scaling", "preprocessing"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_004",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_010",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "{scenario}的團隊在比較 KNN 與 SVM 兩個模型的『學習階段』特性差異。下列關於 KNN 屬於 Lazy 還是 Eager Learning、以及訓練與推論成本的描述何者最為精確?",
+      "stem_variables": {
+        "case_a": {"scenario": "保險理賠詐欺偵測"},
+        "case_b": {"scenario": "農作物影像病害分類"},
+        "case_c": {"scenario": "智能客服意圖辨識"}
+      },
+      "options": [
+        {"key": "A", "text": "KNN 屬 Lazy(無訓練、推論慢);SVM 屬 Eager(訓練慢、推論快只用支援向量)", "is_correct": true, "trap_type": "正解:lazy vs eager 對照"},
+        {"key": "B", "text": "KNN 與 SVM 兩者皆屬 Eager Learning;都需先建立明確決策邊界後再進行查詢樣本推論", "is_correct": false, "trap_type": "誤判 KNN 為 Eager"},
+        {"key": "C", "text": "KNN 屬 Eager(訓練慢);SVM 屬 Lazy(查詢時才算超平面)兩者特性與直覺剛好顛倒", "is_correct": false, "trap_type": "lazy / eager 完全顛倒"},
+        {"key": "D", "text": "KNN 與 SVM 皆屬 Lazy Learning;兩者都不建立模型而是把所有訓練樣本完整地保留至推論時", "is_correct": false, "trap_type": "誤判 SVM 為 Lazy"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "KNN 為 Lazy Learning 的代表:訓練階段只是『把資料存下來』,無模型參數;推論時對每個查詢點計算與全部訓練資料的距離,故推論慢。SVM 為 Eager:訓練階段解二次規劃找出支援向量與超平面,推論只需與支援向量比較(極快)。",
+        "wrong": {
+          "KNN 與 SVM 兩者皆屬 Eager Learning;都需先建立明確決策邊界後再進行查詢樣本推論": "KNN 並無『建立決策邊界』階段 — 邊界是在推論時依鄰居動態決定,屬 Lazy 的本質特徵。",
+          "KNN 屬 Eager(訓練慢);SVM 屬 Lazy(查詢時才算超平面)兩者特性與直覺剛好顛倒": "方向完全相反 — SVM 訓練階段就解出超平面參數,推論時不再算超平面;此選項把兩者顛倒。",
+          "KNN 與 SVM 皆屬 Lazy Learning;兩者都不建立模型而是把所有訓練樣本完整地保留至推論時": "SVM 訓練後只保留支援向量(通常遠少於全部訓練樣本),已產出明確模型參數,屬 Eager。"
+        },
+        "hook": "口訣:KNN 懶人(推論才算)、SVM 勤學(訓練先算)"
+      },
+      "misconceptions": ["誤以為 KNN 也有訓練階段", "把 lazy / eager 方向弄反"],
+      "related_node_ids": ["n_L23202_010", "n_L23202_004"],
+      "tags": ["knn", "svm", "lazy-learning", "eager-learning"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_005",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_010",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "{scenario}的新人工程師將 KNN 與 K-means 兩個演算法混為一談,以為都是『以 K 為核心參數的分群方法』。下列關於兩者最關鍵差異的描述何者最為精確?",
+      "stem_variables": {
+        "case_a": {"scenario": "零售門市顧客分析"},
+        "case_b": {"scenario": "智慧電網用電行為分析"},
+        "case_c": {"scenario": "線上音樂聆聽行為分析"}
+      },
+      "options": [
+        {"key": "A", "text": "KNN 為監督式分類(K=鄰居數);K-means 為非監督式分群(K=群心數),兩者根本不同", "is_correct": true, "trap_type": "正解:監督 vs 非監督 + K 的不同意義"},
+        {"key": "B", "text": "KNN 與 K-means 兩者皆屬非監督學習方法;主要差別只在距離計算公式採取了不同的尺度", "is_correct": false, "trap_type": "誤判 KNN 為非監督"},
+        {"key": "C", "text": "KNN 為非監督分群、K-means 為監督分類;兩者學習典範的監督性質與直覺完全相反顛倒", "is_correct": false, "trap_type": "監督性質完全顛倒"},
+        {"key": "D", "text": "KNN 與 K-means 兩者皆屬監督式分類方法;K 在兩者中皆代表訓練資料中的類別總數量", "is_correct": false, "trap_type": "誤判 K-means 為監督"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "兩者徹底不同:(1) 學習典範:KNN 需要標籤(監督式分類)、K-means 不需要標籤(非監督分群);(2) K 的意義:KNN 的 K 是『投票鄰居數』(查詢時參考的鄰居數量)、K-means 的 K 是『群心數』(整個資料切成幾群);(3) 輸出:KNN 給類別標籤、K-means 給群編號。名字相似但本質完全不同。",
+        "wrong": {
+          "KNN 與 K-means 兩者皆屬非監督學習方法;主要差別只在距離計算公式採取了不同的尺度": "KNN 必須有標籤才能投票決定查詢點的類別,屬監督學習;若無標籤則無法進行 KNN 分類。",
+          "KNN 為非監督分群、K-means 為監督分類;兩者學習典範的監督性質與直覺完全相反顛倒": "方向完全相反 — KNN 是監督(分類)、K-means 是非監督(分群),本選項把兩者顛倒。",
+          "KNN 與 K-means 兩者皆屬監督式分類方法;K 在兩者中皆代表訓練資料中的類別總數量": "K-means 不需要標籤、不知道類別數,K 是『要切幾群』的人為設定;且 KNN 的 K 也不是『類別數』而是『鄰居數』。"
+        },
+        "hook": "口訣:KNN 監督分類(K=鄰居)、K-means 非監督分群(K=群心)— 名同實異"
+      },
+      "misconceptions": ["把 KNN 與 K-means 視為同類", "把 K 在兩者的意義混為一談"],
+      "related_node_ids": ["n_L23202_010", "n_L23202_008"],
+      "tags": ["knn", "k-means", "supervised", "unsupervised"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_006",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_010",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "{scenario}的量化團隊在 {dim} 個特徵的資料集上比較 KNN 與 SVM,實測 KNN 準確率約 0.53、SVM 約 0.65。下列對兩者差距根因的解釋何者最為合理?",
+      "stem_variables": {
+        "case_a": {"scenario": "ETF 多因子選股", "dim": "85"},
+        "case_b": {"scenario": "基因表達量疾病分群", "dim": "120"},
+        "case_c": {"scenario": "工業感測器異常偵測", "dim": "95"}
+      },
+      "options": [
+        {"key": "A", "text": "KNN 純依距離受維度災難重創;SVM 透過核技巧映射高維後仍可找出有效決策超平面", "is_correct": true, "trap_type": "正解:距離型 vs 超平面型對高維抵抗力"},
+        {"key": "B", "text": "KNN 比 SVM 永遠表現較差;此種準確率差距與資料維度高低或核函數技巧使用都完全無關", "is_correct": false, "trap_type": "絕對化結論"},
+        {"key": "C", "text": "KNN 0.53 已屬完美結果;此題情境下 0.53 已是兩類資料分佈下的理論可達準確率上限數值", "is_correct": false, "trap_type": "曲解 0.53 為上限"},
+        {"key": "D", "text": "SVM 0.65 是因為較多參數造成過擬合的測試結果;KNN 沒有參數所以更難過擬合而保持穩定", "is_correct": false, "trap_type": "誤判 SVM 過擬合"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "{dim} 維屬高維情境,KNN 因距離趨同(維度災難)使最近鄰失去判別力,準確率接近隨機(0.5 上下);SVM 用核函數(如 RBF)隱式映射到更高維特徵空間後尋找最大邊界超平面,對高維抵抗力較強,故仍能達 0.65。此即 PDF 的核心對照案例 — 同樣資料下,『以距離為核心的 KNN』 vs 『以邊界為核心的 SVM』在高維下表現分歧。",
+        "wrong": {
+          "KNN 比 SVM 永遠表現較差;此種準確率差距與資料維度高低或核函數技巧使用都完全無關": "在低維或結構簡單的資料上 KNN 常與 SVM 相當甚至更好;『永遠較差』為絕對化錯誤,且維度與核技巧才是本題差距的關鍵。",
+          "KNN 0.53 已屬完美結果;此題情境下 0.53 已是兩類資料分佈下的理論可達準確率上限數值": "0.53 接近二元分類的隨機猜測(0.5)水準,代表 KNN 在此資料上幾乎沒有學到東西;SVM 達 0.65 即證明此資料仍有可學習訊號,絕非上限。",
+          "SVM 0.65 是因為較多參數造成過擬合的測試結果;KNN 沒有參數所以更難過擬合而保持穩定": "0.65 為測試集表現(非訓練集),不能用『過擬合』解釋;且 KNN 並非『沒有參數』(K、距離公式都是),只是訓練階段不算。"
+        },
+        "hook": "高維對照口訣:KNN(距離型)被維度災難打趴、SVM(超平面 + 核)抵抗力較強"
+      },
+      "misconceptions": ["以為 KNN 永遠較差", "以為 SVM 0.65 是過擬合"],
+      "related_node_ids": ["n_L23202_010", "n_L23202_004"],
+      "tags": ["knn", "svm", "high-dimensional", "kernel"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_007",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_012",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "某電商資料科學家準備在無標籤顧客特徵資料上跑 K-means 分群。下列哪一個選項最符合 K-means 標準四步迭代流程的正確順序?",
+      "options": [
+        {"key": "A", "text": "隨機初始化 K 個中心 → 依歐式距離分配每點至最近中心 → 重算群內平均為新中心 → 重複至收斂", "is_correct": true, "trap_type": "正解:assign 先於 update"},
+        {"key": "B", "text": "隨機初始化 K 個中心 → 重算群內平均為新中心 → 依歐式距離分配每點至最近中心 → 重複至收斂", "is_correct": false, "trap_type": "先 update 後 assign"},
+        {"key": "C", "text": "計算所有點兩兩距離後取距離前 K 大者為中心 → 分配每點至最近中心 → 重複至收斂於最遠端點", "is_correct": false, "trap_type": "取最遠對為中心"},
+        {"key": "D", "text": "依資料分布密度自動推導 K 值 → 分配每點至最近中心 → 重算中心 → 重複至 WCSS 收斂歸零時停止", "is_correct": false, "trap_type": "自動找 K + WCSS=0 停止"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "K-means 標準四步:(1) 隨機選 K 個初始中心 (2) assign 階段依歐式距離把每點丟到最近中心 (3) update 階段重算各群平均為新中心 (4) 重複 (2)-(3) 至中心不再變動;assign 必須先於 update,因為要有分群結果才能算平均",
+        "wrong": {
+          "隨機初始化 K 個中心 → 重算群內平均為新中心 → 依歐式距離分配每點至最近中心 → 重複至收斂": "順序顛倒;首輪根本還沒分群,不存在群內成員可平均,必須先 assign 再 update",
+          "計算所有點兩兩距離後取距離前 K 大者為中心 → 分配每點至最近中心 → 重複至收斂於最遠端點": "K-means 不計算兩兩距離(成本 O(n²));初始化是隨機或 k-means++ 選 K 個,不是取最遠對",
+          "依資料分布密度自動推導 K 值 → 分配每點至最近中心 → 重算中心 → 重複至 WCSS 收斂歸零時停止": "K-means 不自動找 K(這是密度型演算法能力);收斂條件是中心不再變動,而非 WCSS=0(只有 K=N 才會 WCSS=0)"
+        },
+        "hook": "口訣『初分均覆』— 初始化、分配(assign)、平均(update)、覆迭(repeat);assign 必先於 update"
+      },
+      "misconceptions": ["把 assign / update 順序顛倒", "以為 K-means 能自動找 K"],
+      "related_node_ids": ["n_L23202_012", "n_L23202_008"],
+      "tags": ["k-means", "iteration", "algorithm-flow"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_008",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_012",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某資料工程師在簡報中要呈現 K-means 群內誤差平方和(WCSS, Within-Cluster Sum of Squares)的數學定義。下列何者為 WCSS 公式最為正確的寫法?",
+      "options": [
+        {"key": "A", "text": "WCSS = Σᵢ Σ_{x∈Cᵢ} ||x − μᵢ||²(各群內每點到該群中心歐式距離平方後加總,再對所有群求和)", "is_correct": true, "trap_type": "正解:歐式距離平方和"},
+        {"key": "B", "text": "WCSS = Σᵢ Σ_{x∈Cᵢ} ||x − μᵢ||(各群內每點到該群中心歐式距離直接加總、未取平方故定義錯誤)", "is_correct": false, "trap_type": "忘平方"},
+        {"key": "C", "text": "WCSS = Σᵢ Σ_{x∈Cᵢ} |x − μᵢ|²(以絕對值差代替歐式距離,再對絕對值差取平方後加總所有點)", "is_correct": false, "trap_type": "用絕對值非歐距"},
+        {"key": "D", "text": "WCSS = Σᵢ ||μᵢ − μ̄||²(各群中心到全體中心的距離平方和,屬群間 BCSS 而非群內 WCSS)", "is_correct": false, "trap_type": "BCSS 群間"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "WCSS(Within-Cluster Sum of Squares)定義為:對每一群 Cᵢ,把群內所有點 x 到該群中心 μᵢ 的歐式距離平方加總,再對所有群加總;平方項是關鍵,缺平方就退化為距離和、性質完全不同",
+        "wrong": {
+          "WCSS = Σᵢ Σ_{x∈Cᵢ} ||x − μᵢ||(各群內每點到該群中心歐式距離直接加總、未取平方故定義錯誤)": "距離未平方就不是 SS(Sum of Squares),這是 SAD(Sum of Absolute Distance)的變形,與 K-means 目標函數不一致",
+          "WCSS = Σᵢ Σ_{x∈Cᵢ} |x − μᵢ|²(以絕對值差代替歐式距離,再對絕對值差取平方後加總所有點)": "在多維特徵下絕對值差不等於歐式距離(後者為各維平方和開根);此式只適用於單一維度的場景",
+          "WCSS = Σᵢ ||μᵢ − μ̄||²(各群中心到全體中心的距離平方和,屬群間 BCSS 而非群內 WCSS)": "此為 BCSS(Between-Cluster Sum of Squares)群間差異,定義上與 WCSS 完全相反,衡量群心分散程度"
+        },
+        "hook": "口訣:WCSS = Within(群內)+ Sum of Squares(平方和);記得「平方」二字,缺一即退化為其他指標"
+      },
+      "misconceptions": ["WCSS 公式忘記平方", "把 BCSS 與 WCSS 混淆"],
+      "related_node_ids": ["n_L23202_012"],
+      "tags": ["wcss", "formula", "k-means"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_009",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_012",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某零售業資料科學家畫出 K-means 在 K=1 至 K=10 的 WCSS 曲線:WCSS 從 K=1 的 5400 急速下降到 K=4 的 720,之後 K=5 為 650、K=6 為 595、K=7 為 540、K=10 為 410。依手肘法該選最佳 K 為多少?",
+      "options": [
+        {"key": "A", "text": "K=4,因為從 K=4 之後 WCSS 下降斜率明顯趨緩,形成手肘曲線的轉折點故為最佳 K 值", "is_correct": true, "trap_type": "正解:選轉折點"},
+        {"key": "B", "text": "K=10,因為 WCSS 數值 410 為所有候選中最低,代表分群最緊密最佳故應選此 K 值作答", "is_correct": false, "trap_type": "選 WCSS 最低"},
+        {"key": "C", "text": "K=1,因為手肘曲線最開始的起點代表尚未進行分群可完整保留資料原始多樣性故為保守選擇", "is_correct": false, "trap_type": "選 K=1"},
+        {"key": "D", "text": "K=7,因為位於候選 K=1 至 K=10 範圍中央屬避免極端的中庸保守選擇故為最佳合理作法", "is_correct": false, "trap_type": "選中位 K"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "手肘法判讀:找 WCSS 下降速率「從急遽轉為平緩」的轉折點;此例 K=1→4 下降 4680、K=4→5 僅降 70、K=5→10 共降 240,K=4 後斜率明顯趨緩,故 K=4 為手肘最佳 K",
+        "wrong": {
+          "K=10,因為 WCSS 數值 410 為所有候選中最低,代表分群最緊密最佳故應選此 K 值作答": "WCSS 必隨 K 增加而下降(K=N 時 WCSS=0),單看最低 WCSS 會錯誤選擇過細分群,失去手肘法目的",
+          "K=1,因為手肘曲線最開始的起點代表尚未進行分群可完整保留資料原始多樣性故為保守選擇": "K=1 等同不分群,WCSS 達到最大值;手肘法要找的是「降幅趨緩」的轉折,而非曲線起點",
+          "K=7,因為位於候選 K=1 至 K=10 範圍中央屬避免極端的中庸保守選擇故為最佳合理作法": "手肘法不是取中位,而是根據 WCSS 曲線實際斜率變化判讀;K=7 處下降仍持續但已過手肘"
+        },
+        "hook": "手肘法判讀三步:(1) 看 WCSS 下降幅度 (2) 找斜率明顯變平緩的位置 (3) 該 K 即手肘;不看絕對最低值"
+      },
+      "misconceptions": ["選 WCSS 最低就是最佳 K", "把手肘法當中位選擇法"],
+      "related_node_ids": ["n_L23202_012"],
+      "tags": ["elbow-method", "wcss", "k-means"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_010",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_012",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某資料科學家盤點 K-means 的四大限制,下列哪一項描述「不屬於」K-means 的固有限制?",
+      "options": [
+        {"key": "A", "text": "在球狀凸群上分群效果不佳;K-means 假設不符合球狀資料分布的數學結構故不適用該情境", "is_correct": true, "trap_type": "正解:球狀為強項非限制"},
+        {"key": "B", "text": "對極端值(outlier)敏感;單一極端點即可大幅拉偏所屬群的中心位置與後續分配結果穩定性", "is_correct": false, "trap_type": "對極端值敏感(屬限制)"},
+        {"key": "C", "text": "需在執行前事先指定 K 值;演算法本身無法自動推導最佳群數需另靠手肘法輔助計算選定", "is_correct": false, "trap_type": "需事先指定 K(屬限制)"},
+        {"key": "D", "text": "需執行特徵縮放前處理;否則大尺度特徵主導歐式距離計算造成分群品質與穩定性下降", "is_correct": false, "trap_type": "需縮放(屬限制)"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "K-means 假設群為球狀凸形,**在球狀資料上恰好是其強項而非限制**;在非球狀(同心圓、月牙、密度差異大)資料上才會失效;此題反向出題,「球狀資料失效」為偽限制,屬此題的答案",
+        "wrong": {
+          "對極端值(outlier)敏感;單一極端點即可大幅拉偏所屬群的中心位置與後續分配結果穩定性": "此確為限制:update 階段以算術平均為中心,極端值對平均拉力強;對策是改用 K-medoids 用中位數",
+          "需在執行前事先指定 K 值;演算法本身無法自動推導最佳群數需另靠手肘法輔助計算選定": "此確為限制:K-means 不會自己找 K,需手肘法 / Silhouette / Gap statistic 輔助選 K",
+          "需執行特徵縮放前處理;否則大尺度特徵主導歐式距離計算造成分群品質與穩定性下降": "此確為限制:K-means 以歐式距離為核心,未縮放時大尺度特徵(如薪資 vs 年齡)主導距離"
+        },
+        "hook": "K-means 四大限制口訣『球外定縮』— 只擅球狀、對 outlier 敏感、需先定 K、需特徵縮放;球狀資料反而是強項"
+      },
+      "misconceptions": ["以為 K-means 對球狀資料也失效", "忘記特徵縮放是必要前處理"],
+      "related_node_ids": ["n_L23202_012", "n_L23301_001"],
+      "tags": ["k-means", "limitations", "concept-distinction"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_011",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_012",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某 HR 分析師對員工資料跑 K-means,特徵含「月薪(範圍 30000-200000)」與「年資(範圍 0-30)」。她未做特徵縮放就直接執行,結果群結構幾乎完全由月薪決定。下列何者最能解釋此現象的根本原因?",
+      "options": [
+        {"key": "A", "text": "歐式距離以各維平方和計算;月薪量級遠大於年資造成距離幾乎只由月薪決定故年資資訊被淹沒", "is_correct": true, "trap_type": "正解:歐式距離受尺度主導"},
+        {"key": "B", "text": "K-means 對特徵維度有先後優先順序;先輸入的欄位會被自動賦予較高權重以驅動分群形成結果", "is_correct": false, "trap_type": "輸入順序賦權"},
+        {"key": "C", "text": "月薪屬連續數值欄位、年資屬離散整數欄位;K-means 設計上偏好連續變數而忽略離散變數影響", "is_correct": false, "trap_type": "連續/離散偏好"},
+        {"key": "D", "text": "K-means 內建特徵重要性計算機制;自動將高方差特徵列為主要驅動因素而排除低方差變數作用", "is_correct": false, "trap_type": "內建特徵重要性"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "K-means 以歐式距離 ||x-μ||² = Σⱼ (xⱼ-μⱼ)² 計算距離;當某維(月薪)數值範圍遠大於另一維(年資),其平方差占絕對主導地位,小尺度維度(年資)幾乎不影響結果;對策:Z-score 標準化或 Min-Max 縮放",
+        "wrong": {
+          "K-means 對特徵維度有先後優先順序;先輸入的欄位會被自動賦予較高權重以驅動分群形成結果": "K-means 對所有特徵維度一視同仁,沒有先後優先順序;主導性來自尺度而非輸入順序",
+          "月薪屬連續數值欄位、年資屬離散整數欄位;K-means 設計上偏好連續變數而忽略離散變數影響": "K-means 不區分連續或離散變數,只看歐式距離數值大小;年資也是連續值的離散採樣",
+          "K-means 內建特徵重要性計算機制;自動將高方差特徵列為主要驅動因素而排除低方差變數作用": "K-means 沒有特徵重要性機制(那是樹模型 / 隨機森林的概念);它只是被動受尺度影響"
+        },
+        "hook": "歐式距離受尺度主導:大量級維度的平方差遠大於小量級維度;標準化(Z-score)或 Min-Max 縮放是必要前處理"
+      },
+      "misconceptions": ["以為 K-means 自動處理尺度差異", "把『輸入順序』當特徵權重來源"],
+      "related_node_ids": ["n_L23202_012", "n_L23301_001"],
+      "tags": ["feature-scaling", "euclidean-distance", "k-means"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_012",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_012",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某天文資料分析師欲對二維平面上呈現「內外兩同心圓環」分布的星體資料分群(內圈一群、外圈一群)。她先試 K-means 但無論 K=2 或加大 K 都無法正確分出內外圈。下列何種演算法最適合此資料結構?",
+      "options": [
+        {"key": "A", "text": "DBSCAN;因其依密度連通性而非球狀中心定義群可正確處理同心圓、月牙等任意形狀分群任務", "is_correct": true, "trap_type": "正解:密度型適合任意形狀"},
+        {"key": "B", "text": "K-means 加 k-means++ 初始化;避免局部最優後即可順利分出同心圓內外兩群結構正確結果", "is_correct": false, "trap_type": "k-means++ 救同心圓"},
+        {"key": "C", "text": "K-means 增加迭代次數至千次以上;讓中心徹底收斂後同心圓分群結果即可達到正確標籤分配", "is_correct": false, "trap_type": "加迭代次數"},
+        {"key": "D", "text": "K-means 配合 Min-Max 特徵縮放至 [0,1] 區間;平衡兩維距離後即可分出同心圓內外環兩群", "is_correct": false, "trap_type": "縮放救同心圓"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "同心圓兩群的中心點重合(都在圓心),K-means 以「最接近中心」分群會把資料切成兩個半圓而非內外環;DBSCAN 依 ε 半徑內鄰居密度連通決定群,內圈點彼此密度可達、外圈點彼此密度可達,但內外因環間空隙而隔離,可正確分群",
+        "wrong": {
+          "K-means 加 k-means++ 初始化;避免局部最優後即可順利分出同心圓內外兩群結構正確結果": "k-means++ 只改善初始化避免落入局部最優,但 K-means 假設球狀凸群的根本限制不變,內外圈共圓心仍無解",
+          "K-means 增加迭代次數至千次以上;讓中心徹底收斂後同心圓分群結果即可達到正確標籤分配": "迭代再多次也無法改變 K-means 用「最近中心」決策的本質;同心圓上兩中心會收斂到相同位置,分群仍錯",
+          "K-means 配合 Min-Max 特徵縮放至 [0,1] 區間;平衡兩維距離後即可分出同心圓內外環兩群": "縮放只解決尺度問題,不改變形狀;同心圓縮放後仍是同心圓,K-means 限制依舊存在"
+        },
+        "hook": "同心圓 / 月牙 / 任意形狀 → 用密度型(DBSCAN);球狀凸群 → 用 K-means;形狀決定演算法選擇"
+      },
+      "misconceptions": ["以為 K-means 適用所有分群場景", "用初始化或縮放救形狀問題"],
+      "related_node_ids": ["n_L23202_012", "n_L23202_002", "n_L23202_008"],
+      "tags": ["dbscan", "k-means", "algorithm-selection"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_013",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_012",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某 ML 工程師閱讀 K-means 文件,看到 sklearn 預設 `init='k-means++'`。她想理解此初始化方法相對於隨機初始化的主要改善目標。下列何項最為正確描述 k-means++ 解決的問題?",
+      "options": [
+        {"key": "A", "text": "降低初始中心隨機性造成的局部最優風險;以距離機率挑選遠離既有中心的新初始中心點分布", "is_correct": true, "trap_type": "正解:改善初始化避免局部最優"},
+        {"key": "B", "text": "自動決定最佳 K 值;演算法依資料分布密度直接推導群數而無需另靠手肘法輔助選擇 K 值大小", "is_correct": false, "trap_type": "自動找 K"},
+        {"key": "C", "text": "讓 K-means 能處理非球狀資料;放鬆球狀凸群假設後支援同心圓與月牙形等任意形狀的分群結果", "is_correct": false, "trap_type": "處理任意形狀"},
+        {"key": "D", "text": "在執行時自動進行特徵縮放;使各維尺度平衡免去使用者預先做 Z-score 標準化的前處理步驟", "is_correct": false, "trap_type": "自動特徵縮放"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "k-means++ 改善「初始化」步驟:第一個中心隨機選,後續中心以「距離既有中心越遠機率越高」抽選;此舉讓初始中心分散,降低 K-means 易受初始隨機性影響落入局部最優的問題;它不改變 K-means 其他核心限制",
+        "wrong": {
+          "自動決定最佳 K 值;演算法依資料分布密度直接推導群數而無需另靠手肘法輔助選擇 K 值大小": "k-means++ 只改初始化,不影響 K 的選擇;選 K 仍需手肘法 / Silhouette / Gap statistic",
+          "讓 K-means 能處理非球狀資料;放鬆球狀凸群假設後支援同心圓與月牙形等任意形狀的分群結果": "k-means++ 不改變 K-means 的形狀假設;非球狀仍需用 DBSCAN / Spectral / GMM 等",
+          "在執行時自動進行特徵縮放;使各維尺度平衡免去使用者預先做 Z-score 標準化的前處理步驟": "k-means++ 與特徵縮放無關;縮放仍需使用者預先做 Z-score 或 Min-Max"
+        },
+        "hook": "k-means++ 的範圍:只改善「初始化」這一步,不解決「需先定 K」「球狀假設」「需縮放」三大其他限制"
+      },
+      "misconceptions": ["以為 k-means++ 自動找 K", "以為 k-means++ 可處理任意形狀"],
+      "related_node_ids": ["n_L23202_012"],
+      "tags": ["k-means-plus-plus", "initialization", "k-means"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_014",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_011",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "{scenario}的資料科學團隊導入隨機森林(Random Forest)建模。資深工程師強調 RF 比單棵決策樹強的關鍵在『雙重隨機性』。下列關於這兩重隨機性的描述何者最為精確?",
+      "stem_variables": {
+        "case_a": {"scenario": "電商會員流失預測"},
+        "case_b": {"scenario": "工廠生產線品管不良預警"},
+        "case_c": {"scenario": "金融機構信用卡盜刷偵測"}
+      },
+      "options": [
+        {"key": "A", "text": "資料隨機=每棵樹用 bootstrap 抽樣;特徵隨機=每次分裂只看部分特徵子集屬獨立兩重", "is_correct": true, "trap_type": "正解:雙重隨機性的兩個獨立面向"},
+        {"key": "B", "text": "RF 只有資料隨機而沒有特徵隨機;每次節點分裂時都會完整考慮所有可用特徵後挑選最佳分裂", "is_correct": false, "trap_type": "漏掉特徵隨機"},
+        {"key": "C", "text": "RF 只有特徵隨機沒有資料隨機;所有樹都使用相同的整個訓練資料集只是看的特徵子集略異", "is_correct": false, "trap_type": "漏掉資料隨機"},
+        {"key": "D", "text": "資料隨機=每棵樹用相同資料;特徵隨機=每棵樹固定看某幾欄;兩者皆屬靜態分配不算真正隨機", "is_correct": false, "trap_type": "把雙重隨機誤判為靜態分配"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "RF 的兩重隨機性互相獨立:(1) 資料隨機(Bagging bootstrap)— 每棵樹從訓練集有放回抽樣建立子訓練集,每棵樹看到的資料不同;(2) 特徵隨機 — 每個分裂節點只從 max_features(預設 'sqrt')隨機抽出的特徵子集中選最佳分裂。兩重隨機共同降低樹間相關性,使平均後 variance 大幅下降。",
+        "wrong": {
+          "RF 只有資料隨機而沒有特徵隨機;每次節點分裂時都會完整考慮所有可用特徵後挑選最佳分裂": "若每次分裂都看全部特徵,則所有樹會傾向選相同強特徵分裂,樹間高度相關,平均後 variance 下降有限;RF 必須加入特徵隨機才能去相關。",
+          "RF 只有特徵隨機沒有資料隨機;所有樹都使用相同的整個訓練資料集只是看的特徵子集略異": "若所有樹用同一筆資料,則僅特徵子集不同,樹間仍高度相似;Bagging bootstrap 是 RF 的基底,缺一不可。",
+          "資料隨機=每棵樹用相同資料;特徵隨機=每棵樹固定看某幾欄;兩者皆屬靜態分配不算真正隨機": "RF 的隨機性是『動態抽樣』非『靜態分配』— 每棵樹的 bootstrap 樣本與每次分裂的特徵子集皆即時隨機抽出,並非預先固定。"
+        },
+        "hook": "雙重隨機口訣:「資料抽抽(bootstrap)+ 特徵抽抽(max_features)」;兩者互補去相關"
+      },
+      "misconceptions": ["漏掉特徵隨機(只記得 Bagging)", "把雙重隨機誤判為靜態分配"],
+      "related_node_ids": ["n_L23202_011", "n_L23202_001", "n_L23202_005"],
+      "tags": ["random-forest", "bagging", "double-randomness"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_015",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_011",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "{scenario}的工程師被問到隨機森林(Random Forest)究竟屬於 Bagging 還是 Boosting?他需給出最精確的學派歸屬與其依據。下列敘述何者最為正確?",
+      "stem_variables": {
+        "case_a": {"scenario": "保險詐欺案件偵測"},
+        "case_b": {"scenario": "電力負載短期預測"},
+        "case_c": {"scenario": "教學影片觀眾興趣分類"}
+      },
+      "options": [
+        {"key": "A", "text": "屬 Bagging:多樹平行獨立訓練再投票或平均;每棵樹間無相依關係屬典型平行集成派代表作品", "is_correct": true, "trap_type": "正解:RF 屬 Bagging 平行集成"},
+        {"key": "B", "text": "屬 Boosting:每一棵新樹會去修正前一棵的殘差錯誤;故樹間以序列方式逐步加權累進輸出", "is_correct": false, "trap_type": "誤判 RF 為 Boosting"},
+        {"key": "C", "text": "屬 Stacking:多棵樹輸出當作下層 meta-model 輸入;最後以 logistic 整合輸出", "is_correct": false, "trap_type": "誤判 RF 為 Stacking"},
+        {"key": "D", "text": "不屬於三大集成派任何一派;RF 為獨立於 Bagging/Boosting/Stacking 之外的第四派", "is_correct": false, "trap_type": "虛構第四派"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "RF 的代表性意義就是 Bagging 集成的成功應用:多棵樹平行獨立訓練(每棵樹的 bootstrap 與特徵抽樣互相獨立),最後分類用多數決投票、迴歸用平均。Bagging 的本質就是『平行 + 投票 / 平均』,降低 variance。",
+        "wrong": {
+          "屬 Boosting:每一棵新樹會去修正前一棵的殘差錯誤;故樹間以序列方式逐步加權累進輸出": "Boosting(GBDT、XGBoost、AdaBoost)才是『序列訓練、後者修正前者』;RF 樹間獨立無相依,完全沒有殘差修正機制。",
+          "屬 Stacking:多棵樹輸出當作下層 meta-model 輸入;最後以 logistic 整合輸出": "Stacking 的特徵是『底層多模型 + 上層 meta-model』兩層架構;RF 只用同類弱學習器投票,單層架構,屬 Bagging 而非 Stacking。",
+          "不屬於三大集成派任何一派;RF 為獨立於 Bagging/Boosting/Stacking 之外的第四派": "集成學習教科書定義就是三大派(Bagging / Boosting / Stacking),RF 是 Bagging 的經典代表作,並非獨立第四派。"
+        },
+        "hook": "口訣:RF=Bagging(平行投票降 variance);XGBoost=Boosting(序列修正降 bias)"
+      },
+      "misconceptions": ["以為 Random Forest 是 Boosting", "以為 RF 與 XGBoost 訓練順序相同"],
+      "related_node_ids": ["n_L23202_011", "n_L23202_001", "n_L23202_006"],
+      "tags": ["random-forest", "bagging", "ensemble-classification"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_016",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_011",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "{scenario}的新手分析師發現單棵決策樹在訓練集準確率近 100% 但測試集僅 65%。他想改用隨機森林(Random Forest)解決過擬合。下列關於『為何 RF 比加深單棵樹更能解過擬合』的描述何者最為精確?",
+      "stem_variables": {
+        "case_a": {"scenario": "醫院急診轉院預測模型"},
+        "case_b": {"scenario": "二手車殘值估算模型"},
+        "case_c": {"scenario": "農作物產量區段分類模型"}
+      },
+      "options": [
+        {"key": "A", "text": "RF 用多棵獨立樹平均降低 variance;單棵樹加深只會讓 variance 升高惡化過擬合", "is_correct": true, "trap_type": "正解:RF 降 variance vs 加深惡化"},
+        {"key": "B", "text": "RF 與加深單棵樹的效果完全等價;兩者都能直接消除過擬合且不需驗證集另行調整超參", "is_correct": false, "trap_type": "誤判兩者等價"},
+        {"key": "C", "text": "RF 只是把單棵樹的所有節點剪枝後拼接而成;結果與加深單棵樹再剪枝在本質意義上完全相同", "is_correct": false, "trap_type": "把 RF 誤當剪枝法"},
+        {"key": "D", "text": "加深單棵樹一定優於 RF;只要樹夠深就能完全擬合資料分佈而 RF 因平均反而稀釋訊號", "is_correct": false, "trap_type": "倒置 RF 與加深的優劣"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "決策樹本質為高 variance 低 bias 模型;加深單棵樹會讓 variance 持續上升、過擬合更嚴重。RF 用多棵獨立樹的平均(E[avg variance] = σ²/n),理論上 variance 下降至 1/n;且特徵隨機進一步降低樹間相關性,使平均更有效。這是 RF 解過擬合的核心數學原理。",
+        "wrong": {
+          "RF 與加深單棵樹的效果完全等價;兩者都能直接消除過擬合且不需驗證集另行調整超參": "兩者方向完全相反 — 加深單棵樹會加重過擬合(variance 上升)、RF 平均則降低 variance;且 RF 也需以驗證集調 n_estimators、max_features。",
+          "RF 只是把單棵樹的所有節點剪枝後拼接而成;結果與加深單棵樹再剪枝在本質意義上完全相同": "RF 不剪枝(每棵樹刻意長到很深以維持低 bias),靠『多棵獨立樹平均』降 variance,與剪枝(犧牲 bias 換 variance)機制完全不同。",
+          "加深單棵樹一定優於 RF;只要樹夠深就能完全擬合資料分佈而 RF 因平均反而稀釋訊號": "完全擬合訓練資料正是過擬合的定義,並非好事;RF 的平均並不會『稀釋訊號』,而是『稀釋雜訊』,因為訊號在多棵樹中一致、雜訊各自獨立。"
+        },
+        "hook": "口訣:單棵深樹 = 高 variance / RF 平均 = 降 variance / Boosting 修正 = 降 bias"
+      },
+      "misconceptions": ["以為加深單棵樹能解過擬合", "把 RF 誤判為剪枝技術"],
+      "related_node_ids": ["n_L23202_011", "n_L23202_005", "n_L23202_001"],
+      "tags": ["random-forest", "overfitting", "variance-reduction"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_017",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_011",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "{scenario}的資料科學家以 sklearn 訓練隨機森林(Random Forest)分類模型,並查看 `feature_importances_` 屬性發現特徵 X 的重要性最高。他向業務主管解讀此結果。下列敘述何者最為合理且不違反 XAI 原則?",
+      "stem_variables": {
+        "case_a": {"scenario": "電信用戶流失預測"},
+        "case_b": {"scenario": "倉儲庫存呆滯品分類"},
+        "case_c": {"scenario": "線上課程完課率預測"}
+      },
+      "options": [
+        {"key": "A", "text": "特徵 X 在此 RF 模型分裂節點中對不純度下降的貢獻最大;但不能直接推論為業務因果關係", "is_correct": true, "trap_type": "正解:重要性 ≠ 因果"},
+        {"key": "B", "text": "特徵 X 與目標標籤完全是直接因果關係;業務上只要拉動 X 變化即可確定改變預測結果方向", "is_correct": false, "trap_type": "把重要性誤判為因果"},
+        {"key": "C", "text": "特徵 X 的標準差最大故 RF 自動排名為第一;與分裂節點的不純度下降貢獻並沒有實際關聯", "is_correct": false, "trap_type": "誤判為單純標準差排名"},
+        {"key": "D", "text": "特徵 X 的 Pearson 相關係數最高;feature_importances_ 即該係數絕對值版本", "is_correct": false, "trap_type": "把重要性誤判為相關係數"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "sklearn 的 feature_importances_(Mean Decrease in Impurity, MDI)定義為:該特徵在所有樹中參與分裂時,造成的 Gini/Entropy 不純度下降的加權累積值。它代表『該特徵對此 RF 模型預測的貢獻度』,屬可解釋 AI(XAI)的工具,但**不等於因果**(因果需 RCT 或反事實分析)、也不等於 Pearson 相關係數。",
+        "wrong": {
+          "特徵 X 與目標標籤完全是直接因果關係;業務上只要拉動 X 變化即可確定改變預測結果方向": "特徵重要性是『該模型的預測貢獻』,不是統計或業務因果;X 可能只是與真正因果變數相關的代理變數(confounder),拉動 X 不一定改變結果。",
+          "特徵 X 的標準差最大故 RF 自動排名為第一;與分裂節點的不純度下降貢獻並沒有實際關聯": "feature_importances_ 與單純的特徵標準差無關;它依賴分裂時的不純度下降,即便標準差小的特徵,只要在分裂中常被選且降不純度多,也會排名靠前。",
+          "特徵 X 的 Pearson 相關係數最高;feature_importances_ 即該係數絕對值版本": "Pearson 衡量線性關聯、feature_importances_ 衡量分裂貢獻,兩者計算邏輯完全不同;非線性關聯時兩者排名可能差很遠。"
+        },
+        "hook": "XAI 鐵律:feature importance ≠ 因果;若要因果需 RCT / 反事實 / 工具變數"
+      },
+      "misconceptions": ["把特徵重要性等同於因果", "把特徵重要性等同於相關係數"],
+      "related_node_ids": ["n_L23202_011", "n_L23402_004", "n_L23402_001"],
+      "tags": ["random-forest", "feature-importance", "xai"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_018",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_011",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "{scenario}的 ML 團隊正在準備技術報告,需精確說明隨機森林(Random Forest)與 XGBoost 在『訓練順序』上的關鍵差異。下列敘述何者最為正確?",
+      "stem_variables": {
+        "case_a": {"scenario": "智慧零售商品推薦"},
+        "case_b": {"scenario": "工業設備故障預測"},
+        "case_c": {"scenario": "銀行小額信貸風控"}
+      },
+      "options": [
+        {"key": "A", "text": "RF 平行訓練多棵獨立樹;XGBoost 序列訓練每棵新樹修正前一棵樹的殘差兩者順序相反", "is_correct": true, "trap_type": "正解:RF 平行 vs XGBoost 序列"},
+        {"key": "B", "text": "RF 序列訓練;每棵新樹依靠前一棵樹的殘差來修正並逐步加權整合最後輸出投票多數決結果", "is_correct": false, "trap_type": "顛倒 RF 為序列"},
+        {"key": "C", "text": "XGBoost 平行訓練;所有樹之間互相獨立沒有任何順序依賴關係且最後皆以平均聚合輸出值", "is_correct": false, "trap_type": "顛倒 XGBoost 為平行"},
+        {"key": "D", "text": "RF 與 XGBoost 兩者皆屬平行訓練;兩者唯一差別只在 XGBoost 多了正則化與缺失值處理", "is_correct": false, "trap_type": "把 XGBoost 也誤判為平行"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "RF 屬 Bagging:多棵樹獨立平行訓練(可同時用多核 CPU 並行),樹間無相依關係。XGBoost 屬 Boosting:第 t 棵樹基於前 t-1 棵樹的累積殘差(梯度)訓練,必須序列進行;XGBoost 的『並行化』只在『單棵樹內節點分裂的特徵掃描』可平行,而非樹間。兩者的訓練順序機制相反。",
+        "wrong": {
+          "RF 序列訓練;每棵新樹依靠前一棵樹的殘差來修正並逐步加權整合最後輸出投票多數決結果": "RF 的核心定義就是『獨立平行樹』,無殘差修正、無加權累積;此描述把 RF 描述成 Boosting,方向完全相反。",
+          "XGBoost 平行訓練;所有樹之間互相獨立沒有任何順序依賴關係且最後皆以平均聚合輸出值": "XGBoost 的核心是『序列梯度提升』,第 t 棵樹必須等前 t-1 棵樹完成後才能訓練;若樹間獨立則無法實現梯度提升,失去 Boosting 本質。",
+          "RF 與 XGBoost 兩者皆屬平行訓練;兩者唯一差別只在 XGBoost 多了正則化與缺失值處理": "正則化與缺失值是 XGBoost 對 GBDT 的改進,但訓練順序差異(平行 vs 序列)才是 RF 與 XGBoost 最根本的差別,屬不同集成派。"
+        },
+        "hook": "口訣:RF 平行抽抽(Bagging);XGBoost 序列接力(Boosting)— 順序剛好相反"
+      },
+      "misconceptions": ["把 RF 與 XGBoost 訓練順序混淆", "以為 XGBoost 的並行化指樹間平行"],
+      "related_node_ids": ["n_L23202_011", "n_L23202_001", "n_L23202_006"],
+      "tags": ["random-forest", "xgboost", "training-order"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_019",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_011",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "{scenario}的工程師在調隨機森林(Random Forest)的 `n_estimators`(樹的數量)超參。他試了 50、100、200、500、1000 五種設定,觀察驗證集 OOB error。下列關於 `n_estimators` 的合理選擇原則何者最為正確?",
+      "stem_variables": {
+        "case_a": {"scenario": "電力公司用電異常偵測"},
+        "case_b": {"scenario": "電商促銷活動轉換預測"},
+        "case_c": {"scenario": "公衛流感案例分類"}
+      },
+      "options": [
+        {"key": "A", "text": "樹增多時 OOB error 通常下降至某點後收斂;再加樹只增成本而不再降誤差屬報酬遞減型曲線", "is_correct": true, "trap_type": "正解:n_estimators 報酬遞減"},
+        {"key": "B", "text": "樹的數量越多就一定越好;n_estimators=10000 必能優於 100;設定上限只受可用記憶體限制", "is_correct": false, "trap_type": "誤判越多越好"},
+        {"key": "C", "text": "樹的數量越多越容易過擬合;n_estimators 一定要小於訓練樣本量否則模型驗證集會嚴重失準", "is_correct": false, "trap_type": "誤判 RF 會因樹多而過擬合"},
+        {"key": "D", "text": "n_estimators 只是預設值無需調整;sklearn 預設值對所有資料規模情境都皆能直接達最佳結果", "is_correct": false, "trap_type": "誤判預設萬用"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "RF 的 n_estimators 增加會讓 OOB error 單調下降至收斂(因為更多獨立樣本平均使 variance 降為 σ²/n);但到一定數量後 error 進入平坦區,再加樹只增訓練 / 推論時間與記憶體成本。實務通常選 100~500,並以驗證集 OOB error 曲線決定停止點。",
+        "wrong": {
+          "樹的數量越多就一定越好;n_estimators=10000 必能優於 100;設定上限只受可用記憶體限制": "樹多到一定數量後 OOB error 收斂、邊際效益消失;10000 棵相較 500 棵通常無顯著差異,卻多 20 倍的訓練 / 推論成本,實務不划算。",
+          "樹的數量越多越容易過擬合;n_estimators 一定要小於訓練樣本量否則模型驗證集會嚴重失準": "RF 的核心特性之一就是『樹增多不會過擬合』(因為每棵樹獨立 bootstrap、平均後 variance 降),這是 Breiman 1996 論文的關鍵結論。",
+          "n_estimators 只是預設值無需調整;sklearn 預設值對所有資料規模情境都皆能直接達最佳結果": "sklearn 預設 n_estimators=100 對小型資料或許足夠,但對複雜任務常需提高;實務必以驗證集調整,沒有萬用預設值。"
+        },
+        "hook": "口訣:RF 樹多不會過擬合,但會邊際效益遞減;以 OOB error 收斂點決定停止"
+      },
+      "misconceptions": ["以為樹越多越好", "誤以為 RF 會因樹多而過擬合"],
+      "related_node_ids": ["n_L23202_011", "n_L23202_001"],
+      "tags": ["random-forest", "hyperparameter", "n-estimators"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_020",
+      "knowledge_code": "L23402",
+      "node_id": "n_L23402_004",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "{scenario}的學員以隨機森林對鳶尾花(Iris)資料集分類,sklearn 預設參數下查看 feature_importances_ 結果為:花瓣長度 0.440、花瓣寬度 0.422、花萼長度 0.108、花萼寬度 0.030。下列關於此結果的解讀何者最為精確?",
+      "stem_variables": {
+        "case_a": {"scenario": "農業 ML 入門課程"},
+        "case_b": {"scenario": "資料分析師認證培訓"},
+        "case_c": {"scenario": "高中 AI 通識教材"}
+      },
+      "options": [
+        {"key": "A", "text": "花瓣兩特徵合計約 0.86 遠勝花萼兩特徵的 0.14;花瓣顯然是 Iris 分類最關鍵特徵組合", "is_correct": true, "trap_type": "正解:花瓣 vs 花萼整體比較"},
+        {"key": "B", "text": "花萼長度的 0.108 數值在四特徵中是最高的;故花萼長度才是真正的最重要分類關鍵特徵", "is_correct": false, "trap_type": "把花萼當最高"},
+        {"key": "C", "text": "四特徵的重要性數值差異不顯著;故四特徵對 Iris 分類預測模型的貢獻度可視為大致相等", "is_correct": false, "trap_type": "誤判為差異不顯著"},
+        {"key": "D", "text": "花瓣寬度 0.422 永遠遠高於花瓣長度 0.440;在所有 Iris 子樣本上花瓣寬都是穩定最高排序", "is_correct": false, "trap_type": "倒置花瓣長寬大小"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "依 sklearn 預設 RF 對 Iris 的計算:花瓣長度 0.440、花瓣寬度 0.422、花萼長度 0.108、花萼寬度 0.030。花瓣兩特徵合計 0.862,花萼兩特徵合計 0.138,差距約 6 倍。生物學上 Iris 三品種主要由『花瓣形狀』區辨,RF feature_importances_ 數據與此一致。",
+        "wrong": {
+          "花萼長度的 0.108 數值在四特徵中是最高的;故花萼長度才是真正的最重要分類關鍵特徵": "0.108 在四特徵中排第三(僅高於花萼寬 0.030),並非最高;最高為花瓣長度 0.440,本選項把排名顛倒。",
+          "四特徵的重要性數值差異不顯著;故四特徵對 Iris 分類預測模型的貢獻度可視為大致相等": "花瓣長 0.440 vs 花萼寬 0.030 相差約 15 倍,差異極為顯著;若視為大致相等則完全忽略了 RF 給出的關鍵業務訊息。",
+          "花瓣寬度 0.422 永遠遠高於花瓣長度 0.440;在所有 Iris 子樣本上花瓣寬都是穩定最高排序": "0.440 > 0.422,花瓣長度才是第一名,本選項顛倒長寬大小;且 RF 重要性會隨子樣本與隨機種子變動,並非『永遠穩定』。"
+        },
+        "hook": "Iris 口訣:花瓣 > 花萼(0.86 vs 0.14);花瓣長 > 花瓣寬(差距小);花萼寬最低"
+      },
+      "misconceptions": ["把花萼當最高", "誤判四特徵重要性差異不顯著"],
+      "related_node_ids": ["n_L23402_004", "n_L23202_011"],
+      "tags": ["feature-importance", "iris", "xai"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_021",
+      "knowledge_code": "L23402",
+      "node_id": "n_L23402_004",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "{scenario}的法務團隊質疑 ML 模型輸出的『特徵重要性』可否作為因果證據。資料科學家需向法務說明 feature_importances_ 與因果關係(causation)的關鍵差異。下列敘述何者最為精確?",
+      "stem_variables": {
+        "case_a": {"scenario": "保險理賠糾紛仲裁"},
+        "case_b": {"scenario": "公平就業審查"},
+        "case_c": {"scenario": "信用評等申訴案件"}
+      },
+      "options": [
+        {"key": "A", "text": "feature_importances_ 只反映該模型內預測貢獻度;因果需 RCT 反事實分析才能合法主張", "is_correct": true, "trap_type": "正解:重要性 ≠ 因果"},
+        {"key": "B", "text": "feature_importances_ 與因果關係兩者完全等價;只要某特徵在 RF 排第一就可主張其為因果", "is_correct": false, "trap_type": "誤判重要性即因果"},
+        {"key": "C", "text": "feature_importances_ 數值越高代表 p 值越小;統計顯著就代表因果故可直接作為法庭證據", "is_correct": false, "trap_type": "把重要性誤判為 p 值"},
+        {"key": "D", "text": "feature_importances_ 與業務因果毫無任何關聯;為純隨機輸出值不應做任何業務解讀或分析", "is_correct": false, "trap_type": "走另一極端否定重要性"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "feature_importances_ 是『該模型內』的預測貢獻度(MDI / permutation),它告訴你『此特徵對此模型的預測有多重要』,但不代表『此特徵真實導致目標變化』。真實因果需要隨機對照試驗(RCT)、反事實分析(counterfactual)、工具變數法等。模型重要性最多可作為『假說來源』,需後續以因果方法驗證,法庭等高風險場域不可單獨作為因果證據。",
+        "wrong": {
+          "feature_importances_ 與因果關係兩者完全等價;只要某特徵在 RF 排第一就可主張其為因果": "兩者完全不等價;特徵 X 重要可能只是因為它是『真正因果變數』Z 的代理變數(confounder),拉動 X 不一定改變結果,主張因果需更嚴謹的方法。",
+          "feature_importances_ 數值越高代表 p 值越小;統計顯著就代表因果故可直接作為法庭證據": "feature_importances_ 並非統計檢定的 p 值(雖然可衍生 permutation importance 的近似 p 值);且即便統計顯著也不等於因果,『相關不等於因果』是統計學基本原則。",
+          "feature_importances_ 與業務因果毫無任何關聯;為純隨機輸出值不應做任何業務解讀或分析": "走到另一極端 — 重要性確實反映此模型的預測貢獻,可作為『初步假說』與『XAI 解釋』,並非毫無價值,只是不能單獨主張因果。"
+        },
+        "hook": "口訣:重要性是『模型預測貢獻』、因果是『真實作用機制』;兩者差距=RCT / 反事實 / 工具變數"
+      },
+      "misconceptions": ["把特徵重要性等同於因果", "把特徵重要性等同於 p 值"],
+      "related_node_ids": ["n_L23402_004", "n_L23202_011", "n_L23402_001"],
+      "tags": ["xai", "feature-importance", "causation"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_022",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_013",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "{scenario}的入門班學員看到簡報寫著線性迴歸模型公式 y = wx + b。講師請他指出 w、b、x、y 四個符號各代表什麼意義。下列敘述何者最為精確?",
+      "stem_variables": {
+        "case_a": {"scenario": "房仲業務員 ML 訓練營"},
+        "case_b": {"scenario": "電商營收預測新訓班"},
+        "case_c": {"scenario": "高中職資料科學社團"}
+      },
+      "options": [
+        {"key": "A", "text": "y 是輸出預測值;x 為輸入特徵;w 為權重(Weight);b 為偏差(Bias)即截距項", "is_correct": true, "trap_type": "正解:四項符號意義正確"},
+        {"key": "B", "text": "y 為輸出;x 為輸入;b 為權重影響輸入大小;w 為偏差調整截距於座標軸截點位移", "is_correct": false, "trap_type": "w 與 b 角色顛倒"},
+        {"key": "C", "text": "w 與 b 兩者皆屬輸入特徵;y 為訓練標籤;x 屬模型估計參數須以資料學習得出", "is_correct": false, "trap_type": "把 w/b 誤為輸入"},
+        {"key": "D", "text": "w 為單一輸入特徵;b 為對應之輸出;x 為權重而 y 屬訓練時要學的偏差參數值", "is_correct": false, "trap_type": "四項符號全部錯位"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "線性迴歸模型 y = wx + b 中:y 是模型輸出的預測值,x 是輸入特徵(自變數),w 是『權重(Weight)』控制特徵對輸出的影響強度,b 是『偏差(Bias)』也稱截距,讓直線可平移上下。w 與 b 都是訓練時要學的『參數』,而非輸入資料。",
+        "wrong": {
+          "y 為輸出;x 為輸入;b 為權重影響輸入大小;w 為偏差調整截距於座標軸截點位移": "b 與 w 角色顛倒 — w 才是『權重(Weight)』控制斜率,b 才是『偏差(Bias)』控制截距;雖然 y/x 對了,但 w/b 弄反屬基本概念誤解。",
+          "w 與 b 兩者皆屬輸入特徵;y 為訓練標籤;x 屬模型估計參數須以資料學習得出": "完全顛倒:w 與 b 是『參數』(訓練學習目標),x 才是『輸入特徵』(資料給定);把參數誤為輸入是常見入門錯誤。",
+          "w 為單一輸入特徵;b 為對應之輸出;x 為權重而 y 屬訓練時要學的偏差參數值": "四項全錯位 — y 不是偏差參數、x 不是權重、w 不是輸入、b 不是輸出,符號意義全部亂代,屬完全誤解模型表示法。"
+        },
+        "hook": "口訣:y=wx+b → y 輸出、x 輸入、w 權重(Weight)、b 偏差(Bias);w/b 是『學』的,x 是『給』的"
+      },
+      "misconceptions": ["把 w 與 b 角色顛倒", "把 w/b 誤為輸入特徵而非待學參數"],
+      "related_node_ids": ["n_L23202_013", "n_L23202_003"],
+      "tags": ["linear-regression", "ols", "model-formula"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_023",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_013",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "{scenario}的工程師被同事問到線性迴歸所最小化的均方誤差(MSE, Mean Squared Error)其數學定義。下列何者為 MSE 公式最為正確的寫法?",
+      "stem_variables": {
+        "case_a": {"scenario": "保險精算建模團隊"},
+        "case_b": {"scenario": "供應鏈需求預測小組"},
+        "case_c": {"scenario": "氣象短期降雨量迴歸"}
+      },
+      "options": [
+        {"key": "A", "text": "MSE = (1/n) Σ (y_true − y_pred)²(對每筆殘差平方後加總,再除以樣本數 n 取平均值)", "is_correct": true, "trap_type": "正解:取平方且除以 n"},
+        {"key": "B", "text": "MSE = Σ (y_true − y_pred)²(殘差平方後直接加總,未除以樣本數故失去平均尺度此項定義錯誤)", "is_correct": false, "trap_type": "忘除 n"},
+        {"key": "C", "text": "MSE = (1/n) Σ (y_true − y_pred)(殘差直接相加再除 n,因正負殘差互抵故此式恆近於零無意義)", "is_correct": false, "trap_type": "不平方"},
+        {"key": "D", "text": "MSE = (1/n) Σ |y_true − y_pred|(取殘差絕對值再平均;此為 MAE 平均絕對誤差,非平方誤差)", "is_correct": false, "trap_type": "用絕對值即 MAE"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "MSE(Mean Squared Error)= (1/n) Σ (y_true − y_pred)²:(1) 對每筆殘差取『平方』以避免正負互抵且放大大誤差,(2) 加總後除以 n 取『平均』使數值不隨樣本數膨脹。OLS 即在此 MSE 上找閉式解使其最小;梯度下降則沿 MSE 負梯度迭代逼近最小。",
+        "wrong": {
+          "MSE = Σ (y_true − y_pred)²(殘差平方後直接加總,未除以樣本數故失去平均尺度此項定義錯誤)": "未除以 n 的話是 SSE(Sum of Squared Errors)而非 MSE;MSE 中的 'M'(Mean)就是『平均』的意思,不除 n 即失去『平均』語意。",
+          "MSE = (1/n) Σ (y_true − y_pred)(殘差直接相加再除 n,因正負殘差互抵故此式恆近於零無意義)": "未平方就會發生正負殘差互相抵消,使指標恆接近 0 而無法反映誤差大小;『平方』正是避免互抵的關鍵。",
+          "MSE = (1/n) Σ |y_true − y_pred|(取殘差絕對值再平均;此為 MAE 平均絕對誤差,非平方誤差)": "此為 MAE(Mean Absolute Error)非 MSE;兩者皆能避免正負互抵但 MSE 因取平方對大誤差更敏感,並擁有處處可微的良好性質。"
+        },
+        "hook": "口訣:MSE 必『先平方再除 n』;少了平方→互抵、少了除 n→變 SSE、用絕對值→變 MAE"
+      },
+      "misconceptions": ["MSE 不除 n 變 SSE", "MSE 不平方變恆為零", "MSE 與 MAE 公式混淆"],
+      "related_node_ids": ["n_L23202_013", "n_L23303_003"],
+      "tags": ["linear-regression", "mse", "loss-function"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_024",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_013",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "{scenario}的資料分析師訓練線性迴歸後得到 R²(R-squared)Score = {r2}。依教材所列 R² 評價分級(Excellent / Good / Fair / Weak),此 R² 之評價應為下列何者?",
+      "stem_variables": {
+        "case_a": {"scenario": "二手車殘值預估", "r2": "0.50"},
+        "case_b": {"scenario": "員工年資與薪資迴歸", "r2": "0.55"},
+        "case_c": {"scenario": "店家月營業額迴歸", "r2": "0.45"}
+      },
+      "options": [
+        {"key": "A", "text": "屬 Fair(0.4~0.6)等級;模型解釋力中等,具一定參考價值但尚有改善空間需進一步調整", "is_correct": true, "trap_type": "正解:R² 落在 0.4~0.6 屬 Fair"},
+        {"key": "B", "text": "屬 Excellent(0.8~1.0)等級;模型擬合效果優異可直接上線,無須再進行任何特徵或模型優化", "is_correct": false, "trap_type": "R²=0.5 誤判為 Excellent"},
+        {"key": "C", "text": "屬 Good(0.6~0.8)等級;模型解釋變異程度良好,可作為核心預測引擎並廣泛應用於各個業務場景", "is_correct": false, "trap_type": "R²=0.5 誤判為 Good"},
+        {"key": "D", "text": "R² 數值越低越好;此 R² 接近 0.5 表示模型誤差小,屬於理想狀態應視為 Excellent 評價層級", "is_correct": false, "trap_type": "誤以為 R² 越低越好"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "依教材 R² 分級:0.8~1.0 Excellent / 0.6~0.8 Good / 0.4~0.6 Fair / <0.4 Weak。題目給定 R² 約 0.5(case_a 0.50、case_b 0.55、case_c 0.45)皆落在 0.4~0.6 區間,屬 Fair 等級 — 模型有一定解釋力但仍需特徵工程或更換模型改善。",
+        "wrong": {
+          "屬 Excellent(0.8~1.0)等級;模型擬合效果優異可直接上線,無須再進行任何特徵或模型優化": "Excellent 需 R² ≥ 0.8,本題 R² 約 0.5 距離 Excellent 還很遠;直接上線 R²=0.5 的模型在絕大多數業務場景下會帶來嚴重的預測誤差。",
+          "屬 Good(0.6~0.8)等級;模型解釋變異程度良好,可作為核心預測引擎並廣泛應用於各個業務場景": "Good 需 R² ≥ 0.6,本題 R² 約 0.5 仍未達 Good 門檻;誤判等級會讓決策者高估模型效能。",
+          "R² 數值越低越好;此 R² 接近 0.5 表示模型誤差小,屬於理想狀態應視為 Excellent 評價層級": "R² 是『解釋變異比例』,數值越接近 1 越好,絕非越低越好;此選項把 R² 方向性完全弄反,屬概念性嚴重錯誤。"
+        },
+        "hook": "R² 分級口訣:『8 優 6 良 4 平 以下弱』(0.8 Excellent / 0.6 Good / 0.4 Fair / <0.4 Weak);R² 越接近 1 越好"
+      },
+      "misconceptions": ["把 R²=0.5 誤判為 Excellent", "把 R² 方向誤為越低越好"],
+      "related_node_ids": ["n_L23202_013", "n_L23303_003"],
+      "tags": ["linear-regression", "r-squared", "evaluation"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_025",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_013",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "{scenario}的新進工程師看到兩個名字都叫『迴歸』的模型 — 線性迴歸(Linear Regression)與邏輯迴歸(Logistic Regression),不確定它們的任務類型是否相同。下列敘述何者最為精確?",
+      "stem_variables": {
+        "case_a": {"scenario": "銀行風控模型小組"},
+        "case_b": {"scenario": "電商評分系統團隊"},
+        "case_c": {"scenario": "醫療數據建模實驗室"}
+      },
+      "options": [
+        {"key": "A", "text": "線性迴歸預測連續值(迴歸任務);邏輯迴歸雖名為迴歸但實為分類任務輸出機率或類別", "is_correct": true, "trap_type": "正解:任務類型不同"},
+        {"key": "B", "text": "線性迴歸實為二元分類;邏輯迴歸實為迴歸預測連續值;兩者任務剛好與名稱字面意思相反", "is_correct": false, "trap_type": "兩者任務顛倒"},
+        {"key": "C", "text": "線性迴歸與邏輯迴歸兩者皆為迴歸任務;差異僅在於前者用 MSE 後者用對數似然作損失函數", "is_correct": false, "trap_type": "兩者皆迴歸"},
+        {"key": "D", "text": "線性迴歸與邏輯迴歸兩者皆為分類任務;只是線性版用平方損失而邏輯版採 sigmoid 激活函數", "is_correct": false, "trap_type": "兩者皆分類"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "雖然兩者名稱都含『迴歸』,但任務截然不同:線性迴歸(Linear Regression)輸出『連續值』,目標如房價、銷售額、溫度,屬迴歸任務;邏輯迴歸(Logistic Regression)透過 Sigmoid 將線性輸出壓到 (0,1) 得『機率』,再以閾值(常為 0.5)判類別,屬『分類任務』。邏輯迴歸名稱保留『迴歸』是因內部仍是『log-odds 對 x 的線性迴歸』。",
+        "wrong": {
+          "線性迴歸實為二元分類;邏輯迴歸實為迴歸預測連續值;兩者任務剛好與名稱字面意思相反": "兩者任務完全顛倒 — 線性迴歸不會輸出『二元』結果而是連續實數;邏輯迴歸不會輸出無界連續值而是 (0,1) 機率,本選項把兩者角色顛倒。",
+          "線性迴歸與邏輯迴歸兩者皆為迴歸任務;差異僅在於前者用 MSE 後者用對數似然作損失函數": "邏輯迴歸並非『迴歸任務』,雖然它優化對數似然(交叉熵),但最終目的是『分類』 — 輸出是類別標籤或機率,評估用 Accuracy / F1 / AUC 而非 R²。",
+          "線性迴歸與邏輯迴歸兩者皆為分類任務;只是線性版用平方損失而邏輯版採 sigmoid 激活函數": "線性迴歸是『迴歸任務』非分類 — 輸出為連續實數,評估用 R² / RMSE / MAE;若硬把連續輸出設閾值轉成類別,效果遠不如專門設計的邏輯迴歸。"
+        },
+        "hook": "口訣:『名字騙人』 — Linear 真迴歸(連續)、Logistic 假迴歸真分類(機率/類別);看『輸出型態』而非『名字』"
+      },
+      "misconceptions": ["把線性迴歸當二元分類", "把邏輯迴歸當預測連續值之迴歸"],
+      "related_node_ids": ["n_L23202_013", "n_L23202_003"],
+      "tags": ["linear-regression", "logistic-regression", "task-type"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_026",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_013",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "{scenario}的工程師以梯度下降法(Gradient Descent)訓練線性迴歸 y = wx + b。每一輪 epoch 中,梯度下降演算法對均方誤差(MSE)所執行的最佳化目標方向應為下列何者?",
+      "stem_variables": {
+        "case_a": {"scenario": "電力負載預測模型訓練"},
+        "case_b": {"scenario": "農作物產量迴歸專案"},
+        "case_c": {"scenario": "計程車車資估算系統"}
+      },
+      "options": [
+        {"key": "A", "text": "沿 MSE 對 w、b 之負梯度方向更新參數;使 MSE 隨迭代逐步下降直到收斂於極小值附近處停止", "is_correct": true, "trap_type": "正解:最小化 MSE"},
+        {"key": "B", "text": "沿 MSE 之正梯度方向更新參數;追求每輪迭代後 MSE 數值最大化以增加損失彰顯模型擬合能力", "is_correct": false, "trap_type": "最大化 MSE"},
+        {"key": "C", "text": "保持 MSE 數值固定不變;只更新權重 w 與偏差 b 的相對比例,讓 MSE 永遠落在初始水準附近", "is_correct": false, "trap_type": "保持 MSE 不變"},
+        {"key": "D", "text": "MSE 是平方函數故不可微分;梯度下降只能用於分類問題迴歸需改用 OLS 閉式解才能訓練完成", "is_correct": false, "trap_type": "誤稱 MSE 不可微"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "梯度下降的本質就是『最小化損失』:計算 MSE 對 w、b 的偏微分(梯度),沿『負梯度』方向更新參數(w ← w − η·∂MSE/∂w),使 MSE 逐輪下降直到接近極小值。MSE 是線性迴歸的損失函數,目標是讓預測值貼近真實值,故損失越小越好。",
+        "wrong": {
+          "沿 MSE 之正梯度方向更新參數;追求每輪迭代後 MSE 數值最大化以增加損失彰顯模型擬合能力": "方向完全顛倒 — 沿正梯度方向是『梯度上升』,只用於『最大化』目標(如報酬函數最大化),對損失函數則為『使損失增大』,完全違反訓練目的。",
+          "保持 MSE 數值固定不變;只更新權重 w 與偏差 b 的相對比例,讓 MSE 永遠落在初始水準附近": "梯度下降的核心就是讓 MSE 下降,『保持 MSE 不變』意味著沒有任何學習發生;若 MSE 不變,梯度更新就是無效或反復震盪。",
+          "MSE 是平方函數故不可微分;梯度下降只能用於分類問題迴歸需改用 OLS 閉式解才能訓練完成": "完全錯誤:平方函數處處可微(對 x 微分為 2x),這正是 MSE 適合梯度下降的關鍵特性;迴歸與分類皆可用梯度下降,並非『只能用於分類』。"
+        },
+        "hook": "梯度下降目標『負梯度下山 → MSE 一輪一輪降』;若 MSE 上升,可能是學習率太大或符號方向錯誤"
+      },
+      "misconceptions": ["把梯度下降方向理解為最大化 MSE", "誤以為 MSE 不可微分"],
+      "related_node_ids": ["n_L23202_013", "n_L23103_003"],
+      "tags": ["linear-regression", "gradient-descent", "optimization"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_027",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_013",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "{scenario}的工程師依教材以 California Housing 資料集做線性迴歸練習,目標預測房價中位數。教材建議在切分 train/test 前先執行 `df[df['AveRooms'] < 10]` 過濾。下列何者最能解釋此過濾步驟的『主要目的』?",
+      "stem_variables": {
+        "case_a": {"scenario": "美西房地產建模課程"},
+        "case_b": {"scenario": "房價趨勢分析實驗室"},
+        "case_c": {"scenario": "住宅 AI 應用工作坊"}
+      },
+      "options": [
+        {"key": "A", "text": "移除 AveRooms 極端值降低離群點對 OLS 擬合的拉扯;使迴歸線貼合主要分布提高 R² 與擬合穩定性", "is_correct": true, "trap_type": "正解:移除離群值"},
+        {"key": "B", "text": "為了大幅增加訓練樣本數量;條件過濾後資料筆數會顯著上升讓線性迴歸擬合更穩定並提升模型泛化能力", "is_correct": false, "trap_type": "誤以為過濾會增樣本"},
+        {"key": "C", "text": "為了讓所有特徵維度一致;只有 AveRooms<10 的樣本特徵欄位數一致 OLS 才能正確算出 w 與 b", "is_correct": false, "trap_type": "誤以為和維度有關"},
+        {"key": "D", "text": "為了符合 LinearRegression 的 fit API 規格;否則程式呼叫時會直接因數值超範圍而報錯", "is_correct": false, "trap_type": "誤以為 API 強制限制"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "California Housing 中 AveRooms(平均房間數)會出現極端值(如 100+ 間)— 這些通常是樣本數小或非住宅資料造成的離群點。OLS 對離群值極為敏感(平方損失會放大大誤差),不過濾的話迴歸線會被少數極端點拉偏,擬合品質下降。過濾後 OLS 能更專注於主要分布,R² 與視覺化效果都會改善;**過濾會減少樣本而非增加**。",
+        "wrong": {
+          "為了大幅增加訓練樣本數量;條件過濾後資料筆數會顯著上升讓線性迴歸擬合更穩定並提升模型泛化能力": "方向完全相反 — 過濾(filter)是『條件取子集』,只會減少樣本數而絕不會增加;『增加樣本』需要另外蒐集或資料增強,與 filter 無關。",
+          "為了讓所有特徵維度一致;只有 AveRooms<10 的樣本特徵欄位數一致 OLS 才能正確算出 w 與 b": "California Housing 全資料的『特徵欄位數(維度)』本來就一致(8 個欄位),不會因 AveRooms 值不同而欄數不同;此過濾是針對『值的範圍』非『欄位數』。",
+          "為了符合 LinearRegression 的 fit API 規格;否則程式呼叫時會直接因數值超範圍而報錯": "Scikit-learn 的 LinearRegression.fit 不會因 AveRooms 值大就拋例外,API 只要求數值型不含 NaN;過濾是『資料品質工程』選擇,非 API 強制。"
+        },
+        "hook": "California Housing 過濾口訣:『去極端(AveRooms<10)→ 提升訊號比』;過濾減少樣本但提高 R²,非反過來"
+      },
+      "misconceptions": ["把過濾誤以為會增加樣本數", "把離群值過濾誤以為 API 強制"],
+      "related_node_ids": ["n_L23202_013", "n_L23303_007"],
+      "tags": ["linear-regression", "outlier", "california-housing", "data-cleaning"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_028",
+      "knowledge_code": "L23301",
+      "node_id": "n_L23301_004",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "{scenario}的資料科學家審視四組資料集時發現它們的平均數、變異數、相關係數、迴歸線斜率幾乎完全相同。資深顧問引用『Anscombe 四重奏』提醒團隊。下列敘述何者最能說明 Anscombe 對 EDA 流程的根本啟示?",
+      "stem_variables": {
+        "case_a": {"scenario": "保險精算風險建模"},
+        "case_b": {"scenario": "零售門市銷售預測"},
+        "case_c": {"scenario": "醫療臨床指標分析"}
+      },
+      "options": [
+        {"key": "A", "text": "摘要統計量相同的資料真實分佈仍可能截然不同;必須先以視覺化圖表驗證才能信任後續建模假設", "is_correct": true, "trap_type": "正解:同統計量不等於同故事,必須畫圖"},
+        {"key": "B", "text": "Anscombe 證明只要四個摘要統計量相同就可省略 EDA;直接套用線性迴歸並接續超參調校最佳化", "is_correct": false, "trap_type": "完全相反 — 跳過 EDA 直接建模"},
+        {"key": "C", "text": "Anscombe 寓意是圖表觀感主觀不可靠;應只信平均變異數等數字以避免人為偏誤干擾分析判讀", "is_correct": false, "trap_type": "走另一極端否定圖表"},
+        {"key": "D", "text": "Anscombe 四組資料的統計量都完全不同;故同統計量的資料分佈一定相同無需額外視覺檢視確認", "is_correct": false, "trap_type": "事實顛倒 — 統計量本就相同"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Anscombe 四重奏(1973 年由統計學家 F.J. Anscombe 提出)的四組(x, y)資料,其平均、變異數、相關係數、迴歸線方程式幾乎完全相同,但散點圖一畫出來才看見:第一組是常見線性關係、第二組是明顯曲線、第三組有單一強離群點主導迴歸、第四組是垂直線加孤點。寓意:摘要統計量會遮蔽資料真實結構,EDA 必須以視覺化補足。",
+        "wrong": {
+          "Anscombe 證明只要四個摘要統計量相同就可省略 EDA;直接套用線性迴歸並接續超參調校最佳化": "與 Anscombe 結論完全相反 — 它正是要警告『不可省略 EDA』;若跳過視覺化直接建模,曲線資料、離群點主導、無共變結構等情況都會被誤判為良好線性關係。",
+          "Anscombe 寓意是圖表觀感主觀不可靠;應只信平均變異數等數字以避免人為偏誤干擾分析判讀": "走到另一極端 — Anscombe 不是否定統計量,而是說『統計量+圖表』兩者互補不可偏廢;只看數字反而會錯失模型不適用的證據。",
+          "Anscombe 四組資料的統計量都完全不同;故同統計量的資料分佈一定相同無需額外視覺檢視確認": "事實顛倒 — Anscombe 構造之精妙就在於『摘要統計量幾乎完全相同』,正是這個前提下散點圖卻顯示四種完全不同的結構,證明同統計量不等於同分佈。"
+        },
+        "hook": "口訣:Anscombe = 同統計量 ≠ 同故事;先畫圖、再建模"
+      },
+      "misconceptions": ["跳過 EDA 直接建模", "只看平均變異數就下結論(Anscombe 反例)"],
+      "related_node_ids": ["n_L23301_004", "n_L23301_001"],
+      "tags": ["eda", "anscombe", "visualization"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_029",
+      "knowledge_code": "L23301",
+      "node_id": "n_L23301_004",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L2",
+      "stem": "{scenario}的資料分析師要呈現過去 {months} 個月的指標變化趨勢給高階主管。在 EDA 階段最適合用於『單一連續變數隨時間變化』的視覺化圖表為下列何者?",
+      "stem_variables": {
+        "case_a": {"scenario": "電商月營收追蹤", "months": "24"},
+        "case_b": {"scenario": "工廠每日良率監控", "months": "12"},
+        "case_c": {"scenario": "醫院病患量統計", "months": "36"}
+      },
+      "options": [
+        {"key": "A", "text": "折線圖(Line Chart);橫軸時間縱軸數值,能清楚呈現走勢、季節性與轉折點等變化", "is_correct": true, "trap_type": "正解:時序首選折線圖"},
+        {"key": "B", "text": "圓餅圖(Pie Chart);把每個月當作一個扇形切片並標示百分比,可清楚顯示時間佔比結構", "is_correct": false, "trap_type": "圓餅圖用於組成不適合時序"},
+        {"key": "C", "text": "散點圖(Scatter Plot);橫軸縱軸都放數值並隨機散佈點,適合觀察時間單一變數變動", "is_correct": false, "trap_type": "散點圖用於雙數值關係"},
+        {"key": "D", "text": "熱力圖(Heatmap);把每個月當作色塊強度排成矩陣狀,用顏色深淺直接呈現趨勢", "is_correct": false, "trap_type": "熱力圖用於多變量相關"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "折線圖以時間為橫軸、數值為縱軸,點與點之間以線段連接,能清楚呈現趨勢方向(上升/下降)、季節性週期、轉折點與波動幅度。EDA 的圖表選擇原則是『問題對應圖表』:時序看折線、類別比較看長條、單變數分佈看直方、雙數值關係看散點、多變量相關看熱力圖。",
+        "wrong": {
+          "圓餅圖(Pie Chart);把每個月當作一個扇形切片並標示百分比,可清楚顯示時間佔比結構": "圓餅圖適合『組成佔比』且類別 ≤ 5-6,把 12 個月切成扇形既無法看見順序,也喪失時序的『連續變化』訊息,是 EDA 圖表誤用的典型。",
+          "散點圖(Scatter Plot);橫軸縱軸都放數值並隨機散佈點,適合觀察時間單一變數變動": "散點圖適合『雙數值變數的關係』(例如身高 vs 體重),時序雖可在橫軸放時間,但缺少『連接線』就難以呈現趨勢走向。",
+          "熱力圖(Heatmap);把每個月當作色塊強度排成矩陣狀,用顏色深淺直接呈現趨勢": "熱力圖適合『多變量相關矩陣』或『二維密度』,單一變數的時序強行轉熱力圖會喪失精確數值刻度,反而難以看出細微變化。"
+        },
+        "hook": "口訣:時序看折線、類別比長條、分佈用直方、關係看散點、相關用熱力"
+      },
+      "misconceptions": ["把圓餅圖誤用於時序", "認為散點圖適合單變數時序"],
+      "related_node_ids": ["n_L23301_004"],
+      "tags": ["eda", "chart-selection", "time-series"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_030",
+      "knowledge_code": "L23301",
+      "node_id": "n_L23301_004",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "{scenario}的工程師在 EDA 階段以盒鬚圖(Box Plot)觀察特徵分佈時被詢問:『箱子(box)兩端的線分別代表什麼?』下列敘述何者最為精確?",
+      "stem_variables": {
+        "case_a": {"scenario": "金融客戶信用評分"},
+        "case_b": {"scenario": "感測器溫度量測"},
+        "case_c": {"scenario": "員工年薪資料分析"}
+      },
+      "options": [
+        {"key": "A", "text": "箱子下緣為第一四分位數(Q1, 25%),上緣為第三四分位數(Q3, 75%);中線為中位數", "is_correct": true, "trap_type": "正解:盒鬚圖箱子=Q1 到 Q3"},
+        {"key": "B", "text": "箱子下緣為平均減一倍標準差,上緣為平均加一倍標準差;適合常態分佈快速涵蓋 68% 區間", "is_correct": false, "trap_type": "把箱子誤判為平均±1σ"},
+        {"key": "C", "text": "箱子下緣為資料最小值,上緣為資料最大值;鬚線僅為裝飾性的延伸線,並無實際統計學意義", "is_correct": false, "trap_type": "把箱子誤判為 min/max"},
+        {"key": "D", "text": "箱子下緣為中位數減一倍標準差,上緣為中位數加一倍標準差;故箱子隨樣本變動較劇烈", "is_correct": false, "trap_type": "中位數加減 σ 混合錯誤"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "盒鬚圖(Box Plot)五數摘要:箱子下緣 Q1(25 百分位)、箱子上緣 Q3(75 百分位)、箱中線 Median(Q2, 50 百分位)、鬚(whiskers)通常延伸至 Q1-1.5×IQR 與 Q3+1.5×IQR、超出鬚之外的點為離群點(outliers)。IQR = Q3 - Q1。盒鬚圖能同時呈現中央趨勢、離散程度、偏態與離群點,是 EDA 偵測極端值的標準工具。",
+        "wrong": {
+          "箱子下緣為平均減一倍標準差,上緣為平均加一倍標準差;適合常態分佈快速涵蓋 68% 區間": "把盒鬚圖與『誤差棒(error bar)』混淆 — 後者才是平均 ± 標準差;盒鬚圖採用四分位數而非平均/標準差,對偏態與離群點更穩健,不受極端值拉動。",
+          "箱子下緣為資料最小值,上緣為資料最大值;鬚線僅為裝飾的延伸線無實際統計意義": "完全相反 — 鬚線才接近極端值範圍(但被 1.5×IQR 限制),箱子只涵蓋中間 50% 資料(Q1 到 Q3);若用 min/max 當箱子就等於變成『範圍長條』,失去四分位概念。",
+          "箱子下緣為中位數減一倍標準差,上緣為中位數加一倍標準差;故箱子隨樣本變動較劇烈": "把中位數與標準差錯誤組合 — 標準差是以平均為中心定義,不會與中位數配對;盒鬚圖完全建立在百分位數(無分佈假設)上,不使用標準差。"
+        },
+        "hook": "口訣:箱子=Q1 到 Q3(中間 50%)、中線=中位數、鬚=±1.5×IQR、外點=離群"
+      },
+      "misconceptions": ["把箱子誤判為平均±1σ", "把箱子誤判為 min 到 max"],
+      "related_node_ids": ["n_L23301_004"],
+      "tags": ["eda", "boxplot", "iqr", "outlier"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_031",
+      "knowledge_code": "L23301",
+      "node_id": "n_L23301_004",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "{scenario}的資料科學家想以 Pearson 相關係數 r 在 EDA 階段衡量變數間關聯。資深顧問提醒『r 並非萬用工具』。下列關於 Pearson 相關係數適用範圍與限制的敘述,何者最為精確?",
+      "stem_variables": {
+        "case_a": {"scenario": "電信顧客流失分析"},
+        "case_b": {"scenario": "藥品劑量反應評估"},
+        "case_c": {"scenario": "智慧電網用電量研究"}
+      },
+      "options": [
+        {"key": "A", "text": "Pearson r 僅適用兩個數值型變數的線性關係衡量;對類別變數或非線性關係不適合", "is_correct": true, "trap_type": "正解:r 限數值且僅線性"},
+        {"key": "B", "text": "Pearson r 適用所有資料類型(數值/順序/類別/名目)且能完整捕捉任意非線性關係結構", "is_correct": false, "trap_type": "適用所有資料類型"},
+        {"key": "C", "text": "Pearson r 只看單一變數標準差大小;與兩變數間實際線性或非線性的關聯強弱完全無關", "is_correct": false, "trap_type": "把 r 誤判為單變數量"},
+        {"key": "D", "text": "Pearson r 越接近 0 代表兩變數線性關係越強;越接近 ±1 反而代表幾乎沒有任何關聯", "is_correct": false, "trap_type": "r 大小意義顛倒"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Pearson 相關係數 r = Cov(X,Y) / (σx·σy),衡量『兩個數值型變數的線性關聯強度與方向』,範圍 [-1, +1]。限制:(1) 僅適用數值/連續變數,類別/名目資料需用 Cramér's V 或卡方;(2) 僅捕捉線性關係,弧形/U 形等非線性可能 r ≈ 0 卻明顯相關;(3) 對離群點敏感;(4) 相關不代表因果。實務 EDA 常以 r > 0.7 為強相關,但仍需以散點圖驗證形狀。",
+        "wrong": {
+          "Pearson r 適用所有資料類型(數值/順序/類別/名目)且能完整捕捉任意非線性關係結構": "錯兩處 — 類別/名目型無法計算 Pearson(算術上無意義),需用 Cramér's V 或卡方;且 r 只測線性,U 形或弧形等非線性關係可能 r ≈ 0 卻明顯相關。",
+          "Pearson r 只看單一變數標準差大小;與兩變數間實際線性或非線性的關聯強弱完全無關": "完全相反 — r 公式即協方差除以兩標準差乘積,正是衡量兩變數共變強度;單看一變數標準差無關聯訊息可言。",
+          "Pearson r 越接近 0 代表兩變數線性關係越強;越接近 ±1 反而代表幾乎沒有任何關聯": "意義顛倒 — |r| 越接近 1 代表線性關係越強(+1 完全正相關、-1 完全負相關);|r| 越接近 0 代表線性關係越弱(但不代表沒有非線性關係)。"
+        },
+        "hook": "口訣:Pearson r ∈ [-1, 1],|r| 大=線性強;限數值型、只測線性、不代表因果"
+      },
+      "misconceptions": ["把 Pearson r 用於類別資料", "把相關係數誤判為因果"],
+      "related_node_ids": ["n_L23301_004"],
+      "tags": ["eda", "correlation", "pearson"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n25_032",
+      "knowledge_code": "L23301",
+      "node_id": "n_L23301_004",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "{scenario}的資料工程師在 EDA 階段發現『年收入』欄位有 {missing_pct}% 缺失值,團隊正討論處理策略。在 EDA 階段對缺失值的首要建議行動為下列何者?",
+      "stem_variables": {
+        "case_a": {"scenario": "個人信貸風險評估", "missing_pct": "8"},
+        "case_b": {"scenario": "保險理賠資料建模", "missing_pct": "12"},
+        "case_c": {"scenario": "電商會員行為分析", "missing_pct": "6"}
+      },
+      "options": [
+        {"key": "A", "text": "先分析缺失機制(MCAR/MAR/MNAR)與分布;再依機制選擇填補刪除或保留缺失指標方案", "is_correct": true, "trap_type": "正解:先分析機制再處理"},
+        {"key": "B", "text": "立即將整個欄位刪除以完全擺脫缺失;不論欄位重要性或缺失比例都採同一刪除策略最為省力", "is_correct": false, "trap_type": "直接刪除整欄"},
+        {"key": "C", "text": "立即用平均數一律補上完成處理;不論缺失機制或欄位分布是否偏態都採平均填補保險", "is_correct": false, "trap_type": "一律平均填補"},
+        {"key": "D", "text": "把缺失全部改填零後繼續建模;此法視同零是無資訊狀態能避免後續任何模型對缺失敏感", "is_correct": false, "trap_type": "全改 0(失真嚴重)"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "EDA 階段對缺失值的首要任務是『先理解再處理』:(1) 量化缺失比例與分布(欄位/列);(2) 判斷缺失機制 — MCAR(完全隨機)、MAR(隨機但相依其他變數)、MNAR(非隨機,缺失本身有訊息);(3) 視機制決策 — MCAR 可刪除或填補、MAR 可條件填補(KNN/多重插補)、MNAR 需新增缺失指標欄位或業務介入。不分機制一律刪除或平均填補,可能引入偏誤或失真。",
+        "wrong": {
+          "立即整欄刪除完全擺脫缺失;不論欄位重要性或缺失比例都採同一刪除策略最為省力": "缺失比例小(如 < 5%)或非關鍵欄位才考慮刪除;若該欄位是關鍵預測變數,直接刪除會喪失重要資訊;若缺失本身有業務意義(MNAR),刪除等於丟掉訊號。",
+          "立即用平均數一律補上完成處理;不論缺失機制或欄位分布是否偏態都採平均填補保險": "平均填補只適用 MCAR 且分佈近常態;若資料偏態應用中位數,若 MNAR 則平均填補會引入嚴重偏誤,且會低估變異數扭曲後續模型。",
+          "把缺失全部改填零後繼續建模;此法視同零是無資訊狀態能避免後續任何模型對缺失敏感": "把缺失改 0 在『年收入』這類數值欄位等於告訴模型『此人收入為零』,失真嚴重;0 只在某些『計數欄位』且 0 確實有意義時可用,EDA 必須先驗證再決定。"
+        },
+        "hook": "口訣:先看比例、再判機制(MCAR/MAR/MNAR)、最後選策略;不可一律刪/補/補 0"
+      },
+      "misconceptions": ["直接刪除整欄缺失", "一律用平均填補不分機制"],
+      "related_node_ids": ["n_L23301_004", "n_L23301_003"],
+      "tags": ["eda", "missing-values", "mcar", "data-preprocessing"],
+      "errata_critical": false
+    }
+  ]
+}
