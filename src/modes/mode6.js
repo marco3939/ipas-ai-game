@@ -352,16 +352,19 @@
     _renderMockExamModal(cardCount, pool, filters) {
       const poolSize = pool.length;
       // 動態題數選項:[5, 10, 25, 全打] 過濾掉超過 pool size 的
+      // 2026-05-17:時長對齊 Mode 7 真考標準(108s/題,即 IPAS AI 中級單科 50 題 90 分鐘)
+      // 5→9 / 10→18 / 25→45 / 50→90 分鐘
       const baseOpts = [
-        { qcount: 5,  minutes: 6,  label: '🥉 速戰 5 題' },
-        { qcount: 10, minutes: 12, label: '🥈 中場 10 題' },
-        { qcount: 25, minutes: 30, label: '🥇 完整 25 題' }
+        { qcount: 5,  minutes: 9,  label: '🥉 速戰 5 題' },
+        { qcount: 10, minutes: 18, label: '🥈 中場 10 題' },
+        { qcount: 25, minutes: 45, label: '🥇 完整 25 題' }
       ];
       const options = baseOpts.filter(o => o.qcount <= poolSize);
       if (poolSize > 25 && poolSize <= 60) {
-        options.push({ qcount: poolSize, minutes: Math.round(poolSize * 1.2), label: '🌟 全打 ' + poolSize + ' 題' });
+        // 全打:qcount × 108s / 60 = qcount × 1.8 分鐘
+        options.push({ qcount: poolSize, minutes: Math.round(poolSize * 1.8), label: '🌟 全打 ' + poolSize + ' 題' });
       } else if (poolSize > 60) {
-        options.push({ qcount: 50, minutes: 60, label: '🌟 完全模考 50 題' });
+        options.push({ qcount: 50, minutes: 90, label: '🌟 完全模考 50 題' });
       }
 
       // 範圍標籤
