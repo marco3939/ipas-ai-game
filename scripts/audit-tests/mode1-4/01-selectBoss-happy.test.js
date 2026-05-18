@@ -8,12 +8,13 @@ const A = makeAssert();
 
 function build() {
   // 2026-05-18 治本方案 C 跟進:Mode 1 改用 boss_topics 精準篩,test 也輪流分配 15 BOSS
-  // 每 BOSS 至少 4 題(60/15=4),確保 selectBoss 對所有 BOSS 都能初始化 state
+  // §8 follow-up:Mode 1 MIN_POOL_TO_BATTLE = 5,fixture 每 BOSS 至少要 5 題才能開戰
+  // 90 題 / 15 BOSS = 6 題/BOSS(餘裕 1 題)
   const ALL_BOSSES = ['ecommerce','finance','medical','autonomous','manufacturing',
                        'energy','telecom','media','smartcity','education','logistics',
                        'legal','data_eng','ml_bigdata','privacy'];
   const questions = [];
-  for (let i = 0; i < 60; i++) {
+  for (let i = 0; i < 90; i++) {
     questions.push(fixtureQuestion({
       id: 'q_t_' + String(i).padStart(3, '0'),
       tags: ['電商', '推薦', '客戶', '金融', '醫療', '製造', '電信'],

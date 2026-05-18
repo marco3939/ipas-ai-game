@@ -131,36 +131,36 @@
   // 取題:精準 boss_topics 篩選(2026-05-18 治本方案 C — 取代舊的 keyword 模糊匹配)
   // 每題在 questions-*.json 內標記 boss_topics: ['ecommerce', 'manufacturing', ...] 或 []。
   // []  = 純技術題 / 無情境,不適合 Mode 1(商業情境決策劇場),會被 Mode 2/7/8/6 接住
-  // 設計變更:
+  // 設計:
   //   1. 篩選改用 boss_topics 精確匹配,不再用 stem/tags 字串模糊命中
-  //   2. 池小於 N(BOSS_QUESTIONS_PER_BATTLE)時,actualN = pool.length(允許短戰)
-  //      避免硬塞跨主題題目(舊邏輯用 general filler 兜底,會把 Weibull 故障率題塞給 CNN BOSS)
-  //   3. 池仍 ≥ 5 才開戰(< 5 過於倉促,提示玩家)
+  //   2. 池 < 5 直接回 []:caller selectBoss 看 questions.length === 0 擋住開戰
+  //   3. 池 ≥ 5 但 < N:actualN = pool.length 短戰(autonomous/telecom 8 題場)
   //   4. 鐵律 #5:不可造題,僅用 QUESTIONS 內 boss_topics 已標記題
   // ※ 程式碼題(format=code_reading/code_trace)的 boss_topics 一律為 [](已預先標記)
+  // 2026-05-18 §8 follow-up:MED-1/2/3 修補(見 PR #38 code-review)
+  const MIN_POOL_TO_BATTLE = 5;
   function pickQuestionsForBoss(boss, n = BOSS_QUESTIONS_PER_BATTLE) {
-    const matched = QUESTIONS.filter(q =>
+    const pool = QUESTIONS.filter(q =>
       Array.isArray(q.boss_topics) && q.boss_topics.includes(boss.key)
     );
-    let pool = [...new Set(matched)];
-    // 2026-05-18 治本方案 C:不再用 general filler 兜底跨主題題目
-    // 池 < 5 不開戰(極小池玩家體驗差);否則 actualN = min(n, pool.length) 允許短戰
-    // 部分 BOSS(autonomous/telecom/education 等)題庫天然窄,接受短戰比硬塞跨主題好
-    if (pool.length < 5) {
-      // 由 caller(challenge / start)決定 UX,這裡只 toast 提示
+    // MED-1:池 < 5 不開戰,回 [] 讓 caller selectBoss 用 questions.length === 0 擋住
+    if (pool.length < MIN_POOL_TO_BATTLE) {
       showToast('「' + (boss.name||'本 BOSS') + '」題庫過小(' + pool.length + ' 題),建議練習其他 BOSS', 4000);
-      // 仍回傳剩餘的(讓 caller 決定要不要繼續)
+      return [];
     }
-    // 跨關卡排除已答對(SeenCorrect):戰鬥模式不重複出已掌握題
-    // 若 filter 後池 < n,fallback 回原池 + showToast 提醒
+    // MED-3:minNeeded 改 Math.min(MIN_POOL_TO_BATTLE, pool.length)
+    // 避免「答對少數題就 fallback 重複出舊題」— minNeeded 是「過濾後至少要有 N 題新題才不 fallback」,
+    // 不是「期望題數」。傳 n 會讓玩家答對 1 題就跳回去重複出題
+    // MED-2:統一 pool = fr.pool(API 已保證返回正確 pool,不分支)
+    let finalPool = pool;
     if (typeof SeenCorrect !== 'undefined') {
-      const fr = SeenCorrect.filterForBattle(pool, Math.min(n, pool.length));
+      const fr = SeenCorrect.filterForBattle(pool, Math.min(MIN_POOL_TO_BATTLE, pool.length));
       if (fr.fallback) showToast('本 BOSS 可用新題不足,允許重複出已答對的舊題');
-      else pool = fr.pool;
+      finalPool = fr.pool;
     }
     // 池小時自動降階場次題數(autonomous/telecom 8 題 → 短戰 8 題)
-    const actualN = Math.min(n, pool.length);
-    return RNG.pickN(pool, actualN);
+    const actualN = Math.min(n, finalPool.length);
+    return RNG.pickN(finalPool, actualN);
   }
 
   const Mode1 = {
