@@ -1,0 +1,392 @@
+{
+  "version": "1.0",
+  "schema_version": "iron-rule-1+2+6",
+  "generated_at": "2026-05-18",
+  "batch": "N33 — 科三 L23203 深度學習進階:ResNet + EfficientNet + Bi-LSTM + Informer 四主題視覺/序列模型",
+  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "iron_rule_compliance": {
+    "rule_1_drill_explanation": "每題皆有 explanation.correct/wrong/hook + misconceptions ≥ 1 + related_node_ids",
+    "rule_2_shuffle_and_cases": "shuffle_options:true;概念辨析題以靜態情境呈現(本批次概念題為主、無需 case 變數)",
+    "rule_3_original": "100% 原創跨產業情境;未照抄考古題,以 KB 節點 n_L23203_011~014 為唯一素材",
+    "rule_4_option_length": "4 選項長度差異 ≤ 20%;正解非永遠最長",
+    "rule_5_source_fidelity": "knowledge_code = L23203;node_id ∈ {n_L23203_011 ResNet, n_L23203_012 EfficientNet, n_L23203_013 Bi-LSTM, n_L23203_014 Informer};related_node_ids 全部對應 kb 真實節點",
+    "rule_6_isolation": "本檔合併 ResNet(3 題)+ EfficientNet(3 題)+ Bi-LSTM(3 題)+ Informer(3 題)四主題;不改其他既有題目檔或共享層"
+  },
+  "subject": 3,
+  "knowledge_codes": ["L23203"],
+  "batch_num": 33,
+  "distribution": {
+    "L23203_count": 12,
+    "by_node": {"n_L23203_011": 3, "n_L23203_012": 3, "n_L23203_013": 3, "n_L23203_014": 3},
+    "by_format": {"single_choice": 12},
+    "by_difficulty": {"easy": 0, "medium": 9, "hard": 3}
+  },
+  "source_pdf": [
+    "機器學習模型圖卡(全).pdf page 48 ResNet(q_n33_001-003)",
+    "機器學習模型圖卡(全).pdf page 49 EfficientNet(q_n33_004-006)",
+    "機器學習模型圖卡(全).pdf page 50 Bi-LSTM(q_n33_007-009)",
+    "機器學習模型圖卡(全).pdf page 54 Informer(q_n33_010-012)"
+  ],
+  "questions": [
+    {
+      "id": "q_n33_001",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_011",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某影像辨識新創團隊主管請工程師「一句話講清楚 ResNet 的核心創新到底是什麼」,下列描述何者最為精確?",
+      "options": [
+        {"key": "A", "text": "跳躍連接讓輸入直接加到深層輸出;模型學習殘差 F(x)=H(x)-x 而非完整映射 H 本身", "is_correct": true, "trap_type": "正解:Skip Connection 學殘差"},
+        {"key": "B", "text": "ResNet 核心就是把網路堆得很深(50/101/152 層);深度本身就是 ResNet 的最大創新", "is_correct": false, "trap_type": "把『深』當核心"},
+        {"key": "C", "text": "ResNet 用更大卷積核(7×7、9×9)取代傳統 3×3 小卷積核;以此擴大感受野提升精度", "is_correct": false, "trap_type": "誤以為靠大卷積核"},
+        {"key": "D", "text": "ResNet 採用 ReLU 配合 Batch Normalization 解決深度網路訓練問題;這是它最核心的特性", "is_correct": false, "trap_type": "誤以為 BN+ReLU 是核心"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "ResNet 的核心創新是『Skip Connection 跳躍連接』+『學殘差 F(x)=H(x)-x』。輸入 x 透過 shortcut 直接加到深層輸出,讓網路只需學殘差(差距)而不是完整映射,因此即使堆到 100+ 層也不會退化。深度本身、卷積核大小、BN/ReLU 都不是 ResNet 的本質創新。",
+        "wrong": {
+          "ResNet 核心就是把網路堆得很深(50/101/152 層);深度本身就是它最大創新賣點": "ResNet 之前 VGG 早已堆到 19 層,但層數再深就性能退化。『可以堆 100 層』是跳躍連接的結果,不是 ResNet 本身的創新。",
+          "ResNet 用更大卷積核(7×7、9×9)取代傳統 3×3 小卷積核;以擴大感受野提升精度表現": "ResNet 主體仍是 3×3 小卷積(僅入口用 7×7),卷積核大小不是 ResNet 的核心議題。",
+          "ResNet 採用 ReLU 配合 Batch Normalization 解決所有深度網路訓練問題;這是它最核心特性": "BN+ReLU 解決『梯度消失』,但 ResNet 解決的是『性能退化』(深層比淺層更差),兩個問題不同。"
+        },
+        "hook": "口訣:ResNet = Skip Connection + 學殘差 F(x)=H(x)-x;深度只是結果,不是原因"
+      },
+      "misconceptions": ["把 ResNet 等同『很深的網路』", "誤以為核心是 BN/ReLU"],
+      "related_node_ids": ["n_L23203_011", "n_L23203_005"],
+      "tags": ["resnet", "skip-connection", "cnn"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n33_002",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_011",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某 CV 研究生在報告中宣稱「ResNet 主要是為了解決梯度消失(vanishing gradient)問題」,指導教授指出這個說法不精確。下列哪一項最能說明教授的觀點?",
+      "options": [
+        {"key": "A", "text": "ResNet 解決的是『性能退化』(深層反而比淺層誤差大);梯度消失靠 BN 與 ReLU 來解決", "is_correct": true, "trap_type": "正解:退化 vs 梯度消失區分"},
+        {"key": "B", "text": "ResNet 確實就是為了解決梯度消失問題;教授的說法錯誤;這正是 He Kaiming 論文的主要訴求", "is_correct": false, "trap_type": "誤以為主要解決梯度消失"},
+        {"key": "C", "text": "ResNet 解決的是過擬合問題;深層網路因參數量太大而過擬合;跳躍連接被用作正則化的作用", "is_correct": false, "trap_type": "誤以為解決過擬合"},
+        {"key": "D", "text": "梯度消失與性能退化是同義詞;教授區分只是文字遊戲;兩者本質完全一致沒有任何區別差異", "is_correct": false, "trap_type": "誤以為兩問題等同"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "ResNet 論文(He Kaiming 2015)明確區分兩個問題:(1)『梯度消失』:反向傳播時梯度逐層衰減,早期由 BN + ReLU + 適當初始化緩解;(2)『性能退化』:即使梯度健康,堆到 56 層的網路訓練誤差仍比 20 層大,這是 ResNet 要解決的核心。Skip Connection 讓模型可以選擇『恆等映射』(F(x)=0 時 H(x)=x),理論上深層不會比淺層差。",
+        "wrong": {
+          "ResNet 確實是為了解決梯度消失問題;教授說法錯誤;這正是 He Kaiming 論文的主要訴求": "He Kaiming 2015 ResNet 論文第二頁直接寫:『此退化問題不是由過擬合或梯度消失引起』,是常見誤解。",
+          "ResNet 解決的是過擬合問題;深層網路因為參數量太大導致過擬合;跳躍連接是正則化作用": "若為過擬合,訓練誤差應該變小、測試誤差變大;但退化問題是訓練誤差也變大,所以不是過擬合。",
+          "梯度消失與性能退化是同義詞;教授區分是文字遊戲;兩者本質完全一致沒有區別差異": "兩者本質不同:梯度消失是反向傳播訊號衰減,性能退化是即使梯度正常深層也學不好,有獨立成因。"
+        },
+        "hook": "辨析:ResNet 解決『退化』(深層比淺層更差);梯度消失靠 BN/ReLU/初始化解決"
+      },
+      "misconceptions": ["把性能退化與梯度消失混為一談", "誤以為 ResNet 解決過擬合"],
+      "related_node_ids": ["n_L23203_011", "n_L23203_005"],
+      "tags": ["resnet", "degradation", "gradient-vanishing"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n33_003",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_011",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某影像分類專案在 ResNet 殘差塊中,若令學習到的殘差 F(x)=0,則該層輸出 H(x) 等於多少?這個性質帶來什麼好處?",
+      "options": [
+        {"key": "A", "text": "H(x)=x(恆等映射);深層若沒學到東西也不會比淺層差,層數可放心加深", "is_correct": true, "trap_type": "正解:恆等映射保底"},
+        {"key": "B", "text": "H(x)=0;深層直接清零;這代表 ResNet 自動移除冗餘層次降低運算成本", "is_correct": false, "trap_type": "誤以為輸出歸零"},
+        {"key": "C", "text": "H(x) 等於上一層輸出乘以權重矩陣;與一般 CNN 完全相同;沒有特殊性質帶來的優勢", "is_correct": false, "trap_type": "誤以為與一般 CNN 等同"},
+        {"key": "D", "text": "H(x)=2x;殘差會讓訊號倍增放大;這就是 ResNet 訓練 100+ 層仍穩定關鍵原因", "is_correct": false, "trap_type": "誤以為訊號倍增"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "ResNet 殘差塊定義:H(x) = F(x) + x。若 F(x)=0,則 H(x)=x,稱為恆等映射(identity mapping)。這個性質的關鍵好處是『保底機制』:即使新加的層沒學到任何有用特徵,它至少能還原成恆等映射,不會傷害已有特徵。這就是為何 ResNet 可以放心堆到 100+ 層而不會退化。",
+        "wrong": {
+          "H(x)=0;深層直接清零;這代表 ResNet 自動移除冗餘層次降低運算成本": "F(x)=0 不代表 H(x)=0;因為 H(x)=F(x)+x,代入後是 H(x)=x,不是清零。",
+          "H(x) 等於上一層輸出乘以權重矩陣;與一般 CNN 完全相同;沒有特殊性質帶來的優勢": "這正是一般 CNN(無 skip)的特性,但 ResNet 透過 +x 多了恆等映射保底,本質不同於普通 CNN。",
+          "H(x)=2x;殘差會讓訊號倍增放大;這就是 ResNet 訓練 100+ 層仍穩定關鍵原因": "H(x)=F(x)+x 不是 2x,訊號倍增也不是穩定性來源;真正關鍵是恆等映射的『不退步保證』。"
+        },
+        "hook": "公式:H(x)=F(x)+x;F(x)=0 → H(x)=x(恆等映射);深層至少不退步"
+      },
+      "misconceptions": ["把 H(x)=F(x)+x 誤為 H(x)=F(x)", "不理解恆等映射的保底意義"],
+      "related_node_ids": ["n_L23203_011", "n_L23203_005"],
+      "tags": ["resnet", "identity-mapping", "residual"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n33_004",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_012",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某 AI 團隊在嵌入式裝置(車載 / 手機)部署影像分類模型時,主管說「我們選 EfficientNet,因為它『複合縮放』」。下列何者最精確描述 EfficientNet 的複合縮放在縮放什麼?",
+      "options": [
+        {"key": "A", "text": "同步調整網路深度 D、寬度 W、輸入解析度 R 三個維度;以最少 FLOPs 達最高準確率", "is_correct": true, "trap_type": "正解:D/W/R 三維同步"},
+        {"key": "B", "text": "只縮放網路深度 D;EfficientNet 就是 ResNet 的延伸更深版本;追求極限深度堆疊", "is_correct": false, "trap_type": "誤以為只縮放深度"},
+        {"key": "C", "text": "只縮放網路寬度 W(channel 數);EfficientNet 透過加寬而非加深來提升模型表達能力", "is_correct": false, "trap_type": "誤以為只縮放寬度"},
+        {"key": "D", "text": "只縮放輸入解析度 R;EfficientNet 透過放大輸入影像達到精度提升;深度與寬度均維持固定", "is_correct": false, "trap_type": "誤以為只縮放解析度"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "EfficientNet(Tan & Le 2019)核心是『Compound Scaling 複合縮放』:同步擴展深度 D(層數)、寬度 W(channel 數)、輸入解析度 R(影像大小)三個維度,用一組複合係數 φ 統一調整。對比傳統手動單一維度縮放(只加深或只加寬),複合縮放在相同 FLOPs 下能達更高準確率。B0~B7 是預設的 8 種尺寸。",
+        "wrong": {
+          "只縮放網路深度 D;EfficientNet 就是 ResNet 的延伸更深版本;追求極限深度堆疊": "EfficientNet 不是只加深,而是 D/W/R 三維同步;ResNet 才是專注深度。",
+          "只縮放網路寬度 W(channel 數);EfficientNet 透過加寬而非加深來提升模型表達能力": "只加寬會在參數量爆增同時收益遞減;EfficientNet 強調三維度平衡才是關鍵。",
+          "只縮放輸入解析度 R;EfficientNet 透過放大輸入影像達到精度提升;深度與寬度均維持固定": "只放大輸入會大幅增加計算量但深層特徵不足;EfficientNet 是三維同步調整。"
+        },
+        "hook": "口訣:EfficientNet = 同步縮放 D/W/R 三維度,FLOPs 與精度雙贏"
+      },
+      "misconceptions": ["誤以為只縮放一個維度", "把 EfficientNet 等同更深網路"],
+      "related_node_ids": ["n_L23203_012", "n_L23203_005", "n_L23203_011"],
+      "tags": ["efficientnet", "compound-scaling", "mobile"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n33_005",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_012",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某新創開發 IoT 邊緣裝置影像辨識,選型時主管說「我們要看 FLOPs 而不只是參數量」,下列何者最能說明 FLOPs(浮點運算次數)為何是 EfficientNet 設計核心指標?",
+      "options": [
+        {"key": "A", "text": "FLOPs 反映實際運算次數;參數量只看記憶體;邊緣裝置真正瓶頸往往在於運算速度與功耗", "is_correct": true, "trap_type": "正解:FLOPs vs 參數量差異"},
+        {"key": "B", "text": "FLOPs 就是參數量的另一種叫法;兩者數值完全相等;只是不同教科書翻譯詞彙的細微差異", "is_correct": false, "trap_type": "把 FLOPs 等同參數量"},
+        {"key": "C", "text": "FLOPs 只衡量模型精度;與運算速度功耗均完全無關;邊緣裝置選型不應只看 FLOPs 一項", "is_correct": false, "trap_type": "誤以為 FLOPs 衡量精度"},
+        {"key": "D", "text": "FLOPs 越高代表模型越省電;EfficientNet 追求高 FLOPs 達到低功耗目標;雖反直覺但正確", "is_correct": false, "trap_type": "FLOPs 越高越省電"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "FLOPs(Floating Point Operations,浮點運算次數)衡量『每次推理需做多少次運算』,直接決定推理速度與功耗;參數量則衡量『模型佔多少記憶體』。兩者不等同 — 例如 Depthwise Convolution 可大幅降低 FLOPs 但參數量影響有限。EfficientNet 在邊緣裝置(IoT / 手機 / 車載)場景,FLOPs 是核心指標。",
+        "wrong": {
+          "FLOPs 就是參數量的另一種叫法;兩者數值完全相等;只是不同教科書翻譯詞彙差異": "兩者測量目標不同 — 參數量是 storage,FLOPs 是 compute;一個模型可參數少但 FLOPs 高(或反之)。",
+          "FLOPs 只衡量模型精度;與運算速度功耗均完全無關;邊緣裝置選型用 FLOPs 並不合理": "完全相反 — FLOPs 不衡量精度,而是衡量計算量;它與運算速度、功耗強相關,是邊緣裝置核心指標。",
+          "FLOPs 越高代表模型越省電;EfficientNet 追求高 FLOPs 達到低功耗目標;反直覺但正確": "方向完全反 — FLOPs 越高運算越多越耗電;EfficientNet 是用最少 FLOPs 達最高精度。"
+        },
+        "hook": "辨析:FLOPs = 運算量(影響速度功耗);Params = 模型大小(影響記憶體);兩者不等同"
+      },
+      "misconceptions": ["把 FLOPs 與參數量混為一談", "誤以為 FLOPs 衡量精度"],
+      "related_node_ids": ["n_L23203_012", "n_L23203_005"],
+      "tags": ["efficientnet", "flops", "edge-device"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n33_006",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_012",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某車載 AI 團隊在比較 ResNet-152 與 EfficientNet-B7 時,工程師說「兩者參數量接近,所以應選 ResNet-152 因為它經過更多年驗證」。下列何項回應最切中要害?",
+      "options": [
+        {"key": "A", "text": "參數量接近不代表 FLOPs 接近;EfficientNet-B7 是用更少 FLOPs 達更高精度的代表;車載應比 FLOPs", "is_correct": true, "trap_type": "正解:選型應比 FLOPs 不只看參數量"},
+        {"key": "B", "text": "工程師完全正確;參數量接近代表兩者運算成本一致;ResNet-152 的成熟度確實更有保障的選擇", "is_correct": false, "trap_type": "認同錯誤論點"},
+        {"key": "C", "text": "兩者都不適合車載;應選 Transformer 因 Self-Attention 比 CNN 先進;EfficientNet 已過時被取代", "is_correct": false, "trap_type": "誤導向 Transformer"},
+        {"key": "D", "text": "選型只看準確率;FLOPs 與參數量都無關緊要;兩者在 ImageNet 精度差不多即可直接做選擇", "is_correct": false, "trap_type": "忽略效率指標"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "EfficientNet 的設計目標就是『相同 FLOPs 下達更高精度』或『相同精度下用更少 FLOPs』。即使參數量接近,EfficientNet-B7 透過複合縮放 + Depthwise Separable Convolution 等技巧,通常 FLOPs 比 ResNet-152 低很多(約 1/8 至 1/10),對車載 / 嵌入式裝置(計算受限、功耗敏感)選 EfficientNet 才合理。",
+        "wrong": {
+          "工程師完全正確;參數量接近代表兩者運算成本一致;選 ResNet-152 的成熟度確實更有保障": "參數量 ≠ FLOPs;兩者運算成本可差數倍,選型不應只看參數量。",
+          "兩者都不適合車載;車載應選 Transformer 因為 Self-Attention 比 CNN 更先進有效;EfficientNet 已過時": "Transformer 在邊緣裝置 inference 通常 FLOPs / 記憶體更高,並非自動更佳;選型仍需看 FLOPs 與延遲。",
+          "選型應只看準確率;FLOPs 與參數量都無關緊要;ResNet-152 與 EfficientNet-B7 在 ImageNet 精度差不多即可": "車載對延遲、功耗敏感,只看精度忽略 FLOPs 會導致部署失敗;EfficientNet 的價值正是效率。"
+        },
+        "hook": "選型:邊緣 / 移動 → EfficientNet(低 FLOPs);追極限精度且資源充足 → ResNet-152"
+      },
+      "misconceptions": ["以為參數量接近 = FLOPs 接近", "忽略效率指標只看精度"],
+      "related_node_ids": ["n_L23203_012", "n_L23203_011", "n_L23203_005"],
+      "tags": ["efficientnet", "resnet", "model-selection"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n33_007",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_013",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某 NLP 團隊主管請工程師「一句話講清楚 Bi-LSTM 與一般 LSTM 的差別」,下列描述何者最為精確?",
+      "options": [
+        {"key": "A", "text": "Bi-LSTM 同時跑前向(x₁→x_T)與後向(x_T→x₁)兩個 LSTM,輸出拼接以同時看過去與未來", "is_correct": true, "trap_type": "正解:雙向 LSTM 拼接"},
+        {"key": "B", "text": "Bi-LSTM 是把兩個 LSTM 上下堆疊(stack)變成更深的網路;仍然只有單一方向的時序處理", "is_correct": false, "trap_type": "把雙向混為堆疊"},
+        {"key": "C", "text": "Bi-LSTM 用比 LSTM 更大的 hidden size;架構與訊號流向相同;差別只在 hidden 維度大小", "is_correct": false, "trap_type": "誤以為只是 hidden 變大"},
+        {"key": "D", "text": "Bi-LSTM 是 LSTM 加上 Attention 機制;這個 Attention 即所謂的『雙向』來源;結構本質沒差", "is_correct": false, "trap_type": "與 Attention 混淆"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Bi-LSTM(Bidirectional LSTM)實際是兩個獨立的 LSTM:前向層從 x₁ 處理到 x_T(過去到現在),後向層從 x_T 處理到 x₁(未來到現在),每個時間步 t 的輸出是兩者拼接 h_t = [h_t^forward; h_t^backward]。這讓模型在每個位置都同時擁有『過去』與『未來』的上下文資訊,對 NER、機器翻譯、情感分析等需要全文理解的任務特別有效。",
+        "wrong": {
+          "Bi-LSTM 是把兩個 LSTM 上下堆疊(stack)變成更深的網路;仍然只有單一方向的時序處理": "Stack LSTM 是多層深度堆疊,仍是單向;Bi-LSTM 是雙向並行,兩者完全不同概念。",
+          "Bi-LSTM 用比 LSTM 更大的 hidden size;架構與訊號流向相同;差別只在 hidden 維度大小": "差別不是 hidden 大小,而是方向 — 多了一個後向 LSTM 並拼接輸出。",
+          "Bi-LSTM 是 LSTM 加上 Attention 機制;這個 Attention 即所謂的『雙向』來源;結構本質沒差": "Bi-LSTM 不含 Attention;它的『雙向』是來自前後兩個 LSTM,不是 Attention 機制。"
+        },
+        "hook": "口訣:Bi-LSTM = 前向 LSTM + 後向 LSTM,輸出拼接;不是堆疊也不是 Attention"
+      },
+      "misconceptions": ["把 Bi-LSTM 與 stack LSTM 混", "把 Bi-LSTM 與 Attention 混"],
+      "related_node_ids": ["n_L23203_013", "n_L23203_002"],
+      "tags": ["bi-lstm", "lstm", "nlp"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n33_008",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_013",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某語音助理新創在規劃即時語音轉文字(streaming ASR)系統時,工程師建議用 Bi-LSTM 提升準確率。技術長立刻否決,理由為何?",
+      "options": [
+        {"key": "A", "text": "Bi-LSTM 後向層需要完整序列(知道未來)才能算,無法做即時 / 串流推理", "is_correct": true, "trap_type": "正解:Bi-LSTM 即時推理不適用"},
+        {"key": "B", "text": "Bi-LSTM 準確率比單向 LSTM 低;在語音辨識領域 Bi-LSTM 從來沒有實際應用過案例", "is_correct": false, "trap_type": "誤以為 Bi-LSTM 準確率低"},
+        {"key": "C", "text": "Bi-LSTM 訓練時記憶體消耗太大;一般 GPU 完全無法訓練;這才是技術長否決的根本理由", "is_correct": false, "trap_type": "誤以為訓練不可行"},
+        {"key": "D", "text": "Bi-LSTM 只能處理影像不能處理語音;架構限制使其專為視覺任務設計;不適用語音場景", "is_correct": false, "trap_type": "誤限定領域"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Bi-LSTM 的後向層必須從序列尾端 x_T 開始往回算,因此需要『先看到整段序列』才能輸出。在即時 / 串流場景(streaming ASR、即時翻譯、線上股價預測),系統收到當前時刻時還沒有未來資料,後向層無法啟動。這就是 Bi-LSTM 在非串流場景(離線 NER、批次翻譯)很強,但即時推理場景不適用的根本原因。",
+        "wrong": {
+          "Bi-LSTM 準確率比單向 LSTM 低;在語音辨識領域 Bi-LSTM 從來沒有實際應用過案例": "完全相反 — 離線語音辨識上 Bi-LSTM 準確率通常優於單向 LSTM;Google / Baidu 早期都用過。",
+          "Bi-LSTM 訓練時記憶體消耗太大;一般 GPU 完全無法訓練;這才是技術長否決的根本理由": "Bi-LSTM 訓練可正常進行;否決理由是『推理時無未來資訊』,而非訓練不可行。",
+          "Bi-LSTM 只能處理影像不能處理語音;架構限制使其專為視覺任務設計;不適用語音場景": "Bi-LSTM 本質是序列模型,主要應用就在 NLP / 語音;不限定領域。"
+        },
+        "hook": "選擇:離線 / 全文 → Bi-LSTM;即時 / 串流 → 單向 LSTM 或因果模型(Causal)"
+      },
+      "misconceptions": ["以為 Bi-LSTM 適合所有任務", "忽略即時推理限制"],
+      "related_node_ids": ["n_L23203_013", "n_L23203_002"],
+      "tags": ["bi-lstm", "streaming", "real-time"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n33_009",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_013",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某 NLP 研究生在比較 Bi-LSTM 與 Transformer 處理長句語意理解時,下列敘述何者最為精確?",
+      "options": [
+        {"key": "A", "text": "Bi-LSTM 用前後兩個 LSTM 拼接;Transformer 用 Self-Attention 全局關聯;兩者實現雙向方式根本不同", "is_correct": true, "trap_type": "正解:實現機制不同"},
+        {"key": "B", "text": "Bi-LSTM 就是 Transformer 的早期版本;兩者本質相同;只是 Bi-LSTM 用 LSTM cell 而非 Attention", "is_correct": false, "trap_type": "誤以為兩者本質相同"},
+        {"key": "C", "text": "Bi-LSTM 比 Transformer 更能處理長距離依賴;在所有 NLP 任務上都領先;Transformer 已被全面淘汰", "is_correct": false, "trap_type": "誤以為 Bi-LSTM 較佳"},
+        {"key": "D", "text": "Transformer 是單向架構;Bi-LSTM 是唯一能看雙向的模型;這是 Bi-LSTM 不可取代的核心特色", "is_correct": false, "trap_type": "誤以為 Transformer 單向"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Bi-LSTM 透過『前向 LSTM + 後向 LSTM 拼接』實現雙向上下文,需循序遞迴無法平行;Transformer Encoder 透過『Self-Attention』讓每個位置同時關注序列所有位置(包含過去與未來),天然是雙向且可平行運算。兩者目標相似(雙向理解)但實現完全不同 — Transformer 在長距離依賴與訓練效率上通常更優。",
+        "wrong": {
+          "Bi-LSTM 就是 Transformer 的早期版本;兩者本質完全相同;只是 Bi-LSTM 用 LSTM cell 而非 Attention 命名": "Bi-LSTM 是遞迴序列模型(2005),Transformer 是 Attention 全局模型(2017);架構本質不同。",
+          "Bi-LSTM 比 Transformer 更能處理長距離依賴;在所有 NLP 任務上都領先;Transformer 已被淘汰": "完全相反 — LSTM/Bi-LSTM 長距離依賴有梯度衰減問題;Transformer 透過 Attention 直接連結任意距離,長依賴反而更強。",
+          "Transformer 是單向架構;Bi-LSTM 是唯一能同時看雙向的模型;這是 Bi-LSTM 不可取代的核心優勢": "Transformer Encoder 本身就是雙向(BERT 的核心特性);GPT 是 decoder-only 才是單向。"
+        },
+        "hook": "辨析:雙向上下文 — Bi-LSTM(遞迴拼接) vs Transformer Encoder(Attention 全局);後者更強更快"
+      },
+      "misconceptions": ["以為 Transformer 單向", "誤以為 Bi-LSTM 比 Transformer 強"],
+      "related_node_ids": ["n_L23203_013", "n_L23203_004", "n_L23203_002"],
+      "tags": ["bi-lstm", "transformer", "comparison"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n33_010",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_014",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某電力公司預測未來 720 小時電力負載時,工程師選用 Informer 而非標準 Transformer,主要原因為何?",
+      "options": [
+        {"key": "A", "text": "Informer 用 ProbSparse Attention 把 O(L²) 降為 O(L log L);長時序在記憶體與算力上才可行", "is_correct": true, "trap_type": "正解:ProbSparse 解 O(L²) 瓶頸"},
+        {"key": "B", "text": "Informer 與標準 Transformer 完全等同;選 Informer 只因新潮;在 720 小時長度下實際差異很小", "is_correct": false, "trap_type": "誤以為兩者等同"},
+        {"key": "C", "text": "Informer 用更深的 Transformer 層數;堆到 100+ 層提升精度;這是它在長時序場景的關鍵優勢", "is_correct": false, "trap_type": "誤以為靠加深"},
+        {"key": "D", "text": "Informer 用更大的 batch size 訓練;長時序預測需要大量資料同時處理才有效;這是核心差異", "is_correct": false, "trap_type": "誤以為靠 batch"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "標準 Transformer 的 Self-Attention 計算複雜度是 O(L²)(L=序列長度),在 720 小時(L=720)場景下,attention matrix 是 720×720 = 51.8 萬元素,記憶體與算力都吃緊。Informer(AAAI 2021)提出 ProbSparse Attention:利用大多數 query 對 attention 貢獻稀疏的性質,只算最關鍵 query-key 對,複雜度降為 O(L log L),讓長時序預測在實務上可行。",
+        "wrong": {
+          "Informer 與標準 Transformer 完全等同;選 Informer 只因新潮;在 720 小時長度下實際差異很小": "兩者本質不同 — Informer 專為長時序設計;在 L=720 時記憶體與速度差距顯著(O(L²) vs O(L log L))。",
+          "Informer 用更深的 Transformer 層數;堆到 100+ 層提升精度;這是它在長時序場景的關鍵優勢": "Informer 並非靠加深;核心創新是 ProbSparse 注意力稀疏化 + Feature Distilling。",
+          "Informer 用更大的 batch size 訓練;長時序預測需要大量資料同時處理才有效;這是核心差異": "batch size 與長時序處理是兩個獨立議題;Informer 核心是減少單個序列內 attention 計算量。"
+        },
+        "hook": "口訣:Informer = ProbSparse Attention,O(L²) → O(L log L);長時序專用"
+      },
+      "misconceptions": ["把 Informer 等同 Transformer", "誤以為靠加深網路"],
+      "related_node_ids": ["n_L23203_014", "n_L23203_004"],
+      "tags": ["informer", "probsparse", "time-series"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n33_011",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_014",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某工程師說「Informer 的 ProbSparse 就是把 attention 隨機抽樣以加速計算」,審查同事指出說法有誤。下列何項最能說明同事的觀點?",
+      "options": [
+        {"key": "A", "text": "ProbSparse 依機率分佈評分選最具資訊量的 query;不是隨機抽樣;後者會丟失關鍵 token", "is_correct": true, "trap_type": "正解:機率稀疏 ≠ 隨機抽樣"},
+        {"key": "B", "text": "ProbSparse 就是隨機 dropout 機制;工程師說法是正確的;審查同事的指正只是細節糾結", "is_correct": false, "trap_type": "認同錯誤觀點"},
+        {"key": "C", "text": "ProbSparse 是把 attention 矩陣量化為 int8;與隨機抽樣完全無關;同事的重點放錯方向", "is_correct": false, "trap_type": "誤以為是量化"},
+        {"key": "D", "text": "ProbSparse 是 attention head 數的縮減;從 16 head 減到 4 head;這就是稀疏的真正含意", "is_correct": false, "trap_type": "誤以為是減 head"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "ProbSparse(Probabilistic Sparse)Attention 的核心是『依 query 的稀疏度評分挑選最具資訊量的 top-u 個 query』,而非隨機抽樣。Informer 論文觀察到 attention 分數呈長尾分佈(大多數 query 對應幾乎均勻分佈,只少數 query 集中關注特定 key),因此用 KL 散度評估每個 query 的『資訊性』,只算前 u = O(log L) 個關鍵 query,將整體複雜度降為 O(L log L)。隨機抽樣會丟失關鍵 query。",
+        "wrong": {
+          "ProbSparse 就是隨機 dropout;工程師說法正確;審查同事的指正是多餘的細節糾結": "ProbSparse 是依機率分佈評分挑選,不是隨機;隨機會喪失重要 token 影響精度。",
+          "ProbSparse 是把 attention 矩陣量化為 int8;與隨機抽樣完全無關;同事重點放錯方向了": "ProbSparse 是稀疏化選 query,不是數值量化(quantization);兩者是不同優化方向。",
+          "ProbSparse 是 attention head 數的縮減;從 16 head 減到 4 head;這就是稀疏的真正含意": "head 數縮減是 multi-head 維度;ProbSparse 是在 query 維度做稀疏挑選,概念不同。"
+        },
+        "hook": "辨析:ProbSparse = 依稀疏度評分選 top-u query(KL 散度),不是隨機抽樣"
+      },
+      "misconceptions": ["把 ProbSparse 誤為隨機抽樣", "把 ProbSparse 與量化或減 head 混"],
+      "related_node_ids": ["n_L23203_014", "n_L23203_004"],
+      "tags": ["informer", "probsparse", "attention"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n33_012",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_014",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某 AI 顧問被客戶問到「長時序預測該選 LSTM、Transformer 或 Informer」,下列回答何者最能反映模型適用性原則?",
+      "options": [
+        {"key": "A", "text": "短中時序(L < 96)→ LSTM/Transformer;長時序(L 數百以上)→ Informer 避免 O(L²) 爆量", "is_correct": true, "trap_type": "正解:依序列長度選型"},
+        {"key": "B", "text": "所有時序預測都應選 LSTM;LSTM 的遞迴結構天然處理任意長度;Transformer 與 Informer 都是冗餘技術", "is_correct": false, "trap_type": "獨厚 LSTM"},
+        {"key": "C", "text": "所有時序預測都應選標準 Transformer;Self-Attention 在任何長度都最優;Informer 是行銷噱頭", "is_correct": false, "trap_type": "獨厚 Transformer"},
+        {"key": "D", "text": "Informer 在任何時序長度都最優;從 L=10 到 L=10000 都應選 Informer;LSTM 與 Transformer 已過時", "is_correct": false, "trap_type": "獨厚 Informer"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "時序模型選型應依序列長度與資料特性:(1)短時序(L<96 約 4 天小時級資料):LSTM 或標準 Transformer 都行,LSTM 簡單,Transformer 平行訓練快;(2)中長時序(L 數百):Transformer 仍可,但 attention O(L²) 開始吃緊;(3)長時序(L 數百到上千,如電力 720 小時、氣候年度預測):Informer 的 ProbSparse Attention O(L log L) 是合理選擇,避免標準 Transformer 在記憶體與算力上爆量。",
+        "wrong": {
+          "所有時序預測都應選 LSTM;LSTM 的遞迴結構天然處理任意長度;Transformer 與 Informer 都是冗餘技術": "LSTM 雖能跑長序列,但長距離梯度衰減 + 遞迴無法平行,訓練慢且效果不佳;Transformer 系才是現代主流。",
+          "所有時序預測都應選標準 Transformer;Self-Attention 在任何長度都最優;Informer 是行銷噱頭": "標準 Transformer 在長序列上 O(L²) 不可行;Informer 是針對此瓶頸的正式學術解(AAAI 2021 Best Paper)。",
+          "Informer 在任何時序長度都最優;從 L=10 到 L=10000 都應選 Informer;LSTM 與 Transformer 已過時": "L=10 時 ProbSparse 的稀疏化沒意義,反而增加複雜度;短時序用 LSTM 或標準 Transformer 更簡單合適。"
+        },
+        "hook": "選型:短序列 → LSTM/Transformer;長序列(L > 96 數百以上)→ Informer"
+      },
+      "misconceptions": ["以為單一模型萬用", "忽略序列長度差異"],
+      "related_node_ids": ["n_L23203_014", "n_L23203_004", "n_L23203_002"],
+      "tags": ["informer", "lstm", "model-selection"],
+      "errata_critical": false
+    }
+  ]
+}

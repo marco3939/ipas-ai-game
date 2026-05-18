@@ -1,0 +1,477 @@
+{
+  "version": "1.0",
+  "schema_version": "iron-rule-1+2+6",
+  "generated_at": "2026-05-18",
+  "batch": 32,
+  "batch_label": "N32 — 科三 Tier B:QDA + POMDP + CFA + CCA + MLP 五節點各 3 題",
+  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "iron_rule_compliance": {
+    "rule_1_drill_explanation": "每題皆有 explanation.correct/wrong/hook + misconceptions ≥ 1 + related_node_ids",
+    "rule_2_shuffle_and_cases": "shuffle_options:true;考點皆從 common_misconceptions + variation_seeds 抽取",
+    "rule_3_original": "100% 原創跨產業情境;素材限 kb/nodes-subject-3-extended.json 5 節點",
+    "rule_4_option_length": "4 選項長度差異 ≤ 20%;正解非永遠最長",
+    "rule_5_source_fidelity": "knowledge_code ∈ {L23202, L23201, L23102, L23203};related_node_ids 全部對應 kb 真實節點",
+    "rule_6_isolation": "本檔僅新建 1 檔;不改其他既有題目檔或共享層"
+  },
+  "subject": 3,
+  "knowledge_codes": ["L23202", "L23201", "L23102", "L23203"],
+  "batch_num": 32,
+  "distribution": {
+    "by_node": {"n_L23202_019": 3, "n_L23201_007": 3, "n_L23102_013": 3, "n_L23102_014": 3, "n_L23203_010": 3},
+    "by_format": {"single_choice": 15},
+    "by_difficulty": {"medium": 10, "hard": 5}
+  },
+  "source_pdf": ["機器學習模型圖卡(全).pdf page 21 QDA", "page 33-34 POMDP", "page 25 CFA", "page 26 CCA", "page 42(MLP 概念取自經典 ML 教材)"],
+  "questions": [
+    {
+      "id": "q_n32_001",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_019",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某零售客群分析團隊用兩維特徵繪散布圖,發現不同客群的邊界呈明顯曲線狀。下列何種判別模型在「邊界為曲面」假設上最適合?",
+      "options": [
+        {"key": "A", "text": "QDA 每類別獨立估計協方差矩陣 Σₖ,邊界形成二次曲面可有效處理客群非線性可分散佈型態", "is_correct": true, "trap_type": "正解:QDA 曲面"},
+        {"key": "B", "text": "LDA 所有類別共享同一個共變異數矩陣 Σ,邊界限定為線性超平面而無法直接處理彎曲分布資料", "is_correct": false, "trap_type": "LDA 線性邊界不適合曲線分布"},
+        {"key": "C", "text": "Logistic Regression 以 sigmoid 線性決策函數,邊界本質仍為直線或超平面而已", "is_correct": false, "trap_type": "Logistic Regression 線性"},
+        {"key": "D", "text": "高斯 Naive Bayes 假設特徵條件獨立,其邊界本質與線性 LDA 接近難以彎曲處理", "is_correct": false, "trap_type": "誤以為 NB 可彎曲"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "QDA(Quadratic Discriminant Analysis)為每個類別獨立估計協方差矩陣 Σₖ,使分類邊界呈二次曲面,適合非線性可分資料。",
+        "wrong": {
+          "LDA 所有類別共享同一個共變異數矩陣 Σ,邊界限定為線性超平面而無法直接處理彎曲分布資料": "LDA 共享 Σ 使邊界為直線/超平面,無法處理曲線分布。",
+          "Logistic Regression 以 sigmoid 線性決策函數,邊界本質仍為直線或超平面而已": "LR 雖用 sigmoid,但決策函數為線性組合,邊界仍為線性。",
+          "高斯 Naive Bayes 假設特徵條件獨立,其邊界本質與線性 LDA 接近難以彎曲處理": "高斯 NB 可產生曲面但題幹強調『判別模型』,本題標準解為 QDA。"
+        },
+        "hook": "口訣:LDA 直線 QDA 曲線,獨立協方差更彈性"
+      },
+      "misconceptions": ["把 QDA 與 LDA 混(LDA 共享 Σ,QDA 獨立 Σₖ)"],
+      "related_node_ids": ["n_L23202_019", "n_L23202_003"],
+      "tags": ["qda", "lda", "non-linear-boundary"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n32_002",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_019",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "比較 QDA 與 LDA 的核心數學差異,下列敘述何者正確?",
+      "options": [
+        {"key": "A", "text": "LDA 假設所有類別共享同一共變異數矩陣 Σ;QDA 每類別獨立估計 Σₖ", "is_correct": true, "trap_type": "正解:共享 vs 獨立 Σ"},
+        {"key": "B", "text": "QDA 邊界為線性;LDA 邊界為二次曲面,兩者在邊界形狀上正好顛倒互換", "is_correct": false, "trap_type": "邊界形狀顛倒"},
+        {"key": "C", "text": "QDA 不假設特徵服從高斯分布;LDA 則嚴格要求特徵須為常態分布之變數", "is_correct": false, "trap_type": "QDA 無高斯假設"},
+        {"key": "D", "text": "LDA 每類別參數量為 d²;QDA 僅需共享 Σ 因此參數量大幅少於 LDA 模型", "is_correct": false, "trap_type": "參數量顛倒"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "LDA 共享 Σ,QDA 每類別獨立 Σₖ;此為兩者核心差異,造成邊界形狀(線性 vs 曲面)與參數量(少 vs 多)的後續差別。",
+        "wrong": {
+          "QDA 邊界為線性;LDA 邊界為二次曲面,兩者在邊界形狀上正好顛倒互換": "顛倒;LDA 線性、QDA 曲面。",
+          "QDA 不假設特徵服從高斯分布;LDA 則嚴格要求特徵須為常態分布之變數": "兩者皆假設高斯;QDA 並未放寬此假設。",
+          "LDA 每類別參數量為 d²;QDA 僅需共享 Σ 因此參數量大幅少於 LDA 模型": "顛倒;QDA 每類別 d² 參數,LDA 共享 Σ 參數較少。"
+        },
+        "hook": "口訣:LDA 直線(共享 Σ);QDA 曲線(獨立 Σₖ)"
+      },
+      "misconceptions": ["把 QDA 與 LDA 混(LDA 共享 Σ,QDA 獨立 Σₖ)", "認為 QDA 不需高斯假設"],
+      "related_node_ids": ["n_L23202_019", "n_L23202_003"],
+      "tags": ["qda", "lda", "covariance-matrix"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n32_003",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_019",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某基因表現研究團隊有 200 個特徵維度但每類別樣本僅 30 筆,工程師建議用 QDA 因為「邊界更彈性」。資深主管不同意,理由為何?",
+      "options": [
+        {"key": "A", "text": "高維下 QDA 每類別需估 d² 參數量極大樣本不足易過擬合;LDA 共享 Σ 反而較穩健", "is_correct": true, "trap_type": "正解:高維過擬合"},
+        {"key": "B", "text": "QDA 的協方差矩陣必為奇異矩陣無法做矩陣求逆運算所以演算法根本無法執行下去", "is_correct": false, "trap_type": "誤以為演算法不能跑"},
+        {"key": "C", "text": "QDA 的高斯假設在高維資料下永遠不會成立所以原則上一律禁止採用 QDA 模型", "is_correct": false, "trap_type": "過度極端"},
+        {"key": "D", "text": "高維下 LDA 反而無法收斂;QDA 因彈性大應優先使用且樣本越少模型準確率反越好", "is_correct": false, "trap_type": "顛倒"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "QDA 每類別需估 d² 個協方差參數;當 d=200、樣本 30 時,參數量遠超樣本數導致嚴重過擬合;LDA 共享 Σ 參數量小,在高維/小樣本下反而穩健。",
+        "wrong": {
+          "QDA 的協方差矩陣必為奇異矩陣無法做矩陣求逆運算所以演算法根本無法執行下去": "可能奇異需正則化但不是『無法執行』。",
+          "QDA 的高斯假設在高維資料下永遠不會成立所以原則上一律禁止採用 QDA 模型": "極端表述;高維下 QDA 慎用而非禁用。",
+          "高維下 LDA 反而無法收斂;QDA 因彈性大應優先使用且樣本越少模型準確率反越好": "顛倒;高維小樣本下 LDA 比 QDA 穩定。"
+        },
+        "hook": "選擇:類別協方差相近用 LDA / 差異大且樣本充足用 QDA"
+      },
+      "misconceptions": ["誤以為 QDA 永遠優於 LDA(高維過擬合風險,LDA 反而穩)"],
+      "related_node_ids": ["n_L23202_019", "n_L23202_003"],
+      "tags": ["qda", "lda", "curse-of-dimensionality", "overfitting"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n32_004",
+      "knowledge_code": "L23201",
+      "node_id": "n_L23201_007",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某自駕物流公司部署機器人於霧氣濃厚的港口,感測器讀數有雜訊使「真實位置」無法直接觀測。最適合此決策框架為何?",
+      "options": [
+        {"key": "A", "text": "POMDP 處理部分可觀測環境;以信念狀態為機率分布持續更新並據以選擇動作", "is_correct": true, "trap_type": "正解:POMDP 信念狀態"},
+        {"key": "B", "text": "MDP 假設環境為完全可觀測;狀態為確定值無雜訊故可直接用狀態值表選擇動作", "is_correct": false, "trap_type": "MDP 假設不符"},
+        {"key": "C", "text": "表格式 Q-Learning 要求離散且完全觀測之狀態;不適合連續且有雜訊的真實狀態空間", "is_correct": false, "trap_type": "Q-Learning 假設不符"},
+        {"key": "D", "text": "監督式學習可直接學標籤對映;不需考量序列決策與環境互動回饋之強化學習設定框架", "is_correct": false, "trap_type": "監督式學習錯誤框架"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "POMDP(Partially Observable MDP)正是處理『真實狀態隱藏 + 只能拿到雜訊觀察值』之情境;以信念狀態(對隱藏狀態的機率分布)為決策依據持續更新。",
+        "wrong": {
+          "MDP 假設環境為完全可觀測;狀態為確定值無雜訊故可直接用狀態值表選擇動作": "MDP 要完全可觀測,雜訊感測器情境違反假設。",
+          "表格式 Q-Learning 要求離散且完全觀測之狀態;不適合連續且有雜訊的真實狀態空間": "Q-Learning 基於 MDP,同樣不適合部分可觀測。",
+          "監督式學習可直接學標籤對映;不需考量序列決策與環境互動回饋之強化學習設定框架": "本題屬序列決策不是標籤學習,監督式不適合。"
+        },
+        "hook": "口訣:霧中開車看影子,POMDP 信念推路況"
+      },
+      "misconceptions": ["把 POMDP 與 MDP 混(MDP 完全可觀,POMDP 部分可觀)"],
+      "related_node_ids": ["n_L23201_007", "n_L23201_004"],
+      "tags": ["pomdp", "mdp", "belief-state", "partial-observation"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n32_005",
+      "knowledge_code": "L23201",
+      "node_id": "n_L23201_007",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "POMDP 相較於 MDP 最關鍵的新增概念為何?",
+      "options": [
+        {"key": "A", "text": "信念狀態(Belief State)為對隱藏的真實狀態之機率分布;以觀察值持續更新此機率分布結構", "is_correct": true, "trap_type": "正解:信念狀態"},
+        {"key": "B", "text": "獎勵函數(Reward Function)是 MDP 與 POMDP 共有的元素;並非 POMDP 新增之核心概念", "is_correct": false, "trap_type": "共有非新增"},
+        {"key": "C", "text": "狀態轉移矩陣 P(s′|s,a) 是 MDP 既有元素;POMDP 沿用但並非其新增的核心概念以區隔之", "is_correct": false, "trap_type": "共有非新增"},
+        {"key": "D", "text": "策略網路(Policy Network)為深度強化學習之實作技術;不屬於 POMDP 之核心數學定義", "is_correct": false, "trap_type": "誤以為策略網路是新增"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "POMDP 在 MDP 五元組基礎上加入『觀察值 O + 觀察機率 Z + 信念狀態 b』;其中信念狀態為對隱藏狀態的機率分布,是 POMDP 相對 MDP 最核心的新增結構。",
+        "wrong": {
+          "獎勵函數(Reward Function)是 MDP 與 POMDP 共有的元素;並非 POMDP 新增之核心概念": "MDP 也有 R,非新增。",
+          "狀態轉移矩陣 P(s′|s,a) 是 MDP 既有元素;POMDP 沿用但並非其新增的核心概念以區隔之": "MDP 也有 P,非新增。",
+          "策略網路(Policy Network)為深度強化學習之實作技術;不屬於 POMDP 之核心數學定義": "Policy Network 為實作層;POMDP 本質為數學框架。"
+        },
+        "hook": "POMDP 三新增:觀察值 O、觀察機率 Z、信念狀態 b"
+      },
+      "misconceptions": ["誤以為 POMDP 只能靠觀察值(實為觀察值 + 信念狀態)"],
+      "related_node_ids": ["n_L23201_007", "n_L23201_004"],
+      "tags": ["pomdp", "belief-state", "mdp"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n32_006",
+      "knowledge_code": "L23201",
+      "node_id": "n_L23201_007",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某新進工程師主張「POMDP 比 MDP 簡單,因為只要看觀察值就好不用整個狀態空間」。資深 RL 研究員糾正,最佳理由為何?",
+      "options": [
+        {"key": "A", "text": "POMDP 信念空間為連續機率分布在離散狀態上維度遠高於 MDP;計算複雜度本質更高", "is_correct": true, "trap_type": "正解:信念空間連續"},
+        {"key": "B", "text": "POMDP 的觀察值維度通常與狀態維度完全相同;故與 MDP 在計算複雜度層面差不多", "is_correct": false, "trap_type": "誤以為複雜度相同"},
+        {"key": "C", "text": "POMDP 不需轉移機率 P 也不需觀察機率 Z;因此實作上反而比完整 MDP 來得簡單", "is_correct": false, "trap_type": "誤以為不需 P 和 Z"},
+        {"key": "D", "text": "MDP 必為連續狀態空間;POMDP 為離散觀察空間故 POMDP 計算成本一律低於 MDP", "is_correct": false, "trap_type": "顛倒"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "POMDP 的信念狀態 b(s) 為在 |S| 維離散狀態上的連續機率分布(單體形空間),計算與規劃在連續無限維空間上進行;相對 MDP 處理有限離散狀態空間,POMDP 本質計算複雜度顯著更高(精確求解為 PSPACE-hard)。",
+        "wrong": {
+          "POMDP 的觀察值維度通常與狀態維度完全相同;故與 MDP 在計算複雜度層面差不多": "觀察值維度與狀態維度未必相同;且複雜度由信念空間決定。",
+          "POMDP 不需轉移機率 P 也不需觀察機率 Z;因此實作上反而比完整 MDP 來得簡單": "POMDP 同時需要 P(狀態轉移)+ Z(觀察機率),比 MDP 多一個。",
+          "MDP 必為連續狀態空間;POMDP 為離散觀察空間故 POMDP 計算成本一律低於 MDP": "顛倒且錯誤;MDP 可離散可連續,POMDP 並非更簡單。"
+        },
+        "hook": "POMDP 複雜度來自連續信念空間(精確求解 PSPACE-hard)"
+      },
+      "misconceptions": ["認為 POMDP 比 MDP 簡單(實為更複雜,信念空間連續)"],
+      "related_node_ids": ["n_L23201_007", "n_L23201_004"],
+      "tags": ["pomdp", "complexity", "belief-state"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n32_007",
+      "knowledge_code": "L23102",
+      "node_id": "n_L23102_013",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某教育測驗團隊已從理論文獻預設「學業壓力量表」由焦慮、課業負擔、家長期待三因子構成,欲檢驗實測資料是否支持此預設結構。最適合方法為何?",
+      "options": [
+        {"key": "A", "text": "CFA 驗證性因子分析:由理論假設出發驗證實測資料是否符合預設因子 ↔ 觀察指標結構", "is_correct": true, "trap_type": "正解:CFA"},
+        {"key": "B", "text": "EFA 探索性因子分析:由無預設假設出發探索潛在因子個數與其與觀察指標之關係", "is_correct": false, "trap_type": "EFA 探索非驗證"},
+        {"key": "C", "text": "PCA 主成分分析:對共變異數矩陣作正交分解以最大化變異量並產生主成分新變數", "is_correct": false, "trap_type": "PCA 不驗證理論"},
+        {"key": "D", "text": "K-means 分群法:對樣本以距離為度量分群為 k 個非重疊群集;並非用於量表結構", "is_correct": false, "trap_type": "K-means 屬分群非結構效度"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "CFA(Confirmatory Factor Analysis)用於驗證『潛在因子 ↔ 觀察指標』的預設結構是否成立;適合心理量表 / 教育測驗 / 結構效度檢測;與 EFA(探索)、PCA(找主成分)不同,CFA 不產生新因子。",
+        "wrong": {
+          "EFA 探索性因子分析:由無預設假設出發探索潛在因子個數與其與觀察指標之關係": "EFA 用在無預設情境;本題已有理論假設應用 CFA。",
+          "PCA 主成分分析:對共變異數矩陣作正交分解以最大化變異量並產生主成分新變數": "PCA 找主成分,不驗證理論結構。",
+          "K-means 分群法:對樣本以距離為度量分群為 k 個非重疊群集;並非用於量表結構": "K-means 為分群任務,非量表結構效度檢測。"
+        },
+        "hook": "口訣:本觀念不是去探索模型,而是去考驗證理論"
+      },
+      "misconceptions": ["把 CFA 與 EFA 混(EFA 探索 / CFA 驗證)"],
+      "related_node_ids": ["n_L23102_013", "n_L23102_001"],
+      "tags": ["cfa", "efa", "factor-analysis", "construct-validity"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n32_008",
+      "knowledge_code": "L23102",
+      "node_id": "n_L23102_013",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "下列關於 CFA 驗證性因子分析的敘述,何者正確?",
+      "options": [
+        {"key": "A", "text": "CFA 是事前預設因子結構→跑模型→事後驗證假設是否成立;由理論驅動而非資料驅動", "is_correct": true, "trap_type": "正解:理論驅動"},
+        {"key": "B", "text": "CFA 與 EFA 皆會產出新因子;差別僅在於 CFA 跑得比 EFA 快;結果上兩者完全等價", "is_correct": false, "trap_type": "誤以為 CFA 產新因子"},
+        {"key": "C", "text": "CFA 等同 PCA;兩者皆對共變異數矩陣作正交分解以最大化每個主成分所解釋的變異", "is_correct": false, "trap_type": "誤以為等同 PCA"},
+        {"key": "D", "text": "CFA 無需任何預設因子結構;只要把所有變數丟入模型即可自動找出最佳潛在因子個數", "is_correct": false, "trap_type": "誤以為無假設"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "CFA 流程為『事前預設結構(理論驅動)→ 跑 CFA → 事後驗證假設』;研究者先有假設才用 CFA,而不是讓資料告訴你有幾個因子。",
+        "wrong": {
+          "CFA 與 EFA 皆會產出新因子;差別僅在於 CFA 跑得比 EFA 快;結果上兩者完全等價": "CFA 不產生新因子;只驗證假設結構。",
+          "CFA 等同 PCA;兩者皆對共變異數矩陣作正交分解以最大化每個主成分所解釋的變異": "PCA 找主成分,CFA 驗證理論模型,本質不同。",
+          "CFA 無需任何預設因子結構;只要把所有變數丟入模型即可自動找出最佳潛在因子個數": "CFA 必須有預設;無預設應改用 EFA。"
+        },
+        "hook": "重點:CFA 不產生因子,而是驗證假設的結構"
+      },
+      "misconceptions": ["誤以為 CFA 也能找新因子(實為只驗證假設,不探索)", "認為 CFA 等同 PCA"],
+      "related_node_ids": ["n_L23102_013", "n_L23102_001"],
+      "tags": ["cfa", "theory-driven", "factor-analysis"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n32_009",
+      "knowledge_code": "L23102",
+      "node_id": "n_L23102_013",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某市調公司只有「20 個顧客滿意度題項的調查資料」,但完全沒有任何理論假設關於背後潛在構念。年輕分析師主張先跑 CFA 找因子結構,資深研究員糾正,理由為何?",
+      "options": [
+        {"key": "A", "text": "CFA 須事前有理論驅動的因子假設才能跑;無假設應先用 EFA 探索再以 CFA 驗證", "is_correct": true, "trap_type": "正解:無假設應用 EFA"},
+        {"key": "B", "text": "CFA 對樣本數要求極低;但對變數的型態要求一律為類別變數而非連續變數使用", "is_correct": false, "trap_type": "誤以為變數型態限制"},
+        {"key": "C", "text": "CFA 必須先用 K-means 對樣本做分群;才能進行後續潛在因子驗證的標準分析流程", "is_correct": false, "trap_type": "捏造流程"},
+        {"key": "D", "text": "CFA 跑出來的因子永遠是正交的;不適合社會科學情境因子間通常具有相關性的場合", "is_correct": false, "trap_type": "錯誤;CFA 可建斜交模型"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "CFA 須有事前理論假設(因子個數 + 每個觀察指標對應哪個因子);無假設情境應先用 EFA 探索可能因子結構,再以另一獨立樣本跑 CFA 驗證。順序為 EFA → CFA。",
+        "wrong": {
+          "CFA 對樣本數要求極低;但對變數的型態要求一律為類別變數而非連續變數使用": "CFA 多用於連續變數(類別需特殊方法),與本題無關。",
+          "CFA 必須先用 K-means 對樣本做分群;才能進行後續潛在因子驗證的標準分析流程": "捏造;CFA 與 K-means 無流程依賴。",
+          "CFA 跑出來的因子永遠是正交的;不適合社會科學情境因子間通常具有相關性的場合": "CFA 可建構斜交(相關因子)模型,正交僅為其中一種設定。"
+        },
+        "hook": "標準流程:無假設 → EFA(探索)→ 形成假設 → CFA(驗證)"
+      },
+      "misconceptions": ["把 CFA 與 EFA 混(EFA 探索 / CFA 驗證)"],
+      "related_node_ids": ["n_L23102_013", "n_L23102_001"],
+      "tags": ["cfa", "efa", "workflow"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n32_010",
+      "knowledge_code": "L23102",
+      "node_id": "n_L23102_014",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某職場健康研究團隊有「8 項生理指標(血壓、心率、血糖等)」與「6 項心理量表分數(焦慮、憂鬱、滿意度等)」,欲找此兩組變數的整體最大關聯。最適合方法為何?",
+      "options": [
+        {"key": "A", "text": "CCA 典型相關分析:同時對兩組變數找出線性組合使其相關係數最大化為整體關聯", "is_correct": true, "trap_type": "正解:CCA"},
+        {"key": "B", "text": "PCA 主成分分析:對單組變數的共變異數矩陣作正交分解產生主成分新變數;不處理兩組", "is_correct": false, "trap_type": "PCA 單組變異"},
+        {"key": "C", "text": "Pearson 相關係數 r:適合衡量兩個變數之間的線性關聯;不適用於兩組多變數的整體關聯", "is_correct": false, "trap_type": "Pearson 限單一對"},
+        {"key": "D", "text": "Spearman 等級相關:適合衡量兩個變數的單調關聯;不適用於兩組多變數整體最大關聯分析", "is_correct": false, "trap_type": "Spearman 限單一對"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "CCA(Canonical Correlation Analysis)針對兩組變數 Set X(p 維)與 Set Y(q 維)找線性組合 U₁ = Σaᵢxᵢ 與 V₁ = Σbⱼyⱼ 使 Corr(U₁, V₁) 最大;適合多模態關聯分析(生理 ↔ 心理 / 圖像 ↔ 文字)。",
+        "wrong": {
+          "PCA 主成分分析:對單組變數的共變異數矩陣作正交分解產生主成分新變數;不處理兩組": "PCA 只處理單組變異最大化,不處理兩組關聯。",
+          "Pearson 相關係數 r:適合衡量兩個變數之間的線性關聯;不適用於兩組多變數的整體關聯": "Pearson 只能算單一對;本題要兩組整體關聯。",
+          "Spearman 等級相關:適合衡量兩個變數的單調關聯;不適用於兩組多變數整體最大關聯分析": "Spearman 同樣只能算單一對。"
+        },
+        "hook": "口訣:看到兩組變數最大關聯,優先想到 CCA"
+      },
+      "misconceptions": ["把 CCA 與 PCA 混(PCA 一組 / CCA 兩組)"],
+      "related_node_ids": ["n_L23102_014", "n_L23102_001"],
+      "tags": ["cca", "pca", "two-sets-correlation"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n32_011",
+      "knowledge_code": "L23102",
+      "node_id": "n_L23102_014",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "下列關於 CCA 與 PCA 核心差異的敘述,何者正確?",
+      "options": [
+        {"key": "A", "text": "CCA 處理兩組變數的整體最大關聯;PCA 處理單組變數的變異最大化以產生新主成分", "is_correct": true, "trap_type": "正解:CCA 兩組 PCA 一組"},
+        {"key": "B", "text": "CCA 與 PCA 皆作用於同一組變數;差別僅在於使用之最佳化目標函數有些微不同而已", "is_correct": false, "trap_type": "誤以為皆單組"},
+        {"key": "C", "text": "PCA 處理兩組變數的最大關聯;CCA 處理單組變數的變異最大化以產生新主成分顛倒一次", "is_correct": false, "trap_type": "顛倒"},
+        {"key": "D", "text": "CCA 與 PCA 本質完全相同;只是 CCA 用於高維資料而 PCA 多用於二維資料而已", "is_correct": false, "trap_type": "誤以為本質相同"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "CCA 與 PCA 最核心差異:CCA 為『兩組變數(X, Y)整體最大關聯』,PCA 為『單組變數(X)變異最大化』;兩者目標不同、輸入結構不同、輸出意義不同。",
+        "wrong": {
+          "CCA 與 PCA 皆作用於同一組變數;差別僅在於使用之最佳化目標函數有些微不同而已": "CCA 為兩組變數,PCA 為單組,本質不同。",
+          "PCA 處理兩組變數的最大關聯;CCA 處理單組變數的變異最大化以產生新主成分顛倒一次": "顛倒;CCA 兩組 PCA 一組。",
+          "CCA 與 PCA 本質完全相同;只是 CCA 用於高維資料而 PCA 多用於二維資料而已": "本質不同,與資料維度無關。"
+        },
+        "hook": "口訣:CCA 兩組關聯;PCA 單組變異"
+      },
+      "misconceptions": ["把 CCA 與 PCA 混(PCA 一組 / CCA 兩組)", "認為 CCA 等同多元相關係數"],
+      "related_node_ids": ["n_L23102_014", "n_L23102_001"],
+      "tags": ["cca", "pca", "dimensionality-reduction"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n32_012",
+      "knowledge_code": "L23102",
+      "node_id": "n_L23102_014",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某醫學影像團隊要分析「CT 影像 100 維特徵」與「病患問卷 30 維特徵」之關聯。年輕分析師認為「只要對每對特徵算 Pearson r 再找最大值就好」。資深研究員糾正,最佳理由為何?",
+      "options": [
+        {"key": "A", "text": "Pearson r 只衡量單一對線性關聯;無法整合 X 組與 Y 組整體的線性組合最大關聯結構", "is_correct": true, "trap_type": "正解:單一對 vs 整體"},
+        {"key": "B", "text": "Pearson r 必為 0 因影像與問卷屬不同型態資料;故根本不需要做兩組變數的關聯分析", "is_correct": false, "trap_type": "錯誤;不同型態仍可相關"},
+        {"key": "C", "text": "Pearson r 在多變數情境下會自動退化為 CCA 的結果;兩者於高維資料上完全等價無異", "is_correct": false, "trap_type": "錯誤;兩者不等價"},
+        {"key": "D", "text": "Pearson r 只能用於分類變數;對連續變數一律無效應改用 Spearman 等級相關替代", "is_correct": false, "trap_type": "錯誤;Pearson 用於連續變數"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Pearson r 只能算兩個單一變數的線性關聯;CCA 找的是『Set X 線性組合 U 與 Set Y 線性組合 V 的最大相關』,捕捉的是兩組變數的整體共變結構,逐對 Pearson 完全錯失此整合資訊。",
+        "wrong": {
+          "Pearson r 必為 0 因影像與問卷屬不同型態資料;故根本不需要做兩組變數的關聯分析": "不同來源資料仍可有相關;這是 CCA 的典型應用情境。",
+          "Pearson r 在多變數情境下會自動退化為 CCA 的結果;兩者於高維資料上完全等價無異": "Pearson r 與 CCA 不等價;CCA 為兩組變數線性組合最大化。",
+          "Pearson r 只能用於分類變數;對連續變數一律無效應改用 Spearman 等級相關替代": "Pearson 正是用於連續變數;Spearman 為等級。"
+        },
+        "hook": "Pearson 單一對;CCA 兩組線性組合最大關聯"
+      },
+      "misconceptions": ["誤以為 CCA 只看單一對相關(實為整體最大關聯)"],
+      "related_node_ids": ["n_L23102_014", "n_L23102_001"],
+      "tags": ["cca", "pearson", "multi-modal"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n32_013",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_010",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "下列關於 XOR 問題與神經網路架構的敘述,何者正確?",
+      "options": [
+        {"key": "A", "text": "XOR 屬於非線性可分問題;MLP(至少 1 隱藏層 + 非線性激活)為解決它的最小架構", "is_correct": true, "trap_type": "正解:MLP 解 XOR"},
+        {"key": "B", "text": "單層感知機(Perceptron)無隱藏層;但仍可以線性決策邊界完美解決 XOR 分類問題", "is_correct": false, "trap_type": "錯誤;Perceptron 解不了 XOR"},
+        {"key": "C", "text": "Logistic Regression 為非線性模型;其本身可解決 XOR 而不需任何隱藏層或激活函數", "is_correct": false, "trap_type": "錯誤;LR 為線性"},
+        {"key": "D", "text": "Naive Bayes 假設特徵獨立;可在無隱藏層情況下完美處理 XOR 等所有非線性分類問題", "is_correct": false, "trap_type": "錯誤;NB 為線性"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "XOR 為經典非線性可分問題(線性分類器無法分隔);MLP 加入至少 1 個隱藏層 + 非線性激活函數(ReLU/Sigmoid/Tanh)後即可解此問題,為解 XOR 的最小神經網路架構。",
+        "wrong": {
+          "單層感知機(Perceptron)無隱藏層;但仍可以線性決策邊界完美解決 XOR 分類問題": "Minsky 1969 證明單層 Perceptron 無法解 XOR;此為深度學習興起的歷史背景。",
+          "Logistic Regression 為非線性模型;其本身可解決 XOR 而不需任何隱藏層或激活函數": "LR 為線性分類器(sigmoid 套用在線性組合上),無法解 XOR。",
+          "Naive Bayes 假設特徵獨立;可在無隱藏層情況下完美處理 XOR 等所有非線性分類問題": "高斯 NB 邊界本質為線性;無法解 XOR。"
+        },
+        "hook": "口訣:隱藏層 + 非線性,MLP 跨越線性可分"
+      },
+      "misconceptions": ["把 MLP 與單層感知機混(後者無法處理非線性如 XOR)"],
+      "related_node_ids": ["n_L23203_010", "n_L23203_003"],
+      "tags": ["mlp", "perceptron", "xor", "non-linear"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n32_014",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_010",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "若 MLP 所有隱藏層皆改用「純線性激活函數(identity:f(x)=x)」,將會發生什麼?",
+      "options": [
+        {"key": "A", "text": "整個多層網路在數學上退化為單層線性模型;無法處理非線性可分資料表達能力大幅下降", "is_correct": true, "trap_type": "正解:退化為線性"},
+        {"key": "B", "text": "收斂速度反而加速數倍;且非線性表達能力提升;故為實務上常用 MLP 加速訓練的技巧", "is_correct": false, "trap_type": "誤以為加速"},
+        {"key": "C", "text": "表達能力依然提升;線性激活仍能保留多層堆疊帶來的非線性表達能力與函數逼近之威力", "is_correct": false, "trap_type": "錯誤;不會非線性"},
+        {"key": "D", "text": "效果等同 dropout 正則化;有助於降低過擬合風險;故為大型 MLP 訓練的標準做法之一", "is_correct": false, "trap_type": "錯誤;與 dropout 無關"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "若所有激活函數皆為線性,多層仿射變換的合成仍為仿射變換;整個網路在數學上等價於單層線性模型,無法表達非線性可分問題。非線性激活是 MLP 表達能力之關鍵。",
+        "wrong": {
+          "收斂速度反而加速數倍;且非線性表達能力提升;故為實務上常用 MLP 加速訓練的技巧": "雖然線性計算較快但表達能力崩潰;非實務做法。",
+          "表達能力依然提升;線性激活仍能保留多層堆疊帶來的非線性表達能力與函數逼近之威力": "錯誤;線性合成仍為線性。",
+          "效果等同 dropout 正則化;有助於降低過擬合風險;故為大型 MLP 訓練的標準做法之一": "dropout 為隨機遮蔽神經元,與線性激活完全無關。"
+        },
+        "hook": "核心:沒有非線性激活,多層也等於單層線性"
+      },
+      "misconceptions": ["忽略非線性激活的重要性(若用線性激活則退化為線性模型)"],
+      "related_node_ids": ["n_L23203_010", "n_L23203_003"],
+      "tags": ["mlp", "activation-function", "linearity"],
+      "errata_critical": false
+    },
+    {
+      "id": "q_n32_015",
+      "knowledge_code": "L23203",
+      "node_id": "n_L23203_010",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "資料科學新進工程師主張「MLP 必須有多層隱藏才能稱為 MLP,單一隱藏層的網路不算」。資深 AI 工程師糾正,理由為何?",
+      "options": [
+        {"key": "A", "text": "MLP 定義為≥1 隱藏層即可;單一隱藏層在足夠神經元下亦可逼近任意連續函數(萬能逼近定理)", "is_correct": true, "trap_type": "正解:1 層即 MLP"},
+        {"key": "B", "text": "MLP 定義為≥3 隱藏層;少於 3 層稱為淺層感知機而不能稱為多層感知機而被歸類於 LR", "is_correct": false, "trap_type": "錯誤;捏造定義"},
+        {"key": "C", "text": "MLP 定義為≥5 隱藏層;少於 5 層之網路一律歸類為 DNN 而 MLP 一詞專指 5 層以上模型", "is_correct": false, "trap_type": "錯誤;捏造定義"},
+        {"key": "D", "text": "MLP 與層數無關;只要使用非線性激活函數即可稱為 MLP;甚至無隱藏層的網路也算 MLP", "is_correct": false, "trap_type": "錯誤;必須≥1 隱藏層"}
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "MLP 定義為前饋網路且含至少 1 個隱藏層 + 非線性激活;Universal Approximation Theorem(Cybenko 1989, Hornik 1991)證明 1 隱藏層 + 足夠神經元 + 非線性激活可逼近任意連續函數。DNN 才是『多隱藏層深度』之指稱。",
+        "wrong": {
+          "MLP 定義為≥3 隱藏層;少於 3 層稱為淺層感知機而不能稱為多層感知機而被歸類於 LR": "捏造;標準教科書 MLP 定義為≥1 隱藏層。",
+          "MLP 定義為≥5 隱藏層;少於 5 層之網路一律歸類為 DNN 而 MLP 一詞專指 5 層以上模型": "捏造;與 DNN 區分依據為『深度概念』而非嚴格層數門檻。",
+          "MLP 與層數無關;只要使用非線性激活函數即可稱為 MLP;甚至無隱藏層的網路也算 MLP": "錯誤;無隱藏層即為單層 Perceptron 不是 MLP。"
+        },
+        "hook": "MLP ≥1 隱藏層即可;DNN 才是『深』"
+      },
+      "misconceptions": ["認為 MLP 必有多層隱藏(實為≥1 即可,DNN 才是『深』)"],
+      "related_node_ids": ["n_L23203_010", "n_L23203_003"],
+      "tags": ["mlp", "dnn", "universal-approximation"],
+      "errata_critical": false
+    }
+  ]
+}

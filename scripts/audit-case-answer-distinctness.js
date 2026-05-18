@@ -44,6 +44,9 @@ const Q_FILES = [
   'questions-batch-n29-L23-DL.json',
   'questions-batch-n30-L23-LLM.json',
   'questions-batch-n31-L23-generative.json',
+  'questions-batch-n32-L23-tierB.json',
+  'questions-batch-n33-L23-DL-advanced.json',
+  'questions-batch-n34-L23-RL-advanced.json',
   'questions-confusion-matrix.json',
   'questions-mode8-trace.json',
 ];

@@ -1361,10 +1361,379 @@
         {"context": "Mode Collapse 是什麼", "trap_options": ["D 太強", "資料不足", "學習率太低"]}
       ],
       "related_node_ids": ["n_L23203_004", "n_L23203_008", "n_L23402_001"]
+    },
+    {
+      "node_id": "n_L23202_019",
+      "knowledge_code": "L23202",
+      "title": "QDA 二次判別分析 — 曲線分界處理非線性",
+      "category": "algorithm",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習模型圖卡(全).pdf", "section": "page 21"}],
+      "summary": "QDA(Quadratic Discriminant Analysis)用二次方程邊界處理非線性分類;對比 LDA 假設所有類別共享同一共變異數矩陣,QDA 每類別獨立估計協方差,邊界為曲面,更靈活但高維易過擬合",
+      "key_points": [
+        "用二次方程邊界(曲面)分類,適合非線性可分資料",
+        "每類別獨立協方差矩陣 Σₖ(對比 LDA 共享 Σ)",
+        "分類邊界為曲線/曲面(對比 LDA 直線/超平面)",
+        "高斯分布假設:特徵服從常態分布",
+        "高維下參數量大易過擬合(每類別 d² 參數,d 為維度)"
+      ],
+      "common_misconceptions": [
+        "把 QDA 與 LDA 混(LDA 共享 Σ,QDA 獨立 Σₖ)",
+        "誤以為 QDA 永遠優於 LDA(高維過擬合風險,LDA 反而穩)",
+        "認為 QDA 不需高斯假設(實為兩者皆假設特徵常態)"
+      ],
+      "explanation_hooks": [
+        "口訣:「LDA 直線 QDA 曲線,獨立協方差更彈性」",
+        "選擇:類別協方差相近用 LDA / 差異大用 QDA"
+      ],
+      "variation_seeds": [
+        {"context": "資料呈非線性分布(曲面分界)", "trap_options": ["LDA", "Logistic Regression", "Naive Bayes"]},
+        {"context": "QDA vs LDA 核心差", "trap_options": ["QDA 線性 / LDA 二次(顛倒)", "兩者共享 Σ", "QDA 無假設"]}
+      ],
+      "related_node_ids": ["n_L23102_002", "n_L23202_003", "n_L23202_014"]
+    },
+    {
+      "node_id": "n_L23201_007",
+      "knowledge_code": "L23201",
+      "title": "POMDP 部分可觀測馬可夫決策 — 信念狀態 + 觀察值",
+      "category": "concept",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習模型圖卡(全).pdf", "section": "page 33-34"}],
+      "summary": "POMDP(Partially Observable MDP)處理「資訊不完全」決策:真實狀態隱藏,Agent 只能觀察值(不完整)推測;結合 Belief State(信念狀態)更新行動;典型案例「霧中開車根據影子推路況」",
+      "key_points": [
+        "真實狀態隱藏(對比 MDP 完全可觀測)",
+        "Agent 只能拿到觀察值 O(不完整、有雜訊)",
+        "Belief State(信念狀態):當前對隱藏狀態的機率分布",
+        "決策流程:觀察值 → 更新信念 → 選動作 → 環境回饋",
+        "應用:機器人自動導航(感測器有雜訊)、醫療決策(症狀推疾病)"
+      ],
+      "common_misconceptions": [
+        "把 POMDP 與 MDP 混(MDP 完全可觀,POMDP 部分可觀)",
+        "誤以為 POMDP 只能靠觀察值(實為觀察值 + 信念狀態)",
+        "認為 POMDP 比 MDP 簡單(實為更複雜,信念空間連續)"
+      ],
+      "explanation_hooks": [
+        "口訣:「霧中開車看影子,POMDP 信念推路況」",
+        "選擇:感測器精準 → MDP / 有雜訊或遮蔽 → POMDP"
+      ],
+      "variation_seeds": [
+        {"context": "感測器有雜訊的機器人導航", "trap_options": ["MDP", "Q-Learning 表格式", "監督學習"]},
+        {"context": "POMDP 核心新增的概念", "trap_options": ["獎勵函數", "狀態轉移矩陣", "策略網路"]}
+      ],
+      "related_node_ids": ["n_L23201_004", "n_L23201_005", "n_L23201_006"]
+    },
+    {
+      "node_id": "n_L23201_008",
+      "knowledge_code": "L23201",
+      "title": "DDPG 深度確定性策略梯度 — Actor-Critic 連續動作控制",
+      "category": "algorithm",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習模型圖卡(全).pdf", "section": "page 37"}],
+      "summary": "DDPG(Deep Deterministic Policy Gradient)針對連續動作空間的強化學習;結合 Actor-Critic 架構:Actor 決定動作、Critic 評估 Q 值;Model-Free;適合機械手臂精細操作、自駕車連續控制",
+      "key_points": [
+        "連續動作空間(對比 DQN 離散動作)",
+        "Actor-Critic 雙網路:Actor 輸出動作 / Critic 輸出 Q(s,a)",
+        "Actor 追求最大 Q;Critic 用 TD-error 學 Q",
+        "Model-Free:不需環境模型",
+        "Deterministic:Actor 輸出確定動作(對比 stochastic 機率分布)",
+        "經典應用:機械手臂、無人機、自駕車轉向控制"
+      ],
+      "common_misconceptions": [
+        "把 DDPG 誤為 DQN(DQN 離散動作 / DDPG 連續動作)",
+        "誤以為 Critic 是核心(實為 Actor-Critic 聯合)",
+        "認為 DDPG 是 stochastic policy(實為 deterministic)"
+      ],
+      "explanation_hooks": [
+        "口訣:「連續動作找 DDPG,Actor 演 Critic 評」",
+        "與 DQN 對比:離散用 DQN / 連續用 DDPG"
+      ],
+      "variation_seeds": [
+        {"context": "機械手臂精細控制角度", "trap_options": ["DQN", "Q-Learning", "監督學習"]},
+        {"context": "DDPG 核心架構", "trap_options": ["僅 Critic 網路", "policy gradient only", "value-based only"]}
+      ],
+      "related_node_ids": ["n_L23201_004", "n_L23201_006", "n_L23201_009"]
+    },
+    {
+      "node_id": "n_L23201_009",
+      "knowledge_code": "L23201",
+      "title": "PPO 近端策略優化 — Clipping 限制更新幅度",
+      "category": "algorithm",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習模型圖卡(全).pdf", "section": "page 38"}],
+      "summary": "PPO(Proximal Policy Optimization)透過 Clipping 機制限制每次策略更新幅度,防止策略發散;基於 Actor-Critic;穩定性與訓練效率兼具;ChatGPT RLHF 主要使用 PPO",
+      "key_points": [
+        "Clipping 機制:策略更新限制在舊策略 ±ε 範圍",
+        "Actor-Critic 架構(同 DDPG)",
+        "解決問題:策略梯度更新過大 → 發散",
+        "提升訓練穩定性 + 效率",
+        "PPO vs TRPO:TRPO 二階導數複雜 / PPO 一階 + clip 簡單高效",
+        "OpenAI 採用:ChatGPT RLHF 的策略優化"
+      ],
+      "common_misconceptions": [
+        "把 PPO 與 TRPO 混(TRPO 二階 / PPO 一階 + clip)",
+        "誤以為 PPO 只考慮 Actor-Critic 架構(實為 Actor-Critic + Clipping 限制更新)",
+        "認為 PPO 無模型也不需 critic(實為兩者皆需)"
+      ],
+      "explanation_hooks": [
+        "口訣:「PPO clip 限更新,穩定優於 TRPO」",
+        "本觀念核心:不只是 Actor-Critic,而是『更新幅度限制』"
+      ],
+      "variation_seeds": [
+        {"context": "ChatGPT RLHF 用什麼演算法", "trap_options": ["DQN", "Q-Learning", "DDPG"]},
+        {"context": "PPO 解決什麼問題", "trap_options": ["獎勵稀疏", "連續動作", "探索不足"]}
+      ],
+      "related_node_ids": ["n_L23201_004", "n_L23201_008", "n_L23201_010"]
+    },
+    {
+      "node_id": "n_L23201_010",
+      "knowledge_code": "L23201",
+      "title": "A3C 並行訓練 — 異步 Worker + 主網路",
+      "category": "algorithm",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習模型圖卡(全).pdf", "section": "page 39"}],
+      "summary": "A3C(Asynchronous Advantage Actor-Critic)多 Worker 在不同 Environment 異步訓練,異步更新同一 Global Network;消除資料相關性、大幅縮短訓練時間;對比 A2C 為同步版本",
+      "key_points": [
+        "多 Worker 平行在不同 Environment 跑",
+        "Asynchronous(異步):各 Worker 獨立更新 Global Network",
+        "Advantage Actor-Critic:用 Advantage 函數 A(s,a) 取代純 Q",
+        "消除資料相關性(打破時序依賴)",
+        "需多 CPU/GPU 計算資源",
+        "對比 A2C:A2C 同步(Synchronous)/ A3C 異步"
+      ],
+      "common_misconceptions": [
+        "把 A3C 與 A2C 混(A3C Asynchronous / A2C Synchronous)",
+        "誤以為 A3C 重點是加速(實為穩定性 + 消除相關性)",
+        "認為 A3C 不需要 critic(實為 Actor-Critic 體系)"
+      ],
+      "explanation_hooks": [
+        "口訣:「A3C 異步多 Worker,共享 Global Network」",
+        "重點:不是加速,而是「消除資料相關性 → 穩定訓練」"
+      ],
+      "variation_seeds": [
+        {"context": "多 CPU 訓練強化學習", "trap_options": ["DQN", "Q-Learning 單線程", "PPO 同步"]},
+        {"context": "A3C vs A2C 核心差", "trap_options": ["A3C 同步 A2C 異步(顛倒)", "演算法本質不同", "A3C 不用 critic"]}
+      ],
+      "related_node_ids": ["n_L23201_004", "n_L23201_008", "n_L23201_009"]
+    },
+    {
+      "node_id": "n_L23102_013",
+      "knowledge_code": "L23102",
+      "title": "CFA 驗證性因子分析 — 驗證理論假設結構",
+      "category": "algorithm",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習模型圖卡(全).pdf", "section": "page 25"}],
+      "summary": "CFA(Confirmatory Factor Analysis)驗證「潛在因子 ↔ 觀察指標」的假設結構是否成立;與 EFA(探索性)、PCA 不同,CFA 不產生新因子,只驗證理論模型;適合心理量表 / 教育測驗 / 結構效度",
+      "key_points": [
+        "驗證 vs 探索:CFA 驗證假設模型(已知因子結構)",
+        "不產生新因子(對比 EFA / PCA)",
+        "事前預設結構 → 跑 CFA → 事後驗證結果",
+        "用於量表結構效度檢測、潛在因子驗證",
+        "需理論驅動:研究者先有假設才用 CFA"
+      ],
+      "common_misconceptions": [
+        "把 CFA 與 EFA 混(EFA 探索 / CFA 驗證)",
+        "誤以為 CFA 也能找新因子(實為只驗證假設,不探索)",
+        "認為 CFA 等同 PCA(PCA 找主成分,CFA 驗證理論模型)"
+      ],
+      "explanation_hooks": [
+        "口訣:「本觀念不是去探索模型,而是去考驗證理論」",
+        "重點:CFA 不產生因子,而是驗證假設的結構"
+      ],
+      "variation_seeds": [
+        {"context": "心理量表測驗結構效度", "trap_options": ["EFA", "PCA", "K-means"]},
+        {"context": "CFA 核心特性", "trap_options": ["產生新因子", "無假設探索", "降維到二維"]}
+      ],
+      "related_node_ids": ["n_L23102_001", "n_L23102_002", "n_L23102_014"]
+    },
+    {
+      "node_id": "n_L23102_014",
+      "knowledge_code": "L23102",
+      "title": "CCA 典型相關分析 — 兩組變數的整體最大關聯",
+      "category": "algorithm",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習模型圖卡(全).pdf", "section": "page 26"}],
+      "summary": "CCA(Canonical Correlation Analysis)找兩組變數 Set X 與 Set Y 的「整體最大相關」,而非單一對相關;產生典型變量 U₁、V₁ 使相關係數最大;適合多模態關聯分析(生理指標 ↔ 心理量表 / 圖像 ↔ 文字)",
+      "key_points": [
+        "兩組變數:Set X(p 維)+ Set Y(q 維)",
+        "找「整體最大關聯」而非單一對相關",
+        "產生典型變量(canonical variables)U₁ = Σaᵢxᵢ、V₁ = Σbⱼyⱼ",
+        "使 Corr(U₁, V₁) 最大",
+        "CCA vs PCA:CCA 兩組變數關聯 / PCA 單組變異",
+        "應用:生理指標 ↔ 心理量表 / 工作滿意度 ↔ 生活品質"
+      ],
+      "common_misconceptions": [
+        "把 CCA 與 PCA 混(PCA 一組 / CCA 兩組)",
+        "誤以為 CCA 只看單一對相關(實為整體最大關聯)",
+        "認為 CCA 等同多元相關係數(後者只是其特殊情形)"
+      ],
+      "explanation_hooks": [
+        "口訣:「看到兩組變數最大關聯,優先想到 CCA」",
+        "重點:不單純的相關性,而是兩組整體最大關聯"
+      ],
+      "variation_seeds": [
+        {"context": "生理指標與心理量表多模態關聯", "trap_options": ["PCA", "Pearson r", "Spearman"]},
+        {"context": "CCA vs PCA 核心差異", "trap_options": ["兩者皆一組變數", "PCA 兩組 CCA 一組(顛倒)", "兩者本質相同"]}
+      ],
+      "related_node_ids": ["n_L23102_001", "n_L23102_002", "n_L23102_013"]
+    },
+    {
+      "node_id": "n_L23203_010",
+      "knowledge_code": "L23203",
+      "title": "MLP 多層感知機 — 隱藏層 + 非線性激活解決感知機限制",
+      "category": "algorithm",
+      "source_level": "L2",
+      "source_refs": [{"file": "經典 ML 教材(MLP 概念);主檔 page 42 標題正確但內容誤植 DQN,不採用"}],
+      "summary": "MLP(Multi-Layer Perceptron)在感知機基礎上加入一或多隱藏層 + 非線性激活函數(ReLU/Sigmoid/Tanh);解決單層感知機只能處理線性可分問題的限制;深度學習基礎前饋網路(DNN 為其多層版本)",
+      "key_points": [
+        "至少 1 隱藏層(對比 Perceptron 無隱藏層)",
+        "非線性激活函數(ReLU/Sigmoid/Tanh)是關鍵",
+        "前饋(Feed-forward):訊號單向從輸入到輸出",
+        "反向傳播(Backprop)+ 梯度下降學權重",
+        "Universal Approximation Theorem:1 隱藏層 + 足夠神經元可逼近任意連續函數",
+        "適合表格資料、分類迴歸基礎任務"
+      ],
+      "common_misconceptions": [
+        "把 MLP 與單層感知機混(後者無法處理非線性如 XOR)",
+        "認為 MLP 必有多層隱藏(實為 ≥1 即可,DNN 才是『深』)",
+        "忽略非線性激活的重要性(若用線性激活則退化為線性模型)"
+      ],
+      "explanation_hooks": [
+        "口訣:「隱藏層 + 非線性,MLP 跨越線性可分」",
+        "核心:沒有非線性激活,多層也等於單層線性"
+      ],
+      "variation_seeds": [
+        {"context": "解決 XOR 問題的最小架構", "trap_options": ["單層感知機", "Logistic Regression", "Naive Bayes"]},
+        {"context": "MLP 中『線性激活』的後果", "trap_options": ["加速收斂", "提升表達能力", "等同 dropout"]}
+      ],
+      "related_node_ids": ["n_L23203_003", "n_L23203_005", "n_L23203_006"]
+    },
+    {
+      "node_id": "n_L23203_011",
+      "knowledge_code": "L23203",
+      "title": "ResNet 殘差網路 — 跳躍連接學殘差解決深度退化",
+      "category": "algorithm",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習模型圖卡(全).pdf", "section": "page 48"}],
+      "summary": "ResNet(Residual Network)透過 Skip Connection(跳躍連接)學習殘差 F(x)=H(x)-x;解決深層網路「性能退化」(深度越深反而準確率下降)問題;可訓練 100+ 層(ResNet-50/101/152);ImageNet 2015 冠軍",
+      "key_points": [
+        "Skip Connection 跳躍連接:輸入直接加到深層輸出",
+        "學殘差 F(x)=H(x)-x(不學完整映射 H,只學差距 F)",
+        "解決「性能退化」(degradation):層數深反而誤差大",
+        "可訓 50/101/152 層(經典深度)",
+        "ImageNet 2015 冠軍(He Kaiming 等人)",
+        "影響:後續 Transformer / DenseNet 都採用 skip connection 概念"
+      ],
+      "common_misconceptions": [
+        "把 ResNet 等同「很深的網路」(深度本身不是 ResNet 重點,跳躍連接才是)",
+        "誤以為 ResNet 解決梯度消失(實為解決「性能退化」,梯度消失靠 BN/ReLU)",
+        "認為 H(x)=F(x) 而非 H(x)=F(x)+x"
+      ],
+      "explanation_hooks": [
+        "口訣:「跳躍連接學殘差,深層也不怕性能退化」",
+        "重點:不是「更深」而是「跳躍連接 + 學殘差」"
+      ],
+      "variation_seeds": [
+        {"context": "為何深層網路訓練後反而準確率下降", "trap_options": ["梯度消失", "過擬合", "資料不足"]},
+        {"context": "ResNet 核心機制", "trap_options": ["更深的網路", "更寬的網路", "更高解析度輸入"]}
+      ],
+      "related_node_ids": ["n_L23203_005", "n_L23203_012", "n_L23304_004"]
+    },
+    {
+      "node_id": "n_L23203_012",
+      "knowledge_code": "L23203",
+      "title": "EfficientNet 效率優化 — 複合縮放 D/W/R 同步",
+      "category": "algorithm",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習模型圖卡(全).pdf", "section": "page 49"}],
+      "summary": "EfficientNet 透過複合縮放(Compound Scaling)同步調整網路深度 D、寬度 W、解析度 R;以最小計算資源達最高準確率;對比傳統手動單一維度縮放的低效;適合移動端 / 嵌入式設備部署",
+      "key_points": [
+        "複合縮放:同步擴展深度 D、寬度 W、解析度 R(對比傳統單一維度)",
+        "目標:用最少計算資源達最高準確率",
+        "FLOPs(浮點運算次數)優化是核心",
+        "B0~B7 系列:從小到大全套尺寸",
+        "適合移動端 / 嵌入式設備部署",
+        "效率不僅是模型大小,更是計算量(FLOPs)的優化"
+      ],
+      "common_misconceptions": [
+        "誤以為 EfficientNet 只追求模型寬度(實為三維度同步)",
+        "認為 EfficientNet 等同更深(實為深度只是 1/3 維度)",
+        "誤以為效率只看模型參數量(實還看 FLOPs)"
+      ],
+      "explanation_hooks": [
+        "口訣:「同時縮放 D/W/R,EfficientNet 全面均衡」",
+        "選型:移動端 / 嵌入式 → EfficientNet;追極限精度 → ResNet"
+      ],
+      "variation_seeds": [
+        {"context": "嵌入式設備部署影像分類", "trap_options": ["ResNet-152", "VGG-19", "Transformer"]},
+        {"context": "EfficientNet 複合縮放是縮放什麼", "trap_options": ["僅深度", "僅寬度", "僅解析度"]}
+      ],
+      "related_node_ids": ["n_L23203_005", "n_L23203_011"]
+    },
+    {
+      "node_id": "n_L23203_013",
+      "knowledge_code": "L23203",
+      "title": "Bi-LSTM 雙向長短期記憶網路 — 同時看過去與未來",
+      "category": "algorithm",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習模型圖卡(全).pdf", "section": "page 50"}],
+      "summary": "Bi-LSTM(Bidirectional LSTM)用前向 + 後向兩個 LSTM 同時捕捉過去與未來上下文;解決單向 LSTM 無法利用未來資訊的限制;適合 NLP 完整理解(命名實體識別、機器翻譯、情感分析)",
+      "key_points": [
+        "前向層:從 x₁ → x_T 處理(過去 → 現在)",
+        "後向層:從 x_T → x₁ 處理(未來 → 現在)",
+        "輸出 h_t = [h_t^forward; h_t^backward] 拼接",
+        "解決:單向 LSTM 看不到未來資訊的問題",
+        "適合需「全文理解」的任務(NER、POS、機器翻譯)",
+        "缺點:不能用於即時 / 串流推理(需完整序列)"
+      ],
+      "common_misconceptions": [
+        "認為 Bi-LSTM 適合所有任務(實為即時推理不適用,缺未來資訊)",
+        "把 Bi-LSTM 與 LSTM stack 混(stack 多層仍單向)",
+        "誤以為 Bi-LSTM 等同 Transformer(後者用 Attention 全局)"
+      ],
+      "explanation_hooks": [
+        "口訣:「過去未來都要看,序列理解更全面」",
+        "選擇:即時推理 → 單向 LSTM / 全文理解 → Bi-LSTM"
+      ],
+      "variation_seeds": [
+        {"context": "命名實體識別(NER)任務", "trap_options": ["單向 LSTM", "Naive Bayes", "Logistic Regression"]},
+        {"context": "Bi-LSTM 不適用的情境", "trap_options": ["NER", "翻譯", "情感分析"]}
+      ],
+      "related_node_ids": ["n_L23203_002", "n_L23203_004", "n_L23203_014"]
+    },
+    {
+      "node_id": "n_L23203_014",
+      "knowledge_code": "L23203",
+      "title": "Informer 高效長時序 — ProbSparse Attention 取代 O(L²)",
+      "category": "algorithm",
+      "source_level": "L2",
+      "source_refs": [{"file": "機器學習模型圖卡(全).pdf", "section": "page 54"}],
+      "summary": "Informer 專為長時序設計的 Transformer 變體;透過 ProbSparse Attention 只算最關鍵 token,解決 Transformer 標準 Self-Attention O(L²) 運算與記憶體瓶頸;適合電力預測、銷售預測、長序列氣候模型",
+      "key_points": [
+        "ProbSparse Attention:稀疏化注意力,只算關鍵 token 對(O(L log L))",
+        "Feature Distilling:特徵層次遞減,降低長序列冗餘",
+        "解決問題:標準 Transformer Self-Attention O(L²) 在長時序(L 大)爆量",
+        "適合長時序預測(電力 / 銷售 / 氣候 / 交通)",
+        "對比 RNN / LSTM:後者遞迴無法平行,長距離梯度衰減",
+        "對比 Transformer:Informer 在長序列上效率高"
+      ],
+      "common_misconceptions": [
+        "誤以為 Informer 等同 Transformer(實為長序列特化版)",
+        "認為長序列用 RNN / LSTM 即可(遞迴運算量大且無法平行)",
+        "把 ProbSparse 誤為隨機抽樣(實為機率稀疏選最關鍵 token)"
+      ],
+      "explanation_hooks": [
+        "口訣:「精選注意力 + 層次遞減,長時序也高效」",
+        "選擇:短時序 → LSTM/Transformer / 長時序(L > 96) → Informer"
+      ],
+      "variation_seeds": [
+        {"context": "預測未來 720 小時電力需求", "trap_options": ["RNN", "LSTM", "ARIMA"]},
+        {"context": "Informer 核心改進", "trap_options": ["更深層 Transformer", "更多 attention heads", "更大 batch"]}
+      ],
+      "related_node_ids": ["n_L23203_002", "n_L23203_004", "n_L23203_013"]
     }
   ],
   "summary": {
-    "total_nodes": 62,
+    "total_nodes": 74,
     "by_code": {
       "L23101_ProbStat": 3,
       "L23103_NumOpt": 8,
