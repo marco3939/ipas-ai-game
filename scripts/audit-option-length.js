@@ -28,6 +28,7 @@ const FILES = [
   'questions-batch-n15-L22301.json', 'questions-batch-n16-L22302.json', 'questions-batch-n17-L22303.json',
   'questions-batch-n18-L22401.json', 'questions-batch-n19-L22402.json', 'questions-batch-n20-L22403.json', 'questions-batch-n21-L22404.json',
   'questions-batch-n22-L22-code-data.json', 'questions-batch-n23-L22-code-ml.json', 'questions-batch-n24-L22-code-gen.json',
+  'questions-batch-boss-fill.json',
   'questions-confusion-matrix.json',
   'questions-mode8-trace.json',
 ];

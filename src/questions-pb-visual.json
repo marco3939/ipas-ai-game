@@ -271,6 +271,9 @@
         "參數量",
         "FC層",
         "PCB瑕疵"
+      ],
+      "boss_topics": [
+        "manufacturing"
       ]
     },
     {
@@ -533,6 +536,9 @@
         "計算量",
         "GPU",
         "醫療影像"
+      ],
+      "boss_topics": [
+        "medical"
       ]
     },
     {
@@ -794,7 +800,8 @@
         "微調",
         "凍結",
         "貓狗分類"
-      ]
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_pb_004",
@@ -892,7 +899,8 @@
         "訓練成本",
         "Adam",
         "mixed-precision"
-      ]
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_pb_005",
@@ -1009,6 +1017,9 @@
         "FFN",
         "參數量",
         "NLP"
+      ],
+      "boss_topics": [
+        "legal"
       ]
     },
     {
@@ -1135,6 +1146,9 @@
         "FlashAttention",
         "瓶頸分析",
         "L²"
+      ],
+      "boss_topics": [
+        "legal"
       ]
     },
     {
@@ -1214,6 +1228,9 @@
         "不平衡",
         "醫療AI",
         "Precision-Recall"
+      ],
+      "boss_topics": [
+        "medical"
       ]
     },
     {
@@ -1292,6 +1309,9 @@
         "閾值",
         "信用卡盜刷",
         "Precision-Recall"
+      ],
+      "boss_topics": [
+        "finance"
       ]
     },
     {
@@ -1410,6 +1430,9 @@
         "閾值",
         "客戶流失",
         "梯形法則"
+      ],
+      "boss_topics": [
+        "telecom"
       ]
     },
     {
@@ -1539,6 +1562,9 @@
         "閾值最佳化",
         "客戶流失",
         "決策閾值"
+      ],
+      "boss_topics": [
+        "telecom"
       ]
     },
     {
@@ -1612,6 +1638,9 @@
         "Precision",
         "醫療AI",
         "乳癌檢測"
+      ],
+      "boss_topics": [
+        "medical"
       ]
     },
     {
@@ -1719,6 +1748,9 @@
         "macro",
         "weighted",
         "輿情分析"
+      ],
+      "boss_topics": [
+        "media"
       ]
     },
     {
@@ -1806,6 +1838,9 @@
         "RMSE",
         "迴歸評估",
         "物流時效"
+      ],
+      "boss_topics": [
+        "logistics"
       ]
     },
     {
@@ -1887,6 +1922,9 @@
         "K-Fold",
         "ROC-AUC",
         "信貸風險"
+      ],
+      "boss_topics": [
+        "finance"
       ]
     },
     {
@@ -1975,6 +2013,9 @@
         "偏度",
         "峰度",
         "零售銷售預測"
+      ],
+      "boss_topics": [
+        "ecommerce"
       ]
     },
     {
@@ -2061,6 +2102,9 @@
         "物件偵測",
         "YOLOv5",
         "PCB瑕疵"
+      ],
+      "boss_topics": [
+        "manufacturing"
       ]
     },
     {
@@ -2184,6 +2228,9 @@
         "FC層",
         "智慧城市",
         "交通流分類"
+      ],
+      "boss_topics": [
+        "smartcity"
       ]
     },
     {
@@ -2290,6 +2337,9 @@
         "Y軸截斷",
         "長條圖",
         "能源用電"
+      ],
+      "boss_topics": [
+        "energy"
       ]
     }
   ]

@@ -4,14 +4,21 @@
   "purpose": "L21201/L21202/L21203 AI 評估/規劃/風險 25 題原創情境題",
   "iron_rule_compliance": "explanation.correct + wrong + hook + misconceptions + related_node_ids + shuffle_options + stem_variables + 跨產業原創 + 選項長度均衡 + node_id 真實",
   "generated_at": "2026-05-10",
-  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "exam_target": {
+    "name": "IPAS AI 應用規劃師中級",
+    "date": "2026-05-23"
+  },
   "distribution": {
     "L21201_AI評估": 8,
     "L21202_AI規劃": 8,
     "L21203_AI風險": 9,
     "scenario_decision": 18,
     "single_choice_text": 7,
-    "by_difficulty": {"easy": 5, "medium": 13, "hard": 7}
+    "by_difficulty": {
+      "easy": 5,
+      "medium": 13,
+      "hard": 7
+    }
   },
   "questions": [
     {
@@ -23,12 +30,33 @@
       "difficulty": "easy",
       "source_level": "L1",
       "stem": "某連鎖咖啡品牌的 CIO 提案導入 AI 客流預測系統,被 CFO 退回時要求『先把評估流程交代清楚』。請依 AI 導入評估三層架構,選出{descriptor}的順序。",
-      "stem_variables": {"descriptor": ["最正確", "最標準", "最完整"]},
+      "stem_variables": {
+        "descriptor": [
+          "最正確",
+          "最標準",
+          "最完整"
+        ]
+      },
       "options": [
-        {"text": "業務需求(As-Is/To-Be、KPI)→ 技術可行性(資料/IT/適配)→ 成本效益(ROI/NPV/Payback)", "is_correct": true},
-        {"text": "成本效益(ROI/NPV/Payback)→ 業務需求(As-Is/To-Be、KPI)→ 技術可行性(資料/IT/適配)", "is_correct": false, "trap_type": "把財務指標放第一層,忽略需求與可行性才是上游條件"},
-        {"text": "技術可行性(資料/IT/適配)→ 業務需求(As-Is/To-Be、KPI)→ 成本效益(ROI/NPV/Payback)", "is_correct": false, "trap_type": "本末倒置,沒有需求就無法判斷可行性與效益"},
-        {"text": "POC 驗證 → 全公司部署 → 後續再評估 ROI 與 KPI 達成度", "is_correct": false, "trap_type": "POC 屬可行性段中的測試手段,非評估三層"}
+        {
+          "text": "業務需求(As-Is/To-Be、KPI)→ 技術可行性(資料/IT/適配)→ 成本效益(ROI/NPV/Payback)",
+          "is_correct": true
+        },
+        {
+          "text": "成本效益(ROI/NPV/Payback)→ 業務需求(As-Is/To-Be、KPI)→ 技術可行性(資料/IT/適配)",
+          "is_correct": false,
+          "trap_type": "把財務指標放第一層,忽略需求與可行性才是上游條件"
+        },
+        {
+          "text": "技術可行性(資料/IT/適配)→ 業務需求(As-Is/To-Be、KPI)→ 成本效益(ROI/NPV/Payback)",
+          "is_correct": false,
+          "trap_type": "本末倒置,沒有需求就無法判斷可行性與效益"
+        },
+        {
+          "text": "POC 驗證 → 全公司部署 → 後續再評估 ROI 與 KPI 達成度",
+          "is_correct": false,
+          "trap_type": "POC 屬可行性段中的測試手段,非評估三層"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -40,9 +68,24 @@
         },
         "hook": "三層口訣:『有需求嗎(Why)→ 做得到嗎(How)→ 划算嗎(How much)』,缺一不可"
       },
-      "misconceptions": ["把財務指標當第一道關卡", "忽略業務需求直接跳技術評估", "把 POC 與三層評估混為一談"],
-      "related_node_ids": ["n_L21201_001", "n_L21202_002"],
-      "tags": ["AI評估", "三層架構", "情境決策", "高頻"]
+      "misconceptions": [
+        "把財務指標當第一道關卡",
+        "忽略業務需求直接跳技術評估",
+        "把 POC 與三層評估混為一談"
+      ],
+      "related_node_ids": [
+        "n_L21201_001",
+        "n_L21202_002"
+      ],
+      "tags": [
+        "AI評估",
+        "三層架構",
+        "情境決策",
+        "高頻"
+      ],
+      "boss_topics": [
+        "ecommerce"
+      ]
     },
     {
       "id": "q_n4_002",
@@ -54,10 +97,25 @@
       "source_level": "L1",
       "stem": "某半導體封測廠 IT 部門評估兩個 AI 良率預測專案。專案甲:初始投資 1,200 萬,預計三年每年產生 600 萬效益。專案乙:初始投資 1,200 萬,預計第一年 100 萬、第二年 500 萬、第三年 1,200 萬。若兩案三年總效益相同(1,800 萬),為何 NPV 仍可能差距明顯?",
       "options": [
-        {"text": "NPV 對現金流時間分布敏感,折現後越早回收的現值越高,專案甲現金流提前,NPV 通常高於後置型的專案乙", "is_correct": true},
-        {"text": "NPV 與時間無關,兩案總和相同就會等值,差距僅來自折現率設定,因此選擇上應視為平手", "is_correct": false, "trap_type": "誤解 NPV 公式中的折現項 (1+r)^t,以為時間不影響"},
-        {"text": "NPV 公式 = ROI × 期數,因兩案總額相同所以 NPV 必然相同,差距只能來自會計帳列認列時點", "is_correct": false, "trap_type": "杜撰公式,NPV 與 ROI 是兩個不同概念"},
-        {"text": "NPV 受 Payback Period 直接決定,兩案投資金額一致,所以 NPV 必然一致,需用其他指標區分", "is_correct": false, "trap_type": "Payback 與 NPV 是不同指標,不存在直接決定關係"}
+        {
+          "text": "NPV 對現金流時間分布敏感,折現後越早回收的現值越高,專案甲現金流提前,NPV 通常高於後置型的專案乙",
+          "is_correct": true
+        },
+        {
+          "text": "NPV 與時間無關,兩案總和相同就會等值,差距僅來自折現率設定,因此選擇上應視為平手",
+          "is_correct": false,
+          "trap_type": "誤解 NPV 公式中的折現項 (1+r)^t,以為時間不影響"
+        },
+        {
+          "text": "NPV 公式 = ROI × 期數,因兩案總額相同所以 NPV 必然相同,差距只能來自會計帳列認列時點",
+          "is_correct": false,
+          "trap_type": "杜撰公式,NPV 與 ROI 是兩個不同概念"
+        },
+        {
+          "text": "NPV 受 Payback Period 直接決定,兩案投資金額一致,所以 NPV 必然一致,需用其他指標區分",
+          "is_correct": false,
+          "trap_type": "Payback 與 NPV 是不同指標,不存在直接決定關係"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -69,9 +127,24 @@
         },
         "hook": "NPV 看時間、ROI 看百分比、Payback 看回本期;三財務指標各管一塊不可互換"
       },
-      "misconceptions": ["把 NPV 與 ROI 混為一談", "忽略時間價值對現值的影響", "認為總額相同 NPV 就相同"],
-      "related_node_ids": ["n_L21201_001", "n_L21202_002"],
-      "tags": ["AI評估", "NPV", "財務指標", "情境決策"]
+      "misconceptions": [
+        "把 NPV 與 ROI 混為一談",
+        "忽略時間價值對現值的影響",
+        "認為總額相同 NPV 就相同"
+      ],
+      "related_node_ids": [
+        "n_L21201_001",
+        "n_L21202_002"
+      ],
+      "tags": [
+        "AI評估",
+        "NPV",
+        "財務指標",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "manufacturing"
+      ]
     },
     {
       "id": "q_n4_003",
@@ -83,10 +156,25 @@
       "source_level": "L1",
       "stem": "某中型壽險公司面臨核保 AI 模型導入決策。需求特徵:(1) 客製化程度極高,(2) 內部已有 5 名資深資料科學家,(3) 預算充裕但時程不急,(4) 知識留存被列為策略目標。三種導入模式中最適合者為何?",
       "options": [
-        {"text": "內部自建團隊開發,可滿足高度客製需求並使核保專業知識內化於組織,符合知識留存策略目標", "is_correct": true},
-        {"text": "委外給顧問公司,因顧問公司精通核保領域,可降低初期人力負擔並快速完成 AI 系統交付", "is_correct": false, "trap_type": "委外雖專業度高,但與知識留存目標衝突"},
-        {"text": "採購商業 SaaS API 服務,以降低開發風險,且能快速上線,長期成本也較內部開發低廉", "is_correct": false, "trap_type": "商業服務客製化弱,長期成本高,不符合需求"},
-        {"text": "三種模式並行同時進行,以多重備援降低單點失敗風險,並利用組合優勢來互補不足", "is_correct": false, "trap_type": "重複投資造成資源浪費,不是合理策略"}
+        {
+          "text": "內部自建團隊開發,可滿足高度客製需求並使核保專業知識內化於組織,符合知識留存策略目標",
+          "is_correct": true
+        },
+        {
+          "text": "委外給顧問公司,因顧問公司精通核保領域,可降低初期人力負擔並快速完成 AI 系統交付",
+          "is_correct": false,
+          "trap_type": "委外雖專業度高,但與知識留存目標衝突"
+        },
+        {
+          "text": "採購商業 SaaS API 服務,以降低開發風險,且能快速上線,長期成本也較內部開發低廉",
+          "is_correct": false,
+          "trap_type": "商業服務客製化弱,長期成本高,不符合需求"
+        },
+        {
+          "text": "三種模式並行同時進行,以多重備援降低單點失敗風險,並利用組合優勢來互補不足",
+          "is_correct": false,
+          "trap_type": "重複投資造成資源浪費,不是合理策略"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -98,9 +186,24 @@
         },
         "hook": "選型四條件:時程急→商業服務;客製高→內部/委外;知識留存→內部;預算少→商業服務"
       },
-      "misconceptions": ["以為內部開發一定比委外貴", "把商業服務等同 SaaS", "忽略知識留存對長期戰略的影響"],
-      "related_node_ids": ["n_L21201_001", "n_L21201_002"],
-      "tags": ["AI評估", "導入模式", "情境決策", "壽險"]
+      "misconceptions": [
+        "以為內部開發一定比委外貴",
+        "把商業服務等同 SaaS",
+        "忽略知識留存對長期戰略的影響"
+      ],
+      "related_node_ids": [
+        "n_L21201_001",
+        "n_L21201_002"
+      ],
+      "tags": [
+        "AI評估",
+        "導入模式",
+        "情境決策",
+        "壽險"
+      ],
+      "boss_topics": [
+        "finance"
+      ]
     },
     {
       "id": "q_n4_004",
@@ -111,12 +214,33 @@
       "difficulty": "easy",
       "source_level": "L1",
       "stem": "某觀光飯店三個月後將開幕,行銷長要求快速導入訂房推薦 AI 模型,但內部完全沒有資料科學人才,預算亦緊張。下列哪種導入模式{descriptor}?",
-      "stem_variables": {"descriptor": ["最為適合", "最值得首選", "最符合需求"]},
+      "stem_variables": {
+        "descriptor": [
+          "最為適合",
+          "最值得首選",
+          "最符合需求"
+        ]
+      },
       "options": [
-        {"text": "採用商業 AutoML 或 Low-code 平台,啟動快、無須自建團隊", "is_correct": true},
-        {"text": "招募一支 5 人以上的內部團隊全職自建,雖費時但能完整掌握核心技術並提升組織能力", "is_correct": false, "trap_type": "三個月時程與緊縮預算下不可行"},
-        {"text": "將整個專案委外給國際顧問公司,由顧問端負責所有 AI 開發與長期維運責任", "is_correct": false, "trap_type": "顧問費用通常高於商業服務,且預算緊張不可行"},
-        {"text": "拒絕採用 AI,改以手工 Excel 樞紐分析做訂房推薦,以維持完全可控與零風險", "is_correct": false, "trap_type": "完全捨棄 AI 與題目情境(行銷長要求導入)矛盾"}
+        {
+          "text": "採用商業 AutoML 或 Low-code 平台,啟動快、無須自建團隊",
+          "is_correct": true
+        },
+        {
+          "text": "招募一支 5 人以上的內部團隊全職自建,雖費時但能完整掌握核心技術並提升組織能力",
+          "is_correct": false,
+          "trap_type": "三個月時程與緊縮預算下不可行"
+        },
+        {
+          "text": "將整個專案委外給國際顧問公司,由顧問端負責所有 AI 開發與長期維運責任",
+          "is_correct": false,
+          "trap_type": "顧問費用通常高於商業服務,且預算緊張不可行"
+        },
+        {
+          "text": "拒絕採用 AI,改以手工 Excel 樞紐分析做訂房推薦,以維持完全可控與零風險",
+          "is_correct": false,
+          "trap_type": "完全捨棄 AI 與題目情境(行銷長要求導入)矛盾"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -128,9 +252,21 @@
         },
         "hook": "時程急 + 無人才 + 預算緊 → 商業服務(AutoML/Low-code/SaaS)是首選"
       },
-      "misconceptions": ["把商業服務等同 SaaS", "誤以為內部一定比商業服務便宜", "認為快速上線就是放棄品質"],
-      "related_node_ids": ["n_L21201_002"],
-      "tags": ["AI評估", "導入模式", "觀光業", "情境決策"]
+      "misconceptions": [
+        "把商業服務等同 SaaS",
+        "誤以為內部一定比商業服務便宜",
+        "認為快速上線就是放棄品質"
+      ],
+      "related_node_ids": [
+        "n_L21201_002"
+      ],
+      "tags": [
+        "AI評估",
+        "導入模式",
+        "觀光業",
+        "情境決策"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n4_005",
@@ -142,10 +278,25 @@
       "source_level": "L1",
       "stem": "某市政府交通局想導入 AI 號誌優化系統,委由顧問完成可行性評估報告。報告主管讀後發現:文件第三章直接以『年節省 800 萬交通延滯成本』推估 ROI,但前兩章對『現有號誌延滯基線』與『AI 控制適配性』均未量化。報告主管最該指出的核心缺漏是?",
       "options": [
-        {"text": "缺少 As-Is 基線與 To-Be 量化目標,使 ROI 分子(回報)成為無依據的數字", "is_correct": true},
-        {"text": "缺少 Payback Period 指標,應在報告中補充回本期計算以平衡 ROI 過於樂觀的問題", "is_correct": false, "trap_type": "Payback 補充無法解決基線缺失的根本問題"},
-        {"text": "缺少 NPV 折現分析,只要將 800 萬以折現率折現後再算 ROI 即可解決所有疑慮", "is_correct": false, "trap_type": "NPV 也是建立在『有效益基線』之上,基線缺失下折現再多次也不可信"},
-        {"text": "缺少對顧問公司的議價分析,主管應要求顧問公司降價以提升投資吸引力", "is_correct": false, "trap_type": "議價屬採購流程,與評估報告品質不直接相關"}
+        {
+          "text": "缺少 As-Is 基線與 To-Be 量化目標,使 ROI 分子(回報)成為無依據的數字",
+          "is_correct": true
+        },
+        {
+          "text": "缺少 Payback Period 指標,應在報告中補充回本期計算以平衡 ROI 過於樂觀的問題",
+          "is_correct": false,
+          "trap_type": "Payback 補充無法解決基線缺失的根本問題"
+        },
+        {
+          "text": "缺少 NPV 折現分析,只要將 800 萬以折現率折現後再算 ROI 即可解決所有疑慮",
+          "is_correct": false,
+          "trap_type": "NPV 也是建立在『有效益基線』之上,基線缺失下折現再多次也不可信"
+        },
+        {
+          "text": "缺少對顧問公司的議價分析,主管應要求顧問公司降價以提升投資吸引力",
+          "is_correct": false,
+          "trap_type": "議價屬採購流程,與評估報告品質不直接相關"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -157,9 +308,23 @@
         },
         "hook": "三層之間順序不可逆:無 As-Is/To-Be → 無可信效益 → 無可信 ROI/NPV/Payback"
       },
-      "misconceptions": ["以為財務指標可以彌補需求基線缺失", "忽視 As-Is 量化的重要性", "把 NPV 當作萬能調味料"],
-      "related_node_ids": ["n_L21201_001"],
-      "tags": ["AI評估", "三層架構", "政府", "情境決策"]
+      "misconceptions": [
+        "以為財務指標可以彌補需求基線缺失",
+        "忽視 As-Is 量化的重要性",
+        "把 NPV 當作萬能調味料"
+      ],
+      "related_node_ids": [
+        "n_L21201_001"
+      ],
+      "tags": [
+        "AI評估",
+        "三層架構",
+        "政府",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "smartcity"
+      ]
     },
     {
       "id": "q_n4_006",
@@ -171,10 +336,25 @@
       "source_level": "L2",
       "stem": "某零售集團評估 AI 補貨預測 POC,專案經理列出計畫:(A) 涵蓋全國 360 家門市、所有品類同步試行;(B) 在第一階段以 5 家具代表性門市、選 3 個熱銷品類試行;(C) 不設定終止條件,直接進入正式上線;(D) 由專案經理一人決定指標與成敗標準,不邀請門市與物流主管參與。下列何者為符合 POC 必備條件的最佳組合?",
       "options": [
-        {"text": "選 (B);具範圍清晰、可控、代表性,符合 POC 受控測試精神並利後續橫向擴展", "is_correct": true},
-        {"text": "選 (A);全面試行才能取得最大資料量,符合『大數據優先』的 AI 模型訓練原則", "is_correct": false, "trap_type": "POC 不是『盡可能涵蓋大範圍』而是『受控可驗證』"},
-        {"text": "選 (C);省去終止條件可避免提前下車,有利專案推動效率與時程縮短", "is_correct": false, "trap_type": "POC 必須有明確終止條件才能避免無止盡耗資源"},
-        {"text": "選 (D);由 PM 一人決定可降低協調成本,使 POC 評估流程更為快速且結論統一", "is_correct": false, "trap_type": "POC 必須有利害關係人支持,否則結論難以被採納"}
+        {
+          "text": "選 (B);具範圍清晰、可控、代表性,符合 POC 受控測試精神並利後續橫向擴展",
+          "is_correct": true
+        },
+        {
+          "text": "選 (A);全面試行才能取得最大資料量,符合『大數據優先』的 AI 模型訓練原則",
+          "is_correct": false,
+          "trap_type": "POC 不是『盡可能涵蓋大範圍』而是『受控可驗證』"
+        },
+        {
+          "text": "選 (C);省去終止條件可避免提前下車,有利專案推動效率與時程縮短",
+          "is_correct": false,
+          "trap_type": "POC 必須有明確終止條件才能避免無止盡耗資源"
+        },
+        {
+          "text": "選 (D);由 PM 一人決定可降低協調成本,使 POC 評估流程更為快速且結論統一",
+          "is_correct": false,
+          "trap_type": "POC 必須有利害關係人支持,否則結論難以被採納"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -186,9 +366,24 @@
         },
         "hook": "POC 四件套:『範圍清晰、可控、代表性、利害關係人支持』,缺一即不符合 POC 定義"
       },
-      "misconceptions": ["把 POC 當作小流量上線", "省略 POC 終止條件", "誤以為 POC 不需要利害關係人參與"],
-      "related_node_ids": ["n_L21201_001", "n_L21202_002"],
-      "tags": ["AI評估", "POC", "零售", "情境決策"]
+      "misconceptions": [
+        "把 POC 當作小流量上線",
+        "省略 POC 終止條件",
+        "誤以為 POC 不需要利害關係人參與"
+      ],
+      "related_node_ids": [
+        "n_L21201_001",
+        "n_L21202_002"
+      ],
+      "tags": [
+        "AI評估",
+        "POC",
+        "零售",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "ecommerce"
+      ]
     },
     {
       "id": "q_n4_007",
@@ -200,10 +395,25 @@
       "source_level": "L1",
       "stem": "某教育科技新創計算 AI 智慧出題系統的 ROI:總投入 800 萬,第一年回報 200 萬、第二年 400 萬、第三年 600 萬,合計 1,200 萬。請問三年累計 ROI 約為何?",
       "options": [
-        {"text": "(1,200 - 800) / 800 × 100% = 50%", "is_correct": true},
-        {"text": "(1,200 + 800) / 800 × 100% = 250%", "is_correct": false, "trap_type": "誤把分子算成總和而非淨利"},
-        {"text": "1,200 / 800 × 100% = 150%", "is_correct": false, "trap_type": "把『回報倍數』與『投資報酬率』混淆"},
-        {"text": "(1,200 - 800) / 1,200 × 100% ≈ 33.3%", "is_correct": false, "trap_type": "分母用回報而非投資"}
+        {
+          "text": "(1,200 - 800) / 800 × 100% = 50%",
+          "is_correct": true
+        },
+        {
+          "text": "(1,200 + 800) / 800 × 100% = 250%",
+          "is_correct": false,
+          "trap_type": "誤把分子算成總和而非淨利"
+        },
+        {
+          "text": "1,200 / 800 × 100% = 150%",
+          "is_correct": false,
+          "trap_type": "把『回報倍數』與『投資報酬率』混淆"
+        },
+        {
+          "text": "(1,200 - 800) / 1,200 × 100% ≈ 33.3%",
+          "is_correct": false,
+          "trap_type": "分母用回報而非投資"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -215,9 +425,23 @@
         },
         "hook": "ROI 公式記法:『淨/本』(淨利 / 本金 = 淨利 / 投資成本)"
       },
-      "misconceptions": ["把回報倍數當 ROI", "ROI 分母用回報", "忘記先扣除成本"],
-      "related_node_ids": ["n_L21201_001"],
-      "tags": ["AI評估", "ROI", "計算", "高頻"]
+      "misconceptions": [
+        "把回報倍數當 ROI",
+        "ROI 分母用回報",
+        "忘記先扣除成本"
+      ],
+      "related_node_ids": [
+        "n_L21201_001"
+      ],
+      "tags": [
+        "AI評估",
+        "ROI",
+        "計算",
+        "高頻"
+      ],
+      "boss_topics": [
+        "education"
+      ]
     },
     {
       "id": "q_n4_008",
@@ -229,10 +453,25 @@
       "source_level": "L2",
       "stem": "某連鎖物流業導入 AI 路線優化系統,顧問報告中宣稱『Payback Period = 1.2 年,投資非常划算』。財務長卻反問:『為什麼 NPV 卻是負的?』下列何者最能說明此矛盾發生的原因?",
       "options": [
-        {"text": "Payback Period 只看『收回本金的時間』,忽略後續長期現金流;NPV 涵蓋全生命週期並折現,可能因後段現金流轉負而為負值", "is_correct": true},
-        {"text": "Payback Period 與 NPV 是同一公式的不同寫法,出現此矛盾即為顧問報告計算錯誤所致,應退回顧問公司重新試算", "is_correct": false, "trap_type": "兩者不是同一公式,衡量維度不同"},
-        {"text": "Payback Period 包含折現而 NPV 不包含,因此 Payback 數字常顯示偏樂觀但 NPV 反而是更貼近實際的真實情況", "is_correct": false, "trap_type": "與事實相反,NPV 才是涵蓋折現的指標"},
-        {"text": "Payback Period 涉及收入而 NPV 涉及成本,因此 Payback 為正而 NPV 為負代表收入勝過成本可放心執行專案", "is_correct": false, "trap_type": "兩者皆涉及收入與成本,差別在於時間範圍與是否折現"}
+        {
+          "text": "Payback Period 只看『收回本金的時間』,忽略後續長期現金流;NPV 涵蓋全生命週期並折現,可能因後段現金流轉負而為負值",
+          "is_correct": true
+        },
+        {
+          "text": "Payback Period 與 NPV 是同一公式的不同寫法,出現此矛盾即為顧問報告計算錯誤所致,應退回顧問公司重新試算",
+          "is_correct": false,
+          "trap_type": "兩者不是同一公式,衡量維度不同"
+        },
+        {
+          "text": "Payback Period 包含折現而 NPV 不包含,因此 Payback 數字常顯示偏樂觀但 NPV 反而是更貼近實際的真實情況",
+          "is_correct": false,
+          "trap_type": "與事實相反,NPV 才是涵蓋折現的指標"
+        },
+        {
+          "text": "Payback Period 涉及收入而 NPV 涉及成本,因此 Payback 為正而 NPV 為負代表收入勝過成本可放心執行專案",
+          "is_correct": false,
+          "trap_type": "兩者皆涉及收入與成本,差別在於時間範圍與是否折現"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -244,9 +483,23 @@
         },
         "hook": "Payback 看『何時回本』、NPV 看『全生命週期淨現值』、ROI 看『投資報酬百分比』,三者分工互補不可互替"
       },
-      "misconceptions": ["把 Payback 與 NPV 視為等價", "誤以為 Payback 有折現", "Payback 越短一定越好(忽略長期)"],
-      "related_node_ids": ["n_L21201_001"],
-      "tags": ["AI評估", "Payback", "NPV", "情境決策"]
+      "misconceptions": [
+        "把 Payback 與 NPV 視為等價",
+        "誤以為 Payback 有折現",
+        "Payback 越短一定越好(忽略長期)"
+      ],
+      "related_node_ids": [
+        "n_L21201_001"
+      ],
+      "tags": [
+        "AI評估",
+        "Payback",
+        "NPV",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "logistics"
+      ]
     },
     {
       "id": "q_n4_009",
@@ -257,12 +510,33 @@
       "difficulty": "medium",
       "source_level": "L1",
       "stem": "某地區醫學中心欲導入 AI 影像輔助診斷系統,風管室建議『漸進式部署(Phased Rollout)』。下列何種啟用順序{descriptor}?",
-      "stem_variables": {"descriptor": ["最為穩健", "最符合風險可控原則", "最為適切"]},
+      "stem_variables": {
+        "descriptor": [
+          "最為穩健",
+          "最符合風險可控原則",
+          "最為適切"
+        ]
+      },
       "options": [
-        {"text": "從單一專科或特定病房開始啟用,逐步擴展到多科室、再到全院", "is_correct": true},
-        {"text": "從急診科開始啟用,因急診病例量大,可快速取得最大量訓練資料", "is_correct": false, "trap_type": "急診屬高風險場景,不適合作為漸進式起點"},
-        {"text": "從夜班時段開始啟用,夜間醫師人力少剛好讓 AI 補位幫助臨床決策", "is_correct": false, "trap_type": "夜班代表性差,且夜班正是高風險時段"},
-        {"text": "全院所有科室同步啟用以縮短時程,風險可由額外人力於上線後監控", "is_correct": false, "trap_type": "全院同步即非漸進式部署的反面"}
+        {
+          "text": "從單一專科或特定病房開始啟用,逐步擴展到多科室、再到全院",
+          "is_correct": true
+        },
+        {
+          "text": "從急診科開始啟用,因急診病例量大,可快速取得最大量訓練資料",
+          "is_correct": false,
+          "trap_type": "急診屬高風險場景,不適合作為漸進式起點"
+        },
+        {
+          "text": "從夜班時段開始啟用,夜間醫師人力少剛好讓 AI 補位幫助臨床決策",
+          "is_correct": false,
+          "trap_type": "夜班代表性差,且夜班正是高風險時段"
+        },
+        {
+          "text": "全院所有科室同步啟用以縮短時程,風險可由額外人力於上線後監控",
+          "is_correct": false,
+          "trap_type": "全院同步即非漸進式部署的反面"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -274,9 +548,25 @@
         },
         "hook": "Phased Rollout = 小範圍 → 驗證 → 擴展;Canary 是按流量比例,Phased 是按範圍逐步"
       },
-      "misconceptions": ["把『病例量大』當作部署起點優勢", "誤以為夜班適合作為試點", "把 Phased Rollout 與 Big Bang 混為一談"],
-      "related_node_ids": ["n_L21202_001", "n_L21302_007"],
-      "tags": ["AI規劃", "漸進部署", "醫療", "情境決策", "高頻"]
+      "misconceptions": [
+        "把『病例量大』當作部署起點優勢",
+        "誤以為夜班適合作為試點",
+        "把 Phased Rollout 與 Big Bang 混為一談"
+      ],
+      "related_node_ids": [
+        "n_L21202_001",
+        "n_L21302_007"
+      ],
+      "tags": [
+        "AI規劃",
+        "漸進部署",
+        "醫療",
+        "情境決策",
+        "高頻"
+      ],
+      "boss_topics": [
+        "medical"
+      ]
     },
     {
       "id": "q_n4_010",
@@ -288,10 +578,25 @@
       "source_level": "L1",
       "stem": "某金融科技公司推出 AI 客服機器人,團隊比較『漸進式部署(Phased Rollout)』與『金絲雀部署(Canary Release)』兩種策略,並爭論該用何者。下列說明何者最為精確?",
       "options": [
-        {"text": "Phased 按『使用者範圍』逐步擴大(內測 → 部分外部 → 全部);Canary 按『流量比例』切換,兩者可結合使用", "is_correct": true},
-        {"text": "Phased 與 Canary 是同一概念的不同名詞,差異僅在於行業習慣稱呼,本題任選一個即可上線", "is_correct": false, "trap_type": "兩者切換維度不同,並非同義詞"},
-        {"text": "Phased 限用於硬體部署、Canary 限用於軟體部署,因此 AI 客服機器人應只能採用 Canary 模式", "is_correct": false, "trap_type": "兩者都可用於軟硬體,並非依產品形式區分"},
-        {"text": "Phased 與 Canary 必須擇一不可並用,並用會使流量分配混亂導致服務不穩定增加維運難度", "is_correct": false, "trap_type": "實務上常結合使用,例如先 Phased 限定用戶 + 在該批用戶內 Canary"}
+        {
+          "text": "Phased 按『使用者範圍』逐步擴大(內測 → 部分外部 → 全部);Canary 按『流量比例』切換,兩者可結合使用",
+          "is_correct": true
+        },
+        {
+          "text": "Phased 與 Canary 是同一概念的不同名詞,差異僅在於行業習慣稱呼,本題任選一個即可上線",
+          "is_correct": false,
+          "trap_type": "兩者切換維度不同,並非同義詞"
+        },
+        {
+          "text": "Phased 限用於硬體部署、Canary 限用於軟體部署,因此 AI 客服機器人應只能採用 Canary 模式",
+          "is_correct": false,
+          "trap_type": "兩者都可用於軟硬體,並非依產品形式區分"
+        },
+        {
+          "text": "Phased 與 Canary 必須擇一不可並用,並用會使流量分配混亂導致服務不穩定增加維運難度",
+          "is_correct": false,
+          "trap_type": "實務上常結合使用,例如先 Phased 限定用戶 + 在該批用戶內 Canary"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -303,9 +608,24 @@
         },
         "hook": "Phased = 範圍切;Canary = 流量切;Blue-Green = 整批切換 + 即時回滾"
       },
-      "misconceptions": ["把 Phased 與 Canary 當作同義詞", "誤以為兩者不可並用", "認為 Canary 只用於微服務"],
-      "related_node_ids": ["n_L21202_001", "n_L21302_007"],
-      "tags": ["AI規劃", "部署策略", "金融", "情境決策"]
+      "misconceptions": [
+        "把 Phased 與 Canary 當作同義詞",
+        "誤以為兩者不可並用",
+        "認為 Canary 只用於微服務"
+      ],
+      "related_node_ids": [
+        "n_L21202_001",
+        "n_L21302_007"
+      ],
+      "tags": [
+        "AI規劃",
+        "部署策略",
+        "金融",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "finance"
+      ]
     },
     {
       "id": "q_n4_011",
@@ -317,10 +637,25 @@
       "source_level": "L1",
       "stem": "某汽車零組件廠考慮導入 AI 瑕疵檢測。POC 階段資料工程師回報:『目前生產線標籤資料每月僅約 200 張瑕疵照片,且照片解析度不一致、缺乏異常類別細分』。專案經理應如何依 AI 導入評估三層處置?",
       "options": [
-        {"text": "技術可行性層發現資料品質不足,應暫停 POC,先補強資料蒐集與標籤一致性,再續行可行性評估與後續財務評估", "is_correct": true},
-        {"text": "立刻計算 ROI 與 NPV,若數字漂亮即可繞過資料品質問題,直接進入正式部署", "is_correct": false, "trap_type": "資料品質不足會讓模型表現失真,財務評估失去意義"},
-        {"text": "把 200 張照片資料用 Data Augmentation 擴增 100 倍至 20,000 張,即可宣告資料量足夠並進入下一階段", "is_correct": false, "trap_type": "Augmentation 不能解決『缺乏類別細分』與標籤一致性問題"},
-        {"text": "改採 Unsupervised Learning,完全不需要標籤資料即可直接訓練瑕疵檢測模型上線使用", "is_correct": false, "trap_type": "瑕疵檢測在工業實務上仍以監督式為主,Unsupervised 異常偵測有其限制與風險"}
+        {
+          "text": "技術可行性層發現資料品質不足,應暫停 POC,先補強資料蒐集與標籤一致性,再續行可行性評估與後續財務評估",
+          "is_correct": true
+        },
+        {
+          "text": "立刻計算 ROI 與 NPV,若數字漂亮即可繞過資料品質問題,直接進入正式部署",
+          "is_correct": false,
+          "trap_type": "資料品質不足會讓模型表現失真,財務評估失去意義"
+        },
+        {
+          "text": "把 200 張照片資料用 Data Augmentation 擴增 100 倍至 20,000 張,即可宣告資料量足夠並進入下一階段",
+          "is_correct": false,
+          "trap_type": "Augmentation 不能解決『缺乏類別細分』與標籤一致性問題"
+        },
+        {
+          "text": "改採 Unsupervised Learning,完全不需要標籤資料即可直接訓練瑕疵檢測模型上線使用",
+          "is_correct": false,
+          "trap_type": "瑕疵檢測在工業實務上仍以監督式為主,Unsupervised 異常偵測有其限制與風險"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -332,9 +667,24 @@
         },
         "hook": "三層中任一層失敗,應停下補強,而非用下一層粉飾上一層;資料品質是技術可行性的根本"
       },
-      "misconceptions": ["以為 ROI 漂亮即可上線", "把 Augmentation 當資料量補丁", "誤以為 Unsupervised 可以省略所有資料準備"],
-      "related_node_ids": ["n_L21201_001", "n_L21202_002"],
-      "tags": ["AI規劃", "POC", "製造", "情境決策"]
+      "misconceptions": [
+        "以為 ROI 漂亮即可上線",
+        "把 Augmentation 當資料量補丁",
+        "誤以為 Unsupervised 可以省略所有資料準備"
+      ],
+      "related_node_ids": [
+        "n_L21201_001",
+        "n_L21202_002"
+      ],
+      "tags": [
+        "AI規劃",
+        "POC",
+        "製造",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "manufacturing"
+      ]
     },
     {
       "id": "q_n4_012",
@@ -346,10 +696,25 @@
       "source_level": "L2",
       "stem": "某大型銀行欲導入 AI 反詐欺模型,風管會議中爭論部署策略。已知:(1) 模型若誤擋正常交易,會嚴重影響客戶體驗;(2) 模型若漏判詐欺,可能造成龐大財損;(3) 銀行有 1,200 萬筆交易/天。最適合的部署組合是?",
       "options": [
-        {"text": "先 Shadow Mode 觀察不阻擋,2 週後再 Canary 1% 流量阻擋,並設可回滾門檻", "is_correct": true},
-        {"text": "直接 Big Bang 全量上線阻擋,因 1,200 萬筆/天的資料量足夠驗證模型表現,風險可事後統計補救", "is_correct": false, "trap_type": "大流量場景 Big Bang 風險極高,沒有可控驗證階段"},
-        {"text": "藍綠部署一次切換新模型,藍綠雖無漸進但可即時回滾,風險已被回滾機制完全消解,適用所有場景", "is_correct": false, "trap_type": "藍綠雖可回滾,但切換瞬間 100% 流量已受影響"},
-        {"text": "完全不部署 AI 維持現有規則引擎,任何 AI 模型在金融反詐欺場景的不確定性都不應引入新風險", "is_correct": false, "trap_type": "與『欲導入 AI 反詐欺模型』題目情境矛盾"}
+        {
+          "text": "先 Shadow Mode 觀察不阻擋,2 週後再 Canary 1% 流量阻擋,並設可回滾門檻",
+          "is_correct": true
+        },
+        {
+          "text": "直接 Big Bang 全量上線阻擋,因 1,200 萬筆/天的資料量足夠驗證模型表現,風險可事後統計補救",
+          "is_correct": false,
+          "trap_type": "大流量場景 Big Bang 風險極高,沒有可控驗證階段"
+        },
+        {
+          "text": "藍綠部署一次切換新模型,藍綠雖無漸進但可即時回滾,風險已被回滾機制完全消解,適用所有場景",
+          "is_correct": false,
+          "trap_type": "藍綠雖可回滾,但切換瞬間 100% 流量已受影響"
+        },
+        {
+          "text": "完全不部署 AI 維持現有規則引擎,任何 AI 模型在金融反詐欺場景的不確定性都不應引入新風險",
+          "is_correct": false,
+          "trap_type": "與『欲導入 AI 反詐欺模型』題目情境矛盾"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -361,9 +726,25 @@
         },
         "hook": "高風險 AI 上線四段:Shadow(觀察)→ Canary(小流量)→ Phased(範圍擴大)→ 全量;每段都需可回滾門檻"
       },
-      "misconceptions": ["把藍綠部署當萬能", "Big Bang 在大量場景反而合理", "誤以為 Shadow Mode 太麻煩可省略"],
-      "related_node_ids": ["n_L21202_001", "n_L21302_007"],
-      "tags": ["AI規劃", "部署策略", "金融", "情境決策", "反詐欺"]
+      "misconceptions": [
+        "把藍綠部署當萬能",
+        "Big Bang 在大量場景反而合理",
+        "誤以為 Shadow Mode 太麻煩可省略"
+      ],
+      "related_node_ids": [
+        "n_L21202_001",
+        "n_L21302_007"
+      ],
+      "tags": [
+        "AI規劃",
+        "部署策略",
+        "金融",
+        "情境決策",
+        "反詐欺"
+      ],
+      "boss_topics": [
+        "finance"
+      ]
     },
     {
       "id": "q_n4_013",
@@ -374,12 +755,33 @@
       "difficulty": "medium",
       "source_level": "L1",
       "stem": "某連鎖超市規劃 AI 個人化促銷推薦系統。專案經理整理 POC 計畫,下列何者{descriptor}符合 POC 必備條件?",
-      "stem_variables": {"descriptor": ["最不", "最違反", "最未"]},
+      "stem_variables": {
+        "descriptor": [
+          "最不",
+          "最違反",
+          "最未"
+        ]
+      },
       "options": [
-        {"text": "POC 範圍涵蓋全公司全部店點且不設終止條件,計畫一次驗證所有可能情境", "is_correct": true},
-        {"text": "選擇 3 家具區域代表性的旗艦店、限定母嬰品類為起點", "is_correct": false, "trap_type": "此項符合『範圍清晰、可控、代表性』"},
-        {"text": "邀請門市店長、行銷部、IT 部三方代表共同參與並訂定成敗指標", "is_correct": false, "trap_type": "此項符合『利害關係人支持』"},
-        {"text": "預先訂定『若兩個月後 CTR 未提升 5% 即終止』的明確退場機制", "is_correct": false, "trap_type": "此項符合『可控+終止條件』"}
+        {
+          "text": "POC 範圍涵蓋全公司全部店點且不設終止條件,計畫一次驗證所有可能情境",
+          "is_correct": true
+        },
+        {
+          "text": "選擇 3 家具區域代表性的旗艦店、限定母嬰品類為起點",
+          "is_correct": false,
+          "trap_type": "此項符合『範圍清晰、可控、代表性』"
+        },
+        {
+          "text": "邀請門市店長、行銷部、IT 部三方代表共同參與並訂定成敗指標",
+          "is_correct": false,
+          "trap_type": "此項符合『利害關係人支持』"
+        },
+        {
+          "text": "預先訂定『若兩個月後 CTR 未提升 5% 即終止』的明確退場機制",
+          "is_correct": false,
+          "trap_type": "此項符合『可控+終止條件』"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -391,9 +793,24 @@
         },
         "hook": "POC 必備四件:範圍清晰 + 可控 + 代表性 + 利害關係人支持;『全面 + 無終止』就是 Big Bang 不是 POC"
       },
-      "misconceptions": ["把 POC 當小流量上線", "誤以為 POC 不需設終止條件", "POC 不需邀請利害關係人"],
-      "related_node_ids": ["n_L21201_001", "n_L21202_002"],
-      "tags": ["AI規劃", "POC", "零售", "情境決策"]
+      "misconceptions": [
+        "把 POC 當小流量上線",
+        "誤以為 POC 不需設終止條件",
+        "POC 不需邀請利害關係人"
+      ],
+      "related_node_ids": [
+        "n_L21201_001",
+        "n_L21202_002"
+      ],
+      "tags": [
+        "AI規劃",
+        "POC",
+        "零售",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "ecommerce"
+      ]
     },
     {
       "id": "q_n4_014",
@@ -404,12 +821,33 @@
       "difficulty": "easy",
       "source_level": "L1",
       "stem": "POC、MVP、Pilot 都是 AI 導入過程的常見階段,概念不可混淆。下列對應何者{descriptor}?",
-      "stem_variables": {"descriptor": ["最為正確", "最為精確", "最符合定義"]},
+      "stem_variables": {
+        "descriptor": [
+          "最為正確",
+          "最為精確",
+          "最符合定義"
+        ]
+      },
       "options": [
-        {"text": "POC 驗證『概念可行性』;MVP 是『最小可用版本』;Pilot 是『小規模實際運行』", "is_correct": true},
-        {"text": "POC、MVP、Pilot 是同一概念三個英文簡稱,差異僅在於行業偏好,實務上可任意互換使用", "is_correct": false, "trap_type": "三者目的、產出、使用者範圍皆不同"},
-        {"text": "POC 是上線後監控、MVP 是測試環境、Pilot 是研發階段,三者順序剛好相反於常識認定", "is_correct": false, "trap_type": "完全顛倒三者用途與順序"},
-        {"text": "POC 必須對外發行、MVP 限內部、Pilot 限員工,三者皆有強制使用者範圍規範要求", "is_correct": false, "trap_type": "杜撰規範,三者並非由使用者範圍嚴格分類"}
+        {
+          "text": "POC 驗證『概念可行性』;MVP 是『最小可用版本』;Pilot 是『小規模實際運行』",
+          "is_correct": true
+        },
+        {
+          "text": "POC、MVP、Pilot 是同一概念三個英文簡稱,差異僅在於行業偏好,實務上可任意互換使用",
+          "is_correct": false,
+          "trap_type": "三者目的、產出、使用者範圍皆不同"
+        },
+        {
+          "text": "POC 是上線後監控、MVP 是測試環境、Pilot 是研發階段,三者順序剛好相反於常識認定",
+          "is_correct": false,
+          "trap_type": "完全顛倒三者用途與順序"
+        },
+        {
+          "text": "POC 必須對外發行、MVP 限內部、Pilot 限員工,三者皆有強制使用者範圍規範要求",
+          "is_correct": false,
+          "trap_type": "杜撰規範,三者並非由使用者範圍嚴格分類"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -421,9 +859,23 @@
         },
         "hook": "POC = 概念能不能做;MVP = 做了能不能用;Pilot = 用了在真實環境表現如何"
       },
-      "misconceptions": ["把 POC 當 MVP", "誤以為三者可互換", "順序顛倒"],
-      "related_node_ids": ["n_L21201_001", "n_L21202_002"],
-      "tags": ["AI規劃", "POC", "MVP", "Pilot", "概念辨析"]
+      "misconceptions": [
+        "把 POC 當 MVP",
+        "誤以為三者可互換",
+        "順序顛倒"
+      ],
+      "related_node_ids": [
+        "n_L21201_001",
+        "n_L21202_002"
+      ],
+      "tags": [
+        "AI規劃",
+        "POC",
+        "MVP",
+        "Pilot",
+        "概念辨析"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n4_015",
@@ -435,10 +887,25 @@
       "source_level": "L2",
       "stem": "某自駕車車隊規劃在『市區營運接駁服務』導入 AI 駕駛輔助系統,風險委員會討論部署策略。下列哪一組『階段 + 條件門檻』組合最具可控性?",
       "options": [
-        {"text": "封閉場域 → 限定路線白天 → 限定路線夜間 → 多路線 → 全市區,每階段需累計零重大事件方可進入下一階段", "is_correct": true},
-        {"text": "直接全市區公測,每車派 2 名工程師後座觀察,藉由大量場景多樣性快速完成驗證後即可正式上線", "is_correct": false, "trap_type": "全市區公測違反風險可控原則,後座觀察不能取代漸進式驗證"},
-        {"text": "在交通最複雜的市區尖峰時段啟動運行,因為這代表最嚴苛的測試環境,通過後即可確認所有情境表現", "is_correct": false, "trap_type": "起點就選最嚴苛場景違反 Phased 漸進精神"},
-        {"text": "由 AI 系統自我評估後決定下一階段是否進階,此種自主推進可避免人為干預並有效加速部署速度", "is_correct": false, "trap_type": "AI 自評違反治理原則,需人在迴路與外部審核"}
+        {
+          "text": "封閉場域 → 限定路線白天 → 限定路線夜間 → 多路線 → 全市區,每階段需累計零重大事件方可進入下一階段",
+          "is_correct": true
+        },
+        {
+          "text": "直接全市區公測,每車派 2 名工程師後座觀察,藉由大量場景多樣性快速完成驗證後即可正式上線",
+          "is_correct": false,
+          "trap_type": "全市區公測違反風險可控原則,後座觀察不能取代漸進式驗證"
+        },
+        {
+          "text": "在交通最複雜的市區尖峰時段啟動運行,因為這代表最嚴苛的測試環境,通過後即可確認所有情境表現",
+          "is_correct": false,
+          "trap_type": "起點就選最嚴苛場景違反 Phased 漸進精神"
+        },
+        {
+          "text": "由 AI 系統自我評估後決定下一階段是否進階,此種自主推進可避免人為干預並有效加速部署速度",
+          "is_correct": false,
+          "trap_type": "AI 自評違反治理原則,需人在迴路與外部審核"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -450,9 +917,24 @@
         },
         "hook": "自駕 Phased = 場域複雜度遞增 + 量化里程門檻 + 人在決策迴路"
       },
-      "misconceptions": ["把『最嚴苛場景』放在 Phased 起點", "讓 AI 自評進階", "把工程師後座監督當作可控替代"],
-      "related_node_ids": ["n_L21202_001", "n_L21302_007"],
-      "tags": ["AI規劃", "Phased Rollout", "自駕車", "情境決策"]
+      "misconceptions": [
+        "把『最嚴苛場景』放在 Phased 起點",
+        "讓 AI 自評進階",
+        "把工程師後座監督當作可控替代"
+      ],
+      "related_node_ids": [
+        "n_L21202_001",
+        "n_L21302_007"
+      ],
+      "tags": [
+        "AI規劃",
+        "Phased Rollout",
+        "自駕車",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "autonomous"
+      ]
     },
     {
       "id": "q_n4_016",
@@ -464,10 +946,25 @@
       "source_level": "L1",
       "stem": "某博物館規劃導入 AI 互動導覽系統,IT 主任提報三層評估後得出結論:『業務需求清楚(改善參觀體驗、提升回客率)、技術可行性高(已有開源模型可用)、ROI 試算為負』。應如何依評估三層處置?",
       "options": [
-        {"text": "ROI 為負代表第三層『成本效益』未通過,應先嘗試降低成本或重新設計使用情境後再評估", "is_correct": true},
-        {"text": "ROI 為負無妨,因為『提升參觀體驗』屬無形效益,應跳過 ROI 直接以『體驗改善程度』作為核准依據", "is_correct": false, "trap_type": "無形效益仍應盡量量化,完全跳過 ROI 易引發投資失控"},
-        {"text": "ROI 為負代表第二層技術可行性錯誤,應改用更高階模型重新評估技術可行性後即可上線", "is_correct": false, "trap_type": "ROI 屬第三層,與技術可行性無直接因果"},
-        {"text": "三層只要任一層通過即可上線,既然第一、二層通過,應立即執行專案以累積實務經驗", "is_correct": false, "trap_type": "三層皆需通過,任一未過即應重評估或終止"}
+        {
+          "text": "ROI 為負代表第三層『成本效益』未通過,應先嘗試降低成本或重新設計使用情境後再評估",
+          "is_correct": true
+        },
+        {
+          "text": "ROI 為負無妨,因為『提升參觀體驗』屬無形效益,應跳過 ROI 直接以『體驗改善程度』作為核准依據",
+          "is_correct": false,
+          "trap_type": "無形效益仍應盡量量化,完全跳過 ROI 易引發投資失控"
+        },
+        {
+          "text": "ROI 為負代表第二層技術可行性錯誤,應改用更高階模型重新評估技術可行性後即可上線",
+          "is_correct": false,
+          "trap_type": "ROI 屬第三層,與技術可行性無直接因果"
+        },
+        {
+          "text": "三層只要任一層通過即可上線,既然第一、二層通過,應立即執行專案以累積實務經驗",
+          "is_correct": false,
+          "trap_type": "三層皆需通過,任一未過即應重評估或終止"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -479,9 +976,22 @@
         },
         "hook": "三層皆需通過;有任一層失敗應重評估或終止,而非跳過或繞過"
       },
-      "misconceptions": ["把無形效益當作跳過 ROI 的藉口", "三層任一通過即可上線", "誤把 ROI 與技術可行性混為一談"],
-      "related_node_ids": ["n_L21201_001", "n_L21202_002"],
-      "tags": ["AI規劃", "三層評估", "博物館", "情境決策"]
+      "misconceptions": [
+        "把無形效益當作跳過 ROI 的藉口",
+        "三層任一通過即可上線",
+        "誤把 ROI 與技術可行性混為一談"
+      ],
+      "related_node_ids": [
+        "n_L21201_001",
+        "n_L21202_002"
+      ],
+      "tags": [
+        "AI規劃",
+        "三層評估",
+        "博物館",
+        "情境決策"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n4_017",
@@ -492,12 +1002,33 @@
       "difficulty": "medium",
       "source_level": "L1",
       "stem": "某線上補習平台蒐集學員『臉部影像、答題紀錄、學習時數、所在地區』訓練 AI 學習行為模型。法務團隊審查告知聲明草稿,內容已包含:『機構名稱、蒐集目的、個資類別、利用期間、利用對象、當事人權利』。依台灣 PDPA 第 8 條規定,主管最該指出的{descriptor}是?",
-      "stem_variables": {"descriptor": ["關鍵缺漏", "首要缺項", "最重要缺漏"]},
+      "stem_variables": {
+        "descriptor": [
+          "關鍵缺漏",
+          "首要缺項",
+          "最重要缺漏"
+        ]
+      },
       "options": [
-        {"text": "缺少『不提供個人資料對當事人之影響』,使學員無從判斷拒絕提供臉部影像會影響哪些功能", "is_correct": true},
-        {"text": "缺少『資料銷毀後再利用程序』說明,使學員無法理解資料生命週期之終結處理", "is_correct": false, "trap_type": "PDPA 事前告知六項並未包含『銷毀後再利用程序』"},
-        {"text": "缺少『加密技術細節』,屬於資料安全揭露事項,沒揭露即違反第 8 條告知要求", "is_correct": false, "trap_type": "加密屬安全維護義務(第 27 條),非事前告知六項"},
-        {"text": "缺少『資料外洩通報窗口』,使學員無從在資安事件發生時即時行使通報權", "is_correct": false, "trap_type": "外洩通報屬事後處置,非事前告知六項"}
+        {
+          "text": "缺少『不提供個人資料對當事人之影響』,使學員無從判斷拒絕提供臉部影像會影響哪些功能",
+          "is_correct": true
+        },
+        {
+          "text": "缺少『資料銷毀後再利用程序』說明,使學員無法理解資料生命週期之終結處理",
+          "is_correct": false,
+          "trap_type": "PDPA 事前告知六項並未包含『銷毀後再利用程序』"
+        },
+        {
+          "text": "缺少『加密技術細節』,屬於資料安全揭露事項,沒揭露即違反第 8 條告知要求",
+          "is_correct": false,
+          "trap_type": "加密屬安全維護義務(第 27 條),非事前告知六項"
+        },
+        {
+          "text": "缺少『資料外洩通報窗口』,使學員無從在資安事件發生時即時行使通報權",
+          "is_correct": false,
+          "trap_type": "外洩通報屬事後處置,非事前告知六項"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -509,9 +1040,26 @@
         },
         "hook": "六項口訣:『機目類用權影』(機關、目的、類別、利用、權利、影響),漏一即違反第 8 條"
       },
-      "misconceptions": ["把『權利』與『不提供影響』湊在一項", "把加密義務當告知義務", "PDPA 與 GDPR 條文混淆"],
-      "related_node_ids": ["n_L21203_001", "n_L21203_002"],
-      "tags": ["PDPA", "事前告知", "教育", "情境決策", "高頻"]
+      "misconceptions": [
+        "把『權利』與『不提供影響』湊在一項",
+        "把加密義務當告知義務",
+        "PDPA 與 GDPR 條文混淆"
+      ],
+      "related_node_ids": [
+        "n_L21203_001",
+        "n_L21203_002"
+      ],
+      "tags": [
+        "PDPA",
+        "事前告知",
+        "教育",
+        "情境決策",
+        "高頻"
+      ],
+      "boss_topics": [
+        "privacy",
+        "education"
+      ]
     },
     {
       "id": "q_n4_018",
@@ -522,12 +1070,33 @@
       "difficulty": "easy",
       "source_level": "L1",
       "stem": "依台灣 PDPA 規定,蒐集個人資料前『事前告知義務』{descriptor}下列何者?",
-      "stem_variables": {"descriptor": ["不包含", "並未要求", "並未列入"]},
+      "stem_variables": {
+        "descriptor": [
+          "不包含",
+          "並未要求",
+          "並未列入"
+        ]
+      },
       "options": [
-        {"text": "資料蒐集後實際使用的軟硬體技術細節清單", "is_correct": true},
-        {"text": "個人資料利用之期間、地區、對象、方式", "is_correct": false, "trap_type": "為告知六項中『利用情形』"},
-        {"text": "當事人查詢、閱覽、更正、刪除權利及行使方式", "is_correct": false, "trap_type": "為告知六項中『當事人權利』"},
-        {"text": "不提供個人資料對當事人之影響", "is_correct": false, "trap_type": "為告知六項中『不提供影響』"}
+        {
+          "text": "資料蒐集後實際使用的軟硬體技術細節清單",
+          "is_correct": true
+        },
+        {
+          "text": "個人資料利用之期間、地區、對象、方式",
+          "is_correct": false,
+          "trap_type": "為告知六項中『利用情形』"
+        },
+        {
+          "text": "當事人查詢、閱覽、更正、刪除權利及行使方式",
+          "is_correct": false,
+          "trap_type": "為告知六項中『當事人權利』"
+        },
+        {
+          "text": "不提供個人資料對當事人之影響",
+          "is_correct": false,
+          "trap_type": "為告知六項中『不提供影響』"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -539,9 +1108,22 @@
         },
         "hook": "六項口訣:『機目類用權影』,軟硬體技術非告知範疇而是內部安全管理"
       },
-      "misconceptions": ["把資安技術揭露當告知義務", "把告知義務與安全維護義務混為一談"],
-      "related_node_ids": ["n_L21203_001"],
-      "tags": ["PDPA", "事前告知", "概念辨析", "高頻"]
+      "misconceptions": [
+        "把資安技術揭露當告知義務",
+        "把告知義務與安全維護義務混為一談"
+      ],
+      "related_node_ids": [
+        "n_L21203_001"
+      ],
+      "tags": [
+        "PDPA",
+        "事前告知",
+        "概念辨析",
+        "高頻"
+      ],
+      "boss_topics": [
+        "privacy"
+      ]
     },
     {
       "id": "q_n4_019",
@@ -553,10 +1135,25 @@
       "source_level": "L1",
       "stem": "某歐洲商銀在台分行運用 AI 信用評分模型,客戶 A 因模型評為高風險而遭拒絕貸款,欲依 GDPR 主張權利。客戶 A 主張:『我有權要求人類審核該決定,而非僅依 AI 自動化決策結果』。其主張對應 GDPR 哪一條最為精確?",
       "options": [
-        {"text": "Art.22 反對自動化決策權,使資料主體有權要求重大影響決策的人為介入與解釋", "is_correct": true},
-        {"text": "Art.17 刪除權(被遺忘權),使客戶可要求銀行刪除其個資以間接推翻信用評分結果", "is_correct": false, "trap_type": "刪除權無法直接推翻決策,且銀行可能有業務必要保留個資"},
-        {"text": "Art.20 資料可攜權,使客戶可要求銀行以機器可讀格式輸出個資至其他金融機構帳戶", "is_correct": false, "trap_type": "資料可攜對應的是攜帶資料,而非要求人為審核"},
-        {"text": "Art.16 修正權,使客戶可要求銀行修正其客戶資料以變更現有信用評分結果", "is_correct": false, "trap_type": "修正權僅針對『不正確個資』,不包括對決策本身的人為審核"}
+        {
+          "text": "Art.22 反對自動化決策權,使資料主體有權要求重大影響決策的人為介入與解釋",
+          "is_correct": true
+        },
+        {
+          "text": "Art.17 刪除權(被遺忘權),使客戶可要求銀行刪除其個資以間接推翻信用評分結果",
+          "is_correct": false,
+          "trap_type": "刪除權無法直接推翻決策,且銀行可能有業務必要保留個資"
+        },
+        {
+          "text": "Art.20 資料可攜權,使客戶可要求銀行以機器可讀格式輸出個資至其他金融機構帳戶",
+          "is_correct": false,
+          "trap_type": "資料可攜對應的是攜帶資料,而非要求人為審核"
+        },
+        {
+          "text": "Art.16 修正權,使客戶可要求銀行修正其客戶資料以變更現有信用評分結果",
+          "is_correct": false,
+          "trap_type": "修正權僅針對『不正確個資』,不包括對決策本身的人為審核"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -568,9 +1165,26 @@
         },
         "hook": "AI 系統最直接相關的 GDPR 條文是 Art.22 反對自動化決策(自動化 + 重大影響)"
       },
-      "misconceptions": ["把 Art.17 刪除權當萬能武器", "Art.20 與 Art.22 混淆", "誤以為修正權可推翻決策"],
-      "related_node_ids": ["n_L21203_001", "n_L21203_002"],
-      "tags": ["GDPR", "Art.22", "信貸", "情境決策", "高頻"]
+      "misconceptions": [
+        "把 Art.17 刪除權當萬能武器",
+        "Art.20 與 Art.22 混淆",
+        "誤以為修正權可推翻決策"
+      ],
+      "related_node_ids": [
+        "n_L21203_001",
+        "n_L21203_002"
+      ],
+      "tags": [
+        "GDPR",
+        "Art.22",
+        "信貸",
+        "情境決策",
+        "高頻"
+      ],
+      "boss_topics": [
+        "privacy",
+        "finance"
+      ]
     },
     {
       "id": "q_n4_020",
@@ -581,12 +1195,33 @@
       "difficulty": "medium",
       "source_level": "L1",
       "stem": "某科技公司部署 AI 影像辨識系統於工廠安全監控,資安主管擔心模型遭對抗性攻擊(如貼上對抗貼紙騙過模型)。下列何者{descriptor}屬於有效的對抗性攻擊防禦策略?",
-      "stem_variables": {"descriptor": ["並非", "並不", "並不算"]},
+      "stem_variables": {
+        "descriptor": [
+          "並非",
+          "並不",
+          "並不算"
+        ]
+      },
       "options": [
-        {"text": "強化外部網路防火牆與 DDoS 防護等級,以阻擋外網對模型 API 端點的存取攻擊", "is_correct": true},
-        {"text": "對抗樣本訓練(Adversarial Training),把對抗樣本納入訓練集提升模型魯棒性", "is_correct": false, "trap_type": "為標準 In-model 防禦"},
-        {"text": "推論後規則引擎(Post-hoc Rule Engine),檢查輸出是否違反業務常識(如人不可能瞬間消失)", "is_correct": false, "trap_type": "為標準 Post-hoc 防禦"},
-        {"text": "輸入前處理(Pre-hoc Filtering),過濾異常或極端數值的輸入樣本", "is_correct": false, "trap_type": "為標準 Pre-hoc 防禦"}
+        {
+          "text": "強化外部網路防火牆與 DDoS 防護等級,以阻擋外網對模型 API 端點的存取攻擊",
+          "is_correct": true
+        },
+        {
+          "text": "對抗樣本訓練(Adversarial Training),把對抗樣本納入訓練集提升模型魯棒性",
+          "is_correct": false,
+          "trap_type": "為標準 In-model 防禦"
+        },
+        {
+          "text": "推論後規則引擎(Post-hoc Rule Engine),檢查輸出是否違反業務常識(如人不可能瞬間消失)",
+          "is_correct": false,
+          "trap_type": "為標準 Post-hoc 防禦"
+        },
+        {
+          "text": "輸入前處理(Pre-hoc Filtering),過濾異常或極端數值的輸入樣本",
+          "is_correct": false,
+          "trap_type": "為標準 Pre-hoc 防禦"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -598,9 +1233,22 @@
         },
         "hook": "對抗性攻擊看『模型脆弱性』,要從模型角度解決;網路層防火牆解決的是『接觸』而非『模型內部』"
       },
-      "misconceptions": ["以為網路防火牆能防對抗性攻擊", "把資安通用方案套用到 AI 特定威脅"],
-      "related_node_ids": ["n_L21203_003"],
-      "tags": ["對抗性攻擊", "AI資安", "情境決策", "高頻"]
+      "misconceptions": [
+        "以為網路防火牆能防對抗性攻擊",
+        "把資安通用方案套用到 AI 特定威脅"
+      ],
+      "related_node_ids": [
+        "n_L21203_003"
+      ],
+      "tags": [
+        "對抗性攻擊",
+        "AI資安",
+        "情境決策",
+        "高頻"
+      ],
+      "boss_topics": [
+        "manufacturing"
+      ]
     },
     {
       "id": "q_n4_021",
@@ -612,10 +1260,25 @@
       "source_level": "L2",
       "stem": "某新創 AI 公司發布生成式圖像模型,被多位畫家提告侵權。法務分析後得知:訓練資料來自網路爬蟲,未做授權審核;部分輸出與某畫家原作高度相似。公司管理層討論未來如何降低再次侵權風險,下列措施何者最為治本?",
       "options": [
-        {"text": "建立『訓練資料篩選與授權驗證』機制,從源頭排除未授權或高風險資料,並建立可追溯的授權證據鏈", "is_correct": true},
-        {"text": "在每張生成圖像加上不可見浮水印,以便事後若被告侵權時可作為來源證據,進而降低再次侵權", "is_correct": false, "trap_type": "浮水印僅能事後追溯,無法預防侵權"},
-        {"text": "啟用差分隱私技術於模型訓練階段,使模型完全無法記憶任何訓練樣本特徵以避開風險", "is_correct": false, "trap_type": "差分隱私是中段控制,無法解決源頭未授權問題,且過強會嚴重影響表現"},
-        {"text": "在輸出端做語意相似度比對,若與已知作品相似度過高即拒絕輸出,即可徹底阻止侵權發生", "is_correct": false, "trap_type": "末端管控只能擋已知作品,且效能成本極高,治標不治本"}
+        {
+          "text": "建立『訓練資料篩選與授權驗證』機制,從源頭排除未授權或高風險資料,並建立可追溯的授權證據鏈",
+          "is_correct": true
+        },
+        {
+          "text": "在每張生成圖像加上不可見浮水印,以便事後若被告侵權時可作為來源證據,進而降低再次侵權",
+          "is_correct": false,
+          "trap_type": "浮水印僅能事後追溯,無法預防侵權"
+        },
+        {
+          "text": "啟用差分隱私技術於模型訓練階段,使模型完全無法記憶任何訓練樣本特徵以避開風險",
+          "is_correct": false,
+          "trap_type": "差分隱私是中段控制,無法解決源頭未授權問題,且過強會嚴重影響表現"
+        },
+        {
+          "text": "在輸出端做語意相似度比對,若與已知作品相似度過高即拒絕輸出,即可徹底阻止侵權發生",
+          "is_correct": false,
+          "trap_type": "末端管控只能擋已知作品,且效能成本極高,治標不治本"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -627,9 +1290,23 @@
         },
         "hook": "生成式 AI 侵權治理:『源頭篩選 > 中段控制 > 末端追溯』,源頭治本,末端治標"
       },
-      "misconceptions": ["以為浮水印能預防侵權", "把差分隱私當萬靈丹", "末端比對能擋所有侵權"],
-      "related_node_ids": ["n_L21203_004"],
-      "tags": ["生成式AI", "著作權", "情境決策", "高頻"]
+      "misconceptions": [
+        "以為浮水印能預防侵權",
+        "把差分隱私當萬靈丹",
+        "末端比對能擋所有侵權"
+      ],
+      "related_node_ids": [
+        "n_L21203_004"
+      ],
+      "tags": [
+        "生成式AI",
+        "著作權",
+        "情境決策",
+        "高頻"
+      ],
+      "boss_topics": [
+        "media"
+      ]
     },
     {
       "id": "q_n4_022",
@@ -641,10 +1318,25 @@
       "source_level": "L1",
       "stem": "某證券商導入 AI 自動下單系統,主管機關要求每筆 AI 推論決策皆須具備『不可否認性(Non-repudiation)』以利事後法務追蹤。下列何種技術組合最為精確對應此要求?",
       "options": [
-        {"text": "對每筆推論輸入/輸出產生 Hash 並結合數位簽章,使紀錄不可竄改且來源無法抵賴", "is_correct": true},
-        {"text": "對所有推論結果使用對稱式加密(如 AES)儲存,以保障資料機密性免於外洩", "is_correct": false, "trap_type": "對稱加密處理機密性,非不可否認性"},
-        {"text": "對所有推論輸出做去識別化處理,使紀錄無法回溯到任何特定使用者以保護個資", "is_correct": false, "trap_type": "去識別化處理隱私性,與不可否認性無關"},
-        {"text": "對所有推論做 SHA-256 雜湊但不簽章,因為 Hash 本身已可達成完整性與不可否認性兩項要求", "is_correct": false, "trap_type": "Hash 只能保完整性,缺數位簽章無法證明來源"}
+        {
+          "text": "對每筆推論輸入/輸出產生 Hash 並結合數位簽章,使紀錄不可竄改且來源無法抵賴",
+          "is_correct": true
+        },
+        {
+          "text": "對所有推論結果使用對稱式加密(如 AES)儲存,以保障資料機密性免於外洩",
+          "is_correct": false,
+          "trap_type": "對稱加密處理機密性,非不可否認性"
+        },
+        {
+          "text": "對所有推論輸出做去識別化處理,使紀錄無法回溯到任何特定使用者以保護個資",
+          "is_correct": false,
+          "trap_type": "去識別化處理隱私性,與不可否認性無關"
+        },
+        {
+          "text": "對所有推論做 SHA-256 雜湊但不簽章,因為 Hash 本身已可達成完整性與不可否認性兩項要求",
+          "is_correct": false,
+          "trap_type": "Hash 只能保完整性,缺數位簽章無法證明來源"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -656,9 +1348,24 @@
         },
         "hook": "Hash = 完整性;數位簽章 = 來源證明;Hash + 數位簽章 = 不可否認性"
       },
-      "misconceptions": ["把不可否認性當機密性", "Hash 沒有簽章也算不可否認", "去識別化處理一切隱私問題"],
-      "related_node_ids": ["n_L21203_005"],
-      "tags": ["不可否認性", "Hash", "數位簽章", "金融", "高頻"]
+      "misconceptions": [
+        "把不可否認性當機密性",
+        "Hash 沒有簽章也算不可否認",
+        "去識別化處理一切隱私問題"
+      ],
+      "related_node_ids": [
+        "n_L21203_005"
+      ],
+      "tags": [
+        "不可否認性",
+        "Hash",
+        "數位簽章",
+        "金融",
+        "高頻"
+      ],
+      "boss_topics": [
+        "finance"
+      ]
     },
     {
       "id": "q_n4_023",
@@ -670,10 +1377,25 @@
       "source_level": "L2",
       "stem": "某 AI 健康管理 App 新版增加『情緒辨識』(透過攝影機分析使用者表情)功能,計畫沿用舊版告知聲明。法遵主管反對沿用,認為應重啟告知流程。下列何項是其反對的最強理由?",
       "options": [
-        {"text": "情緒辨識所蒐集的『個資類別』與舊版不同,且利用目的範圍擴大,須依 PDPA 重新告知並取得同意", "is_correct": true},
-        {"text": "新功能屬於 AI 模型升級而非個資範圍變動,只要在隱私權聲明的附錄補上相關技術說明即可不需重新告知", "is_correct": false, "trap_type": "個資類別與目的擴大就觸發 PDPA 重新告知義務"},
-        {"text": "情緒辨識並非個資範疇,因為情緒並非靜態身分資訊的一部分,所以本案不需要依 PDPA 處理或重新告知", "is_correct": false, "trap_type": "個資的定義包含可識別個人之資訊,情緒辨識屬個資"},
-        {"text": "舊版告知聲明已經涵蓋『AI 預測』因此自動延伸涵蓋『情緒辨識』,法務僅需在內部備案即可不需重啟流程", "is_correct": false, "trap_type": "蒐集目的與類別變動需重新告知,不能含混延伸"}
+        {
+          "text": "情緒辨識所蒐集的『個資類別』與舊版不同,且利用目的範圍擴大,須依 PDPA 重新告知並取得同意",
+          "is_correct": true
+        },
+        {
+          "text": "新功能屬於 AI 模型升級而非個資範圍變動,只要在隱私權聲明的附錄補上相關技術說明即可不需重新告知",
+          "is_correct": false,
+          "trap_type": "個資類別與目的擴大就觸發 PDPA 重新告知義務"
+        },
+        {
+          "text": "情緒辨識並非個資範疇,因為情緒並非靜態身分資訊的一部分,所以本案不需要依 PDPA 處理或重新告知",
+          "is_correct": false,
+          "trap_type": "個資的定義包含可識別個人之資訊,情緒辨識屬個資"
+        },
+        {
+          "text": "舊版告知聲明已經涵蓋『AI 預測』因此自動延伸涵蓋『情緒辨識』,法務僅需在內部備案即可不需重啟流程",
+          "is_correct": false,
+          "trap_type": "蒐集目的與類別變動需重新告知,不能含混延伸"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -685,9 +1407,25 @@
         },
         "hook": "PDPA 重新告知觸發條件:個資類別變更 / 蒐集目的擴大 / 利用對象擴增,任一變動即觸發"
       },
-      "misconceptions": ["以為 AI 模型升級不涉及告知", "把情緒辨識當作非個資", "舊告知可無限延伸"],
-      "related_node_ids": ["n_L21203_001", "n_L21203_002"],
-      "tags": ["PDPA", "情緒辨識", "健康App", "情境決策"]
+      "misconceptions": [
+        "以為 AI 模型升級不涉及告知",
+        "把情緒辨識當作非個資",
+        "舊告知可無限延伸"
+      ],
+      "related_node_ids": [
+        "n_L21203_001",
+        "n_L21203_002"
+      ],
+      "tags": [
+        "PDPA",
+        "情緒辨識",
+        "健康App",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "privacy",
+        "medical"
+      ]
     },
     {
       "id": "q_n4_024",
@@ -699,10 +1437,25 @@
       "source_level": "L1",
       "stem": "GDPR 規範資料主體七大權利,某德商 AI 公司客戶要求『將我所有的個資以 JSON 格式輸出,並由你方協助轉移至其他競爭服務商』。此要求對應的條文為何?",
       "options": [
-        {"text": "Art.20 資料可攜權,要求機器可讀格式輸出個資並支援機構間直接轉移作業", "is_correct": true},
-        {"text": "Art.17 刪除權(被遺忘權),客戶可要求把所有個資從原機構徹底刪除以利用於他處", "is_correct": false, "trap_type": "刪除權與資料可攜目的不同,刪除是消去而非移轉"},
-        {"text": "Art.15 查閱權,客戶可要求原機構提供個資副本但不要求機器可讀格式或機構間轉移", "is_correct": false, "trap_type": "查閱權只到提供副本,缺機器可讀與轉移要件"},
-        {"text": "Art.22 反對自動化決策權,使客戶可要求停止以 AI 演算法做決策並轉至人工方式評估", "is_correct": false, "trap_type": "Art.22 對應的是反對自動化決策,非資料移轉"}
+        {
+          "text": "Art.20 資料可攜權,要求機器可讀格式輸出個資並支援機構間直接轉移作業",
+          "is_correct": true
+        },
+        {
+          "text": "Art.17 刪除權(被遺忘權),客戶可要求把所有個資從原機構徹底刪除以利用於他處",
+          "is_correct": false,
+          "trap_type": "刪除權與資料可攜目的不同,刪除是消去而非移轉"
+        },
+        {
+          "text": "Art.15 查閱權,客戶可要求原機構提供個資副本但不要求機器可讀格式或機構間轉移",
+          "is_correct": false,
+          "trap_type": "查閱權只到提供副本,缺機器可讀與轉移要件"
+        },
+        {
+          "text": "Art.22 反對自動化決策權,使客戶可要求停止以 AI 演算法做決策並轉至人工方式評估",
+          "is_correct": false,
+          "trap_type": "Art.22 對應的是反對自動化決策,非資料移轉"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -714,9 +1467,24 @@
         },
         "hook": "Art.20 三要件:結構化機器可讀 + 同意或合約基礎 + 支援機構間轉移"
       },
-      "misconceptions": ["把 Art.15 查閱權當資料可攜", "刪除與轉移混淆", "Art.22 與 Art.20 用途搞錯"],
-      "related_node_ids": ["n_L21203_001", "n_L21203_002"],
-      "tags": ["GDPR", "Art.20", "資料可攜", "情境決策"]
+      "misconceptions": [
+        "把 Art.15 查閱權當資料可攜",
+        "刪除與轉移混淆",
+        "Art.22 與 Art.20 用途搞錯"
+      ],
+      "related_node_ids": [
+        "n_L21203_001",
+        "n_L21203_002"
+      ],
+      "tags": [
+        "GDPR",
+        "Art.20",
+        "資料可攜",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "privacy"
+      ]
     },
     {
       "id": "q_n4_025",
@@ -727,12 +1495,33 @@
       "difficulty": "hard",
       "source_level": "L2",
       "stem": "某政府電子化身分驗證 AI 系統採『臉部辨識+活體偵測』。資安團隊評估三類風險:(R1) 對抗性貼紙使活體偵測失效、(R2) 系統受 SQL Injection 攻擊、(R3) 公司內部員工濫用查詢個資。下列風險與對策對應何者{descriptor}?",
-      "stem_variables": {"descriptor": ["最為精確", "最對位", "最正確"]},
+      "stem_variables": {
+        "descriptor": [
+          "最為精確",
+          "最對位",
+          "最正確"
+        ]
+      },
       "options": [
-        {"text": "R1 用對抗訓練 + 多模態驗證、R2 用 WAF + 參數化查詢、R3 用最小權限 + 稽核軌跡", "is_correct": true},
-        {"text": "R1、R2、R3 都用網路防火牆同一策略處理即可,因為都屬於『外部威脅』可由邊界防護機制一站式解決", "is_correct": false, "trap_type": "三類風險完全不同維度,單一防護無法涵蓋"},
-        {"text": "R1 用 SQL 參數化查詢、R2 用對抗訓練、R3 用差分隱私,以技術交叉互補的方式來形成完整防禦縱深", "is_correct": false, "trap_type": "完全錯置,各自對應對象顛倒"},
-        {"text": "R1、R2、R3 應全部以差分隱私一招涵蓋處理,因為差分隱私為當代 AI 隱私防護技術中的最通用解法", "is_correct": false, "trap_type": "差分隱私是隱私保護,無法防 SQLi 或對抗性攻擊"}
+        {
+          "text": "R1 用對抗訓練 + 多模態驗證、R2 用 WAF + 參數化查詢、R3 用最小權限 + 稽核軌跡",
+          "is_correct": true
+        },
+        {
+          "text": "R1、R2、R3 都用網路防火牆同一策略處理即可,因為都屬於『外部威脅』可由邊界防護機制一站式解決",
+          "is_correct": false,
+          "trap_type": "三類風險完全不同維度,單一防護無法涵蓋"
+        },
+        {
+          "text": "R1 用 SQL 參數化查詢、R2 用對抗訓練、R3 用差分隱私,以技術交叉互補的方式來形成完整防禦縱深",
+          "is_correct": false,
+          "trap_type": "完全錯置,各自對應對象顛倒"
+        },
+        {
+          "text": "R1、R2、R3 應全部以差分隱私一招涵蓋處理,因為差分隱私為當代 AI 隱私防護技術中的最通用解法",
+          "is_correct": false,
+          "trap_type": "差分隱私是隱私保護,無法防 SQLi 或對抗性攻擊"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -744,9 +1533,26 @@
         },
         "hook": "AI 風險矩陣三層:模型層(對抗訓練)+ 應用層(WAF/參數化)+ 治理層(最小權限/稽核),工具不可串用"
       },
-      "misconceptions": ["把所有資安問題塞進防火牆", "把差分隱私當萬能解", "把對抗性攻擊與 SQL Injection 混為一談"],
-      "related_node_ids": ["n_L21203_003", "n_L21203_005"],
-      "tags": ["AI風險矩陣", "對抗性攻擊", "資安", "政府", "情境決策"]
+      "misconceptions": [
+        "把所有資安問題塞進防火牆",
+        "把差分隱私當萬能解",
+        "把對抗性攻擊與 SQL Injection 混為一談"
+      ],
+      "related_node_ids": [
+        "n_L21203_003",
+        "n_L21203_005"
+      ],
+      "tags": [
+        "AI風險矩陣",
+        "對抗性攻擊",
+        "資安",
+        "政府",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "smartcity",
+        "privacy"
+      ]
     }
   ],
   "summary": {
@@ -784,10 +1590,29 @@
       "rule_5_node_id_validity": "all node_ids verified against scripts/kb-allowed-nodes.json L21201/L21202/L21203 groups"
     },
     "industries_covered": [
-      "餐飲(咖啡品牌)", "半導體封測", "壽險核保", "觀光飯店", "市政交通", "零售連鎖", "教育科技",
-      "物流", "醫療影像", "金融客服", "汽車製造", "銀行反詐欺", "超市", "博物館", "自駕車",
-      "教育(線上補習)", "歐洲商銀信貸", "工廠安全", "AI 生成圖像", "證券自動下單",
-      "健康管理 App", "AI 公司資料移轉", "政府身分驗證"
+      "餐飲(咖啡品牌)",
+      "半導體封測",
+      "壽險核保",
+      "觀光飯店",
+      "市政交通",
+      "零售連鎖",
+      "教育科技",
+      "物流",
+      "醫療影像",
+      "金融客服",
+      "汽車製造",
+      "銀行反詐欺",
+      "超市",
+      "博物館",
+      "自駕車",
+      "教育(線上補習)",
+      "歐洲商銀信貸",
+      "工廠安全",
+      "AI 生成圖像",
+      "證券自動下單",
+      "健康管理 App",
+      "AI 公司資料移轉",
+      "政府身分驗證"
     ]
   }
 }

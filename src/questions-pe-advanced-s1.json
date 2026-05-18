@@ -61,6 +61,9 @@
         "線性注意力",
         "長文處理",
         "進階NLP"
+      ],
+      "boss_topics": [
+        "legal"
       ]
     },
     {
@@ -118,6 +121,9 @@
         "Faster R-CNN",
         "邊緣推論",
         "進階CV"
+      ],
+      "boss_topics": [
+        "manufacturing"
       ]
     },
     {
@@ -177,6 +183,9 @@
         "分割架構",
         "醫療影像",
         "進階CV"
+      ],
+      "boss_topics": [
+        "medical"
       ]
     },
     {
@@ -235,6 +244,9 @@
         "視覺特徵橋接LLM",
         "多模態架構",
         "進階多模態"
+      ],
+      "boss_topics": [
+        "ecommerce"
       ]
     },
     {
@@ -294,6 +306,9 @@
         "多語言對齊",
         "領域差距",
         "進階多模態"
+      ],
+      "boss_topics": [
+        "ecommerce"
       ]
     }
   ]

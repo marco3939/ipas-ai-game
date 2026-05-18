@@ -30,12 +30,33 @@
       "difficulty": "easy",
       "source_level": "L1",
       "stem": "下列關於 NLP 四階段演進的{descriptor}描述,何者正確?",
-      "stem_variables": {"descriptor": ["主要", "核心", "標準"]},
+      "stem_variables": {
+        "descriptor": [
+          "主要",
+          "核心",
+          "標準"
+        ]
+      },
       "options": [
-        {"text": "Rule-based → 統計式(N-gram、HMM、CRF)→ 深度學習(RNN、LSTM)→ 預訓練(Transformer 系)", "is_correct": true},
-        {"text": "統計式(HMM、CRF 為主)→ Rule-based 詞典文法分析 → 深度學習 RNN/LSTM 序列建模 → 強化學習對話代理人主流階段", "is_correct": false, "trap_type": "順序顛倒"},
-        {"text": "Rule-based 規則式 → 知識圖譜符號推理 → 統計學習 LDA 主題模型 → 自監督式預訓練擴散去噪生成模型階段", "is_correct": false, "trap_type": "誤植 LDA / Diffusion"},
-        {"text": "符號邏輯運算 → 機器翻譯雙語詞典法 → CNN 卷積序列建模 → 以圖神經網路 GNN 為主流的 NLP 進階階段", "is_correct": false, "trap_type": "杜撰階段"}
+        {
+          "text": "Rule-based → 統計式(N-gram、HMM、CRF)→ 深度學習(RNN、LSTM)→ 預訓練(Transformer 系)",
+          "is_correct": true
+        },
+        {
+          "text": "統計式(HMM、CRF 為主)→ Rule-based 詞典文法分析 → 深度學習 RNN/LSTM 序列建模 → 強化學習對話代理人主流階段",
+          "is_correct": false,
+          "trap_type": "順序顛倒"
+        },
+        {
+          "text": "Rule-based 規則式 → 知識圖譜符號推理 → 統計學習 LDA 主題模型 → 自監督式預訓練擴散去噪生成模型階段",
+          "is_correct": false,
+          "trap_type": "誤植 LDA / Diffusion"
+        },
+        {
+          "text": "符號邏輯運算 → 機器翻譯雙語詞典法 → CNN 卷積序列建模 → 以圖神經網路 GNN 為主流的 NLP 進階階段",
+          "is_correct": false,
+          "trap_type": "杜撰階段"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -47,9 +68,20 @@
         },
         "hook": "口訣:規 → 統 → 深 → 預;每階段解決『序列、長距、平行』三難題"
       },
-      "misconceptions": ["把 LSTM 當 Transformer 同代", "誤以為 BERT/GPT 是 RNN 的延伸"],
-      "related_node_ids": ["n_L21101_002", "n_L21101_005"],
-      "tags": ["NLP", "演進", "概念"]
+      "misconceptions": [
+        "把 LSTM 當 Transformer 同代",
+        "誤以為 BERT/GPT 是 RNN 的延伸"
+      ],
+      "related_node_ids": [
+        "n_L21101_002",
+        "n_L21101_005"
+      ],
+      "tags": [
+        "NLP",
+        "演進",
+        "概念"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n1_nlp_002",
@@ -61,10 +93,25 @@
       "source_level": "L1",
       "stem": "某零售業欲導入時序型銷量預測模型,團隊採用 ARIMA 進行分析。下列關於該技術所屬 NLP/序列建模演進階段的判斷,何者最為精確?",
       "options": [
-        {"text": "屬於統計式階段(N-gram、HMM、CRF 同期)的時序統計建模代表,以線性自回歸與差分捕捉短期相依", "is_correct": true},
-        {"text": "屬於規則式(Rule-based)階段,因其需依專家經驗設定差分階數 d 與滯後階數 p,屬於專家系統時代產物", "is_correct": false, "trap_type": "把參數設定誤判為 rule-based"},
-        {"text": "屬於深度學習階段,因 ARIMA 之自回歸權重經反向傳播學習,等同於 RNN 隱藏層的時序遞迴權重", "is_correct": false, "trap_type": "RNN 與 AR 機制誤等同"},
-        {"text": "屬於預訓練階段,可視為 Transformer 之前的自監督式時序預訓練模型,具備跨資料集遷移能力", "is_correct": false, "trap_type": "預訓練概念張冠李戴"}
+        {
+          "text": "屬於統計式階段(N-gram、HMM、CRF 同期)的時序統計建模代表,以線性自回歸與差分捕捉短期相依",
+          "is_correct": true
+        },
+        {
+          "text": "屬於規則式(Rule-based)階段,因其需依專家經驗設定差分階數 d 與滯後階數 p,屬於專家系統時代產物",
+          "is_correct": false,
+          "trap_type": "把參數設定誤判為 rule-based"
+        },
+        {
+          "text": "屬於深度學習階段,因 ARIMA 之自回歸權重經反向傳播學習,等同於 RNN 隱藏層的時序遞迴權重",
+          "is_correct": false,
+          "trap_type": "RNN 與 AR 機制誤等同"
+        },
+        {
+          "text": "屬於預訓練階段,可視為 Transformer 之前的自監督式時序預訓練模型,具備跨資料集遷移能力",
+          "is_correct": false,
+          "trap_type": "預訓練概念張冠李戴"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -76,9 +123,22 @@
         },
         "hook": "口訣:ARIMA = 統計時序;RNN/LSTM = 深度時序;不要把『可調參數』當 rule-based"
       },
-      "misconceptions": ["把 ARIMA 誤判為 rule-based 因為要設定參數", "誤以為深度學習階段已淘汰所有統計法"],
-      "related_node_ids": ["n_L21101_002"],
-      "tags": ["NLP", "時序建模", "ARIMA", "零售"]
+      "misconceptions": [
+        "把 ARIMA 誤判為 rule-based 因為要設定參數",
+        "誤以為深度學習階段已淘汰所有統計法"
+      ],
+      "related_node_ids": [
+        "n_L21101_002"
+      ],
+      "tags": [
+        "NLP",
+        "時序建模",
+        "ARIMA",
+        "零售"
+      ],
+      "boss_topics": [
+        "ecommerce"
+      ]
     },
     {
       "id": "q_n1_nlp_003",
@@ -90,10 +150,25 @@
       "source_level": "L1",
       "stem": "下列何者是預訓練(Transformer)階段相較於前一階段(RNN/LSTM)的關鍵突破?",
       "options": [
-        {"text": "可進行整序列平行運算且能直接捕捉長距離依賴,並透過大規模自監督預訓練建立通用語意表示", "is_correct": true},
-        {"text": "首度引入詞嵌入向量(Word Embedding)概念,使單詞可在連續向量空間中以稠密表示形式呈現", "is_correct": false, "trap_type": "突破點錯置"},
-        {"text": "首次將神經網路引入語言模型,使機器能透過反向傳播自動學習語法規則與詞彙語意特徵", "is_correct": false, "trap_type": "技術年代錯置"},
-        {"text": "以 CRF 條件機率場替換 HMM 隱馬可夫模型,大幅提升序列標註與命名實體辨識任務的準確度", "is_correct": false, "trap_type": "屬統計階段內部演進"}
+        {
+          "text": "可進行整序列平行運算且能直接捕捉長距離依賴,並透過大規模自監督預訓練建立通用語意表示",
+          "is_correct": true
+        },
+        {
+          "text": "首度引入詞嵌入向量(Word Embedding)概念,使單詞可在連續向量空間中以稠密表示形式呈現",
+          "is_correct": false,
+          "trap_type": "突破點錯置"
+        },
+        {
+          "text": "首次將神經網路引入語言模型,使機器能透過反向傳播自動學習語法規則與詞彙語意特徵",
+          "is_correct": false,
+          "trap_type": "技術年代錯置"
+        },
+        {
+          "text": "以 CRF 條件機率場替換 HMM 隱馬可夫模型,大幅提升序列標註與命名實體辨識任務的準確度",
+          "is_correct": false,
+          "trap_type": "屬統計階段內部演進"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -105,9 +180,19 @@
         },
         "hook": "口訣:預訓練階段 = 平行 + 長距離 + 自監督預訓練;三特徵缺一不可"
       },
-      "misconceptions": ["把 Word2Vec 算成預訓練階段(實屬深度學習階段)"],
-      "related_node_ids": ["n_L21101_002", "n_L21101_004"],
-      "tags": ["NLP", "演進", "Transformer"]
+      "misconceptions": [
+        "把 Word2Vec 算成預訓練階段(實屬深度學習階段)"
+      ],
+      "related_node_ids": [
+        "n_L21101_002",
+        "n_L21101_004"
+      ],
+      "tags": [
+        "NLP",
+        "演進",
+        "Transformer"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n1_nlp_004",
@@ -119,10 +204,25 @@
       "source_level": "L1",
       "stem": "在 NLP 演進史中,深度學習階段(RNN、LSTM、GRU)主要解決前一階段(統計式)的哪一個核心限制?",
       "options": [
-        {"text": "N-gram 受固定長度視窗限制,難以建模較遠的詞與詞之間的語意相依關係", "is_correct": true},
-        {"text": "HMM 缺乏顯式狀態轉移機率,導致序列標註任務的 F1 分數普遍偏低", "is_correct": false, "trap_type": "HMM 機制誤述"},
-        {"text": "統計式語言模型僅能在英文上運作,無法擴展到中文等多字符語言", "is_correct": false, "trap_type": "事實錯誤"},
-        {"text": "Rule-based 系統的詞典維護成本過高,造成統計式同樣難以擴展與部署", "is_correct": false, "trap_type": "問錯階段"}
+        {
+          "text": "N-gram 受固定長度視窗限制,難以建模較遠的詞與詞之間的語意相依關係",
+          "is_correct": true
+        },
+        {
+          "text": "HMM 缺乏顯式狀態轉移機率,導致序列標註任務的 F1 分數普遍偏低",
+          "is_correct": false,
+          "trap_type": "HMM 機制誤述"
+        },
+        {
+          "text": "統計式語言模型僅能在英文上運作,無法擴展到中文等多字符語言",
+          "is_correct": false,
+          "trap_type": "事實錯誤"
+        },
+        {
+          "text": "Rule-based 系統的詞典維護成本過高,造成統計式同樣難以擴展與部署",
+          "is_correct": false,
+          "trap_type": "問錯階段"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -134,9 +234,18 @@
         },
         "hook": "口訣:深度學習補的是『長距離依賴』,不是語言或部署"
       },
-      "misconceptions": ["以為 RNN 解決的是部署成本而非建模能力"],
-      "related_node_ids": ["n_L21101_005"],
-      "tags": ["NLP", "演進", "RNN"]
+      "misconceptions": [
+        "以為 RNN 解決的是部署成本而非建模能力"
+      ],
+      "related_node_ids": [
+        "n_L21101_005"
+      ],
+      "tags": [
+        "NLP",
+        "演進",
+        "RNN"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n1_nlp_005",
@@ -147,12 +256,33 @@
       "difficulty": "medium",
       "source_level": "L1",
       "stem": "Transformer 採用 Multi-head Self-Attention 的{descriptor}目的為何?",
-      "stem_variables": {"descriptor": ["主要", "核心", "首要"]},
+      "stem_variables": {
+        "descriptor": [
+          "主要",
+          "核心",
+          "首要"
+        ]
+      },
       "options": [
-        {"text": "讓模型能同時於多個不同的表示子空間(representation subspace)中,平行捕捉多樣化的語義關聯", "is_correct": true},
-        {"text": "藉由將 Q、K、V 矩陣拆分至多個 GPU 卡上以加速矩陣乘法,屬於資料平行層面的硬體優化策略", "is_correct": false, "trap_type": "把多頭誤當資料平行"},
-        {"text": "增加位置編碼(Positional Encoding)的解析度與向量維度,使序列順序資訊在長文本中不致衰減", "is_correct": false, "trap_type": "與位置編碼混淆"},
-        {"text": "以多組獨立的小卷積核取代單組大卷積核,降低參數量並改善 Transformer 的梯度傳遞穩定性", "is_correct": false, "trap_type": "把多頭當卷積核"}
+        {
+          "text": "讓模型能同時於多個不同的表示子空間(representation subspace)中,平行捕捉多樣化的語義關聯",
+          "is_correct": true
+        },
+        {
+          "text": "藉由將 Q、K、V 矩陣拆分至多個 GPU 卡上以加速矩陣乘法,屬於資料平行層面的硬體優化策略",
+          "is_correct": false,
+          "trap_type": "把多頭誤當資料平行"
+        },
+        {
+          "text": "增加位置編碼(Positional Encoding)的解析度與向量維度,使序列順序資訊在長文本中不致衰減",
+          "is_correct": false,
+          "trap_type": "與位置編碼混淆"
+        },
+        {
+          "text": "以多組獨立的小卷積核取代單組大卷積核,降低參數量並改善 Transformer 的梯度傳遞穩定性",
+          "is_correct": false,
+          "trap_type": "把多頭當卷積核"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -164,9 +294,20 @@
         },
         "hook": "口訣:多頭 = 多子空間多視角;不是加速、不是卷積、不是位置編碼"
       },
-      "misconceptions": ["把 Multi-head 當資料平行加速", "誤以為 Self-Attention 內部用卷積"],
-      "related_node_ids": ["n_L21101_001", "n_L21101_003"],
-      "tags": ["Transformer", "Self-Attention", "Multi-head"]
+      "misconceptions": [
+        "把 Multi-head 當資料平行加速",
+        "誤以為 Self-Attention 內部用卷積"
+      ],
+      "related_node_ids": [
+        "n_L21101_001",
+        "n_L21101_003"
+      ],
+      "tags": [
+        "Transformer",
+        "Self-Attention",
+        "Multi-head"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n1_nlp_006",
@@ -178,10 +319,25 @@
       "source_level": "L1",
       "stem": "Self-Attention 計算採用 Scaled Dot-Product 形式 softmax(QKᵀ/√dₖ)V,公式中除以 √dₖ 的主要原因為何?",
       "options": [
-        {"text": "防止點積值在維度 dₖ 較大時過大,導致 softmax 進入飽和區、梯度消失而難以訓練", "is_correct": true},
-        {"text": "確保注意力權重之總和恰為 1,以維持注意力機率分布的合法性與輸出可解釋性", "is_correct": false, "trap_type": "softmax 已負責歸一化"},
-        {"text": "讓 Q 與 K 的內積結果等同於餘弦相似度,使注意力分數具備幾何上的角度語意", "is_correct": false, "trap_type": "縮放不等於餘弦"},
-        {"text": "降低多頭並行時各頭之間的相關係數,使每個 head 學到的子空間表示更加獨立", "is_correct": false, "trap_type": "錯誤歸因"}
+        {
+          "text": "防止點積值在維度 dₖ 較大時過大,導致 softmax 進入飽和區、梯度消失而難以訓練",
+          "is_correct": true
+        },
+        {
+          "text": "確保注意力權重之總和恰為 1,以維持注意力機率分布的合法性與輸出可解釋性",
+          "is_correct": false,
+          "trap_type": "softmax 已負責歸一化"
+        },
+        {
+          "text": "讓 Q 與 K 的內積結果等同於餘弦相似度,使注意力分數具備幾何上的角度語意",
+          "is_correct": false,
+          "trap_type": "縮放不等於餘弦"
+        },
+        {
+          "text": "降低多頭並行時各頭之間的相關係數,使每個 head 學到的子空間表示更加獨立",
+          "is_correct": false,
+          "trap_type": "錯誤歸因"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -193,9 +349,19 @@
         },
         "hook": "口訣:除 √dₖ = 控制方差防梯度消失;與機率歸一、餘弦、多頭獨立性都無關"
       },
-      "misconceptions": ["以為 √dₖ 用於機率歸一化", "誤把縮放當餘弦相似度轉換"],
-      "related_node_ids": ["n_L21101_001"],
-      "tags": ["Transformer", "Self-Attention", "Scaled Dot-Product"]
+      "misconceptions": [
+        "以為 √dₖ 用於機率歸一化",
+        "誤把縮放當餘弦相似度轉換"
+      ],
+      "related_node_ids": [
+        "n_L21101_001"
+      ],
+      "tags": [
+        "Transformer",
+        "Self-Attention",
+        "Scaled Dot-Product"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n1_nlp_007",
@@ -207,10 +373,25 @@
       "source_level": "L1",
       "stem": "某金融機構欲建置法規長文(平均 8,000 token)合規分析模型,主管詢問為何應優先選 Transformer 而非 LSTM,下列何者為最具技術代表性的理由?",
       "options": [
-        {"text": "Self-Attention 任兩 token 路徑長度為 O(1),LSTM 為 O(n) 逐步傳遞,長文遠距相依易於 LSTM 隱狀態衰減", "is_correct": true},
-        {"text": "Transformer 完全不需要詞嵌入向量,可直接以 one-hot 稀疏向量輸入,大幅降低法規語料的前處理與儲存成本", "is_correct": false, "trap_type": "事實錯誤,仍需嵌入"},
-        {"text": "LSTM 對 GPU 平行化不友善而 Transformer 僅在 CPU 上才能達到最佳推論吞吐,正好符合金融機房 CPU 多核特性", "is_correct": false, "trap_type": "硬體錯誤"},
-        {"text": "Transformer 內建抽象語法樹解析器,可將法規條文自動結構化為 AST 並對應至條號層級樹狀結構,LSTM 完全不具此能力", "is_correct": false, "trap_type": "杜撰特性"}
+        {
+          "text": "Self-Attention 任兩 token 路徑長度為 O(1),LSTM 為 O(n) 逐步傳遞,長文遠距相依易於 LSTM 隱狀態衰減",
+          "is_correct": true
+        },
+        {
+          "text": "Transformer 完全不需要詞嵌入向量,可直接以 one-hot 稀疏向量輸入,大幅降低法規語料的前處理與儲存成本",
+          "is_correct": false,
+          "trap_type": "事實錯誤,仍需嵌入"
+        },
+        {
+          "text": "LSTM 對 GPU 平行化不友善而 Transformer 僅在 CPU 上才能達到最佳推論吞吐,正好符合金融機房 CPU 多核特性",
+          "is_correct": false,
+          "trap_type": "硬體錯誤"
+        },
+        {
+          "text": "Transformer 內建抽象語法樹解析器,可將法規條文自動結構化為 AST 並對應至條號層級樹狀結構,LSTM 完全不具此能力",
+          "is_correct": false,
+          "trap_type": "杜撰特性"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -222,9 +403,22 @@
         },
         "hook": "口訣:Transformer 兩 token 距離 = O(1);LSTM = O(n);長文選 Transformer"
       },
-      "misconceptions": ["以為 Transformer 不需嵌入層"],
-      "related_node_ids": ["n_L21101_001"],
-      "tags": ["Transformer", "金融", "長文本", "情境"]
+      "misconceptions": [
+        "以為 Transformer 不需嵌入層"
+      ],
+      "related_node_ids": [
+        "n_L21101_001"
+      ],
+      "tags": [
+        "Transformer",
+        "金融",
+        "長文本",
+        "情境"
+      ],
+      "boss_topics": [
+        "finance",
+        "legal"
+      ]
     },
     {
       "id": "q_n1_nlp_008",
@@ -236,10 +430,25 @@
       "source_level": "L1",
       "stem": "Transformer 加入 Positional Encoding(位置編碼)的根本原因為何?",
       "options": [
-        {"text": "Self-Attention 對序列順序具置換不變性(permutation-invariant),需額外注入位置資訊以區分詞序", "is_correct": true},
-        {"text": "用以彌補 softmax 在長序列中產生的注意力權重數值溢位風險,並提升 attention 訓練的數值穩定性與收斂速度", "is_correct": false, "trap_type": "與縮放因子混淆"},
-        {"text": "為了讓 Self-Attention 的分數矩陣維持對角線優勢,使最近的鄰居 token 自然獲得最高注意力分數權重", "is_correct": false, "trap_type": "誤述注意力傾向"},
-        {"text": "用以取代詞嵌入向量(Word Embedding)層,使整個 Transformer 的輸入表示完全僅由絕對位置編碼向量定義", "is_correct": false, "trap_type": "概念張冠李戴"}
+        {
+          "text": "Self-Attention 對序列順序具置換不變性(permutation-invariant),需額外注入位置資訊以區分詞序",
+          "is_correct": true
+        },
+        {
+          "text": "用以彌補 softmax 在長序列中產生的注意力權重數值溢位風險,並提升 attention 訓練的數值穩定性與收斂速度",
+          "is_correct": false,
+          "trap_type": "與縮放因子混淆"
+        },
+        {
+          "text": "為了讓 Self-Attention 的分數矩陣維持對角線優勢,使最近的鄰居 token 自然獲得最高注意力分數權重",
+          "is_correct": false,
+          "trap_type": "誤述注意力傾向"
+        },
+        {
+          "text": "用以取代詞嵌入向量(Word Embedding)層,使整個 Transformer 的輸入表示完全僅由絕對位置編碼向量定義",
+          "is_correct": false,
+          "trap_type": "概念張冠李戴"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -251,9 +460,17 @@
         },
         "hook": "口訣:位置編碼 = 注入順序資訊;Self-Attention 本身對順序無感"
       },
-      "misconceptions": ["以為位置編碼可取代詞嵌入"],
-      "related_node_ids": ["n_L21101_001"],
-      "tags": ["Transformer", "Positional Encoding"]
+      "misconceptions": [
+        "以為位置編碼可取代詞嵌入"
+      ],
+      "related_node_ids": [
+        "n_L21101_001"
+      ],
+      "tags": [
+        "Transformer",
+        "Positional Encoding"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n1_nlp_009",
@@ -265,10 +482,25 @@
       "source_level": "L1",
       "stem": "團隊發現 Transformer 訓練後出現 Attention Collapse 現象(注意力過度集中於少數 token,影響泛化能力),下列何者為合適的對策方向?",
       "options": [
-        {"text": "在注意力分數加上稀疏化或熵約束(如 entropy regularization、attention dropout),使注意力分布更均衡", "is_correct": true},
-        {"text": "停用所有 Multi-head 多頭機制改回單頭注意力,大幅降低模型自由度與表示能力以強制避免訓練後出現坍縮現象", "is_correct": false, "trap_type": "過度簡化錯誤對策"},
-        {"text": "把所有 Encoder/Decoder 中的 Self-Attention 層直接換成 1D 卷積層,因為卷積運算本質上不會發生注意力過度集中坍縮", "is_correct": false, "trap_type": "違背 Transformer 設計初衷"},
-        {"text": "全面取消位置編碼以防止注意力被絕對位置綁架,強制模型僅依詞嵌入語意自由分配注意力權重以維持泛化能力", "is_correct": false, "trap_type": "後果嚴重的誤解法"}
+        {
+          "text": "在注意力分數加上稀疏化或熵約束(如 entropy regularization、attention dropout),使注意力分布更均衡",
+          "is_correct": true
+        },
+        {
+          "text": "停用所有 Multi-head 多頭機制改回單頭注意力,大幅降低模型自由度與表示能力以強制避免訓練後出現坍縮現象",
+          "is_correct": false,
+          "trap_type": "過度簡化錯誤對策"
+        },
+        {
+          "text": "把所有 Encoder/Decoder 中的 Self-Attention 層直接換成 1D 卷積層,因為卷積運算本質上不會發生注意力過度集中坍縮",
+          "is_correct": false,
+          "trap_type": "違背 Transformer 設計初衷"
+        },
+        {
+          "text": "全面取消位置編碼以防止注意力被絕對位置綁架,強制模型僅依詞嵌入語意自由分配注意力權重以維持泛化能力",
+          "is_correct": false,
+          "trap_type": "後果嚴重的誤解法"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -280,9 +512,17 @@
         },
         "hook": "口訣:Collapse 對策 = 稀疏化/熵約束;不是換架構"
       },
-      "misconceptions": ["以為換成卷積能避免坍縮"],
-      "related_node_ids": ["n_L21101_001"],
-      "tags": ["Transformer", "Attention Collapse"]
+      "misconceptions": [
+        "以為換成卷積能避免坍縮"
+      ],
+      "related_node_ids": [
+        "n_L21101_001"
+      ],
+      "tags": [
+        "Transformer",
+        "Attention Collapse"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n1_nlp_010",
@@ -293,12 +533,32 @@
       "difficulty": "easy",
       "source_level": "L1",
       "stem": "下列關於 BERT 與 GPT 在 Transformer 結構上的差異,何者{descriptor}?",
-      "stem_variables": {"descriptor": ["正確", "符合事實"]},
+      "stem_variables": {
+        "descriptor": [
+          "正確",
+          "符合事實"
+        ]
+      },
       "options": [
-        {"text": "BERT 僅使用 Encoder 雙向架構;GPT 僅使用 Decoder 單向(自迴歸)架構", "is_correct": true},
-        {"text": "BERT 採用 Encoder-Decoder 雙塔結構;GPT 採用單一 Encoder 雙向架構", "is_correct": false, "trap_type": "結構混淆"},
-        {"text": "BERT 僅使用 Decoder 自迴歸架構;GPT 僅使用 Encoder 雙向遮罩架構", "is_correct": false, "trap_type": "兩者顛倒"},
-        {"text": "BERT 與 GPT 皆採用 Encoder-Decoder 結構,差異僅在於訓練資料量規模", "is_correct": false, "trap_type": "簡化錯誤"}
+        {
+          "text": "BERT 僅使用 Encoder 雙向架構;GPT 僅使用 Decoder 單向(自迴歸)架構",
+          "is_correct": true
+        },
+        {
+          "text": "BERT 採用 Encoder-Decoder 雙塔結構;GPT 採用單一 Encoder 雙向架構",
+          "is_correct": false,
+          "trap_type": "結構混淆"
+        },
+        {
+          "text": "BERT 僅使用 Decoder 自迴歸架構;GPT 僅使用 Encoder 雙向遮罩架構",
+          "is_correct": false,
+          "trap_type": "兩者顛倒"
+        },
+        {
+          "text": "BERT 與 GPT 皆採用 Encoder-Decoder 結構,差異僅在於訓練資料量規模",
+          "is_correct": false,
+          "trap_type": "簡化錯誤"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -310,9 +570,19 @@
         },
         "hook": "口訣:BERT = Encoder 雙向 = 理解;GPT = Decoder 單向 = 生成"
       },
-      "misconceptions": ["把 BERT 當 Encoder-Decoder", "認為 GPT 雙向"],
-      "related_node_ids": ["n_L21101_002"],
-      "tags": ["BERT", "GPT", "結構"]
+      "misconceptions": [
+        "把 BERT 當 Encoder-Decoder",
+        "認為 GPT 雙向"
+      ],
+      "related_node_ids": [
+        "n_L21101_002"
+      ],
+      "tags": [
+        "BERT",
+        "GPT",
+        "結構"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n1_nlp_011",
@@ -324,10 +594,25 @@
       "source_level": "L1",
       "stem": "BERT 預訓練的 Masked Language Model(MLM)策略,下列何者描述正確?",
       "options": [
-        {"text": "隨機選取輸入序列約 15% 的詞,遮罩後由模型依雙向上下文預測被遮罩之原詞", "is_correct": true},
-        {"text": "依序由句首逐詞遮罩至句尾,使模型左到右逐 token 預測,形成自迴歸式單向語言模型", "is_correct": false, "trap_type": "與 GPT 自迴歸混淆"},
-        {"text": "僅遮罩每個句子的最後一個詞,以模擬未來詞預測任務,本質等同於 next-token prediction", "is_correct": false, "trap_type": "與 next-token 混淆"},
-        {"text": "遮罩所有名詞與動詞詞性的詞彙,並僅以詞性標籤(POS tag)的序列進行對位重建", "is_correct": false, "trap_type": "杜撰策略"}
+        {
+          "text": "隨機選取輸入序列約 15% 的詞,遮罩後由模型依雙向上下文預測被遮罩之原詞",
+          "is_correct": true
+        },
+        {
+          "text": "依序由句首逐詞遮罩至句尾,使模型左到右逐 token 預測,形成自迴歸式單向語言模型",
+          "is_correct": false,
+          "trap_type": "與 GPT 自迴歸混淆"
+        },
+        {
+          "text": "僅遮罩每個句子的最後一個詞,以模擬未來詞預測任務,本質等同於 next-token prediction",
+          "is_correct": false,
+          "trap_type": "與 next-token 混淆"
+        },
+        {
+          "text": "遮罩所有名詞與動詞詞性的詞彙,並僅以詞性標籤(POS tag)的序列進行對位重建",
+          "is_correct": false,
+          "trap_type": "杜撰策略"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -339,9 +624,19 @@
         },
         "hook": "口訣:MLM = 隨機 15% + 雙向預測;不是依序、不是只遮句尾"
       },
-      "misconceptions": ["以為 MLM 依序遮罩句尾", "把 MLM 當自迴歸"],
-      "related_node_ids": ["n_L21101_002"],
-      "tags": ["BERT", "MLM", "預訓練"]
+      "misconceptions": [
+        "以為 MLM 依序遮罩句尾",
+        "把 MLM 當自迴歸"
+      ],
+      "related_node_ids": [
+        "n_L21101_002"
+      ],
+      "tags": [
+        "BERT",
+        "MLM",
+        "預訓練"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n1_nlp_012",
@@ -353,10 +648,25 @@
       "source_level": "L1",
       "stem": "醫療診所欲建置『病患問診摘要分類』系統,將自由文字主訴自動歸入 50 個 ICD 分類,下列模型最適合作為基底?",
       "options": [
-        {"text": "BERT 等 Encoder-only 雙向預訓練模型,於 [CLS] token 輸出後接分類頭進行 fine-tune", "is_correct": true},
-        {"text": "GPT 純 Decoder 自迴歸生成模型,直接以 prompt 要求模型逐字輸出對應的 ICD 編碼字串以完成分類", "is_correct": false, "trap_type": "用生成模型做分類效率差"},
-        {"text": "Diffusion 條件去噪生成模型,將病患主訴文字當作條件、ICD 編碼當作影像目標進行多步取樣輸出", "is_correct": false, "trap_type": "Diffusion 用於影像生成"},
-        {"text": "Word2Vec Skip-gram 詞向量加總平均後直接以 argmax 輸出最近類別,完全不需 fine-tune 與分類層", "is_correct": false, "trap_type": "技術過於原始"}
+        {
+          "text": "BERT 等 Encoder-only 雙向預訓練模型,於 [CLS] token 輸出後接分類頭進行 fine-tune",
+          "is_correct": true
+        },
+        {
+          "text": "GPT 純 Decoder 自迴歸生成模型,直接以 prompt 要求模型逐字輸出對應的 ICD 編碼字串以完成分類",
+          "is_correct": false,
+          "trap_type": "用生成模型做分類效率差"
+        },
+        {
+          "text": "Diffusion 條件去噪生成模型,將病患主訴文字當作條件、ICD 編碼當作影像目標進行多步取樣輸出",
+          "is_correct": false,
+          "trap_type": "Diffusion 用於影像生成"
+        },
+        {
+          "text": "Word2Vec Skip-gram 詞向量加總平均後直接以 argmax 輸出最近類別,完全不需 fine-tune 與分類層",
+          "is_correct": false,
+          "trap_type": "技術過於原始"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -368,9 +678,22 @@
         },
         "hook": "口訣:理解任務 → BERT;生成任務 → GPT;影像生成 → Diffusion"
       },
-      "misconceptions": ["把分類任務交給生成式模型,造成不穩定"],
-      "related_node_ids": ["n_L21101_002", "n_L21101_004"],
-      "tags": ["BERT", "醫療", "分類", "情境"]
+      "misconceptions": [
+        "把分類任務交給生成式模型,造成不穩定"
+      ],
+      "related_node_ids": [
+        "n_L21101_002",
+        "n_L21101_004"
+      ],
+      "tags": [
+        "BERT",
+        "醫療",
+        "分類",
+        "情境"
+      ],
+      "boss_topics": [
+        "medical"
+      ]
     },
     {
       "id": "q_n1_nlp_013",
@@ -382,10 +705,25 @@
       "source_level": "L1",
       "stem": "自駕車對話介面團隊欲開發『多輪語音指令續寫』功能,使乘客可以自然口語連續指示車輛,下列預訓練模型架構最為適合?",
       "options": [
-        {"text": "GPT 等 Decoder-only 自迴歸模型,以左到右逐 token 生成自然連貫的續寫文字", "is_correct": true},
-        {"text": "BERT 等 Encoder-only 雙向模型,直接以 [CLS] 向量輸出整段續寫指令", "is_correct": false, "trap_type": "Encoder 不擅生成"},
-        {"text": "TF-IDF 加 cosine 相似度檢索最相近歷史指令,再原樣回覆給乘客", "is_correct": false, "trap_type": "屬檢索而非生成"},
-        {"text": "FastText 子詞 n-gram 嵌入後做 K-Means 分群,以群心向量還原成續寫", "is_correct": false, "trap_type": "嵌入無生成能力"}
+        {
+          "text": "GPT 等 Decoder-only 自迴歸模型,以左到右逐 token 生成自然連貫的續寫文字",
+          "is_correct": true
+        },
+        {
+          "text": "BERT 等 Encoder-only 雙向模型,直接以 [CLS] 向量輸出整段續寫指令",
+          "is_correct": false,
+          "trap_type": "Encoder 不擅生成"
+        },
+        {
+          "text": "TF-IDF 加 cosine 相似度檢索最相近歷史指令,再原樣回覆給乘客",
+          "is_correct": false,
+          "trap_type": "屬檢索而非生成"
+        },
+        {
+          "text": "FastText 子詞 n-gram 嵌入後做 K-Means 分群,以群心向量還原成續寫",
+          "is_correct": false,
+          "trap_type": "嵌入無生成能力"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -397,9 +735,21 @@
         },
         "hook": "口訣:續寫 = 自迴歸 = GPT;理解 = 雙向 = BERT"
       },
-      "misconceptions": ["以為 BERT 也能擅長生成"],
-      "related_node_ids": ["n_L21101_002"],
-      "tags": ["GPT", "自駕車", "生成", "情境"]
+      "misconceptions": [
+        "以為 BERT 也能擅長生成"
+      ],
+      "related_node_ids": [
+        "n_L21101_002"
+      ],
+      "tags": [
+        "GPT",
+        "自駕車",
+        "生成",
+        "情境"
+      ],
+      "boss_topics": [
+        "autonomous"
+      ]
     },
     {
       "id": "q_n1_nlp_014",
@@ -411,10 +761,25 @@
       "source_level": "L1",
       "stem": "下列關於 BERT 第二項預訓練任務 Next Sentence Prediction(NSP)的描述,何者最為精確?",
       "options": [
-        {"text": "判斷句 B 是否為句 A 的下一句,以二元分類訓練模型理解句子間連貫關係", "is_correct": true},
-        {"text": "依句 A 自迴歸生成完整的句 B,與 GPT 之 next-token 任務目標完全一致", "is_correct": false, "trap_type": "與生成任務混淆"},
-        {"text": "對 A、B 兩句分別計算 TF-IDF 餘弦相似度作為 NSP 標籤的監督訊號", "is_correct": false, "trap_type": "杜撰機制"},
-        {"text": "預測句 A、B 各自的詞性序列以強化命名實體辨識的下游遷移能力", "is_correct": false, "trap_type": "錯置任務目標"}
+        {
+          "text": "判斷句 B 是否為句 A 的下一句,以二元分類訓練模型理解句子間連貫關係",
+          "is_correct": true
+        },
+        {
+          "text": "依句 A 自迴歸生成完整的句 B,與 GPT 之 next-token 任務目標完全一致",
+          "is_correct": false,
+          "trap_type": "與生成任務混淆"
+        },
+        {
+          "text": "對 A、B 兩句分別計算 TF-IDF 餘弦相似度作為 NSP 標籤的監督訊號",
+          "is_correct": false,
+          "trap_type": "杜撰機制"
+        },
+        {
+          "text": "預測句 A、B 各自的詞性序列以強化命名實體辨識的下游遷移能力",
+          "is_correct": false,
+          "trap_type": "錯置任務目標"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -426,9 +791,18 @@
         },
         "hook": "口訣:NSP = 句對二元分類『B 是否接續 A』"
       },
-      "misconceptions": ["以為 NSP 是生成 B 句"],
-      "related_node_ids": ["n_L21101_002"],
-      "tags": ["BERT", "NSP", "預訓練"]
+      "misconceptions": [
+        "以為 NSP 是生成 B 句"
+      ],
+      "related_node_ids": [
+        "n_L21101_002"
+      ],
+      "tags": [
+        "BERT",
+        "NSP",
+        "預訓練"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n1_nlp_015",
@@ -439,12 +813,32 @@
       "difficulty": "medium",
       "source_level": "L1",
       "stem": "下列關於 Word2Vec 中 Skip-gram 與 CBOW 兩種訓練模式的差異,何者{descriptor}?",
-      "stem_variables": {"descriptor": ["正確", "符合原始論文"]},
+      "stem_variables": {
+        "descriptor": [
+          "正確",
+          "符合原始論文"
+        ]
+      },
       "options": [
-        {"text": "CBOW 由周圍詞預測中心詞,訓練快且高頻詞效果佳;Skip-gram 由中心詞預測周圍,訓練較慢但低頻詞語意更佳", "is_correct": true},
-        {"text": "CBOW 與 Skip-gram 皆為以中心詞預測周圍詞的訓練架構,兩者差異僅在於是否使用負取樣或層級 softmax 加速", "is_correct": false, "trap_type": "方向描述錯誤"},
-        {"text": "Skip-gram 採用共現矩陣分解的統計式建模,CBOW 採用神經網路預測式建模,兩者代表完全不同的詞向量學習典範", "is_correct": false, "trap_type": "與 GloVe 混淆"},
-        {"text": "CBOW 對低頻詞效果更佳,因其輸入端有多個周圍詞可平均稀釋雜訊使梯度更穩定,反而 Skip-gram 對高頻詞較佳", "is_correct": false, "trap_type": "結論顛倒"}
+        {
+          "text": "CBOW 由周圍詞預測中心詞,訓練快且高頻詞效果佳;Skip-gram 由中心詞預測周圍,訓練較慢但低頻詞語意更佳",
+          "is_correct": true
+        },
+        {
+          "text": "CBOW 與 Skip-gram 皆為以中心詞預測周圍詞的訓練架構,兩者差異僅在於是否使用負取樣或層級 softmax 加速",
+          "is_correct": false,
+          "trap_type": "方向描述錯誤"
+        },
+        {
+          "text": "Skip-gram 採用共現矩陣分解的統計式建模,CBOW 採用神經網路預測式建模,兩者代表完全不同的詞向量學習典範",
+          "is_correct": false,
+          "trap_type": "與 GloVe 混淆"
+        },
+        {
+          "text": "CBOW 對低頻詞效果更佳,因其輸入端有多個周圍詞可平均稀釋雜訊使梯度更穩定,反而 Skip-gram 對高頻詞較佳",
+          "is_correct": false,
+          "trap_type": "結論顛倒"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -456,9 +850,19 @@
         },
         "hook": "口訣:CBOW 周圍 → 中心(高頻佳);Skip-gram 中心 → 周圍(低頻佳)"
       },
-      "misconceptions": ["以為 CBOW 對低頻詞較佳", "把 Word2Vec 與 GloVe 混淆"],
-      "related_node_ids": ["n_L21101_001"],
-      "tags": ["Word2Vec", "Skip-gram", "CBOW"]
+      "misconceptions": [
+        "以為 CBOW 對低頻詞較佳",
+        "把 Word2Vec 與 GloVe 混淆"
+      ],
+      "related_node_ids": [
+        "n_L21101_001"
+      ],
+      "tags": [
+        "Word2Vec",
+        "Skip-gram",
+        "CBOW"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n1_nlp_016",
@@ -470,10 +874,25 @@
       "source_level": "L1",
       "stem": "教育產業 NLP 團隊在處理學生作文時,常遇到自創新詞、外語拼字錯誤等 OOV(未登錄詞)問題。下列詞嵌入方法最能有效減緩 OOV 影響者為何?",
       "options": [
-        {"text": "FastText 將詞拆為子詞 n-gram(character n-gram)後加總,使未登錄詞仍能由其字根片段組合得到向量", "is_correct": true},
-        {"text": "GloVe 透過全域共現矩陣分解,於計算過程中會自動為訓練未見的新詞補上零向量,確保下游分類任務的穩定性", "is_correct": false, "trap_type": "GloVe 並無此能力"},
-        {"text": "Word2Vec CBOW 模式由於訓練目標為周圍詞平均,自動具備拼字模糊比對校正能力,可在推論階段消除多數 OOV 問題", "is_correct": false, "trap_type": "杜撰能力"},
-        {"text": "TF-IDF 對未登錄詞計算 IDF 時值會趨近於無窮大,因此能賦予 OOV 詞彙極高的辨識力分數與權重以利下游檢索", "is_correct": false, "trap_type": "OOV 在 TF-IDF 直接被忽略"}
+        {
+          "text": "FastText 將詞拆為子詞 n-gram(character n-gram)後加總,使未登錄詞仍能由其字根片段組合得到向量",
+          "is_correct": true
+        },
+        {
+          "text": "GloVe 透過全域共現矩陣分解,於計算過程中會自動為訓練未見的新詞補上零向量,確保下游分類任務的穩定性",
+          "is_correct": false,
+          "trap_type": "GloVe 並無此能力"
+        },
+        {
+          "text": "Word2Vec CBOW 模式由於訓練目標為周圍詞平均,自動具備拼字模糊比對校正能力,可在推論階段消除多數 OOV 問題",
+          "is_correct": false,
+          "trap_type": "杜撰能力"
+        },
+        {
+          "text": "TF-IDF 對未登錄詞計算 IDF 時值會趨近於無窮大,因此能賦予 OOV 詞彙極高的辨識力分數與權重以利下游檢索",
+          "is_correct": false,
+          "trap_type": "OOV 在 TF-IDF 直接被忽略"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -485,9 +904,21 @@
         },
         "hook": "口訣:OOV → FastText 子詞;GloVe/Word2Vec/TF-IDF 對 OOV 都無解"
       },
-      "misconceptions": ["以為 GloVe 能處理 OOV"],
-      "related_node_ids": ["n_L21101_005"],
-      "tags": ["FastText", "OOV", "教育", "情境"]
+      "misconceptions": [
+        "以為 GloVe 能處理 OOV"
+      ],
+      "related_node_ids": [
+        "n_L21101_005"
+      ],
+      "tags": [
+        "FastText",
+        "OOV",
+        "教育",
+        "情境"
+      ],
+      "boss_topics": [
+        "education"
+      ]
     },
     {
       "id": "q_n1_nlp_017",
@@ -499,10 +930,25 @@
       "source_level": "L1",
       "stem": "下列關於 GloVe 詞向量訓練機制的描述,何者最為精確?",
       "options": [
-        {"text": "基於全語料的詞共現矩陣統計,以加權最小平方優化詞向量內積近似 log(共現次數)", "is_correct": true},
-        {"text": "以中心詞自回歸生成周圍詞,屬於 Word2Vec Skip-gram 的擴展強化版本", "is_correct": false, "trap_type": "與 Skip-gram 混淆"},
-        {"text": "對輸入文本逐句以 BPE 子詞切分後,於 Transformer Encoder 上預訓練", "is_correct": false, "trap_type": "與預訓練 LM 混淆"},
-        {"text": "結合 LSTM 雙向序列建模與位置編碼,動態生成上下文相依的詞向量", "is_correct": false, "trap_type": "與 ELMo 混淆"}
+        {
+          "text": "基於全語料的詞共現矩陣統計,以加權最小平方優化詞向量內積近似 log(共現次數)",
+          "is_correct": true
+        },
+        {
+          "text": "以中心詞自回歸生成周圍詞,屬於 Word2Vec Skip-gram 的擴展強化版本",
+          "is_correct": false,
+          "trap_type": "與 Skip-gram 混淆"
+        },
+        {
+          "text": "對輸入文本逐句以 BPE 子詞切分後,於 Transformer Encoder 上預訓練",
+          "is_correct": false,
+          "trap_type": "與預訓練 LM 混淆"
+        },
+        {
+          "text": "結合 LSTM 雙向序列建模與位置編碼,動態生成上下文相依的詞向量",
+          "is_correct": false,
+          "trap_type": "與 ELMo 混淆"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -514,9 +960,17 @@
         },
         "hook": "口訣:Word2Vec 預測式;GloVe 統計式(共現矩陣 + log 近似)"
       },
-      "misconceptions": ["把 GloVe 當 Skip-gram"],
-      "related_node_ids": ["n_L21101_001"],
-      "tags": ["GloVe", "詞嵌入"]
+      "misconceptions": [
+        "把 GloVe 當 Skip-gram"
+      ],
+      "related_node_ids": [
+        "n_L21101_001"
+      ],
+      "tags": [
+        "GloVe",
+        "詞嵌入"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n1_nlp_018",
@@ -527,12 +981,33 @@
       "difficulty": "easy",
       "source_level": "L1",
       "stem": "Word2Vec、GloVe、FastText 三者皆為靜態詞嵌入(static word embedding)的{descriptor}缺點為何?",
-      "stem_variables": {"descriptor": ["共同", "主要", "代表性"]},
+      "stem_variables": {
+        "descriptor": [
+          "共同",
+          "主要",
+          "代表性"
+        ]
+      },
       "options": [
-        {"text": "同一詞無論上下文皆對應單一固定向量,無法處理一詞多義(polysemy)的語境差異", "is_correct": true},
-        {"text": "三者皆需要海量平行語料(如雙語對齊翻譯句對)才能有效訓練詞向量表示", "is_correct": false, "trap_type": "與機器翻譯誤接"},
-        {"text": "三者皆基於 Transformer 結構,訓練成本極高且難以在中小型語料上收斂", "is_correct": false, "trap_type": "技術年代錯置"},
-        {"text": "三者皆要求輸入須為已 fine-tune 之 BERT 嵌入,否則無法計算詞向量", "is_correct": false, "trap_type": "因果倒置"}
+        {
+          "text": "同一詞無論上下文皆對應單一固定向量,無法處理一詞多義(polysemy)的語境差異",
+          "is_correct": true
+        },
+        {
+          "text": "三者皆需要海量平行語料(如雙語對齊翻譯句對)才能有效訓練詞向量表示",
+          "is_correct": false,
+          "trap_type": "與機器翻譯誤接"
+        },
+        {
+          "text": "三者皆基於 Transformer 結構,訓練成本極高且難以在中小型語料上收斂",
+          "is_correct": false,
+          "trap_type": "技術年代錯置"
+        },
+        {
+          "text": "三者皆要求輸入須為已 fine-tune 之 BERT 嵌入,否則無法計算詞向量",
+          "is_correct": false,
+          "trap_type": "因果倒置"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -544,9 +1019,17 @@
         },
         "hook": "口訣:靜態嵌入 = 一詞一向量;BERT 才能依上下文變"
       },
-      "misconceptions": ["以為 Word2Vec 也能依上下文動態變化"],
-      "related_node_ids": ["n_L21101_003"],
-      "tags": ["詞嵌入", "Polysemy"]
+      "misconceptions": [
+        "以為 Word2Vec 也能依上下文動態變化"
+      ],
+      "related_node_ids": [
+        "n_L21101_003"
+      ],
+      "tags": [
+        "詞嵌入",
+        "Polysemy"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n1_nlp_019",
@@ -558,14 +1041,39 @@
       "source_level": "L1",
       "stem": "某語料庫共有 {D} 篇文件,其中包含詞 'audit' 的文件有 {df} 篇。則該詞之 IDF(以自然對數表示)為何?",
       "stem_variables": {
-        "D": [1000, 500, 2000, 10000],
-        "df": [10, 50, 200, 100]
+        "D": [
+          1000,
+          500,
+          2000,
+          10000
+        ],
+        "df": [
+          10,
+          50,
+          200,
+          100
+        ]
       },
       "options": [
-        {"text": "IDF = ln(|D| / df),即 ln(總文件數 / 含詞文件數)", "is_correct": true},
-        {"text": "IDF = ln(df / |D|),即 ln(含詞文件數 / 總文件數)", "is_correct": false, "trap_type": "分子分母顛倒"},
-        {"text": "IDF = |D| - df,即總文件數減去含詞文件數的線性差值", "is_correct": false, "trap_type": "公式錯誤"},
-        {"text": "IDF = TF × ln(|D|),與含詞文件數無關,僅以詞頻乘上總文件數對數計算", "is_correct": false, "trap_type": "與 TF-IDF 整體混淆"}
+        {
+          "text": "IDF = ln(|D| / df),即 ln(總文件數 / 含詞文件數)",
+          "is_correct": true
+        },
+        {
+          "text": "IDF = ln(df / |D|),即 ln(含詞文件數 / 總文件數)",
+          "is_correct": false,
+          "trap_type": "分子分母顛倒"
+        },
+        {
+          "text": "IDF = |D| - df,即總文件數減去含詞文件數的線性差值",
+          "is_correct": false,
+          "trap_type": "公式錯誤"
+        },
+        {
+          "text": "IDF = TF × ln(|D|),與含詞文件數無關,僅以詞頻乘上總文件數對數計算",
+          "is_correct": false,
+          "trap_type": "與 TF-IDF 整體混淆"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -577,9 +1085,18 @@
         },
         "hook": "口訣:IDF = log(全部文件 / 含詞文件);詞越罕見 → IDF 越大"
       },
-      "misconceptions": ["分子分母顛倒導致 IDF 變負"],
-      "related_node_ids": ["n_L21101_001"],
-      "tags": ["TF-IDF", "公式", "計算"]
+      "misconceptions": [
+        "分子分母顛倒導致 IDF 變負"
+      ],
+      "related_node_ids": [
+        "n_L21101_001"
+      ],
+      "tags": [
+        "TF-IDF",
+        "公式",
+        "計算"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n1_nlp_020",
@@ -591,10 +1108,25 @@
       "source_level": "L1",
       "stem": "製造業使用 TF-IDF 處理冗長技術維修日誌(平均 8000 字),發現關鍵詞辨識能力下降,主因為何?",
       "options": [
-        {"text": "長文本中常見詞(如『機台』『更換』)詞頻偏高,TF 過度放大其權重,壓縮了關鍵詞的相對辨識度", "is_correct": true},
-        {"text": "長文本超出 TF-IDF 最大支援字數上限,導致超出部分文字無法計算 TF 也無法納入 IDF", "is_correct": false, "trap_type": "杜撰技術限制"},
-        {"text": "TF-IDF 在長文本中需先進行向量壓縮,常見壓縮會移除關鍵詞,屬資料前處理副作用", "is_correct": false, "trap_type": "杜撰流程"},
-        {"text": "長文本的 IDF 隨文件長度自動衰減,使所有詞的 IDF 趨近於零,導致權重失效", "is_correct": false, "trap_type": "IDF 與文件長度無關"}
+        {
+          "text": "長文本中常見詞(如『機台』『更換』)詞頻偏高,TF 過度放大其權重,壓縮了關鍵詞的相對辨識度",
+          "is_correct": true
+        },
+        {
+          "text": "長文本超出 TF-IDF 最大支援字數上限,導致超出部分文字無法計算 TF 也無法納入 IDF",
+          "is_correct": false,
+          "trap_type": "杜撰技術限制"
+        },
+        {
+          "text": "TF-IDF 在長文本中需先進行向量壓縮,常見壓縮會移除關鍵詞,屬資料前處理副作用",
+          "is_correct": false,
+          "trap_type": "杜撰流程"
+        },
+        {
+          "text": "長文本的 IDF 隨文件長度自動衰減,使所有詞的 IDF 趨近於零,導致權重失效",
+          "is_correct": false,
+          "trap_type": "IDF 與文件長度無關"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -606,9 +1138,21 @@
         },
         "hook": "口訣:長文本 → TF 過度膨脹 → 用 sublinear TF 或 BM25 解決"
       },
-      "misconceptions": ["以為 TF-IDF 有字數上限"],
-      "related_node_ids": ["n_L21101_001"],
-      "tags": ["TF-IDF", "長文本", "製造業", "情境"]
+      "misconceptions": [
+        "以為 TF-IDF 有字數上限"
+      ],
+      "related_node_ids": [
+        "n_L21101_001"
+      ],
+      "tags": [
+        "TF-IDF",
+        "長文本",
+        "製造業",
+        "情境"
+      ],
+      "boss_topics": [
+        "manufacturing"
+      ]
     },
     {
       "id": "q_n1_nlp_021",
@@ -619,12 +1163,33 @@
       "difficulty": "easy",
       "source_level": "L1",
       "stem": "下列關於 N-gram 語言模型的{descriptor}限制描述,何者正確?",
-      "stem_variables": {"descriptor": ["主要", "核心", "本質"]},
+      "stem_variables": {
+        "descriptor": [
+          "主要",
+          "核心",
+          "本質"
+        ]
+      },
       "options": [
-        {"text": "受固定長度的前 N-1 詞滑動視窗限制,難以捕捉超出視窗範圍的長距離語意依賴", "is_correct": true},
-        {"text": "假設詞與詞之間完全獨立(詞袋假設),因此無法表示任何相鄰詞共現關係", "is_correct": false, "trap_type": "與 BoW 混淆"},
-        {"text": "N-gram 必須先以 BERT 預訓練後才能計算機率,因此不適用於低資源語言場景", "is_correct": false, "trap_type": "因果倒置"},
-        {"text": "N-gram 模型僅能用於生成任務,無法應用於文本分類或情感分析等理解任務", "is_correct": false, "trap_type": "適用範圍錯誤"}
+        {
+          "text": "受固定長度的前 N-1 詞滑動視窗限制,難以捕捉超出視窗範圍的長距離語意依賴",
+          "is_correct": true
+        },
+        {
+          "text": "假設詞與詞之間完全獨立(詞袋假設),因此無法表示任何相鄰詞共現關係",
+          "is_correct": false,
+          "trap_type": "與 BoW 混淆"
+        },
+        {
+          "text": "N-gram 必須先以 BERT 預訓練後才能計算機率,因此不適用於低資源語言場景",
+          "is_correct": false,
+          "trap_type": "因果倒置"
+        },
+        {
+          "text": "N-gram 模型僅能用於生成任務,無法應用於文本分類或情感分析等理解任務",
+          "is_correct": false,
+          "trap_type": "適用範圍錯誤"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -636,9 +1201,17 @@
         },
         "hook": "口訣:N-gram 限制 = 固定視窗 → 長距離依賴失效;不是『獨立假設』(那是 unigram)"
       },
-      "misconceptions": ["把 N-gram 限制誤判為『詞間獨立』(那是 BoW)"],
-      "related_node_ids": ["n_L21101_001"],
-      "tags": ["N-gram", "限制"]
+      "misconceptions": [
+        "把 N-gram 限制誤判為『詞間獨立』(那是 BoW)"
+      ],
+      "related_node_ids": [
+        "n_L21101_001"
+      ],
+      "tags": [
+        "N-gram",
+        "限制"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n1_nlp_022",
@@ -650,15 +1223,42 @@
       "source_level": "L1",
       "stem": "假設 |D| = {D}、含詞 'fraud' 的文件數 df = {df}、該詞在某文件出現 TF = {tf} 次。則該文件中 'fraud' 的 TF-IDF 值(以自然對數)為何?",
       "stem_variables": {
-        "D": [1000, 500, 2000],
-        "df": [10, 25, 100],
-        "tf": [5, 8, 3]
+        "D": [
+          1000,
+          500,
+          2000
+        ],
+        "df": [
+          10,
+          25,
+          100
+        ],
+        "tf": [
+          5,
+          8,
+          3
+        ]
       },
       "options": [
-        {"text": "TF-IDF = TF × ln(|D|/df),例:TF=5、|D|=1000、df=10 → 5 × ln(100) ≈ 23.03", "is_correct": true},
-        {"text": "TF-IDF = TF + ln(|D|/df),以加法結合詞頻與逆文件頻率,可避免乘法運算時發生大數值溢位的數值不穩定風險", "is_correct": false, "trap_type": "加法錯誤"},
-        {"text": "TF-IDF = (TF / df) × |D|,以詞頻除以含詞文件數的比值,再乘以總文件數作為該詞最終的線性權重輸出值", "is_correct": false, "trap_type": "公式雜亂"},
-        {"text": "TF-IDF = TF × ln(df/|D|),其中 IDF 部分採用含詞文件數對總文件數的對數比例作為逆向縮放因子,可抑制詞頻", "is_correct": false, "trap_type": "IDF 顛倒"}
+        {
+          "text": "TF-IDF = TF × ln(|D|/df),例:TF=5、|D|=1000、df=10 → 5 × ln(100) ≈ 23.03",
+          "is_correct": true
+        },
+        {
+          "text": "TF-IDF = TF + ln(|D|/df),以加法結合詞頻與逆文件頻率,可避免乘法運算時發生大數值溢位的數值不穩定風險",
+          "is_correct": false,
+          "trap_type": "加法錯誤"
+        },
+        {
+          "text": "TF-IDF = (TF / df) × |D|,以詞頻除以含詞文件數的比值,再乘以總文件數作為該詞最終的線性權重輸出值",
+          "is_correct": false,
+          "trap_type": "公式雜亂"
+        },
+        {
+          "text": "TF-IDF = TF × ln(df/|D|),其中 IDF 部分採用含詞文件數對總文件數的對數比例作為逆向縮放因子,可抑制詞頻",
+          "is_correct": false,
+          "trap_type": "IDF 顛倒"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -670,9 +1270,19 @@
         },
         "hook": "口訣:TF-IDF = TF × ln(|D|/df);乘不是加,分子是 |D|"
       },
-      "misconceptions": ["以加法替代乘法", "IDF 分子分母顛倒"],
-      "related_node_ids": ["n_L21101_001"],
-      "tags": ["TF-IDF", "公式", "計算"]
+      "misconceptions": [
+        "以加法替代乘法",
+        "IDF 分子分母顛倒"
+      ],
+      "related_node_ids": [
+        "n_L21101_001"
+      ],
+      "tags": [
+        "TF-IDF",
+        "公式",
+        "計算"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n1_nlp_023",
@@ -683,12 +1293,33 @@
       "difficulty": "medium",
       "source_level": "L1",
       "stem": "下列關於 RAG(Retrieval-Augmented Generation)的{descriptor}描述,何者正確?",
-      "stem_variables": {"descriptor": ["主要", "核心", "正確"]},
+      "stem_variables": {
+        "descriptor": [
+          "主要",
+          "核心",
+          "正確"
+        ]
+      },
       "options": [
-        {"text": "結合外部向量檢索與語言模型生成,以降低模型幻覺與克服訓練截止知識過時問題", "is_correct": true},
-        {"text": "完全取代大型語言模型的內部知識,使生成階段無需任何預訓練語言模型即可運作", "is_correct": false, "trap_type": "替代誤解"},
-        {"text": "為一種多模態擴散生成模型,主要應用於影像與音訊條件生成的取樣加速", "is_correct": false, "trap_type": "技術錯置"},
-        {"text": "純粹的提示工程技術,僅以 few-shot 提示樣板嵌入問題即視為 RAG", "is_correct": false, "trap_type": "概念簡化錯誤"}
+        {
+          "text": "結合外部向量檢索與語言模型生成,以降低模型幻覺與克服訓練截止知識過時問題",
+          "is_correct": true
+        },
+        {
+          "text": "完全取代大型語言模型的內部知識,使生成階段無需任何預訓練語言模型即可運作",
+          "is_correct": false,
+          "trap_type": "替代誤解"
+        },
+        {
+          "text": "為一種多模態擴散生成模型,主要應用於影像與音訊條件生成的取樣加速",
+          "is_correct": false,
+          "trap_type": "技術錯置"
+        },
+        {
+          "text": "純粹的提示工程技術,僅以 few-shot 提示樣板嵌入問題即視為 RAG",
+          "is_correct": false,
+          "trap_type": "概念簡化錯誤"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -700,9 +1331,20 @@
         },
         "hook": "口訣:RAG = LLM(閉卷)+ 向量檢索(開卷);兩階段缺一不可"
       },
-      "misconceptions": ["以為 RAG 取代 LLM"],
-      "related_node_ids": ["n_L21101_002", "n_L21101_003"],
-      "tags": ["RAG", "概念"]
+      "misconceptions": [
+        "以為 RAG 取代 LLM"
+      ],
+      "related_node_ids": [
+        "n_L21101_002",
+        "n_L21101_003"
+      ],
+      "tags": [
+        "RAG",
+        "概念"
+      ],
+      "boss_topics": [
+        "legal"
+      ]
     },
     {
       "id": "q_n1_nlp_024",
@@ -714,10 +1356,25 @@
       "source_level": "L1",
       "stem": "金融客服 RAG 系統上線後出現『回覆語氣自然但內容與問題意圖不符』,根因最可能為何?",
       "options": [
-        {"text": "向量檢索階段返回語意相似但意圖不符的片段,導致 LLM 在錯誤上下文中生成『流暢但離題』回應", "is_correct": true},
-        {"text": "LLM 取樣溫度過低使生成過於保守,導致回覆無法準確覆蓋使用者真實提問範圍", "is_correct": false, "trap_type": "錯歸因取樣參數"},
-        {"text": "Context Window 容量不足,使所有檢索片段被截斷而僅保留無關尾段,影響回應切題", "is_correct": false, "trap_type": "次要原因誤判為主因"},
-        {"text": "向量資料庫的 ANN 索引(如 HNSW)構建錯誤,導致查詢時直接遺漏所有相關片段", "is_correct": false, "trap_type": "索引故障非主流原因"}
+        {
+          "text": "向量檢索階段返回語意相似但意圖不符的片段,導致 LLM 在錯誤上下文中生成『流暢但離題』回應",
+          "is_correct": true
+        },
+        {
+          "text": "LLM 取樣溫度過低使生成過於保守,導致回覆無法準確覆蓋使用者真實提問範圍",
+          "is_correct": false,
+          "trap_type": "錯歸因取樣參數"
+        },
+        {
+          "text": "Context Window 容量不足,使所有檢索片段被截斷而僅保留無關尾段,影響回應切題",
+          "is_correct": false,
+          "trap_type": "次要原因誤判為主因"
+        },
+        {
+          "text": "向量資料庫的 ANN 索引(如 HNSW)構建錯誤,導致查詢時直接遺漏所有相關片段",
+          "is_correct": false,
+          "trap_type": "索引故障非主流原因"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -729,9 +1386,22 @@
         },
         "hook": "口訣:RAG 主難 = 語意 vs 意圖落差;不是 context window、不是溫度"
       },
-      "misconceptions": ["以為 RAG 主要挑戰是 Context Window"],
-      "related_node_ids": ["n_L21101_002"],
-      "tags": ["RAG", "金融", "檢索", "情境"]
+      "misconceptions": [
+        "以為 RAG 主要挑戰是 Context Window"
+      ],
+      "related_node_ids": [
+        "n_L21101_002"
+      ],
+      "tags": [
+        "RAG",
+        "金融",
+        "檢索",
+        "情境"
+      ],
+      "boss_topics": [
+        "finance",
+        "legal"
+      ]
     },
     {
       "id": "q_n1_nlp_025",
@@ -743,10 +1413,25 @@
       "source_level": "L1",
       "stem": "RAG 系統的向量檢索階段,常用的近似最近鄰(ANN)函式庫為下列何者?",
       "options": [
-        {"text": "Faiss、ScaNN 等專為高維向量設計的 ANN 函式庫,以 IVF/HNSW 等索引提供近似查詢", "is_correct": true},
-        {"text": "OpenCV、Scikit-image 等影像處理函式庫,以 SIFT/HOG 特徵直接搜尋文字向量", "is_correct": false, "trap_type": "影像庫誤用"},
-        {"text": "PyTorch DataLoader、TensorFlow tf.data 等資料管線工具,內建向量檢索能力", "is_correct": false, "trap_type": "資料管線非檢索引擎"},
-        {"text": "Pandas DataFrame 配合 SQL JOIN,直接以等值比對檢索 embedding 欄位向量", "is_correct": false, "trap_type": "結構化檢索非 ANN"}
+        {
+          "text": "Faiss、ScaNN 等專為高維向量設計的 ANN 函式庫,以 IVF/HNSW 等索引提供近似查詢",
+          "is_correct": true
+        },
+        {
+          "text": "OpenCV、Scikit-image 等影像處理函式庫,以 SIFT/HOG 特徵直接搜尋文字向量",
+          "is_correct": false,
+          "trap_type": "影像庫誤用"
+        },
+        {
+          "text": "PyTorch DataLoader、TensorFlow tf.data 等資料管線工具,內建向量檢索能力",
+          "is_correct": false,
+          "trap_type": "資料管線非檢索引擎"
+        },
+        {
+          "text": "Pandas DataFrame 配合 SQL JOIN,直接以等值比對檢索 embedding 欄位向量",
+          "is_correct": false,
+          "trap_type": "結構化檢索非 ANN"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -758,9 +1443,20 @@
         },
         "hook": "口訣:RAG 向量檢索 → Faiss / ScaNN / Milvus / Pinecone;不是 OpenCV、不是 DataLoader"
       },
-      "misconceptions": ["以為 SQL JOIN 就能做 ANN"],
-      "related_node_ids": ["n_L21101_002"],
-      "tags": ["RAG", "Faiss", "ANN"]
+      "misconceptions": [
+        "以為 SQL JOIN 就能做 ANN"
+      ],
+      "related_node_ids": [
+        "n_L21101_002"
+      ],
+      "tags": [
+        "RAG",
+        "Faiss",
+        "ANN"
+      ],
+      "boss_topics": [
+        "legal"
+      ]
     }
   ]
 }

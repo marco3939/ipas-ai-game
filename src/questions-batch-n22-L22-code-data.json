@@ -125,7 +125,8 @@
         "pandas",
         "dropna",
         "資料清理"
-      ]
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n22_002",
@@ -230,7 +231,8 @@
         "pandas",
         "drop_duplicates",
         "去重"
-      ]
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n22_003",
@@ -313,7 +315,8 @@
         "pandas",
         "fillna",
         "缺值填補"
-      ]
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n22_004",
@@ -400,7 +403,8 @@
         "pandas",
         "merge",
         "inner join"
-      ]
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n22_005",
@@ -511,7 +515,8 @@
         "pandas",
         "isna",
         "缺值統計"
-      ]
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n22_006",
@@ -613,7 +618,8 @@
         "numpy",
         "percentile",
         "IQR"
-      ]
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n22_007",
@@ -708,7 +714,8 @@
         "numpy",
         "where",
         "離群偵測"
-      ]
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n22_008",
@@ -763,7 +770,8 @@
         "numpy",
         "random.choice",
         "加權抽樣"
-      ]
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n22_009",
@@ -849,7 +857,8 @@
         "numpy",
         "partial_stats",
         "分散統計"
-      ]
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n22_010",
@@ -948,7 +957,8 @@
         "numpy",
         "cov",
         "variance"
-      ]
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n22_011",
@@ -1029,7 +1039,8 @@
         "seasonal_decompose",
         "加法模型",
         "時間序列"
-      ]
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n22_012",
@@ -1142,7 +1153,8 @@
         "mlxtend",
         "apriori",
         "關聯規則"
-      ]
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n22_013",
@@ -1231,7 +1243,8 @@
         "mlxtend",
         "association_rules",
         "lift"
-      ]
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n22_014",
@@ -1317,7 +1330,8 @@
         "numpy",
         "markov",
         "轉移矩陣"
-      ]
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n22_015",
@@ -1397,7 +1411,8 @@
         "pandas",
         "resample",
         "時間序列"
-      ]
+      ],
+      "boss_topics": []
     }
   ]
 }

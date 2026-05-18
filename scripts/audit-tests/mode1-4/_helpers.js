@@ -506,6 +506,9 @@ function fixtureQuestion(overrides = {}) {
     format: 'mcq',
     stem: '測試題幹',
     tags: ['電商', '推薦'],
+    // 2026-05-18 治本方案 C:Mode 1 改用 boss_topics 精準篩選(取代 keyword)
+    // 預設給 ecommerce 對齊 tags['電商','推薦'],避免 fixture 在 Mode 1 selectBoss 後池為空
+    boss_topics: ['ecommerce'],
     options: [
       { text: '正確選項', is_correct: true },
       { text: '錯誤 1', is_correct: false },

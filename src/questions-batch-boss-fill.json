@@ -1,0 +1,2695 @@
+{
+  "version": "1.0",
+  "purpose": "Mode 1 BOSS 補題(治本方案 C §8 follow-up)— autonomous/telecom/education/smartcity/energy/legal 6 個小池 BOSS 補到 ≥ 20 題/BOSS",
+  "generated_at": "2026-05-18",
+  "questions": [
+    {
+      "id": "q_bf_auto_001",
+      "knowledge_code": "L21102",
+      "node_id": "n_L21102_002",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某自駕計程車公司的感知團隊正在規劃市區行人偵測模組,需求是:(1) 即時辨識前方多名行人位置(矩形框),(2) 並能在十字路口分辨「同向 3 位行人」是 3 個獨立個體以利路徑規劃,但不需要逐像素勾勒身形輪廓。請選最合適的 CV 任務階層。",
+      "options": [
+        {
+          "text": "實例分割(Instance Segmentation),需求是區分多個同類個體,且仍可輸出 bounding box",
+          "is_correct": true
+        },
+        {
+          "text": "影像分類(Image Classification),把整張影像標記為「有行人」即可滿足偵測需求",
+          "is_correct": false,
+          "trap_type": "任務階層誤判:分類無位置資訊"
+        },
+        {
+          "text": "語意分割(Semantic Segmentation),逐像素標出行人類別並可天然區分個體間界線",
+          "is_correct": false,
+          "trap_type": "概念混淆:語意分割不分個體"
+        },
+        {
+          "text": "全景分割(Panoptic Segmentation),這是同時做語意 + 實例,本場景必須採用以求最佳精度",
+          "is_correct": false,
+          "trap_type": "過度複雜:成本超出需求"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 需求拆解 — 要矩形框 + 區分同類個體,但不需逐像素輪廓。 **Step 2:** 物件偵測給框但不分同類個體計數(難以判 3 人 vs 1 群);語意分割逐像素但同類粘成一團;實例分割同時給框 + 區分個體。 **Step 3:** 因此選實例分割最精準匹配。",
+        "wrong": {
+          "影像分類(Image Classification),把整張影像標記為「有行人」即可滿足偵測需求": "分類僅輸出整張影像類別,無位置與個體資訊,自駕路徑規劃無法使用。",
+          "語意分割(Semantic Segmentation),逐像素標出行人類別並可天然區分個體間界線": "語意分割對同類像素一視同仁,3 名相鄰行人會被連成單一區域,無法計數個體。",
+          "全景分割(Panoptic Segmentation),這是同時做語意 + 實例,本場景必須採用以求最佳精度": "全景分割同時負責 stuff(道路/天空)+ thing(行人/車輛),計算量大;本場景僅需 thing 個體,過度配置。"
+        },
+        "hook": "要框 + 分個體 = 實例;只要框不分個體 = 偵測;要逐像素 + 不分個體 = 語意。"
+      },
+      "misconceptions": [
+        "以為語意分割能自動分離相鄰同類個體",
+        "以為全景分割永遠是最佳選擇"
+      ],
+      "related_node_ids": [
+        "n_L21102_002"
+      ],
+      "tags": [
+        "autonomous",
+        "CV",
+        "instance-segmentation"
+      ],
+      "boss_topics": [
+        "autonomous"
+      ]
+    },
+    {
+      "id": "q_bf_auto_002",
+      "knowledge_code": "L21102",
+      "node_id": "n_L21102_003",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某物流自駕貨車隊在高速公路情境下測試前車偵測模型,A 模型在 mAP@0.5 達 0.92、mAP@0.75 僅 0.61;B 模型 mAP@0.5 為 0.85、mAP@0.75 為 0.79。安全團隊要求剎車預判需精準框住前車尾燈位置(框需高度貼合車尾)以估算車距。應選哪個模型,理由為何?",
+      "options": [
+        {
+          "text": "選 B 模型:mAP@0.75 較高代表預測框與真實框 IoU 重疊更嚴格,定位品質更高,適合精準測距需求",
+          "is_correct": true
+        },
+        {
+          "text": "選 A 模型:mAP@0.5 較高代表整體召回好,測距任務只需偵測到車就夠了",
+          "is_correct": false,
+          "trap_type": "指標誤讀:忽略定位精度需求"
+        },
+        {
+          "text": "選 A 模型:mAP@0.5 是業界標準,@0.75 只是輔助指標,選 A 較安全保守",
+          "is_correct": false,
+          "trap_type": "錯誤經驗主義:@0.5 非業界唯一標準"
+        },
+        {
+          "text": "兩者取平均(0.92+0.61)/2 vs (0.85+0.79)/2 比較總分,A 模型平均略低應選 B",
+          "is_correct": false,
+          "trap_type": "錯誤計算:mAP 不可這樣平均比較定位需求"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** mAP@K 中的 K 是 IoU 閾值,K 越高表預測框與真實框重疊面積要求越嚴。 **Step 2:** 測距需要框「貼合」車尾,屬高定位精度需求,應看 mAP@0.75。 **Step 3:** B 模型 @0.75 為 0.79 遠勝 A 的 0.61,故選 B。",
+        "wrong": {
+          "選 A 模型:mAP@0.5 較高代表整體召回好,測距任務只需偵測到車就夠了": "測距需要框邊精準對齊車身,@0.5 IoU 容許框偏移較大,直接影響車距估算誤差。",
+          "選 A 模型:mAP@0.5 是業界標準,@0.75 只是輔助指標,選 A 較安全保守": "@0.5 雖常見但非唯一標準;自駕等高安全場景傾向採用 @0.75 甚至 @0.5:0.95 平均評估。",
+          "兩者取平均(0.92+0.61)/2 vs (0.85+0.79)/2 比較總分,A 模型平均略低應選 B": "理由錯了 — 雖結論巧合對,但不可任意平均兩個 IoU 閾值;應依任務需求選對應閾值。"
+        },
+        "hook": "mAP@閾值越高 = 框越要貼合;測距 / 抓細部 → 看 @0.75 以上。"
+      },
+      "misconceptions": [
+        "以為 mAP@0.5 一律是最重要指標",
+        "以為不同 IoU 閾值的 mAP 可平均"
+      ],
+      "related_node_ids": [
+        "n_L21102_003"
+      ],
+      "tags": [
+        "autonomous",
+        "CV",
+        "mAP",
+        "IoU"
+      ],
+      "boss_topics": [
+        "autonomous"
+      ]
+    },
+    {
+      "id": "q_bf_auto_003",
+      "knowledge_code": "L21102",
+      "node_id": "n_L21102_004",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某接駁車車載 GPU(算力受限的嵌入式平台)上,VGG-19 物件偵測 backbone 在 1080p 影像推論延遲達 180 ms,但安全規範要求 < 50 ms。團隊不可更換硬體、不可降解析度。從 CNN 譜系角度,最合適的替換策略是?",
+      "options": [
+        {
+          "text": "改用 GoogLeNet / ResNet 系列,以 Inception 模組或殘差結構降低運算量",
+          "is_correct": true
+        },
+        {
+          "text": "改回 LeNet,因為其層數最淺、運算最快,可立即將延遲壓在 50 ms 以內",
+          "is_correct": false,
+          "trap_type": "過度簡化:LeNet 表達力不足自駕情境"
+        },
+        {
+          "text": "改用 AlexNet,因為它是首個 ImageNet 冠軍,公認自駕車最佳實踐架構",
+          "is_correct": false,
+          "trap_type": "權威謬誤:AlexNet 非邊緣推論首選"
+        },
+        {
+          "text": "保留 VGG-19 並加上 Dropout 加速推論,Dropout 可隨機關閉神經元減少計算",
+          "is_correct": false,
+          "trap_type": "概念誤用:Dropout 僅訓練期關閉,推論期不啟用"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** VGG-19 採堆疊 3x3 卷積,參數與 FLOPs 巨大不利邊緣推論。 **Step 2:** GoogLeNet 用 Inception 模組(多尺度並行 + 1x1 降維)、ResNet 用殘差捷徑允許更深網路但 FLOPs 不爆炸。 **Step 3:** 兩者皆在保留精度同時顯著降推論延遲,適合邊緣 GPU。",
+        "wrong": {
+          "改回 LeNet,因為其層數最淺、運算最快,可立即將延遲壓在 50 ms 以內": "LeNet 為手寫數字辨識設計,僅 2 層卷積,對自駕複雜場景特徵抽取能力嚴重不足。",
+          "改用 AlexNet,因為它是首個 ImageNet 冠軍,公認自駕車最佳實踐架構": "AlexNet 為 2012 年作品,參數量大、無現代化模組,並非邊緣推論最佳選擇。",
+          "保留 VGG-19 並加上 Dropout 加速推論,Dropout 可隨機關閉神經元減少計算": "Dropout 僅在訓練階段隨機丟棄神經元以防過擬合,推論階段全神經元啟用,無法降低延遲。"
+        },
+        "hook": "邊緣推論延遲卡關 → 從 VGG 譜系 跳 → GoogLeNet(Inception)/ ResNet(殘差);LeNet 太淺不夠用。"
+      },
+      "misconceptions": [
+        "以為 Dropout 可在推論期加速",
+        "以為網路越淺一定越好"
+      ],
+      "related_node_ids": [
+        "n_L21102_004"
+      ],
+      "tags": [
+        "autonomous",
+        "CV",
+        "CNN",
+        "edge-inference"
+      ],
+      "boss_topics": [
+        "autonomous"
+      ]
+    },
+    {
+      "id": "q_bf_auto_004",
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_005",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某自駕計程車調度中心使用雲端 AI 服務分配車輛,平日 QPS 約 500,週末晚間 QPS 飆升至 3000 並出現服務逾時。架構師希望系統能依負載自動增減運算節點數量並對外保持單一服務入口。最對應的雲原生機制組合為何?",
+      "options": [
+        {
+          "text": "Kubernetes HPA 水平擴展依 CPU 或自訂指標自動增減 Pod 數",
+          "is_correct": true
+        },
+        {
+          "text": "在單一節點直接擴大 GPU 記憶體即可承擔尖峰流量,屬於垂直擴展中的記憶體擴充",
+          "is_correct": false,
+          "trap_type": "擴展類型混淆:垂直擴展不解決服務逾時"
+        },
+        {
+          "text": "改用單體部署 + 手動於週末擴增節點,降低 K8s 抽象成本反而較適合不規則流量",
+          "is_correct": false,
+          "trap_type": "反向決策:手動擴展不滿足自動需求"
+        },
+        {
+          "text": "改用 SQLite 加快本地查詢以提升 QPS,從資料層解決服務逾時是最直接有效策略",
+          "is_correct": false,
+          "trap_type": "錯誤對策:DB 引擎與服務擴展無直接關聯"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 需求 = 流量波動大 + 自動擴縮 + 單一服務入口。 **Step 2:** Kubernetes HPA 監控 CPU / QPS 自動調整 Pod 副本數,Service 提供統一 ClusterIP / LoadBalancer 入口。 **Step 3:** 配合雲端 Auto Scaling Group 連 Node 數也可彈性,完整滿足需求。",
+        "wrong": {
+          "在單一節點直接擴大 GPU 記憶體即可承擔尖峰流量,屬於垂直擴展中的記憶體擴充": "垂直擴展對單一 Pod 算力受限,且 CPU 瓶頸下記憶體不影響 QPS,且無法支應更大流量。",
+          "改用單體部署 + 手動於週末擴增節點,降低 K8s 抽象成本反而較適合不規則流量": "手動擴增需值班介入、反應慢,與「自動增減」需求相違。",
+          "改用 SQLite 加快本地查詢以提升 QPS,從資料層解決服務逾時是最直接有效策略": "SQLite 為單檔嵌入式 DB,並發能力遠低於分散式 DB,且服務逾時瓶頸在應用層擴展。"
+        },
+        "hook": "流量波動 + 自動擴 = K8s HPA + Auto Scaling(水平擴展)。"
+      },
+      "misconceptions": [
+        "以為垂直擴展能解決並發瓶頸",
+        "以為換 DB 引擎能直接解決服務逾時"
+      ],
+      "related_node_ids": [
+        "n_L21302_005"
+      ],
+      "tags": [
+        "autonomous",
+        "K8s",
+        "autoscaling"
+      ],
+      "boss_topics": [
+        "autonomous",
+        "smartcity"
+      ]
+    },
+    {
+      "id": "q_bf_auto_005",
+      "knowledge_code": "L21102",
+      "node_id": "n_L21102_002",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某港口自駕貨櫃車的環景感知系統需求:(1) 對「道路、堆場、天空」這類無計數意義的背景區域逐像素分類,(2) 對「貨櫃車、工人、堆高機」逐個體區分並標 ID 追蹤。請選最合適的 CV 任務階層。",
+      "options": [
+        {
+          "text": "全景分割(Panoptic Segmentation):同時處理 stuff(背景類)逐像素 + thing(個體類)實例化",
+          "is_correct": true
+        },
+        {
+          "text": "物件偵測(Object Detection):用 bounding box 框出所有物件即可滿足上述兩需求",
+          "is_correct": false,
+          "trap_type": "覆蓋不足:無法逐像素背景分類"
+        },
+        {
+          "text": "語意分割(Semantic Segmentation):逐像素分類已包含對所有類別的處理,自然滿足實例 ID 追蹤",
+          "is_correct": false,
+          "trap_type": "概念混淆:語意分割不分個體"
+        },
+        {
+          "text": "實例分割(Instance Segmentation):同時處理 stuff + thing,並對所有像素標 ID",
+          "is_correct": false,
+          "trap_type": "概念混淆:實例分割只處理 thing 類"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 需求拆解 — 背景類(stuff,如道路 / 堆場)需逐像素分類但不需個體計數;個體類(thing,如車輛 / 工人)需個體區分。 **Step 2:** 全景分割 = 語意分割(stuff)+ 實例分割(thing),正好同時滿足。 **Step 3:** 故選全景分割。",
+        "wrong": {
+          "物件偵測(Object Detection):用 bounding box 框出所有物件即可滿足上述兩需求": "物件偵測僅輸出框,無法對「道路 / 堆場」這種沒明確邊界的背景做逐像素分類。",
+          "語意分割(Semantic Segmentation):逐像素分類已包含對所有類別的處理,自然滿足實例 ID 追蹤": "語意分割對所有同類像素貼相同標籤,無法區分「3 個工人」是不同個體。",
+          "實例分割(Instance Segmentation):同時處理 stuff + thing,並對所有像素標 ID": "實例分割專門處理「可數個體」(thing),不對 stuff(無界背景)做逐像素分類。"
+        },
+        "hook": "stuff(背景)+ thing(個體)都要 = 全景分割(Panoptic)。"
+      },
+      "misconceptions": [
+        "以為實例分割同時涵蓋 stuff 與 thing",
+        "以為語意分割可區分個體"
+      ],
+      "related_node_ids": [
+        "n_L21102_002"
+      ],
+      "tags": [
+        "autonomous",
+        "CV",
+        "panoptic"
+      ],
+      "boss_topics": [
+        "autonomous"
+      ]
+    },
+    {
+      "id": "q_bf_auto_006",
+      "knowledge_code": "L21202",
+      "node_id": "n_L21202_001",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某自駕計程車公司剛通過實驗區內部測試,計劃將新 v2.0 感知模型推上量產車隊。安全長要求採 AI 漸進式部署原則。下列做法最符合「Phased Rollout」精神?",
+      "options": [
+        {
+          "text": "先 5% 車於低速接駁線實跑、設回退條件,逐步擴大至 25%/50%/100%",
+          "is_correct": true
+        },
+        {
+          "text": "週五午夜一次性替換全車隊模型,週末車流量低正好可觀察是否有大量客訴",
+          "is_correct": false,
+          "trap_type": "All-or-nothing:違反漸進式部署"
+        },
+        {
+          "text": "新模型只在模擬器跑 100 萬公里通過後即視為可量產,不需實車漸進",
+          "is_correct": false,
+          "trap_type": "依賴模擬:忽略真實路域差異"
+        },
+        {
+          "text": "對所有車輛同時部署但讓駕駛手動隨時切回舊版,讓使用者投票決定何時全切換",
+          "is_correct": false,
+          "trap_type": "責任轉嫁:使用者投票非工程控制"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 漸進式部署 = 由小流量 → 大流量逐步擴張,每階段設回退條件。 **Step 2:** 自駕關安全,先 5% / 低風險路段試水溫,觀察 KPI(接管率 / 急煞次數)再擴大。 **Step 3:** 一旦指標異常立即回退並追根。",
+        "wrong": {
+          "週五午夜一次性替換全車隊模型,週末車流量低正好可觀察是否有大量客訴": "一次性 big bang 部署完全違反漸進式原則,出問題影響全車隊。",
+          "新模型只在模擬器跑 100 萬公里通過後即視為可量產,不需實車漸進": "模擬器無法涵蓋所有真實長尾情境(如特殊天氣 / 罕見路標),仍需實車漸進驗證。",
+          "對所有車輛同時部署但讓駕駛手動隨時切回舊版,讓使用者投票決定何時全切換": "切換決策應由工程指標控制(回退條件),非使用者主觀投票,且全車隊已是 big bang 部署。"
+        },
+        "hook": "AI 漸進式部署 = 5% → 25% → 50% → 100%,每階段設回退條件。"
+      },
+      "misconceptions": [
+        "以為模擬器測試足以替代漸進實車",
+        "以為一次性全量切換可降風險"
+      ],
+      "related_node_ids": [
+        "n_L21202_001"
+      ],
+      "tags": [
+        "autonomous",
+        "deployment",
+        "phased-rollout"
+      ],
+      "boss_topics": [
+        "autonomous"
+      ]
+    },
+    {
+      "id": "q_bf_auto_007",
+      "knowledge_code": "L21203",
+      "node_id": "n_L21203_003",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某乘用車 ADAS 團隊收到資安通報:研究人員證明在 Stop Sign 上貼特殊圖樣的小貼紙能讓辨識模型誤判為「速限 45」,這是典型 evasion 對抗性攻擊。下列哪個方案最完整體現「對抗性攻擊三層防禦」精神?",
+      "options": [
+        {
+          "text": "訓練期注入對抗樣本 + 推論期輸入過濾 + 系統層 ensemble 冗餘三層並行",
+          "is_correct": true
+        },
+        {
+          "text": "只在訓練期加入更多正常 Stop Sign 影像並調高學習率,讓模型自然強健起來",
+          "is_correct": false,
+          "trap_type": "片面對策:只強化訓練資料量"
+        },
+        {
+          "text": "於推論時對輸入加上隨機高斯雜訊,使攻擊圖樣失效,單一技術即可防護",
+          "is_correct": false,
+          "trap_type": "單點防禦:忽略多層次"
+        },
+        {
+          "text": "直接停用 ADAS 視覺辨識,改僅靠 GPS / 高精地圖預先存好的標誌位置,徹底排除對抗攻擊風險",
+          "is_correct": false,
+          "trap_type": "因噎廢食:犧牲核心功能"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 對抗性攻擊三層防禦 = 訓練期(Adversarial Training)+ 推論期(輸入檢測 / 重建 / 隨機平滑)+ 系統層(多模型 ensemble / 多感測冗餘)。 **Step 2:** Stop Sign 貼紙屬 evasion 攻擊,單層防禦易被繞過,需三層協同。 **Step 3:** 此選項三層皆涵蓋,最完整。",
+        "wrong": {
+          "只在訓練期加入更多正常 Stop Sign 影像並調高學習率,讓模型自然強健起來": "加更多正常樣本對 adversarial perturbation 無針對性防護,需注入對抗樣本才有效;且僅單層。",
+          "於推論時對輸入加上隨機高斯雜訊,使攻擊圖樣失效,單一技術即可防護": "隨機平滑屬推論期單一手段,精心設計的攻擊仍可繞過,缺乏訓練 / 系統層配套。",
+          "直接停用 ADAS 視覺辨識,改僅靠 GPS / 高精地圖預先存好的標誌位置,徹底排除對抗攻擊風險": "高精地圖無法應對臨時施工 / 改道路標,放棄視覺等於放棄主要感知通道,過度反應。"
+        },
+        "hook": "對抗防禦三層 = 訓練(注對抗樣本)+ 推論(輸入檢測)+ 系統(冗餘 ensemble)。"
+      },
+      "misconceptions": [
+        "以為單一技術可完全防禦對抗性攻擊",
+        "以為加更多正常資料就能防 adversarial 樣本"
+      ],
+      "related_node_ids": [
+        "n_L21203_003"
+      ],
+      "tags": [
+        "autonomous",
+        "adversarial",
+        "security"
+      ],
+      "boss_topics": [
+        "autonomous"
+      ]
+    },
+    {
+      "id": "q_bf_auto_008",
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_003",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某礦場自駕運礦車的物件偵測模型在訓練時主要用乾燥晴天資料,部署半年後雨季來臨,現場回報誤判率上升;同時礦區擴建後出現新型機械(自走式破碎機),模型對其分類錯誤頻繁。MLOps 團隊應分別診斷?",
+      "options": [
+        {
+          "text": "雨季屬 Data Drift,新機械屬 Concept Drift,用 PSI 監控",
+          "is_correct": true
+        },
+        {
+          "text": "兩者都歸類為 Concept Drift,只需重新標註雨季資料即可解決全部問題",
+          "is_correct": false,
+          "trap_type": "Drift 類型誤判"
+        },
+        {
+          "text": "兩者都不屬 Drift,而是模型過擬合,需加強 Dropout 與 L2 正則化重訓",
+          "is_correct": false,
+          "trap_type": "誤診為過擬合:忽略部署後分佈變化"
+        },
+        {
+          "text": "雨季屬硬體故障雜訊與模型無關;新機械屬感測器解析度不足,皆非 Drift",
+          "is_correct": false,
+          "trap_type": "歸因錯誤:迴避模型監控議題"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** Data Drift = P(X) 改變,輸入分佈變(雨季影像亮度 / 紋理 / 噪音改變)。 **Step 2:** Concept Drift = P(Y|X) 改變或新類別出現(新機械從未在訓練集出現,模型不認識)。 **Step 3:** 監控工具:PSI / KL Divergence 偵測 Data Drift;預測信心下降 + 標籤回流監控偵測 Concept Drift。",
+        "wrong": {
+          "兩者都歸類為 Concept Drift,只需重新標註雨季資料即可解決全部問題": "雨季屬 P(X) 變化而非 P(Y|X);且只重標雨季忽略新機械需要重訓涵蓋新類別。",
+          "兩者都不屬 Drift,而是模型過擬合,需加強 Dropout 與 L2 正則化重訓": "過擬合是訓練期表徵 (train↑ val↓);部署後分佈變化屬 Drift,不可混為一談。",
+          "雨季屬硬體故障雜訊與模型無關;新機械屬感測器解析度不足,皆非 Drift": "Drift 監控是 MLOps 核心職責,迴避此議題會錯過模型衰退預警。"
+        },
+        "hook": "P(X) 變 = Data Drift;P(Y|X) 變 = Concept Drift;PSI / KL 看分佈位移。"
+      },
+      "misconceptions": [
+        "以為 Drift 都是同一類",
+        "以為部署問題都是過擬合所致"
+      ],
+      "related_node_ids": [
+        "n_L21302_003"
+      ],
+      "tags": [
+        "autonomous",
+        "drift",
+        "MLOps"
+      ],
+      "boss_topics": [
+        "autonomous",
+        "manufacturing"
+      ]
+    },
+    {
+      "id": "q_bf_auto_009",
+      "knowledge_code": "L21202",
+      "node_id": "n_L21202_002",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某國防自駕車輛(無人地面載具 UGV)團隊規劃架構:緊急避障決策(50 ms 內)放車載邊緣推論;非即時的路徑規劃與全車隊地圖更新放雲端推論。團隊用「AI 導入評估三層」對照,以下哪個判斷最正確?",
+      "options": [
+        {
+          "text": "邊緣 / 雲端分工符合「技術可行性、商業價值、合規可控」三層平衡",
+          "is_correct": true
+        },
+        {
+          "text": "全部放雲端最簡單,可避免邊緣裝置算力受限,延遲再加大頻寬即可滿足 50 ms 邊界",
+          "is_correct": false,
+          "trap_type": "技術可行性誤判:網路延遲不可由頻寬無限縮短"
+        },
+        {
+          "text": "全部放邊緣,雲端只當備份;延遲越低越好,商業價值與合規層可後置處理",
+          "is_correct": false,
+          "trap_type": "片面強調延遲:忽略雲端規模化價值"
+        },
+        {
+          "text": "AI 導入評估三層僅針對 RoI 試算,與延遲 / 邊緣雲端分工無關",
+          "is_correct": false,
+          "trap_type": "框架認知錯誤:三層涵蓋技術+商業+合規"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** AI 導入評估三層 = 技術可行性 + 商業價值 + 合規可控。 **Step 2:** 50 ms 避障屬技術可行性硬約束 → 必邊緣;車隊地圖更新需聚合多車資料 → 雲端,符合商業規模化價值;集中審查資料屬合規層。 **Step 3:** 三層全考量是最完整評估。",
+        "wrong": {
+          "全部放雲端最簡單,可避免邊緣裝置算力受限,延遲再加大頻寬即可滿足 50 ms 邊界": "網路 RTT 受光速 + 路由跳數限制,即便頻寬無限大,延遲仍受網路物理層限制,無法 50 ms 內穩定回應。",
+          "全部放邊緣,雲端只當備份;延遲越低越好,商業價值與合規層可後置處理": "全車隊地圖更新需多車匯流 + 集中審查,僅邊緣無法達成;且三層應同步考量非後置。",
+          "AI 導入評估三層僅針對 RoI 試算,與延遲 / 邊緣雲端分工無關": "三層架構同時涵蓋技術可行性(含延遲 / 算力)、商業價值、合規,並非僅 RoI。"
+        },
+        "hook": "AI 三層 = 技術可行 + 商業價值 + 合規可控;邊緣 / 雲端分工是技術可行性層的具體決策。"
+      },
+      "misconceptions": [
+        "以為頻寬可無限縮短網路延遲",
+        "以為三層只是 RoI 框架"
+      ],
+      "related_node_ids": [
+        "n_L21202_002"
+      ],
+      "tags": [
+        "autonomous",
+        "edge-cloud",
+        "evaluation"
+      ],
+      "boss_topics": [
+        "autonomous"
+      ]
+    },
+    {
+      "id": "q_bf_auto_010",
+      "knowledge_code": "L21102",
+      "node_id": "n_L21102_003",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某自駕接駁車行人偵測模型在驗證集上的指標:IoU 閾值 0.5 → Recall 0.96 / Precision 0.85;IoU 閾值 0.7 → Recall 0.78 / Precision 0.93。安全長強調「漏報行人代價遠高於誤報」(寧可緊急煞錯也不能撞人)。應採哪個閾值,理由為何?",
+      "options": [
+        {
+          "text": "選 0.5 閾值:Recall 較高(0.96)漏報少,符合「漏報致命」優先,代價是多一些誤煞",
+          "is_correct": true
+        },
+        {
+          "text": "選 0.7 閾值:Precision 較高(0.93)誤判少,可避免不必要的緊急煞車造成乘客傷害",
+          "is_correct": false,
+          "trap_type": "代價排序錯誤:撞人代價 > 誤煞"
+        },
+        {
+          "text": "選 0.7 閾值:IoU 越高代表偵測框越準,Recall 雖低但整體模型更可靠,屬安全選擇",
+          "is_correct": false,
+          "trap_type": "指標混淆:IoU 高不等於漏報少"
+        },
+        {
+          "text": "選 0.5 閾值:Precision 較高(0.85)代表誤判少,所以漏報行人風險可被覆蓋",
+          "is_correct": false,
+          "trap_type": "資料誤讀:0.5 對應 Precision 0.85 不是較高"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** Recall = TP/(TP+FN),Recall 高 → 漏報(FN)少。 **Step 2:** 安全長要求「漏報 = 撞人」絕不可,優先 Recall。 **Step 3:** 0.5 閾值 Recall 0.96 顯著高於 0.7 閾值的 0.78,選 0.5。",
+        "wrong": {
+          "選 0.7 閾值:Precision 較高(0.93)誤判少,可避免不必要的緊急煞車造成乘客傷害": "誤煞代價(乘客不適)遠低於漏報(撞人致命),代價排序錯誤。",
+          "選 0.7 閾值:IoU 越高代表偵測框越準,Recall 雖低但整體模型更可靠,屬安全選擇": "IoU 高僅代表框定位準,但 Recall 低 = 直接漏掉行人,對人命安全是反向結論。",
+          "選 0.5 閾值:Precision 較高(0.85)代表誤判少,所以漏報行人風險可被覆蓋": "事實錯誤:0.5 對應 Precision 0.85 < 0.7 對應的 0.93,且論述邏輯混淆。"
+        },
+        "hook": "漏報致命 → 顧 Recall;誤報昂貴 → 顧 Precision。自駕撞人 = Recall 第一。"
+      },
+      "misconceptions": [
+        "以為 IoU 高一律是安全選擇",
+        "以為 Precision 高就能涵蓋漏報風險"
+      ],
+      "related_node_ids": [
+        "n_L21102_003"
+      ],
+      "tags": [
+        "autonomous",
+        "recall",
+        "safety"
+      ],
+      "boss_topics": [
+        "autonomous"
+      ]
+    },
+    {
+      "id": "q_bf_auto_011",
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_006",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某卡車隊自駕公司在訓練 8K 環景全景分割模型時,單 GPU 24GB 記憶體跑 batch_size=16 立刻 OOM(Out of Memory),團隊不能換更大 GPU。最對應 MLOps 解法?",
+      "options": [
+        {
+          "text": "Data Sharding 多 GPU 分片 + 縮小 batch_size 至 4~8,配梯度累積",
+          "is_correct": true
+        },
+        {
+          "text": "把所有資料先降為 8-bit 整數儲存於 GPU,記憶體只剩 1/4,batch_size 可直接 ×4",
+          "is_correct": false,
+          "trap_type": "禁用主題誤導:INT8 量化非本題重點且為禁用"
+        },
+        {
+          "text": "停用反向傳播只跑前向推論,記憶體用量大幅下降,模型仍可學習",
+          "is_correct": false,
+          "trap_type": "概念謬誤:無反向傳播無法訓練"
+        },
+        {
+          "text": "把 batch_size 加大到 64,讓 GPU 自動最佳化記憶體配置,OOM 是配置誤判",
+          "is_correct": false,
+          "trap_type": "反向操作:加大 batch 加劇 OOM"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** OOM 主因 = 單 GPU 一次處理太多樣本 + 中間 activation。 **Step 2:** Data Sharding 把資料分散到多 GPU,每張卡只負責一部分;同時把 batch_size 減小釋放單卡記憶體。 **Step 3:** 若擔心 effective batch 變小,搭配梯度累積維持訓練穩定。",
+        "wrong": {
+          "把所有資料先降為 8-bit 整數儲存於 GPU,記憶體只剩 1/4,batch_size 可直接 ×4": "量化技術屬本專案禁用主題且訓練時通常用混合精度(FP16/BF16)而非直接 INT8 訓練。",
+          "停用反向傳播只跑前向推論,記憶體用量大幅下降,模型仍可學習": "沒有反向傳播 = 沒有梯度 = 無法更新參數,模型完全無法學習。",
+          "把 batch_size 加大到 64,讓 GPU 自動最佳化記憶體配置,OOM 是配置誤判": "batch_size 與記憶體用量正相關,加大只會更 OOM。"
+        },
+        "hook": "GPU 記憶體不夠 → Data Sharding + 縮 Batch + 梯度累積;不是加大 batch。"
+      },
+      "misconceptions": [
+        "以為 GPU 會自動最佳化大 batch",
+        "以為停反向傳播也能訓練"
+      ],
+      "related_node_ids": [
+        "n_L21302_006"
+      ],
+      "tags": [
+        "autonomous",
+        "GPU",
+        "training"
+      ],
+      "boss_topics": [
+        "autonomous"
+      ]
+    },
+    {
+      "id": "q_bf_auto_012",
+      "knowledge_code": "L21301",
+      "node_id": "n_L21301_001",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某自駕計程車的車載 IMU(慣性量測單元)+ LiDAR 點雲索引以每 10 ms 一筆 JSON 上傳邊緣節點:`{\"t\": 1715980800123, \"speed\": 38.5, \"yaw_rate\": 0.12, \"lidar_obj_cnt\": 7}`,工程師要為「過彎前異常加速偵測」抽特徵。下列哪個時序特徵抽取做法最對應半結構化 JSON 資料處理?",
+      "options": [
+        {
+          "text": "對 speed / yaw_rate 以 rolling window 取 mean/std/max",
+          "is_correct": true
+        },
+        {
+          "text": "把整份 JSON 串成單一字串送進詞袋模型(BoW)抽取詞頻特徵,讓 ML 自動學語意",
+          "is_correct": false,
+          "trap_type": "技術錯置:時序數值非文字"
+        },
+        {
+          "text": "丟棄 t 欄位(時間戳),只保留 speed 與 yaw_rate 算全域 mean / std 當特徵",
+          "is_correct": false,
+          "trap_type": "丟資訊:丟掉時間導致過彎時序失效"
+        },
+        {
+          "text": "把 JSON 轉成圖片再用 CNN 抽特徵,因為深度學習對非結構化最有效",
+          "is_correct": false,
+          "trap_type": "繞圈解法:對時序資料無必要"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** JSON 屬半結構化資料,有明確欄位但需自訂解析。 **Step 2:** 對時序欄位(speed / yaw_rate)做滾動窗口聚合(mean / std / max / min)可捕捉短期動態。 **Step 3:** 配合 t 欄做時間對齊與標籤匹配(過彎前 N 秒視為正樣本)抽出可學習特徵。",
+        "wrong": {
+          "把整份 JSON 串成單一字串送進詞袋模型(BoW)抽取詞頻特徵,讓 ML 自動學語意": "BoW 是處理自然語言文本的方法,數值 JSON 用 BoW 會失去數值大小與時間語意。",
+          "丟棄 t 欄位(時間戳),只保留 speed 與 yaw_rate 算全域 mean / std 當特徵": "丟掉時間戳就無法捕捉「過彎前」這種時序相對概念,且全域 mean 無法反映瞬時動態。",
+          "把 JSON 轉成圖片再用 CNN 抽特徵,因為深度學習對非結構化最有效": "時序數值資料用滾動統計或 RNN 即可,轉圖片 + CNN 增加複雜度且不對應資料本質。"
+        },
+        "hook": "JSON 時序資料 = 用 rolling window 抽 mean/std/max + 對齊時間戳。"
+      },
+      "misconceptions": [
+        "以為 BoW 適用所有半結構化資料",
+        "以為丟時間戳不會影響時序特徵"
+      ],
+      "related_node_ids": [
+        "n_L21301_001"
+      ],
+      "tags": [
+        "autonomous",
+        "JSON",
+        "time-series",
+        "feature-engineering"
+      ],
+      "boss_topics": [
+        "autonomous"
+      ]
+    },
+    {
+      "id": "q_bf_tel_001",
+      "knowledge_code": "L23304",
+      "node_id": "n_L23304_002",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某大型行動電信業者建構客戶流失預測模型,資料科學家從帳單、通話、加值服務、APP 使用、客服紀錄中蒐集了 287 個候選特徵。初步檢查發現許多特徵高度相關(例如「月均通話分鐘」「月均通話次數」「月均通話帳單金額」共線性極強),且模型在驗證集解釋力過剩、上線後可解釋性低,業務端要求只保留少量可解釋核心特徵。下列何項做法最能同時做到自動特徵篩選與抑制多重共線?",
+      "options": [
+        {
+          "text": "採用 L1 正則化(LASSO)邏輯迴歸,透過 L1 範數懲罰將不重要係數壓縮至 0,自動完成稀疏特徵選擇,同時對共線特徵組會傾向只保留一個代表性變數",
+          "is_correct": true
+        },
+        {
+          "text": "採用 L2 正則化(Ridge)邏輯迴歸,因 L2 對所有係數平方懲罰會自動把不重要特徵的係數壓縮至 0,輸出稀疏權重以達到自動特徵選擇與抑制共線之效果",
+          "is_correct": false,
+          "trap_type": "L2 不會稀疏化"
+        },
+        {
+          "text": "保留全部 287 個特徵直接送入邏輯迴歸,並把學習率調至極小、訓練 epoch 拉到很長以強化收斂,讓模型自行透過反向傳播自動學會忽略不重要與共線之冗餘特徵",
+          "is_correct": false,
+          "trap_type": "未處理共線+過擬合"
+        },
+        {
+          "text": "對所有特徵做 Min-Max 縮放至 [0,1] 區間後直接送入邏輯迴歸,因縮放後尺度一致即可消除多重共線,並透過縮放後權重大小直接判斷特徵重要性而完成自動篩選",
+          "is_correct": false,
+          "trap_type": "縮放不解決共線"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 釐清需求 — 287 維特徵中存在高度共線(通話分鐘 / 次數 / 金額),且需要自動篩選並提升可解釋性,屬「特徵選擇 + 正則化」雙需求。**Step 2:** 選擇 L1(LASSO)— L1 範數懲罰 Σ|w_i| 在最佳化過程中具有將係數精準壓縮至 0 的性質,自動產生稀疏模型;對於高度共線的特徵組,L1 會傾向只保留其中一個代表變數,其餘係數歸 0,同時達成特徵選擇與抑制共線。**Step 3:** 對照 L2(Ridge)— L2 懲罰 Σw_i² 只會把係數壓「小」但不會到 0,無法做特徵選擇;面對共線特徵會把權重平均分散到多個共線變數,反而降低可解釋性,故不適合本情境。",
+        "wrong": {
+          "採用 L2 正則化(Ridge)邏輯迴歸,因 L2 對所有係數平方懲罰會自動把不重要特徵的係數壓縮至 0,輸出稀疏權重以達到自動特徵選擇與抑制共線之效果": "L2 是平方懲罰,梯度在 w→0 時趨近 0,無法精準壓到 0,故不會產生稀疏解;L2 適合「穩定共線權重」但不做特徵選擇",
+          "保留全部 287 個特徵直接送入邏輯迴歸,並把學習率調至極小、訓練 epoch 拉到很長以強化收斂,讓模型自行透過反向傳播自動學會忽略不重要與共線之冗餘特徵": "邏輯迴歸是凸最佳化,訓練再久也不會自動「忽略」特徵;且共線會讓設計矩陣秩虧、權重不穩,延長訓練只會加劇過擬合",
+          "對所有特徵做 Min-Max 縮放至 [0,1] 區間後直接送入邏輯迴歸,因縮放後尺度一致即可消除多重共線,並透過縮放後權重大小直接判斷特徵重要性而完成自動篩選": "縮放只調整尺度不改變線性相關性,共線結構完全保留;且把所有特徵都留下違反「保留少量可解釋核心特徵」的業務需求"
+        },
+        "hook": "口訣:L1=稀疏選特徵(歸 0),L2=穩定縮共線(縮小不歸 0);要砍特徵選 LASSO,要穩權重選 Ridge"
+      },
+      "misconceptions": [
+        "誤以為 L2 也能做特徵選擇(把係數壓到 0)",
+        "把特徵縮放當成解決多重共線的方法",
+        "認為延長訓練可以讓模型自動忽略冗餘特徵",
+        "混淆 L1 與 L2 對共線特徵的處理機制"
+      ],
+      "related_node_ids": [
+        "n_L23304_001",
+        "n_L23304_005",
+        "n_L23301_002"
+      ],
+      "tags": [
+        "L1 LASSO",
+        "特徵選擇",
+        "多重共線",
+        "電信流失",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "telecom",
+        "ml_bigdata"
+      ]
+    },
+    {
+      "id": "q_bf_tel_002",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_002",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某固網寬頻業者部署客戶流失預警模型,商業情境如下:每月解約率約 4%,挽留方案是『主動電話 + 折扣 200 元 / 月、為期 6 個月』,單戶挽留成本約 1,200 元;若漏抓真正流失戶,失去的客戶終身價值平均約 18,000 元(挽留成本 ≪ 漏抓成本約 1:15)。資深行銷總監要求模型部署評估指標應該『寧可錯打給沒打算解約的人,也不要漏掉真的要走的人』。下列哪個評估策略最契合此商業取捨?",
+      "options": [
+        {
+          "text": "以 Recall(召回率)作為主要監控指標,並適度容忍 Precision 下降;以 F2 分數(對 Recall 加權)作為閾值調整目標,確保盡可能不漏掉真正將流失之客戶",
+          "is_correct": true
+        },
+        {
+          "text": "以 Precision(精準率)作為主要監控指標,盡量提高被預警之客戶確實解約之比率,以最小化每一通挽留電話之打擾成本,並以 F0.5 分數作為閾值調整目標",
+          "is_correct": false,
+          "trap_type": "成本反向取捨"
+        },
+        {
+          "text": "以整體準確率(Accuracy)作為唯一上線指標,因為 Accuracy 同時涵蓋 TP 與 TN,在 4% 解約率之資料中能直接反映模型對流失與非流失之雙向預測能力與商業價值",
+          "is_correct": false,
+          "trap_type": "不平衡禁用 Accuracy"
+        },
+        {
+          "text": "以 ROC-AUC 為唯一驗收門檻,當 AUC ≥ 0.85 即可直接上線,不需另行設定 Precision / Recall 工作點,因為 AUC 已涵蓋所有閾值之整體判別能力故能反映商業最佳取捨",
+          "is_correct": false,
+          "trap_type": "AUC 與工作點脫鉤"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 量化成本不對稱 — 挽留成本 1,200 元 vs 漏抓成本 18,000 元,FN(漏抓真流失)代價是 FP(誤打給不走的人)的 15 倍,商業端要求『寧誤打勿漏抓』。**Step 2:** 對應指標 — Recall = TP/(TP+FN) 直接刻畫『真流失被找出的比率』,Recall ↑ 等於 FN ↓,正是商業需求;同時用 F-beta 中的 F2(Recall 權重高於 Precision)當閾值調優目標,可在容忍 Precision 下滑的前提下逼出更高 Recall。**Step 3:** 排除其他選項 — 4% 流失率是典型不平衡資料,Accuracy 會被多數類主導(全猜不流失準確率 96%);AUC 是跨閾值的排序能力,商業上線必須選一個工作點(Precision/Recall trade-off),光看 AUC 無法決定該不該打挽留電話。",
+        "wrong": {
+          "以 Precision(精準率)作為主要監控指標,盡量提高被預警之客戶確實解約之比率,以最小化每一通挽留電話之打擾成本,並以 F0.5 分數作為閾值調整目標": "Precision/F0.5 偏向降低 FP(誤打),但本案 FN 成本遠高於 FP,優先壓 FP 等於把漏抓放大 = 反向取捨",
+          "以整體準確率(Accuracy)作為唯一上線指標,因為 Accuracy 同時涵蓋 TP 與 TN,在 4% 解約率之資料中能直接反映模型對流失與非流失之雙向預測能力與商業價值": "4% 屬不平衡資料,模型只要無腦預測『不流失』就有 96% Accuracy,卻完全沒抓到任何流失戶,商業價值為零",
+          "以 ROC-AUC 為唯一驗收門檻,當 AUC ≥ 0.85 即可直接上線,不需另行設定 Precision / Recall 工作點,因為 AUC 已涵蓋所有閾值之整體判別能力故能反映商業最佳取捨": "AUC 評估的是排序能力跨所有閾值,但上線必須選工作點(threshold),不同 threshold 對應截然不同的 Precision/Recall,AUC 高不代表選對工作點"
+        },
+        "hook": "口訣:漏抓貴 → 拚 Recall,誤打貴 → 拚 Precision;不平衡禁 Accuracy,AUC 看排序但要另選工作點"
+      },
+      "misconceptions": [
+        "把 Accuracy 套用於不平衡資料",
+        "用 AUC 代替工作點選擇",
+        "混淆 Precision / Recall 在不對稱成本下的取捨方向",
+        "誤以為 F1 永遠是最佳評估指標(忽略 F2/F0.5)"
+      ],
+      "related_node_ids": [
+        "n_L23303_001",
+        "n_L23303_004",
+        "n_L22402_003"
+      ],
+      "tags": [
+        "Recall",
+        "Precision",
+        "不平衡資料",
+        "成本敏感",
+        "電信流失",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "telecom"
+      ]
+    },
+    {
+      "id": "q_bf_tel_003",
+      "knowledge_code": "L22302",
+      "node_id": "n_L22302_004",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某國際電話服務商客服中心每月接收約 14 萬通客訴文字逐字稿,目前由 60 名客服主管人工標註為「資費爭議 / 通話品質 / 國際漫遊 / 帳單錯誤 / 申辦疑問 / 其他」六類,作為流失預警下游特徵。資料分析主管想先做一輪非監督式探索,觀察是否有人工分類未涵蓋的潛在主題(如「VoIP 替代品比較詢問」「特定國家斷線」)。下列哪個文字探勘工具最適合用於此「主題發現」階段?",
+      "options": [
+        {
+          "text": "採用主題模型(如 LDA / Latent Dirichlet Allocation)對逐字稿做非監督式主題萃取,每篇文件得到主題分佈、每個主題得到關鍵詞分佈,可用以發現未被人工類別涵蓋之潛在主題",
+          "is_correct": true
+        },
+        {
+          "text": "採用 TF-IDF 加上 Cosine Similarity 計算每篇逐字稿與「現有 6 類客訴範本」之相似度,挑出相似度最高之類別作為自動分類結果,並以準確率衡量是否需要新增主題",
+          "is_correct": false,
+          "trap_type": "監督式分類非發現"
+        },
+        {
+          "text": "採用情感分析(Sentiment Analysis)模型對每篇逐字稿做「正向 / 中性 / 負向」三分類標註,統計各情感佔比之變化,以判斷是否存在新主題與未涵蓋之客訴類型",
+          "is_correct": false,
+          "trap_type": "情感非主題"
+        },
+        {
+          "text": "採用命名實體識別(NER)抽取每篇逐字稿中之人名 / 地名 / 機構名 / 時間,以實體共現次數作為主題群聚指標,並用以發現未被現有客訴分類覆蓋之潛在新主題類別",
+          "is_correct": false,
+          "trap_type": "NER 抽實體非主題"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 釐清任務 — 客戶需要「發現」未知主題,屬非監督式主題萃取(topic discovery),不可使用任何依賴既有 6 類標籤之監督式方法。**Step 2:** 選擇 LDA — Latent Dirichlet Allocation 把每篇文件視為主題分佈、每個主題視為關鍵詞分佈,僅輸入語料即可萃取 K 個潛在主題;分析師可觀察主題關鍵詞(如某主題高權重詞=「VoIP / WhatsApp / 划算 / 改用」)判斷是否為人工未涵蓋之新主題。**Step 3:** 排除其他選項 — TF-IDF + Cosine 比對範本是監督式分類、被框死在既有 6 類;情感分析只輸出極性、無法揭示主題內容;NER 抽人名地名時間,跟「客訴主題」無對應關係。",
+        "wrong": {
+          "採用 TF-IDF 加上 Cosine Similarity 計算每篇逐字稿與「現有 6 類客訴範本」之相似度,挑出相似度最高之類別作為自動分類結果,並以準確率衡量是否需要新增主題": "此方法把所有文件強塞回 6 個既有類別,無法發現任何未涵蓋的新主題,正是任務要避免的監督式偏誤",
+          "採用情感分析(Sentiment Analysis)模型對每篇逐字稿做「正向 / 中性 / 負向」三分類標註,統計各情感佔比之變化,以判斷是否存在新主題與未涵蓋之客訴類型": "情感分析輸出極性,跟主題內容無關;客戶可能對任何主題都不滿,情感分佈無法揭示「主題是什麼」",
+          "採用命名實體識別(NER)抽取每篇逐字稿中之人名 / 地名 / 機構名 / 時間,以實體共現次數作為主題群聚指標,並用以發現未被現有客訴分類覆蓋之潛在新主題類別": "NER 抽具體實體(誰、何處、何時),但「主題」是語意層概念,實體共現只能反映時空對象、不能反映客訴主題類別"
+        },
+        "hook": "口訣:要『發現』主題 → LDA(非監督);要『歸類』回既有桶 → TF-IDF+分類器;情感看情緒、NER 抽實體都不是主題"
+      },
+      "misconceptions": [
+        "混淆主題發現(非監督)與文本分類(監督)",
+        "把情感分析誤當主題分析",
+        "認為 NER 可以做主題探索",
+        "誤以為 TF-IDF + Cosine 能發現新主題"
+      ],
+      "related_node_ids": [
+        "n_L22302_001",
+        "n_L22302_003",
+        "n_L22302_005"
+      ],
+      "tags": [
+        "文字探勘",
+        "LDA",
+        "主題模型",
+        "客服文本",
+        "電信",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "telecom"
+      ]
+    },
+    {
+      "id": "q_bf_tel_004",
+      "knowledge_code": "L23301",
+      "node_id": "n_L23301_003",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某 IoT SIM 卡服務商建構企業客戶流失預測模型,訓練集共 48,000 筆,其中流失樣本僅 1,440 筆(流失率約 3%)。資料科學家用未經處理的原始資料訓練 XGBoost,雖在驗證集 Accuracy 高達 97%,但 Recall 僅 8%,模型幾乎把所有客戶都判為「不流失」。團隊決定在進入模型訓練前先做不平衡資料處理。下列做法何者最符合 SMOTE 的正確使用方式?",
+      "options": [
+        {
+          "text": "只在訓練集執行 SMOTE 合成少數類樣本(以少數類 K 近鄰連線插值),驗證集與測試集維持原始分佈;以 Recall / F1 / PR-AUC 評估,而非 Accuracy",
+          "is_correct": true
+        },
+        {
+          "text": "在切分訓練 / 驗證 / 測試前,先對全資料集執行 SMOTE,使三組資料中流失與非流失樣本各佔 50%,再進行隨機切分,以確保三組分佈一致並降低驗證階段之變異",
+          "is_correct": false,
+          "trap_type": "切分前 SMOTE 資料洩漏"
+        },
+        {
+          "text": "在訓練集對「多數類」執行 SMOTE 過採樣,使非流失樣本翻倍至 93,000 筆,以更大樣本量讓 XGBoost 學到非流失客戶之細部變化,從而間接提升對少數類流失客戶之 Recall 表現",
+          "is_correct": false,
+          "trap_type": "SMOTE 對象搞錯"
+        },
+        {
+          "text": "保留原始資料不做任何採樣,改以提升學習率(learning rate)+ 加大樹的最大深度(max_depth)補償不平衡;以 Accuracy 為主要評估指標,因為 97% 已遠優於亂猜的 50%",
+          "is_correct": false,
+          "trap_type": "未處理+評估錯"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 釐清 SMOTE 對象與時機 — SMOTE(Synthetic Minority Over-sampling Technique)是對「少數類」做 K 近鄰連線插值合成新樣本;且只能在「訓練集」內做,驗證 / 測試集必須維持原始分佈才能真實反映上線表現。**Step 2:** 評估指標切換 — 3% 流失率是嚴重不平衡,Accuracy 會被多數類主導(全猜不流失 = 97% Accuracy 卻 Recall=0);應採用 Recall / F1 / PR-AUC 評估真實的少數類識別能力。**Step 3:** 排除錯誤做法 — 切分前 SMOTE 會把合成樣本的鄰居漏進驗證集,屬資料洩漏(data leakage),驗證指標會虛高;對多數類做 SMOTE 違反 SMOTE 定義;不做採樣只調學習率與深度無法解決樣本不平衡,且 Accuracy 在 3% 場景毫無意義。",
+        "wrong": {
+          "在切分訓練 / 驗證 / 測試前,先對全資料集執行 SMOTE,使三組資料中流失與非流失樣本各佔 50%,再進行隨機切分,以確保三組分佈一致並降低驗證階段之變異": "切分前 SMOTE 是典型資料洩漏,合成樣本是用真實樣本鄰居插出來的,鄰居可能落到驗證 / 測試集,使指標虛高、上線即崩",
+          "在訓練集對「多數類」執行 SMOTE 過採樣,使非流失樣本翻倍至 93,000 筆,以更大樣本量讓 XGBoost 學到非流失客戶之細部變化,從而間接提升對少數類流失客戶之 Recall 表現": "SMOTE 的設計就是補少數類,對多數類加樣只會把不平衡放大;且對 Recall 沒有任何幫助,反而讓模型更偏向預測非流失",
+          "保留原始資料不做任何採樣,改以提升學習率(learning rate)+ 加大樹的最大深度(max_depth)補償不平衡;以 Accuracy 為主要評估指標,因為 97% 已遠優於亂猜的 50%": "調學習率與樹深無法處理樣本層級的不平衡(只是模型最佳化方向);Accuracy 97% 在 3% 流失率場景毫無資訊量(全猜 0 也有 97%)"
+        },
+        "hook": "口訣:SMOTE 只補少數類、只在訓練集做;切分前先 SMOTE = 資料洩漏;不平衡看 Recall / F1 / PR-AUC,別看 Accuracy"
+      },
+      "misconceptions": [
+        "切分前先對全資料做 SMOTE 導致資料洩漏",
+        "誤對多數類做 SMOTE",
+        "在驗證 / 測試集也做 SMOTE 採樣",
+        "用 Accuracy 評估嚴重不平衡資料"
+      ],
+      "related_node_ids": [
+        "n_L23301_001",
+        "n_L23303_001",
+        "n_L23303_004"
+      ],
+      "tags": [
+        "SMOTE",
+        "不平衡資料",
+        "資料洩漏",
+        "電信流失",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "telecom",
+        "ml_bigdata"
+      ]
+    },
+    {
+      "id": "q_bf_tel_005",
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_003",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某 B2B 企業專線電信服務商上線「客戶流失預測」模型已 9 個月,2026 年 3 月公司全面改革企業資費(從「按月固定費」改為「按頻寬用量+SLA 等級分級」),導致下游模型輸入特徵分佈出現劇烈變化:「月均通話分鐘」「資費級距」「附加服務數」幾個關鍵特徵的長條圖整體向右偏移。但因為標籤(實際解約事件)需要 60~90 天才會確認,目前還無法計算新一期的 Recall / F1。MLOps 工程師希望在「等不到真實標籤」前先發出預警。下列何種偵測策略最適合?",
+      "options": [
+        {
+          "text": "以 PSI(Population Stability Index)比對上線後與訓練期特徵分佈,> 0.25 即顯著漂移立即告警;屬 Data Drift,可在標籤回收前提早預警",
+          "is_correct": true
+        },
+        {
+          "text": "等待 90 天回收真實標籤後,直接重新計算 Recall / F1 / AUC,若指標下降超過 5% 則啟動重訓;在標籤回收前保持模型運行不做任何告警,以免誤判",
+          "is_correct": false,
+          "trap_type": "等標籤延遲告警"
+        },
+        {
+          "text": "對每次推論結果計算模型預測機率之平均值,若平均流失機率較上線首月變化超過 20% 即視為 Concept Drift,直接以「預測分佈變化」取代特徵分佈與標籤分佈之雙重監測",
+          "is_correct": false,
+          "trap_type": "預測平均混 drift 類型"
+        },
+        {
+          "text": "重新對訓練資料做一次特徵縮放(Min-Max)後重新匯入模型推論服務,因為新資費上路後絕對數值會偏移、縮放可吸收漂移,屬於最低成本之線上漂移補償方案",
+          "is_correct": false,
+          "trap_type": "縮放不修 drift"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 釐清 drift 類型 — 特徵分佈改變但標籤未到,屬 Data Drift(輸入端漂移)非 Concept Drift(輸入與標籤關係改變);Data Drift 不需標籤即可偵測。**Step 2:** 採用 PSI — PSI 把訓練期分佈 P 與線上分佈 Q 切相同 bin,計算 Σ(Q_i − P_i) × ln(Q_i/P_i),經驗門檻:PSI < 0.1 穩定 / 0.1~0.25 中等變化 / > 0.25 顯著漂移需告警 + 介入。**Step 3:** 排除其他選項 — 等 90 天標籤回收等於放任 3 個月模型決策劣化;單看預測機率平均無法區分是輸入漂移還是真實流失率變化;對特徵縮放不能解決分佈漂移,縮放只是線性變換,漂移後的相對結構與訓練期 mapping 不同,需要重訓或重新校準。",
+        "wrong": {
+          "等待 90 天回收真實標籤後,直接重新計算 Recall / F1 / AUC,若指標下降超過 5% 則啟動重訓;在標籤回收前保持模型運行不做任何告警,以免誤判": "60~90 天延遲對線上挽留決策代價極高;Data Drift 偵測本來就是為了在等不到標籤時提前預警,放棄等於失去預警機制",
+          "對每次推論結果計算模型預測機率之平均值,若平均流失機率較上線首月變化超過 20% 即視為 Concept Drift,直接以「預測分佈變化」取代特徵分佈與標籤分佈之雙重監測": "預測平均變化可能來自輸入漂移、可能來自真實率變化,單看預測分佈無法區分 Data Drift / Concept Drift,且把「預測漂移」直接稱為 Concept Drift 是定義錯誤",
+          "重新對訓練資料做一次特徵縮放(Min-Max)後重新匯入模型推論服務,因為新資費上路後絕對數值會偏移、縮放可吸收漂移,屬於最低成本之線上漂移補償方案": "Min-Max 縮放只是線性變換,訓練期已固定 min/max;新分佈即使縮放後仍與訓練期 mapping 不同,模型內部學到的決策邊界沒有跟著移動,屬「假修」"
+        },
+        "hook": "口訣:標籤未到看 Data Drift(PSI / KL),標籤到了看 Concept Drift(指標下降);PSI > 0.25 立刻告警"
+      },
+      "misconceptions": [
+        "混淆 Data Drift 與 Concept Drift",
+        "等標籤回收才告警(延遲幾個月)",
+        "把特徵縮放當作漂移修補手段",
+        "只看預測機率平均判斷 drift 類型"
+      ],
+      "related_node_ids": [
+        "n_L21302_002",
+        "n_L21302_007",
+        "n_L21302_005"
+      ],
+      "tags": [
+        "MLOps",
+        "Data Drift",
+        "PSI",
+        "電信",
+        "B2B",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "telecom",
+        "ml_bigdata"
+      ]
+    },
+    {
+      "id": "q_bf_tel_006",
+      "knowledge_code": "L22402",
+      "node_id": "n_L22402_001",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某 OTT 影音電信加值服務商希望建構「客戶終身價值(CLV / Customer Lifetime Value)」預測,輸出未來 24 個月每位用戶之預期累積貢獻金額(以新台幣計算,範圍 0 至約 80,000 元),目標是供行銷部門排序投放預算。資料科學家在啟動專案前先要釐清「這是分類還是迴歸任務」。下列何項判斷最正確?",
+      "options": [
+        {
+          "text": "屬迴歸任務 — 輸出為連續金額數值;評估指標應採 RMSE / MAE / R²,並可依預測金額排序決定投放優先順序;不可直接以 Accuracy / F1 評估",
+          "is_correct": true
+        },
+        {
+          "text": "屬二元分類任務 — 將每位用戶以中位數 CLV(例如 5,000 元)切為「高價值」與「低價值」兩類後再訓練分類器;以 Accuracy / F1 / AUC 評估,可直接得到投放優先順序",
+          "is_correct": false,
+          "trap_type": "硬切分類丟資訊"
+        },
+        {
+          "text": "屬多元分類任務 — 將 CLV 切為 5 段(0-1k / 1k-5k / 5k-15k / 15k-40k / 40k-80k)後做 5 類分類,每類獨立評估 Recall;此設計可同時兼顧連續性與類別性,優於迴歸",
+          "is_correct": false,
+          "trap_type": "強行多分類丟序"
+        },
+        {
+          "text": "屬非監督任務 — 因為「未來 24 個月貢獻金額」屬於尚未發生之事件、沒有可用標籤,只能以 K-means 對用戶做分群後憑商業直覺指派每群之估計 CLV 值再排序",
+          "is_correct": false,
+          "trap_type": "誤判監督性"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 判斷輸出型態 — CLV 輸出為連續金額(0 至 80,000 元),連續數值預測屬「迴歸」任務(L22402 鑑別式 AI 預測分類 / 迴歸 / 排序 / 推薦中之迴歸)。**Step 2:** 對應評估指標 — 迴歸應用 RMSE(對大誤差敏感)/ MAE(平均絕對誤差)/ R²(變異被解釋比率);Accuracy / F1 是分類指標,套用於連續輸出沒有意義。**Step 3:** 排除其他選項 — 強行硬切分類會丟掉金額大小資訊(4,999 與 5,001 被判不同類);非監督式 K-means 適合用戶分群,但本案有歷史交易資料可建立 24 個月後實際 CLV 標籤(回看式 supervised),不是非監督問題。",
+        "wrong": {
+          "屬二元分類任務 — 將每位用戶以中位數 CLV(例如 5,000 元)切為「高價值」與「低價值」兩類後再訓練分類器;以 Accuracy / F1 / AUC 評估,可直接得到投放優先順序": "硬切二類丟失連續性,4,999 與 80,000 都被歸為「低 / 高價值」,排序投放時失去金額差異資訊;且分類器輸出機率無法等價於金額",
+          "屬多元分類任務 — 將 CLV 切為 5 段(0-1k / 1k-5k / 5k-15k / 15k-40k / 40k-80k)後做 5 類分類,每類獨立評估 Recall;此設計可同時兼顧連續性與類別性,優於迴歸": "5 類分類仍丟失組內金額大小;且把連續排序問題化為類別問題會丟失順序資訊(若用一般 softmax 分類器並未保留序),迴歸更直接",
+          "屬非監督任務 — 因為「未來 24 個月貢獻金額」屬於尚未發生之事件、沒有可用標籤,只能以 K-means 對用戶做分群後憑商業直覺指派每群之估計 CLV 值再排序": "歷史資料中存在『已過 24 個月之老用戶實際累積貢獻』可作為訓練標籤(supervised regression);非監督做分群只能描述群型、不能輸出金額預測"
+        },
+        "hook": "口訣:連續數值 → 迴歸(RMSE / MAE / R²);類別標籤 → 分類(Accuracy / F1);硬切連續為類別=丟資訊"
+      },
+      "misconceptions": [
+        "把連續預測硬切為分類問題",
+        "誤以為沒有當下標籤就是非監督",
+        "用 Accuracy / F1 評估迴歸輸出",
+        "認為多分類比迴歸更靈活"
+      ],
+      "related_node_ids": [
+        "n_L22402_002",
+        "n_L22402_005",
+        "n_L23303_003"
+      ],
+      "tags": [
+        "鑑別式 AI",
+        "迴歸",
+        "CLV",
+        "電信",
+        "OTT",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "telecom"
+      ]
+    },
+    {
+      "id": "q_bf_tel_007",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_008",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某行動電信公司行銷部希望根據通話行為將既有 320 萬用戶做分眾,以便設計差異化方案。資料中每位用戶以「月均通話分鐘 / 月均封包流量 / 月均通話次數 / 月均資費」等 8 個連續特徵描述,所有特徵已做 Z-score 標準化。行銷部的需求是:(A)分群結果要能說明「每群有什麼共同特徵」(以群中心向量描述);(B)群數可控、能依行銷預算約束為 4 ~ 6 群;(C)對 320 萬筆資料要能在數小時內跑完。下列分群方法最契合此情境?",
+      "options": [
+        {
+          "text": "採用 K-means 並以肘部法(Elbow Method)/ Silhouette 在 k=3~8 範圍選最佳 k;K-means 對球狀群效果好、計算複雜度 O(nkdi),320 萬筆易處理,且群中心向量可作為每群之共同特徵描述",
+          "is_correct": true
+        },
+        {
+          "text": "採用階層式分群(Hierarchical Clustering)並產出完整樹狀圖(Dendrogram)以視覺化所有用戶間相似度;由業務人員自行從樹狀圖中切出 4~6 群,以提供最豐富之分群解讀彈性",
+          "is_correct": false,
+          "trap_type": "階層式 O(n²) 不可行"
+        },
+        {
+          "text": "採用 DBSCAN 並依密度自動產出群數,因 DBSCAN 不需指定 k 故可同時兼顧自動性與彈性;以 Core / Border / Noise 三類點分類,將 Noise 直接視為新群作為高潛力客戶",
+          "is_correct": false,
+          "trap_type": "DBSCAN 群數不可控"
+        },
+        {
+          "text": "直接以 Logistic Regression 對「是否為高價值用戶」做二元分類後,以預測機率排名前 25% / 25~50% / 50~75% / 75~100% 切為 4 群,以監督式手段強行產出穩定分群",
+          "is_correct": false,
+          "trap_type": "分類非分群"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 對照三項需求 — (A)要有「每群共同特徵」→ 需要群中心可描述;(B)群數可控 4~6 → 需要支援指定 k;(C)320 萬筆數小時內 → 需要線性級複雜度。**Step 2:** K-means 對位 — K-means 以群中心(centroid)為每群代表向量,直接滿足 (A);使用者指定 k 並以肘部法 / Silhouette 在 k=3~8 區間選最佳,滿足 (B);時間複雜度 O(nkdi)接近線性、Mini-batch K-means 可加速,320 萬筆在數小時內可處理,滿足 (C)。**Step 3:** 排除其他選項 — 階層式分群須計算 n² 兩兩距離,320 萬筆需約 10¹³ 次運算,記憶體與時間皆不可行;DBSCAN 群數由密度決定無法指定 4~6,且 Noise 不應視為群;Logistic Regression 是監督式分類、不是分群方法,且需要既有標籤。",
+        "wrong": {
+          "採用階層式分群(Hierarchical Clustering)並產出完整樹狀圖(Dendrogram)以視覺化所有用戶間相似度;由業務人員自行從樹狀圖中切出 4~6 群,以提供最豐富之分群解讀彈性": "階層式時間複雜度 O(n²~n³)、空間需存 n×n 距離矩陣,320 萬筆規模不可行;且樹狀圖可視化在百萬級資料上失去意義",
+          "採用 DBSCAN 並依密度自動產出群數,因 DBSCAN 不需指定 k 故可同時兼顧自動性與彈性;以 Core / Border / Noise 三類點分類,將 Noise 直接視為新群作為高潛力客戶": "DBSCAN 群數由 eps / min_samples 隱含決定,難以控制為 4~6 群;Noise 是「未達密度」的點,不是同一群高潛力客戶,直接視為一群是錯誤詮釋",
+          "直接以 Logistic Regression 對「是否為高價值用戶」做二元分類後,以預測機率排名前 25% / 25~50% / 50~75% / 75~100% 切為 4 群,以監督式手段強行產出穩定分群": "Logistic Regression 屬監督式分類,需要既有標籤;機率分位切組是排序而非分群,沒有「每群有何共同特徵」之內涵"
+        },
+        "hook": "口訣:要球狀+可控+海量 → K-means;要層級可探索但小資料 → 階層式;要密度+不規則 → DBSCAN;分類≠分群"
+      },
+      "misconceptions": [
+        "把分類預測機率分位當成分群",
+        "誤以為階層式分群可處理百萬級資料",
+        "把 DBSCAN Noise 視為一個有意義的群",
+        "認為 K-means 對所有資料形狀都最佳"
+      ],
+      "related_node_ids": [
+        "n_L23202_002",
+        "n_L23202_003",
+        "n_L23301_001"
+      ],
+      "tags": [
+        "K-means",
+        "分群",
+        "客戶分眾",
+        "電信",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "telecom",
+        "ml_bigdata"
+      ]
+    },
+    {
+      "id": "q_bf_tel_008",
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_005",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某 5G 行動電信業者在全台 12 個邊緣節點(MEC, Multi-access Edge Computing)部署「即時通話品質劣化預測」AI 推論服務,要求單筆推論 P95 延遲 ≤ 50 毫秒,且尖峰時段(每日 19:00~22:00)流量是平峰之 7 倍。資深 SRE 評估目前單節點 4 副本 Pod 已不足以撐尖峰。下列哪個高可用 AI 服務架構策略最契合此情境?",
+      "options": [
+        {
+          "text": "每個邊緣節點導入 Kubernetes HPA(Horizontal Pod Autoscaler),依 CPU / GPU 使用率或 QPS 自動調整副本數,並搭配 Auto Scaling 群組擴增節點",
+          "is_correct": true
+        },
+        {
+          "text": "把所有邊緣節點推論流量集中導回中心雲端機房之單一大型 GPU 伺服器處理,以單點高運算密度滿足尖峰,並透過提高伺服器規格(Vertical Scaling)取代水平擴展以降低複雜度",
+          "is_correct": false,
+          "trap_type": "回中心違延遲"
+        },
+        {
+          "text": "尖峰時段預先暫停模型推論服務 90 分鐘,將該時段所有請求改為固定回傳上一小時之預測結果,等流量回落後再恢復推論;以「服務暫停 + 快取替代」取代擴容以節省成本",
+          "is_correct": false,
+          "trap_type": "暫停服務違 SLA"
+        },
+        {
+          "text": "在每個邊緣節點將模型 Pod 固定為 1 副本,改以提高每個 Pod 的 CPU / GPU 配額(Resource Request / Limit)上限取代擴展副本,因垂直擴展不必處理跨副本一致性",
+          "is_correct": false,
+          "trap_type": "垂直擴展受限"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 釐清需求 — P95 ≤ 50ms 屬即時 SLA;尖峰 7 倍流量需彈性容量;邊緣節點本質要靠近用戶降延遲,不能回中心。**Step 2:** 對應方案 — Kubernetes HPA(Horizontal Pod Autoscaler)以 CPU / GPU / QPS 為觸發指標自動增減 Pod 副本;同時搭配 Cluster Auto Scaling 在節點層級隨負載擴增 worker,組成「Pod 副本 ↔ 節點容量」雙層彈性,可彈性吸收 7 倍尖峰並維持低延遲。**Step 3:** 排除其他選項 — 流量回中心會把 RTT 從邊緣 ~10ms 拉高到中心 ~50ms 以上、違反 50ms P95;暫停服務 90 分鐘違反 SLA;垂直擴展受單機資源上限與分區效能瓶頸限制,且單副本沒有 HA(節點故障即整區服務中斷)。",
+        "wrong": {
+          "把所有邊緣節點推論流量集中導回中心雲端機房之單一大型 GPU 伺服器處理,以單點高運算密度滿足尖峰,並透過提高伺服器規格(Vertical Scaling)取代水平擴展以降低複雜度": "回中心違反邊緣節點存在的目的(降延遲);單點集中是 SPOF(單點故障),且 50ms P95 在跨城回傳下幾乎無法達成",
+          "尖峰時段預先暫停模型推論服務 90 分鐘,將該時段所有請求改為固定回傳上一小時之預測結果,等流量回落後再恢復推論;以「服務暫停 + 快取替代」取代擴容以節省成本": "尖峰時段正是業務最需要即時預測的時段(通話品質劣化);用 90 分鐘前快取對「通話品質劣化預測」毫無意義,且形同服務不可用",
+          "在每個邊緣節點將模型 Pod 固定為 1 副本,改以提高每個 Pod 的 CPU / GPU 配額(Resource Request / Limit)上限取代擴展副本,因垂直擴展不必處理跨副本一致性": "單副本沒有 HA(該副本掛掉整個邊緣節點服務中斷);垂直擴展受單機資源上限,7 倍流量單副本難以吸收;且推論為無狀態服務,水平擴展不需要副本一致性"
+        },
+        "hook": "口訣:邊緣即時 = 水平擴展(HPA)+ Auto Scaling;垂直擴展有上限、單副本無 HA、回中心違延遲"
+      },
+      "misconceptions": [
+        "認為垂直擴展可取代水平擴展",
+        "把邊緣流量集中回中心",
+        "用快取替代尖峰時段推論",
+        "單副本部署忽視 HA 風險"
+      ],
+      "related_node_ids": [
+        "n_L21302_001",
+        "n_L21302_007",
+        "n_L21302_006"
+      ],
+      "tags": [
+        "MLOps",
+        "邊緣推論",
+        "5G",
+        "Kubernetes",
+        "Auto Scaling",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "telecom"
+      ]
+    },
+    {
+      "id": "q_bf_tel_009",
+      "knowledge_code": "L22203",
+      "node_id": "n_L22203_001",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某行動電信業者欲建構「上線 / 離線事件即時管線」:每秒約 28 萬筆使用者裝置 attach / detach 事件由全台基地台上送,業務需求是「事件發生 5 秒內」必須產出「分區即時在網人數」儀表板,並同步觸發異常斷網警示給維運中心。下列處理架構最契合此情境?",
+      "options": [
+        {
+          "text": "採用串流處理(Stream Processing)架構,事件抵達即逐筆 / 微批次處理產出即時聚合,符合『5 秒內』之低延遲約束;以 Kafka + Flink / Spark Structured Streaming 等串流引擎為核心",
+          "is_correct": true
+        },
+        {
+          "text": "採用每日批次處理(Daily Batch),於每日凌晨 02:00 把前一日所有 attach / detach 事件匯入資料倉儲彙整為「分區在網人數」,讓營運中心隔日早會審視,以最低成本承載 28 萬 QPS",
+          "is_correct": false,
+          "trap_type": "批次延遲過大"
+        },
+        {
+          "text": "採用人工輪班制度,由維運中心 24 小時值班同仁每 5 分鐘手動查詢基地台 Log 統計在網人數並更新試算表,以全人工值守取代任何自動化串流或批次處理架構",
+          "is_correct": false,
+          "trap_type": "人工不可行"
+        },
+        {
+          "text": "把所有 attach / detach 事件先存入關聯式資料庫,再以 BI 工具設定 SQL 每 30 分鐘輪詢一次彙整在網人數,以 30 分鐘輪詢取代串流以降低系統複雜度;告警另以人工排程巡檢",
+          "is_correct": false,
+          "trap_type": "輪詢延遲不足"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 識別關鍵約束 — 28 萬 QPS 高吞吐 + 5 秒內低延遲 + 即時告警 → 屬典型 Stream Processing 場景。**Step 2:** 對應架構 — Kafka 為事件 broker 吸納 28 萬 QPS;Flink / Spark Structured Streaming 對事件做窗口聚合(例如 5 秒滾動窗口計算分區在網人數)並輸出至儀表板;同一管線可觸發異常規則(例如某基地台 1 秒內 detach 數異常)即時告警。**Step 3:** 排除其他選項 — 每日批次延遲 24 小時遠超 5 秒;人工輪班無法承接 28 萬 QPS;30 分鐘輪詢延遲也遠大於 5 秒、且 SQL 對高吞吐事件聚合非最佳化、告警也錯失即時性。",
+        "wrong": {
+          "採用每日批次處理(Daily Batch),於每日凌晨 02:00 把前一日所有 attach / detach 事件匯入資料倉儲彙整為「分區在網人數」,讓營運中心隔日早會審視,以最低成本承載 28 萬 QPS": "批次延遲 24 小時遠超 5 秒約束,且異常斷網需要即時告警、隔日才知道斷網已造成數萬用戶長時間受影響",
+          "採用人工輪班制度,由維運中心 24 小時值班同仁每 5 分鐘手動查詢基地台 Log 統計在網人數並更新試算表,以全人工值守取代任何自動化串流或批次處理架構": "28 萬 QPS 是每秒事件數,人類無法手動處理;且 5 分鐘手動輪詢遠超 5 秒約束;人工值守是反工程化的退步方案",
+          "把所有 attach / detach 事件先存入關聯式資料庫,再以 BI 工具設定 SQL 每 30 分鐘輪詢一次彙整在網人數,以 30 分鐘輪詢取代串流以降低系統複雜度;告警另以人工排程巡檢": "30 分鐘輪詢延遲遠超 5 秒;關聯式 DB 在 28 萬 QPS 寫入下會崩潰;告警靠人工排程巡檢失去即時性"
+        },
+        "hook": "口訣:即時 = Stream(秒級);小時級延遲容忍 = 微批次;隔日報表 = Batch;選擇看「業務要多快」"
+      },
+      "misconceptions": [
+        "把高吞吐自動等同於需要批次處理",
+        "誤以為輪詢間隔短就等於串流",
+        "忽略即時告警需求只看儀表板需求",
+        "認為 Stream 架構成本永遠高於批次"
+      ],
+      "related_node_ids": [
+        "n_L22203_002",
+        "n_L22203_005",
+        "n_L22203_003"
+      ],
+      "tags": [
+        "串流處理",
+        "資料管線",
+        "5G",
+        "電信",
+        "即時",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "telecom",
+        "ml_bigdata"
+      ]
+    },
+    {
+      "id": "q_bf_tel_010",
+      "knowledge_code": "L21203",
+      "node_id": "n_L21203_001",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某行動電信業者欲將「使用者通話紀錄」(主叫號碼 / 被叫號碼 / 通話時長 / 基地台位置 / 通話時間)提供給內部 AI 團隊建立流失預測模型,法務長提醒此屬個人資料保護法(PDPA)所稱「個人資料」之利用範疇,且屬「特種類別資料」之鄰近敏感資訊(可推導出社交關係 / 位置軌跡)。下列做法何者最符合 PDPA 蒐集 / 處理 / 利用之事前告知義務並降低再識別風險?",
+      "options": [
+        {
+          "text": "依 PDPA 第 8 條於契約 / 隱私政策 / 同意書告知六項法定事項(蒐集機關、目的、類別、利用方式、當事人權利、不提供之影響);AI 訓練資料採『假名化』(hash + salt 替換電話)並落實最小必要原則",
+          "is_correct": true
+        },
+        {
+          "text": "因 AI 訓練屬於「內部研究分析」與當初電信服務蒐集目的高度相關,可直接沿用既有契約,無須額外告知;將電話號碼僅保留尾 4 碼即可視為去識別化,可大幅降低法務風險",
+          "is_correct": false,
+          "trap_type": "目的內擴解+尾碼不夠"
+        },
+        {
+          "text": "只要 AI 模型輸出之預測結果由內部使用、不對外公開,則訓練資料可保留所有原始個資欄位(完整電話號碼 / 身分證字號 / 基地台位置)以維持模型最高準確率;PDPA 規範僅針對對外輸出之個資",
+          "is_correct": false,
+          "trap_type": "誤解內部豁免"
+        },
+        {
+          "text": "全面以 GDPR 之 Right to be Forgotten(被遺忘權)為唯一合規依據,因 GDPR 標準高於 PDPA,只要符合 GDPR 即視同自動符合台灣 PDPA;告知與假名化均非必要,只需提供刪除窗口即可",
+          "is_correct": false,
+          "trap_type": "GDPR 不取代 PDPA"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** PDPA 第 8 條六項告知 — 蒐集機關名稱 / 蒐集之目的 / 個資類別 / 利用之期間地區對象方式 / 當事人得行使之權利及方式 / 不提供之影響;告知須具體、不可僅以一句『同意內部使用』帶過。**Step 2:** 假名化降低再識別風險 — 把電話號碼以 hash + salt 轉換、移除可直接識別欄位、僅保留訓練必要特徵(最小可用原則),即使資料外流也難以再識別。**Step 3:** 排除其他選項 — 將「電信服務」之蒐集目的擴解至 AI 流失預測屬「目的擴張」,需另行告知 / 取得同意;尾 4 碼仍可大範圍配合其他欄位再識別;PDPA 適用「處理」階段非只「公開輸出」階段;GDPR 適用歐盟資料主體,不取代台灣 PDPA 適用台灣境內當事人之要求。",
+        "wrong": {
+          "因 AI 訓練屬於「內部研究分析」與當初電信服務蒐集目的高度相關,可直接沿用既有契約,無須額外告知;將電話號碼僅保留尾 4 碼即可視為去識別化,可大幅降低法務風險": "蒐集目的不可任意擴張,AI 流失預測與「電信服務」目的不同,需另行告知;尾 4 碼配合其他欄位可被輕易再識別,屬假性去識別化",
+          "只要 AI 模型輸出之預測結果由內部使用、不對外公開,則訓練資料可保留所有原始個資欄位(完整電話號碼 / 身分證字號 / 基地台位置)以維持模型最高準確率;PDPA 規範僅針對對外輸出之個資": "PDPA 同時規範「蒐集 / 處理 / 利用」三階段,內部處理一樣需符合最小必要原則與安全維護義務;誤以為內部即豁免是常見合規誤區",
+          "全面以 GDPR 之 Right to be Forgotten(被遺忘權)為唯一合規依據,因 GDPR 標準高於 PDPA,只要符合 GDPR 即視同自動符合台灣 PDPA;告知與假名化均非必要,只需提供刪除窗口即可": "GDPR 適用對歐盟資料主體之處理,並不自動涵蓋台灣 PDPA 適用之台灣境內當事人;且 PDPA 第 8 條告知義務是獨立要件,不可以 GDPR 規定取代"
+        },
+        "hook": "口訣:PDPA 第 8 條六告知一個不能少 + 假名化 + 最小必要;尾 4 碼可再識別,GDPR 不取代 PDPA"
+      },
+      "misconceptions": [
+        "把蒐集目的任意擴張至新 AI 用途",
+        "誤以為內部使用即不適用 PDPA",
+        "把尾碼遮蔽當成去識別化",
+        "認為 GDPR 可取代 PDPA"
+      ],
+      "related_node_ids": [
+        "n_L21203_002",
+        "n_L21203_003",
+        "n_L21203_005"
+      ],
+      "tags": [
+        "PDPA",
+        "個資告知",
+        "假名化",
+        "通話紀錄",
+        "電信",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "telecom",
+        "privacy"
+      ]
+    },
+    {
+      "id": "q_bf_tel_011",
+      "knowledge_code": "L21302",
+      "node_id": "n_L21302_003",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某行動電信業者將客戶流失預測模型上線 14 個月,近 3 個月發現:特徵輸入分佈幾乎不變(PSI 均 < 0.1),但驗證集 Recall 由 68% 跌至 41%。團隊回溯發現是因為市場上 3 家競業同時推出更低資費方案、客戶流失誘因『改變』了(同樣特徵分佈下,流失條件變寬鬆)。下列何項判斷與處置最正確?",
+      "options": [
+        {
+          "text": "屬 Concept Drift(輸入與標籤關係改變)而非 Data Drift;應收集近期標籤重新訓練或啟動線上學習並更新閾值;單看 PSI 不足,須補上「標籤後驗效能監測」",
+          "is_correct": true
+        },
+        {
+          "text": "屬 Data Drift,應立即重做特徵縮放與正規化以強制輸入分佈與訓練期一致;不需重新訓練模型,因 PSI 已顯示分佈未變故問題不在模型本身",
+          "is_correct": false,
+          "trap_type": "誤判 drift 類型"
+        },
+        {
+          "text": "屬模型過擬合(Overfitting)復發,應對訓練資料加強 L2 正則化與 Dropout 後重新訓練,以降低模型對訓練分佈之依賴;此類效能下降與外部市場變化無關",
+          "is_correct": false,
+          "trap_type": "誤判過擬合"
+        },
+        {
+          "text": "屬資料品質劣化,應檢查資料管線是否有缺漏值 / 重複值 / 編碼錯誤,在問題未釐清前暫停推論服務;在資料管線確認無誤前不應重新訓練,避免錯誤再固化",
+          "is_correct": false,
+          "trap_type": "誤判資料品質"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 判別 drift 類型 — 輸入分佈未變(PSI < 0.1)但效能下降,正是 Concept Drift 之典型徵兆(輸入 X 不變,但 X→Y 的映射改變);此例市場競業改變了用戶在『同樣特徵下』的流失條件。**Step 2:** 處置策略 — 收集近期已回收標籤之新資料重新訓練模型(或採用線上學習 / 增量學習方式持續更新權重),並重新校準閾值以對應新流失率與新成本結構。**Step 3:** 監測補強 — 單看 PSI 只能偵測 Data Drift,Concept Drift 需另外監測標籤後驗效能(Recall / F1 / 商業 KPI 隨時間之變化),雙重監測機制才能涵蓋兩種 drift。",
+        "wrong": {
+          "屬 Data Drift,應立即重做特徵縮放與正規化以強制輸入分佈與訓練期一致;不需重新訓練模型,因 PSI 已顯示分佈未變故問題不在模型本身": "PSI < 0.1 表示輸入分佈穩定 = 非 Data Drift;且就算是 Data Drift,重做縮放也不修補映射關係改變;邏輯與診斷雙錯",
+          "屬模型過擬合(Overfitting)復發,應對訓練資料加強 L2 正則化與 Dropout 後重新訓練,以降低模型對訓練分佈之依賴;此類效能下降與外部市場變化無關": "Overfitting 是「訓練時即發生」的現象,不會在上線 14 個月後突然『復發』;此例是外部 X→Y 關係改變,加正則化只會更欠擬合,無法解決",
+          "屬資料品質劣化,應檢查資料管線是否有缺漏值 / 重複值 / 編碼錯誤,在問題未釐清前暫停推論服務;在資料管線確認無誤前不應重新訓練,避免錯誤再固化": "資料品質問題通常會反映在 PSI / 缺漏值率上升,題目並未提及此類異常;且面對市場行為改變,暫停服務不是解,應啟動重訓"
+        },
+        "hook": "口訣:輸入變 = Data Drift(PSI 抓);輸入不變但效能掉 = Concept Drift(效能監測抓);雙監測才完整"
+      },
+      "misconceptions": [
+        "把 Concept Drift 誤判為 Data Drift",
+        "把外部市場變化誤判為過擬合復發",
+        "認為 PSI 可單獨涵蓋所有 drift 偵測",
+        "面對效能下降暫停服務而非啟動重訓"
+      ],
+      "related_node_ids": [
+        "n_L21302_002",
+        "n_L21302_007",
+        "n_L23304_001"
+      ],
+      "tags": [
+        "MLOps",
+        "Concept Drift",
+        "重新訓練",
+        "電信流失",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "telecom"
+      ]
+    },
+    {
+      "id": "q_bf_tel_012",
+      "knowledge_code": "L22402",
+      "node_id": "n_L22402_003",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某固網國際電話業者建構「詐騙電話即時偵測」模型(俗稱 +886 偽冒 / 假投資詐騙),通話量約每月 7,800 萬通,確認為詐騙之歷史標籤僅 0.06%(極端不平衡)。商業要求:(A)每漏抓一通詐騙電話,受害者平均損失 38 萬元;(B)誤判一通正常電話為詐騙僅造成 1 通電話被多 1.5 秒語音警示(成本極低);(C)需於通話接通後 1.5 秒內判斷。下列模型評估與閾值策略最契合此情境?",
+      "options": [
+        {
+          "text": "以 Recall 為主、Precision 為輔,優先壓低 FN(漏抓);指標採 PR-AUC / F2 取代 Accuracy 與 ROC-AUC;閾值調低以容忍 FP 換取 Recall,並控制推論延遲 < 1.5s",
+          "is_correct": true
+        },
+        {
+          "text": "以 Precision 為核心目標,確保警示電話幾乎都是詐騙以避免「狼來了」效應;閾值調高以降低 FP;以 Accuracy 為主要監控指標,因為 0.06% 詐騙率下 99.94% Accuracy 即達優秀標準",
+          "is_correct": false,
+          "trap_type": "成本反向+Accuracy 失效"
+        },
+        {
+          "text": "以 ROC-AUC ≥ 0.95 為唯一上線門檻,因 AUC 已涵蓋所有閾值之整體判別力故無須另選工作點;在 0.06% 不平衡資料中 ROC-AUC 與 PR-AUC 等價、可任擇一作為驗收指標",
+          "is_correct": false,
+          "trap_type": "AUC 在極端不平衡偏高"
+        },
+        {
+          "text": "以人工聽音檔抽樣標註後計算每月準確率,當準確率 < 95% 時整批下線重訓;不需設定即時閾值或工作點,因詐騙判定屬高度主觀任務只能以人工驗收為標準",
+          "is_correct": false,
+          "trap_type": "離線抽樣違即時"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 量化成本不對稱 — FN(漏抓詐騙)= 受害者 38 萬元;FP(誤判正常)= 1.5 秒語音警示 ≈ 趨近於 0;FN 成本是 FP 的數十萬倍,商業要求「寧誤判勿漏抓」。**Step 2:** 對應指標選擇 — Recall = TP/(TP+FN) 直接刻畫詐騙抓捕率,優先優化;以 PR-AUC(Precision-Recall AUC)與 F2 分數作為驗收指標,因 0.06% 極端不平衡下 ROC-AUC 易被多數類拉高(看起來很美但實際少數類抓不到),PR-AUC 對少數類效能更敏感。**Step 3:** 工作點與延遲 — 閾值降低以提升 Recall(可容忍 FP 上升,因 FP 成本極低),同時透過模型輕量化 / 邊緣推論 / 快取等手段把推論延遲壓在 1.5 秒內;Accuracy 在 0.06% 不平衡下完全無意義(全猜正常即 99.94%)。",
+        "wrong": {
+          "以 Precision 為核心目標,確保警示電話幾乎都是詐騙以避免「狼來了」效應;閾值調高以降低 FP;以 Accuracy 為主要監控指標,因為 0.06% 詐騙率下 99.94% Accuracy 即達優秀標準": "FN 成本(38 萬)遠高於 FP(趨近 0),拚 Precision 等於放任漏抓 = 反向取捨;且 99.94% Accuracy 在 0.06% 不平衡下毫無意義(全猜正常也有 99.94%)",
+          "以 ROC-AUC ≥ 0.95 為唯一上線門檻,因 AUC 已涵蓋所有閾值之整體判別力故無須另選工作點;在 0.06% 不平衡資料中 ROC-AUC 與 PR-AUC 等價、可任擇一作為驗收指標": "在極端不平衡下 ROC-AUC 容易因 TN 數量龐大而虛高,PR-AUC 才能反映少數類真實效能;且上線必須選工作點,光看 AUC 不能決定閾值",
+          "以人工聽音檔抽樣標註後計算每月準確率,當準確率 < 95% 時整批下線重訓;不需設定即時閾值或工作點,因詐騙判定屬高度主觀任務只能以人工驗收為標準": "通話接通後 1.5 秒內必須判斷,純人工抽樣是事後驗證、無法即時介入;且抽樣準確率仍是 Accuracy 思維、在 0.06% 不平衡下失效"
+        },
+        "hook": "口訣:極端不平衡 → 看 PR-AUC / F2 而非 ROC-AUC / Accuracy;漏抓貴 → 拚 Recall + 降閾值"
+      },
+      "misconceptions": [
+        "在極端不平衡下用 ROC-AUC 或 Accuracy 評估",
+        "用 Precision 為主忽略 FN 成本",
+        "把離線抽樣當作即時偵測之替代",
+        "認為 AUC 高就能直接上線不選工作點"
+      ],
+      "related_node_ids": [
+        "n_L22402_001",
+        "n_L23303_002",
+        "n_L23303_004"
+      ],
+      "tags": [
+        "詐欺偵測",
+        "極端不平衡",
+        "PR-AUC",
+        "Recall",
+        "電信",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "telecom"
+      ]
+    },
+    {
+      "id": "q_bf_edu_001",
+      "knowledge_code": "L23202",
+      "node_id": "n_L23202_003",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某線上 MOOC 平台擁有 80 萬名學員與 1.2 萬門課程,新註冊使用者僅填寫 3 個興趣標籤即進站。產品團隊擬部署『個人化課程推薦』,但發現協同過濾(Collaborative Filtering)對新註冊者完全推不出結果(冷啟動),而僅用內容過濾(Content-Based)又無法反映同類學員的口碑差異。下列哪一個方案最能兼顧新使用者冷啟動與群體口碑學習,並具備可量化的線上監測指標?",
+      "options": [
+        {
+          "text": "採用混合式推薦(Hybrid):新使用者前 14 天以內容過濾為主(課程簡介 TF-IDF 比對興趣標籤),累積 ≥ 10 次點擊或完課後逐步切換為協同過濾,線上以 CTR(點擊率)與 NDCG@10(排序品質)雙指標 A/B 監測",
+          "is_correct": true
+        },
+        {
+          "text": "全平台一律僅使用協同過濾(User-User CF),新使用者前兩週固定推薦平台『熱門 Top 100』課程作為過渡,離線評估只看 RMSE(均方根誤差)是否低於 0.9 即可上線,不需設定線上 A/B 監測",
+          "is_correct": false,
+          "trap_type": "冷啟動硬塞熱門+離線指標誤用"
+        },
+        {
+          "text": "全平台一律僅使用內容過濾(Content-Based),以課程描述 TF-IDF 與使用者興趣標籤 cosine 相似度排序,線上指標只看『推薦清單平均相似度分數』作為品質代理,不需收集點擊回饋",
+          "is_correct": false,
+          "trap_type": "純內容無口碑+自循環指標"
+        },
+        {
+          "text": "改用關聯規則(Apriori)挖掘『買了 A 也買了 B』的課程組合作為唯一推薦邏輯,新使用者直接套用最高支持度規則,線上以規則支持度與信賴度作為核心評估指標即可",
+          "is_correct": false,
+          "trap_type": "關聯規則忽略個人興趣"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 拆解問題本質 — 協同過濾(CF)依賴『使用者-項目互動矩陣』,新使用者無互動 → 冷啟動;內容過濾(CB)只看項目特徵與使用者 profile,無法吸收『同類學員口碑』。**Step 2:** 採用 Hybrid 混合策略 — 新使用者初期(<14 天 / <10 次互動)用 CB 解冷啟動,累積足夠行為後切換 CF 取得群體口碑訊號,兼顧兩者優勢。**Step 3:** 監測指標雙保險 — CTR 衡量『使用者願不願意點』,NDCG@10 衡量『排序前 10 名的相關性是否排對位置』,兩者結合線上 A/B 才能客觀判斷新版本是否真的優於舊版。",
+        "wrong": {
+          "全平台一律僅使用協同過濾(User-User CF),新使用者前兩週固定推薦平台『熱門 Top 100』課程作為過渡,離線評估只看 RMSE(均方根誤差)是否低於 0.9 即可上線,不需設定線上 A/B 監測": "硬塞熱門忽略個人興趣偏差大;RMSE 只衡量評分預測誤差,不衡量排序品質;缺乏線上 A/B 無法驗證離線→線上一致性",
+          "全平台一律僅使用內容過濾(Content-Based),以課程描述 TF-IDF 與使用者興趣標籤 cosine 相似度排序,線上指標只看『推薦清單平均相似度分數』作為品質代理,不需收集點擊回饋": "純 CB 無法反映『同類學員的真實口碑差異』,且『相似度分數』是系統自評,屬於自循環指標,沒有外部使用者回饋驗證",
+          "改用關聯規則(Apriori)挖掘『買了 A 也買了 B』的課程組合作為唯一推薦邏輯,新使用者直接套用最高支持度規則,線上以規則支持度與信賴度作為核心評估指標即可": "Apriori 只看共現,無個人化;新使用者無歷史購買無法套規則;支持度/信賴度是規則本身的統計屬性,不等於推薦點擊或滿意度"
+        },
+        "hook": "口訣:CF 怕冷啟動,CB 缺口碑,Hybrid 補兩端;線上看 CTR + NDCG"
+      },
+      "misconceptions": [
+        "認為協同過濾可用熱門清單暫代解決冷啟動",
+        "把離線 RMSE 當成上線可行的唯一指標",
+        "誤以為相似度分數可代替使用者真實點擊回饋"
+      ],
+      "related_node_ids": [
+        "n_L23202_001",
+        "n_L23303_002",
+        "n_L23202_004"
+      ],
+      "tags": [
+        "個人化推薦",
+        "協同過濾",
+        "內容過濾",
+        "冷啟動",
+        "MOOC",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "education",
+        "ml_bigdata"
+      ]
+    },
+    {
+      "id": "q_bf_edu_002",
+      "knowledge_code": "L21104",
+      "node_id": "n_L21104_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某高中欲建立『高一新生輟學風險預警』多模態模型,規劃納入(a)入學筆試成績、(b)導師家訪面談錄音、(c)學生在校臉部表情影像三類訊號。實際資料蒐集後發現:筆試成績 100% 完整,但面談錄音僅 62% 學生有(部分家長拒訪),臉部影像僅 18% 學生有(影像同意書回收率低)。模型團隊應採取下列何種多模態缺失資料處理策略最為合適?",
+      "options": [
+        {
+          "text": "保留三模態並設計『模態遮罩』(Modality Masking)機制:訓練期隨機 dropout 模態,推論期依實際可得模態動態加權;影像因樣本量過低(18%)設為輔助訊號,不作主決策依據",
+          "is_correct": true
+        },
+        {
+          "text": "強制要求所有家長補簽影像同意書並補錄音,在資料完整率達 100% 之前禁止任何模型訓練啟動,以避免缺失資料造成模型偏誤,期間以人工導師判斷取代 AI 預警系統",
+          "is_correct": false,
+          "trap_type": "理想化阻擋專案+忽略現實同意"
+        },
+        {
+          "text": "對所有缺失的錄音與影像欄位一律以『全 0 向量』填補(Zero Imputation),讓模型把缺失樣本當成『正常零訊號樣本』學習,如此可以最大化保留資料筆數且不需設計複雜的模態管理機制",
+          "is_correct": false,
+          "trap_type": "Zero Imputation 引入假訊號"
+        },
+        {
+          "text": "刪除所有缺失任一模態的學生紀錄,只保留三模態都完整的樣本訓練(估約 11% 學生),此舉雖犧牲樣本量但能確保資料品質最高,且免去缺失值處理的工程成本",
+          "is_correct": false,
+          "trap_type": "Complete Case 樣本量崩潰"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 評估每個模態的可得率與資訊價值 — 筆試 100%(穩定基線)、錄音 62%(中等覆蓋率)、影像 18%(嚴重稀疏)。直接用 Complete Case 只剩 ~11% 樣本,模型無法學習。**Step 2:** 採模態遮罩(Modality Masking)策略 — 訓練時隨機 dropout 模態,讓模型學會在『任一模態缺失』時仍可用其餘模態推論,等同於 ensemble 多種子模型。**Step 3:** 對覆蓋率過低的影像模態降權為『輔助訊號』 — 18% 樣本量會讓影像權重不穩定且易過擬合,改作輔助而非主決策,可降低偏誤風險。",
+        "wrong": {
+          "強制要求所有家長補簽影像同意書並補錄音,在資料完整率達 100% 之前禁止任何模型訓練啟動,以避免缺失資料造成模型偏誤,期間以人工導師判斷取代 AI 預警系統": "影像同意涉及個資與家長意願,強制違反 PDPA 比例原則;且 AI 專案不可無限期擱置等待資料完備",
+          "對所有缺失的錄音與影像欄位一律以『全 0 向量』填補(Zero Imputation),讓模型把缺失樣本當成『正常零訊號樣本』學習,如此可以最大化保留資料筆數且不需設計複雜的模態管理機制": "Zero Imputation 把『缺失』與『真實低訊號』混為一談,引入系統性偏誤;模型會學到錯誤的訊號-結果對應",
+          "刪除所有缺失任一模態的學生紀錄,只保留三模態都完整的樣本訓練(估約 11% 學生),此舉雖犧牲樣本量但能確保資料品質最高,且免去缺失值處理的工程成本": "Complete Case 在多模態場景幾乎一定樣本量崩潰;且保留下來的 11% 是『有同意』的特定族群,選樣偏誤(selection bias)嚴重"
+        },
+        "hook": "口訣:多模態缺失=遮罩訓練+模態加權;Zero/CompleteCase 都會偏誤"
+      },
+      "misconceptions": [
+        "認為缺失值一律填 0 就能解決",
+        "誤以為 Complete Case Analysis 是最安全的方法",
+        "把多模態看成『必須全部到齊才能用』"
+      ],
+      "related_node_ids": [
+        "n_L21104_001",
+        "n_L21203_002",
+        "n_L23301_002"
+      ],
+      "tags": [
+        "多模態",
+        "缺失資料",
+        "模態遮罩",
+        "教育預警",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "education",
+        "ml_bigdata"
+      ]
+    },
+    {
+      "id": "q_bf_edu_003",
+      "knowledge_code": "L21104",
+      "node_id": "n_L21104_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某 K-12 數位學習平台累積 8 萬張教材插圖(物理、化學、生物、地理混雜),過去靠人工標註 10 大類分類用於『相似題搜尋』。新團隊接手後僅有 200 張標好類別、其餘全無標註,且每月新增約 5000 張未標註插圖。技術主管想評估是否能用 CLIP(Contrastive Language-Image Pretraining)做 zero-shot 分類取代人工標註。下列哪個 CLIP 應用評估最正確?",
+      "options": [
+        {
+          "text": "CLIP 適合此情境:以『影像-文字 contrastive』預訓練,可直接用類別中文描述(如『物理力學示意圖』)作 prompt,對未標註圖計算相似度排序;部署前以 200 張樣本驗 top-1 accuracy,低信心樣本維持人工複審",
+          "is_correct": true
+        },
+        {
+          "text": "CLIP 不適合此情境:zero-shot 必須先在『教育插圖領域』重新預訓練 3 個月以上才能使用,否則完全無法分類;建議放棄 CLIP 改聘 3 位專任標註員以人工方式處理每月新增 5000 張圖片",
+          "is_correct": false,
+          "trap_type": "誤解 zero-shot 需重訓"
+        },
+        {
+          "text": "CLIP 適合此情境,但因為只有 200 張標註樣本,必須先用 200 張做完整監督式 fine-tune 才能釋出 zero-shot 能力,fine-tune 後就不再需要任何人工複審,可全面取代人工標註",
+          "is_correct": false,
+          "trap_type": "fine-tune 才用+免複審"
+        },
+        {
+          "text": "CLIP 不適合此情境:CLIP 僅能輸出 ImageNet 1000 類別的固定標籤,無法處理使用者自訂的『物理、化學、生物、地理』教育類別,建議改用傳統 CNN 從零訓練 10 類分類器",
+          "is_correct": false,
+          "trap_type": "誤以為 CLIP 標籤固定"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** CLIP 核心特性 — 以 4 億張影像-文字對 contrastive 預訓練,影像 encoder 與文字 encoder 共享同一語意空間,可用自訂類別文字描述當 prompt 做 zero-shot 分類,不需在目標領域重新訓練。**Step 2:** 評估流程 — 用 200 張標註樣本算 top-1 accuracy 確認 baseline 是否可接受(如 ≥ 75%);若達標即可上線。**Step 3:** 建立 fallback — 對相似度分數低於信心閾值的樣本維持人工複審,兼顧自動化效率與品質。",
+        "wrong": {
+          "CLIP 不適合此情境:zero-shot 必須先在『教育插圖領域』重新預訓練 3 個月以上才能使用,否則完全無法分類;建議放棄 CLIP 改聘 3 位專任標註員以人工方式處理每月新增 5000 張圖片": "完全誤解 zero-shot 概念;zero-shot 的定義就是『目標領域無訓練資料也可直接推論』",
+          "CLIP 適合此情境,但因為只有 200 張標註樣本,必須先用 200 張做完整監督式 fine-tune 才能釋出 zero-shot 能力,fine-tune 後就不再需要任何人工複審,可全面取代人工標註": "zero-shot 本義就是『不 fine-tune』;且任何 AI 系統都應保留 human-in-the-loop 處理低信心樣本",
+          "CLIP 不適合此情境:CLIP 僅能輸出 ImageNet 1000 類別的固定標籤,無法處理使用者自訂的『物理、化學、生物、地理』教育類別,建議改用傳統 CNN 從零訓練 10 類分類器": "CLIP 不受固定類別限制,任何自然語言描述都可作 prompt;這正是 CLIP 與傳統 CNN 分類器最大差異"
+        },
+        "hook": "口訣:CLIP zero-shot=自訂 prompt 直接推論;200 張只拿來『驗證』不拿來『訓練』"
+      },
+      "misconceptions": [
+        "誤以為 zero-shot 還需要重新訓練",
+        "把 CLIP 當成固定類別分類器",
+        "認為 AI 可完全免去人工複審"
+      ],
+      "related_node_ids": [
+        "n_L21104_002",
+        "n_L21101_005"
+      ],
+      "tags": [
+        "CLIP",
+        "zero-shot",
+        "多模態",
+        "教材分類",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "education"
+      ]
+    },
+    {
+      "id": "q_bf_edu_004",
+      "knowledge_code": "L21101",
+      "node_id": "n_L21101_003",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某補習班升學部欲開發『國中會考作文自動評分』系統,目標分數區間 1-6 級分,每篇作文 300-500 字。團隊取得 5 萬篇歷年作文與 3 位資深國文老師評分。技術長提出四種評估方式以驗證模型輸出品質,下列哪個對『作文整體評分』最適合?",
+      "options": [
+        {
+          "text": "以 Quadratic Weighted Kappa(QWK)衡量模型與人工評分一致性,輔以 RMSE 看差距;再抽 500 篇由獨立第 4 位老師盲評,避免模型只複製單一老師偏好",
+          "is_correct": true
+        },
+        {
+          "text": "使用 BLEU-4 分數比對模型『產生的評分理由文字』與『老師原始評語』之 n-gram 重疊比例,以 BLEU 越高代表評分準確度越好,可不需要分數一致性檢驗",
+          "is_correct": false,
+          "trap_type": "BLEU 適用翻譯非評分"
+        },
+        {
+          "text": "用 ROUGE-L 衡量作文原文與老師評語的最長共同子序列,以 ROUGE 越高代表作文品質越高,並直接以 ROUGE 分數作為作文評分,免去訓練分類模型的成本",
+          "is_correct": false,
+          "trap_type": "ROUGE 衡量摘要重疊"
+        },
+        {
+          "text": "僅以模型評分與單一資深老師評分的『Pearson 相關係數』作為唯一指標,只要相關係數 ≥ 0.7 即可上線,且不需要其他老師作交叉驗證,避免引入主觀判斷",
+          "is_correct": false,
+          "trap_type": "單評者+相關係數不等於一致"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 作文評分屬『有序分類』(ordinal,1-6 級分有順序),不是純翻譯或摘要任務 — Kappa 系列指標專門設計衡量評者間一致性。**Step 2:** Quadratic Weighted Kappa 對『差距大的不一致』懲罰更重(如老師打 6 模型打 2 比差 1 級分嚴重得多),最貼合教育評量場景;RMSE 輔助看分數差距絕對值。**Step 3:** 用獨立第 4 位老師盲評 500 篇,避免模型過擬合某位老師的偏好(評者偏誤),確保泛化品質。",
+        "wrong": {
+          "使用 BLEU-4 分數比對模型『產生的評分理由文字』與『老師原始評語』之 n-gram 重疊比例,以 BLEU 越高代表評分準確度越好,可不需要分數一致性檢驗": "BLEU 是機器翻譯指標,衡量 n-gram 重疊;評語措辭即使相近也無法保證『級分數字一致』,根本不對齊評估目標",
+          "用 ROUGE-L 衡量作文原文與老師評語的最長共同子序列,以 ROUGE 越高代表作文品質越高,並直接以 ROUGE 分數作為作文評分,免去訓練分類模型的成本": "ROUGE 是自動摘要指標;作文原文與評語是兩種不同性質的文字,LCS 無語意意義",
+          "僅以模型評分與單一資深老師評分的『Pearson 相關係數』作為唯一指標,只要相關係數 ≥ 0.7 即可上線,且不需要其他老師作交叉驗證,避免引入主觀判斷": "Pearson 高不等於一致(可能系統性偏移);單評者比較會把該老師偏好當 ground truth,缺乏跨評者驗證"
+        },
+        "hook": "口訣:作文評分=有序分類,用 QWK;BLEU/ROUGE 是生成任務指標,別套錯"
+      },
+      "misconceptions": [
+        "把 BLEU / ROUGE 當通用 NLP 品質指標",
+        "誤以為高相關係數=高一致性",
+        "用單一評者當 ground truth"
+      ],
+      "related_node_ids": [
+        "n_L21101_004",
+        "n_L23303_003",
+        "n_L21101_006"
+      ],
+      "tags": [
+        "NLP",
+        "作文評分",
+        "QWK",
+        "評估指標",
+        "教育",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "education"
+      ]
+    },
+    {
+      "id": "q_bf_edu_005",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_001",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某偏鄉高中近 3 年累積 4200 筆學生資料,其中『輟學』(中離+休學未復學)佔 168 筆(4%),『正常在學』4032 筆(96%)。教育局委託團隊建立輟學風險預警模型,希望盡早介入輔導。模型 A 在測試集 Accuracy 96.1%,模型 B Accuracy 92.5% 但 Recall 對輟學類為 0.78、模型 A Recall 對輟學類為 0.18。下列何者對指標選擇最正確?",
+      "options": [
+        {
+          "text": "本題為類別嚴重不平衡的高風險預警情境,模型 A 高 Accuracy 為『全猜在學』之假象;應選模型 B,核心指標看 Recall(輟學類)、輔以 F1 / PR-AUC,因漏抓代價遠大於誤報",
+          "is_correct": true
+        },
+        {
+          "text": "選模型 A,因為 Accuracy 96.1% 明顯高於模型 B 的 92.5%,代表整體預測能力較強;對學生輔導這類教育場景應以整體準確率為唯一指標,避免老師被太多誤報干擾",
+          "is_correct": false,
+          "trap_type": "不平衡資料看 Accuracy"
+        },
+        {
+          "text": "選模型 A,因為 Accuracy 比 Recall 更全面;對輟學類的 Recall 只要不低於 0.15 即可接受,因為輟學畢竟是少數案例,模型不需要過度敏感以免過多誤報",
+          "is_correct": false,
+          "trap_type": "Recall 門檻設太低"
+        },
+        {
+          "text": "選模型 B,但僅以 Precision(輟學類)作為唯一核心指標,因為要避免老師被誤報干擾;Recall 與 F1 可省略不看,Accuracy 也不需評估",
+          "is_correct": false,
+          "trap_type": "Precision 單看忽略漏接"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 識別資料不平衡 — 輟學:在學 = 4:96,基線『全猜在學』即有 96% Accuracy,因此 Accuracy 在此完全失真。**Step 2:** 確認業務代價不對稱 — 漏判一位即將輟學學生(False Negative)= 失去輔導機會,代價極高;誤判一位學生需輔導(False Positive)= 多花一次面談時間,代價低。因此優先看 Recall(輟學類)— 越高代表越少漏接。**Step 3:** 輔助指標 — F1 平衡 Precision/Recall,避免 Recall 拉太高(全部都猜輟學)導致 Precision 崩潰;PR-AUC 在不平衡資料比 ROC-AUC 更穩定。",
+        "wrong": {
+          "選模型 A,因為 Accuracy 96.1% 明顯高於模型 B 的 92.5%,代表整體預測能力較強;對學生輔導這類教育場景應以整體準確率為唯一指標,避免老師被太多誤報干擾": "Accuracy 在類別不平衡時失真;模型 A 只是『全猜在學』的高 Accuracy 假象,Recall 0.18 代表 82% 真實輟學案例會被漏掉",
+          "選模型 A,因為 Accuracy 比 Recall 更全面;對輟學類的 Recall 只要不低於 0.15 即可接受,因為輟學畢竟是少數案例,模型不需要過度敏感以免過多誤報": "Recall 0.15 等於只抓 15% 輟學風險學生 — 與其上線此模型不如不上;教育預警的少數類正是要找出的重點",
+          "選模型 B,但僅以 Precision(輟學類)作為唯一核心指標,因為要避免老師被誤報干擾;Recall 與 F1 可省略不看,Accuracy 也不需評估": "只看 Precision 可能造成模型『只預測超高風險、其他全放走』— 漏掉大量真實輟學案例,違背早期介入目的"
+        },
+        "hook": "口訣:不平衡資料看 Recall + F1 + PR-AUC,Accuracy 是 baseline 都贏的假指標"
+      },
+      "misconceptions": [
+        "在不平衡資料仍以 Accuracy 為核心指標",
+        "把『誤報多』看得比『漏接』嚴重",
+        "把 ROC-AUC 視為任何資料都最穩的指標"
+      ],
+      "related_node_ids": [
+        "n_L23303_002",
+        "n_L23303_004",
+        "n_L23202_005"
+      ],
+      "tags": [
+        "不平衡資料",
+        "Recall",
+        "輟學預警",
+        "F1",
+        "PR-AUC",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "education",
+        "ml_bigdata"
+      ]
+    },
+    {
+      "id": "q_bf_edu_006",
+      "knowledge_code": "L21203",
+      "node_id": "n_L21203_003",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某英語線上學習平台主要對 9-15 歲學員提供個人化學習,蒐集學員姓名、學校、年齡、家庭聯絡電話、口說錄音、作業作答歷程、Webcam 表情訊號等資料,並將資料用於『AI 學習路徑推薦』。法務長提醒平台須符合個資法(PDPA)並考量未成年特殊保護,團隊提出四種合規方案,下列何者最為完整且符合『最小蒐集 + 法定代理人同意 + 目的拘束 + 退場機制』四項要件?",
+      "options": [
+        {
+          "text": "盤點欄位是否與『學習路徑推薦』直接必要(刪除非必要 Webcam);註冊時取得法定代理人書面同意並明列蒐集目的;設資料退場機制(結業 12 個月後自動刪除),家長隨時可查、改、停、刪",
+          "is_correct": true
+        },
+        {
+          "text": "繼續蒐集所有現有欄位,在隱私權政策中以小字載明『註冊即視為家長同意』條款,並把資料用途擴及『未來潛在新服務(如轉介給合作補習班)』以保留商業彈性,資料原則上永久保存以利模型持續迭代",
+          "is_correct": false,
+          "trap_type": "默示同意+目的擴張"
+        },
+        {
+          "text": "由於 AI 模型訓練越多資料品質越好,應蒐集所有可得欄位且不需限定使用目的;未成年學員以勾選『我已年滿 18 歲』方式繞過家長同意流程,並將原始資料完整無加密存放以加速模型訓練流程",
+          "is_correct": false,
+          "trap_type": "未成年規避+不加密"
+        },
+        {
+          "text": "資料一律匿名化(姓名置換成編號)後即可不受個資法規範,可任意對外提供合作機構,且未成年同意流程也可一併免除;退場機制不需要設定,因匿名化後永久保存無風險",
+          "is_correct": false,
+          "trap_type": "假匿名認知+規避同意"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 最小蒐集(資料最小化原則)— 重新盤點每個欄位『是否與個人化學習推薦直接相關』,Webcam 表情訊號對學習路徑非必要且高敏感,應移除;這是 PDPA 第 5 條比例原則的要求。**Step 2:** 未成年同意 — 9-15 歲為未成年,個資蒐集須取得法定代理人(家長)書面同意,且應具體告知蒐集目的(不可空泛寫『產品改善』)。**Step 3:** 目的拘束 + 退場機制 — 個資不可挪作蒐集目的外用途(如轉介補習班需另取同意);應設自動刪除機制(如結業 12 個月)並保障當事人查詢、更正、刪除權利,符合 PDPA 第 3 條當事人權益。",
+        "wrong": {
+          "繼續蒐集所有現有欄位,在隱私權政策中以小字載明『註冊即視為家長同意』條款,並把資料用途擴及『未來潛在新服務(如轉介給合作補習班)』以保留商業彈性,資料原則上永久保存以利模型持續迭代": "『默示同意』未明確告知不符合 PDPA;目的擴張到『轉介合作機構』屬目的外利用須另行取得同意;永久保存違反必要範圍原則",
+          "由於 AI 模型訓練越多資料品質越好,應蒐集所有可得欄位且不需限定使用目的;未成年學員以勾選『我已年滿 18 歲』方式繞過家長同意流程,並將原始資料完整無加密存放以加速模型訓練流程": "規避未成年同意屬重大違法;不加密存放違反 PDPA 第 27 條安全維護義務;『越多越好』違反最小蒐集",
+          "資料一律匿名化(姓名置換成編號)後即可不受個資法規範,可任意對外提供合作機構,且未成年同意流程也可一併免除;退場機制不需要設定,因匿名化後永久保存無風險": "姓名換編號屬『假名化』非『匿名化』,仍可重新識別,仍受 PDPA 管制;對外提供合作機構仍須另取同意"
+        },
+        "hook": "口訣:最小蒐集 + 法代同意 + 目的拘束 + 退場機制,四件缺一不可"
+      },
+      "misconceptions": [
+        "把『假名化』當『匿名化』使用",
+        "誤以為隱私權政策小字載明即等於同意",
+        "未成年同意可由學員自己勾選代替家長"
+      ],
+      "related_node_ids": [
+        "n_L21203_001",
+        "n_L21203_002",
+        "n_L21203_004"
+      ],
+      "tags": [
+        "PDPA",
+        "未成年保護",
+        "最小蒐集",
+        "目的拘束",
+        "教育",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "education",
+        "privacy"
+      ]
+    },
+    {
+      "id": "q_bf_edu_007",
+      "knowledge_code": "L23301",
+      "node_id": "n_L23301_003",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某大學物理系研究生用 1200 筆『高一學生段考歷程』預測『學年末總成績』(回歸任務),模型在訓練集 R² = 0.97,測試集 R² = 0.41。研究生詢問指導教授如何改善,下列哪個診斷與處方最完整?",
+      "options": [
+        {
+          "text": "症狀為典型過擬合(訓練好、測試差);處方:(1)切分 80/20 並加 5-fold 交叉驗證;(2)降模型複雜度(減樹深或加 L2);(3)檢查是否有資料洩漏特徵",
+          "is_correct": true
+        },
+        {
+          "text": "症狀為欠擬合(訓練 R² 還不夠高);處方:增加更多多項式特徵互動項與模型深度直到訓練 R² 達 0.99 以上,確保模型完全學會訓練資料的模式,不需要看測試集表現",
+          "is_correct": false,
+          "trap_type": "誤診為欠擬合"
+        },
+        {
+          "text": "症狀為資料量不足;處方:把 1200 筆全部投入訓練不切測試集,讓模型最大化學習,僅在最終以一個樣本驗證 R²,因為樣本切分會浪費寶貴資料",
+          "is_correct": false,
+          "trap_type": "犧牲驗證集"
+        },
+        {
+          "text": "症狀為測試集分布偏移;處方:重複洗牌資料並挑出讓測試 R² 最接近訓練 R² 的那一組切分結果作為最終模型,直到測試 R² ≥ 0.95 為止,以確保模型穩定",
+          "is_correct": false,
+          "trap_type": "Cherry-picking 切分"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 診斷 — 訓練 R² 0.97 vs 測試 R² 0.41,差距 0.56,屬典型過擬合(overfitting):模型記住訓練樣本而非學到泛化規律。**Step 2:** 處方第一招 — 5-fold 交叉驗證確認問題穩定存在,並用平均 R² ± std 作為更穩健的指標。**Step 3:** 處方後續 — (a)降低模型複雜度(樹深↓ / L2 正則化↑ / Dropout↑);(b)檢查資料洩漏 — 例如『學年末總成績』所衍生的特徵(如『學年平均』)誤被當作輸入特徵,會造成訓練看似完美但測試崩潰。",
+        "wrong": {
+          "症狀為欠擬合(訓練 R² 還不夠高);處方:增加更多多項式特徵互動項與模型深度直到訓練 R² 達 0.99 以上,確保模型完全學會訓練資料的模式,不需要看測試集表現": "完全相反 — 訓練 0.97 已經很高,問題在『泛化』不在『擬合不夠』;再加深只會更過擬合",
+          "症狀為資料量不足;處方:把 1200 筆全部投入訓練不切測試集,讓模型最大化學習,僅在最終以一個樣本驗證 R²,因為樣本切分會浪費寶貴資料": "拿掉測試集等於丟掉模型驗證能力;單一樣本驗證無統計意義",
+          "症狀為測試集分布偏移;處方:重複洗牌資料並挑出讓測試 R² 最接近訓練 R² 的那一組切分結果作為最終模型,直到測試 R² ≥ 0.95 為止,以確保模型穩定": "這是 cherry-picking 切分,屬於資料洩漏與報告偏誤的學術倫理問題,模型上線後仍會崩潰"
+        },
+        "hook": "口訣:訓練高+測試低=過擬合;處方=降複雜度+交叉驗證+查資料洩漏"
+      },
+      "misconceptions": [
+        "把過擬合誤診為欠擬合,反向加深模型",
+        "為了 R² 數字漂亮做 cherry-picking 切分",
+        "認為樣本量小就不必切測試集"
+      ],
+      "related_node_ids": [
+        "n_L23301_001",
+        "n_L23303_005",
+        "n_L23202_006"
+      ],
+      "tags": [
+        "過擬合",
+        "交叉驗證",
+        "資料洩漏",
+        "成績預測",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "education",
+        "ml_bigdata"
+      ]
+    },
+    {
+      "id": "q_bf_edu_008",
+      "knowledge_code": "L21201",
+      "node_id": "n_L21201_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某大型語言補習班(全台 28 個分校)董事會欲導入『AI 智慧排課與學員流失預警』平台,IT 副總建議先以 POC(Proof of Concept)驗證可行性再決定全面導入。下列哪一個 POC 規劃最符合 AI 導入評估三層(策略層 / 技術層 / 組織層)的精神且最能降低決策風險?",
+      "options": [
+        {
+          "text": "三層條件齊備:策略層挑小範圍場景(北區 3 校流失預警)、技術層設可量化驗收(Recall ≥ 0.7、誤報率 < 30%、預警到介入 < 3 天)、組織層確認顧問接受度+專案 owner+8 週 Go/No-Go 決策點",
+          "is_correct": true
+        },
+        {
+          "text": "直接跳過 POC 階段,因為 AI 是技術趨勢必須擁抱,先以董事會專案預算購入頂規 AI 平台同步在全台 28 校上線,3 個月後再依現場使用回饋決定是否要調整功能,以避免錯過市場時機",
+          "is_correct": false,
+          "trap_type": "略過 POC 直上線"
+        },
+        {
+          "text": "POC 範圍以技術可行性為唯一考量:全台 28 校全部資料同時匯入測試平台,只看模型 Accuracy 是否達 90% 即可決定是否導入,不需評估組織端的工作流變更與分校接受度,因為 AI 上線後同仁自然會適應",
+          "is_correct": false,
+          "trap_type": "只看技術層忽略組織層"
+        },
+        {
+          "text": "由 IT 部門獨立進行 POC 6 個月後再向業務部門簡報,期間不需業務或教學顧問參與;驗收標準由 IT 部門依模型開發進度動態調整,直到模型內部測試表現滿意為止再公開上線",
+          "is_correct": false,
+          "trap_type": "IT 孤島開發+標準浮動"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 策略層 — POC 須先選『與營運痛點對齊』的小範圍場景(如北區 3 校學員流失),避免一開始就 28 校全押注;成功才有擴大本,失敗也限縮損失。**Step 2:** 技術層 — 訂可量化驗收(Recall ≥ 0.7、誤報率 < 30%、預警到輔導介入週期 < 3 天),涵蓋模型品質+流程效益雙面向,而非單看 Accuracy。**Step 3:** 組織層 — POC 不只是技術試點,須事先盤點分校教學顧問的接受度、工作流改造、培訓計畫;設立專案 owner 與 Go/No-Go 決策點(如 8 週後),避免無止盡延伸耗盡資源。",
+        "wrong": {
+          "直接跳過 POC 階段,因為 AI 是技術趨勢必須擁抱,先以董事會專案預算購入頂規 AI 平台同步在全台 28 校上線,3 個月後再依現場使用回饋決定是否要調整功能,以避免錯過市場時機": "跳過 POC 將整個組織置於高風險;28 校同步上線一旦失敗將造成全面停擺與信任崩潰",
+          "POC 範圍以技術可行性為唯一考量:全台 28 校全部資料同時匯入測試平台,只看模型 Accuracy 是否達 90% 即可決定是否導入,不需評估組織端的工作流變更與分校接受度,因為 AI 上線後同仁自然會適應": "POC 三層缺一不可;只看技術而忽略組織層,技術即使成功也會因『現場不採用』而失敗",
+          "由 IT 部門獨立進行 POC 6 個月後再向業務部門簡報,期間不需業務或教學顧問參與;驗收標準由 IT 部門依模型開發進度動態調整,直到模型內部測試表現滿意為止再公開上線": "IT 孤島開發脫離業務真實需求;驗收標準浮動讓 POC 永遠『差一點就好』無法收斂,違反 Go/No-Go 原則"
+        },
+        "hook": "口訣:POC 三層=策略對痛點+技術可量化+組織有 owner;少一層都會翻車"
+      },
+      "misconceptions": [
+        "把 POC 當技術部門的內部實驗",
+        "認為 POC 越大範圍越能反映真實",
+        "POC 沒有設 Go/No-Go 決策點"
+      ],
+      "related_node_ids": [
+        "n_L21201_002",
+        "n_L21203_005"
+      ],
+      "tags": [
+        "AI 導入評估",
+        "POC",
+        "三層架構",
+        "補習班",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "education"
+      ]
+    },
+    {
+      "id": "q_bf_sc_001",
+      "knowledge_code": "L23402",
+      "node_id": "n_L23402_002",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "雙北智慧城市治理中心部署一套行人闖紅燈 CV 辨識系統,內部稽核發現對深膚色族群的『真實闖紅燈卻被漏判』(False Negative)比例為 18%,對淺膚色族群僅 5%;但兩族群被攔下盤查的整體比例約略相當。市府督導小組要求改善『弱勢族群的執法漏接』,下列何種公平性指標最能對齊此政策目標並作為改善後驗收依據?",
+      "options": [
+        {
+          "text": "採用 Equal Opportunity(機會均等),要求兩族群在『真正闖紅燈者』中被正確判出的真陽性率(TPR)需收斂至相近水準,直接對應『弱勢族群執法漏接』改善目標",
+          "is_correct": true
+        },
+        {
+          "text": "採用 Demographic Parity(人口統計均等),要求兩族群被系統判定為違規之整體比例需相同,以此作為弱勢族群執法漏接議題的單一驗收門檻,簡化指標計算流程",
+          "is_correct": false,
+          "trap_type": "DP 無視真實標籤"
+        },
+        {
+          "text": "改採整體 Accuracy(總體準確率)為驗收指標,只要全體準確率提升至 95% 以上,即視同弱勢族群執法漏接問題已獲得實質有效改善並達成政策目標",
+          "is_correct": false,
+          "trap_type": "Accuracy 忽略子群"
+        },
+        {
+          "text": "採用 Equalized Odds(均等勝率),同時要求 TPR 與 FPR 兩族群皆需嚴格相等,但因約束最強難以同時收斂,可能犧牲整體效能反而無法在期限內驗收上線",
+          "is_correct": false,
+          "trap_type": "EO 約束過嚴非最對齊"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 釐清政策目標 — 督導小組關注的是『真實闖紅燈者中被漏判的比例』在族群間不一致,亦即 False Negative Rate 不對等,或等價地『TPR(真陽性率 = 1 - FNR)』不對等。**Step 2:** 對應指標 — Equal Opportunity 正是要求『在 y=1(真實正類)條件下,各族群 P(ŷ=1 | y=1) 即 TPR 相等』,精準對齊『執法漏接』改善目標,且不要求 FPR 同步收斂,可行性高於 Equalized Odds。**Step 3:** 驗收方式 — 以兩族群 TPR 差距(ΔTPR)作為主指標(例如門檻設 ≤ 5%),並同步監測整體 Accuracy 不顯著下降,即可量化驗收。",
+        "wrong": {
+          "採用 Demographic Parity(人口統計均等),要求兩族群被系統判定為違規之整體比例需相同,以此作為弱勢族群執法漏接議題的單一驗收門檻,簡化指標計算流程": "DP 只看『預測為正的整體比例』,不分真實是否違規;若兩族群實際違規率本來就不同,強迫 DP 反而會犧牲真實正類的辨識,無法解決漏判",
+          "改採整體 Accuracy(總體準確率)為驗收指標,只要全體準確率提升至 95% 以上,即視同弱勢族群執法漏接問題已獲得實質有效改善並達成政策目標": "Accuracy 是聚合指標、會被多數族群主導,深膚色族群即使 FNR 18% 持續,整體 Accuracy 仍可能很高,完全遮蔽子群不公平",
+          "採用 Equalized Odds(均等勝率),同時要求 TPR 與 FPR 兩族群皆需嚴格相等,但因約束最強難以同時收斂,可能犧牲整體效能反而無法在期限內驗收上線": "EO 同時鎖 TPR + FPR,涵蓋範圍超過政策目標;此題只關心 FNR/TPR 不對等,EO 過度約束會犧牲效能且難以同時收斂"
+        },
+        "hook": "口訣:漏接 = 看 TPR = Equal Opportunity;DP 不看真實,EO 鎖兩端"
+      },
+      "misconceptions": [
+        "把 Demographic Parity 當成所有公平性場景的萬用解",
+        "誤以為整體 Accuracy 高即代表各族群皆公平",
+        "把 Equalized Odds 當成『更嚴格就更好』而忽略可行性",
+        "FNR 與 TPR 關係未釐清(TPR = 1 - FNR)"
+      ],
+      "related_node_ids": [
+        "n_L23402_001",
+        "n_L23303_002",
+        "n_L23303_004"
+      ],
+      "tags": [
+        "智慧城市",
+        "CV 監控",
+        "公平性指標",
+        "Equal Opportunity",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "smartcity"
+      ]
+    },
+    {
+      "id": "q_bf_sc_002",
+      "knowledge_code": "L21203",
+      "node_id": "n_L21203_001",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "南部港都市府擬於 12 個高肇事路口部署人臉辨識攝影機,主目的為通緝犯比對與失蹤人口協尋;系統將即時擷取路人臉部影像並回傳市府資料中心比對。法務處要求專案上線前必須完備個資法(PDPA)事前告知義務。下列何種規劃最符合 PDPA 事前告知六項要求,可作為公開告知文書的基線?",
+      "options": [
+        {
+          "text": "於路口豎立公告牌與市府網站同步揭露:蒐集機關、蒐集目的、個資類別、利用期間地區對象方式、當事人權利行使方式、不提供之影響,六項齊備並提供查詢窗口",
+          "is_correct": true
+        },
+        {
+          "text": "於市府網站張貼一份『智慧治安專案聲明』,僅揭露蒐集目的與蒐集機關兩項;其餘四項基於『治安偵查例外』可於事後若有申訴再提供當事人查詢,以避免犯嫌規避辨識",
+          "is_correct": false,
+          "trap_type": "六項拆半"
+        },
+        {
+          "text": "於路口貼一張小標示寫明『本區域內已部署智慧科技執法』,並請民眾自行洽轄區派出所詢問細節;另以新聞稿一次性說明專案概要視為已善盡公開告知個資蒐集義務",
+          "is_correct": false,
+          "trap_type": "公告不具體"
+        },
+        {
+          "text": "因人臉影像於比對完成後即刪除、屬『暫存技術處理』非個資蒐集行為,故毋須踐行個資法事前告知義務,僅須於市府年度資安報告載明系統建置即可符合主管機關要求",
+          "is_correct": false,
+          "trap_type": "誤判非個資"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 確認屬個資蒐集 — 人臉影像為可直接識別自然人之生物特徵資料,屬 PDPA 第 2 條個人資料,即使比對後刪除,擷取與比對過程已構成『蒐集 + 處理』,須踐行第 8 條事前告知義務。**Step 2:** PDPA 事前告知六項 = (1) 公務/非公務機關名稱、(2) 蒐集目的、(3) 個資類別、(4) 利用期間/地區/對象/方式、(5) 當事人權利行使、(6) 不提供之影響,須全部揭露不可拆。**Step 3:** 智慧城市公共空間部署,可採『公告牌(現場)+ 網站(常態)』雙軌揭露並設查詢窗口,使路人於『進入監視範圍前』即知悉,符合事前告知精神。",
+        "wrong": {
+          "於市府網站張貼一份『智慧治安專案聲明』,僅揭露蒐集目的與蒐集機關兩項;其餘四項基於『治安偵查例外』可於事後若有申訴再提供當事人查詢,以避免犯嫌規避辨識": "PDPA 第 8 條六項為法定強制,非選配;『治安偵查』例外限於犯罪偵查特定程序,不能用來免除一般公共空間部署的事前告知",
+          "於路口貼一張小標示寫明『本區域內已部署智慧科技執法』,並請民眾自行洽轄區派出所詢問細節;另以新聞稿一次性說明專案概要視為已善盡公開告知個資蒐集義務": "未列具體六項,僅以模糊字眼『智慧科技執法』取代,無法讓當事人知悉個資類別、利用範圍與權利行使方式,不符合事前告知",
+          "因人臉影像於比對完成後即刪除、屬『暫存技術處理』非個資蒐集行為,故毋須踐行個資法事前告知義務,僅須於市府年度資安報告載明系統建置即可符合主管機關要求": "人臉影像為生物特徵個資,擷取與比對行為已構成蒐集與處理,即使比對後刪除仍須事前告知,『暫存即免責』為常見錯誤主張"
+        },
+        "hook": "口訣:PDPA 事前告知=機關/目的/類別/利用/權利/不提供影響(六項齊備不可拆)"
+      },
+      "misconceptions": [
+        "誤以為人臉影像比對後即刪除就不屬個資蒐集",
+        "把『治安偵查』當成全面豁免 PDPA 事前告知的萬用例外",
+        "把模糊性公告當成已盡告知義務",
+        "把六項告知義務當成可挑選的清單"
+      ],
+      "related_node_ids": [
+        "n_L21203_002",
+        "n_L22404_001",
+        "n_L21102_002"
+      ],
+      "tags": [
+        "智慧城市",
+        "人臉辨識",
+        "PDPA",
+        "事前告知",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "smartcity",
+        "privacy"
+      ]
+    },
+    {
+      "id": "q_bf_sc_003",
+      "knowledge_code": "L21102",
+      "node_id": "n_L21102_002",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "中部都會智慧交通中心欲針對市區主幹道擴增即時車流預測,需求是:從路口 CCTV 影像中『同時辨識每一台車的位置與類別(機車/小客車/公車/大貨車)』,以餵給下游號誌時相最佳化模組。下列 CV 任務階層中,最對應此需求且兼顧延遲可控的選擇為何?",
+      "options": [
+        {
+          "text": "採物件偵測(Object Detection),輸出每台車的 bounding box 與類別標籤,並以 mAP@0.5 與單張推論延遲(ms)作為驗收指標,精準輸出位置與類別並控制延遲",
+          "is_correct": true
+        },
+        {
+          "text": "採影像分類(Image Classification),把整張路口影像分為『擁堵/順暢/壅塞』三類即可,因為號誌時相最佳化只需要整體車流壅塞程度,毋須個別車輛位置與類別之精細結果",
+          "is_correct": false,
+          "trap_type": "分類解析度不足"
+        },
+        {
+          "text": "採實例分割(Instance Segmentation),為每台車輸出像素級遮罩與類別,雖然延遲偏高、運算量大,但畫面更精緻可同步應用於市府宣傳影片之 AI 智慧城市視覺成果展示",
+          "is_correct": false,
+          "trap_type": "過度精細與目標錯置"
+        },
+        {
+          "text": "採語意分割(Semantic Segmentation),把整張影像逐像素標『道路/車輛/行人/背景』四類,但同類車輛不會被區分為個體,亦無法輸出每台車的類別與位置作下游時相最佳化",
+          "is_correct": false,
+          "trap_type": "語意分割不分個體"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 拆解需求 — 『每一台車的位置 + 類別』即『個體 + 類別』兩件事;『即時』要求延遲可控。**Step 2:** 對應 CV 四階層 — 分類只輸出整張影像一個標籤(解析度不足);語意分割逐像素分類但不分個體;物件偵測輸出 bbox + 類別,符合『個體 + 類別』;實例分割再加像素級遮罩,精細但延遲高、運算量大,超過下游需求。**Step 3:** 選物件偵測並以 mAP@0.5 + 推論延遲雙指標驗收,既滿足功能又控制即時性。",
+        "wrong": {
+          "採影像分類(Image Classification),把整張路口影像分為『擁堵/順暢/壅塞』三類即可,因為號誌時相最佳化只需要整體車流壅塞程度,毋須個別車輛位置與類別之精細結果": "分類只輸出整張影像一個標籤,無法輸出個別車輛的位置與類別,無法支援『區分機車/小客車/公車/大貨車』與下游時相邏輯",
+          "採實例分割(Instance Segmentation),為每台車輸出像素級遮罩與類別,雖然延遲偏高、運算量大,但畫面更精緻可同步應用於市府宣傳影片之 AI 智慧城市視覺成果展示": "需求只要 bbox + 類別,不需要像素級遮罩;選實例分割等於超規格、推論延遲高,與『即時』要求衝突",
+          "採語意分割(Semantic Segmentation),把整張影像逐像素標『道路/車輛/行人/背景』四類,但同類車輛不會被區分為個體,亦無法輸出每台車的類別與位置作下游時相最佳化": "語意分割對同類像素不區分個體,『兩台並排小客車』會被視為同一塊,無法計數與下游個體追蹤"
+        },
+        "hook": "口訣:要個體+類別=Detection;要逐像素分類=Semantic;要個體+像素=Instance"
+      },
+      "misconceptions": [
+        "把影像分類當成可解決所有 CV 場景的入門選項",
+        "把語意分割與實例分割視為等價",
+        "認為實例分割越精細越好不顧延遲",
+        "忽略 mAP 與推論延遲必須同時納入驗收"
+      ],
+      "related_node_ids": [
+        "n_L21102_003",
+        "n_L21102_001",
+        "n_L23303_001"
+      ],
+      "tags": [
+        "智慧城市",
+        "智慧交通",
+        "物件偵測",
+        "CV 任務階層",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "smartcity"
+      ]
+    },
+    {
+      "id": "q_bf_sc_004",
+      "knowledge_code": "L22404",
+      "node_id": "n_L22404_005",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "機場智慧化中心擬將『旅客每日進出航廈匯總統計』以開放資料(Open Data)形式對外釋出,以供學術與產業研究使用;但旅客原始紀錄含護照識別碼,直接釋出有再識別風險。資料治理委員會希望兼顧『可用性』與『個資保護強度可量化調整』,下列何種匿名化機制最對齊需求?",
+      "options": [
+        {
+          "text": "採差分隱私(Differential Privacy)對統計查詢加入校準噪音,以隱私預算 ε 量化保護強度;ε 越小保護越強但精度下降,可依釋出目的調整,並保證單筆個資進出不影響結果",
+          "is_correct": true
+        },
+        {
+          "text": "對護照識別碼以單向雜湊(SHA-256)取代後即視為已匿名,可直接釋出對應的旅客逐筆進出紀錄,因雜湊不可逆故再識別風險為零,可同時保留資料最高細度與完整研究價值",
+          "is_correct": false,
+          "trap_type": "雜湊≠匿名化"
+        },
+        {
+          "text": "套用 k-匿名將護照識別碼直接刪除即釋出每日逐筆進出紀錄,因已無直接識別欄位故視為匿名資料,毋須再衡量準識別欄位組合所帶來之再識別風險與群組可區辨大小",
+          "is_correct": false,
+          "trap_type": "k 匿名誤用"
+        },
+        {
+          "text": "採聯邦學習(Federated Learning)讓研究單位在不取得資料下訓練模型,雖屬隱私強化技術但本題目標為『釋出可下載之開放統計資料集』,聯邦學習無法產出可下載之資料",
+          "is_correct": false,
+          "trap_type": "技術目標錯置"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 需求拆解 — 釋出『匯總統計』+ 『可量化的個資保護強度』+ 『可調整』。**Step 2:** 差分隱私(DP)對統計查詢加入校準噪音,以隱私預算 ε 量化保護強度;ε 越小噪音越大、保護越強、精度下降,可依釋出目的(學術/產業)調整,並保證『單筆個資進出不影響結果分布』。**Step 3:** 對航廈每日進出計數加 Laplace/Gaussian 噪音,並對外公告 ε 值,使下游使用者可評估資料品質與隱私風險,兼顧可用性與保護強度可量化。",
+        "wrong": {
+          "對護照識別碼以單向雜湊(SHA-256)取代後即視為已匿名,可直接釋出對應的旅客逐筆進出紀錄,因雜湊不可逆故再識別風險為零,可同時保留資料最高細度與完整研究價值": "雜湊屬假名化(pseudonymization)非匿名化,搭配時間/地點等準識別欄位仍可被再識別(linkage attack),不符『匿名』",
+          "套用 k-匿名將護照識別碼直接刪除即釋出每日逐筆進出紀錄,因已無直接識別欄位故視為匿名資料,毋須再衡量準識別欄位組合所帶來之再識別風險與群組可區辨大小": "刪除直接識別符不等於 k-匿名;k-匿名要求每組準識別欄位組合至少有 k 筆紀錄不可區分,且本題需求是匯總釋出非逐筆",
+          "採聯邦學習(Federated Learning)讓研究單位在不取得資料下訓練模型,雖屬隱私強化技術但本題目標為『釋出可下載之開放統計資料集』,聯邦學習無法產出可下載之資料": "聯邦學習解決『模型訓練不出資料』,但本題要釋出『可下載統計資料』,目標不符"
+        },
+        "hook": "口訣:可量化保護強度+加噪統計=Differential Privacy(ε);雜湊只是假名化"
+      },
+      "misconceptions": [
+        "把單向雜湊當成完整匿名化",
+        "誤以為刪除直接識別欄位就達到 k-匿名",
+        "把聯邦學習與差分隱私功能混淆",
+        "忽略 ε 隱私預算的隱私/精度權衡意義"
+      ],
+      "related_node_ids": [
+        "n_L22404_003",
+        "n_L22404_004",
+        "n_L22404_006"
+      ],
+      "tags": [
+        "智慧城市",
+        "開放資料",
+        "差分隱私",
+        "k-匿名",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "smartcity",
+        "privacy"
+      ]
+    },
+    {
+      "id": "q_bf_sc_005",
+      "knowledge_code": "L23402",
+      "node_id": "n_L23402_001",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "偏鄉智慧化專案部署一套違規傾倒垃圾 CV 辨識系統。模型訓練資料 90% 來自西部都會區既有路口,僅 10% 來自東部偏鄉;東部標註多由同一位外包人員依個人主觀『看起來像不像違規』完成。系統上線後東部誤判率明顯偏高。下列對此案『AI 偏見三類』分析與對應處遇最完整且最對齊根因者為何?",
+      "options": [
+        {
+          "text": "Sampling Bias 來自東部資料佔比過低需補採;Label Bias 來自單一標註員主觀,需多標註員交叉並訂標準作業書;與 Feature Bias 是否存在無直接證據,需資料分析後再評估",
+          "is_correct": true
+        },
+        {
+          "text": "屬於單純的 Feature Bias,因為特徵欄位(影像像素)在東西部本質就有環境差異,只要在模型訓練前對亮度與對比度作正規化處理即可一次性消除,毋須補資料或改標註流程",
+          "is_correct": false,
+          "trap_type": "誤歸 Feature"
+        },
+        {
+          "text": "屬於單純的 Sampling Bias,只要把東部資料補齊到 50% 占比即可徹底解決誤判率偏高的問題,標註員流程屬作業面議題非偏見議題,不需在此模型偏見治理任務中一併處理",
+          "is_correct": false,
+          "trap_type": "Label Bias 忽略"
+        },
+        {
+          "text": "屬於單純的 Label Bias,因為標註員主觀標註才是根本原因;只要改採多標註員交叉並計算 Kappa 一致性,Sampling Bias 在大模型架構下會被自動均衡,毋須再額外補東部資料",
+          "is_correct": false,
+          "trap_type": "Sampling Bias 忽略"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 對映偏見三類 — Sampling Bias 指『樣本分布不代表母體』,本案東部 10% 明顯偏低;Label Bias 指『標註品質/主觀』,本案單一標註員主觀標註直接命中;Feature Bias 指『特徵選擇/構建』帶入偏誤,本案題目未提供特徵工程的具體證據,需資料分析後再評估。**Step 2:** 對應處遇 — Sampling Bias 補採東部資料、Label Bias 多標註員交叉並訂 SOP/標註指引、Feature Bias 待證據後再評估,不應預先誤歸。**Step 3:** 上線後以區域別誤判率(東部 vs 西部)、標註者間一致性(IAA, e.g., Kappa)兩個指標追蹤改善成效。",
+        "wrong": {
+          "屬於單純的 Feature Bias,因為特徵欄位(影像像素)在東西部本質就有環境差異,只要在模型訓練前對亮度與對比度作正規化處理即可一次性消除,毋須補資料或改標註流程": "亮度/對比度差異屬影像前處理議題,非 Feature Bias 之核心(特徵選擇/構建偏誤);且未處理 Sampling 與 Label Bias 之根因",
+          "屬於單純的 Sampling Bias,只要把東部資料補齊到 50% 占比即可徹底解決誤判率偏高的問題,標註員流程屬作業面議題非偏見議題,不需在此模型偏見治理任務中一併處理": "Label Bias 是 AI 偏見三類之一,標註員主觀直接污染學習目標,不能略過;只補 Sampling 而標籤仍有偏,模型只是學到偏誤標籤",
+          "屬於單純的 Label Bias,因為標註員主觀標註才是根本原因;只要改採多標註員交叉並計算 Kappa 一致性,Sampling Bias 在大模型架構下會被自動均衡,毋須再額外補東部資料": "Sampling Bias 不會因模型架構自動均衡;訓練分布與真實佈署分布不一致時,模型對少數區域表現必然偏差"
+        },
+        "hook": "口訣:抽樣偏 / 標籤偏 / 特徵偏,逐項證據逐項治;補資料 + 多標註 + 再驗特徵"
+      },
+      "misconceptions": [
+        "把亮度差異誤判為 Feature Bias",
+        "認為 Sampling Bias 可被大模型自動消除",
+        "把 Label Bias 排除在偏見治理範圍之外",
+        "未對三類偏見逐項蒐證即斷定根因"
+      ],
+      "related_node_ids": [
+        "n_L23402_002",
+        "n_L23303_002",
+        "n_L23303_004"
+      ],
+      "tags": [
+        "智慧城市",
+        "偏鄉",
+        "AI 偏見三類",
+        "Sampling Bias",
+        "Label Bias",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "smartcity"
+      ]
+    },
+    {
+      "id": "q_bf_sc_006",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_004",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "校園智慧化專案蒐集校內公開論壇貼文,以 NLP 分類器自動標記『校園安全相關陳情』類別(正類)以利校安組即時處置。正類僅佔全部貼文 3%(高度不平衡)。專案初版模型驗收採整體 Accuracy = 97%,但校安組反映『真正陳情貼文常被漏接』。下列評估指標與公平性監測組合,何者最能對齊『漏接』與『跨子群是否公平』兩目標?",
+      "options": [
+        {
+          "text": "主指標改為正類 Recall(召回率)以對齊漏接;同時以系所或居住地為子群,監測各子群 Recall 之差距是否擴大,並輔以 F1 平衡精準度與召回率避免過度報警",
+          "is_correct": true
+        },
+        {
+          "text": "繼續沿用整體 Accuracy 為主指標,只要把模型訓練資料量擴增到原本的十倍即可同步解決漏接與跨子群公平性議題,不需新增召回率或子群指標於驗收與監測流程",
+          "is_correct": false,
+          "trap_type": "不平衡仍用 Accuracy"
+        },
+        {
+          "text": "改採整體 Precision(精準率)為主指標以避免誤報,同時忽略召回率與子群拆解,因為高 Precision 已代表所有預測為正者均正確、不會有任何陳情貼文被漏接之疑慮",
+          "is_correct": false,
+          "trap_type": "Precision 不對齊漏接"
+        },
+        {
+          "text": "改採 Macro F1 為唯一主指標並全面取代 Recall 與子群監測,因為 Macro F1 同時涵蓋 Precision 與 Recall 兩面,故跨子群公平性議題在 Macro F1 範疇內已可被一併監測",
+          "is_correct": false,
+          "trap_type": "Macro F1 不替代子群"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 釐清『漏接』 — 漏接 = 真實正類沒被找出,即 False Negative 多 / Recall 低,故主指標應改為正類 Recall。**Step 2:** 不平衡資料禁用 Accuracy — 正類佔 3%,模型全部預測為負亦可達 97% Accuracy,完全遮蔽校安組關心的漏接議題。**Step 3:** 跨子群公平性 — 以系所/居住地等子群拆解 Recall 差距,監測是否特定族群被系統性漏接;同時搭配 F1 平衡 Precision/Recall 避免過度報警造成校安組勤務崩潰。",
+        "wrong": {
+          "繼續沿用整體 Accuracy 為主指標,只要把模型訓練資料量擴增到原本的十倍即可同步解決漏接與跨子群公平性議題,不需新增召回率或子群指標於驗收與監測流程": "正類僅 3%,整體 Accuracy 可被『全部預測為負』達 97% 主導,擴大資料量也無法改變指標不對齊問題的本質",
+          "改採整體 Precision(精準率)為主指標以避免誤報,同時忽略召回率與子群拆解,因為高 Precision 已代表所有預測為正者均正確、不會有任何陳情貼文被漏接之疑慮": "Precision 只看『預測為正當中對的比例』,模型可只挑最有信心的少數案件預測為正,Precision 很高但 Recall 極低,大量陳情被漏接",
+          "改採 Macro F1 為唯一主指標並全面取代 Recall 與子群監測,因為 Macro F1 同時涵蓋 Precision 與 Recall 兩面,故跨子群公平性議題在 Macro F1 範疇內已可被一併監測": "Macro F1 是『正/負類』各算 F1 再平均,並非子群拆解;跨子群公平性需以子群(系所/居住地)為單位拆 Recall 才能監測"
+        },
+        "hook": "口訣:漏接看 Recall,不平衡禁 Accuracy,公平要按『子群』拆,F1 平衡兩端"
+      },
+      "misconceptions": [
+        "對高度不平衡資料仍把 Accuracy 當主指標",
+        "把 Precision 高誤解為不會漏接",
+        "把 Macro F1 等同於子群公平性指標",
+        "未對校內子群(系所/居住地)拆解 Recall"
+      ],
+      "related_node_ids": [
+        "n_L23303_001",
+        "n_L23303_002",
+        "n_L23402_002"
+      ],
+      "tags": [
+        "智慧城市",
+        "校園智慧化",
+        "NLP",
+        "不平衡資料",
+        "Recall",
+        "公平性",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "smartcity"
+      ]
+    },
+    {
+      "id": "q_bf_eng_001",
+      "knowledge_code": "L22302",
+      "node_id": "n_L22302_006",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某太陽光電場運營商欲建置「次日 24 小時逐時發電量」預測模型,以申報日前電力市場交易量。歷史資料含 3 年逐時發電量、雲量、日照強度、氣溫等多變數,呈現明顯日週期(夜間 0、午間峰)與弱年週期(夏強冬弱),且天氣突變時序列出現非線性陡降。下列模型選型策略,何者最能兼顧「多變數非線性」與「長短期週期」之預測需求?",
+      "options": [
+        {
+          "text": "採用 LSTM(長短期記憶網路)以多變數時序輸入(發電量+雲量+日照+氣溫),透過記憶閘門同時捕捉日週期與天氣突變之非線性關係,並以時序型交叉驗證避免資料洩漏",
+          "is_correct": true
+        },
+        {
+          "text": "採用單變量 ARIMA(p,d,q) 僅對歷史發電量序列建模,因為 ARIMA 對線性自迴歸與差分趨勢處理嚴謹,可完整對應太陽能日週期與天氣突變所造成的非線性陡降關係",
+          "is_correct": false,
+          "trap_type": "ARIMA 線性侷限"
+        },
+        {
+          "text": "採用多元線性迴歸以雲量、日照、氣溫對發電量直接建模,搭配標準 K-Fold 交叉驗證隨機切分樣本,避免時序方法的複雜度,可同時取得多變數解釋力與穩健的次日預測效能",
+          "is_correct": false,
+          "trap_type": "K-Fold 時序洩漏"
+        },
+        {
+          "text": "採用 Naive 持續性預測(以今日同小時值作為次日同小時預測),因為太陽能日週期極強,持續性假設可避免複雜模型過擬合並保證對天氣突變最即時的反應與最低部署成本",
+          "is_correct": false,
+          "trap_type": "Naive baseline 誤用"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 釐清資料特性 — 多變數(發電量+氣象)、強日週期+弱年週期、且天氣突變造成非線性陡降。**Step 2:** 篩除線性與單變量模型 — ARIMA 屬線性自迴歸且原生為單變量(VARIMA 雖可多變量但仍為線性),無法處理雲量突變引發的非線性陡降;多元線性迴歸忽略時序自相關。**Step 3:** 選用 LSTM — 記憶閘(input/forget/output gate)可同時保留短期(小時級雲量變化)與長期(年週期)記憶,且天生支援多變數輸入。**Step 4:** 驗證策略採 rolling-origin 時序交叉驗證(訓練集永遠在驗證集之前),避免標準 K-Fold 隨機切分造成『用未來預測過去』的資料洩漏。",
+        "wrong": {
+          "採用單變量 ARIMA(p,d,q) 僅對歷史發電量序列建模,因為 ARIMA 對線性自迴歸與差分趨勢處理嚴謹,可完整對應太陽能日週期與天氣突變所造成的非線性陡降關係": "ARIMA 為線性模型,無法捕捉雲量突變的非線性陡降;且單變量會丟掉雲量/日照等關鍵外生變數的解釋力",
+          "採用多元線性迴歸以雲量、日照、氣溫對發電量直接建模,搭配標準 K-Fold 交叉驗證隨機切分樣本,避免時序方法的複雜度,可同時取得多變數解釋力與穩健的次日預測效能": "線性迴歸忽略發電量自相關;標準 K-Fold 隨機切分使驗證集樣本可能在訓練集時間之前,造成嚴重資料洩漏",
+          "採用 Naive 持續性預測(以今日同小時值作為次日同小時預測),因為太陽能日週期極強,持續性假設可避免複雜模型過擬合並保證對天氣突變最即時的反應與最低部署成本": "Naive 持續性僅可作為 baseline 對比,完全無法處理次日天氣與今日不同的情境,真實部署誤差過大"
+        },
+        "hook": "口訣:多變數+非線性 → LSTM;時序驗證用 rolling-origin,K-Fold 隨機切會洩漏未來"
+      },
+      "misconceptions": [
+        "誤以為 ARIMA 可處理非線性",
+        "對時序資料用標準 K-Fold 造成資料洩漏",
+        "把 Naive 持續性當作可部署模型而非僅為 baseline",
+        "忽略多變數氣象外生變數對發電量的影響"
+      ],
+      "related_node_ids": [
+        "n_L22302_001",
+        "n_L23303_005",
+        "n_L23303_008"
+      ],
+      "tags": [
+        "時間序列",
+        "太陽能預測",
+        "LSTM",
+        "ARIMA",
+        "rolling-origin",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "energy",
+        "ml_bigdata"
+      ]
+    },
+    {
+      "id": "q_bf_eng_002",
+      "knowledge_code": "L23101",
+      "node_id": "n_L23101_002",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "台電調度中心欲評估「夏季尖峰負載超過備轉容量上限導致分區限電」之機率,以擬定燃氣機組調度策略。已知尖峰負載受氣溫、工業用電、空調用電等多重隨機因素交互影響,且各變數之間存在非線性相依關係,難以推導解析機率密度函數。下列風險量化方法,何者最適合此種「多源不確定性疊加」之極端電力負載風險評估?",
+      "options": [
+        {
+          "text": "建構各變數機率分佈(氣溫常態、工業用電對數常態、空調條件分佈),以 Monte Carlo 抽樣 10 萬次合成尖峰負載樣本,統計超過備轉容量上限之頻率作為限電風險機率估計",
+          "is_correct": true
+        },
+        {
+          "text": "直接以過去 5 年歷史尖峰負載超過備轉上限之天數除以總天數作為限電機率,因為樣本來自真實觀測,可避免任何模擬假設誤差,並完整反映多源不確定性疊加之非線性交互影響於風險上",
+          "is_correct": false,
+          "trap_type": "歷史頻率法低估極端"
+        },
+        {
+          "text": "假設尖峰負載服從常態分佈,以歷史平均加 1.96 倍標準差作為 95% 信賴上限,若備轉容量大於此上限即視為零限電風險,簡化計算同時保留統計嚴謹度可作為調度依據之依憑",
+          "is_correct": false,
+          "trap_type": "常態假設忽略厚尾"
+        },
+        {
+          "text": "採用線性迴歸以氣溫、工業用電、空調用電對尖峰負載建模,以模型 R² 大於 0.85 為通過門檻並以 R² 值乘以歷史最高負載作為限電風險上界,可同時取得解釋力與保守風險估計值",
+          "is_correct": false,
+          "trap_type": "R² 非風險指標"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 識別問題本質 — 多源(氣溫、工業、空調)隨機變數疊加且非線性相依,解析推導機率密度函數不可行。**Step 2:** Monte Carlo 模擬適用情境 — 對每個輸入變數分別建構機率分佈,以亂數抽樣大量合成樣本(通常 10⁴ ~ 10⁶ 次),透過大數法則使統計頻率收斂至真實機率。**Step 3:** 套用至本題 — 對 10 萬次合成尖峰負載逐筆比對備轉容量上限,落在上限之外的次數除以 10 萬即為限電機率估計。**Step 4:** 為何優於其他方法 — 歷史頻率法對極端事件(數年才一次)樣本過少;常態假設低估厚尾(極端高溫疊加工業滿載)風險;R² 衡量擬合度與風險機率無對應關係。",
+        "wrong": {
+          "直接以過去 5 年歷史尖峰負載超過備轉上限之天數除以總天數作為限電機率,因為樣本來自真實觀測,可避免任何模擬假設誤差,並完整反映多源不確定性疊加之非線性交互影響於風險上": "歷史頻率法對『罕見尖峰』樣本過少(可能 5 年僅 1-2 次),統計不穩定且無法外推未發生過之極端組合",
+          "假設尖峰負載服從常態分佈,以歷史平均加 1.96 倍標準差作為 95% 信賴上限,若備轉容量大於此上限即視為零限電風險,簡化計算同時保留統計嚴謹度可作為調度依據之依憑": "電力負載常具厚尾(極端高溫疊加工業滿載),常態假設嚴重低估尾部風險;且『大於上限即零風險』完全錯誤(尾部仍有殘留機率)",
+          "採用線性迴歸以氣溫、工業用電、空調用電對尖峰負載建模,以模型 R² 大於 0.85 為通過門檻並以 R² 值乘以歷史最高負載作為限電風險上界,可同時取得解釋力與保守風險估計值": "R² 衡量解釋變異量,與『超過閾值機率』毫無數學對應;『R² × 歷史最高』屬無意義組合"
+        },
+        "hook": "口訣:多源不確定性疊加 → Monte Carlo;歷史頻率法看不到未發生的極端,常態假設低估厚尾"
+      },
+      "misconceptions": [
+        "誤以為歷史頻率可代表未來極端風險",
+        "對厚尾分佈強行套用常態假設",
+        "把 R² 當作風險或機率指標",
+        "忽略多變數非線性相依需要模擬而非解析"
+      ],
+      "related_node_ids": [
+        "n_L23101_003",
+        "n_L22102_002",
+        "n_L22102_006"
+      ],
+      "tags": [
+        "Monte Carlo",
+        "電力負載",
+        "極端風險",
+        "尖峰備轉",
+        "厚尾分佈",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "energy"
+      ]
+    },
+    {
+      "id": "q_bf_eng_003",
+      "knowledge_code": "L22102",
+      "node_id": "n_L22102_005",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某離岸風電開發商於彰化外海進行風場選址,需評估「年平均發電量」與「風速 25 m/s 以上颱風級陣風發生頻率」以決定機組容量配置。經一年實測,該風場風速資料呈現右偏(多數時間 6-12 m/s,偶發 20 m/s 以上強風),且風速永不為負。下列風速機率建模選擇,何者最符合風能工程實務之分佈特性?",
+      "options": [
+        {
+          "text": "採用 Weibull 分佈(形狀參數 k、尺度參數 λ)建模風速,因其支撐域為非負且形狀彈性可同時擬合右偏與不同尾部厚度,為風能工業界評估年發電量與極端陣風頻率之標準分佈",
+          "is_correct": true
+        },
+        {
+          "text": "採用常態分佈以歷史風速平均與標準差建模,因為中央極限定理保證大樣本下風速會趨近常態,可同時直接套用 68-95-99.7 法則計算強風機率並推估離岸風場年平均發電量大小",
+          "is_correct": false,
+          "trap_type": "常態無法表達右偏"
+        },
+        {
+          "text": "採用 Poisson 分佈以歷史每月強風事件數均值建模風速,因為 Poisson 適合罕見事件且僅需單一參數 λ 即可同時描述風速強度與年發電量,可大幅簡化風場選址之機率推估工作流程",
+          "is_correct": false,
+          "trap_type": "Poisson 為離散計數"
+        },
+        {
+          "text": "採用均勻分佈介於歷史最低風速與最高風速之間建模,因為均勻分佈不需假設形狀僅需上下界,可避免任何分佈誤設並對所有風速給予同等機率,符合風能評估中之保守原則與基準",
+          "is_correct": false,
+          "trap_type": "均勻分佈忽略集中趨勢"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 識別資料特性 — 風速非負、右偏(多數中等、少數極強)、需同時量化『年平均』(中央趨勢)與『極端陣風』(尾部機率)。**Step 2:** Weibull 分佈適用性 — 支撐域 x ≥ 0(符合非負風速)、形狀參數 k 可調節偏態與尾部厚度(風能工程典型 k≈2,即 Rayleigh 分佈)、尺度參數 λ 控制平均風速,為 IEC 61400 國際風能標準採用的風速分佈。**Step 3:** 排除其他選項 — 常態分佈定義域含負值且對稱,無法擬合右偏;Poisson 為離散計數分佈,描述『單位時間發生次數』而非『連續強度』;均勻分佈過度簡化,忽略風速集中於中等值的事實。**Step 4:** 實務應用 — 以 Weibull 積分計算強風機率 P(v > 25),並透過功率曲線轉換出年發電量期望值。",
+        "wrong": {
+          "採用常態分佈以歷史風速平均與標準差建模,因為中央極限定理保證大樣本下風速會趨近常態,可同時直接套用 68-95-99.7 法則計算強風機率並推估離岸風場年平均發電量大小": "CLT 講的是『樣本平均』趨近常態,單一風速觀測值並不趨近常態;常態分佈含負值且對稱,無法表達風速的右偏特性",
+          "採用 Poisson 分佈以歷史每月強風事件數均值建模風速,因為 Poisson 適合罕見事件且僅需單一參數 λ 即可同時描述風速強度與年發電量,可大幅簡化風場選址之機率推估工作流程": "Poisson 為離散計數分佈(描述單位時間事件數),不能用來描述連續變數風速的強度",
+          "採用均勻分佈介於歷史最低風速與最高風速之間建模,因為均勻分佈不需假設形狀僅需上下界,可避免任何分佈誤設並對所有風速給予同等機率,符合風能評估中之保守原則與基準": "均勻分佈給所有風速等機率,完全忽略風速集中於 6-12 m/s 的觀測事實,嚴重低估中等風速頻率"
+        },
+        "hook": "口訣:風速→Weibull(非負、右偏、形狀彈);Poisson 數次數、常態會出負、均勻無集中"
+      },
+      "misconceptions": [
+        "誤用 CLT 推論單一風速服從常態",
+        "把 Poisson(離散計數)套到連續強度上",
+        "對明顯偏態資料套用對稱分佈",
+        "以為均勻分佈是『最保守』選擇"
+      ],
+      "related_node_ids": [
+        "n_L22102_001",
+        "n_L22102_004",
+        "n_L22102_006"
+      ],
+      "tags": [
+        "Weibull 分佈",
+        "風速建模",
+        "離岸風電",
+        "極端陣風",
+        "右偏分佈",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "energy"
+      ]
+    },
+    {
+      "id": "q_bf_eng_004",
+      "knowledge_code": "L23303",
+      "node_id": "n_L23303_008",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某智慧電網公司以 ARIMA(2,1,1) 對全台逐日用電量建模,訓練 RMSE 表現良好。資深資料科學家提醒「ARIMA 模型須通過殘差白噪音檢驗才可信賴外推」。團隊繪製殘差圖後發現殘差自相關函數(ACF)在 lag 7 出現顯著尖峰(超過信賴帶),Ljung-Box 檢定 p-value < 0.01。下列診斷結論與後續處置,何者最正確?",
+      "options": [
+        {
+          "text": "殘差未通過白噪音檢驗(ACF lag 7 殘留結構、Ljung-Box 拒絕虛無),表示週週期未被模型吸收;應改用 SARIMA 加入季節項 s=7 或增加外生變數重新建模,不可直接以原模型外推",
+          "is_correct": true
+        },
+        {
+          "text": "訓練 RMSE 良好即代表模型擬合充分,殘差圖 ACF lag 7 顯著與 Ljung-Box 拒絕屬於統計過度敏感;只要 RMSE 通過業務閾值即可上線並以原 ARIMA(2,1,1) 直接外推次週用電預測無虞",
+          "is_correct": false,
+          "trap_type": "RMSE 凌駕殘差檢驗"
+        },
+        {
+          "text": "ACF lag 7 顯著代表殘差存在自相關,屬於模型過擬合徵兆;應降低 AR/MA 階數重新訓練(例如 ARIMA(1,1,0))讓殘差自相關自然消散,避免引入季節項導致模型複雜度過高與過擬合",
+          "is_correct": false,
+          "trap_type": "誤判過擬合"
+        },
+        {
+          "text": "Ljung-Box p-value < 0.01 代表殘差均值顯著不為零,屬於偏誤(bias)問題而非白噪音問題;應對殘差中心化(減去殘差均值)後重新評估即可,不需調整模型結構或增加季節項",
+          "is_correct": false,
+          "trap_type": "誤解 Ljung-Box"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 釐清白噪音檢驗意義 — ARIMA 假設殘差為白噪音(零均值、固定變異、無自相關);若殘差仍存在自相關,代表模型未吸收完所有結構,外推誤差會被低估。**Step 2:** 解讀 ACF lag 7 — 逐日用電量在 lag 7 顯著表示『每週同一天高度相關』,即模型遺漏了週週期(平日工業日 vs 週末民生),原 ARIMA(2,1,1) 未含季節項自然抓不到。**Step 3:** Ljung-Box 檢定 — 虛無假設『前 k 個 lag 自相關均為零』,p < 0.01 拒絕虛無,綜合判定殘差非白噪音。**Step 4:** 正確處置 — 改用 SARIMA(p,d,q)(P,D,Q)s=7 加入季節差分與季節 AR/MA 項,或加入週幾 dummy 等外生變數(SARIMAX);訓練 RMSE 良好不代表可外推,殘差檢驗才是 ARIMA 可信賴的根本門檻。",
+        "wrong": {
+          "訓練 RMSE 良好即代表模型擬合充分,殘差圖 ACF lag 7 顯著與 Ljung-Box 拒絕屬於統計過度敏感;只要 RMSE 通過業務閾值即可上線並以原 ARIMA(2,1,1) 直接外推次週用電預測無虞": "ARIMA 殘差白噪音是外推有效的必要條件;訓練 RMSE 不能取代殘差檢驗,殘存自相關會讓未來預測信賴區間嚴重失準",
+          "ACF lag 7 顯著代表殘差存在自相關,屬於模型過擬合徵兆;應降低 AR/MA 階數重新訓練(例如 ARIMA(1,1,0))讓殘差自相關自然消散,避免引入季節項導致模型複雜度過高與過擬合": "過擬合徵兆為『訓練佳但驗證差』,與殘差自相關無對應;降低階數會讓問題更嚴重,週週期需要季節項才能吸收",
+          "Ljung-Box p-value < 0.01 代表殘差均值顯著不為零,屬於偏誤(bias)問題而非白噪音問題;應對殘差中心化(減去殘差均值)後重新評估即可,不需調整模型結構或增加季節項": "Ljung-Box 檢驗的是『殘差自相關是否為零』,並非『殘差均值是否為零』;中心化無法消除自相關結構"
+        },
+        "hook": "口訣:ARIMA 看殘差(白噪音才能外推);ACF lag 7 顯著 → 週週期沒抓到 → 改 SARIMA"
+      },
+      "misconceptions": [
+        "誤以為訓練 RMSE 好就代表模型可外推",
+        "把殘差自相關當作過擬合徵兆",
+        "誤解 Ljung-Box 為均值檢定而非自相關檢定",
+        "忽略季節性需要 SARIMA 而非降階"
+      ],
+      "related_node_ids": [
+        "n_L23303_007",
+        "n_L22302_006",
+        "n_L23303_005"
+      ],
+      "tags": [
+        "ARIMA",
+        "殘差白噪音",
+        "Ljung-Box",
+        "SARIMA",
+        "電網用電預測",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "energy",
+        "ml_bigdata"
+      ]
+    },
+    {
+      "id": "q_bf_eng_005",
+      "knowledge_code": "L22402",
+      "node_id": "n_L22402_004",
+      "subject": 2,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某抽蓄水力電廠與儲能電池運營商合作開發「極端負載警示模型」,以決定何時啟動儲能放電。資料集涵蓋 3 年逐 15 分鐘電網負載,其中「極端高負載事件」僅佔 0.3%(極不平衡)。團隊以 XGBoost 訓練分類器,測試集 Accuracy 達 99.7%,但實際部署兩個月後,儲能放電啟動次數遠少於預期,多次錯過真實極端事件。下列診斷與改善策略,何者最關鍵?",
+      "options": [
+        {
+          "text": "Accuracy 在 0.3% 極不平衡資料下會被多數類淹沒(全預測『無極端』即可得 99.7%);應改以 Recall(召回率)為主指標確保極端事件不漏接,並輔以 PR-AUC 監測精準-召回權衡之變化",
+          "is_correct": true
+        },
+        {
+          "text": "Accuracy 99.7% 已達工業級標準,模型本身無問題,儲能啟動少屬於決策閾值偏保守的問題;應將分類器輸出機率閾值由預設 0.5 降至 0.3 即可大幅提升放電啟動次數而無需更換評估指標體系",
+          "is_correct": false,
+          "trap_type": "閾值調整治標"
+        },
+        {
+          "text": "儲能放電少屬於模型過擬合導致泛化失效,應對訓練資料以 SMOTE 過採樣將極端事件比例補到 50:50 後重新訓練,並繼續以 Accuracy 作為主要驗收指標,以維持與既有報表體系的一致性",
+          "is_correct": false,
+          "trap_type": "Accuracy 主指標未換"
+        },
+        {
+          "text": "問題出在 XGBoost 對極端事件不敏感應改採 Logistic Regression,因其線性決策邊界對少數類更敏感,並以 F1 與 Accuracy 平均值之合成指標作為驗收標準兼顧少數類偵測與整體分類正確性",
+          "is_correct": false,
+          "trap_type": "歸因模型族錯誤"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 識別不平衡資料禁忌 — 極端事件僅佔 0.3%,模型只要全預測『無極端』就能得 99.7% Accuracy,完全沒抓到任何極端事件仍會通過驗收。**Step 2:** 改換主指標 — 業務目標『不漏接極端負載』對應 Recall = TP/(TP+FN);Recall 越高漏接越少,直接對齊『儲能放電不可錯過事件』的營運訴求。**Step 3:** 輔助指標 PR-AUC — 不平衡資料下 ROC-AUC 會被多數類稀釋,PR-AUC(Precision-Recall 曲線下面積)聚焦少數類表現,可監測『提升 Recall 是否大幅犧牲 Precision』。**Step 4:** 排除其他選項 — 純調閾值是治標(評估指標仍誤導決策);SMOTE 可作為訓練手段但繼續用 Accuracy 評估等於沒換主指標;歸因 XGBoost vs Logistic 與不平衡無關。",
+        "wrong": {
+          "Accuracy 99.7% 已達工業級標準,模型本身無問題,儲能啟動少屬於決策閾值偏保守的問題;應將分類器輸出機率閾值由預設 0.5 降至 0.3 即可大幅提升放電啟動次數而無需更換評估指標體系": "Accuracy 在 0.3% 不平衡下根本不能用作主指標;單純調閾值無法解決『評估指標誤導模型選擇與驗收』的根本問題",
+          "儲能放電少屬於模型過擬合導致泛化失效,應對訓練資料以 SMOTE 過採樣將極端事件比例補到 50:50 後重新訓練,並繼續以 Accuracy 作為主要驗收指標,以維持與既有報表體系的一致性": "SMOTE 可作訓練端手段,但若評估指標仍用 Accuracy,新模型仍會被多數類淹沒而通過驗收,沒有對齊到漏接率",
+          "問題出在 XGBoost 對極端事件不敏感應改採 Logistic Regression,因其線性決策邊界對少數類更敏感,並以 F1 與 Accuracy 平均值之合成指標作為驗收標準兼顧少數類偵測與整體分類正確性": "問題不在模型族,而在評估指標誤選;Logistic 對線性可分有效但與少數類敏感度無直接關係,且 Accuracy 平均仍會稀釋少數類訊號"
+        },
+        "hook": "口訣:不平衡資料禁用 Accuracy → 看 Recall(不漏接)+ PR-AUC(精召權衡);先換指標再談手段"
+      },
+      "misconceptions": [
+        "在極不平衡資料用 Accuracy 當主指標",
+        "以為純調閾值可取代評估指標重設",
+        "把 SMOTE 訓練手段當成評估方式",
+        "誤將指標問題歸因為模型族選擇"
+      ],
+      "related_node_ids": [
+        "n_L23303_004",
+        "n_L23303_002",
+        "n_L22402_003"
+      ],
+      "tags": [
+        "不平衡資料",
+        "Recall",
+        "PR-AUC",
+        "極端負載",
+        "儲能放電",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "energy",
+        "manufacturing"
+      ]
+    },
+    {
+      "id": "q_bf_leg_001",
+      "knowledge_code": "L21103",
+      "node_id": "n_L21103_004",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某中型律師事務所部署一套 LLM 法條問答系統,協助初級律師快速查找最高法院民事判決。內部試行兩週後,合夥人發現 LLM 偶爾引用『看似專業、實則不存在的虛構判例字號』(如杜撰出根本不存在的「最高法院 112 年度台上字第 XXXX 號」),嚴重影響可信度。資訊長提出四種改造方案,下列何者最能同時根治幻覺問題,並具備可量化驗證之檢索品質指標?",
+      "options": [
+        {
+          "text": "導入 RAG 架構,將司法院判決書資料庫切塊嵌入為向量索引,生成前檢索 Top-K 真實判例作上下文,並以 Precision@K(前 K 筆相關比率)與 Recall@K(應命中之被檢出比率)雙指標持續監測",
+          "is_correct": true
+        },
+        {
+          "text": "改用更大規模參數的閉卷 LLM(如 70B 模型)並提高溫度參數 temperature 至 0.9,讓模型發揮更高創造力以涵蓋更多潛在判例,以 BLEU 分數對照人工撰寫範本評估生成品質與用語流暢度",
+          "is_correct": false,
+          "trap_type": "閉卷+高溫加劇幻覺"
+        },
+        {
+          "text": "在系統提示詞(System Prompt)中加入『請勿杜撰判例,如不確定請回答不知道』之指令,並以律師使用者滿意度問卷(NPS)與每月平均回應字數作為法律問答系統部署後品質核心評估指標",
+          "is_correct": false,
+          "trap_type": "純 Prompt 護欄無檢索"
+        },
+        {
+          "text": "改用 TF-IDF 加 N-gram 進行關鍵字比對直接輸出原文段落以避免任何生成,並以模型訓練階段之困惑度(Perplexity)與字詞共現頻率作為法律檢索系統部署後的線上品質核心指標",
+          "is_correct": false,
+          "trap_type": "退回統計式+指標錯置"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "**Step 1:** 釐清幻覺根因 — LLM『閉卷』生成時僅依參數記憶輸出,對於低頻、長尾的判例字號容易『拼湊式杜撰』(hallucination)。單靠加大模型或調 Prompt 都無法根治,因為知識仍封閉於權重中。**Step 2:** 選擇 RAG(Retrieval-Augmented Generation)『開卷』架構 — 把司法院判決書資料庫切塊嵌入(chunk + embedding)建立向量索引,生成前先檢索 Top-K 真實段落作為 context 餵給 LLM,使模型『有所本』地引用真實判例。**Step 3:** 建立可量化檢索品質監測 — Precision@K(前 K 筆中相關文件比率)監測『檢索精確度』、Recall@K(應命中文件中被檢索的比率)監測『召回完整度』,兩者並用可避免只看一面導致『精準但漏案』或『召回多但雜訊大』。",
+        "wrong": {
+          "改用更大規模參數的閉卷 LLM(如 70B 模型)並提高溫度參數 temperature 至 0.9,讓模型發揮更高創造力以涵蓋更多潛在判例,以 BLEU 分數對照人工撰寫範本評估生成品質與用語流暢度": "閉卷模型再大都會幻覺,且 temperature 0.9 反而加劇杜撰;BLEU 衡量翻譯/生成相似度,完全不適用於『判例真實性』驗證",
+          "在系統提示詞(System Prompt)中加入『請勿杜撰判例,如不確定請回答不知道』之指令,並以律師使用者滿意度問卷(NPS)與每月平均回應字數作為法律問答系統部署後品質核心評估指標": "Prompt 護欄只能降低不能根治幻覺(模型仍可能『自信地杜撰』);NPS 與回應字數無法量化『判例字號是否真實存在』",
+          "改用 TF-IDF 加 N-gram 進行關鍵字比對直接輸出原文段落以避免任何生成,並以模型訓練階段之困惑度(Perplexity)與字詞共現頻率作為法律檢索系統部署後的線上品質核心指標": "純 TF-IDF/N-gram 缺乏語意理解(同義詞、上下文無法處理),屬統計式 NLP 階段方案;Perplexity 是訓練期模型內部指標,不適合作為線上檢索品質指標"
+        },
+        "hook": "口訣:幻覺=閉卷症,RAG=開卷藥;檢索看 P@K(準)+ R@K(全),Prompt 只能護欄不能治根"
+      },
+      "misconceptions": [
+        "誤以為加大模型參數量就能消除幻覺",
+        "把 BLEU / Perplexity / NPS 當成檢索系統的品質指標",
+        "認為 System Prompt 加一句『勿杜撰』即可解決幻覺",
+        "把 TF-IDF 統計式檢索視為可取代 RAG 的現代方案"
+      ],
+      "related_node_ids": [
+        "n_L21103_001",
+        "n_L21101_006",
+        "n_L21101_005"
+      ],
+      "tags": [
+        "RAG",
+        "LLM 幻覺",
+        "法律 AI",
+        "Precision@K",
+        "Recall@K",
+        "情境決策"
+      ],
+      "boss_topics": [
+        "legal"
+      ]
+    }
+  ]
+}

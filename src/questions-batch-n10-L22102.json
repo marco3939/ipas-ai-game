@@ -3,7 +3,10 @@
   "schema_version": "iron-rule-1+2+6",
   "generated_at": "2026-05-16",
   "batch": "N10 — 科二大數據 L22102 機率分佈與資料分佈模型",
-  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "exam_target": {
+    "name": "IPAS AI 應用規劃師中級",
+    "date": "2026-05-23"
+  },
   "iron_rule_compliance": {
     "rule_1": "every question has explanation.correct + explanation.wrong + explanation.hook + misconceptions",
     "rule_2": "shuffle_options=true; calculation items carry stem_variables multi-case with distinct answers",
@@ -14,9 +17,24 @@
   },
   "distribution": {
     "L22102_count": 20,
-    "by_node": {"n_L22102_001": 3, "n_L22102_002": 4, "n_L22102_003": 3, "n_L22102_004": 4, "n_L22102_005": 3, "n_L22102_006": 3},
-    "by_format": {"single_choice_text": 15, "single_choice_scenario": 3, "calculation": 2},
-    "by_difficulty": {"easy": 5, "medium": 11, "hard": 4}
+    "by_node": {
+      "n_L22102_001": 3,
+      "n_L22102_002": 4,
+      "n_L22102_003": 3,
+      "n_L22102_004": 4,
+      "n_L22102_005": 3,
+      "n_L22102_006": 3
+    },
+    "by_format": {
+      "single_choice_text": 15,
+      "single_choice_scenario": 3,
+      "calculation": 2
+    },
+    "by_difficulty": {
+      "easy": 5,
+      "medium": 11,
+      "hard": 4
+    }
   },
   "questions": [
     {
@@ -29,10 +47,25 @@
       "source_level": "L1",
       "stem": "某電商平台分析工程師需為下列四種變數選擇正確的分佈類型描述。下列何者『正確配對為連續隨機變數(應以 PDF 建模)』?",
       "options": [
-        {"text": "顧客在客服頁面停留的秒數,可取任意非負實數,適合用機率密度函數(PDF)建模", "is_correct": true},
-        {"text": "顧客一日內成功下單的訂單筆數,取值為 0、1、2、… 之非負整數計數,本質屬於連續隨機變數", "is_correct": false, "trap_type": "把可數整數誤判為連續"},
-        {"text": "顧客是否點擊推薦廣告(0/1)的二元結果,本質為連續變數可直接用 PDF 進行機率建模", "is_correct": false, "trap_type": "Bernoulli 為離散"},
-        {"text": "客服系統一天內收到的客訴件數,因件數可能達數百則即可視為連續變數套用 PDF 處理", "is_correct": false, "trap_type": "大量整數仍為離散"}
+        {
+          "text": "顧客在客服頁面停留的秒數,可取任意非負實數,適合用機率密度函數(PDF)建模",
+          "is_correct": true
+        },
+        {
+          "text": "顧客一日內成功下單的訂單筆數,取值為 0、1、2、… 之非負整數計數,本質屬於連續隨機變數",
+          "is_correct": false,
+          "trap_type": "把可數整數誤判為連續"
+        },
+        {
+          "text": "顧客是否點擊推薦廣告(0/1)的二元結果,本質為連續變數可直接用 PDF 進行機率建模",
+          "is_correct": false,
+          "trap_type": "Bernoulli 為離散"
+        },
+        {
+          "text": "客服系統一天內收到的客訴件數,因件數可能達數百則即可視為連續變數套用 PDF 處理",
+          "is_correct": false,
+          "trap_type": "大量整數仍為離散"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -44,9 +77,23 @@
         },
         "hook": "口訣『離散用 P=,連續用 P≤』;可數 → 離散,實數區間 → 連續"
       },
-      "misconceptions": ["把離散看起來像連續(大量整數)當成連續", "誤以為計數變數可用 PDF"],
-      "related_node_ids": ["n_L22102_006"],
-      "tags": ["PDF", "PMF", "連續", "離散"]
+      "misconceptions": [
+        "把離散看起來像連續(大量整數)當成連續",
+        "誤以為計數變數可用 PDF"
+      ],
+      "related_node_ids": [
+        "n_L22102_006"
+      ],
+      "tags": [
+        "PDF",
+        "PMF",
+        "連續",
+        "離散"
+      ],
+      "boss_topics": [
+        "ecommerce",
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n10_002",
@@ -58,10 +105,25 @@
       "source_level": "L1",
       "stem": "某保險公司資料科學家在審視一張身高常態分佈的 PDF 圖時,發現某個身高點對應的 f(x) 數值為 1.6。下列對此現象的解釋,何者最為正確?",
       "options": [
-        {"text": "PDF 縱軸是『密度』而非機率,密度值本身可大於 1,只要全區間積分為 1 即合法", "is_correct": true},
-        {"text": "PDF 縱軸即代表機率值本身,出現 1.6 必為資料異常或繪圖比例錯誤導致超出正常合法範圍", "is_correct": false, "trap_type": "把密度誤當機率"},
-        {"text": "PDF 縱軸代表累積機率,1.6 表示已超過總體機率 100%,屬於圖表計算或座標錯誤的結果", "is_correct": false, "trap_type": "把 PDF 與 CDF 混淆"},
-        {"text": "PDF 縱軸代表頻率次數,1.6 必須四捨五入為 2,才能與離散資料的整數計數性質保持一致", "is_correct": false, "trap_type": "誤把 PDF 當頻率直方圖"}
+        {
+          "text": "PDF 縱軸是『密度』而非機率,密度值本身可大於 1,只要全區間積分為 1 即合法",
+          "is_correct": true
+        },
+        {
+          "text": "PDF 縱軸即代表機率值本身,出現 1.6 必為資料異常或繪圖比例錯誤導致超出正常合法範圍",
+          "is_correct": false,
+          "trap_type": "把密度誤當機率"
+        },
+        {
+          "text": "PDF 縱軸代表累積機率,1.6 表示已超過總體機率 100%,屬於圖表計算或座標錯誤的結果",
+          "is_correct": false,
+          "trap_type": "把 PDF 與 CDF 混淆"
+        },
+        {
+          "text": "PDF 縱軸代表頻率次數,1.6 必須四捨五入為 2,才能與離散資料的整數計數性質保持一致",
+          "is_correct": false,
+          "trap_type": "誤把 PDF 當頻率直方圖"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -73,9 +135,21 @@
         },
         "hook": "PMF 縱軸 ≤ 1(機率);PDF 縱軸可 > 1(密度);區別記在心"
       },
-      "misconceptions": ["以為 PDF 縱軸必 ≤ 1", "把 PDF 與 CDF 混為一談"],
-      "related_node_ids": ["n_L22102_002"],
-      "tags": ["PDF", "密度", "連續"]
+      "misconceptions": [
+        "以為 PDF 縱軸必 ≤ 1",
+        "把 PDF 與 CDF 混為一談"
+      ],
+      "related_node_ids": [
+        "n_L22102_002"
+      ],
+      "tags": [
+        "PDF",
+        "密度",
+        "連續"
+      ],
+      "boss_topics": [
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n10_003",
@@ -87,10 +161,25 @@
       "source_level": "L1",
       "stem": "某物流公司資料工程師希望用機器學習預測『單一包裹配送時間』(分鐘,連續)與『單日異常配送件數』(整數,離散)。下列關於 loss 函數與分佈假設的配對何者最為正確?",
       "options": [
-        {"text": "配送時間用 MSE(對應 Normal PDF);異常件數用 Poisson loss(對應 Poisson PMF)分別呼應連續離散建模", "is_correct": true},
-        {"text": "配送時間用 Cross-Entropy(對應 Bernoulli);異常件數用 MSE(對應 Normal),兩者一律視為對稱連續變數迴歸處理即可", "is_correct": false, "trap_type": "連續/離散與 loss 配對顛倒"},
-        {"text": "兩者皆用 MSE 即可,把離散事件件數當成連續數值放進迴歸模型,不必特別處理 PMF 與 PDF 分佈差異", "is_correct": false, "trap_type": "忽略 PMF/PDF 差異"},
-        {"text": "兩者皆用 Cross-Entropy,將分鐘數先離散化為類別後即可直接用分類模型套用 BCE 損失函數計算", "is_correct": false, "trap_type": "強行離散化犧牲資訊"}
+        {
+          "text": "配送時間用 MSE(對應 Normal PDF);異常件數用 Poisson loss(對應 Poisson PMF)分別呼應連續離散建模",
+          "is_correct": true
+        },
+        {
+          "text": "配送時間用 Cross-Entropy(對應 Bernoulli);異常件數用 MSE(對應 Normal),兩者一律視為對稱連續變數迴歸處理即可",
+          "is_correct": false,
+          "trap_type": "連續/離散與 loss 配對顛倒"
+        },
+        {
+          "text": "兩者皆用 MSE 即可,把離散事件件數當成連續數值放進迴歸模型,不必特別處理 PMF 與 PDF 分佈差異",
+          "is_correct": false,
+          "trap_type": "忽略 PMF/PDF 差異"
+        },
+        {
+          "text": "兩者皆用 Cross-Entropy,將分鐘數先離散化為類別後即可直接用分類模型套用 BCE 損失函數計算",
+          "is_correct": false,
+          "trap_type": "強行離散化犧牲資訊"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -102,9 +191,24 @@
         },
         "hook": "Loss = 分佈負對數似然:MSE↔Normal、CE↔Bernoulli、Poisson loss↔Poisson"
       },
-      "misconceptions": ["以為 MSE 通吃所有連續/離散", "忽略 loss 背後的分佈假設"],
-      "related_node_ids": ["n_L22102_004", "n_L22102_006"],
-      "tags": ["loss", "MSE", "Poisson", "分佈假設"]
+      "misconceptions": [
+        "以為 MSE 通吃所有連續/離散",
+        "忽略 loss 背後的分佈假設"
+      ],
+      "related_node_ids": [
+        "n_L22102_004",
+        "n_L22102_006"
+      ],
+      "tags": [
+        "loss",
+        "MSE",
+        "Poisson",
+        "分佈假設"
+      ],
+      "boss_topics": [
+        "logistics",
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n10_004",
@@ -116,10 +220,25 @@
       "source_level": "L1",
       "stem": "某教育機構統計全市國中生數學成績近似常態分佈,平均 70 分、標準差 10 分。根據 68-95-99.7 法則,落於 60~80 分區間的學生比例最接近下列何者?",
       "options": [
-        {"text": "約 68%,因為 60 與 80 分恰為平均數 70 加減 1 個標準差(±1σ)範圍", "is_correct": true},
-        {"text": "約 95%,因為 60 與 80 分構成 ±2σ 範圍且涵蓋接近全體絕大多數常態樣本", "is_correct": false, "trap_type": "把 ±1σ 誤看成 ±2σ"},
-        {"text": "約 50%,因為 60 與 80 分分別位於中位數兩側並各佔分佈一半剛好構成中央 50%", "is_correct": false, "trap_type": "誤以為對稱即 50%"},
-        {"text": "約 99.7%,因為 60 與 80 分覆蓋了常態分佈的主要鐘形區段近乎全部資料範圍", "is_correct": false, "trap_type": "把 ±1σ 誤當 ±3σ"}
+        {
+          "text": "約 68%,因為 60 與 80 分恰為平均數 70 加減 1 個標準差(±1σ)範圍",
+          "is_correct": true
+        },
+        {
+          "text": "約 95%,因為 60 與 80 分構成 ±2σ 範圍且涵蓋接近全體絕大多數常態樣本",
+          "is_correct": false,
+          "trap_type": "把 ±1σ 誤看成 ±2σ"
+        },
+        {
+          "text": "約 50%,因為 60 與 80 分分別位於中位數兩側並各佔分佈一半剛好構成中央 50%",
+          "is_correct": false,
+          "trap_type": "誤以為對稱即 50%"
+        },
+        {
+          "text": "約 99.7%,因為 60 與 80 分覆蓋了常態分佈的主要鐘形區段近乎全部資料範圍",
+          "is_correct": false,
+          "trap_type": "把 ±1σ 誤當 ±3σ"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -131,9 +250,22 @@
         },
         "hook": "68-95-99.7 對 ±1σ / ±2σ / ±3σ 一一對應,先算 σ 倍數再查比例"
       },
-      "misconceptions": ["把 ±1σ 與 ±2σ 比例記反", "忽略先算 σ 倍數"],
-      "related_node_ids": ["n_L22102_001"],
-      "tags": ["常態", "68-95-99.7", "經驗法則"]
+      "misconceptions": [
+        "把 ±1σ 與 ±2σ 比例記反",
+        "忽略先算 σ 倍數"
+      ],
+      "related_node_ids": [
+        "n_L22102_001"
+      ],
+      "tags": [
+        "常態",
+        "68-95-99.7",
+        "經驗法則"
+      ],
+      "boss_topics": [
+        "education",
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n10_005",
@@ -145,10 +277,25 @@
       "source_level": "L1",
       "stem": "某金融風控團隊對交易金額計算 Z 分數作為異常偵測指標,某筆交易的 Z 值為 +2.5。下列何項解讀最為正確?",
       "options": [
-        {"text": "該筆交易金額高於平均 2.5 個標準差,屬常態下發生機率約 0.6% 的右尾少見值", "is_correct": true},
-        {"text": "該筆交易發生機率恰為 2.5%,因 Z 分數本身就是該觀察值對應的累積機率值或單尾百分位", "is_correct": false, "trap_type": "把 Z 當機率"},
-        {"text": "該筆交易金額為平均值的 2.5 倍,因 Z 公式分子分母相除自然得到對平均的相對倍率", "is_correct": false, "trap_type": "Z 不是倍率"},
-        {"text": "該筆交易恰為常態分佈中位數,因 Z 為正值代表偏右恰位於中央偏移之核心對稱位置", "is_correct": false, "trap_type": "Z=0 才是中位數"}
+        {
+          "text": "該筆交易金額高於平均 2.5 個標準差,屬常態下發生機率約 0.6% 的右尾少見值",
+          "is_correct": true
+        },
+        {
+          "text": "該筆交易發生機率恰為 2.5%,因 Z 分數本身就是該觀察值對應的累積機率值或單尾百分位",
+          "is_correct": false,
+          "trap_type": "把 Z 當機率"
+        },
+        {
+          "text": "該筆交易金額為平均值的 2.5 倍,因 Z 公式分子分母相除自然得到對平均的相對倍率",
+          "is_correct": false,
+          "trap_type": "Z 不是倍率"
+        },
+        {
+          "text": "該筆交易恰為常態分佈中位數,因 Z 為正值代表偏右恰位於中央偏移之核心對稱位置",
+          "is_correct": false,
+          "trap_type": "Z=0 才是中位數"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -160,9 +307,21 @@
         },
         "hook": "Z = 標準差距;|Z|>2 已少見、|Z|>3 為 0.3% 級罕見"
       },
-      "misconceptions": ["把 Z 當機率", "把 Z 視為平均倍率"],
-      "related_node_ids": ["n_L22102_001"],
-      "tags": ["Z 分數", "標準化", "異常偵測"]
+      "misconceptions": [
+        "把 Z 當機率",
+        "把 Z 視為平均倍率"
+      ],
+      "related_node_ids": [
+        "n_L22102_001"
+      ],
+      "tags": [
+        "Z 分數",
+        "標準化",
+        "異常偵測"
+      ],
+      "boss_topics": [
+        "finance"
+      ]
     },
     {
       "id": "q_n10_006",
@@ -174,15 +333,54 @@
       "source_level": "L1",
       "stem": "某醫療檢驗機構觀察人群血壓近似常態分佈,平均 {mu} mmHg、標準差 {sigma} mmHg。某受測者血壓量測值為 {x} mmHg,其 Z 分數(取小數第 2 位)應為下列何者?",
       "stem_variables": {
-        "case_a": {"mu": "120", "sigma": "10", "x": "145", "answer": "2.50", "wrong1": "25.00", "wrong2": "-2.50", "wrong3": "0.40"},
-        "case_b": {"mu": "100", "sigma": "15", "x": "130", "answer": "2.00", "wrong1": "30.00", "wrong2": "-2.00", "wrong3": "0.50"},
-        "case_c": {"mu": "80", "sigma": "8", "x": "92", "answer": "1.50", "wrong1": "12.00", "wrong2": "-1.50", "wrong3": "0.67"}
+        "case_a": {
+          "mu": "120",
+          "sigma": "10",
+          "x": "145",
+          "answer": "2.50",
+          "wrong1": "25.00",
+          "wrong2": "-2.50",
+          "wrong3": "0.40"
+        },
+        "case_b": {
+          "mu": "100",
+          "sigma": "15",
+          "x": "130",
+          "answer": "2.00",
+          "wrong1": "30.00",
+          "wrong2": "-2.00",
+          "wrong3": "0.50"
+        },
+        "case_c": {
+          "mu": "80",
+          "sigma": "8",
+          "x": "92",
+          "answer": "1.50",
+          "wrong1": "12.00",
+          "wrong2": "-1.50",
+          "wrong3": "0.67"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "未除以 σ"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "分子顛倒符號"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "分子分母倒置"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "未除以 σ"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "分子顛倒符號"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "分子分母倒置"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -194,9 +392,22 @@
         },
         "hook": "Z 公式必背:Z = (x - μ) / σ;分子方向、別忘除 σ"
       },
-      "misconceptions": ["忘記除以 σ", "分子順序顛倒"],
-      "related_node_ids": ["n_L22102_001"],
-      "tags": ["Z 分數", "計算", "常態"]
+      "misconceptions": [
+        "忘記除以 σ",
+        "分子順序顛倒"
+      ],
+      "related_node_ids": [
+        "n_L22102_001"
+      ],
+      "tags": [
+        "Z 分數",
+        "計算",
+        "常態"
+      ],
+      "boss_topics": [
+        "medical",
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n10_007",
@@ -208,10 +419,25 @@
       "source_level": "L1",
       "stem": "某政府部門統計某縣市每日通勤時間原本為右偏分佈,但抽取多個獨立隨機樣本後計算各組『樣本平均通勤時間』。下列關於樣本平均分佈的敘述何者最為正確?",
       "options": [
-        {"text": "依中央極限定理,樣本平均的抽樣分佈會趨近常態,即使母體本身為偏態", "is_correct": true},
-        {"text": "由於母體為右偏分佈,樣本平均的抽樣分佈也必然繼續呈現相同方向的右偏現象", "is_correct": false, "trap_type": "誤以為樣本平均繼承母體偏態"},
-        {"text": "樣本平均的分佈必為均勻分佈,因隨機抽樣會把母體所有結構打散成均等機率", "is_correct": false, "trap_type": "誤把抽樣與均勻混淆"},
-        {"text": "樣本平均不存在分佈概念,因為平均是單一數值無法形成任何抽樣分佈描述", "is_correct": false, "trap_type": "忽略抽樣分佈概念"}
+        {
+          "text": "依中央極限定理,樣本平均的抽樣分佈會趨近常態,即使母體本身為偏態",
+          "is_correct": true
+        },
+        {
+          "text": "由於母體為右偏分佈,樣本平均的抽樣分佈也必然繼續呈現相同方向的右偏現象",
+          "is_correct": false,
+          "trap_type": "誤以為樣本平均繼承母體偏態"
+        },
+        {
+          "text": "樣本平均的分佈必為均勻分佈,因隨機抽樣會把母體所有結構打散成均等機率",
+          "is_correct": false,
+          "trap_type": "誤把抽樣與均勻混淆"
+        },
+        {
+          "text": "樣本平均不存在分佈概念,因為平均是單一數值無法形成任何抽樣分佈描述",
+          "is_correct": false,
+          "trap_type": "忽略抽樣分佈概念"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -223,9 +449,21 @@
         },
         "hook": "CLT:n 大時樣本平均近似 N(μ, σ²/n),母體形狀不重要"
       },
-      "misconceptions": ["忽略 CLT", "以為樣本平均會繼承母體偏態"],
-      "related_node_ids": ["n_L22102_006"],
-      "tags": ["CLT", "抽樣分佈", "常態"]
+      "misconceptions": [
+        "忽略 CLT",
+        "以為樣本平均會繼承母體偏態"
+      ],
+      "related_node_ids": [
+        "n_L22102_006"
+      ],
+      "tags": [
+        "CLT",
+        "抽樣分佈",
+        "常態"
+      ],
+      "boss_topics": [
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n10_008",
@@ -237,10 +475,25 @@
       "source_level": "L1",
       "stem": "某電商團隊在 A/B Test 中對 200 位用戶展示新版按鈕,假設每位用戶點擊機率為 0.15 且彼此獨立。若以二項分佈建模點擊人數 X ~ B(200, 0.15),期望點擊人數 E[X] 與變異數 Var[X] 應為下列何者?",
       "options": [
-        {"text": "E[X] = 200×0.15 = 30,Var[X] = 200×0.15×0.85 = 25.5,依 np 與 np(1-p) 公式直接得出", "is_correct": true},
-        {"text": "E[X] = 0.15,Var[X] = 0.15×0.85 = 0.1275,此為單一 Bernoulli 期望與變異數而非二項分佈期望", "is_correct": false, "trap_type": "套 Bernoulli 而非二項"},
-        {"text": "E[X] = 200,Var[X] = 200,將 n 直接當成期望且忽略成功機率 p 在二項分佈中的乘數效應", "is_correct": false, "trap_type": "忽略 p 直接用 n"},
-        {"text": "E[X] = 100,Var[X] = 50,將二項視為對稱分佈而把 p 預設為 0.5 後再代入 n/2 與 n/4 公式", "is_correct": false, "trap_type": "預設 p=0.5"}
+        {
+          "text": "E[X] = 200×0.15 = 30,Var[X] = 200×0.15×0.85 = 25.5,依 np 與 np(1-p) 公式直接得出",
+          "is_correct": true
+        },
+        {
+          "text": "E[X] = 0.15,Var[X] = 0.15×0.85 = 0.1275,此為單一 Bernoulli 期望與變異數而非二項分佈期望",
+          "is_correct": false,
+          "trap_type": "套 Bernoulli 而非二項"
+        },
+        {
+          "text": "E[X] = 200,Var[X] = 200,將 n 直接當成期望且忽略成功機率 p 在二項分佈中的乘數效應",
+          "is_correct": false,
+          "trap_type": "忽略 p 直接用 n"
+        },
+        {
+          "text": "E[X] = 100,Var[X] = 50,將二項視為對稱分佈而把 p 預設為 0.5 後再代入 n/2 與 n/4 公式",
+          "is_correct": false,
+          "trap_type": "預設 p=0.5"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -252,9 +505,22 @@
         },
         "hook": "二項招牌:E = np,Var = np(1-p);Bernoulli 是 n=1 特例"
       },
-      "misconceptions": ["把 Bernoulli 與二項混淆", "誤以為 p 預設 0.5"],
-      "related_node_ids": ["n_L22102_001"],
-      "tags": ["二項", "Bernoulli", "期望"]
+      "misconceptions": [
+        "把 Bernoulli 與二項混淆",
+        "誤以為 p 預設 0.5"
+      ],
+      "related_node_ids": [
+        "n_L22102_001"
+      ],
+      "tags": [
+        "二項",
+        "Bernoulli",
+        "期望"
+      ],
+      "boss_topics": [
+        "ecommerce",
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n10_009",
@@ -266,10 +532,25 @@
       "source_level": "L1",
       "stem": "某電信公司客服訓練評估從 500 位話務員中隨機『抽完不放回』選 20 人考核,記錄通過考核人數 X。下列關於以二項分佈 B(20, p) 直接建模 X 的敘述何者最為正確?",
       "options": [
-        {"text": "不放回抽樣使各次結果相依,嚴格不符二項獨立假設;但若樣本 / 母體比例小,可近似使用二項", "is_correct": true},
-        {"text": "不放回抽樣完全等同放回抽樣,可以無條件直接套用二項分佈公式進行考核分析", "is_correct": false, "trap_type": "忽略獨立假設"},
-        {"text": "不放回抽樣只能改用常態分佈直接建模,因二項分佈只適用於連續性的成敗試驗類型", "is_correct": false, "trap_type": "二項本為離散,且不放回對應超幾何"},
-        {"text": "不放回抽樣的正確分佈為 Poisson,因為每次抽取後成功率穩定減少符合 Poisson 之假設", "is_correct": false, "trap_type": "套 Poisson 為錯誤"}
+        {
+          "text": "不放回抽樣使各次結果相依,嚴格不符二項獨立假設;但若樣本 / 母體比例小,可近似使用二項",
+          "is_correct": true
+        },
+        {
+          "text": "不放回抽樣完全等同放回抽樣,可以無條件直接套用二項分佈公式進行考核分析",
+          "is_correct": false,
+          "trap_type": "忽略獨立假設"
+        },
+        {
+          "text": "不放回抽樣只能改用常態分佈直接建模,因二項分佈只適用於連續性的成敗試驗類型",
+          "is_correct": false,
+          "trap_type": "二項本為離散,且不放回對應超幾何"
+        },
+        {
+          "text": "不放回抽樣的正確分佈為 Poisson,因為每次抽取後成功率穩定減少符合 Poisson 之假設",
+          "is_correct": false,
+          "trap_type": "套 Poisson 為錯誤"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -281,9 +562,22 @@
         },
         "hook": "不放回精確 = 超幾何;若樣本/母體 ≪ 10% 才安心用二項近似"
       },
-      "misconceptions": ["把不放回直接套二項", "誤把超幾何當 Poisson"],
-      "related_node_ids": ["n_L22102_004"],
-      "tags": ["二項", "獨立性", "超幾何"]
+      "misconceptions": [
+        "把不放回直接套二項",
+        "誤把超幾何當 Poisson"
+      ],
+      "related_node_ids": [
+        "n_L22102_004"
+      ],
+      "tags": [
+        "二項",
+        "獨立性",
+        "超幾何"
+      ],
+      "boss_topics": [
+        "telecom",
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n10_010",
@@ -295,10 +589,25 @@
       "source_level": "L1",
       "stem": "某科技公司資料科學家為點擊率(CTR)預測模型挑選損失函數時,將每筆樣本視為 Bernoulli 試驗。下列哪項損失函數與 Bernoulli 分佈的負對數似然在數學形式上等價?",
       "options": [
-        {"text": "二元交叉熵(BCE):-[y log p + (1-y) log(1-p)]", "is_correct": true},
-        {"text": "均方誤差(MSE):(y - p)²,源自高斯雜訊假設下的常態分佈負對數似然推導之迴歸 loss 數學形式", "is_correct": false, "trap_type": "MSE 對應常態而非 Bernoulli"},
-        {"text": "Huber loss:小誤差用二次大誤差用線性,源自含截尾(truncated)的常態分佈穩健估計推導之損失函數", "is_correct": false, "trap_type": "Huber 不對應 Bernoulli"},
-        {"text": "Hinge loss:max(0, 1 - y·f(x)),源自支援向量機(SVM)之最大邊際分類器最佳化目標函數設計", "is_correct": false, "trap_type": "Hinge 與 Bernoulli 對應失敗"}
+        {
+          "text": "二元交叉熵(BCE):-[y log p + (1-y) log(1-p)]",
+          "is_correct": true
+        },
+        {
+          "text": "均方誤差(MSE):(y - p)²,源自高斯雜訊假設下的常態分佈負對數似然推導之迴歸 loss 數學形式",
+          "is_correct": false,
+          "trap_type": "MSE 對應常態而非 Bernoulli"
+        },
+        {
+          "text": "Huber loss:小誤差用二次大誤差用線性,源自含截尾(truncated)的常態分佈穩健估計推導之損失函數",
+          "is_correct": false,
+          "trap_type": "Huber 不對應 Bernoulli"
+        },
+        {
+          "text": "Hinge loss:max(0, 1 - y·f(x)),源自支援向量機(SVM)之最大邊際分類器最佳化目標函數設計",
+          "is_correct": false,
+          "trap_type": "Hinge 與 Bernoulli 對應失敗"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -310,9 +619,21 @@
         },
         "hook": "對數似然 ↔ loss:Bernoulli↔BCE、Normal↔MSE、Poisson↔Poisson loss"
       },
-      "misconceptions": ["分類任務用 MSE", "忽略 loss 背後的機率假設"],
-      "related_node_ids": ["n_L22102_001"],
-      "tags": ["Bernoulli", "BCE", "loss"]
+      "misconceptions": [
+        "分類任務用 MSE",
+        "忽略 loss 背後的機率假設"
+      ],
+      "related_node_ids": [
+        "n_L22102_001"
+      ],
+      "tags": [
+        "Bernoulli",
+        "BCE",
+        "loss"
+      ],
+      "boss_topics": [
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n10_011",
@@ -324,10 +645,25 @@
       "source_level": "L1",
       "stem": "某餐飲外送平台分析發現,某熱門店家每小時接到的訂單數 X 近似 Poisson(λ=8)。下列關於 X 之期望與變異數的敘述何者最為正確?",
       "options": [
-        {"text": "E[X] = Var[X] = λ = 8,期望與變異數相等是 Poisson 分佈的招牌特徵", "is_correct": true},
-        {"text": "E[X] = 8,Var[X] = 64,變異數為期望的平方且皆與 λ 之冪次直接相關連動", "is_correct": false, "trap_type": "誤把 Var 寫成 λ²"},
-        {"text": "E[X] = 8,Var[X] = √8,變異數需開根號才能符合與標準差一致的單位描述", "is_correct": false, "trap_type": "把 Var 與 Std 混淆"},
-        {"text": "E[X] = 0,Var[X] = 8,Poisson 分佈期望恆為零僅變異數會隨 λ 線性放大", "is_correct": false, "trap_type": "錯認 Poisson 期望"}
+        {
+          "text": "E[X] = Var[X] = λ = 8,期望與變異數相等是 Poisson 分佈的招牌特徵",
+          "is_correct": true
+        },
+        {
+          "text": "E[X] = 8,Var[X] = 64,變異數為期望的平方且皆與 λ 之冪次直接相關連動",
+          "is_correct": false,
+          "trap_type": "誤把 Var 寫成 λ²"
+        },
+        {
+          "text": "E[X] = 8,Var[X] = √8,變異數需開根號才能符合與標準差一致的單位描述",
+          "is_correct": false,
+          "trap_type": "把 Var 與 Std 混淆"
+        },
+        {
+          "text": "E[X] = 0,Var[X] = 8,Poisson 分佈期望恆為零僅變異數會隨 λ 線性放大",
+          "is_correct": false,
+          "trap_type": "錯認 Poisson 期望"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -339,9 +675,21 @@
         },
         "hook": "Poisson 招牌:E = Var = λ;Var/Mean ≫ 1 警覺過離散"
       },
-      "misconceptions": ["把 Poisson Var 寫成 λ²", "誤把 Var 與 Std 混淆"],
-      "related_node_ids": ["n_L22102_003"],
-      "tags": ["Poisson", "期望", "變異數"]
+      "misconceptions": [
+        "把 Poisson Var 寫成 λ²",
+        "誤把 Var 與 Std 混淆"
+      ],
+      "related_node_ids": [
+        "n_L22102_003"
+      ],
+      "tags": [
+        "Poisson",
+        "期望",
+        "變異數"
+      ],
+      "boss_topics": [
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n10_012",
@@ -353,10 +701,25 @@
       "source_level": "L1",
       "stem": "某能源公司分析變電所每月設備跳脫次數,記錄 24 個月後得到樣本平均 4.0 次、樣本變異數 16.0 次²。下列對此資料分佈最為適當的判讀為何?",
       "options": [
-        {"text": "Var/Mean = 4 ≫ 1 顯示過離散(overdispersion),應改用 Negative Binomial 建模", "is_correct": true},
-        {"text": "Var = 16、Mean = 4 完全符合 Poisson 分佈假設,因 16 恰為 4 的平方剛好對應 Poisson λ² 之數值結構特徵", "is_correct": false, "trap_type": "誤以為 Var = λ²"},
-        {"text": "Var > Mean 屬於欠離散(underdispersion),建議改用負二項分佈以補強分佈尾部不足之機率質量結構", "is_correct": false, "trap_type": "過離散與欠離散名詞顛倒"},
-        {"text": "資料應直接改套用常態分佈,因樣本變異數較大代表資料近似常態鐘形,已脫離原本計數變數的離散性質", "is_correct": false, "trap_type": "計數仍離散"}
+        {
+          "text": "Var/Mean = 4 ≫ 1 顯示過離散(overdispersion),應改用 Negative Binomial 建模",
+          "is_correct": true
+        },
+        {
+          "text": "Var = 16、Mean = 4 完全符合 Poisson 分佈假設,因 16 恰為 4 的平方剛好對應 Poisson λ² 之數值結構特徵",
+          "is_correct": false,
+          "trap_type": "誤以為 Var = λ²"
+        },
+        {
+          "text": "Var > Mean 屬於欠離散(underdispersion),建議改用負二項分佈以補強分佈尾部不足之機率質量結構",
+          "is_correct": false,
+          "trap_type": "過離散與欠離散名詞顛倒"
+        },
+        {
+          "text": "資料應直接改套用常態分佈,因樣本變異數較大代表資料近似常態鐘形,已脫離原本計數變數的離散性質",
+          "is_correct": false,
+          "trap_type": "計數仍離散"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -368,9 +731,23 @@
         },
         "hook": "Var/Mean = 1 → Poisson;> 1 → 過離散用 NB;< 1 → 欠離散"
       },
-      "misconceptions": ["看到計數即套 Poisson 不檢驗", "過離散與欠離散名詞顛倒"],
-      "related_node_ids": ["n_L22102_003", "n_L22102_006"],
-      "tags": ["Poisson", "過離散", "Negative Binomial"]
+      "misconceptions": [
+        "看到計數即套 Poisson 不檢驗",
+        "過離散與欠離散名詞顛倒"
+      ],
+      "related_node_ids": [
+        "n_L22102_003",
+        "n_L22102_006"
+      ],
+      "tags": [
+        "Poisson",
+        "過離散",
+        "Negative Binomial"
+      ],
+      "boss_topics": [
+        "energy",
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n10_013",
@@ -382,15 +759,51 @@
       "source_level": "L1",
       "stem": "某製造廠生產線每小時平均出現 {lam} 件瑕疵,瑕疵發生符合 Poisson 分佈。請問下個小時恰好出現 {k} 件瑕疵的機率 P(X={k})(四捨五入小數第 3 位,e ≈ 2.71828)最接近下列何者?",
       "stem_variables": {
-        "case_a": {"lam": "2", "k": "0", "answer": "0.135", "wrong1": "0.271", "wrong2": "0.500", "wrong3": "0.000"},
-        "case_b": {"lam": "3", "k": "2", "answer": "0.224", "wrong1": "0.149", "wrong2": "0.300", "wrong3": "0.448"},
-        "case_c": {"lam": "1", "k": "1", "answer": "0.368", "wrong1": "0.500", "wrong2": "1.000", "wrong3": "0.184"}
+        "case_a": {
+          "lam": "2",
+          "k": "0",
+          "answer": "0.135",
+          "wrong1": "0.271",
+          "wrong2": "0.500",
+          "wrong3": "0.000"
+        },
+        "case_b": {
+          "lam": "3",
+          "k": "2",
+          "answer": "0.224",
+          "wrong1": "0.149",
+          "wrong2": "0.300",
+          "wrong3": "0.448"
+        },
+        "case_c": {
+          "lam": "1",
+          "k": "1",
+          "answer": "0.368",
+          "wrong1": "0.500",
+          "wrong2": "1.000",
+          "wrong3": "0.184"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "錯位 k 或漏 k!"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤用比例直觀"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "計算錯位"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "錯位 k 或漏 k!"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤用比例直觀"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "計算錯位"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -402,9 +815,22 @@
         },
         "hook": "Poisson PMF 三件套:e^(-λ)、λ 的 k 次方、k 階乘"
       },
-      "misconceptions": ["忘記 k! 項", "把平均當機率"],
-      "related_node_ids": ["n_L22102_003"],
-      "tags": ["Poisson", "PMF", "計算"]
+      "misconceptions": [
+        "忘記 k! 項",
+        "把平均當機率"
+      ],
+      "related_node_ids": [
+        "n_L22102_003"
+      ],
+      "tags": [
+        "Poisson",
+        "PMF",
+        "計算"
+      ],
+      "boss_topics": [
+        "manufacturing",
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n10_014",
@@ -416,10 +842,25 @@
       "source_level": "L1",
       "stem": "某保險公司資料團隊建模『罕見大額理賠次數』時,觀察到 n=10000 筆保單中極少數會出險,出險機率 p≈0.0005。下列關於以 Poisson 近似二項 B(n, p) 的條件何者最為正確?",
       "options": [
-        {"text": "當 n 大、p 小且 np = λ 固定,二項分佈可近似為 Poisson(λ);此處 np=5 適合近似", "is_correct": true},
-        {"text": "只要 n 大就可直接套常態近似(np≥5 且 n(1-p)≥5),Poisson 近似在 n 大時並不適用", "is_correct": false, "trap_type": "p 極小時常態近似不準"},
-        {"text": "二項與 Poisson 無近似關係,任何 n 與 p 組合皆不可進行兩分佈間的數學近似轉換", "is_correct": false, "trap_type": "否認標準極限關係"},
-        {"text": "近似條件為 p > 0.5 且 n 小,因 Poisson 主要描述高機率事件下的計數分佈特性表現", "is_correct": false, "trap_type": "把 Poisson 條件顛倒"}
+        {
+          "text": "當 n 大、p 小且 np = λ 固定,二項分佈可近似為 Poisson(λ);此處 np=5 適合近似",
+          "is_correct": true
+        },
+        {
+          "text": "只要 n 大就可直接套常態近似(np≥5 且 n(1-p)≥5),Poisson 近似在 n 大時並不適用",
+          "is_correct": false,
+          "trap_type": "p 極小時常態近似不準"
+        },
+        {
+          "text": "二項與 Poisson 無近似關係,任何 n 與 p 組合皆不可進行兩分佈間的數學近似轉換",
+          "is_correct": false,
+          "trap_type": "否認標準極限關係"
+        },
+        {
+          "text": "近似條件為 p > 0.5 且 n 小,因 Poisson 主要描述高機率事件下的計數分佈特性表現",
+          "is_correct": false,
+          "trap_type": "把 Poisson 條件顛倒"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -431,9 +872,22 @@
         },
         "hook": "Poisson = 罕見事件二項極限;n 大、p 小、np = λ"
       },
-      "misconceptions": ["p 極小時硬套常態近似", "把 Poisson 適用條件顛倒"],
-      "related_node_ids": ["n_L22102_003"],
-      "tags": ["Poisson", "二項", "近似"]
+      "misconceptions": [
+        "p 極小時硬套常態近似",
+        "把 Poisson 適用條件顛倒"
+      ],
+      "related_node_ids": [
+        "n_L22102_003"
+      ],
+      "tags": [
+        "Poisson",
+        "二項",
+        "近似"
+      ],
+      "boss_topics": [
+        "finance",
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n10_015",
@@ -445,10 +899,25 @@
       "source_level": "L1",
       "stem": "某旅遊網站客服系統的『下一通來電等待時間』近似指數分佈,平均等待時間為 5 分鐘。下列關於此分佈參數 λ 的敘述何者最為正確?",
       "options": [
-        {"text": "λ = 1 / 平均 = 1/5 = 0.2 次/分鐘,代表單位時間平均事件發生率", "is_correct": true},
-        {"text": "λ = 平均 = 5,因為指數分佈參數 λ 就是平均值本身且無需透過倒數轉換", "is_correct": false, "trap_type": "把 λ 與 1/λ 混淆"},
-        {"text": "λ = 平均² = 25,因指數變異等於平均的平方故 λ 需從變異數開根號才能正確還原", "is_correct": false, "trap_type": "誤套變異公式"},
-        {"text": "λ = √5 ≈ 2.24,將平均開根號得到事件發生率符合單位時間平方根之轉換規則", "is_correct": false, "trap_type": "亂套開根號"}
+        {
+          "text": "λ = 1 / 平均 = 1/5 = 0.2 次/分鐘,代表單位時間平均事件發生率",
+          "is_correct": true
+        },
+        {
+          "text": "λ = 平均 = 5,因為指數分佈參數 λ 就是平均值本身且無需透過倒數轉換",
+          "is_correct": false,
+          "trap_type": "把 λ 與 1/λ 混淆"
+        },
+        {
+          "text": "λ = 平均² = 25,因指數變異等於平均的平方故 λ 需從變異數開根號才能正確還原",
+          "is_correct": false,
+          "trap_type": "誤套變異公式"
+        },
+        {
+          "text": "λ = √5 ≈ 2.24,將平均開根號得到事件發生率符合單位時間平方根之轉換規則",
+          "is_correct": false,
+          "trap_type": "亂套開根號"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -460,9 +929,21 @@
         },
         "hook": "指數招牌:E = 1/λ、Var = 1/λ²;λ 是發生率,1/λ 是平均間隔"
       },
-      "misconceptions": ["把 λ 與 1/λ 混淆", "把指數變異公式套錯位置"],
-      "related_node_ids": ["n_L22102_004"],
-      "tags": ["指數", "λ", "等待時間"]
+      "misconceptions": [
+        "把 λ 與 1/λ 混淆",
+        "把指數變異公式套錯位置"
+      ],
+      "related_node_ids": [
+        "n_L22102_004"
+      ],
+      "tags": [
+        "指數",
+        "λ",
+        "等待時間"
+      ],
+      "boss_topics": [
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n10_016",
@@ -474,10 +955,25 @@
       "source_level": "L1",
       "stem": "某半導體廠以 Weibull 分佈建模零件壽命,實測形狀參數 k = 0.6。下列對該零件故障率行為的解讀,何者最為正確?",
       "options": [
-        {"text": "k < 1 對應遞減故障率,常見於『嬰兒期早夭』:剛上線零件最易故障,撐過初期後越穩定", "is_correct": true},
-        {"text": "k < 1 對應遞增故障率,代表零件越用越容易壞,屬於『老化期』的可靠度衰退典型曲線階段", "is_correct": false, "trap_type": "k<1 與 k>1 解讀顛倒"},
-        {"text": "k < 1 等同於指數分佈,故障率隨時間維持為定值且具有無記憶性的標準連續分佈統計特性", "is_correct": false, "trap_type": "指數為 k=1"},
-        {"text": "k < 1 表示故障率呈雙峰分佈,代表零件在早期與晚期皆有高故障率而中段壽命相對穩定運作", "is_correct": false, "trap_type": "Weibull 單一形狀參數無雙峰"}
+        {
+          "text": "k < 1 對應遞減故障率,常見於『嬰兒期早夭』:剛上線零件最易故障,撐過初期後越穩定",
+          "is_correct": true
+        },
+        {
+          "text": "k < 1 對應遞增故障率,代表零件越用越容易壞,屬於『老化期』的可靠度衰退典型曲線階段",
+          "is_correct": false,
+          "trap_type": "k<1 與 k>1 解讀顛倒"
+        },
+        {
+          "text": "k < 1 等同於指數分佈,故障率隨時間維持為定值且具有無記憶性的標準連續分佈統計特性",
+          "is_correct": false,
+          "trap_type": "指數為 k=1"
+        },
+        {
+          "text": "k < 1 表示故障率呈雙峰分佈,代表零件在早期與晚期皆有高故障率而中段壽命相對穩定運作",
+          "is_correct": false,
+          "trap_type": "Weibull 單一形狀參數無雙峰"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -489,9 +985,22 @@
         },
         "hook": "Weibull 浴缸曲線:k<1 嬰兒期、k=1 隨機(指數)、k>1 老化"
       },
-      "misconceptions": ["把 k<1 與 k>1 解讀顛倒", "誤以為 k<1 仍是指數"],
-      "related_node_ids": ["n_L22102_006"],
-      "tags": ["Weibull", "故障率", "可靠度"]
+      "misconceptions": [
+        "把 k<1 與 k>1 解讀顛倒",
+        "誤以為 k<1 仍是指數"
+      ],
+      "related_node_ids": [
+        "n_L22102_006"
+      ],
+      "tags": [
+        "Weibull",
+        "故障率",
+        "可靠度"
+      ],
+      "boss_topics": [
+        "manufacturing",
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n10_017",
@@ -503,10 +1012,25 @@
       "source_level": "L1",
       "stem": "某網路服務公司分析客戶兩次斷線之間的時間間隔,工程師發現:不論先前已穩定運行多久,『再等 t 分鐘斷線』的機率始終一致。此特性最適合以下列哪一性質與分佈描述?",
       "options": [
-        {"text": "無記憶性(memoryless property),為指數分佈的典型特徵且唯一連續分佈具此性質", "is_correct": true},
-        {"text": "中央極限性(CLT),為常態分佈的特徵代表大量獨立隨機變數之和必然趨近常態分佈", "is_correct": false, "trap_type": "把 CLT 與無記憶性混淆"},
-        {"text": "對稱性(symmetry),為常態鐘形分佈最重要的對稱性質且能讓平均中位數眾數三者相等", "is_correct": false, "trap_type": "常態對稱與無記憶無關"},
-        {"text": "重尾性(heavy tail),為 Student t 分佈的招牌特徵且自由度越小尾部越厚的描述方式", "is_correct": false, "trap_type": "重尾屬於 t 分佈"}
+        {
+          "text": "無記憶性(memoryless property),為指數分佈的典型特徵且唯一連續分佈具此性質",
+          "is_correct": true
+        },
+        {
+          "text": "中央極限性(CLT),為常態分佈的特徵代表大量獨立隨機變數之和必然趨近常態分佈",
+          "is_correct": false,
+          "trap_type": "把 CLT 與無記憶性混淆"
+        },
+        {
+          "text": "對稱性(symmetry),為常態鐘形分佈最重要的對稱性質且能讓平均中位數眾數三者相等",
+          "is_correct": false,
+          "trap_type": "常態對稱與無記憶無關"
+        },
+        {
+          "text": "重尾性(heavy tail),為 Student t 分佈的招牌特徵且自由度越小尾部越厚的描述方式",
+          "is_correct": false,
+          "trap_type": "重尾屬於 t 分佈"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -518,9 +1042,22 @@
         },
         "hook": "無記憶性 = 指數(連續)/ 幾何(離散),『過去等多久不影響未來』"
       },
-      "misconceptions": ["把無記憶性與 CLT 混淆", "把指數誤當常態"],
-      "related_node_ids": ["n_L22102_004"],
-      "tags": ["指數", "無記憶性", "等待"]
+      "misconceptions": [
+        "把無記憶性與 CLT 混淆",
+        "把指數誤當常態"
+      ],
+      "related_node_ids": [
+        "n_L22102_004"
+      ],
+      "tags": [
+        "指數",
+        "無記憶性",
+        "等待"
+      ],
+      "boss_topics": [
+        "telecom",
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n10_018",
@@ -532,10 +1069,25 @@
       "source_level": "L1",
       "stem": "某電商團隊建模『單一顧客客單價』時觀察到資料明顯右偏厚尾(少數高金額訂單拉長右側尾巴)。下列分佈選擇與處理方式何者最為適當?",
       "options": [
-        {"text": "對客單價取 log 轉常態後建模,或直接套用 Log-Normal 分佈以匹配右偏厚尾結構", "is_correct": true},
-        {"text": "直接以常態分佈建模,因樣本數夠大依中央極限定理 CLT 單筆資料即可自動轉為常態分佈型態", "is_correct": false, "trap_type": "CLT 適用於樣本平均不是單筆"},
-        {"text": "以二項分佈建模,因金額由多筆消費累加而成,可用 n×p 框架描述其右偏特性的疊加結果", "is_correct": false, "trap_type": "金額為連續非二項"},
-        {"text": "以指數分佈建模,因指數分佈為右偏連續,可直接套用任何含正向偏態之金額類型資料分析", "is_correct": false, "trap_type": "指數適合等待時間非金額"}
+        {
+          "text": "對客單價取 log 轉常態後建模,或直接套用 Log-Normal 分佈以匹配右偏厚尾結構",
+          "is_correct": true
+        },
+        {
+          "text": "直接以常態分佈建模,因樣本數夠大依中央極限定理 CLT 單筆資料即可自動轉為常態分佈型態",
+          "is_correct": false,
+          "trap_type": "CLT 適用於樣本平均不是單筆"
+        },
+        {
+          "text": "以二項分佈建模,因金額由多筆消費累加而成,可用 n×p 框架描述其右偏特性的疊加結果",
+          "is_correct": false,
+          "trap_type": "金額為連續非二項"
+        },
+        {
+          "text": "以指數分佈建模,因指數分佈為右偏連續,可直接套用任何含正向偏態之金額類型資料分析",
+          "is_correct": false,
+          "trap_type": "指數適合等待時間非金額"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -547,9 +1099,23 @@
         },
         "hook": "右偏厚尾金額:Log-Normal 或 log 轉換 + Normal"
       },
-      "misconceptions": ["把 CLT 套到單筆資料", "把所有右偏資料套指數"],
-      "related_node_ids": ["n_L22102_002", "n_L22102_005"],
-      "tags": ["分佈選擇", "Log-Normal", "偏態"]
+      "misconceptions": [
+        "把 CLT 套到單筆資料",
+        "把所有右偏資料套指數"
+      ],
+      "related_node_ids": [
+        "n_L22102_002",
+        "n_L22102_005"
+      ],
+      "tags": [
+        "分佈選擇",
+        "Log-Normal",
+        "偏態"
+      ],
+      "boss_topics": [
+        "ecommerce",
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n10_019",
@@ -561,10 +1127,25 @@
       "source_level": "L1",
       "stem": "某政府交通部門為下列三項變數選擇分佈時,何項『情境 ↔ 分佈』配對最為適當?",
       "options": [
-        {"text": "每月某路口車禍件數(罕見計數)→ Poisson;車輛到站時間間隔 → 指數;駕駛年齡(對稱鐘形)→ Normal", "is_correct": true},
-        {"text": "車禍件數 → Normal(連續);到站間隔 → Bernoulli(二元);駕駛年齡 → Poisson(離散計數的代表分佈)", "is_correct": false, "trap_type": "三項全部配錯"},
-        {"text": "車禍件數 → Bernoulli;到站間隔 → Binomial;駕駛年齡 → 指數,以連續時間長度近似建模年齡之分佈", "is_correct": false, "trap_type": "三項全部誤套"},
-        {"text": "車禍件數 → 指數;到站間隔 → Poisson;駕駛年齡 → 二項,把成敗試驗的框架套用至連續年齡分佈中", "is_correct": false, "trap_type": "Poisson/Exp 順序顛倒"}
+        {
+          "text": "每月某路口車禍件數(罕見計數)→ Poisson;車輛到站時間間隔 → 指數;駕駛年齡(對稱鐘形)→ Normal",
+          "is_correct": true
+        },
+        {
+          "text": "車禍件數 → Normal(連續);到站間隔 → Bernoulli(二元);駕駛年齡 → Poisson(離散計數的代表分佈)",
+          "is_correct": false,
+          "trap_type": "三項全部配錯"
+        },
+        {
+          "text": "車禍件數 → Bernoulli;到站間隔 → Binomial;駕駛年齡 → 指數,以連續時間長度近似建模年齡之分佈",
+          "is_correct": false,
+          "trap_type": "三項全部誤套"
+        },
+        {
+          "text": "車禍件數 → 指數;到站間隔 → Poisson;駕駛年齡 → 二項,把成敗試驗的框架套用至連續年齡分佈中",
+          "is_correct": false,
+          "trap_type": "Poisson/Exp 順序顛倒"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -576,9 +1157,23 @@
         },
         "hook": "Poisson 計次數,指數計間隔,Normal 對稱鐘形 — 三者成對記憶"
       },
-      "misconceptions": ["把 Poisson 與指數順序搞反", "看到計數即無條件套常態"],
-      "related_node_ids": ["n_L22102_004", "n_L22102_005"],
-      "tags": ["分佈選擇", "情境", "配對"]
+      "misconceptions": [
+        "把 Poisson 與指數順序搞反",
+        "看到計數即無條件套常態"
+      ],
+      "related_node_ids": [
+        "n_L22102_004",
+        "n_L22102_005"
+      ],
+      "tags": [
+        "分佈選擇",
+        "情境",
+        "配對"
+      ],
+      "boss_topics": [
+        "smartcity",
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n10_020",
@@ -590,10 +1185,25 @@
       "source_level": "L1",
       "stem": "某金融科技公司資料團隊在建構信用評分模型時觀察到月所得明顯右偏。下列關於『右偏資料是否直接套用線性迴歸(MSE / Normal 假設)』的策略,何者最為適當?",
       "options": [
-        {"text": "應先以 log / Box-Cox 轉換使資料趨近常態,再套線性迴歸", "is_correct": true},
-        {"text": "可直接套線性迴歸而不需任何轉換,因為樣本量大時 MSE 對任意分佈皆穩健,前處理步驟即可全數省略", "is_correct": false, "trap_type": "忽略 MSE 假設"},
-        {"text": "應改用分類模型把所得直接分為高低兩類後用 BCE 取代 MSE,以避免右偏對迴歸殘差結構帶來偏差影響", "is_correct": false, "trap_type": "把連續硬切類別丟失資訊"},
-        {"text": "應強制標準化使資料變為 0 平均 1 標準差,即可消除右偏並讓資料完全符合常態分佈之所有假設條件", "is_correct": false, "trap_type": "StandardScaler 不改形狀"}
+        {
+          "text": "應先以 log / Box-Cox 轉換使資料趨近常態,再套線性迴歸",
+          "is_correct": true
+        },
+        {
+          "text": "可直接套線性迴歸而不需任何轉換,因為樣本量大時 MSE 對任意分佈皆穩健,前處理步驟即可全數省略",
+          "is_correct": false,
+          "trap_type": "忽略 MSE 假設"
+        },
+        {
+          "text": "應改用分類模型把所得直接分為高低兩類後用 BCE 取代 MSE,以避免右偏對迴歸殘差結構帶來偏差影響",
+          "is_correct": false,
+          "trap_type": "把連續硬切類別丟失資訊"
+        },
+        {
+          "text": "應強制標準化使資料變為 0 平均 1 標準差,即可消除右偏並讓資料完全符合常態分佈之所有假設條件",
+          "is_correct": false,
+          "trap_type": "StandardScaler 不改形狀"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -605,9 +1215,22 @@
         },
         "hook": "右偏三招:log / Box-Cox / Yeo-Johnson 轉常態;StandardScaler 不改形狀"
       },
-      "misconceptions": ["以為標準化能消除偏態", "對右偏資料不轉換直接迴歸"],
-      "related_node_ids": ["n_L22102_002"],
-      "tags": ["分佈選擇", "偏態轉換", "Box-Cox"]
+      "misconceptions": [
+        "以為標準化能消除偏態",
+        "對右偏資料不轉換直接迴歸"
+      ],
+      "related_node_ids": [
+        "n_L22102_002"
+      ],
+      "tags": [
+        "分佈選擇",
+        "偏態轉換",
+        "Box-Cox"
+      ],
+      "boss_topics": [
+        "finance",
+        "ml_bigdata"
+      ]
     }
   ]
 }

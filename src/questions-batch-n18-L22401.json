@@ -3,7 +3,10 @@
   "schema_version": "iron-rule-1+2+6",
   "generated_at": "2026-05-16",
   "batch": "N18 — 科二大數據 L22401 大數據與機器學習",
-  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "exam_target": {
+    "name": "IPAS AI 應用規劃師中級",
+    "date": "2026-05-23"
+  },
   "iron_rule_compliance": {
     "rule_1": "every question has explanation.correct + explanation.wrong + explanation.hook + misconceptions",
     "rule_2": "shuffle_options=true on every item; calculation items carry stem_variables multi-case with distinct answers",
@@ -14,9 +17,24 @@
   },
   "distribution": {
     "L22401_count": 20,
-    "by_node": {"n_L22401_001": 3, "n_L22401_002": 3, "n_L22401_003": 3, "n_L22401_004": 3, "n_L22401_005": 4, "n_L22401_006": 4},
-    "by_format": {"single_choice_text": 15, "single_choice_scenario": 3, "calculation": 2},
-    "by_difficulty": {"easy": 5, "medium": 11, "hard": 4}
+    "by_node": {
+      "n_L22401_001": 3,
+      "n_L22401_002": 3,
+      "n_L22401_003": 3,
+      "n_L22401_004": 3,
+      "n_L22401_005": 4,
+      "n_L22401_006": 4
+    },
+    "by_format": {
+      "single_choice_text": 15,
+      "single_choice_scenario": 3,
+      "calculation": 2
+    },
+    "by_difficulty": {
+      "easy": 5,
+      "medium": 11,
+      "hard": 4
+    }
   },
   "questions": [
     {
@@ -29,10 +47,25 @@
       "source_level": "L1",
       "stem": "某線上書店把訓練資料從 10 萬筆擴大到 100 萬筆,但模型在驗證集上的 AUC 僅從 0.86 提升到 0.865。下列何者最能正確解讀此一邊際遞減現象?",
       "options": [
-        {"text": "資料規模對模型表現有正向影響但呈邊際遞減,需檢視資料多樣性與品質而非單純加量", "is_correct": true},
-        {"text": "資料量再加 10 倍模型一定會繼續顯著進步,只是當前算力不足才壓抑了學習成效", "is_correct": false, "trap_type": "誤以為更多資料一定線性提升"},
-        {"text": "AUC 已達理論上限 1.0,模型無法再進步,後續任何資料擴增都不會改變表現", "is_correct": false, "trap_type": "0.865 遠未到 1.0"},
-        {"text": "驗證集太小導致觀察不到差異,只要增加驗證集筆數即可看到顯著提升", "is_correct": false, "trap_type": "誤把模型問題歸因為驗證集"}
+        {
+          "text": "資料規模對模型表現有正向影響但呈邊際遞減,需檢視資料多樣性與品質而非單純加量",
+          "is_correct": true
+        },
+        {
+          "text": "資料量再加 10 倍模型一定會繼續顯著進步,只是當前算力不足才壓抑了學習成效",
+          "is_correct": false,
+          "trap_type": "誤以為更多資料一定線性提升"
+        },
+        {
+          "text": "AUC 已達理論上限 1.0,模型無法再進步,後續任何資料擴增都不會改變表現",
+          "is_correct": false,
+          "trap_type": "0.865 遠未到 1.0"
+        },
+        {
+          "text": "驗證集太小導致觀察不到差異,只要增加驗證集筆數即可看到顯著提升",
+          "is_correct": false,
+          "trap_type": "誤把模型問題歸因為驗證集"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -44,9 +77,21 @@
         },
         "hook": "10× 資料 ≈ 個位數百分比改進(經驗法則),重複資料再加無幫助;先看多樣性"
       },
-      "misconceptions": ["以為資料越多模型一定越好", "把驗證集大小與訓練資料效果混淆"],
-      "related_node_ids": ["n_L22401_002"],
-      "tags": ["資料規模", "邊際遞減", "scaling"]
+      "misconceptions": [
+        "以為資料越多模型一定越好",
+        "把驗證集大小與訓練資料效果混淆"
+      ],
+      "related_node_ids": [
+        "n_L22401_002"
+      ],
+      "tags": [
+        "資料規模",
+        "邊際遞減",
+        "scaling"
+      ],
+      "boss_topics": [
+        "ecommerce"
+      ]
     },
     {
       "id": "q_n18_002",
@@ -58,10 +103,25 @@
       "source_level": "L1",
       "stem": "某影像辨識團隊面對驗證集 mAP 停滯不前的瓶頸,提出四種擴增資料策略。下列何項策略對提升模型泛化能力最具實質效益?",
       "options": [
-        {"text": "蒐集涵蓋夜間、雨天、不同地區等未見場景的影像,擴大資料分佈的覆蓋範圍與多樣性", "is_correct": true},
-        {"text": "把現有訓練集每張影像複製 10 份加入資料集,讓模型能對既有樣本看到更多次", "is_correct": false, "trap_type": "重複資料無新資訊"},
-        {"text": "把訓練集中所有標註為『汽車』的影像移除,讓模型專注於困難類別的學習效率", "is_correct": false, "trap_type": "移除標籤降低覆蓋"},
-        {"text": "在訓練集中加入大量未經標註與品質檢查的網路爬蟲影像,以最快方式衝高總筆數", "is_correct": false, "trap_type": "雜訊資料反而降低品質"}
+        {
+          "text": "蒐集涵蓋夜間、雨天、不同地區等未見場景的影像,擴大資料分佈的覆蓋範圍與多樣性",
+          "is_correct": true
+        },
+        {
+          "text": "把現有訓練集每張影像複製 10 份加入資料集,讓模型能對既有樣本看到更多次",
+          "is_correct": false,
+          "trap_type": "重複資料無新資訊"
+        },
+        {
+          "text": "把訓練集中所有標註為『汽車』的影像移除,讓模型專注於困難類別的學習效率",
+          "is_correct": false,
+          "trap_type": "移除標籤降低覆蓋"
+        },
+        {
+          "text": "在訓練集中加入大量未經標註與品質檢查的網路爬蟲影像,以最快方式衝高總筆數",
+          "is_correct": false,
+          "trap_type": "雜訊資料反而降低品質"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -73,9 +133,19 @@
         },
         "hook": "資料多樣性(coverage)> 資料量;新增資料前先問『分佈是否補了新角落』"
       },
-      "misconceptions": ["以為複製資料能提升模型", "把資料量等同於資料品質"],
-      "related_node_ids": ["n_L22401_004"],
-      "tags": ["資料規模", "多樣性", "覆蓋"]
+      "misconceptions": [
+        "以為複製資料能提升模型",
+        "把資料量等同於資料品質"
+      ],
+      "related_node_ids": [
+        "n_L22401_004"
+      ],
+      "tags": [
+        "資料規模",
+        "多樣性",
+        "覆蓋"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n18_003",
@@ -87,10 +157,25 @@
       "source_level": "L1",
       "stem": "某客服語音轉文字模型在訓練 loss 持續下降的同時,驗證集字錯誤率(WER)反而從 12% 上升至 15%。團隊試圖透過『再加 5 倍訓練資料』來改善表現,下列何者為最合理的優先判斷?",
       "options": [
-        {"text": "先確認模型是否處於 overfit 狀態,再評估資料、模型容量、正則化三者中真正的瓶頸點", "is_correct": true},
-        {"text": "立刻加 5 倍訓練資料,訓練 loss 下降代表模型仍在學習,擴增資料必能同步降低 WER", "is_correct": false, "trap_type": "把 training loss 下降誤當進步"},
-        {"text": "把驗證集替換為更大的測試集,擴大評估規模即可讓 WER 自然回到下降趨勢", "is_correct": false, "trap_type": "替換驗證集無法解決 overfit"},
-        {"text": "改用更大的模型參數規模,參數量翻倍配合既有資料能直接突破當前 WER 瓶頸限制", "is_correct": false, "trap_type": "資料 × 參數失衡更易 overfit"}
+        {
+          "text": "先確認模型是否處於 overfit 狀態,再評估資料、模型容量、正則化三者中真正的瓶頸點",
+          "is_correct": true
+        },
+        {
+          "text": "立刻加 5 倍訓練資料,訓練 loss 下降代表模型仍在學習,擴增資料必能同步降低 WER",
+          "is_correct": false,
+          "trap_type": "把 training loss 下降誤當進步"
+        },
+        {
+          "text": "把驗證集替換為更大的測試集,擴大評估規模即可讓 WER 自然回到下降趨勢",
+          "is_correct": false,
+          "trap_type": "替換驗證集無法解決 overfit"
+        },
+        {
+          "text": "改用更大的模型參數規模,參數量翻倍配合既有資料能直接突破當前 WER 瓶頸限制",
+          "is_correct": false,
+          "trap_type": "資料 × 參數失衡更易 overfit"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -102,9 +187,19 @@
         },
         "hook": "Training loss ↓ + Val metric ↑↓ 不一致 → 先驗 overfit,再談 scaling"
       },
-      "misconceptions": ["把 training loss 下降當模型進步", "認為加資料是萬靈丹"],
-      "related_node_ids": ["n_L22401_006"],
-      "tags": ["overfit", "資料規模", "瓶頸診斷"]
+      "misconceptions": [
+        "把 training loss 下降當模型進步",
+        "認為加資料是萬靈丹"
+      ],
+      "related_node_ids": [
+        "n_L22401_006"
+      ],
+      "tags": [
+        "overfit",
+        "資料規模",
+        "瓶頸診斷"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n18_004",
@@ -116,10 +211,25 @@
       "source_level": "L1",
       "stem": "某新聞網站每秒接收上萬筆使用者點擊事件,且讀者偏好每週都在變化,即時推薦模型必須能持續學習新趨勢。下列何種訓練範式最為適合?",
       "options": [
-        {"text": "Online Learning,逐筆或小批次更新模型權重,能適應資料流與概念漂移", "is_correct": true},
-        {"text": "Batch Learning,每週將完整歷史資料重訓一次,確保訓練過程嚴謹度與穩定", "is_correct": false, "trap_type": "週期太長跟不上分鐘級漂移"},
-        {"text": "離線交叉驗證後固定模型,直接部署不再更新,避免線上更新帶來預測波動", "is_correct": false, "trap_type": "完全不更新無法跟上漂移"},
-        {"text": "預訓練一次後永遠凍結權重,以節省持續訓練的硬體與運維資源開銷", "is_correct": false, "trap_type": "凍結模型對抗不了漂移"}
+        {
+          "text": "Online Learning,逐筆或小批次更新模型權重,能適應資料流與概念漂移",
+          "is_correct": true
+        },
+        {
+          "text": "Batch Learning,每週將完整歷史資料重訓一次,確保訓練過程嚴謹度與穩定",
+          "is_correct": false,
+          "trap_type": "週期太長跟不上分鐘級漂移"
+        },
+        {
+          "text": "離線交叉驗證後固定模型,直接部署不再更新,避免線上更新帶來預測波動",
+          "is_correct": false,
+          "trap_type": "完全不更新無法跟上漂移"
+        },
+        {
+          "text": "預訓練一次後永遠凍結權重,以節省持續訓練的硬體與運維資源開銷",
+          "is_correct": false,
+          "trap_type": "凍結模型對抗不了漂移"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -131,9 +241,22 @@
         },
         "hook": "資料流 + 概念漂移 → Online;靜態任務 + 嚴格驗證 → Batch"
       },
-      "misconceptions": ["以為 Batch Learning 永遠比 Online 安全", "誤以為部署後不需更新"],
-      "related_node_ids": ["n_L22401_001"],
-      "tags": ["Online Learning", "概念漂移", "推薦"]
+      "misconceptions": [
+        "以為 Batch Learning 永遠比 Online 安全",
+        "誤以為部署後不需更新"
+      ],
+      "related_node_ids": [
+        "n_L22401_001"
+      ],
+      "tags": [
+        "Online Learning",
+        "概念漂移",
+        "推薦"
+      ],
+      "boss_topics": [
+        "media",
+        "ecommerce"
+      ]
     },
     {
       "id": "q_n18_005",
@@ -145,10 +268,25 @@
       "source_level": "L1",
       "stem": "某醫學影像新創準備訓練 X 光肺結核分類器,病灶標準由放射科醫師委員會制定且少有更動,模型需通過嚴格的離線驗證才能上線。下列何者為最適合的訓練範式?",
       "options": [
-        {"text": "Batch Learning,以完整訓練集進行多次 epoch 訓練,再走嚴謹的離線交叉驗證流程", "is_correct": true},
-        {"text": "Online Learning,逐筆吃進影像即時更新權重,讓模型能對每張新片立即調整參數", "is_correct": false, "trap_type": "醫療場景不應逐筆即時更新"},
-        {"text": "完全不訓練,直接使用既有開源預訓練模型推論,以節省訓練流程的時間與算力支出", "is_correct": false, "trap_type": "未驗證模型不可用於醫療"},
-        {"text": "強化學習,以醫師回饋作為獎勵訊號逐步更新策略,讓模型自行探索診斷方法的最佳路徑", "is_correct": false, "trap_type": "RL 不符監督式分類設定"}
+        {
+          "text": "Batch Learning,以完整訓練集進行多次 epoch 訓練,再走嚴謹的離線交叉驗證流程",
+          "is_correct": true
+        },
+        {
+          "text": "Online Learning,逐筆吃進影像即時更新權重,讓模型能對每張新片立即調整參數",
+          "is_correct": false,
+          "trap_type": "醫療場景不應逐筆即時更新"
+        },
+        {
+          "text": "完全不訓練,直接使用既有開源預訓練模型推論,以節省訓練流程的時間與算力支出",
+          "is_correct": false,
+          "trap_type": "未驗證模型不可用於醫療"
+        },
+        {
+          "text": "強化學習,以醫師回饋作為獎勵訊號逐步更新策略,讓模型自行探索診斷方法的最佳路徑",
+          "is_correct": false,
+          "trap_type": "RL 不符監督式分類設定"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -160,9 +298,21 @@
         },
         "hook": "標準穩定 + 嚴格驗證 → Batch;資料流 + 偏好漂移 → Online"
       },
-      "misconceptions": ["把 Online Learning 視為萬用", "誤以為任何問題都可套 RL"],
-      "related_node_ids": ["n_L22401_001"],
-      "tags": ["Batch Learning", "醫療", "驗證"]
+      "misconceptions": [
+        "把 Online Learning 視為萬用",
+        "誤以為任何問題都可套 RL"
+      ],
+      "related_node_ids": [
+        "n_L22401_001"
+      ],
+      "tags": [
+        "Batch Learning",
+        "醫療",
+        "驗證"
+      ],
+      "boss_topics": [
+        "medical"
+      ]
     },
     {
       "id": "q_n18_006",
@@ -174,10 +324,25 @@
       "source_level": "L1",
       "stem": "下列關於 Mini-batch SGD 與 Online Learning 的比較,何者敘述最為正確?",
       "options": [
-        {"text": "Mini-batch SGD 每次以 32~512 筆梯度均值更新,雜訊小於純 Online、收斂較穩定", "is_correct": true},
-        {"text": "Mini-batch SGD 與純 Online Learning 完全相同,僅在批次大小命名上有些微差異而已", "is_correct": false, "trap_type": "兩者批次定義不同"},
-        {"text": "Mini-batch SGD 需先收齊完整資料才能訓練,因此不適用於任何資料流情境的應用", "is_correct": false, "trap_type": "Mini-batch 不需完整資料"},
-        {"text": "純 Online Learning 因每筆梯度雜訊大,收斂速度永遠優於 mini-batch 的收斂效率", "is_correct": false, "trap_type": "雜訊大不等於收斂快"}
+        {
+          "text": "Mini-batch SGD 每次以 32~512 筆梯度均值更新,雜訊小於純 Online、收斂較穩定",
+          "is_correct": true
+        },
+        {
+          "text": "Mini-batch SGD 與純 Online Learning 完全相同,僅在批次大小命名上有些微差異而已",
+          "is_correct": false,
+          "trap_type": "兩者批次定義不同"
+        },
+        {
+          "text": "Mini-batch SGD 需先收齊完整資料才能訓練,因此不適用於任何資料流情境的應用",
+          "is_correct": false,
+          "trap_type": "Mini-batch 不需完整資料"
+        },
+        {
+          "text": "純 Online Learning 因每筆梯度雜訊大,收斂速度永遠優於 mini-batch 的收斂效率",
+          "is_correct": false,
+          "trap_type": "雜訊大不等於收斂快"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -189,9 +354,19 @@
         },
         "hook": "Full-batch ⇄ Mini-batch ⇄ Online,折衷點在 mini-batch"
       },
-      "misconceptions": ["把 mini-batch 當成純 Online", "以為雜訊大 = 收斂快"],
-      "related_node_ids": ["n_L22401_001"],
-      "tags": ["Mini-batch", "SGD", "Online"]
+      "misconceptions": [
+        "把 mini-batch 當成純 Online",
+        "以為雜訊大 = 收斂快"
+      ],
+      "related_node_ids": [
+        "n_L22401_001"
+      ],
+      "tags": [
+        "Mini-batch",
+        "SGD",
+        "Online"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n18_007",
@@ -203,10 +378,25 @@
       "source_level": "L1",
       "stem": "某團隊訓練一個 200MB 參數的影像分類網路,單卡可放下整個模型,但訓練資料量龐大想加速;手邊有 8 張 GPU。下列何種分散式訓練策略最為直接適用?",
       "options": [
-        {"text": "資料平行(Data Parallel),每張 GPU 複製一份模型、各自處理不同 mini-batch 後梯度聚合", "is_correct": true},
-        {"text": "模型平行(Model Parallel),把網路依照層數切成 8 段分配到不同 GPU 上依序執行", "is_correct": false, "trap_type": "200MB 不需切模型"},
-        {"text": "單卡訓練,因 8 張 GPU 之間通訊成本必然遠高於並行帶來的訓練速度收益", "is_correct": false, "trap_type": "8 卡資料平行通常正收益"},
-        {"text": "把訓練資料切 8 份在 8 台機器上訓練 8 個獨立模型,最後選最高 accuracy 的那一個", "is_correct": false, "trap_type": "獨立訓練非分散式訓練"}
+        {
+          "text": "資料平行(Data Parallel),每張 GPU 複製一份模型、各自處理不同 mini-batch 後梯度聚合",
+          "is_correct": true
+        },
+        {
+          "text": "模型平行(Model Parallel),把網路依照層數切成 8 段分配到不同 GPU 上依序執行",
+          "is_correct": false,
+          "trap_type": "200MB 不需切模型"
+        },
+        {
+          "text": "單卡訓練,因 8 張 GPU 之間通訊成本必然遠高於並行帶來的訓練速度收益",
+          "is_correct": false,
+          "trap_type": "8 卡資料平行通常正收益"
+        },
+        {
+          "text": "把訓練資料切 8 份在 8 台機器上訓練 8 個獨立模型,最後選最高 accuracy 的那一個",
+          "is_correct": false,
+          "trap_type": "獨立訓練非分散式訓練"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -218,9 +408,19 @@
         },
         "hook": "模型放得下單卡 → Data Parallel;放不下單卡 → Model Parallel"
       },
-      "misconceptions": ["把多 GPU 一律當作 Model Parallel", "把獨立訓練誤當分散式"],
-      "related_node_ids": ["n_L22401_001"],
-      "tags": ["資料平行", "GPU", "分散式"]
+      "misconceptions": [
+        "把多 GPU 一律當作 Model Parallel",
+        "把獨立訓練誤當分散式"
+      ],
+      "related_node_ids": [
+        "n_L22401_001"
+      ],
+      "tags": [
+        "資料平行",
+        "GPU",
+        "分散式"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n18_008",
@@ -232,10 +432,25 @@
       "source_level": "L1",
       "stem": "某研究機構訓練一個 1200 億參數的大型語言模型,以 FP16 估算單一模型副本約需 240GB 記憶體,遠超過單張 80GB GPU 容量。下列何種分散式訓練策略為必要選擇?",
       "options": [
-        {"text": "模型平行(Model Parallel),把模型依層或張量切分到多張 GPU,讓單一副本能跨卡放下", "is_correct": true},
-        {"text": "資料平行(Data Parallel),在每張 GPU 複製完整 240GB 模型,並各自處理不同 mini-batch", "is_correct": false, "trap_type": "單卡裝不下無法純資料平行"},
-        {"text": "改用 CPU 訓練並使用大容量主記憶體(2TB)整體承載模型,完全避開 GPU 記憶體不足問題", "is_correct": false, "trap_type": "CPU 訓練速度不可接受"},
-        {"text": "把模型參數量壓縮到 80GB 以下後再用單卡訓練,可完全避開分散式架構帶來的複雜度", "is_correct": false, "trap_type": "壓縮會改變模型容量"}
+        {
+          "text": "模型平行(Model Parallel),把模型依層或張量切分到多張 GPU,讓單一副本能跨卡放下",
+          "is_correct": true
+        },
+        {
+          "text": "資料平行(Data Parallel),在每張 GPU 複製完整 240GB 模型,並各自處理不同 mini-batch",
+          "is_correct": false,
+          "trap_type": "單卡裝不下無法純資料平行"
+        },
+        {
+          "text": "改用 CPU 訓練並使用大容量主記憶體(2TB)整體承載模型,完全避開 GPU 記憶體不足問題",
+          "is_correct": false,
+          "trap_type": "CPU 訓練速度不可接受"
+        },
+        {
+          "text": "把模型參數量壓縮到 80GB 以下後再用單卡訓練,可完全避開分散式架構帶來的複雜度",
+          "is_correct": false,
+          "trap_type": "壓縮會改變模型容量"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -247,9 +462,19 @@
         },
         "hook": "百億 LLM → 資料平行 + 模型平行 混合;放不下單卡是模型平行的判別線"
       },
-      "misconceptions": ["以為資料平行能解決放不下問題", "認為壓縮等於不改模型"],
-      "related_node_ids": ["n_L22401_001"],
-      "tags": ["模型平行", "LLM", "GPU"]
+      "misconceptions": [
+        "以為資料平行能解決放不下問題",
+        "認為壓縮等於不改模型"
+      ],
+      "related_node_ids": [
+        "n_L22401_001"
+      ],
+      "tags": [
+        "模型平行",
+        "LLM",
+        "GPU"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n18_009",
@@ -261,10 +486,25 @@
       "source_level": "L1",
       "stem": "某團隊把資料平行訓練從 8 卡擴展到 64 卡後,訓練速度只變快 4 倍而非預期的 8 倍。下列何者最可能是主要瓶頸成因?",
       "options": [
-        {"text": "GPU 之間 All-Reduce 梯度同步的通訊頻寬已成為實際天花板,卡數越多通訊開銷比例越高", "is_correct": true},
-        {"text": "資料平行架構在 64 卡以上會強制改為模型平行,因此速度上限完全由模型切分決定", "is_correct": false, "trap_type": "資料平行不會自動轉模型平行"},
-        {"text": "GPU 規格不同會導致 64 卡互相等待,只要把所有卡換成相同型號就能線性加速到 64 倍", "is_correct": false, "trap_type": "同型號也有通訊瓶頸"},
-        {"text": "Batch size 必須固定,卡數變多反而每卡分到的工作量變少,訓練自然會減速無法加速", "is_correct": false, "trap_type": "global batch 通常隨卡數放大"}
+        {
+          "text": "GPU 之間 All-Reduce 梯度同步的通訊頻寬已成為實際天花板,卡數越多通訊開銷比例越高",
+          "is_correct": true
+        },
+        {
+          "text": "資料平行架構在 64 卡以上會強制改為模型平行,因此速度上限完全由模型切分決定",
+          "is_correct": false,
+          "trap_type": "資料平行不會自動轉模型平行"
+        },
+        {
+          "text": "GPU 規格不同會導致 64 卡互相等待,只要把所有卡換成相同型號就能線性加速到 64 倍",
+          "is_correct": false,
+          "trap_type": "同型號也有通訊瓶頸"
+        },
+        {
+          "text": "Batch size 必須固定,卡數變多反而每卡分到的工作量變少,訓練自然會減速無法加速",
+          "is_correct": false,
+          "trap_type": "global batch 通常隨卡數放大"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -276,9 +516,19 @@
         },
         "hook": "資料平行加速 < 線性 的最常見成因 = GPU 通訊頻寬瓶頸"
       },
-      "misconceptions": ["以為 GPU 數量翻倍速度也翻倍", "忽略 All-Reduce 通訊開銷"],
-      "related_node_ids": ["n_L22401_001"],
-      "tags": ["資料平行", "通訊瓶頸", "scaling"]
+      "misconceptions": [
+        "以為 GPU 數量翻倍速度也翻倍",
+        "忽略 All-Reduce 通訊開銷"
+      ],
+      "related_node_ids": [
+        "n_L22401_001"
+      ],
+      "tags": [
+        "資料平行",
+        "通訊瓶頸",
+        "scaling"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n18_010",
@@ -290,10 +540,25 @@
       "source_level": "L1",
       "stem": "某線上廣告平台想訓練點擊預測模型,但正例(點擊)僅佔總曝光 0.3%。若仍對訓練資料採用均勻隨機取樣,可能造成下列何種主要問題?",
       "options": [
-        {"text": "模型嚴重偏向多數類(未點擊),學不到正例特徵且容易輸出全 0 預測", "is_correct": true},
-        {"text": "模型會學到極佳的正例特徵,因為均勻取樣保留了正例自然分佈的訊號完整性", "is_correct": false, "trap_type": "均勻取樣對極不平衡無法救正例"},
-        {"text": "模型訓練速度會大幅變慢,因為均勻取樣會自動把所有負例都重複取出再學習", "is_correct": false, "trap_type": "均勻取樣不重複多數類"},
-        {"text": "模型在離線驗證集 AUC 會變很低,因為均勻取樣會自動把驗證集分佈也同步改寫", "is_correct": false, "trap_type": "均勻取樣不改驗證分佈"}
+        {
+          "text": "模型嚴重偏向多數類(未點擊),學不到正例特徵且容易輸出全 0 預測",
+          "is_correct": true
+        },
+        {
+          "text": "模型會學到極佳的正例特徵,因為均勻取樣保留了正例自然分佈的訊號完整性",
+          "is_correct": false,
+          "trap_type": "均勻取樣對極不平衡無法救正例"
+        },
+        {
+          "text": "模型訓練速度會大幅變慢,因為均勻取樣會自動把所有負例都重複取出再學習",
+          "is_correct": false,
+          "trap_type": "均勻取樣不重複多數類"
+        },
+        {
+          "text": "模型在離線驗證集 AUC 會變很低,因為均勻取樣會自動把驗證集分佈也同步改寫",
+          "is_correct": false,
+          "trap_type": "均勻取樣不改驗證分佈"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -305,9 +570,21 @@
         },
         "hook": "極端不平衡 + 均勻取樣 → 模型退化成預測多數類,需加權 / 過取樣補救"
       },
-      "misconceptions": ["以為均勻取樣對所有資料都公平", "把 accuracy 高當模型好"],
-      "related_node_ids": ["n_L22401_005"],
-      "tags": ["均勻取樣", "不平衡", "CTR"]
+      "misconceptions": [
+        "以為均勻取樣對所有資料都公平",
+        "把 accuracy 高當模型好"
+      ],
+      "related_node_ids": [
+        "n_L22401_005"
+      ],
+      "tags": [
+        "均勻取樣",
+        "不平衡",
+        "CTR"
+      ],
+      "boss_topics": [
+        "media"
+      ]
     },
     {
       "id": "q_n18_011",
@@ -319,10 +596,25 @@
       "source_level": "L1",
       "stem": "某物流業者訓練包裹延遲預測模型,發現少數『暴雨天』樣本特別難學但對業務決策最重要。團隊想加強模型對這類困難樣本的關注。下列何種取樣策略最為合適?",
       "options": [
-        {"text": "重要性取樣,依樣本困難度動態調整抽中機率以放大邊界樣本", "is_correct": true},
-        {"text": "把所有暴雨天樣本從訓練集移除,讓模型專注學習晴天的主流情境再外推到暴雨", "is_correct": false, "trap_type": "移除困難樣本反而學不到"},
-        {"text": "對所有樣本以均勻隨機取樣,讓模型自動發現暴雨樣本的特殊性後再對其加強訓練", "is_correct": false, "trap_type": "均勻取樣無法強調少數類"},
-        {"text": "對驗證集加倍取樣暴雨資料,以便最佳化驗證指標來推動模型對暴雨情境的學習能力", "is_correct": false, "trap_type": "不應改驗證集分佈"}
+        {
+          "text": "重要性取樣,依樣本困難度動態調整抽中機率以放大邊界樣本",
+          "is_correct": true
+        },
+        {
+          "text": "把所有暴雨天樣本從訓練集移除,讓模型專注學習晴天的主流情境再外推到暴雨",
+          "is_correct": false,
+          "trap_type": "移除困難樣本反而學不到"
+        },
+        {
+          "text": "對所有樣本以均勻隨機取樣,讓模型自動發現暴雨樣本的特殊性後再對其加強訓練",
+          "is_correct": false,
+          "trap_type": "均勻取樣無法強調少數類"
+        },
+        {
+          "text": "對驗證集加倍取樣暴雨資料,以便最佳化驗證指標來推動模型對暴雨情境的學習能力",
+          "is_correct": false,
+          "trap_type": "不應改驗證集分佈"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -334,9 +626,21 @@
         },
         "hook": "Hard example mining = 重要性取樣;驗證集絕不能因取樣策略而失真"
       },
-      "misconceptions": ["把困難樣本當噪聲移除", "對驗證集套用取樣加權"],
-      "related_node_ids": ["n_L22401_005"],
-      "tags": ["重要性取樣", "困難樣本", "驗證集"]
+      "misconceptions": [
+        "把困難樣本當噪聲移除",
+        "對驗證集套用取樣加權"
+      ],
+      "related_node_ids": [
+        "n_L22401_005"
+      ],
+      "tags": [
+        "重要性取樣",
+        "困難樣本",
+        "驗證集"
+      ],
+      "boss_topics": [
+        "logistics"
+      ]
     },
     {
       "id": "q_n18_012",
@@ -348,10 +652,25 @@
       "source_level": "L1",
       "stem": "下列關於『訓練取樣策略』與『驗證 / 測試集分佈』的敘述,何者最為正確?",
       "options": [
-        {"text": "訓練可採加權或重要性取樣,但驗證 / 測試集應保留原始分佈以反映模型真實線上表現", "is_correct": true},
-        {"text": "訓練、驗證、測試三集都應同步加權,以維持資料前處理流程一致並降低偏差", "is_correct": false, "trap_type": "驗證集加權會失真"},
-        {"text": "只要驗證集 accuracy 高,訓練與驗證採用任何取樣組合皆可,不需考慮分佈一致性問題", "is_correct": false, "trap_type": "accuracy 不等於分佈一致"},
-        {"text": "訓練集應保留原始分佈、測試集應加權少數類以放大模型對罕見類別的真實表現程度", "is_correct": false, "trap_type": "顛倒處理位置"}
+        {
+          "text": "訓練可採加權或重要性取樣,但驗證 / 測試集應保留原始分佈以反映模型真實線上表現",
+          "is_correct": true
+        },
+        {
+          "text": "訓練、驗證、測試三集都應同步加權,以維持資料前處理流程一致並降低偏差",
+          "is_correct": false,
+          "trap_type": "驗證集加權會失真"
+        },
+        {
+          "text": "只要驗證集 accuracy 高,訓練與驗證採用任何取樣組合皆可,不需考慮分佈一致性問題",
+          "is_correct": false,
+          "trap_type": "accuracy 不等於分佈一致"
+        },
+        {
+          "text": "訓練集應保留原始分佈、測試集應加權少數類以放大模型對罕見類別的真實表現程度",
+          "is_correct": false,
+          "trap_type": "顛倒處理位置"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -363,9 +682,20 @@
         },
         "hook": "訓練可任意取樣 → 驗證 / 測試永遠保留原始分佈"
       },
-      "misconceptions": ["對驗證集套用 SMOTE / 加權", "認為三集分佈該同步調整"],
-      "related_node_ids": ["n_L22401_005", "n_L22401_006"],
-      "tags": ["取樣", "驗證集", "方法論"]
+      "misconceptions": [
+        "對驗證集套用 SMOTE / 加權",
+        "認為三集分佈該同步調整"
+      ],
+      "related_node_ids": [
+        "n_L22401_005",
+        "n_L22401_006"
+      ],
+      "tags": [
+        "取樣",
+        "驗證集",
+        "方法論"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n18_013",
@@ -377,10 +707,25 @@
       "source_level": "L1",
       "stem": "某銀行詐欺偵測訓練資料中,詐欺案件僅佔 0.1%。模型在測試集達到 99.9% accuracy 但實務上幾乎抓不到任何詐欺。下列何種評估指標組合最能避免此一假象?",
       "options": [
-        {"text": "Recall、Precision、F1-score 與 PR-AUC,聚焦少數類抓捕成效並反映正負例的權衡", "is_correct": true},
-        {"text": "Accuracy 加上整體 ROC-AUC 取平均,以更全面的方式描述模型在所有類別上的表現", "is_correct": false, "trap_type": "Accuracy 已被多數類主導"},
-        {"text": "Log Loss 配合單純的 Accuracy 數值即可,因兩者本就為互補性指標於分類任務", "is_correct": false, "trap_type": "Log Loss 仍會被多數類主導"},
-        {"text": "Mean Absolute Error 配合 R² 決定係數,以衡量機率輸出與真實標籤之數值距離", "is_correct": false, "trap_type": "MAE/R² 為迴歸指標"}
+        {
+          "text": "Recall、Precision、F1-score 與 PR-AUC,聚焦少數類抓捕成效並反映正負例的權衡",
+          "is_correct": true
+        },
+        {
+          "text": "Accuracy 加上整體 ROC-AUC 取平均,以更全面的方式描述模型在所有類別上的表現",
+          "is_correct": false,
+          "trap_type": "Accuracy 已被多數類主導"
+        },
+        {
+          "text": "Log Loss 配合單純的 Accuracy 數值即可,因兩者本就為互補性指標於分類任務",
+          "is_correct": false,
+          "trap_type": "Log Loss 仍會被多數類主導"
+        },
+        {
+          "text": "Mean Absolute Error 配合 R² 決定係數,以衡量機率輸出與真實標籤之數值距離",
+          "is_correct": false,
+          "trap_type": "MAE/R² 為迴歸指標"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -392,9 +737,21 @@
         },
         "hook": "Accuracy 在 < 5% 正例的場景已失意義;優先 Recall / F1 / PR-AUC"
       },
-      "misconceptions": ["把 99.9% accuracy 當好模型", "對不平衡資料用 MAE/R²"],
-      "related_node_ids": ["n_L22401_004"],
-      "tags": ["不平衡", "Recall", "PR-AUC"]
+      "misconceptions": [
+        "把 99.9% accuracy 當好模型",
+        "對不平衡資料用 MAE/R²"
+      ],
+      "related_node_ids": [
+        "n_L22401_004"
+      ],
+      "tags": [
+        "不平衡",
+        "Recall",
+        "PR-AUC"
+      ],
+      "boss_topics": [
+        "finance"
+      ]
     },
     {
       "id": "q_n18_014",
@@ -406,10 +763,25 @@
       "source_level": "L1",
       "stem": "某保險公司理賠詐欺偵測團隊以 SMOTE 為少數類進行合成樣本擴增。下列關於 SMOTE 操作流程的敘述,何者最為正確?",
       "options": [
-        {"text": "SMOTE 僅可套用於訓練集少數類,驗證集 / 測試集應保留原始分佈以避免評估失真", "is_correct": true},
-        {"text": "SMOTE 應對訓練、驗證、測試三集同步套用,以確保前處理流程具備完整一致性", "is_correct": false, "trap_type": "對驗證/測試套 SMOTE 會失真"},
-        {"text": "SMOTE 是在原始空間直接複製少數類資料數倍,並未產生任何新的合成樣本內容", "is_correct": false, "trap_type": "SMOTE 為插值而非複製"},
-        {"text": "SMOTE 必須在多數類也套用,合成多數類樣本以維持新分佈與原始分佈絕對一致", "is_correct": false, "trap_type": "SMOTE 鎖定少數類"}
+        {
+          "text": "SMOTE 僅可套用於訓練集少數類,驗證集 / 測試集應保留原始分佈以避免評估失真",
+          "is_correct": true
+        },
+        {
+          "text": "SMOTE 應對訓練、驗證、測試三集同步套用,以確保前處理流程具備完整一致性",
+          "is_correct": false,
+          "trap_type": "對驗證/測試套 SMOTE 會失真"
+        },
+        {
+          "text": "SMOTE 是在原始空間直接複製少數類資料數倍,並未產生任何新的合成樣本內容",
+          "is_correct": false,
+          "trap_type": "SMOTE 為插值而非複製"
+        },
+        {
+          "text": "SMOTE 必須在多數類也套用,合成多數類樣本以維持新分佈與原始分佈絕對一致",
+          "is_correct": false,
+          "trap_type": "SMOTE 鎖定少數類"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -421,9 +793,22 @@
         },
         "hook": "SMOTE = 少數類插值合成,只在訓練集做;驗證 / 測試永遠保留原始分佈"
       },
-      "misconceptions": ["對驗證集套 SMOTE", "把 SMOTE 當複製"],
-      "related_node_ids": ["n_L22401_004", "n_L22401_006"],
-      "tags": ["SMOTE", "不平衡", "驗證集"]
+      "misconceptions": [
+        "對驗證集套 SMOTE",
+        "把 SMOTE 當複製"
+      ],
+      "related_node_ids": [
+        "n_L22401_004",
+        "n_L22401_006"
+      ],
+      "tags": [
+        "SMOTE",
+        "不平衡",
+        "驗證集"
+      ],
+      "boss_topics": [
+        "finance"
+      ]
     },
     {
       "id": "q_n18_015",
@@ -435,15 +820,51 @@
       "source_level": "L1",
       "stem": "某二元分類任務中正例與負例樣本筆數比例為 {pos}:{neg}。若採用 inverse-frequency 類別權重(每類權重正比於該類樣本筆數倒數),則『正例權重 ÷ 負例權重』之比值最接近下列何者?",
       "stem_variables": {
-        "case_a": {"pos": "1", "neg": "9", "answer": "9.00", "wrong1": "0.11", "wrong2": "1.00", "wrong3": "10.00"},
-        "case_b": {"pos": "1", "neg": "49", "answer": "49.00", "wrong1": "0.02", "wrong2": "1.00", "wrong3": "50.00"},
-        "case_c": {"pos": "3", "neg": "12", "answer": "4.00", "wrong1": "0.25", "wrong2": "1.00", "wrong3": "5.00"}
+        "case_a": {
+          "pos": "1",
+          "neg": "9",
+          "answer": "9.00",
+          "wrong1": "0.11",
+          "wrong2": "1.00",
+          "wrong3": "10.00"
+        },
+        "case_b": {
+          "pos": "1",
+          "neg": "49",
+          "answer": "49.00",
+          "wrong1": "0.02",
+          "wrong2": "1.00",
+          "wrong3": "50.00"
+        },
+        "case_c": {
+          "pos": "3",
+          "neg": "12",
+          "answer": "4.00",
+          "wrong1": "0.25",
+          "wrong2": "1.00",
+          "wrong3": "5.00"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "把正例權重與負例權重比例顛倒"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤以為等權重(忽略 inverse-frequency)"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤把總筆數比作為權重比"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "把正例權重與負例權重比例顛倒"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤以為等權重(忽略 inverse-frequency)"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤把總筆數比作為權重比"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -455,9 +876,21 @@
         },
         "hook": "Inverse-frequency:少數類權重 = 多數類筆數 / 少數類筆數;比例顛倒就完全失效"
       },
-      "misconceptions": ["把權重比例顛倒", "忽略類別權重直接訓練"],
-      "related_node_ids": ["n_L22401_004"],
-      "tags": ["類別權重", "不平衡", "計算"]
+      "misconceptions": [
+        "把權重比例顛倒",
+        "忽略類別權重直接訓練"
+      ],
+      "related_node_ids": [
+        "n_L22401_004"
+      ],
+      "tags": [
+        "類別權重",
+        "不平衡",
+        "計算"
+      ],
+      "boss_topics": [
+        "ml_bigdata"
+      ]
     },
     {
       "id": "q_n18_016",
@@ -469,10 +902,25 @@
       "source_level": "L1",
       "stem": "某醫療團隊處理 1:200 不平衡的罕見疾病標註資料,比較三種方案:(A) 純類別權重(loss 加權),(B) SMOTE 過取樣到 1:1,(C) 隨機欠取樣多數類到 1:1。下列敘述何者最為正確?",
       "options": [
-        {"text": "三方案皆有取捨:類別權重最穩;SMOTE 可能在重疊區生出不存在樣本;欠取樣可能丟失多數類資訊", "is_correct": true},
-        {"text": "SMOTE 永遠優於另兩者,因為它能生成最多新樣本以最大化少數類在訓練中的權重影響", "is_correct": false, "trap_type": "SMOTE 並非永遠最佳"},
-        {"text": "隨機欠取樣永遠優於另兩者,因為它能讓兩類數量相等且不引入任何合成資料噪聲", "is_correct": false, "trap_type": "欠取樣會丟資訊"},
-        {"text": "三方案完全等價,選擇時只需考慮實作便利性,對最終模型表現不會有顯著影響的差異", "is_correct": false, "trap_type": "三方案影響顯著不同"}
+        {
+          "text": "三方案皆有取捨:類別權重最穩;SMOTE 可能在重疊區生出不存在樣本;欠取樣可能丟失多數類資訊",
+          "is_correct": true
+        },
+        {
+          "text": "SMOTE 永遠優於另兩者,因為它能生成最多新樣本以最大化少數類在訓練中的權重影響",
+          "is_correct": false,
+          "trap_type": "SMOTE 並非永遠最佳"
+        },
+        {
+          "text": "隨機欠取樣永遠優於另兩者,因為它能讓兩類數量相等且不引入任何合成資料噪聲",
+          "is_correct": false,
+          "trap_type": "欠取樣會丟資訊"
+        },
+        {
+          "text": "三方案完全等價,選擇時只需考慮實作便利性,對最終模型表現不會有顯著影響的差異",
+          "is_correct": false,
+          "trap_type": "三方案影響顯著不同"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -484,9 +932,21 @@
         },
         "hook": "不平衡三策略各有風險;醫療稀有疾病常先試類別權重,再視 PR-AUC 決定是否加 SMOTE"
       },
-      "misconceptions": ["把 SMOTE 當萬靈丹", "認為欠取樣不丟資訊"],
-      "related_node_ids": ["n_L22401_004"],
-      "tags": ["不平衡", "SMOTE", "策略比較"]
+      "misconceptions": [
+        "把 SMOTE 當萬靈丹",
+        "認為欠取樣不丟資訊"
+      ],
+      "related_node_ids": [
+        "n_L22401_004"
+      ],
+      "tags": [
+        "不平衡",
+        "SMOTE",
+        "策略比較"
+      ],
+      "boss_topics": [
+        "medical"
+      ]
     },
     {
       "id": "q_n18_017",
@@ -498,10 +958,25 @@
       "source_level": "L1",
       "stem": "某零售商欲建立月度銷售預測模型,擁有 2020~2025 共六年的逐日銷售資料。下列何種 train/val/test 切分策略最為合適?",
       "options": [
-        {"text": "Time-based split,以早期年份作為訓練集、中段作驗證集、最近一段時間作測試集", "is_correct": true},
-        {"text": "Random split,將六年資料隨機 70/15/15 切分,讓三集呈現完整時序的均勻分佈", "is_correct": false, "trap_type": "時序資料 random split 洩漏"},
-        {"text": "把所有資料同時放入訓練集與測試集,以便讓模型在完整時序上獲得最高的觀測量", "is_correct": false, "trap_type": "資料洩漏直接違規"},
-        {"text": "依產品類別做 group-based split,把不同類別產品分到不同集合避免相關性問題", "is_correct": false, "trap_type": "時序預測重點不在類別"}
+        {
+          "text": "Time-based split,以早期年份作為訓練集、中段作驗證集、最近一段時間作測試集",
+          "is_correct": true
+        },
+        {
+          "text": "Random split,將六年資料隨機 70/15/15 切分,讓三集呈現完整時序的均勻分佈",
+          "is_correct": false,
+          "trap_type": "時序資料 random split 洩漏"
+        },
+        {
+          "text": "把所有資料同時放入訓練集與測試集,以便讓模型在完整時序上獲得最高的觀測量",
+          "is_correct": false,
+          "trap_type": "資料洩漏直接違規"
+        },
+        {
+          "text": "依產品類別做 group-based split,把不同類別產品分到不同集合避免相關性問題",
+          "is_correct": false,
+          "trap_type": "時序預測重點不在類別"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -513,9 +988,21 @@
         },
         "hook": "時序資料 → time-based;同 ID 多筆 → group-based;i.i.d. → random"
       },
-      "misconceptions": ["對時序資料 random split", "把所有資料當訓練測試共用"],
-      "related_node_ids": ["n_L22401_004"],
-      "tags": ["time-based", "時序", "切分"]
+      "misconceptions": [
+        "對時序資料 random split",
+        "把所有資料當訓練測試共用"
+      ],
+      "related_node_ids": [
+        "n_L22401_004"
+      ],
+      "tags": [
+        "time-based",
+        "時序",
+        "切分"
+      ],
+      "boss_topics": [
+        "ecommerce"
+      ]
     },
     {
       "id": "q_n18_018",
@@ -527,10 +1014,25 @@
       "source_level": "L1",
       "stem": "某眼科 AI 團隊建置眼底影像疾病分類器,平均每位病人有 8 張眼底片。若採用 random split 將所有影像 70/15/15 切分,測試集 AUC 高達 0.97,但模型部署到新醫院後表現顯著下降。下列何者最可能是主因?",
       "options": [
-        {"text": "Random split 把同病人影像切到 train 與 test 造成資料洩漏", "is_correct": true},
-        {"text": "模型參數過少導致泛化能力不足,把參數量翻倍後即可直接解決新醫院的部署問題", "is_correct": false, "trap_type": "切分問題不是容量"},
-        {"text": "新醫院影像數量少於訓練集,只要把新醫院影像加倍取樣即可線上達到原本的 AUC", "is_correct": false, "trap_type": "未解決洩漏根本"},
-        {"text": "AUC 本身為不穩定指標,改用 accuracy 才能反映模型在新醫院真實的部署表現", "is_correct": false, "trap_type": "切分錯換指標也救不了"}
+        {
+          "text": "Random split 把同病人影像切到 train 與 test 造成資料洩漏",
+          "is_correct": true
+        },
+        {
+          "text": "模型參數過少導致泛化能力不足,把參數量翻倍後即可直接解決新醫院的部署問題",
+          "is_correct": false,
+          "trap_type": "切分問題不是容量"
+        },
+        {
+          "text": "新醫院影像數量少於訓練集,只要把新醫院影像加倍取樣即可線上達到原本的 AUC",
+          "is_correct": false,
+          "trap_type": "未解決洩漏根本"
+        },
+        {
+          "text": "AUC 本身為不穩定指標,改用 accuracy 才能反映模型在新醫院真實的部署表現",
+          "is_correct": false,
+          "trap_type": "切分錯換指標也救不了"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -542,9 +1044,21 @@
         },
         "hook": "同一 ID 多筆 → group-based split(病人 / 客戶 / 攝影地點)"
       },
-      "misconceptions": ["對病人多片資料 random split", "把離線高分當部署表現保證"],
-      "related_node_ids": ["n_L22401_004"],
-      "tags": ["group-based", "資料洩漏", "醫療"]
+      "misconceptions": [
+        "對病人多片資料 random split",
+        "把離線高分當部署表現保證"
+      ],
+      "related_node_ids": [
+        "n_L22401_004"
+      ],
+      "tags": [
+        "group-based",
+        "資料洩漏",
+        "醫療"
+      ],
+      "boss_topics": [
+        "medical"
+      ]
     },
     {
       "id": "q_n18_019",
@@ -556,15 +1070,48 @@
       "source_level": "L1",
       "stem": "某資料科學團隊有 {N} 筆 i.i.d. 標註資料,以 7 : 1.5 : 1.5 比例切分為 train / val / test 三集。請問驗證集(val)應分得的筆數最接近下列何者?",
       "stem_variables": {
-        "case_a": {"N": "10000", "answer": "1500", "wrong1": "7000", "wrong2": "1000", "wrong3": "3000"},
-        "case_b": {"N": "20000", "answer": "3000", "wrong1": "14000", "wrong2": "2000", "wrong3": "6000"},
-        "case_c": {"N": "8000", "answer": "1200", "wrong1": "5600", "wrong2": "800", "wrong3": "2400"}
+        "case_a": {
+          "N": "10000",
+          "answer": "1500",
+          "wrong1": "7000",
+          "wrong2": "1000",
+          "wrong3": "3000"
+        },
+        "case_b": {
+          "N": "20000",
+          "answer": "3000",
+          "wrong1": "14000",
+          "wrong2": "2000",
+          "wrong3": "6000"
+        },
+        "case_c": {
+          "N": "8000",
+          "answer": "1200",
+          "wrong1": "5600",
+          "wrong2": "800",
+          "wrong3": "2400"
+        }
       },
       "options": [
-        {"text": "{answer}", "is_correct": true},
-        {"text": "{wrong1}", "is_correct": false, "trap_type": "誤填訓練集筆數"},
-        {"text": "{wrong2}", "is_correct": false, "trap_type": "誤用 10% 比例計算"},
-        {"text": "{wrong3}", "is_correct": false, "trap_type": "誤把 val + test 合計"}
+        {
+          "text": "{answer}",
+          "is_correct": true
+        },
+        {
+          "text": "{wrong1}",
+          "is_correct": false,
+          "trap_type": "誤填訓練集筆數"
+        },
+        {
+          "text": "{wrong2}",
+          "is_correct": false,
+          "trap_type": "誤用 10% 比例計算"
+        },
+        {
+          "text": "{wrong3}",
+          "is_correct": false,
+          "trap_type": "誤把 val + test 合計"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -576,9 +1123,19 @@
         },
         "hook": "7:1.5:1.5 → train 70% / val 15% / test 15%;比例相加 = 10 為分母"
       },
-      "misconceptions": ["把 val 與 test 合計", "把比例分母誤算成 100"],
-      "related_node_ids": ["n_L22401_004"],
-      "tags": ["切分", "計算", "比例"]
+      "misconceptions": [
+        "把 val 與 test 合計",
+        "把比例分母誤算成 100"
+      ],
+      "related_node_ids": [
+        "n_L22401_004"
+      ],
+      "tags": [
+        "切分",
+        "計算",
+        "比例"
+      ],
+      "boss_topics": []
     },
     {
       "id": "q_n18_020",
@@ -590,10 +1147,25 @@
       "source_level": "L1",
       "stem": "某團隊欲建立電商使用者下個月流失預測模型,資料含 2 年的使用者每日行為紀錄,且同一使用者有上千筆行為紀錄。下列何種切分策略最能避免資料洩漏並反映真實部署表現?",
       "options": [
-        {"text": "先依時間切『過去訓練、近期測試』,再於各集合內以使用者 ID 為群組避免同 ID 跨集", "is_correct": true},
-        {"text": "對所有 2 年資料隨機 70/15/15 切分,以最大化各集合內的使用者與時間多樣性", "is_correct": false, "trap_type": "時序 + 群組雙重洩漏"},
-        {"text": "只做使用者 ID group-based split 而忽略時間,讓三集合都包含完整 2 年時間的資料", "is_correct": false, "trap_type": "未防時序洩漏"},
-        {"text": "只做時間切分而忽略使用者 ID,允許同使用者部分歷史在訓練集、近期行為在測試集", "is_correct": false, "trap_type": "未防 group 洩漏"}
+        {
+          "text": "先依時間切『過去訓練、近期測試』,再於各集合內以使用者 ID 為群組避免同 ID 跨集",
+          "is_correct": true
+        },
+        {
+          "text": "對所有 2 年資料隨機 70/15/15 切分,以最大化各集合內的使用者與時間多樣性",
+          "is_correct": false,
+          "trap_type": "時序 + 群組雙重洩漏"
+        },
+        {
+          "text": "只做使用者 ID group-based split 而忽略時間,讓三集合都包含完整 2 年時間的資料",
+          "is_correct": false,
+          "trap_type": "未防時序洩漏"
+        },
+        {
+          "text": "只做時間切分而忽略使用者 ID,允許同使用者部分歷史在訓練集、近期行為在測試集",
+          "is_correct": false,
+          "trap_type": "未防 group 洩漏"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -605,9 +1177,22 @@
         },
         "hook": "時序 + 群組複合場景 → 時間切 + group 約束,兩道防線都不可少"
       },
-      "misconceptions": ["只防一種洩漏忽略另一種", "把流失預測當 i.i.d. 處理"],
-      "related_node_ids": ["n_L22401_004", "n_L22401_005"],
-      "tags": ["時序", "group-based", "複合切分"]
+      "misconceptions": [
+        "只防一種洩漏忽略另一種",
+        "把流失預測當 i.i.d. 處理"
+      ],
+      "related_node_ids": [
+        "n_L22401_004",
+        "n_L22401_005"
+      ],
+      "tags": [
+        "時序",
+        "group-based",
+        "複合切分"
+      ],
+      "boss_topics": [
+        "ecommerce"
+      ]
     }
   ]
 }
