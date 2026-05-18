@@ -409,7 +409,7 @@
       "stem": "某礦場自駕運礦車的物件偵測模型在訓練時主要用乾燥晴天資料,部署半年後雨季來臨,現場回報誤判率上升;同時礦區擴建後出現新型機械(自走式破碎機),模型對其分類錯誤頻繁。MLOps 團隊應分別診斷?",
       "options": [
         {
-          "text": "雨季屬 Data Drift(輸入分佈變),新機械屬 Concept Drift,以 PSI 監控",
+          "text": "雨季屬 Data Drift,新機械屬 Concept Drift,用 PSI 監控",
           "is_correct": true
         },
         {
@@ -634,7 +634,7 @@
       "stem": "某自駕計程車的車載 IMU(慣性量測單元)+ LiDAR 點雲索引以每 10 ms 一筆 JSON 上傳邊緣節點:`{\"t\": 1715980800123, \"speed\": 38.5, \"yaw_rate\": 0.12, \"lidar_obj_cnt\": 7}`,工程師要為「過彎前異常加速偵測」抽特徵。下列哪個時序特徵抽取做法最對應半結構化 JSON 資料處理?",
       "options": [
         {
-          "text": "對 speed / yaw_rate 取 rolling window(1 秒)算 mean / std / max",
+          "text": "對 speed / yaw_rate 以 rolling window 取 mean/std/max",
           "is_correct": true
         },
         {

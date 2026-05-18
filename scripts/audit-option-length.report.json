@@ -1,10 +1,10 @@
 {
   "summary": {
-    "total": 502,
-    "longestPct": "42.2",
-    "shortestPct": "14.7",
+    "total": 546,
+    "longestPct": "43.6",
+    "shortestPct": "14.5",
     "avgRatio": "1.04",
-    "acceptablePct": "96.0",
+    "acceptablePct": "96.2",
     "flaggedCount": 0
   },
   "flagged": []
