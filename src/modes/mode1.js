@@ -135,8 +135,15 @@
   //     設 floor = 2n(n=20 時 = 40),讓「跨場 Jaccard IoU < 0.5」成立(平均一半題目不同)
   //  3. 最終池仍 < n 時接受較短戰鬥(showToast 提醒)
   // ※ 不可造題,僅用 QUESTIONS 內既有(鐵律 #5 來源忠實性)
+  // 2026-05-17:Mode 1 是商業情境決策題,排除純程式碼題(使用者反映:考 CNN 不該跳 np.array)
+  // 程式碼題仍會在 Mode 2(程式判讀道場)/ Mode 7(模考)/ Mode 8(Code Trace)/ Mode 6(卡牌)出現
+  function _isCodeQuestion(q) {
+    return q.format === 'code_reading' || q.format === 'code_trace';
+  }
+
   function pickQuestionsForBoss(boss, n = BOSS_QUESTIONS_PER_BATTLE) {
     const matched = QUESTIONS.filter(q => {
+      if (_isCodeQuestion(q)) return false;  // 排除程式碼題
       const text = (q.stem || '') + ' ' + (q.tags || []).join(' ');
       return boss.keywords.some(k => text.includes(k));
     });
@@ -148,7 +155,10 @@
       // 2026-05-16 H1 fix: subject 2 (L22 大數據) 與商業/產業 BOSS 主題天然相關
       // (資料工程、隱私、生成式 AI 應用等);擴大 filler pool 涵蓋三科,
       // 避免 L22 題目在 keyword pool 不足時被排除。
-      const general = QUESTIONS.filter(q => [1, 2, 3].includes(q.subject) && !pool.includes(q));
+      // 2026-05-17:兜底也排除程式碼題,保持商業情境純度
+      const general = QUESTIONS.filter(q =>
+        [1, 2, 3].includes(q.subject) && !pool.includes(q) && !_isCodeQuestion(q)
+      );
       // 把缺口補到 floor,一次抽 (floor - pool.length) 題進池
       pool = [...pool, ...RNG.pickN(general, Math.max(0, VARIATION_FLOOR - pool.length))];
     }
