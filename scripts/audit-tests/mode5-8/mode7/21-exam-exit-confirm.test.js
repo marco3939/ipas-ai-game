@@ -160,4 +160,41 @@ function setupMode7(n = 3) {
     'F3: navigateNext() 正常推進 state.idx → 1');
 }
 
+// --- G. DrillSession 有 onComplete 時(下鑽回原戰鬥),結算路徑不清旗標 ---
+//   §8 H1 修補驗證:Mode 1/2/3/4/5/6/7/8 答錯走 drillThis → DrillSession.start(..., onComplete)
+//   下鑽結束 → onComplete 觸發 → 回原戰鬥;此時旗標需保持 true,否則「下鑽完旗標永久 false」
+{
+  const { Mode, sandbox } = setupMode7(3);
+  Mode._startBattle();
+  // 確保進入戰鬥時旗標 = true
+  A.eq(sandbox.window._examInProgress, true, 'G0: 戰鬥中旗標 true');
+
+  // 模擬 DrillSession 結算階段:queue 空 + total > 0 + 有 onComplete(下鑽回戰鬥情境)
+  let cbCalled = false;
+  sandbox.window.DrillSession.queue = [];
+  sandbox.window.DrillSession.total = 1;
+  sandbox.window.DrillSession.correct = 1;
+  sandbox.window.DrillSession.targetNode = 'n_test';
+  sandbox.window.DrillSession.originalQ = { id: 'q_orig' };
+  sandbox.window.DrillSession.depth = 0;
+  sandbox.window.DrillSession.onComplete = () => { cbCalled = true; };
+
+  try { sandbox.window.DrillSession.next(); } catch (_) {}
+
+  A.eq(sandbox.window._examInProgress, true,
+    'G1: DrillSession 有 onComplete 時,結算進入路徑後旗標保持 true(下鑽完回原戰鬥不被誤清)');
+}
+
+// --- H. Source-level 驗證:DrillSession.next 清旗標條件含 !this.onComplete guard ---
+//   驗證 H1 修補的 source code 邏輯(execution-level 在 sandbox 內 race 不穩定,改 source 驗證)
+//   結算路徑必須含 `!this.onComplete` guard,否則「下鑽完旗標永久 false」復現
+{
+  const fs = require('fs');
+  const path = require('path');
+  const indexSrc = fs.readFileSync(path.join(__dirname, '../../../../src/index.html'), 'utf8');
+  const hasH1Guard = /depth\s*===\s*0\s*&&\s*!this\.onComplete[\s\S]*?_setExamMode\(false\)/.test(indexSrc);
+  A.ok(hasH1Guard,
+    'H: index.html DrillSession.next 結算路徑含 `depth===0 && !this.onComplete` guard,避免下鑽回戰鬥誤清旗標');
+}
+
 process.exit(A.summary('Mode7 exam-exit confirm'));

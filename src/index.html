@@ -1947,8 +1947,12 @@ const DrillSession = {
       showToast(`${allCorrect ? '🎉' : '✓'} 下鑽完成${lvLabel}!正答 ${this.correct}/${this.total} (${ratioPct}%) · 熟練度 +${bonus}`, 3500);
       if (window.confetti && allCorrect && this.total > 0 && this.depth === 0) GameFX.bigConfetti();
       // 完成後:若有 onComplete 就呼叫(回到原戰鬥),否則才回首頁
-      // 2026-05-19:在 callback 前清考試旗標(下鑽結束 → 原 mode 自己決定要不要重新標)
-      if (typeof _setExamMode === 'function' && this.depth === 0) _setExamMode(false);
+      // 2026-05-19 §8 H1 修補:「僅當沒 onComplete 時清旗標」
+      //   - 有 onComplete = 下鑽結束回原戰鬥(Mode 1/2/3/4/5/6/7/8.drillThis)→ 旗標保持 true 讓原戰鬥延續
+      //   - 沒 onComplete = 從 Mode 7 review 結算後啟動的下鑽 / 獨立下鑽 → 結束走 goHome,旗標清掉
+      if (typeof _setExamMode === 'function' && this.depth === 0 && !this.onComplete) {
+        _setExamMode(false);
+      }
       setTimeout(() => {
         if (this.onComplete) {
           const cb = this.onComplete;

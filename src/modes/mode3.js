@@ -329,6 +329,8 @@
           this._placeCooldown = false;
           this._dragCardId = null;
           this._cleanupGhosts && this._cleanupGhosts();
+          // 2026-05-19 §8 M2 修補:silent return 路徑也清考試旗標
+          if (typeof _setExamMode === 'function') _setExamMode(false);
           return;
         }
         this.state.timeLeft--;
