@@ -1783,10 +1783,10 @@
       const lvlHintText = lvm.hint;
       // Hero 漸層:依等級切換深底色(深紫紅 / 深琥珀 / 深綠暗黑)
       const heroBg = isHigh
-        ? 'radial-gradient(circle at 30% 0%, #064e3b 0%, #022c22 60%, #021711 100%)'
+        ? 'var(--grad-hero-success)'
         : isMid
-          ? 'radial-gradient(circle at 30% 0%, #78350f 0%, #451a03 60%, #1c0a01 100%)'
-          : 'radial-gradient(circle at 30% 0%, #7f1d1d 0%, #450a0a 60%, #1a0404 100%)';
+          ? 'var(--grad-hero-warning)'
+          : 'var(--grad-hero-danger)';
       const reasonText = reason === 'time_up' ? '⏰ 時間到自動交卷' :
                          reason === 'surrender' ? '🏳️ 投降結束' :
                          reason === 'submit' ? '📤 已交卷' :

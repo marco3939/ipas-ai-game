@@ -268,7 +268,7 @@
             <div style="margin-left:auto">⚡ MP ${player.mp} / ${player.mpMax}</div>
           </div>
           <div class="hp-track" style="margin-top:10px;height:8px;background:rgba(255,255,255,0.06)">
-            <div class="hp-fill" style="width:${Math.round(unlocked/total*100)}%;background:linear-gradient(90deg,#60a5fa,#fbbf24)"></div>
+            <div class="hp-fill" style="width:${Math.round(unlocked/total*100)}%;background:var(--grad-info)"></div>
           </div>
         </div>`;
 
@@ -297,7 +297,7 @@
           <div class="actions" style="margin-top:10px;flex-wrap:wrap">
             <button class="btn btn-ghost" onclick="Mode6.selectAllChallengeableInFilter()">✅ 全選 (依 MP 上限,排除金卡 + 無題卡)</button>
             <button class="btn btn-ghost" onclick="Mode6.clearBatchSelection()">🗑 清空選擇</button>
-            <button class="btn btn-primary" onclick="Mode6.executeBatch()" ${batchSelectedCount===0?'disabled':''} style="background:linear-gradient(90deg,#f87171,#fbbf24)">🔥 執行批次挑戰</button>
+            <button class="btn btn-primary" onclick="Mode6.executeBatch()" ${batchSelectedCount===0?'disabled':''} style="background:var(--grad-fire)">🔥 執行批次挑戰</button>
             <button class="btn btn-ghost" onclick="Mode6.toggleBatchMode()">⬅ 退出批次模式</button>
           </div>
         </div>
@@ -320,8 +320,8 @@
         </div>
         <div class="actions">
           <button class="btn btn-ghost" onclick="goHome()">🏠 回主頁</button>
-          ${batchMode ? '' : `<button class="btn btn-primary" onclick="Mode6.toggleBatchMode()" style="background:linear-gradient(90deg,#f87171,#fbbf24)">🔥 批次挑戰模式(依 MP 多選解鎖)</button>`}
-          <button class="btn btn-primary" onclick="Mode6.startMockExam()" style="background:linear-gradient(90deg,#60a5fa,#fbbf24)">📋 對篩選範圍模擬考</button>
+          ${batchMode ? '' : `<button class="btn btn-primary" onclick="Mode6.toggleBatchMode()" style="background:var(--grad-fire)">🔥 批次挑戰模式(依 MP 多選解鎖)</button>`}
+          <button class="btn btn-primary" onclick="Mode6.startMockExam()" style="background:var(--grad-info)">📋 對篩選範圍模擬考</button>
           <button class="btn btn-ghost" onclick="Mode6.shareProgress()">📤 分享收藏進度</button>
           <button class="btn btn-ghost" onclick="if(confirm('重置圖鑑進度?(只清本案計數,不影響全域 Mastery / 錯題本)'))Mode6.resetCodex()">🔄 重置圖鑑</button>
         </div>
@@ -651,7 +651,7 @@
           ${(m.attempts||0) > 0 ? `
             <div style="margin-top:10px">
               <div style="font-size:0.85rem;color:var(--fg-dim);margin-bottom:4px">熟練度 ${m.score} / 100 · 嘗試 ${m.attempts} 次 · 答對 ${m.correct}</div>
-              <div class="hp-track"><div class="hp-fill" style="width:${m.score}%;background:linear-gradient(90deg,#60a5fa,#fbbf24)"></div></div>
+              <div class="hp-track"><div class="hp-fill" style="width:${m.score}%;background:var(--grad-info)"></div></div>
             </div>` : ''}
         </div>
 
@@ -710,7 +710,7 @@
         // 批次中:旗標已由 executeBatch 設好,不重設
       }
 
-      const ctx = `<div class="boss-bar" style="background:linear-gradient(90deg,#1e3a8a,#0f766e)">
+      const ctx = `<div class="boss-bar" style="background:var(--grad-primary)">
         <div class="boss-name">⚔️ 挑戰封印 — ${esc(card.knowledge_code)} · ${esc(card.title)}</div>
         <div style="font-size:0.85rem;color:rgba(255,255,255,0.85);margin-top:4px">
           答對:Mastery +(共用層公式)· 連對 ${STREAK_GOLD_THRESHOLD} 題升金卡<br>
