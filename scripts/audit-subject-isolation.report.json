@@ -1,0 +1,33 @@
+{
+  "generated_at": "2026-05-19T15:40:06.325Z",
+  "totalQ": 905,
+  "fileCount": 46,
+  "subjectDistribution": {
+    "1": 199,
+    "2": 340,
+    "3": 366,
+    "other": 0
+  },
+  "totalViolations": 0,
+  "violationsByCheck": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+  },
+  "crossSubjectAllowlist": [
+    "questions.json",
+    "questions-batch-boss-fill.json",
+    "questions-mode8-trace.json",
+    "questions-confusion-matrix.json",
+    "questions-pa-code.json",
+    "questions-pb-visual.json",
+    "questions-pc-modes.json",
+    "questions-pd-scenario.json",
+    "questions-pe-advanced-s1.json",
+    "questions-pf-advanced-s3.json",
+    "questions-pg-eval.json",
+    "questions-ph-mlops.json"
+  ],
+  "violations": []
+}

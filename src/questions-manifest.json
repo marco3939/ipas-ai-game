@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-05-19T05:14:27.231Z",
+  "generated_at": "2026-05-19T15:41:14.227Z",
   "total_files": 46,
   "total_questions": 905,
   "subject_totals": {
@@ -158,10 +158,10 @@
     },
     {
       "file": "questions-batch-n19-L22402.json",
-      "count": 20,
+      "count": 27,
       "subjects": {
         "1": 0,
-        "2": 20,
+        "2": 27,
         "3": 0
       }
     },
@@ -248,10 +248,10 @@
     },
     {
       "file": "questions-batch-n28-L23-RL-biz.json",
-      "count": 15,
+      "count": 8,
       "subjects": {
         "1": 0,
-        "2": 7,
+        "2": 0,
         "3": 8
       }
     },
