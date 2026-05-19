@@ -1393,7 +1393,7 @@
           "is_correct": true
         },
         {
-          "text": "(A)K-means 處理迴歸;(B)Linear Regression 處理客戶分群;(C)DBSCAN 處理時序 — 三者通用模型可互換使用達最佳效果",
+          "text": "(A)K-means 處理迴歸;(B)Linear Regression 處理客戶分群;(C)DBSCAN 處理時序 — 此三者皆為通用模型可互相替換使用以達到最佳效果與表現",
           "is_correct": false,
           "trap_type": "三任務性質與模型完全不對應,且模型不可互換"
         },

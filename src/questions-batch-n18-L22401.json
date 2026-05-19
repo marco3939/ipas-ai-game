@@ -273,7 +273,7 @@
           "is_correct": true
         },
         {
-          "text": "Online Learning,逐筆吃進影像即時更新權重,讓模型能對每張新片立即調整參數",
+          "text": "Online Learning,逐筆吃進影像並即時更新權重,讓模型能對每張新進來的影像立即調整參數",
           "is_correct": false,
           "trap_type": "醫療場景不應逐筆即時更新"
         },

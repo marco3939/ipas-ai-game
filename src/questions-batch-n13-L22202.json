@@ -179,7 +179,7 @@
           "trap_type": "把架構選錯歸咎技術過時"
         },
         {
-          "text": "這是 schema-on-read 架構的固有缺陷,只有 schema-on-write 才能避免任何資料品質問題",
+          "text": "這是 schema-on-read 架構與生俱來的固有缺陷,只有 schema-on-write 架構才能避免任何資料品質問題",
           "is_correct": false,
           "trap_type": "把治理問題歸咎讀寫時機"
         }
@@ -232,7 +232,7 @@
           "trap_type": "誤以為 Lakehouse 完全取代"
         },
         {
-          "text": "Lakehouse 等同 Lake 與 Warehouse 簡單堆疊,因此 BI 與 ML 仍須各自維護獨立副本與權限機制",
+          "text": "Lakehouse 等同 Lake 與 Warehouse 兩者的簡單堆疊組合,因此 BI 與 ML 仍須各自維護獨立副本與權限機制",
           "is_correct": false,
           "trap_type": "把 Lakehouse 視為堆疊"
         },

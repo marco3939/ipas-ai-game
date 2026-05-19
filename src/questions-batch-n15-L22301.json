@@ -338,7 +338,7 @@
           "is_correct": true
         },
         {
-          "text": "可確定該 URL 確實在已下架集合中,Bloom Filter 的設計特性僅產生偽陰性回報訊息",
+          "text": "可確定該 URL 確實在已下架集合之中,Bloom Filter 的設計特性僅會產生偽陰性的回報訊息卻不產生偽陽性",
           "is_correct": false,
           "trap_type": "顛倒偽陽偽陰"
         },

@@ -64,7 +64,7 @@
       "stem": "DDPG 採用 Actor-Critic 雙網路架構。下列關於兩個網路『角色分工』與『輸出內容』的描述何者最為精確?",
       "options": [
         {"key": "A", "text": "Actor 輸出動作 μ(s);Critic 輸出 Q(s,a);Actor 求最大 Q,Critic 以 TD-error 學", "is_correct": true, "trap_type": "正解:Actor-Critic 分工"},
-        {"key": "B", "text": "Actor 輸出 Q 值估計;Critic 輸出動作機率分布,兩者輸出互換但功能仍等價於 DDPG 標準架構", "is_correct": false, "trap_type": "兩者角色顛倒"},
+        {"key": "B", "text": "Actor 輸出 Q 值之估計值;Critic 輸出動作之機率分布,兩者輸出互換但功能仍完全等價於 DDPG 標準的雙網路完整架構", "is_correct": false, "trap_type": "兩者角色顛倒"},
         {"key": "C", "text": "DDPG 僅有 Critic 一個神經網路,Actor 為傳統 ε-greedy 規則並不需要任何網路結構", "is_correct": false, "trap_type": "誤判單網路"},
         {"key": "D", "text": "Actor 與 Critic 共享同一網路的所有輸出層,僅以不同損失函數區分,兩者本質上實為同一神經網路", "is_correct": false, "trap_type": "誤把單網路雙頭當分開網路"}
       ],

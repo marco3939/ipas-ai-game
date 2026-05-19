@@ -982,7 +982,7 @@
           "trap_type": "與 Model Registry 混淆"
         },
         {
-          "text": "負責深度學習推論的 GPU 加速運算",
+          "text": "負責深度學習推論時的 GPU 加速運算與處理",
           "is_correct": false,
           "trap_type": "GPU 由底層硬體負責"
         }

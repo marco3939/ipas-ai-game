@@ -448,7 +448,7 @@
           "is_correct": true
         },
         {
-          "text": "Leave-One-Out CV(LOOCV),每次留 1 筆驗證共 150 次,因樣本少故 LOOCV 一定最佳",
+          "text": "Leave-One-Out CV(LOOCV),每次留 1 筆做驗證共執行 150 次,因樣本少故 LOOCV 一定為最佳選擇",
           "is_correct": false,
           "trap_type": "LOOCV 在極不平衡時,留出陰性樣本的 fold 完全無法評估陽性偵測能力,且運算成本高、估計變異大"
         },

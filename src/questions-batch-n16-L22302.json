@@ -481,7 +481,7 @@
           "trap_type": "兩者結構描述顛倒"
         },
         {
-          "text": "FP-Growth 比 Apriori 慢但更精確;Apriori 為近似演算法,容易在大資料下產生假規則",
+          "text": "FP-Growth 比 Apriori 速度更慢但反而更精確;Apriori 屬於近似演算法,容易在大資料規模下產生大量假規則",
           "is_correct": false,
           "trap_type": "兩者都是精確,非近似"
         },
