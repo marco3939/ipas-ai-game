@@ -235,7 +235,8 @@ function loadRenderHelpers(sandbox) {
 // 載 generateVariation
 function loadGenerateVariation(sandbox) {
   const idx = readIndex();
-  const block = sliceConst(idx, 'function generateVariation(originalQ, count = 3) {',
+  // 2026-05-19 M4 修補:generateVariation 簽名加 excludeIds 第三參(deep drill 排除父層原題)
+  const block = sliceConst(idx, 'function generateVariation(originalQ, count = 3, excludeIds = null) {',
     '// === Toast');
   vm.runInContext(block + '\n;', sandbox);
   return sandbox.generateVariation;
