@@ -3,7 +3,10 @@
   "schema_version": "iron-rule-1+2+6",
   "generated_at": "2026-05-18",
   "batch": "N28 — 科三 L23201 強化學習(Q-Learning + SARSA + DQN)+ L22402 ML 模型業務情境對映 合併批次",
-  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "exam_target": {
+    "name": "IPAS AI 應用規劃師中級",
+    "date": "2026-05-23"
+  },
   "iron_rule_compliance": {
     "rule_1_drill_explanation": "每題皆有 explanation.correct/wrong/hook + misconceptions ≥ 1 + related_node_ids",
     "rule_2_shuffle_and_cases": "shuffle_options:true;概念辨析題以靜態情境呈現(公式 / 屬性 / 命名差異)、業務對映題以情境變數做領域變化;懸崖行走、Atari 等案例題以靜態案例呈現",
@@ -13,15 +16,30 @@
     "rule_6_isolation": "本檔合併 L23201(RL)+ L22402(業務對映)三節點共 15 題;不改其他既有題目檔或共享層"
   },
   "subject": 3,
-  "knowledge_codes": ["L23201", "L22402"],
+  "knowledge_codes": [
+    "L23201",
+    "L22402"
+  ],
   "distribution": {
     "L23201_count": 8,
     "L22402_count": 7,
-    "by_node": {"n_L23201_005": 4, "n_L23201_006": 4, "n_L22402_007": 7},
-    "by_format": {"single_choice": 15},
-    "by_difficulty": {"easy": 1, "medium": 11, "hard": 3}
+    "by_node": {
+      "n_L23201_005": 4,
+      "n_L23201_006": 4,
+      "n_L22402_007": 7
+    },
+    "by_format": {
+      "single_choice": 15
+    },
+    "by_difficulty": {
+      "easy": 1,
+      "medium": 11,
+      "hard": 3
+    }
   },
-  "source_pdf": ["機器學習模型圖卡(全).pdf (page 35-36 Q-Learning/SARSA;page 40 DQN;page 2 心智圖 ML×業務對映)"],
+  "source_pdf": [
+    "機器學習模型圖卡(全).pdf (page 35-36 Q-Learning/SARSA;page 40 DQN;page 2 心智圖 ML×業務對映)"
+  ],
   "questions": [
     {
       "id": "q_n28_001",
@@ -33,10 +51,30 @@
       "source_level": "L2",
       "stem": "在強化學習教材中,Q-Learning 與 SARSA 常被以 Off-policy / On-policy 對照講解。下列關於兩者『策略屬性』與『更新時所用動作』的描述何者最為精確?",
       "options": [
-        {"key": "A", "text": "Q-Learning 屬 Off-policy 用下一狀態最大 Q;SARSA 屬 On-policy 用實際採取的下一動作", "is_correct": true, "trap_type": "正解:On/Off-policy 與更新動作對照"},
-        {"key": "B", "text": "Q-Learning 屬 On-policy 用實際採取的下一動作;SARSA 屬 Off-policy 用下一狀態最大 Q 值", "is_correct": false, "trap_type": "On/Off-policy 完全顛倒"},
-        {"key": "C", "text": "Q-Learning 與 SARSA 同屬 On-policy;差別僅在 Q-Learning 學得快、SARSA 學得慢無策略本質差異", "is_correct": false, "trap_type": "誤判兩者皆 On-policy"},
-        {"key": "D", "text": "Q-Learning 與 SARSA 同屬 Off-policy;兩者更新都用『下一狀態的最大 Q』只是學習率超參設定不同", "is_correct": false, "trap_type": "誤判兩者皆 Off-policy"}
+        {
+          "key": "A",
+          "text": "Q-Learning 屬 Off-policy 用下一狀態最大 Q;SARSA 屬 On-policy 用實際採取的下一動作",
+          "is_correct": true,
+          "trap_type": "正解:On/Off-policy 與更新動作對照"
+        },
+        {
+          "key": "B",
+          "text": "Q-Learning 屬 On-policy 用實際採取的下一動作;SARSA 屬 Off-policy 用下一狀態最大 Q 值",
+          "is_correct": false,
+          "trap_type": "On/Off-policy 完全顛倒"
+        },
+        {
+          "key": "C",
+          "text": "Q-Learning 與 SARSA 同屬 On-policy;差別僅在 Q-Learning 學得快、SARSA 學得慢無策略本質差異",
+          "is_correct": false,
+          "trap_type": "誤判兩者皆 On-policy"
+        },
+        {
+          "key": "D",
+          "text": "Q-Learning 與 SARSA 同屬 Off-policy;兩者更新都用『下一狀態的最大 Q』只是學習率超參設定不同",
+          "is_correct": false,
+          "trap_type": "誤判兩者皆 Off-policy"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -48,9 +86,20 @@
         },
         "hook": "口訣:Q 取 max → Off-policy 激進;SARSA 跟實際 → On-policy 保守"
       },
-      "misconceptions": ["把 On/Off-policy 顛倒", "誤以為兩者更新公式相同"],
-      "related_node_ids": ["n_L23201_005", "n_L23201_004"],
-      "tags": ["q-learning", "sarsa", "on-policy", "off-policy"],
+      "misconceptions": [
+        "把 On/Off-policy 顛倒",
+        "誤以為兩者更新公式相同"
+      ],
+      "related_node_ids": [
+        "n_L23201_005",
+        "n_L23201_004"
+      ],
+      "tags": [
+        "q-learning",
+        "sarsa",
+        "on-policy",
+        "off-policy"
+      ],
       "errata_critical": false
     },
     {
@@ -63,10 +112,30 @@
       "source_level": "L2",
       "stem": "Q-Learning 的 Q 值更新公式為 Q(s,a) ← Q(s,a) + α[r + γ·X − Q(s,a)]。下列關於『X』項以及其策略屬性的描述何者最為精確?",
       "options": [
-        {"key": "A", "text": "X = max_a' Q(s',a') 取下一狀態所有可能動作中最大 Q 值,使其屬於 Off-policy 演算法的標準形式", "is_correct": true, "trap_type": "正解:max Q 算子與 Off-policy 對映"},
-        {"key": "B", "text": "X = Q(s', a_實際) 取實際在 s' 採取的下一動作之 Q 值,使其屬於 On-policy 演算法的標準形式", "is_correct": false, "trap_type": "把 SARSA 公式套到 Q-Learning"},
-        {"key": "C", "text": "X = 平均 Q(s',a') 對 a' 取期望平均,屬於 Expected SARSA 變體並等同於原始 Q-Learning 演算法", "is_correct": false, "trap_type": "誤把 Expected SARSA 當 Q-Learning"},
-        {"key": "D", "text": "X = Q(s,a) 自身的當前估計值,僅以即時獎勵 r 與折扣項調整數值,完全不涉及下一狀態任何動作的 Q 值估計", "is_correct": false, "trap_type": "完全脫離 TD 結構"}
+        {
+          "key": "A",
+          "text": "X = max_a' Q(s',a') 取下一狀態所有可能動作中最大 Q 值,使其屬於 Off-policy 演算法的標準形式",
+          "is_correct": true,
+          "trap_type": "正解:max Q 算子與 Off-policy 對映"
+        },
+        {
+          "key": "B",
+          "text": "X = Q(s', a_實際) 取實際在 s' 採取的下一動作之 Q 值,使其屬於 On-policy 演算法的標準形式",
+          "is_correct": false,
+          "trap_type": "把 SARSA 公式套到 Q-Learning"
+        },
+        {
+          "key": "C",
+          "text": "X = 平均 Q(s',a') 對 a' 取期望平均,屬於 Expected SARSA 變體並等同於原始 Q-Learning 演算法",
+          "is_correct": false,
+          "trap_type": "誤把 Expected SARSA 當 Q-Learning"
+        },
+        {
+          "key": "D",
+          "text": "X = Q(s,a) 自身的當前估計值,僅以即時獎勵 r 與折扣項調整數值,完全不涉及下一狀態任何動作的 Q 值估計",
+          "is_correct": false,
+          "trap_type": "完全脫離 TD 結構"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -78,9 +147,20 @@
         },
         "hook": "Q-Learning 公式必記:Q(s,a) ← Q(s,a) + α[r + γ·max Q(s',a') − Q(s,a)]"
       },
-      "misconceptions": ["把 SARSA 更新項套到 Q-Learning", "忘記 max 算子是 Q-Learning 的關鍵"],
-      "related_node_ids": ["n_L23201_005", "n_L23201_004"],
-      "tags": ["q-learning", "td-update", "max-q", "off-policy"],
+      "misconceptions": [
+        "把 SARSA 更新項套到 Q-Learning",
+        "忘記 max 算子是 Q-Learning 的關鍵"
+      ],
+      "related_node_ids": [
+        "n_L23201_005",
+        "n_L23201_004"
+      ],
+      "tags": [
+        "q-learning",
+        "td-update",
+        "max-q",
+        "off-policy"
+      ],
       "errata_critical": false
     },
     {
@@ -93,10 +173,30 @@
       "source_level": "L2",
       "stem": "SARSA 的命名來自更新公式所用的五元組 (s, a, r, s', a')。下列關於 SARSA 更新項與 Q-Learning 之差異的描述何者最為精確?",
       "options": [
-        {"key": "A", "text": "SARSA 用 Q(s', a_實際) 即實際採取的下一動作之 Q 值;Q-Learning 用 max_a' Q(s',a') 取最大", "is_correct": true, "trap_type": "正解:實際 a vs max Q 對照"},
-        {"key": "B", "text": "SARSA 用 max_a' Q(s',a');Q-Learning 用 Q(s', a_實際) 兩者命名上互換但實質公式相同", "is_correct": false, "trap_type": "兩者顛倒"},
-        {"key": "C", "text": "SARSA 與 Q-Learning 更新公式完全相同;只是 SARSA 強制要求 ε-greedy 而 Q-Learning 可任意探索", "is_correct": false, "trap_type": "忽略公式差異"},
-        {"key": "D", "text": "SARSA 不需要下一狀態 s';只用 (s, a, r) 三元組更新而 Q-Learning 用四元組 (s, a, r, s')", "is_correct": false, "trap_type": "脫離五元組命名"}
+        {
+          "key": "A",
+          "text": "SARSA 用 Q(s', a_實際) 即實際採取的下一動作之 Q 值;Q-Learning 用 max_a' Q(s',a') 取最大",
+          "is_correct": true,
+          "trap_type": "正解:實際 a vs max Q 對照"
+        },
+        {
+          "key": "B",
+          "text": "SARSA 用 max_a' Q(s',a');Q-Learning 用 Q(s', a_實際) 兩者命名上互換但實質公式相同",
+          "is_correct": false,
+          "trap_type": "兩者顛倒"
+        },
+        {
+          "key": "C",
+          "text": "SARSA 與 Q-Learning 更新公式完全相同;只是 SARSA 強制要求 ε-greedy 而 Q-Learning 可任意探索",
+          "is_correct": false,
+          "trap_type": "忽略公式差異"
+        },
+        {
+          "key": "D",
+          "text": "SARSA 不需要下一狀態 s';只用 (s, a, r) 三元組更新而 Q-Learning 用四元組 (s, a, r, s')",
+          "is_correct": false,
+          "trap_type": "脫離五元組命名"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -108,9 +208,19 @@
         },
         "hook": "SARSA 諧音記憶:State-Action-Reward-State'-Action' 五元組,a' 是『實際』非 max"
       },
-      "misconceptions": ["以為 SARSA 公式含 max", "忘記 SARSA 命名來源"],
-      "related_node_ids": ["n_L23201_005", "n_L23201_004"],
-      "tags": ["sarsa", "td-update", "on-policy"],
+      "misconceptions": [
+        "以為 SARSA 公式含 max",
+        "忘記 SARSA 命名來源"
+      ],
+      "related_node_ids": [
+        "n_L23201_005",
+        "n_L23201_004"
+      ],
+      "tags": [
+        "sarsa",
+        "td-update",
+        "on-policy"
+      ],
       "errata_critical": false
     },
     {
@@ -123,10 +233,30 @@
       "source_level": "L2",
       "stem": "在『懸崖行走 Cliff Walking』經典案例中(網格世界,懸崖邊高負獎勵,終點正獎勵),Q-Learning 與 SARSA 在訓練收斂後會學到截然不同的策略。下列對兩者行為差異的描述何者最為精確?",
       "options": [
-        {"key": "A", "text": "Q-Learning 走貼懸崖的最短險路(最優但偶會跌落);SARSA 走遠離懸崖的繞遠路(較安全但長)", "is_correct": true, "trap_type": "正解:激進險路 vs 保守遠路"},
-        {"key": "B", "text": "Q-Learning 與 SARSA 收斂後完全相同;網格世界規模小不足以呈現兩者策略差異", "is_correct": false, "trap_type": "誤判兩者一致"},
-        {"key": "C", "text": "Q-Learning 走遠路保守;SARSA 走險路激進兩者特性命名上互換但實質結果相反", "is_correct": false, "trap_type": "兩者顛倒"},
-        {"key": "D", "text": "兩者皆需先學環境轉移機率才能走任何路徑;懸崖案例必須改用 Model-Based 才有收斂可能", "is_correct": false, "trap_type": "誤判需 Model-Based"}
+        {
+          "key": "A",
+          "text": "Q-Learning 走貼懸崖的最短險路(最優但偶會跌落);SARSA 走遠離懸崖的繞遠路(較安全但長)",
+          "is_correct": true,
+          "trap_type": "正解:激進險路 vs 保守遠路"
+        },
+        {
+          "key": "B",
+          "text": "Q-Learning 與 SARSA 收斂後完全相同;網格世界規模小不足以呈現兩者策略差異",
+          "is_correct": false,
+          "trap_type": "誤判兩者一致"
+        },
+        {
+          "key": "C",
+          "text": "Q-Learning 走遠路保守;SARSA 走險路激進兩者特性命名上互換但實質結果相反",
+          "is_correct": false,
+          "trap_type": "兩者顛倒"
+        },
+        {
+          "key": "D",
+          "text": "兩者皆需先學環境轉移機率才能走任何路徑;懸崖案例必須改用 Model-Based 才有收斂可能",
+          "is_correct": false,
+          "trap_type": "誤判需 Model-Based"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -138,9 +268,20 @@
         },
         "hook": "懸崖案例記憶圖:Q-Learning 沿崖邊抄近路、SARSA 繞中央走遠路"
       },
-      "misconceptions": ["誤以為兩者結果相同", "把激進 / 保守特性顛倒"],
-      "related_node_ids": ["n_L23201_005", "n_L23201_004"],
-      "tags": ["cliff-walking", "q-learning", "sarsa", "risk-aware"],
+      "misconceptions": [
+        "誤以為兩者結果相同",
+        "把激進 / 保守特性顛倒"
+      ],
+      "related_node_ids": [
+        "n_L23201_005",
+        "n_L23201_004"
+      ],
+      "tags": [
+        "cliff-walking",
+        "q-learning",
+        "sarsa",
+        "risk-aware"
+      ],
       "errata_critical": false
     },
     {
@@ -153,10 +294,30 @@
       "source_level": "L2",
       "stem": "DQN(Deep Q-Network)以神經網路取代 Q-Learning 的 Q-Table。下列關於『為何要引入 NN 取代 Q-Table』的描述何者最為精確?",
       "options": [
-        {"key": "A", "text": "Q-Table 在大狀態空間(如 Atari 84×84 像素)無法窮舉;改 NN 以參數 θ 近似 Q(s,a;θ) 對未見狀態泛化", "is_correct": true, "trap_type": "正解:大狀態空間泛化"},
-        {"key": "B", "text": "Q-Table 在小狀態空間下收斂速度反而較慢,因此只要任務規模足夠就一律改用 NN 取代,以顯著加快整體訓練收斂速度", "is_correct": false, "trap_type": "倒因為果"},
-        {"key": "C", "text": "Q-Table 在 Off-policy 模式下必然失效,改 NN 後策略屬性會自動改變使 DQN 升級為 On-policy 演算法", "is_correct": false, "trap_type": "誤判策略屬性會變"},
-        {"key": "D", "text": "Q-Table 完全無法處理離散動作空間,只有改用 NN 之後 DQN 才得以輸出連續動作完整覆蓋所有控制類任務情境", "is_correct": false, "trap_type": "離散/連續顛倒"}
+        {
+          "key": "A",
+          "text": "Q-Table 在大狀態空間(如 Atari 84×84 像素)無法窮舉;改 NN 以參數 θ 近似 Q(s,a;θ) 對未見狀態泛化",
+          "is_correct": true,
+          "trap_type": "正解:大狀態空間泛化"
+        },
+        {
+          "key": "B",
+          "text": "Q-Table 在小狀態空間下收斂速度反而較慢,因此只要任務規模足夠就一律改用 NN 取代,以顯著加快整體訓練收斂速度",
+          "is_correct": false,
+          "trap_type": "倒因為果"
+        },
+        {
+          "key": "C",
+          "text": "Q-Table 在 Off-policy 模式下必然失效,改 NN 後策略屬性會自動改變使 DQN 升級為 On-policy 演算法",
+          "is_correct": false,
+          "trap_type": "誤判策略屬性會變"
+        },
+        {
+          "key": "D",
+          "text": "Q-Table 完全無法處理離散動作空間,只有改用 NN 之後 DQN 才得以輸出連續動作完整覆蓋所有控制類任務情境",
+          "is_correct": false,
+          "trap_type": "離散/連續顛倒"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -168,9 +329,19 @@
         },
         "hook": "DQN 動機口訣:大狀態空間 → Q-Table 爆炸 → NN 泛化"
       },
-      "misconceptions": ["以為 NN 取代 Q-Table 是為了加速", "誤以為 DQN 能處理連續動作"],
-      "related_node_ids": ["n_L23201_006", "n_L23201_005"],
-      "tags": ["dqn", "neural-network", "function-approximation"],
+      "misconceptions": [
+        "以為 NN 取代 Q-Table 是為了加速",
+        "誤以為 DQN 能處理連續動作"
+      ],
+      "related_node_ids": [
+        "n_L23201_006",
+        "n_L23201_005"
+      ],
+      "tags": [
+        "dqn",
+        "neural-network",
+        "function-approximation"
+      ],
       "errata_critical": false
     },
     {
@@ -183,10 +354,30 @@
       "source_level": "L2",
       "stem": "DQN 訓練三件套中的『Experience Replay(經驗回放)』是穩定訓練的關鍵設計。下列關於其用途的描述何者最為精確?",
       "options": [
-        {"key": "A", "text": "把 (s,a,r,s') 交互經驗存入緩衝池,訓練時從中隨機抽 batch 打破時序相關性,並提升樣本利用率", "is_correct": true, "trap_type": "正解:打破時序相關 + 重複使用"},
-        {"key": "B", "text": "按時序順序逐筆回放所有歷史交互經驗,讓網路嚴格依交互時序逐步更新以確保 Markov 性質完整保留下來", "is_correct": false, "trap_type": "誤判為串行回放"},
-        {"key": "C", "text": "回放真實環境模型計算下一狀態轉移機率分佈,讓 DQN 從 Model-Free 升級成 Model-Based 演算法", "is_correct": false, "trap_type": "誤判 DQN 性質"},
-        {"key": "D", "text": "讓玩家觀看遊戲錄影回放以人工標記獎勵訊號,屬監督式學習而非強化學習機制與 NN 訓練穩定性完全無關", "is_correct": false, "trap_type": "字面誤解"}
+        {
+          "key": "A",
+          "text": "把 (s,a,r,s') 交互經驗存入緩衝池,訓練時從中隨機抽 batch 打破時序相關性,並提升樣本利用率",
+          "is_correct": true,
+          "trap_type": "正解:打破時序相關 + 重複使用"
+        },
+        {
+          "key": "B",
+          "text": "按時序順序逐筆回放所有歷史交互經驗,讓網路嚴格依交互時序逐步更新以確保 Markov 性質完整保留下來",
+          "is_correct": false,
+          "trap_type": "誤判為串行回放"
+        },
+        {
+          "key": "C",
+          "text": "回放真實環境模型計算下一狀態轉移機率分佈,讓 DQN 從 Model-Free 升級成 Model-Based 演算法",
+          "is_correct": false,
+          "trap_type": "誤判 DQN 性質"
+        },
+        {
+          "key": "D",
+          "text": "讓玩家觀看遊戲錄影回放以人工標記獎勵訊號,屬監督式學習而非強化學習機制與 NN 訓練穩定性完全無關",
+          "is_correct": false,
+          "trap_type": "字面誤解"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -198,9 +389,19 @@
         },
         "hook": "Experience Replay 兩用途:破時序相關 + 重複用樣本"
       },
-      "misconceptions": ["以為 Replay 是串行回放", "把 Replay 誤為 Model-Based 機制"],
-      "related_node_ids": ["n_L23201_006", "n_L23201_005"],
-      "tags": ["dqn", "experience-replay", "sample-efficiency"],
+      "misconceptions": [
+        "以為 Replay 是串行回放",
+        "把 Replay 誤為 Model-Based 機制"
+      ],
+      "related_node_ids": [
+        "n_L23201_006",
+        "n_L23201_005"
+      ],
+      "tags": [
+        "dqn",
+        "experience-replay",
+        "sample-efficiency"
+      ],
       "errata_critical": false
     },
     {
@@ -213,10 +414,30 @@
       "source_level": "L2",
       "stem": "DQN 的另一關鍵設計是『Target Network(目標網路)』,即同時維護兩個 Q 網路(主網路 θ 與目標網路 θ⁻)。下列關於其作用的描述何者最為精確?",
       "options": [
-        {"key": "A", "text": "目標 Q 值改用固定 θ⁻ 計算,每 N 步才同步一次主網路權重,避免主網路追逐自身變動目標而發散", "is_correct": true, "trap_type": "正解:固定目標防發散"},
-        {"key": "B", "text": "目標網路即時跟隨主網路權重逐 step 完全同步,以確保兩者權重完全一致並避免梯度估計差異累積", "is_correct": false, "trap_type": "逐步同步 = 等同無 Target"},
-        {"key": "C", "text": "目標網路專用於儲存 Replay Buffer 歷史交互經驗,與訓練穩定性無關只是輔助記憶體管理機制", "is_correct": false, "trap_type": "字面混淆兩件套"},
-        {"key": "D", "text": "目標網路用於計算策略 π(a|s) 機率分佈,與 Q 值估計完全無關屬 Actor-Critic 結構的一部分", "is_correct": false, "trap_type": "與 A2C/A3C 混淆"}
+        {
+          "key": "A",
+          "text": "目標 Q 值改用固定 θ⁻ 計算,每 N 步才同步一次主網路權重,避免主網路追逐自身變動目標而發散",
+          "is_correct": true,
+          "trap_type": "正解:固定目標防發散"
+        },
+        {
+          "key": "B",
+          "text": "目標網路即時跟隨主網路權重逐 step 完全同步,以確保兩者權重完全一致並避免梯度估計差異累積",
+          "is_correct": false,
+          "trap_type": "逐步同步 = 等同無 Target"
+        },
+        {
+          "key": "C",
+          "text": "目標網路專用於儲存 Replay Buffer 歷史交互經驗,與訓練穩定性無關只是輔助記憶體管理機制",
+          "is_correct": false,
+          "trap_type": "字面混淆兩件套"
+        },
+        {
+          "key": "D",
+          "text": "目標網路用於計算策略 π(a|s) 機率分佈,與 Q 值估計完全無關屬 Actor-Critic 結構的一部分",
+          "is_correct": false,
+          "trap_type": "與 A2C/A3C 混淆"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -228,9 +449,19 @@
         },
         "hook": "DQN 三件套:NN 取代 Q-Table、Experience Replay 破時序、Target Network 穩目標"
       },
-      "misconceptions": ["以為 Target Network 與 Replay Buffer 同一件事", "誤判逐步同步即可"],
-      "related_node_ids": ["n_L23201_006", "n_L23201_005"],
-      "tags": ["dqn", "target-network", "training-stability"],
+      "misconceptions": [
+        "以為 Target Network 與 Replay Buffer 同一件事",
+        "誤判逐步同步即可"
+      ],
+      "related_node_ids": [
+        "n_L23201_006",
+        "n_L23201_005"
+      ],
+      "tags": [
+        "dqn",
+        "target-network",
+        "training-stability"
+      ],
       "errata_critical": false
     },
     {
@@ -243,10 +474,30 @@
       "source_level": "L2",
       "stem": "DQN 在強化學習分類上常被討論其是否屬於 Model-Based 還是 Model-Free。下列關於 DQN 性質的描述何者最為精確?",
       "options": [
-        {"key": "A", "text": "DQN 屬於 Model-Free 演算法,不需學環境轉移機率 P(s'|s,a),直接從實際交互經驗中學習 Q(s,a;θ)", "is_correct": true, "trap_type": "正解:Model-Free 從交互學 Q"},
-        {"key": "B", "text": "DQN 屬於 Model-Based 演算法,NN 內部必須先學環境轉移機率 P(s'|s,a) 才能執行 Q 值更新與動作選擇", "is_correct": false, "trap_type": "誤判為 Model-Based"},
-        {"key": "C", "text": "DQN 屬 Off-policy 同時也是 Model-Based,因為 Experience Replay 本質上等同於環境模型完整重建", "is_correct": false, "trap_type": "把 Replay 誤當環境模型"},
-        {"key": "D", "text": "DQN 既非 Model-Free 也非 Model-Based,屬 Imitation Learning 從專家示範軌跡學習而無關環境動態", "is_correct": false, "trap_type": "誤判為 Imitation Learning"}
+        {
+          "key": "A",
+          "text": "DQN 屬於 Model-Free 演算法,不需學環境轉移機率 P(s'|s,a),直接從實際交互經驗中學習 Q(s,a;θ)",
+          "is_correct": true,
+          "trap_type": "正解:Model-Free 從交互學 Q"
+        },
+        {
+          "key": "B",
+          "text": "DQN 屬於 Model-Based 演算法,NN 內部必須先學環境轉移機率 P(s'|s,a) 才能執行 Q 值更新與動作選擇",
+          "is_correct": false,
+          "trap_type": "誤判為 Model-Based"
+        },
+        {
+          "key": "C",
+          "text": "DQN 屬 Off-policy 同時也是 Model-Based,因為 Experience Replay 本質上等同於環境模型完整重建",
+          "is_correct": false,
+          "trap_type": "把 Replay 誤當環境模型"
+        },
+        {
+          "key": "D",
+          "text": "DQN 既非 Model-Free 也非 Model-Based,屬 Imitation Learning 從專家示範軌跡學習而無關環境動態",
+          "is_correct": false,
+          "trap_type": "誤判為 Imitation Learning"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -258,30 +509,67 @@
         },
         "hook": "DQN 雙標籤:Off-policy(策略屬性)+ Model-Free(不學環境模型)"
       },
-      "misconceptions": ["把 Experience Replay 當環境模型", "混淆 Off-policy 與 Model-Based 兩個維度"],
-      "related_node_ids": ["n_L23201_006", "n_L23201_005", "n_L23203_005"],
-      "tags": ["dqn", "model-free", "off-policy"],
+      "misconceptions": [
+        "把 Experience Replay 當環境模型",
+        "混淆 Off-policy 與 Model-Based 兩個維度"
+      ],
+      "related_node_ids": [
+        "n_L23201_006",
+        "n_L23201_005",
+        "n_L23203_005"
+      ],
+      "tags": [
+        "dqn",
+        "model-free",
+        "off-policy"
+      ],
       "errata_critical": false
     },
     {
       "id": "q_n28_009",
       "knowledge_code": "L22402",
       "node_id": "n_L22402_007",
-      "subject": 3,
+      "subject": 2,
       "format": "single_choice",
       "difficulty": "medium",
       "source_level": "L2",
       "stem": "{scenario}的金融科技團隊欲建構『股票價格(時序 + 多元因子)預測』模型,主管要求兼顧『短期日線預測』與『結構化財報特徵』。下列關於模型選型的描述何者最為合理?",
       "stem_variables": {
-        "case_a": {"scenario": "某券商研究部"},
-        "case_b": {"scenario": "某資產管理公司量化部"},
-        "case_c": {"scenario": "某 FinTech 新創"}
+        "case_a": {
+          "scenario": "某券商研究部"
+        },
+        "case_b": {
+          "scenario": "某資產管理公司量化部"
+        },
+        "case_c": {
+          "scenario": "某 FinTech 新創"
+        }
       },
       "options": [
-        {"key": "A", "text": "首選 XGBoost(結構化特徵)+ CNN/RNN(時序序列);兩類互補符合股票預測常見技術棧", "is_correct": true, "trap_type": "正解:XGBoost + CNN/RNN 組合"},
-        {"key": "B", "text": "首選 K-means 分群把所有歷史股價分群後;直接以分群結果預測明日價格無需任何模型", "is_correct": false, "trap_type": "分群誤當預測"},
-        {"key": "C", "text": "首選 Naive Bayes 假設特徵獨立;最適合股票多因子強相關情境並保證最佳預測精度", "is_correct": false, "trap_type": "違背 NB 獨立假設前提"},
-        {"key": "D", "text": "首選 KNN 計算與歷史相似日的距離;高維因子下 KNN 距離趨同問題對股票預測無影響", "is_correct": false, "trap_type": "忽略維度災難"}
+        {
+          "key": "A",
+          "text": "首選 XGBoost(結構化特徵)+ CNN/RNN(時序序列);兩類互補符合股票預測常見技術棧",
+          "is_correct": true,
+          "trap_type": "正解:XGBoost + CNN/RNN 組合"
+        },
+        {
+          "key": "B",
+          "text": "首選 K-means 分群把所有歷史股價分群後;直接以分群結果預測明日價格無需任何模型",
+          "is_correct": false,
+          "trap_type": "分群誤當預測"
+        },
+        {
+          "key": "C",
+          "text": "首選 Naive Bayes 假設特徵獨立;最適合股票多因子強相關情境並保證最佳預測精度",
+          "is_correct": false,
+          "trap_type": "違背 NB 獨立假設前提"
+        },
+        {
+          "key": "D",
+          "text": "首選 KNN 計算與歷史相似日的距離;高維因子下 KNN 距離趨同問題對股票預測無影響",
+          "is_correct": false,
+          "trap_type": "忽略維度災難"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -293,30 +581,67 @@
         },
         "hook": "股票對映:XGBoost(結構化)+ CNN/RNN(時序)是業界共識"
       },
-      "misconceptions": ["以為 K-means 可做預測", "忽略股票多因子的強相關"],
-      "related_node_ids": ["n_L22402_007", "n_L23203_005"],
-      "tags": ["stock-prediction", "xgboost", "rnn", "model-selection"],
+      "misconceptions": [
+        "以為 K-means 可做預測",
+        "忽略股票多因子的強相關"
+      ],
+      "related_node_ids": [
+        "n_L22402_007",
+        "n_L23203_005"
+      ],
+      "tags": [
+        "stock-prediction",
+        "xgboost",
+        "rnn",
+        "model-selection"
+      ],
       "errata_critical": false
     },
     {
       "id": "q_n28_010",
       "knowledge_code": "L22402",
       "node_id": "n_L22402_007",
-      "subject": 3,
+      "subject": 2,
       "format": "single_choice",
       "difficulty": "medium",
       "source_level": "L2",
       "stem": "{scenario}的風控部門欲建構『信用評分(申請人是否核貸)』模型,法遵單位要求『模型可解釋 + 自動特徵選擇』。下列關於模型選型的描述何者最為合理?",
       "stem_variables": {
-        "case_a": {"scenario": "某商業銀行"},
-        "case_b": {"scenario": "某網路保險公司"},
-        "case_c": {"scenario": "某消費金融機構"}
+        "case_a": {
+          "scenario": "某商業銀行"
+        },
+        "case_b": {
+          "scenario": "某網路保險公司"
+        },
+        "case_c": {
+          "scenario": "某消費金融機構"
+        }
       },
       "options": [
-        {"key": "A", "text": "首選 LASSO 或邏輯迴歸等可解釋分類模型;前者自動把不重要特徵係數縮為 0 兼顧可解釋", "is_correct": true, "trap_type": "正解:LASSO/分類可解釋"},
-        {"key": "B", "text": "首選 DQN 強化學習對每筆申請以最大化長期累積獎勵作序列決策,最符合金融業法遵的可解釋要求", "is_correct": false, "trap_type": "RL 與可解釋背道而馳"},
-        {"key": "C", "text": "首選 K-means 對所有申請人特徵做非監督分群,以群編號當作信用等級直接輸出無需任何訓練", "is_correct": false, "trap_type": "分群 ≠ 監督評分"},
-        {"key": "D", "text": "首選多層複雜深度神經網路,隱藏層數越多解釋性越強最適合銀行業法遵與主管機關的監理稽核", "is_correct": false, "trap_type": "深度網路與可解釋顛倒"}
+        {
+          "key": "A",
+          "text": "首選 LASSO 或邏輯迴歸等可解釋分類模型;前者自動把不重要特徵係數縮為 0 兼顧可解釋",
+          "is_correct": true,
+          "trap_type": "正解:LASSO/分類可解釋"
+        },
+        {
+          "key": "B",
+          "text": "首選 DQN 強化學習對每筆申請以最大化長期累積獎勵作序列決策,最符合金融業法遵的可解釋要求",
+          "is_correct": false,
+          "trap_type": "RL 與可解釋背道而馳"
+        },
+        {
+          "key": "C",
+          "text": "首選 K-means 對所有申請人特徵做非監督分群,以群編號當作信用等級直接輸出無需任何訓練",
+          "is_correct": false,
+          "trap_type": "分群 ≠ 監督評分"
+        },
+        {
+          "key": "D",
+          "text": "首選多層複雜深度神經網路,隱藏層數越多解釋性越強最適合銀行業法遵與主管機關的監理稽核",
+          "is_correct": false,
+          "trap_type": "深度網路與可解釋顛倒"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -328,30 +653,66 @@
         },
         "hook": "信用評分對映:LASSO / 邏輯迴歸 = 可解釋 + 自動特徵選擇雙重需求"
       },
-      "misconceptions": ["以為深度網路可解釋", "把 K-means 分群當分類"],
-      "related_node_ids": ["n_L22402_007", "n_L23202_013"],
-      "tags": ["credit-scoring", "lasso", "interpretability"],
+      "misconceptions": [
+        "以為深度網路可解釋",
+        "把 K-means 分群當分類"
+      ],
+      "related_node_ids": [
+        "n_L22402_007",
+        "n_L23202_013"
+      ],
+      "tags": [
+        "credit-scoring",
+        "lasso",
+        "interpretability"
+      ],
       "errata_critical": false
     },
     {
       "id": "q_n28_011",
       "knowledge_code": "L22402",
       "node_id": "n_L22402_007",
-      "subject": 3,
+      "subject": 2,
       "format": "single_choice",
       "difficulty": "medium",
       "source_level": "L2",
       "stem": "{scenario}的風控團隊欲建構『信用卡盜刷詐欺偵測』模型,挑戰為『正常交易 99% / 詐欺 < 1% 嚴重不平衡 + 詐欺手法不斷演變』。下列關於模型選型的描述何者最為合理?",
       "stem_variables": {
-        "case_a": {"scenario": "某發卡銀行"},
-        "case_b": {"scenario": "某第三方支付平台"},
-        "case_c": {"scenario": "某數位錢包業者"}
+        "case_a": {
+          "scenario": "某發卡銀行"
+        },
+        "case_b": {
+          "scenario": "某第三方支付平台"
+        },
+        "case_c": {
+          "scenario": "某數位錢包業者"
+        }
       },
       "options": [
-        {"key": "A", "text": "首選 K-means / VAE 等非監督分群方法偵測異常,搭配 SVM 或深度學習做監督分類雙管齊下", "is_correct": true, "trap_type": "正解:分群異常 + SVM/DL"},
-        {"key": "B", "text": "首選線性迴歸對單筆交易金額做連續數值預測,以預測金額值是否大於設定門檻來直接判定該筆交易是否屬於詐欺", "is_correct": false, "trap_type": "迴歸誤判為分類"},
-        {"key": "C", "text": "首選 SARSA 強化學習以單筆交易為狀態學習,每筆交易須等待最終結果回饋後再更新策略效率最為即時", "is_correct": false, "trap_type": "RL 與單次分類不匹配"},
-        {"key": "D", "text": "首選 Polynomial Regression 高次多項式擬合,高 VIF 共線性對詐欺偵測為優勢無需任何前處理", "is_correct": false, "trap_type": "多項式迴歸與分類無關"}
+        {
+          "key": "A",
+          "text": "首選 K-means / VAE 等非監督分群方法偵測異常,搭配 SVM 或深度學習做監督分類雙管齊下",
+          "is_correct": true,
+          "trap_type": "正解:分群異常 + SVM/DL"
+        },
+        {
+          "key": "B",
+          "text": "首選線性迴歸對單筆交易金額做連續數值預測,以預測金額值是否大於設定門檻來直接判定該筆交易是否屬於詐欺",
+          "is_correct": false,
+          "trap_type": "迴歸誤判為分類"
+        },
+        {
+          "key": "C",
+          "text": "首選 SARSA 強化學習以單筆交易為狀態學習,每筆交易須等待最終結果回饋後再更新策略效率最為即時",
+          "is_correct": false,
+          "trap_type": "RL 與單次分類不匹配"
+        },
+        {
+          "key": "D",
+          "text": "首選 Polynomial Regression 高次多項式擬合,高 VIF 共線性對詐欺偵測為優勢無需任何前處理",
+          "is_correct": false,
+          "trap_type": "多項式迴歸與分類無關"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -363,30 +724,67 @@
         },
         "hook": "詐欺對映:K-means(異常)+ SVM/DL(分類)雙管齊下"
       },
-      "misconceptions": ["以為詐欺偵測可用迴歸", "誤把單次分類當 RL 任務"],
-      "related_node_ids": ["n_L22402_007", "n_L23202_012"],
-      "tags": ["fraud-detection", "kmeans", "svm", "anomaly-detection"],
+      "misconceptions": [
+        "以為詐欺偵測可用迴歸",
+        "誤把單次分類當 RL 任務"
+      ],
+      "related_node_ids": [
+        "n_L22402_007",
+        "n_L23202_012"
+      ],
+      "tags": [
+        "fraud-detection",
+        "kmeans",
+        "svm",
+        "anomaly-detection"
+      ],
       "errata_critical": false
     },
     {
       "id": "q_n28_012",
       "knowledge_code": "L22402",
       "node_id": "n_L22402_007",
-      "subject": 3,
+      "subject": 2,
       "format": "single_choice",
       "difficulty": "medium",
       "source_level": "L2",
       "stem": "{scenario}的投研團隊欲建構『動態資產配置(Portfolio Allocation)』系統,需根據市場狀態連續調整股 / 債 / 黃金 / 現金比例。下列關於模型選型的描述何者最為合理?",
       "stem_variables": {
-        "case_a": {"scenario": "某機器人理財平台"},
-        "case_b": {"scenario": "某私人銀行"},
-        "case_c": {"scenario": "某對沖基金"}
+        "case_a": {
+          "scenario": "某機器人理財平台"
+        },
+        "case_b": {
+          "scenario": "某私人銀行"
+        },
+        "case_c": {
+          "scenario": "某對沖基金"
+        }
       },
       "options": [
-        {"key": "A", "text": "首選深度學習(抓市場非線性特徵作為狀態表示)搭配強化學習(動態調整配置以最大化長期累積報酬)", "is_correct": true, "trap_type": "正解:DL + RL 雙搭"},
-        {"key": "B", "text": "首選 KNN 找與當前市場狀態最相似的歷史交易日,直接複製該日最佳配置權重完整跨年度套用", "is_correct": false, "trap_type": "相似日簡化謬誤"},
-        {"key": "C", "text": "首選 Naive Bayes 對市場狀態獨立分類,完全不需考量資產相關性即可決定最佳配置比例", "is_correct": false, "trap_type": "獨立假設違背資產相關性"},
-        {"key": "D", "text": "首選決策樹單一規則樹完整覆蓋市場情境,不需要任何動態調整一旦訓練完成即終身固定使用", "is_correct": false, "trap_type": "靜態模型 vs 動態配置矛盾"}
+        {
+          "key": "A",
+          "text": "首選深度學習(抓市場非線性特徵作為狀態表示)搭配強化學習(動態調整配置以最大化長期累積報酬)",
+          "is_correct": true,
+          "trap_type": "正解:DL + RL 雙搭"
+        },
+        {
+          "key": "B",
+          "text": "首選 KNN 找與當前市場狀態最相似的歷史交易日,直接複製該日最佳配置權重完整跨年度套用",
+          "is_correct": false,
+          "trap_type": "相似日簡化謬誤"
+        },
+        {
+          "key": "C",
+          "text": "首選 Naive Bayes 對市場狀態獨立分類,完全不需考量資產相關性即可決定最佳配置比例",
+          "is_correct": false,
+          "trap_type": "獨立假設違背資產相關性"
+        },
+        {
+          "key": "D",
+          "text": "首選決策樹單一規則樹完整覆蓋市場情境,不需要任何動態調整一旦訓練完成即終身固定使用",
+          "is_correct": false,
+          "trap_type": "靜態模型 vs 動態配置矛盾"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -398,30 +796,66 @@
         },
         "hook": "資產配置對映:DL(感知非線性)+ RL(動態決策)雙搭"
       },
-      "misconceptions": ["以為相似日就有相同最佳配置", "忽略資產相關性"],
-      "related_node_ids": ["n_L22402_007", "n_L23201_006"],
-      "tags": ["asset-allocation", "deep-learning", "reinforcement-learning"],
+      "misconceptions": [
+        "以為相似日就有相同最佳配置",
+        "忽略資產相關性"
+      ],
+      "related_node_ids": [
+        "n_L22402_007",
+        "n_L23201_006"
+      ],
+      "tags": [
+        "asset-allocation",
+        "deep-learning",
+        "reinforcement-learning"
+      ],
       "errata_critical": false
     },
     {
       "id": "q_n28_013",
       "knowledge_code": "L22402",
       "node_id": "n_L22402_007",
-      "subject": 3,
+      "subject": 2,
       "format": "single_choice",
       "difficulty": "medium",
       "source_level": "L2",
       "stem": "{scenario}的財務部門欲建構『季度營收與現金流預測』模型,資料以月為單位含外部宏觀因子(利率、匯率、CPI)。下列關於模型選型的描述何者最為合理?",
       "stem_variables": {
-        "case_a": {"scenario": "某上市製造業"},
-        "case_b": {"scenario": "某連鎖零售集團"},
-        "case_c": {"scenario": "某 SaaS 軟體公司"}
+        "case_a": {
+          "scenario": "某上市製造業"
+        },
+        "case_b": {
+          "scenario": "某連鎖零售集團"
+        },
+        "case_c": {
+          "scenario": "某 SaaS 軟體公司"
+        }
       },
       "options": [
-        {"key": "A", "text": "首選 LSTM / GRU 抓時序記憶,搭配 ElasticNet 處理多元變數與多重共線性", "is_correct": true, "trap_type": "正解:LSTM/GRU + ElasticNet"},
-        {"key": "B", "text": "首選 K-means 把所有季度分群以推估未來營收;非監督分群可直接輸出季度預測值", "is_correct": false, "trap_type": "分群誤當預測"},
-        {"key": "C", "text": "首選 Naive Bayes 對宏觀因子做獨立分類;CPI 與利率彼此獨立故 NB 假設天然成立", "is_correct": false, "trap_type": "違背 NB 獨立假設"},
-        {"key": "D", "text": "首選 KNN 找最相似歷史季度直接套用;高維宏觀因子下 KNN 距離趨同對預測為優勢", "is_correct": false, "trap_type": "顛倒維度災難方向"}
+        {
+          "key": "A",
+          "text": "首選 LSTM / GRU 抓時序記憶,搭配 ElasticNet 處理多元變數與多重共線性",
+          "is_correct": true,
+          "trap_type": "正解:LSTM/GRU + ElasticNet"
+        },
+        {
+          "key": "B",
+          "text": "首選 K-means 把所有季度分群以推估未來營收;非監督分群可直接輸出季度預測值",
+          "is_correct": false,
+          "trap_type": "分群誤當預測"
+        },
+        {
+          "key": "C",
+          "text": "首選 Naive Bayes 對宏觀因子做獨立分類;CPI 與利率彼此獨立故 NB 假設天然成立",
+          "is_correct": false,
+          "trap_type": "違背 NB 獨立假設"
+        },
+        {
+          "key": "D",
+          "text": "首選 KNN 找最相似歷史季度直接套用;高維宏觀因子下 KNN 距離趨同對預測為優勢",
+          "is_correct": false,
+          "trap_type": "顛倒維度災難方向"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -433,25 +867,57 @@
         },
         "hook": "財務預測對映:LSTM/GRU(時序)+ ElasticNet(多元共線)"
       },
-      "misconceptions": ["以為 K-means 可做迴歸預測", "誤把高維 KNN 當優勢"],
-      "related_node_ids": ["n_L22402_007", "n_L23203_005", "n_L23202_018"],
-      "tags": ["financial-forecast", "lstm", "elasticnet", "time-series"],
+      "misconceptions": [
+        "以為 K-means 可做迴歸預測",
+        "誤把高維 KNN 當優勢"
+      ],
+      "related_node_ids": [
+        "n_L22402_007",
+        "n_L23203_005",
+        "n_L23202_018"
+      ],
+      "tags": [
+        "financial-forecast",
+        "lstm",
+        "elasticnet",
+        "time-series"
+      ],
       "errata_critical": false
     },
     {
       "id": "q_n28_014",
       "knowledge_code": "L22402",
       "node_id": "n_L22402_007",
-      "subject": 3,
+      "subject": 2,
       "format": "single_choice",
       "difficulty": "hard",
       "source_level": "L2",
       "stem": "在 IPAS 高頻題型『選型錯配』題中,下列哪一項『情境 → 模型』的搭配最為不適合(屬於常見錯誤配對)?",
       "options": [
-        {"key": "A", "text": "用 LSTM 預測『純表格的客戶屬性是否流失』(無任何時序資訊只有靜態欄位)", "is_correct": true, "trap_type": "正解:LSTM 用在無時序的浪費"},
-        {"key": "B", "text": "用 XGBoost 預測『含技術指標與財報結構化特徵的股票漲跌』(高頻表格化資料)", "is_correct": false, "trap_type": "正配 XGBoost 結構化"},
-        {"key": "C", "text": "用 LASSO 對『信用評分含 200 個原始特徵』做自動特徵選擇兼可解釋線性係數", "is_correct": false, "trap_type": "正配 LASSO 信用評分"},
-        {"key": "D", "text": "用 K-means 對『百萬筆未標籤的信用卡交易行為』做非監督分群以揪出異常群", "is_correct": false, "trap_type": "正配 K-means 詐欺異常"}
+        {
+          "key": "A",
+          "text": "用 LSTM 預測『純表格的客戶屬性是否流失』(無任何時序資訊只有靜態欄位)",
+          "is_correct": true,
+          "trap_type": "正解:LSTM 用在無時序的浪費"
+        },
+        {
+          "key": "B",
+          "text": "用 XGBoost 預測『含技術指標與財報結構化特徵的股票漲跌』(高頻表格化資料)",
+          "is_correct": false,
+          "trap_type": "正配 XGBoost 結構化"
+        },
+        {
+          "key": "C",
+          "text": "用 LASSO 對『信用評分含 200 個原始特徵』做自動特徵選擇兼可解釋線性係數",
+          "is_correct": false,
+          "trap_type": "正配 LASSO 信用評分"
+        },
+        {
+          "key": "D",
+          "text": "用 K-means 對『百萬筆未標籤的信用卡交易行為』做非監督分群以揪出異常群",
+          "is_correct": false,
+          "trap_type": "正配 K-means 詐欺異常"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -463,25 +929,55 @@
         },
         "hook": "選型錯配警示:無時序資料不要用 LSTM(浪費 + 訓練不穩)"
       },
-      "misconceptions": ["以為 LSTM 萬用", "把純表格資料當序列輸入"],
-      "related_node_ids": ["n_L22402_007", "n_L23203_005"],
-      "tags": ["model-mismatch", "lstm", "tabular-data"],
+      "misconceptions": [
+        "以為 LSTM 萬用",
+        "把純表格資料當序列輸入"
+      ],
+      "related_node_ids": [
+        "n_L22402_007",
+        "n_L23203_005"
+      ],
+      "tags": [
+        "model-mismatch",
+        "lstm",
+        "tabular-data"
+      ],
       "errata_critical": false
     },
     {
       "id": "q_n28_015",
       "knowledge_code": "L22402",
       "node_id": "n_L22402_007",
-      "subject": 3,
+      "subject": 2,
       "format": "single_choice",
       "difficulty": "hard",
       "source_level": "L2",
       "stem": "在 IPAS 教材『機器學習模型圖卡』綜整 5 大業務領域 × 模型對映後,下列關於『選型核心邏輯』的綜合描述何者最為精確?",
       "options": [
-        {"key": "A", "text": "選型核心邏輯應綜合資料型態(時序 / 結構化 / 影像)、任務性質(分類 / 迴歸 / 分群)、解釋需求三個維度", "is_correct": true, "trap_type": "正解:選型五步邏輯"},
-        {"key": "B", "text": "5 大領域不論資料型態與任務性質均應首選深度學習,傳統機器學習已被深度學習全面取代故無需區分對映", "is_correct": false, "trap_type": "深度學習萬用謬誤"},
-        {"key": "C", "text": "5 大領域皆應首選強化學習,以最大化長期累積獎勵為目標可適用一切監督 / 非監督任務情境且不需特徵工程", "is_correct": false, "trap_type": "RL 萬用謬誤"},
-        {"key": "D", "text": "選型只需考量資料量單一維度,百萬筆以上資料一律深度學習;百萬筆以下一律 KNN 無需考慮其他面向", "is_correct": false, "trap_type": "單一維度謬誤"}
+        {
+          "key": "A",
+          "text": "選型核心邏輯應綜合資料型態(時序 / 結構化 / 影像)、任務性質(分類 / 迴歸 / 分群)、解釋需求三個維度",
+          "is_correct": true,
+          "trap_type": "正解:選型五步邏輯"
+        },
+        {
+          "key": "B",
+          "text": "5 大領域不論資料型態與任務性質均應首選深度學習,傳統機器學習已被深度學習全面取代故無需區分對映",
+          "is_correct": false,
+          "trap_type": "深度學習萬用謬誤"
+        },
+        {
+          "key": "C",
+          "text": "5 大領域皆應首選強化學習,以最大化長期累積獎勵為目標可適用一切監督 / 非監督任務情境且不需特徵工程",
+          "is_correct": false,
+          "trap_type": "RL 萬用謬誤"
+        },
+        {
+          "key": "D",
+          "text": "選型只需考量資料量單一維度,百萬筆以上資料一律深度學習;百萬筆以下一律 KNN 無需考慮其他面向",
+          "is_correct": false,
+          "trap_type": "單一維度謬誤"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -493,9 +989,19 @@
         },
         "hook": "選型五步:資料型 → 任務 → 資料量 → 解釋需求 → 上線延遲"
       },
-      "misconceptions": ["以為深度學習萬用", "把領域對映互換"],
-      "related_node_ids": ["n_L22402_007", "n_L22402_001"],
-      "tags": ["model-selection", "business-mapping", "ml-overview"],
+      "misconceptions": [
+        "以為深度學習萬用",
+        "把領域對映互換"
+      ],
+      "related_node_ids": [
+        "n_L22402_007",
+        "n_L22402_001"
+      ],
+      "tags": [
+        "model-selection",
+        "business-mapping",
+        "ml-overview"
+      ],
       "errata_critical": false
     }
   ]

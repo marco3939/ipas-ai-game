@@ -1,9 +1,9 @@
 {
   "summary": {
-    "totalQ": 768,
+    "totalQ": 905,
     "violationCount": 0,
     "compliantPct": "100.0",
-    "kbNodeCount": 179,
+    "kbNodeCount": 212,
     "kbCodeCount": 34
   },
   "violations": []
