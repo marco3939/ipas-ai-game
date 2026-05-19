@@ -168,7 +168,7 @@
     start() {
       // 進場前先清理上一場殘留(若有)
       this.cleanup();
-      RNG.set(Date.now());
+      RNG.set(Date.now() + Math.floor(Math.random() * 1e5));
       this.renderSetup();
     },
 
@@ -185,7 +185,7 @@
     //   - 不動 _drawQuestions / scope / difficulty 邏輯,僅 bypass setup
     startWithCustomPool(questionList, opts) {
       this.cleanup();
-      RNG.set(Date.now());
+      RNG.set(Date.now() + Math.floor(Math.random() * 1e5));
       opts = opts || {};
       if (!Array.isArray(questionList) || questionList.length === 0) {
         showToast('⚠️ 卡牌池為空,無法開戰', 3000);

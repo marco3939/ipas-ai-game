@@ -401,7 +401,9 @@ function loadSharedLayer(sandbox, indexSrc) {
   vm.runInContext('var QUESTIONS = sandboxQuestions || [];'.replace('sandboxQuestions', 'window.QUESTIONS'), sandbox);
 
   // 9) generateVariation
-  injectBlock(sandbox, indexSrc, 'function generateVariation(originalQ, count = 3) {', '// === Toast ===');
+  // 2026-05-19 M4 修補:generateVariation 簽名加 excludeIds 第三參(deep drill 排除父層原題)
+  // 對應 src/index.html:1422 `function generateVariation(originalQ, count = 3, excludeIds = null) {`
+  injectBlock(sandbox, indexSrc, 'function generateVariation(originalQ, count = 3, excludeIds = null) {', '// === Toast ===');
 
   // 10) highlightCodeSimple
   injectBlock(sandbox, indexSrc, 'function highlightCodeSimple(code) {', '// === 渲染視覺資料');

@@ -174,7 +174,7 @@
     start() {
       // 進場前清舊 timer(防 home → start 殘留)
       this._clearAllTimers();
-      RNG.set(Date.now());
+      RNG.set(Date.now() + Math.floor(Math.random() * 1e5));
       this.cachedBosses = null; // 進案時重新偵測
       this.renderMap();
     },
@@ -277,7 +277,7 @@
     },
 
     refreshBosses() {
-      RNG.set(Date.now());
+      RNG.set(Date.now() + Math.floor(Math.random() * 1e5));
       this.cachedBosses = null; // 主動重新偵測
       this.renderMap();
       showToast('🔄 已重新偵測弱點');

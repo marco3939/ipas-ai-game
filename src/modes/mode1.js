@@ -148,13 +148,17 @@
       showToast('「' + (boss.name||'本 BOSS') + '」題庫過小(' + pool.length + ' 題),建議練習其他 BOSS', 4000);
       return [];
     }
-    // MED-3:minNeeded 改 Math.min(MIN_POOL_TO_BATTLE, pool.length)
+    // MED-3 / L1 修補(2026-05-19):minNeeded 改比例式門檻
+    // 原 `Math.min(5, pool.length)` 對小池 BOSS(autonomous 8 題)會反覆出已答對題
+    // 改 `Math.max(1, Math.ceil(pool.length / 4))`:池 8 題 → minNeeded=2,讓 SeenCorrect 過濾
+    // 後若 < 25% 才 fallback,小池 BOSS 也能持續出新題
     // 避免「答對少數題就 fallback 重複出舊題」— minNeeded 是「過濾後至少要有 N 題新題才不 fallback」,
     // 不是「期望題數」。傳 n 會讓玩家答對 1 題就跳回去重複出題
     // MED-2:統一 pool = fr.pool(API 已保證返回正確 pool,不分支)
     let finalPool = pool;
     if (typeof SeenCorrect !== 'undefined') {
-      const fr = SeenCorrect.filterForBattle(pool, Math.min(MIN_POOL_TO_BATTLE, pool.length));
+      const minNeeded = Math.max(1, Math.ceil(pool.length / 4));
+      const fr = SeenCorrect.filterForBattle(pool, minNeeded);
       if (fr.fallback) showToast('本 BOSS 可用新題不足,允許重複出已答對的舊題');
       finalPool = fr.pool;
     }

@@ -1121,8 +1121,9 @@ const Wrongbook = {
       // 若舊紀錄沒 text 而本次傳了,補上(向後相容遷移)
       if (!existing.userText && userText) existing.userText = userText;
       if (!existing.correctText && correctText) existing.correctText = correctText;
-      // 也更新最後一次選的(若有變)
-      if (userChoice) existing.userChoice = userChoice;
+      // L3 修補(2026-05-19):userChoice 對齊 userText pattern,只在無紀錄時補
+      // 錯題本應顯示「玩家首次答錯時選什麼」,不該被後續其他 mode 答案蓋掉
+      if (!existing.userChoice && userChoice) existing.userChoice = userChoice;
     } else {
       w.push({
         qid, nodeId, userChoice, correctChoice,
@@ -1418,10 +1419,16 @@ async function loadQuestions() {
 // 為何在 generateVariation 過濾而非在 DrillSession 處理:
 //      所有呼叫者(Mode 1/2/3/4/5/6/7/8 + PlayEngine.drill)都假設變化型可走 A/B/C/D 流程。
 //      在源頭排除最簡單,且 CM 題庫本來就主要透過 Mode 7 直接出題,不靠下鑽。
-function generateVariation(originalQ, count = 3) {
+function generateVariation(originalQ, count = 3, excludeIds = null) {
+  // L4 + M4 — excludeIds:額外要排除的題目 id 集合(deep drill 用,避免父層 originalQ / 父層已 queue 題目被重抽)
+  // 接受 Array / Set / null;null = 無額外排除
+  const excludeSet = excludeIds
+    ? (excludeIds instanceof Set ? excludeIds : new Set(excludeIds))
+    : null;
   const candidates = QUESTIONS.filter(q =>
     q.id !== originalQ.id &&
-    q.interaction_type !== 'confusion-matrix' // 排除互動拖曳題型(下鑽流程不相容)
+    q.interaction_type !== 'confusion-matrix' && // 排除互動拖曳題型(下鑽流程不相容)
+    !(excludeSet && excludeSet.has(q.id))         // M4:排除父層 originalQ + 已 queue 題目(deep drill)
   );
   const sameNode = candidates.filter(q => q.node_id === originalQ.node_id);
   const relatedIds = originalQ.related_node_ids || [];
@@ -1435,9 +1442,13 @@ function generateVariation(originalQ, count = 3) {
   (originalQ.misconceptions || []).forEach(addKw);
 
   // sameCode 僅取「關鍵詞至少 2 個重疊」的題目(避免跨度過大)
+  // L4:upperKeywords.size === 0 時(題目無 hook/tags/misconceptions)降級為「同 knowledge_code 即可」,
+  //     不再要求 hits >= 2(否則永遠不成立 → 跳過 → 變化型品質下降)
+  const noKeywords = upperKeywords.size === 0;
   const sameCodeFiltered = candidates.filter(q => {
     if (q.knowledge_code !== originalQ.knowledge_code) return false;
     if (sameNode.includes(q) || relatedNode.includes(q)) return false;
+    if (noKeywords) return true; // L4 fallback:無關鍵詞時直接用同 knowledge_code
     let hits = 0;
     const text = ((q.explanation?.hook || '') + ' ' + (q.tags || []).join(' ') + ' ' + (q.misconceptions || []).join(' '));
     upperKeywords.forEach(kw => { if (text.includes(kw)) hits++; });
@@ -2068,9 +2079,18 @@ const DrillSession = {
     if (!wrongQ) { this.next(); return; }
     if (this.depth >= 1) { this.next(); return; }  // safety:已是 deep,不再 nested
     // 找 1 題 nested drill question(generateVariation 取最多 3 題,我們只用第 1 題)
+    // M4 — 排除父層 originalQ + 父層 queue 已 queue 過的題目 + parent stack chain 中所有 originalQ/queue
+    //       避免 deep drill 抽到玩家在父層已看過(或即將看到)的題目
+    const excludeIds = new Set();
+    if (this.originalQ && this.originalQ.id) excludeIds.add(this.originalQ.id);
+    (this.queue || []).forEach(q => { if (q && q.id) excludeIds.add(q.id); });
+    (this._parentStack || []).forEach(p => {
+      if (p && p.originalQ && p.originalQ.id) excludeIds.add(p.originalQ.id);
+      ((p && p.queue) || []).forEach(q => { if (q && q.id) excludeIds.add(q.id); });
+    });
     let nested = [];
     try {
-      const variations = generateVariation(wrongQ, 3);
+      const variations = generateVariation(wrongQ, 3, excludeIds);
       nested = variations.slice(0, 1);
     } catch (_) { nested = []; }
     if (nested.length === 0) { this.next(); return; }
@@ -2884,8 +2904,13 @@ const ProgressIO = {
         for (const k of Object.keys(cleanPayload)) {
           try { localStorage.removeItem(k); } catch (_) {}
         }
+        // L6 修補(2026-05-19):偵測 rollback setItem 失敗(remove 完但 set 失敗 → 空狀態)
+        let rollbackFailed = false;
         for (const [k, v] of Object.entries(rollback)) {
-          try { localStorage.setItem(k, v); } catch (_) {}
+          try { localStorage.setItem(k, v); } catch (_) { rollbackFailed = true; }
+        }
+        if (rollbackFailed) {
+          try { showToast('⚠️ rollback 部分失敗,建議重新整理頁面並從備份還原', 5000); } catch (_) {}
         }
         throw new Error('寫入失敗(可能 quota 已滿),已還原舊資料');
       }
