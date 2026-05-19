@@ -347,7 +347,9 @@ function makeSandbox(opts = {}) {
     GameFX: {
       flash: () => {}, damageNumber: () => {}, shake: () => {}, attackAnim: () => {},
       combo: () => {}, hideCombo: () => {}, confetti: () => {}, bigConfetti: () => {},
-      levelUp: () => {}
+      levelUp: () => {},
+      // 2026-05-19 新增 3 個 BOSS 戰動畫(noop in test sandbox)
+      bossKnockback: () => {}, heal: () => {}, bossEnrage: () => {}
     },
     ErrorReports: { renderButton: () => '' },
     ConfusionMatrix: undefined, // not used in mode 1-4

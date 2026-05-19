@@ -701,7 +701,7 @@
     _loadFontScale() {
       const key = Storage.get(FONT_SCALE_KEY, null);
       if (key && FONT_SCALE_LEVELS.find(l => l.key === key)) return key;
-      return 'M';
+      return 'L';
     },
     _saveFontScale(key) {
       Storage.set(FONT_SCALE_KEY, key);
@@ -1736,9 +1736,21 @@
 
     _renderResult(result, reason) {
       const overallPct = result.total > 0 ? Math.round(result.correct / result.total * 100) : 0;
-      const lvlColor = result.estLevel === '高' ? '#4ade80' :
-                       result.estLevel === '中' ? '#facc15' : '#f87171';
-      const lvlEmoji = result.estLevel === '高' ? '🥇' : result.estLevel === '中' ? '🥈' : '🥉';
+      const wrongCount = result.total - result.correct - (result.unanswered || 0);
+      const isHigh = result.estLevel === '高';
+      const isMid = result.estLevel === '中';
+      // 等級配色:高=綠系 / 中=琥珀系 / 低=赤紅系(對比強烈)
+      const lvlColor = isHigh ? '#4ade80' : isMid ? '#facc15' : '#f87171';
+      const lvlColorDark = isHigh ? '#166534' : isMid ? '#854d0e' : '#7f1d1d';
+      const lvlEmoji = isHigh ? '🥇' : isMid ? '🥈' : '🥉';
+      const lvlLabel = isHigh ? '高分通過候選' : isMid ? '及格邊緣' : '需加強練習';
+      const lvlHintText = isHigh ? '≥80% 真考有機會通過' : isMid ? '60-79% 接近及格邊緣' : '<60% 需要加強練習';
+      // Hero 漸層:依等級切換深底色(深紫紅 / 深琥珀 / 深綠暗黑)
+      const heroBg = isHigh
+        ? 'radial-gradient(circle at 30% 0%, #064e3b 0%, #022c22 60%, #021711 100%)'
+        : isMid
+          ? 'radial-gradient(circle at 30% 0%, #78350f 0%, #451a03 60%, #1c0a01 100%)'
+          : 'radial-gradient(circle at 30% 0%, #7f1d1d 0%, #450a0a 60%, #1a0404 100%)';
       const reasonText = reason === 'time_up' ? '⏰ 時間到自動交卷' :
                          reason === 'surrender' ? '🏳️ 投降結束' :
                          reason === 'submit' ? '📤 已交卷' :
@@ -1749,52 +1761,89 @@
       this._lastResult = result;
       this._lastResultReason = reason;
 
+      // 用時格式化
+      const totalMin = Math.floor(result.timeUsed / 60);
+      const totalSec = result.timeUsed % 60;
+      const timeStr = `${totalMin}m ${totalSec}s`;
+      // Pace 統計:平均 / 最長
+      const ptimes = (result.perQuestionTime || []).filter(t => typeof t === 'number');
+      const avgSec = ptimes.length ? Math.round(ptimes.reduce((a, b) => a + b, 0) / ptimes.length / 1000) : 0;
+      const maxSec = ptimes.length ? Math.round(Math.max(...ptimes) / 1000) : 0;
+      const slowCount = ptimes.filter(t => t > 90000).length;
+
       // Pace Heatmap
       const heatmap = this._buildHeatmapHTML(result);
 
-      // 分科目得分區塊
-      const catBlock = `
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin:12px 0">
-          ${['L21', 'L22', 'L23', 'other'].map(c => {
-            const data = result.byCategory[c];
-            const label = c === 'L21' ? '科一(L21)' : c === 'L22' ? '科二(L22)' : c === 'L23' ? '科三(L23)' : '其他/邊界';
-            const pct = data.total > 0 ? Math.round(data.correct / data.total * 100) : 0;
-            const color = pct >= 80 ? '#4ade80' : pct >= 60 ? '#facc15' : '#f87171';
-            return `<div style="background:var(--bg-3);padding:10px;border-radius:var(--radius-sm);text-align:center;border-left:4px solid ${color}">
-              <div style="font-size:0.75rem;color:var(--fg-dim)">${label}</div>
-              <div style="font-size:1.3rem;font-weight:900;color:${color}">${data.correct}/${data.total}</div>
-              <div style="font-size:0.75rem;color:var(--fg-dim)">${pct}%</div>
-            </div>`;
-          }).join('')}
-        </div>
-      `;
+      // === KPI 卡片 ===
+      const kpi = (icon, label, value, accent, sub) => `
+        <div style="flex:1;min-width:130px;background:var(--bg-2);border:1px solid var(--border);border-left:4px solid ${accent};border-radius:var(--radius-sm);padding:12px 14px">
+          <div style="font-size:0.72rem;color:var(--fg-dim);font-weight:700;letter-spacing:0.05em;text-transform:uppercase">${icon} ${label}</div>
+          <div style="font-size:1.7rem;font-weight:900;color:${accent};margin-top:4px;line-height:1.1">${value}</div>
+          ${sub ? `<div style="font-size:0.72rem;color:var(--fg-mute);margin-top:2px">${sub}</div>` : ''}
+        </div>`;
+      const kpiRow = `
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin:14px 0">
+          ${kpi('✅', '正確', `${result.correct}`, '#4ade80', `共 ${result.total} 題`)}
+          ${kpi('❌', '錯題', `${wrongCount}`, '#f87171', result.unanswered > 0 ? `+${result.unanswered} 未答` : '全題作答')}
+          ${kpi('⏱️', '總用時', timeStr, '#38bdf8', avgSec ? `平均 ${avgSec}s/題` : '—')}
+          ${kpi(lvlEmoji, '預估等級', result.estLevel, lvlColor, lvlLabel)}
+        </div>`;
 
-      // Top 5 錯題清單
+      // === 分科目得分(progress bar)===
+      const catRow = (code, data) => {
+        const label = code === 'L21' ? '科一 · L21' : code === 'L22' ? '科二 · L22' : code === 'L23' ? '科三 · L23' : '其他 / 邊界';
+        const pct = data.total > 0 ? Math.round(data.correct / data.total * 100) : 0;
+        const color = pct >= 80 ? '#4ade80' : pct >= 60 ? '#facc15' : data.total > 0 ? '#f87171' : '#475569';
+        const muted = data.total === 0;
+        return `<div style="margin:10px 0">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">
+            <strong style="font-size:0.9rem;color:${muted ? 'var(--fg-mute)' : 'var(--fg)'}">${label}</strong>
+            <span style="font-size:0.85rem;color:${color};font-weight:800">${data.correct}/${data.total}${data.total > 0 ? ` · ${pct}%` : ''}</span>
+          </div>
+          <div class="hp-track" style="height:10px;background:var(--bg-3)">
+            <div class="hp-fill" style="background:linear-gradient(90deg,${color},${color}cc);width:${pct}%"></div>
+          </div>
+        </div>`;
+      };
+      const catBlock = `
+        <div style="margin-top:8px">
+          ${['L21', 'L22', 'L23', 'other'].map(c => catRow(c, result.byCategory[c])).join('')}
+        </div>`;
+
+      // === Top 5 錯題卡片 ===
       const topWrongBlock = result.topWrong.length === 0 ? `
-        <div style="text-align:center;color:var(--success);padding:14px">🎉 沒有錯題,完美演出!</div>` : `
+        <div style="text-align:center;color:var(--success);padding:18px;background:rgba(74,222,128,0.08);border-radius:var(--radius-sm);border:1px dashed var(--success)">
+          🎉 沒有錯題,完美演出!
+        </div>` : `
         <div class="weak-list" style="margin-top:8px">
           ${result.topWrong.map((w, i) => {
-            const stem = (w.q.stem || '').substring(0, 60).replace(/\{[^}]+\}/g, '');
+            const stem = (w.q.stem || '').substring(0, 80).replace(/\{[^}]+\}/g, '');
             const npc = NPCS[w.npcIdx] || NPCS[0];
             const tsec = Math.round((w.timeUsed || 0) / 1000);
-            return `<div class="weak-item" style="flex-direction:column;align-items:flex-start;gap:6px;padding:10px">
-              <div style="display:flex;justify-content:space-between;width:100%;align-items:center">
-                <span style="font-size:0.8rem;color:var(--fg-dim)">#${i+1} · ${npc.avatar} · 用時 ${tsec}s · ${w.q.knowledge_code || ''}</span>
-                <span class="weak-score low">錯</span>
+            const isSlow = tsec >= 90;
+            return `<div class="weak-item" style="flex-direction:column;align-items:stretch;gap:8px;padding:12px;background:var(--bg-3);border:1px solid var(--border);border-left:4px solid #f87171">
+              <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+                <span style="font-size:0.78rem;color:var(--fg-dim);font-weight:600">
+                  <span style="background:#f87171;color:#fff;padding:1px 7px;border-radius:9px;font-weight:800;margin-right:6px">#${i+1}</span>
+                  ${npc.avatar} ${this._esc(npc.name || '')} · ${this._esc(w.q.knowledge_code || '')}
+                </span>
+                <span class="badge" style="background:${isSlow ? 'rgba(248,113,113,0.2)' : 'var(--bg-2)'};color:${isSlow ? '#fca5a5' : 'var(--fg-dim)'};font-weight:700">
+                  ⏱️ ${tsec}s${isSlow ? ' · 卡題' : ''}
+                </span>
               </div>
-              <div style="font-size:0.85rem;color:var(--fg);line-height:1.5">${stem}…</div>
-              <div style="display:flex;gap:6px">
-                <button class="btn btn-warn" style="font-size:0.8rem;padding:6px 12px"
+              <div style="font-size:0.9rem;color:var(--fg);line-height:1.55">${this._esc(stem)}…</div>
+              <div style="display:flex;gap:8px">
+                <button class="btn btn-warn" style="font-size:0.8rem;padding:6px 14px"
                   onclick="Mode7.drillWrong('${w.qid}')">🎯 進下鑽</button>
               </div>
             </div>`;
           }).join('')}
         </div>`;
 
-      // UX #2 標記題清單
+      // === 標記題清單(UX #2)===
       const markedBlock = (result.markedQids && result.markedQids.length > 0) ? `
         <div class="card">
-          <h2>🔖 已標記的題目(${result.markedQids.length} 題)</h2>
+          <h2>🔖 已標記的題目 <span style="font-size:0.85rem;color:var(--fg-dim);font-weight:normal">(${result.markedQids.length} 題)</span></h2>
           <p style="font-size:0.85rem;color:var(--fg-dim);margin-bottom:8px">
             這些是你模考中主動標記的題目,建議回頭複習
           </p>
@@ -1803,12 +1852,10 @@
               const allQ = (typeof QUESTIONS !== 'undefined' ? QUESTIONS : []);
               const q = allQ.find(x => x.id === qid);
               if (!q) return '';
-              const stem = (q.stem || '').substring(0, 60).replace(/\{[^}]+\}/g, '');
-              return `<div class="weak-item" style="flex-direction:column;align-items:flex-start;gap:6px;padding:10px">
-                <div style="display:flex;justify-content:space-between;width:100%;align-items:center">
-                  <span style="font-size:0.8rem;color:var(--fg-dim)">🔖 #${i+1} · ${this._esc(q.knowledge_code || '')}</span>
-                </div>
-                <div style="font-size:0.85rem;color:var(--fg);line-height:1.5">${stem}…</div>
+              const stem = (q.stem || '').substring(0, 80).replace(/\{[^}]+\}/g, '');
+              return `<div class="weak-item" style="flex-direction:column;align-items:stretch;gap:6px;padding:10px;border-left:4px solid #facc15">
+                <div style="font-size:0.78rem;color:var(--fg-dim)">🔖 #${i+1} · ${this._esc(q.knowledge_code || '')}</div>
+                <div style="font-size:0.88rem;color:var(--fg);line-height:1.55">${this._esc(stem)}…</div>
               </div>`;
             }).join('')}
           </div>
@@ -1817,61 +1864,86 @@
       const view = document.getElementById('view-play');
       view.innerHTML = `
         <div class="m7-mock-view">
-        <div class="card" style="background:linear-gradient(135deg,#1e1b4b,#7f1d1d)">
-          <h1 style="text-align:center;color:#fef3c7;font-size:1.8rem">🎬 模考結束</h1>
-          <div style="text-align:center;color:var(--fg-dim);margin-top:6px">${reasonText}</div>
 
-          <div style="text-align:center;margin:16px 0">
-            <div style="font-size:3.5rem;font-weight:900;color:${lvlColor};text-shadow:0 0 20px currentColor">
-              ${lvlEmoji} ${result.correct} / ${result.total}
+        <!-- HERO:大標題 + 等級徽章 + 大字正確率 -->
+        <div class="card" style="background:${heroBg};border:1px solid ${lvlColorDark};box-shadow:0 0 40px ${lvlColor}33,0 4px 20px rgba(0,0,0,0.5);overflow:hidden;position:relative">
+          <div style="position:absolute;top:0;right:0;width:240px;height:240px;background:radial-gradient(circle, ${lvlColor}22 0%, transparent 70%);pointer-events:none"></div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;position:relative">
+            <div>
+              <div style="font-size:0.78rem;color:#fef3c7cc;letter-spacing:0.15em;font-weight:700;text-transform:uppercase">🎬 Mode 7 · 模考結算</div>
+              <h1 style="color:#fef3c7;font-size:1.6rem;margin-top:4px">${reasonText}</h1>
             </div>
-            <div style="font-size:1.5rem;color:var(--fg);margin-top:4px">${overallPct}%</div>
-            <div style="margin-top:8px;font-size:1rem;color:${lvlColor};font-weight:700">
-              預估等級:${result.estLevel}
-              <span style="font-size:0.8rem;color:var(--fg-dim);font-weight:normal">
-                (${result.estLevel === '高' ? '≥80% 真考有機會通過' :
-                   result.estLevel === '中' ? '60-79% 接近及格邊緣' :
-                   '<60% 需要加強練習'})
-              </span>
+            <div style="background:${lvlColor};color:${lvlColorDark};padding:6px 14px;border-radius:999px;font-weight:900;font-size:0.95rem;box-shadow:0 0 18px ${lvlColor}66">
+              ${lvlEmoji} ${result.estLevel} 級
             </div>
           </div>
 
-          <div style="background:rgba(0,0,0,0.4);padding:12px;border-radius:var(--radius-sm);font-size:0.9rem;color:var(--fg-dim);text-align:center">
-            ⏱️ 用時 ${Math.floor(result.timeUsed / 60)}m ${result.timeUsed % 60}s
-            · 已答 ${result.totalAttempted}/${result.total}
-            ${result.unanswered > 0 ? ` · 未答 ${result.unanswered}` : ''}
+          <div style="text-align:center;margin:22px 0 12px;position:relative">
+            <div style="font-size:5rem;font-weight:900;color:${lvlColor};text-shadow:0 0 30px ${lvlColor}88;line-height:1;letter-spacing:-0.03em">
+              ${overallPct}<span style="font-size:2.2rem;margin-left:2px">%</span>
+            </div>
+            <div style="font-size:1.1rem;color:#fef3c7;margin-top:8px;font-weight:600">
+              ${result.correct} / ${result.total} 題答對
+              ${result.unanswered > 0 ? `<span style="color:#fde68a99"> · ${result.unanswered} 題未答</span>` : ''}
+            </div>
+            <div style="font-size:0.85rem;color:${lvlColor};margin-top:6px;font-weight:700;opacity:0.9">
+              ${lvlHintText}
+            </div>
+          </div>
+
+          <!-- 大型橫條:正確率視覺條 -->
+          <div style="background:rgba(0,0,0,0.5);height:14px;border-radius:7px;overflow:hidden;margin-top:8px;border:1px solid rgba(255,255,255,0.08)">
+            <div style="height:100%;width:${overallPct}%;background:linear-gradient(90deg,${lvlColor},${lvlColor}aa);box-shadow:0 0 12px ${lvlColor};transition:width 1s cubic-bezier(.4,0,.2,1)"></div>
           </div>
         </div>
 
+        <!-- KPI 卡片區 -->
+        <div class="card" style="padding:14px 16px">
+          <div style="font-size:0.85rem;color:var(--fg-dim);font-weight:700">📈 關鍵指標</div>
+          ${kpiRow}
+        </div>
+
+        <!-- 分科目得分(progress bar)-->
         <div class="card">
-          <h2>📊 分科目得分</h2>
+          <h2>📊 分科目得分細目</h2>
+          <p style="font-size:0.82rem;color:var(--fg-dim);margin-bottom:6px">綠 ≥80% · 黃 60-79% · 紅 <60%</p>
           ${catBlock}
         </div>
 
+        <!-- Pace Heatmap -->
         <div class="card">
           <h2>🌡️ Pace Heatmap(每題用時)</h2>
-          <p style="font-size:0.85rem;color:var(--fg-dim);margin-bottom:8px">
-            🟢 ≤60s(穩) · 🟡 60-90s(尚可) · 🔴 ≥90s(卡題)
-          </p>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:0.82rem;color:var(--fg-dim);margin-bottom:10px;align-items:center">
+            <span><span style="display:inline-block;width:12px;height:12px;background:#4ade80;border-radius:2px;vertical-align:middle"></span> ≤60s 穩</span>
+            <span><span style="display:inline-block;width:12px;height:12px;background:#facc15;border-radius:2px;vertical-align:middle"></span> 60-90s 尚可</span>
+            <span><span style="display:inline-block;width:12px;height:12px;background:#f87171;border-radius:2px;vertical-align:middle"></span> ≥90s 卡題</span>
+            ${avgSec > 0 ? `<span style="margin-left:auto;color:var(--fg)"><strong>平均 ${avgSec}s</strong> · 最長 ${maxSec}s · 卡題 ${slowCount} 題</span>` : ''}
+          </div>
           ${heatmap}
         </div>
 
+        <!-- Top 5 錯題 -->
         <div class="card">
-          <h2>🎯 Top 5 卡題錯題(可進下鑽)</h2>
+          <h2>🎯 Top 5 卡題錯題</h2>
           <p style="font-size:0.85rem;color:var(--fg-dim);margin-bottom:8px">
-            這些是你用時最長且答錯的題目,進下鑽針對性訓練(鐵律 #1)
+            用時最長且答錯的題目 — 進下鑽針對性訓練(鐵律 #1)
           </p>
           ${topWrongBlock}
         </div>
 
         ${markedBlock}
 
-        <div class="card">
-          <p style="font-size:0.85rem;color:var(--fg-dim);margin-bottom:8px;text-align:center">
-            💡 建議先「📚 逐題回顧」確認每題都看過(每題可加入錯題本),再離開模考結果
+        <!-- ACTION BAR(顯眼漸層主 CTA)-->
+        <div class="card" style="background:linear-gradient(180deg,var(--bg-2),var(--bg-3));border:1px solid var(--primary);box-shadow:0 0 24px rgba(56,189,248,0.18)">
+          <p style="font-size:0.88rem;color:var(--fg);margin-bottom:12px;text-align:center;line-height:1.6">
+            💡 建議先 <strong style="color:var(--primary)">逐題回顧</strong> 確認每題都看過(可加入錯題本),再離開模考
           </p>
-          <div class="actions" style="justify-content:center;flex-wrap:wrap">
-            <button class="btn btn-primary" onclick="Mode7.startReview()">📚 逐題回顧 <span id="m7-review-progress-badge" style="font-size:0.85rem;opacity:0.85">(${this.state.reviewedSet ? this.state.reviewedSet.size : 0}/${result.total} 已看)</span></button>
+          <div class="actions" style="justify-content:center;flex-wrap:wrap;gap:10px">
+            <button class="btn btn-primary" onclick="Mode7.startReview()"
+              style="background:linear-gradient(135deg,#38bdf8,#0284c7);color:#fff;font-size:1rem;padding:12px 22px;box-shadow:0 4px 14px rgba(56,189,248,0.4);border:none">
+              📚 逐題回顧
+              <span id="m7-review-progress-badge" style="font-size:0.82rem;opacity:0.9;margin-left:4px">(${this.state && this.state.reviewedSet ? this.state.reviewedSet.size : 0}/${result.total} 已看)</span>
+            </button>
             <button class="btn btn-warn" onclick="Mode7.drillAllWrong()" ${result.topWrong.length === 0 ? 'disabled' : ''}>🎯 全部錯題下鑽</button>
             <button class="btn btn-ghost" onclick="Mode7.expandAllExplanations()">📖 展開所有解析</button>
             <button class="btn btn-ghost" onclick="Mode7.start()">🔁 再來一場</button>

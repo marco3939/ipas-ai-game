@@ -437,6 +437,9 @@
       const pt = document.getElementById('m2-player-hp-text');
       if (bt) bt.textContent = `${this.state.bossHp} / ${this.state.bossHpMax}`;
       if (pt) pt.textContent = `HP ${p.hp}/${p.hpMax} · MP ${p.mp}/${p.mpMax}`;
+      // 2026-05-19 新增:BOSS HP < 30% 開啟怒火光環、HP=0 或回血移除
+      const bossAv = document.getElementById('m2-boss-avatar');
+      if (bossAv) GameFX.bossEnrage(bossAv, bossPct > 0 && bossPct < 30);
     },
 
     updateSkillTray() {
@@ -555,6 +558,8 @@
       this._scheduleTimeout(() => {
         GameFX.shake(bossAv);
         GameFX.damageNumber(bossAv, dmg, { kind: 'player', crit: isCrit });
+        // 2026-05-19 新增:BOSS 命中時往後彈飛
+        GameFX.bossKnockback(bossAv);
       }, 200);
 
       if (this.state.combo >= 2) GameFX.combo(this.state.combo);
@@ -572,7 +577,8 @@
       p.mp = Math.min(p.mpMax, p.mp + mpHeal);
       Player.save(p);
       if (p.hp > beforeHp) {
-        this._scheduleTimeout(() => GameFX.damageNumber(playerAv, '+' + (p.hp - beforeHp), { kind: 'player' }), 400);
+        // 2026-05-19 強化:GameFX.heal 合併綠光暈 + 浮動數字
+        this._scheduleTimeout(() => GameFX.heal(playerAv, p.hp - beforeHp), 400);
       }
 
       this.updateBars();

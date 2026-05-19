@@ -151,7 +151,29 @@
   .pair-card.selected { border-color: var(--warn); background: rgba(250,204,21,0.1); }
   .pair-card.matched { border-color: var(--success); background: rgba(74,222,128,0.15); cursor: default; }
   .pair-card.mismatched { border-color: var(--danger); animation: shake 0.4s; }
-  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+  /* 2026-05-19 強化:6px → 10px,加 y 軸抖動;時間 0.4s → 0.5s */
+  @keyframes shake { 0%,100% { transform: translate(0,0) rotate(0); }
+    15% { transform: translate(-10px, 2px) rotate(-2deg); }
+    30% { transform: translate(10px, -2px) rotate(2deg); }
+    45% { transform: translate(-9px, 1px) rotate(-1.5deg); }
+    60% { transform: translate(9px, -1px) rotate(1.5deg); }
+    75% { transform: translate(-6px, 1px) rotate(-1deg); }
+    90% { transform: translate(6px, 0) rotate(1deg); } }
+  /* 2026-05-19 新增:BOSS 被擊中後彈飛(被擊飛感) */
+  @keyframes bossKnockback { 0% { transform: translateX(0) rotate(0); }
+    30% { transform: translateX(28px) rotate(8deg) scale(1.06); filter: brightness(1.5); }
+    60% { transform: translateX(20px) rotate(4deg) scale(1.02); filter: brightness(1.2); }
+    100% { transform: translateX(0) rotate(0) scale(1); filter: brightness(1); } }
+  .avatar.boss-knockback { animation: bossKnockback 0.55s cubic-bezier(.34,1.56,.64,1); }
+  /* 2026-05-19 新增:玩家補血綠光暈 */
+  @keyframes healPulse { 0% { box-shadow: 0 0 0 0 rgba(74,222,128,0.9), 0 0 0 0 rgba(74,222,128,0.6); }
+    50% { box-shadow: 0 0 30px 12px rgba(74,222,128,0.7), 0 0 60px 24px rgba(74,222,128,0.4); }
+    100% { box-shadow: 0 0 0 0 rgba(74,222,128,0), 0 0 0 0 rgba(74,222,128,0); } }
+  .avatar.healing { animation: healPulse 0.9s ease-out; }
+  /* 2026-05-19 新增:BOSS 低血量怒火脈衝 */
+  @keyframes bossEnrage { 0%,100% { box-shadow: 0 0 20px rgba(239,68,68,0.5), 0 0 40px rgba(239,68,68,0.3); filter: brightness(1) saturate(1); }
+    50% { box-shadow: 0 0 50px rgba(239,68,68,1), 0 0 90px rgba(220,38,38,0.85), inset 0 0 20px rgba(239,68,68,0.6); filter: brightness(1.3) saturate(1.5); } }
+  .avatar.boss-enrage { animation: bossEnrage 0.9s ease-in-out infinite; }
 
   /* RPG 對話框(案 1) */
   .rpg-scene { background: linear-gradient(135deg, #1e3a5f, #2d4a7a); border-radius: var(--radius);
@@ -209,9 +231,9 @@
     display: flex; align-items: center; justify-content: center; font-size: 2rem; flex-shrink: 0;
     box-shadow: 0 0 20px rgba(56,189,248,0.4); }
   .avatar.boss { background: linear-gradient(135deg, #7f1d1d, #991b1b); box-shadow: 0 0 20px rgba(239,68,68,0.4); }
-  .avatar.taking-damage { animation: shake 0.4s; }
+  .avatar.taking-damage { animation: shake 0.5s; }
   .avatar.attacking { animation: attack 0.5s; }
-  @keyframes attack { 0%,100% { transform: translateX(0); } 50% { transform: translateX(20px) scale(1.1); } }
+  @keyframes attack { 0%,100% { transform: translateX(0); } 50% { transform: translateX(24px) scale(1.15); filter: brightness(1.3); } }
   .bar-info { flex: 1; }
   .bar-name { font-weight: 700; font-size: 0.95rem; }
   .bar-name .level { background: var(--primary); color: var(--primary-fg); padding: 1px 6px;
@@ -224,12 +246,14 @@
   @keyframes pulseHP { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
   .hp-text { font-size: 0.8rem; color: var(--fg-dim); margin-top: 2px; }
 
-  /* 傷害數字飛出 */
-  .damage-num { position: absolute; font-size: 2rem; font-weight: 900; pointer-events: none;
-    text-shadow: 0 0 12px currentColor; z-index: 100; }
-  .damage-num.player { color: #fbbf24; }
+  /* 傷害數字飛出 — 2026-05-19 強化:字體變大、加描邊更醒目 */
+  .damage-num { position: absolute; font-size: 2.5rem; font-weight: 900; pointer-events: none;
+    text-shadow: 0 0 18px currentColor, 0 2px 4px rgba(0,0,0,0.6); z-index: 100;
+    -webkit-text-stroke: 1px rgba(0,0,0,0.4); letter-spacing: -0.02em; }
+  .damage-num.player { color: #4ade80; text-shadow: 0 0 18px #4ade80, 0 2px 4px rgba(0,0,0,0.6); }
   .damage-num.enemy { color: #f87171; }
-  .damage-num.crit { font-size: 3rem; color: #fb923c; }
+  .damage-num.crit { font-size: 4rem; color: #fb923c;
+    text-shadow: 0 0 24px #fb923c, 0 0 48px #fbbf24, 0 2px 6px rgba(0,0,0,0.7); }
 
   /* Combo 連擊 */
   .combo-display { position: fixed; top: 80px; right: 16px; padding: 8px 16px;
@@ -295,11 +319,11 @@
   .visual-data { margin: 12px 0; }
   .visual-data-title { font-size: 0.85rem; color: var(--fg-dim); margin-bottom: 6px; }
 
-  /* 答對 / 答錯 全螢幕閃光 */
+  /* 答對 / 答錯 全螢幕閃光 — 2026-05-19 強化:顏色更鮮豔、延長時間 */
   .flash-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 5000;
-    opacity: 0; transition: opacity 0.3s; }
-  .flash-overlay.correct { background: radial-gradient(ellipse at center, rgba(74,222,128,0.4), transparent 70%); }
-  .flash-overlay.wrong { background: radial-gradient(ellipse at center, rgba(248,113,113,0.4), transparent 70%); }
+    opacity: 0; transition: opacity 0.45s; }
+  .flash-overlay.correct { background: radial-gradient(ellipse at center, rgba(34,197,94,0.65), rgba(74,222,128,0.25) 40%, transparent 75%); }
+  .flash-overlay.wrong { background: radial-gradient(ellipse at center, rgba(239,68,68,0.7), rgba(248,113,113,0.3) 40%, transparent 75%); }
   .flash-overlay.show { opacity: 1; }
 
   /* === 錯誤回報(草案 1:Inline form 非 modal)=== */
@@ -2238,13 +2262,15 @@ const Mode4 = {
 
 // === 遊戲化共用引擎(Phase C)===
 const GameFX = {
+  // 2026-05-19 強化:閃光時間 300ms → 450ms,配合 CSS transition 0.45s,殘留時間延長更突顯
   flash(kind = 'correct') {
     const el = document.createElement('div');
     el.className = `flash-overlay ${kind}`;
     document.body.appendChild(el);
     requestAnimationFrame(() => el.classList.add('show'));
-    setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 300); }, 300);
+    setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 450); }, 450);
   },
+  // 2026-05-19 強化:飛行距離 -80 → -110、scale crit 2→2.5 / normal 1.4→1.7、duration 1.2 → 1.4
   damageNumber(targetEl, amount, opts = {}) {
     if (!targetEl) return;
     const r = targetEl.getBoundingClientRect();
@@ -2255,13 +2281,44 @@ const GameFX = {
     num.style.top = (r.top + 20) + 'px';
     document.body.appendChild(num);
     if (window.gsap) {
-      gsap.fromTo(num, { y: 0, opacity: 1, scale: 0.5 },
-        { y: -80, opacity: 0, scale: opts.crit ? 2 : 1.4, duration: 1.2, ease: 'power2.out',
+      gsap.fromTo(num, { y: 0, opacity: 1, scale: 0.4, rotation: opts.crit ? -8 : 0 },
+        { y: -110, opacity: 0, scale: opts.crit ? 2.5 : 1.7, rotation: opts.crit ? 6 : 0,
+          duration: 1.4, ease: 'power2.out',
           onComplete: () => num.remove() });
-    } else { setTimeout(() => num.remove(), 1200); }
+    } else { setTimeout(() => num.remove(), 1400); }
   },
-  shake(el) { if (!el) return; el.classList.add('taking-damage'); setTimeout(() => el.classList.remove('taking-damage'), 400); },
+  // 2026-05-19 強化:幅度 6px → 10px(於 CSS @keyframes shake),時長 0.4s → 0.5s
+  shake(el) { if (!el) return; el.classList.add('taking-damage'); setTimeout(() => el.classList.remove('taking-damage'), 500); },
   attackAnim(el) { if (!el) return; el.classList.add('attacking'); setTimeout(() => el.classList.remove('attacking'), 500); },
+  // 2026-05-19 新增:BOSS 被擊中往後彈(0.55s,被擊飛感)
+  bossKnockback(el) {
+    if (!el) return;
+    el.classList.remove('boss-knockback'); // 重設使連發可重播
+    // 強制 reflow 確保 animation 重新觸發
+    // eslint-disable-next-line no-unused-expressions
+    el.offsetWidth;
+    el.classList.add('boss-knockback');
+    setTimeout(() => el.classList.remove('boss-knockback'), 600);
+  },
+  // 2026-05-19 新增:玩家補血綠光暈(0.9s)+ 浮動 +amount 數字
+  heal(el, amount) {
+    if (!el) return;
+    el.classList.remove('healing');
+    // eslint-disable-next-line no-unused-expressions
+    el.offsetWidth;
+    el.classList.add('healing');
+    setTimeout(() => el.classList.remove('healing'), 950);
+    if (amount != null && Number.isFinite(+amount) && +amount > 0) {
+      this.damageNumber(el, '+' + amount, { kind: 'player' });
+    }
+  },
+  // 2026-05-19 新增:BOSS 低血量時的怒火光環(紅色脈衝,持續直到取消)
+  // 用法:bossEnrage(el, true) 開啟、bossEnrage(el, false) 關閉
+  bossEnrage(el, on = true) {
+    if (!el) return;
+    if (on) el.classList.add('boss-enrage');
+    else el.classList.remove('boss-enrage');
+  },
   confetti(opts = {}) {
     if (!window.confetti) return;
     confetti({ particleCount: opts.count || 60, spread: 70, origin: { y: 0.6 }, ...opts });

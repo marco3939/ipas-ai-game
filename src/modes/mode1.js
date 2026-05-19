@@ -390,6 +390,9 @@
       const pt = document.getElementById('player-hp-text');
       if (bt) bt.textContent = `${this.state.bossHp} / ${this.state.bossHpMax}`;
       if (pt) pt.textContent = `HP ${p.hp}/${p.hpMax} · MP ${p.mp}/${p.mpMax}`;
+      // 2026-05-19 新增:BOSS HP < 30% 開啟怒火光環、HP=0 或回血移除
+      const bossAv = document.getElementById('boss-avatar');
+      if (bossAv) GameFX.bossEnrage(bossAv, bossPct > 0 && bossPct < 30);
     },
 
     updateSkillTray() {
@@ -498,6 +501,8 @@
       this._scheduleTimeout(() => {
         if (!this.state) return;
         GameFX.shake(bossAv); GameFX.damageNumber(bossAv, dmg, { kind: 'player', crit: isCrit });
+        // 2026-05-19 新增:BOSS 命中時往後彈飛(被擊飛感)
+        GameFX.bossKnockback(bossAv);
       }, 200);
       if (this.state.combo >= 2) GameFX.combo(this.state.combo);
       if (this.state.combo === 5) { GameFX.confetti({ count: 100, colors: ['#fbbf24','#f59e0b','#ef4444'] }); showToast('🔥 5 連擊!氣勢正盛!'); }
@@ -511,11 +516,11 @@
       p.hp = Math.min(p.hpMax, p.hp + hpHeal);
       p.mp = Math.min(p.mpMax, p.mp + mpHeal);
       Player.save(p);
-      // 顯示綠色治療數字
+      // 顯示綠色治療數字 + 綠光暈(2026-05-19:GameFX.heal 合併兩者)
       if (p.hp > beforeHp) {
         this._scheduleTimeout(() => {
           if (!this.state) return;
-          GameFX.damageNumber(playerAv, '+' + (p.hp - beforeHp), { kind: 'player' });
+          GameFX.heal(playerAv, p.hp - beforeHp);
         }, 400);
       }
       this.updateBars(); this.updateSkillTray();
