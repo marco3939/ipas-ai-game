@@ -4,44 +4,9 @@ const fs = require('fs');
 const path = require('path');
 
 const SRC_DIR = path.join(__dirname, '..', 'src');
-const FILES = [
-  'questions.json',
-  'questions-pa-code.json',
-  'questions-pb-visual.json',
-  'questions-pc-modes.json',
-  'questions-pd-scenario.json',
-  'questions-pe-advanced-s1.json',
-  'questions-pf-advanced-s3.json',
-  'questions-pg-eval.json',
-  'questions-ph-mlops.json',
-  'questions-batch-n1-nlp.json',
-  'questions-batch-n2-cv.json',
-  'questions-batch-n3-genai.json',
-  'questions-batch-n4-planning.json',
-  'questions-batch-n5-deploy.json',
-  'questions-batch-n6-ml-core.json',
-  'questions-batch-n7-dl.json',
-  'questions-batch-n8-eval-gov.json',
-  'questions-batch-n9-subject2.json',
-  'questions-batch-n10-L22102.json', 'questions-batch-n11-L22103.json',
-  'questions-batch-n12-L22201.json', 'questions-batch-n13-L22202.json', 'questions-batch-n14-L22203.json',
-  'questions-batch-n15-L22301.json', 'questions-batch-n16-L22302.json', 'questions-batch-n17-L22303.json',
-  'questions-batch-n18-L22401.json', 'questions-batch-n19-L22402.json', 'questions-batch-n20-L22403.json', 'questions-batch-n21-L22404.json',
-  'questions-batch-n22-L22-code-data.json', 'questions-batch-n23-L22-code-ml.json', 'questions-batch-n24-L22-code-gen.json',
-  'questions-batch-boss-fill.json',
-  'questions-batch-n25-L23-ml-core.json',
-  'questions-batch-n26-L23-classical.json',
-  'questions-batch-n27-L23-clustering-reg.json',
-  'questions-batch-n28-L23-RL-biz.json',
-  'questions-batch-n29-L23-DL.json',
-  'questions-batch-n30-L23-LLM.json',
-  'questions-batch-n31-L23-generative.json',
-  'questions-batch-n32-L23-tierB.json',
-  'questions-batch-n33-L23-DL-advanced.json',
-  'questions-batch-n34-L23-RL-advanced.json',
-  'questions-confusion-matrix.json',
-  'questions-mode8-trace.json',
-];
+// 2026-05-18:FILES 改用 manifest 動態載入(取代寫死 list)
+const _manifest = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "src", "questions-manifest.json"), "utf8"));
+const FILES = _manifest.files;
 
 const stats = {
   singleChoice: 0,
