@@ -2569,7 +2569,7 @@
           "trap_type": "忽略需要兩兩比對"
         },
         {
-          "text": "O(log n) — 對數級成長",
+          "text": "O(log n) — 對數成長(分治)",
           "is_correct": false,
           "trap_type": "誤套二分搜的形式"
         }

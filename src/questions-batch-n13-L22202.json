@@ -49,16 +49,16 @@
       "stem": "某連鎖超市資訊長盤點企業內部三套儲存架構:Warehouse、Lake、Lakehouse。下列關於這三種架構定位的描述,何者最為正確?",
       "options": [
         {
-          "text": "Warehouse 偏結構化 BI 報表、Lake 偏多型態原始資料、Lakehouse 在 Lake 之上加上 Warehouse 等級治理",
+          "text": "Warehouse 偏結構化 BI、Lake 偏多型態原始資料、Lakehouse 在 Lake 上加 Warehouse 治理",
           "is_correct": true
         },
         {
-          "text": "Warehouse 偏多型態原始資料、Lake 偏結構化 BI 報表、Lakehouse 為兩者輕量化合併的簡化版本架構",
+          "text": "Warehouse 偏多型態原始資料、Lake 偏結構化 BI 報表、Lakehouse 為兩者輕量化合併的簡化版本",
           "is_correct": false,
           "trap_type": "Warehouse 與 Lake 定位顛倒"
         },
         {
-          "text": "三者皆為強 schema 架構,差異僅在儲存規模大小,Lake 是中型、Lakehouse 是大型 Warehouse",
+          "text": "三者皆為強 schema 架構,差異僅在儲存規模大小,Lake 屬於中型架構、Lakehouse 屬於大型 Warehouse 等級",
           "is_correct": false,
           "trap_type": "Lake 並非強 schema"
         },
@@ -517,7 +517,7 @@
           "trap_type": "違反定理基本前提"
         },
         {
-          "text": "可用性(A)在分散式系統可完全捨棄,因跨中心架構本來就接受長時間 timeout 的回應",
+          "text": "可用性(A)在分散式系統當中可完全捨棄,因跨資料中心架構本來就接受長時間 timeout 的回應",
           "is_correct": false,
           "trap_type": "可用性不可隨意丟"
         },

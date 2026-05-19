@@ -275,17 +275,17 @@
           "is_correct": true
         },
         {
-          "text": "決策樹的分裂閾值、神經網路的各層權重、softmax 輸出的機率向量",
+          "text": "決策樹訓練後得到的各節點分裂閾值、神經網路反向傳播後的各層權重、softmax 推論輸出機率向量",
           "is_correct": false,
           "trap_type": "這些是訓練得到的內部參數,非預先設定的超參數"
         },
         {
-          "text": "訓練資料的特徵均值、標準差以及訓練資料的樣本量",
+          "text": "訓練資料各特徵欄位的均值與標準差、訓練樣本數量與類別比例等資料層級統計屬性",
           "is_correct": false,
           "trap_type": "資料統計量屬資料屬性,不是模型超參數"
         },
         {
-          "text": "預測結果的混淆矩陣、ROC 曲線下面積以及 F1 分數",
+          "text": "模型評估階段產出的混淆矩陣、ROC 曲線下面積(AUC)以及 F1 分數等性能指標",
           "is_correct": false,
           "trap_type": "這些是模型評估後得到的指標,不是訓練輸入"
         }
@@ -490,21 +490,21 @@
       "stem": "某新聞媒體分析平台訓練 CNN 影像分類器時發現:(1)訓練 loss 下降快但驗證 loss 從第 3 個 epoch 開始上升;(2)模型在訓練集 accuracy 達 99%、驗證集僅 72%。下列調整方向中,何者最不可能改善過擬合?",
       "options": [
         {
-          "text": "把 batch size 從 64 改為 4096 並把學習率同步乘 64 倍",
+          "text": "把 batch size 從 64 改為 4096 並把學習率同步乘 64 倍,以加速整體訓練吞吐",
           "is_correct": true
         },
         {
-          "text": "加入 dropout 層、增加 L2 權重衰減係數",
+          "text": "在中間隱藏層加入 dropout 層、提高 L2 權重衰減係數,以正則化方式限制模型容量",
           "is_correct": false,
           "trap_type": "這些都是降低過擬合的標準正則化手段"
         },
         {
-          "text": "做資料擴增(隨機翻轉、裁切、色彩抖動)增加有效樣本量",
+          "text": "套用資料擴增(隨機翻轉、裁切、色彩抖動、隨機遮擋)實質提升有效訓練樣本多樣性",
           "is_correct": false,
           "trap_type": "資料擴增是降低過擬合的主流方法之一"
         },
         {
-          "text": "啟用 early stopping,在第 3 個 epoch 後就停止訓練",
+          "text": "啟用 early stopping,在驗證 loss 開始反轉的第 3 個 epoch 後立即停止訓練並保留快照",
           "is_correct": false,
           "trap_type": "Early stopping 直接針對驗證 loss 反轉,有效"
         }
@@ -549,17 +549,17 @@
           "is_correct": true
         },
         {
-          "text": "AutoML 強調「一鍵到底」全自動化,可完全跳過資料探索與特徵工程階段直接建模",
+          "text": "AutoML 主打「一鍵到底」全自動化,可完全跳過資料探索與特徵工程階段,直接把原始資料丟給引擎建模",
           "is_correct": false,
           "trap_type": "誤以為 AutoML 可省掉 EDA 與 FE"
         },
         {
-          "text": "AutoML 的階段順序是先部署、再做特徵工程,最後才回頭校準模型",
+          "text": "AutoML 八階段的順序是先部署再做特徵工程,最後回頭做校準與微調,等於把部署排在搜尋與對比之前",
           "is_correct": false,
           "trap_type": "部署應在校準微調之後,順序顛倒"
         },
         {
-          "text": "AutoML 僅是 NAS 的別名,只負責搜尋神經網路結構,不處理超參搜尋",
+          "text": "AutoML 只是 NAS 的別名,負責範圍僅限神經網路結構搜尋,不處理超參數搜尋與機率校準等其他子任務",
           "is_correct": false,
           "trap_type": "AutoML 涵蓋更廣,NAS 只是其中之一"
         }
@@ -603,17 +603,17 @@
           "is_correct": true
         },
         {
-          "text": "EDA 主要目的是繪製漂亮的圖表給主管,模型本身不會因此提升",
+          "text": "EDA 的主要目的是繪製漂亮圖表給主管,屬於簡報工作而非建模流程,移除 EDA 不會影響模型品質",
           "is_correct": false,
           "trap_type": "把 EDA 視為純美觀工作"
         },
         {
-          "text": "EDA 的存在是因為 AutoML 不支援讀取 CSV,需要先看一次資料才能載入",
+          "text": "EDA 的存在純粹是因為 AutoML 不支援讀取 CSV 檔,團隊只是借機把資料先用其他工具看過一遍而已",
           "is_correct": false,
           "trap_type": "技術細節錯誤,AutoML 工具普遍支援 CSV"
         },
         {
-          "text": "EDA 完全可以由 AutoML 引擎自動產生,實務上人工 EDA 已被淘汰",
+          "text": "EDA 完全可以交給 AutoML 引擎自動產生,實務上人工 EDA 早已被淘汰,領域判讀也無價值",
           "is_correct": false,
           "trap_type": "AutoML 不能代替領域判讀"
         }
@@ -657,17 +657,17 @@
           "is_correct": true
         },
         {
-          "text": "直接把所有預測機率乘以 2,讓分布看起來更分散",
+          "text": "直接把所有預測機率乘以 2,並把超過 1 的部分截斷成 1,期望以這種線性放大讓機率分布在 0 到 1 之間更分散且更易做分群決策",
           "is_correct": false,
           "trap_type": "純線性放大不改變排序也不改變機率合理性"
         },
         {
-          "text": "重新跑一次 NAS,搜尋新的神經網路結構取代現有模型",
+          "text": "重新跑一次完整 NAS,搜尋新的神經網路結構去取代現有模型,期望以更大模型容量與更深架構自然解決機率輸出集中於 0.5 的問題",
           "is_correct": false,
           "trap_type": "結構搜尋對機率校準無直接幫助"
         },
         {
-          "text": "改用準確率而非 ROC-AUC 當主要指標,問題就會消失",
+          "text": "把主要評估指標從 ROC-AUC 改為準確率(accuracy)或 F1,認為更換評估指標後,模型機率輸出集中在 0.5 附近的現象就會自動消失",
           "is_correct": false,
           "trap_type": "換指標不改變機率分布失真本身"
         }
@@ -712,17 +712,17 @@
           "is_correct": true
         },
         {
-          "text": "NAS 是商業名稱,HPO 是學術名稱,實際上指向完全相同的搜尋演算法",
+          "text": "NAS 是商業界的行銷名稱,HPO 是學術界的正式名稱,兩者實際上指向完全相同的搜尋演算法與搜尋空間",
           "is_correct": false,
           "trap_type": "兩者問題不同、搜尋空間不同"
         },
         {
-          "text": "NAS 只能搜尋 CNN,HPO 只能搜尋 Transformer,兩者依模型架構分工",
+          "text": "NAS 只能用於搜尋 CNN 結構,HPO 只能用於搜尋 Transformer 超參,兩者依據目標模型架構嚴格分工",
           "is_correct": false,
           "trap_type": "NAS 與 HPO 不以模型類別劃分"
         },
         {
-          "text": "NAS 只在小資料下使用,HPO 只在大資料下使用,兩者依資料量切換",
+          "text": "NAS 只在小資料情境下使用,HPO 只在大資料情境下使用,兩者依資料量規模切換,不能混用",
           "is_correct": false,
           "trap_type": "資料量大小並非劃分標準"
         }
@@ -767,17 +767,17 @@
           "is_correct": true
         },
         {
-          "text": "AutoML 在金融領域被法規完全禁止,凡涉及貸款一律不得使用 AutoML 引擎",
+          "text": "AutoML 在金融領域被全球法規明令完全禁止,凡涉及貸款業務一律不得使用任何 AutoML 引擎或自動建模工具",
           "is_correct": false,
           "trap_type": "未有此普遍禁令,實務以模型可解釋性為標準"
         },
         {
-          "text": "AutoML 對連續變量無法處理,銀行貸款資料含連續變量所以一定不能用",
+          "text": "AutoML 對連續變量(如收入、年齡、聯徵分數)在技術上無法處理,銀行貸款資料含大量連續變量所以一定不能用",
           "is_correct": false,
           "trap_type": "AutoML 完全可處理連續變量,描述與事實不符"
         },
         {
-          "text": "AutoML 工具一律不支援交叉驗證,所以模型穩定性無法評估",
+          "text": "AutoML 工具一律不支援交叉驗證與 hold-out 切分,所以模型穩定性與泛化能力都無法以標準方法評估",
           "is_correct": false,
           "trap_type": "主流 AutoML 工具皆內建 CV"
         }
@@ -821,17 +821,17 @@
           "is_correct": true
         },
         {
-          "text": "需在離線無網路廠房做表格資料 AutoML → 強制只能使用線上雲端 AutoML 服務",
+          "text": "需在離線無網路的廠房內網對表格資料做 AutoML → 強制只能使用線上 SaaS 雲端 AutoML 服務,不考慮可本地部署的選項",
           "is_correct": false,
           "trap_type": "離線情境應選可本地部署工具"
         },
         {
-          "text": "需做影像 AutoML 但完全沒有寫程式能力 → 直接用 Python 套件從零撰寫 NAS 演算法",
+          "text": "需做影像 AutoML 但團隊完全沒有寫程式能力 → 直接讓他們用 Python 套件從零撰寫 NAS 演算法與訓練流程",
           "is_correct": false,
           "trap_type": "無程式能力卻寫 NAS 屬自相矛盾"
         },
         {
-          "text": "需嚴格控制超參搜尋預算與 hold-out 評估 → 直接交付給未經訓練的業務人員手動執行",
+          "text": "需嚴格控制超參搜尋預算與 hold-out 評估流程 → 直接把工具交付給未經 ML 訓練的業務人員手動執行",
           "is_correct": false,
           "trap_type": "業務人員缺乏 ML 知識,無法控制嚴格實驗預算"
         }
@@ -930,17 +930,17 @@
           "is_correct": true
         },
         {
-          "text": "只看訓練集 accuracy,選訓練集表現最高的模型直接部署",
+          "text": "只看訓練集 accuracy,直接選訓練集表現最高的模型部署到產線,完全不參考 hold-out 或交叉驗證結果",
           "is_correct": false,
           "trap_type": "訓練集表現會偏向過擬合,非選型依據"
         },
         {
-          "text": "永遠選參數量最大的模型,因為「越大越準」",
+          "text": "永遠選候選中參數量最大的模型上線,理由是「模型越大越準」,並不考慮推論成本與是否過擬合",
           "is_correct": false,
           "trap_type": "未考慮推論成本與過擬合風險"
         },
         {
-          "text": "用三組模型在 hold-out 集的平均分數做唯一指標,完全不看延遲與模型大小",
+          "text": "只用三組模型在 hold-out 集的平均分數做唯一指標,完全不看推論延遲、記憶體佔用與模型大小等部署條件",
           "is_correct": false,
           "trap_type": "忽略產線即時推論延遲約束"
         }

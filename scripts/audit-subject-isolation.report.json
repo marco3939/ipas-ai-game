@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-05-19T15:49:50.174Z",
-  "totalQ": 962,
-  "fileCount": 50,
+  "generated_at": "2026-05-19T16:50:34.020Z",
+  "totalQ": 997,
+  "fileCount": 52,
   "subjectDistribution": {
     "1": 256,
     "2": 340,
-    "3": 366,
+    "3": 401,
     "other": 0
   },
   "totalViolations": 0,
