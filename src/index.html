@@ -1034,9 +1034,15 @@ const Mastery = {
     const m = this.load();
     const qPerNode = {};
     for (const q of QUESTIONS) if (q.node_id) qPerNode[q.node_id] = (qPerNode[q.node_id] || 0) + 1;
+    // 2026-05-19 §8 H4 修補:雙路徑判定「已熟練」
+    // - 路徑 A:correct >= min(3, qPerNode)(原行為 — 實答對足夠次數)
+    // - 路徑 B:score >= 80(新加 — skillReinforce / drillBonus 等只動 score 的路徑也被認可)
+    // 任一達標即視為熟練。避免案例 4 殘留(Mode 5 強化 5 次 score=100 但 correct=0 被當沒練過)
     return Object.entries(m).filter(([nodeId, n]) => {
       const required = Math.min(3, qPerNode[nodeId] || 3);
-      return (n.correct || 0) >= required;
+      if ((n.correct || 0) >= required) return true;
+      if ((n.score || 0) >= 80) return true;
+      return false;
     }).length;
   }
 };
@@ -2047,8 +2053,10 @@ const DrillSession = {
         if (isCorrect) DrillSession.correct++;
         origAnswer(key);
       } finally {
-        // case 11:用 try/finally 確保即使 origAnswer throw 也會還原,避免 wrap 永留累積污染
-        PlayEngine.answer = origAnswer;
+        // case 11 + 2026-05-19 §8 H3 修補:還原永遠走 __nativeAnswer(絕對原生)
+        // 原 `PlayEngine.answer = origAnswer` 在 wrap 鏈中段被覆蓋時會還原成「中間版本」
+        // 而非真原生 → 多層 wrap / 殘存 hook 可能污染。改用 __nativeAnswer 確保 ground truth。
+        PlayEngine.answer = PlayEngine.__nativeAnswer || origAnswer;
       }
     };
   },

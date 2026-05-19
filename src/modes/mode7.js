@@ -862,7 +862,17 @@
         const draft = this.state.draft[i];
         if (!draft || !draft.userKey) continue;
         const item = this.state.lineup[i];
-        const renderedQ = this._getRendered(item);
+        let renderedQ = this._getRendered(item);
+        // 2026-05-19 §8 H2 修補:若拿不到 rendered options(item._rendered 未 cache,
+        // 玩家從題目列表跳到此題未進過 _showCurrentQuestion),主動跑 renderQuestion 補 cache
+        // 避免 rOpts 為空 → opt undefined → 寫入 correctKey='' → Wrongbook 殘留型污染(案例 10)
+        const rOptsInitial = (renderedQ && renderedQ.options) || [];
+        if (rOptsInitial.length === 0 && item && item.q && typeof renderQuestion === 'function') {
+          try {
+            item._rendered = renderQuestion(item.q);
+            renderedQ = item._rendered;
+          } catch (_) {}
+        }
         const rOpts = (renderedQ && renderedQ.options) || [];
         const opt = rOpts.find(o => o.key === draft.userKey);
         const isCorrect = !!(opt && opt.is_correct);
@@ -1606,6 +1616,19 @@
       this._stopTimer();
       // 還原 PlayEngine
       this._restorePlayEngine();
+
+      // 2026-05-19 §8 H2 修補:_saveHistory 內會跑 renderQuestion 補所有 item._rendered,
+      // 但 _commitToSharedLayer 在它之前呼叫 → 未 cache 題的 Wrongbook 寫入可能用空 key。
+      // 修補:把 _saveHistory 的 render-cache pre-pass 提前(以下 loop),
+      // 確保 _commitToSharedLayer 拿到的 _getRendered 永遠有 key。
+      const s = this.state;
+      if (s && Array.isArray(s.lineup) && typeof renderQuestion === 'function') {
+        s.lineup.forEach(item => {
+          if (item && item.q && !item._rendered) {
+            try { item._rendered = renderQuestion(item.q); } catch (_) {}
+          }
+        });
+      }
 
       // 2026-05-16 lenient 改造:答題期間 hook 不寫共用層,交卷時統一寫最終 answers
       // 這支持「首答錯 → 重答對 → 算對」的真考一致性
