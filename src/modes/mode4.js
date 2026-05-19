@@ -139,6 +139,18 @@
       if (typeof _setExamMode === 'function') _setExamMode(false);
     },
 
+    // 2026-05-19 §8 M2 修補:離場 cleanup 清 PlayEngine.onNext hook,
+    // 避免下次進別 mode(如 Mode 7)時舊 closure 殘留呼叫 Mode4.nextOne(state 已 null)
+    cleanup() {
+      this.stopTimer();
+      if (typeof PlayEngine !== 'undefined' && PlayEngine.onNext) {
+        // 只在 onNext 是 Mode4 自己掛的時候才清(避免誤清其他 mode)
+        // 簡單判斷:onNext 在 state 為 Mode4 時掛了 nextOne;清掉即可,其他 mode 進場會重掛
+        PlayEngine.onNext = null;
+      }
+      this.state = null;
+    },
+
     render() {
       const p = Player.load();
       const view = document.getElementById('view-play');

@@ -819,7 +819,17 @@ const Storage = {
   K_USER_NICKNAME: 'ipas_user_nickname_v1', // 使用者暱稱(P1 進度匯出匯入)
   get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
   set(k, v) {
-    try { localStorage.setItem(k, JSON.stringify(v)); }
+    try {
+      localStorage.setItem(k, JSON.stringify(v));
+      // 2026-05-19 §8 M3 修補:成功寫入時清 _writeFailed 旗標
+      // 原邏輯設了沒清,使用者清過 SM2/Wrongbook 後 quota 恢復,UI 永遠認為仍 fail
+      if (Storage._writeFailed) {
+        Storage._writeFailed = false;
+        // 同時移除常駐 banner(若還在)
+        const banner = document.getElementById('storage-quota-banner');
+        if (banner) banner.remove();
+      }
+    }
     catch(e) {
       console.warn('storage full:', e);
       // 案例 10 audit HIGH-5D:silent data-loss 高風險 — 改 persistent banner 取代 throttled toast,
@@ -1557,6 +1567,18 @@ function goHome() {
   if (typeof PlayEngine !== 'undefined') {
     PlayEngine.current = null;
   }
+  // 2026-05-19 §8 M6 修補:goHome 順帶清 DrillSession 全域狀態,避免「批次 / Mode 7 drillWrong
+  // 中途點首頁退出後,DrillSession.queue / onComplete 殘留,下次進別 mode 被舊 callback 干擾」
+  if (typeof DrillSession !== 'undefined') {
+    DrillSession.queue = [];
+    DrillSession.total = 0;
+    DrillSession.correct = 0;
+    DrillSession.onComplete = null;
+    DrillSession.targetNode = null;
+    DrillSession.originalQ = null;
+    DrillSession.depth = 0;
+    DrillSession._parentStack = [];
+  }
   // Mode 8 同樣有獨立 timer 與 _timers 佇列,需同步清理
   // (state=null 後 _handleTimeout 會經由 line 86 的 guard 自行 no-op)
   if (typeof Mode8 !== 'undefined') {
@@ -1574,7 +1596,11 @@ function goHome() {
   if (typeof Mode2 !== 'undefined' && Mode2._clearAllTimers) Mode2._clearAllTimers();
   // 案例 10 audit C-1:goHome 漏 cleanup Mode 3/4/5/6 → 中途離場 timer 殘留會洗 home view
   if (typeof Mode3 !== 'undefined' && Mode3.stopTimer) Mode3.stopTimer();
-  if (typeof Mode4 !== 'undefined' && Mode4.stopTimer) Mode4.stopTimer();
+  // 2026-05-19 §8 M2 修補:優先呼叫 Mode4.cleanup(清 PlayEngine.onNext + state),fallback 到 stopTimer
+  if (typeof Mode4 !== 'undefined') {
+    if (Mode4.cleanup) Mode4.cleanup();
+    else if (Mode4.stopTimer) Mode4.stopTimer();
+  }
   if (typeof Mode5 !== 'undefined' && Mode5.cleanup) Mode5.cleanup();
   if (typeof Mode6 !== 'undefined' && Mode6.cleanup) Mode6.cleanup();
   refreshHome();
