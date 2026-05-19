@@ -1,0 +1,181 @@
+name: Audit
+
+# Security note: this workflow does NOT consume any untrusted user input
+# (issue titles, PR bodies, commit messages, head_ref, etc.) inside run: blocks.
+# The only ${{ }} interpolations used are steps.*.outcome values, which are
+# GitHub-controlled enums (success/failure/cancelled/skipped) — safe to inline.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  audit:
+    name: Audit (qbank integrity + sandbox tests + jsdom browser-sim)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: scripts/playwright/package-lock.json
+
+      - name: Install jsdom dependencies (scripts/playwright)
+        working-directory: scripts/playwright
+        run: npm install --no-audit --no-fund
+
+      # ---------------------------------------------------------------
+      # Step 1 — primary audit scripts (tetsu #4 / #5 / #7 + render + calc + mode flow + marker + theme)
+      # fail fast on any single failure.
+      # ---------------------------------------------------------------
+      - name: Step 1 — Run primary audit scripts
+        id: primary_audits
+        run: |
+          set -e
+          echo "::group::audit-qbank-integrity (tetsu #7)"
+          node scripts/audit-qbank-integrity.js || { echo "::error::audit-qbank-integrity FAILED (tetsu #7: manifest / missing-load / drift / subject)"; exit 1; }
+          echo "::endgroup::"
+
+          echo "::group::audit-option-length (tetsu #4)"
+          node scripts/audit-option-length.js || { echo "::error::audit-option-length FAILED (tetsu #4: option length imbalance)"; exit 1; }
+          echo "::endgroup::"
+
+          echo "::group::audit-source-fidelity (tetsu #5)"
+          node scripts/audit-source-fidelity.js || { echo "::error::audit-source-fidelity FAILED (tetsu #5: knowledge_code / node_id source infidelity)"; exit 1; }
+          echo "::endgroup::"
+
+          echo "::group::audit-render (render output / placeholder)"
+          node scripts/audit-render.js || { echo "::error::audit-render FAILED (placeholder residue / is_correct anomaly, case 8)"; exit 1; }
+          echo "::endgroup::"
+
+          echo "::group::audit-calculation (calculation schema)"
+          node scripts/audit-calculation.js || { echo "::error::audit-calculation FAILED (calculation schema invalid)"; exit 1; }
+          echo "::endgroup::"
+
+          echo "::group::verify-calc-numeric (numeric correctness independent verification)"
+          node scripts/verify-calc-numeric.js || { echo "::error::verify-calc-numeric FAILED (calculation numeric answer wrong)"; exit 1; }
+          echo "::endgroup::"
+
+          echo "::group::audit-mode-flow (Mode isCorrect / correctKey, case 10)"
+          node scripts/audit-mode-flow.js || { echo "::error::audit-mode-flow FAILED (Mode 7 isCorrect/correctKey empty at some commit point, case 10 regression)"; exit 1; }
+          echo "::endgroup::"
+
+          echo "::group::audit-marker-integrity (_helpers.js marker)"
+          node scripts/audit-marker-integrity.js || { echo "::error::audit-marker-integrity FAILED (_helpers.js marker mismatch)"; exit 1; }
+          echo "::endgroup::"
+
+          echo "::group::audit-theme-tokens (theme tokens, PR #49)"
+          node scripts/audit-theme-tokens.js || { echo "::error::audit-theme-tokens FAILED (theme token drift)"; exit 1; }
+          echo "::endgroup::"
+
+          echo "Step 1 PASS - all primary audits green"
+
+      # ---------------------------------------------------------------
+      # Step 2 - audit-tests sandbox suite (each *.test.js is a standalone node script, exit 0 = PASS)
+      # ---------------------------------------------------------------
+      - name: Step 2 — Run audit-tests sandbox suite
+        id: sandbox_tests
+        run: |
+          set -e
+          PASS=0
+          FAIL=0
+          FAILED_FILES=()
+
+          shopt -s nullglob
+          FILES=(
+            scripts/audit-tests/mode1-4/*.test.js
+            scripts/audit-tests/mode5-8/mode5/*.test.js
+            scripts/audit-tests/mode5-8/mode6/*.test.js
+            scripts/audit-tests/mode5-8/mode7/*.test.js
+            scripts/audit-tests/mode5-8/mode8/*.test.js
+            scripts/audit-tests/srs-drill-review/*.test.js
+          )
+
+          if [ ${#FILES[@]} -eq 0 ]; then
+            echo "::error::No audit-tests files matched any glob - directory layout drift?"
+            exit 1
+          fi
+
+          echo "Found ${#FILES[@]} sandbox test files."
+          echo ""
+
+          for f in "${FILES[@]}"; do
+            echo "::group::$f"
+            if node "$f"; then
+              echo "  PASS: $f"
+              PASS=$((PASS + 1))
+            else
+              echo "::error file=$f::Sandbox test FAILED - see log group above"
+              FAIL=$((FAIL + 1))
+              FAILED_FILES+=("$f")
+            fi
+            echo "::endgroup::"
+          done
+
+          echo ""
+          echo "Sandbox summary: $PASS PASS / $FAIL FAIL (total ${#FILES[@]})"
+
+          if [ $FAIL -gt 0 ]; then
+            echo "::error::$FAIL sandbox test(s) failed:"
+            for f in "${FAILED_FILES[@]}"; do
+              echo "::error::  - $f"
+            done
+            exit 1
+          fi
+
+          echo "Step 2 PASS - all $PASS sandbox tests green"
+
+      # ---------------------------------------------------------------
+      # Step 3 - jsdom browser-sim (SPA end-to-end simulation, needs jsdom module)
+      # ---------------------------------------------------------------
+      - name: Step 3 — Run jsdom browser-sim
+        id: browser_sim
+        env:
+          NODE_PATH: scripts/playwright/node_modules
+        run: |
+          set -e
+          if [ ! -d "scripts/playwright/node_modules/jsdom" ]; then
+            echo "::error::jsdom module not installed in scripts/playwright/node_modules - install step failed silently?"
+            exit 1
+          fi
+          node scripts/browser-sim.test.js || {
+            echo "::error::browser-sim.test.js FAILED - SPA end-to-end simulation (jsdom) failed"
+            exit 1
+          }
+          echo "Step 3 PASS - jsdom browser-sim green"
+
+      # ---------------------------------------------------------------
+      # Final summary — print PASS/FAIL per step at end of log
+      # steps.*.outcome is a GitHub-controlled enum (success/failure/cancelled/skipped),
+      # not untrusted user input — safe to inline.
+      # ---------------------------------------------------------------
+      - name: Audit summary
+        if: always()
+        env:
+          OUTCOME_PRIMARY: ${{ steps.primary_audits.outcome }}
+          OUTCOME_SANDBOX: ${{ steps.sandbox_tests.outcome }}
+          OUTCOME_BROWSER: ${{ steps.browser_sim.outcome }}
+        run: |
+          echo "============================================================"
+          echo " IPAS AI Game - Audit CI Summary"
+          echo "============================================================"
+          echo " Step 1 (primary audits)   : $OUTCOME_PRIMARY"
+          echo " Step 2 (sandbox tests)    : $OUTCOME_SANDBOX"
+          echo " Step 3 (jsdom browser-sim): $OUTCOME_BROWSER"
+          echo "============================================================"
+          if [ "$OUTCOME_PRIMARY" = "success" ] \
+             && [ "$OUTCOME_SANDBOX" = "success" ] \
+             && [ "$OUTCOME_BROWSER" = "success" ]; then
+            echo " OVERALL: PASS"
+          else
+            echo " OVERALL: FAIL - see step logs above for details"
+          fi
+          echo "============================================================"

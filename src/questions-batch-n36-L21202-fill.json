@@ -1,0 +1,841 @@
+{
+  "version": "1.0",
+  "agent": "N36",
+  "purpose": "L21202 AI 漸進式部署(Phased Rollout)+ AI 導入評估三層 / POC 條件 原創題庫",
+  "schema_version": "iron-rule-1+2+3+4+5",
+  "generated_at": "2026-05-19",
+  "exam_target": {
+    "name": "IPAS AI 應用規劃師中級",
+    "date": "2026-05-23"
+  },
+  "iron_rule_1_compliance": "every question has explanation.correct + explanation.wrong + explanation.hook + misconceptions + related_node_ids",
+  "iron_rule_2_compliance": "shuffle_options:true on every question",
+  "iron_rule_3_compliance": "全 14 題原創跨產業情境(製造/醫療/金融/零售/物流/教育/SaaS/自駕);未複製 114-2 原題",
+  "iron_rule_4_compliance": "正解/平均錯解長度比落在 [0.85, 1.20];錯解皆寫成看似專業合理的另一描述",
+  "iron_rule_5_compliance": "knowledge_code = L21202;node_id 為 n_L21202_001 或 n_L21202_002(均在 kb-allowed-nodes.json 白名單);未涉禁用主題",
+  "node_distribution": {
+    "n_L21202_001_漸進式部署": 7,
+    "n_L21202_002_POC條件": 7
+  },
+  "format_distribution": {
+    "single_choice": 14
+  },
+  "difficulty_distribution": {
+    "medium": 9,
+    "hard": 5
+  },
+  "questions": [
+    {
+      "id": "q_n36_001",
+      "knowledge_code": "L21202",
+      "node_id": "n_L21202_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某汽車零件廠導入新版瑕疵影像分類模型,團隊想用最低風險方式上線。下列何種部署策略最符合「Canary(金絲雀)部署」的精神?",
+      "options": [
+        {
+          "text": "先開放 3% 產線影像流量給新模型,確認誤判率與延遲穩定後再逐步擴大到 25%、50%、100%",
+          "is_correct": true
+        },
+        {
+          "text": "直接全量切換至新模型,將舊模型保留於備援機房,觀察 24 小時內若有品管異常即切回舊版",
+          "is_correct": false,
+          "trap_type": "全量切換不是 Canary,屬於高風險直上"
+        },
+        {
+          "text": "讓新模型同步接收所有產線影像但不輸出控制訊號,僅將其預測與實際標註的差距留存後續分析",
+          "is_correct": false,
+          "trap_type": "這描述的是 Shadow deployment,不是 Canary"
+        },
+        {
+          "text": "將新舊模型放在獨立環境同時運行,以負載平衡器把產線請求 50/50 隨機分配,並比較兩邊表現",
+          "is_correct": false,
+          "trap_type": "50/50 直接對切較接近 Blue-Green 或 A/B,並非小流量金絲雀"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Canary deployment 的核心是「以極小比例(常見 1–5%)的真實流量先試驗新版本」,監控錯誤率、延遲、業務 KPI 等指標,確認與舊版一致或更優後再逐步擴大流量比例。這是漸進式部署中風險最低、回滾最快的標準作法。",
+        "wrong": {
+          "直接全量切換至新模型,將舊模型保留於備援機房,觀察 24 小時內若有品管異常即切回舊版": "全量直上的爆炸半徑等於 100%,雖能回滾但已造成大量誤判;Canary 強調事前小流量試驗",
+          "讓新模型同步接收所有產線影像但不輸出控制訊號,僅將其預測與實際標註的差距留存後續分析": "此為 Shadow deployment 的定義(影子流量、零外部影響),不是 Canary",
+          "將新舊模型放在獨立環境同時運行,以負載平衡器把產線請求 50/50 隨機分配,並比較兩邊表現": "50/50 對切常見於 Blue-Green 或大型 A/B test,起始比例就過大,失去金絲雀「小步快跑」的本意"
+        },
+        "hook": "Canary 口訣:1–5% 小流量 → 觀察指標 → 階段性放大 → 異常即回滾"
+      },
+      "misconceptions": [
+        "誤把 Shadow 當成 Canary",
+        "把全量切換 + 備援當成漸進式部署",
+        "認為 50/50 切流也算 Canary"
+      ],
+      "related_node_ids": [
+        "n_L21202_001"
+      ],
+      "tags": [
+        "Canary",
+        "漸進式部署",
+        "製造業",
+        "風險控制"
+      ],
+      "boss_topics": [
+        "manufacturing"
+      ]
+    },
+    {
+      "id": "q_n36_002",
+      "knowledge_code": "L21202",
+      "node_id": "n_L21202_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某銀行信用卡反詐欺團隊訓練了新版風控模型,擔心直接上線可能誤拒大量正常交易,想先用真實刷卡流量驗證新模型表現但完全不影響客戶體驗。下列何種部署方式最適合?",
+      "options": [
+        {
+          "text": "Shadow deployment:新模型同步接收 production 流量並紀錄預測,實際擋件 / 放行仍由舊模型決定",
+          "is_correct": true
+        },
+        {
+          "text": "Canary deployment:把 2% 的真實刷卡流量導向新模型進行擋件決策,並在後台同步監控擋件率變化",
+          "is_correct": false,
+          "trap_type": "Canary 仍會影響該 2% 客戶的真實決策,不符合「完全不影響客戶」"
+        },
+        {
+          "text": "Blue-Green deployment:部署兩套對等環境後,選離峰時段以負載平衡器一次性切換到新模型版本",
+          "is_correct": false,
+          "trap_type": "Blue-Green 切換後新模型即接管全部真實決策,不是只觀察"
+        },
+        {
+          "text": "A/B testing deployment:將顧客隨機分群,A 組由舊模型決策、B 組由新模型決策,並做統計檢定",
+          "is_correct": false,
+          "trap_type": "A/B 仍會影響 B 組客戶的真實決策"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Shadow deployment 的特色是新模型「同步接收 production 流量做預測但不影響使用者」:其輸出只進入日誌系統供分析,實際決策仍由舊模型負責。對金融風控這類「錯擋一筆即傷害客戶體驗 + 商譽」的高敏感場景,Shadow 是事前驗證最安全的方式。",
+        "wrong": {
+          "Canary deployment:把 2% 的真實刷卡流量導向新模型進行擋件決策,並在後台同步監控擋件率變化": "Canary 即使只有 2%,該 2% 客戶仍受新模型決策影響,不符合「完全不影響客戶」",
+          "Blue-Green deployment:部署兩套對等環境後,選離峰時段以負載平衡器一次性切換到新模型版本": "Blue-Green 切換後新模型即生效,屬於一次性全量切換而非觀察期",
+          "A/B testing deployment:將顧客隨機分群,A 組由舊模型決策、B 組由新模型決策,並做統計檢定": "A/B 強調分群比較,但 B 組仍會受新模型實際影響"
+        },
+        "hook": "Shadow 口訣:同步流量、雙模型預測、僅舊版生效、新版進日誌"
+      },
+      "misconceptions": [
+        "誤以為小比例 Canary 就等同無風險",
+        "把 Blue-Green 視為觀察期",
+        "把 A/B test 當成零影響觀察"
+      ],
+      "related_node_ids": [
+        "n_L21202_001"
+      ],
+      "tags": [
+        "Shadow",
+        "漸進式部署",
+        "金融",
+        "風控"
+      ],
+      "boss_topics": [
+        "finance"
+      ]
+    },
+    {
+      "id": "q_n36_003",
+      "knowledge_code": "L21202",
+      "node_id": "n_L21202_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某零售電商雙 11 前要升級推薦系統,IT 主管比較 Canary 與 Blue-Green 兩種部署策略。下列何項對兩者差異的描述最正確?",
+      "options": [
+        {
+          "text": "Canary 漸進切換、爆炸半徑可控但需長期共存兩版本;Blue-Green 一次切換、回滾極快但需雙倍資源",
+          "is_correct": true
+        },
+        {
+          "text": "Canary 與 Blue-Green 都需要雙倍資源,Canary 強調統計顯著性、Blue-Green 強調容器化基礎建設與成本",
+          "is_correct": false,
+          "trap_type": "Canary 並不必然需要雙倍資源,且 A/B 才是統計顯著性主軸"
+        },
+        {
+          "text": "Canary 回滾速度比 Blue-Green 更快,因 Canary 只切回少量,而 Blue-Green 需重新部署舊環境上線",
+          "is_correct": false,
+          "trap_type": "Blue-Green 回滾通常是切換負載平衡器即可,速度反而更快"
+        },
+        {
+          "text": "Canary 適合無狀態服務、Blue-Green 適合有狀態服務,兩者不能在同一個系統內共用或互相搭配",
+          "is_correct": false,
+          "trap_type": "兩者可組合使用,且狀態管理與部署策略選擇沒有絕對對應"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Canary 與 Blue-Green 的核心差異在「切換節奏」與「資源成本」。Canary 把新版本流量比例從 1% 逐步擴到 100%,爆炸半徑小、可在任一階段停下,代價是兩版本長時間並存;Blue-Green 維持完整的藍綠兩套生產環境,切換是「一刀切」、回滾僅需切回 LB,但需要雙倍基礎設施。",
+        "wrong": {
+          "Canary 與 Blue-Green 都需要雙倍資源,Canary 強調統計顯著性、Blue-Green 強調容器化基礎建設與成本": "Canary 不必然雙倍資源(可逐步擴容),統計顯著性是 A/B testing 的主軸而非 Canary 的本質定義",
+          "Canary 回滾速度比 Blue-Green 更快,因 Canary 只切回少量,而 Blue-Green 需重新部署舊環境上線": "Blue-Green 因藍環境一直在線,回滾只需 LB 切換,通常比 Canary 多階段切回更快",
+          "Canary 適合無狀態服務、Blue-Green 適合有狀態服務,兩者不能在同一個系統內共用或互相搭配": "業界常將 Canary 與 Blue-Green 組合使用(Green 內再做 Canary),不存在不能共用的絕對規則"
+        },
+        "hook": "Canary 漸進可控、Blue-Green 一刀切;前者長共存、後者雙資源"
+      },
+      "misconceptions": [
+        "把 Canary 跟 Blue-Green 的資源成本搞反",
+        "誤以為 Canary 回滾比 Blue-Green 快",
+        "把部署策略跟服務狀態做僵化綁定"
+      ],
+      "related_node_ids": [
+        "n_L21202_001"
+      ],
+      "tags": [
+        "Canary",
+        "Blue-Green",
+        "比較",
+        "零售"
+      ],
+      "boss_topics": [
+        "retail"
+      ]
+    },
+    {
+      "id": "q_n36_004",
+      "knowledge_code": "L21202",
+      "node_id": "n_L21202_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某 SaaS 公司用 A/B testing 比較新版推薦演算法是否提升點擊率,基線 CTR 為 5%,期望偵測到 0.5 個百分點的提升。下列哪項對「最小樣本量 / 統計顯著性」的描述最正確?",
+      "options": [
+        {
+          "text": "依 α、檢定力與 MDE 預先算出每組樣本量,實驗跑滿樣本後再判讀,不可偷看就提前中止",
+          "is_correct": true
+        },
+        {
+          "text": "只要 B 組的 CTR 算出來比 A 組高就可以判定新版本更好,不需考慮樣本量、信賴區間或 p 值問題",
+          "is_correct": false,
+          "trap_type": "未做統計檢定的單純比大小很容易把雜訊當訊號"
+        },
+        {
+          "text": "樣本量越大越好,只要連續部署 7 天就足以涵蓋週期性波動,不必另外計算所需最小樣本量大小",
+          "is_correct": false,
+          "trap_type": "時間長度與樣本量不可互相替代,需各自計算"
+        },
+        {
+          "text": "為加速決策應允許「達到顯著就中止」的早停策略,通常可節省 50% 以上試驗時間且不影響結論",
+          "is_correct": false,
+          "trap_type": "Peeking / early stopping 會大幅推高型一錯誤率"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "A/B test 的標準作法是先設定 α(常見 0.05)與檢定力 1-β(常見 0.8),依基線指標與「最小可偵測效果(MDE)」計算每組樣本量。實驗應跑滿樣本量再判讀,「peeking + early stopping」未做修正會推高型一錯誤率(false positive),把雜訊當訊號。",
+        "wrong": {
+          "只要 B 組的 CTR 算出來比 A 組高就可以判定新版本更好,不需考慮樣本量、信賴區間或 p 值問題": "未做檢定的比較很容易把隨機波動誤認為顯著差異",
+          "樣本量越大越好,只要連續部署 7 天就足以涵蓋週期性波動,不必另外計算所需最小樣本量大小": "時間僅能控制週期性,樣本量決定統計功效,兩者不可互換",
+          "為加速決策應允許「達到顯著就中止」的早停策略,通常可節省 50% 以上試驗時間且不影響結論": "未做 sequential test 修正的 peeking 會把 α 由 5% 膨脹到 20% 以上"
+        },
+        "hook": "A/B 三件套:α、檢定力、MDE → 算樣本量 → 跑滿不偷看"
+      },
+      "misconceptions": [
+        "看到 B>A 即下結論不做檢定",
+        "把時間長度當樣本量",
+        "Peeking 不修正"
+      ],
+      "related_node_ids": [
+        "n_L21202_001"
+      ],
+      "tags": [
+        "A/B testing",
+        "統計顯著性",
+        "樣本量",
+        "SaaS"
+      ],
+      "boss_topics": [
+        "saas"
+      ]
+    },
+    {
+      "id": "q_n36_005",
+      "knowledge_code": "L21202",
+      "node_id": "n_L21202_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某醫院影像 AI 在 Canary 階段被導入 3% 的胸部 X 光影像,值班工程師應如何設計 rollback(自動回滾)觸發條件最為合理?",
+      "options": [
+        {
+          "text": "預先定義 error rate、latency、漏診率三項門檻,任一連續超標即自動切回舊模型並通知人員",
+          "is_correct": true
+        },
+        {
+          "text": "不設自動門檻,等放射科醫師每週的 retrospective 會議再人工判斷是否需要把流量切回舊模型版本",
+          "is_correct": false,
+          "trap_type": "週度人工複核太慢,Canary 期間風險可能已擴大"
+        },
+        {
+          "text": "只要新模型平均推論時間比舊模型快即視為部署成功,延遲是 Canary 期間唯一需要持續監控的指標",
+          "is_correct": false,
+          "trap_type": "醫療場景單看 latency 忽略漏診率屬於誤抓重點"
+        },
+        {
+          "text": "等 Canary 期結束後再彙總所有指標一次性評估,期間不論任何異常都不切回,以免影響流量比例觀察",
+          "is_correct": false,
+          "trap_type": "完全不設即時 rollback 等於沒有 Canary 安全網"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Canary 的核心價值是「異常即回滾」。標準作法是預先定義技術指標(error rate、latency)與業務指標(本案的漏診率 / FN rate)的明確門檻,當任一指標連續超標即自動切回舊模型,並產生工單給人工複核。門檻、時窗、處置流程都應事先寫成 runbook。",
+        "wrong": {
+          "不設自動門檻,等放射科醫師每週的 retrospective 會議再人工判斷是否需要把流量切回舊模型版本": "週度人工複核反應太慢,期間若有誤判已造成臨床風險,違背 Canary 的快速回滾精神",
+          "只要新模型平均推論時間比舊模型快即視為部署成功,延遲是 Canary 期間唯一需要持續監控的指標": "醫療影像分類最關鍵的是漏診率而非 latency,只看延遲屬於指標選擇錯誤",
+          "等 Canary 期結束後再彙總所有指標一次性評估,期間不論任何異常都不切回,以免影響流量比例觀察": "拒絕即時 rollback 等同於把 Canary 退化為小規模全量部署"
+        },
+        "hook": "Rollback 三件套:技術指標 + 業務指標 + 連續時窗 → 自動切回 + 工單告警"
+      },
+      "misconceptions": [
+        "只設技術指標漏掉業務指標",
+        "把回滾延後到週會做",
+        "認為 Canary 不需要即時自動切回"
+      ],
+      "related_node_ids": [
+        "n_L21202_001"
+      ],
+      "tags": [
+        "Rollback",
+        "Canary",
+        "醫療",
+        "監控門檻"
+      ],
+      "boss_topics": [
+        "medical"
+      ]
+    },
+    {
+      "id": "q_n36_006",
+      "knowledge_code": "L21202",
+      "node_id": "n_L21202_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某物流公司用 Canary 部署新版 ETA(預估到貨時間)模型,主管問「Canary 期間應該監控哪些指標」。下列何項組合最符合「技術 + 業務 + 安全」的多維監控原則?",
+      "options": [
+        {
+          "text": "技術:error / latency / 資源;業務:ETA 誤差 / 客訴;安全:極端輸出 / 新舊模型差異",
+          "is_correct": true
+        },
+        {
+          "text": "只監控模型 accuracy,因它本身就是一種綜合指標,單一數值即可完整反映整體系統健康度與穩定度",
+          "is_correct": false,
+          "trap_type": "accuracy 對長尾、不平衡資料有盲區,單一指標不足"
+        },
+        {
+          "text": "只看 CPU 與記憶體使用率,因基礎設施健康即代表模型也健康,不必另外設業務 KPI 監控門檻指標",
+          "is_correct": false,
+          "trap_type": "基礎設施健康不等同模型健康,忽略業務 KPI 是常見盲區"
+        },
+        {
+          "text": "把舊模型完全停掉只跑新模型並比較其與歷史平均的差距,僅以這份歷史資料作為唯一的判讀基準依據",
+          "is_correct": false,
+          "trap_type": "停掉舊模型即失去同期對照,且歷史平均無法反映即時 drift"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Canary 期間的監控應分三層:技術層(error rate、p95 latency、資源使用)、業務層(KPI 對齊使用者價值,如 ETA 誤差、客訴率)、安全層(極端輸出、新舊模型同 input 預測差異過大樣本)。三層缺一不可,單看 accuracy 或 CPU 都是片面視角。",
+        "wrong": {
+          "只監控模型 accuracy,因它本身就是一種綜合指標,單一數值即可完整反映整體系統健康度與穩定度": "Accuracy 在不平衡資料下會被多數類主導,長尾與安全事件容易被遮蔽",
+          "只看 CPU 與記憶體使用率,因基礎設施健康即代表模型也健康,不必另外設業務 KPI 監控門檻指標": "CPU 正常但模型輸出偏移的情境很常見,基礎設施指標只是必要條件而非充分條件",
+          "把舊模型完全停掉只跑新模型並比較其與歷史平均的差距,僅以這份歷史資料作為唯一的判讀基準依據": "停掉舊模型即失去同期對照,Canary 的核心價值就是新舊並存比較"
+        },
+        "hook": "Canary 監控三層:技術 / 業務 / 安全,缺一不可"
+      },
+      "misconceptions": [
+        "用單一 accuracy 替代多維監控",
+        "只看基礎設施忽略業務 KPI",
+        "Canary 期間關掉舊模型對照"
+      ],
+      "related_node_ids": [
+        "n_L21202_001"
+      ],
+      "tags": [
+        "Canary",
+        "監控",
+        "物流",
+        "多維指標"
+      ],
+      "boss_topics": [
+        "logistics"
+      ]
+    },
+    {
+      "id": "q_n36_007",
+      "knowledge_code": "L21202",
+      "node_id": "n_L21202_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某自駕新創公司想驗證新版感知模型,但因事關交通安全絕不可影響真實駕駛行為。技術長指示「先大量收集 production traffic 訓練資料且零外部影響」,下列何種部署最契合?",
+      "options": [
+        {
+          "text": "Shadow deployment:新模型同步運算所有感測輸入,但決策只進日誌、真實控制權仍歸舊模型",
+          "is_correct": true
+        },
+        {
+          "text": "Canary deployment:選 0.5% 車輛改用新模型負責真實駕駛控制,並在後台同步監控碰撞事件率變化",
+          "is_correct": false,
+          "trap_type": "Canary 在自駕場景仍會讓 0.5% 車輛承擔真實風險"
+        },
+        {
+          "text": "Blue-Green deployment:同時部署兩套自駕模型於車輛,駕駛過程中以負載平衡器隨機切換以收樣本",
+          "is_correct": false,
+          "trap_type": "車內隨機切換感知模型可能造成連續判斷不一致"
+        },
+        {
+          "text": "A/B testing deployment:把車輛分群讓 A 組跑舊模型、B 組跑新模型,比較事故率與抵達時間差距",
+          "is_correct": false,
+          "trap_type": "用 B 組真實載客承擔風險違反零外部影響的前提"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Shadow deployment 同時讓新舊模型對 production 真實感測流量做預測,但僅舊模型的決策被執行;新模型輸出只進日誌與離線評估。這滿足「收 production traffic 訓練 + 零外部影響」需求,是高安全敏感場景(自駕、醫療、核能)新模型驗證的標準作法。",
+        "wrong": {
+          "Canary deployment:選 0.5% 車輛改用新模型負責真實駕駛控制,並在後台同步監控碰撞事件率變化": "即使 0.5% 也是真實接管駕駛,在自駕場景違反「零外部影響」前提",
+          "Blue-Green deployment:同時部署兩套自駕模型於車輛,駕駛過程中以負載平衡器隨機切換以收樣本": "感知決策需要時序一致性,車內隨機切換會造成判斷震盪",
+          "A/B testing deployment:把車輛分群讓 A 組跑舊模型、B 組跑新模型,比較事故率與抵達時間差距": "A/B 仍要求 B 組承擔真實安全風險,不滿足零外部影響"
+        },
+        "hook": "Shadow 標籤:同步運算、僅進日誌、零真實控制權"
+      },
+      "misconceptions": [
+        "誤把 Canary 視為零風險",
+        "在安全敏感系統做模型隨機切換",
+        "用真實載客做 A/B 卻不評估風險暴露"
+      ],
+      "related_node_ids": [
+        "n_L21202_001"
+      ],
+      "tags": [
+        "Shadow",
+        "Canary",
+        "自駕",
+        "安全敏感"
+      ],
+      "boss_topics": [
+        "autonomous"
+      ]
+    },
+    {
+      "id": "q_n36_008",
+      "knowledge_code": "L21202",
+      "node_id": "n_L21202_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某線上教育平台要做「自動作業評分」AI 的 POC,主管要求「先確認可行性、再決定要不要進入 Pilot」。下列哪一項對「POC 成功門檻設定」最為正確?",
+      "options": [
+        {
+          "text": "啟動前定義量化 KPI、樣本範圍、時長、預算,結束時逐項比對得出 Go / No-Go 結論",
+          "is_correct": true
+        },
+        {
+          "text": "POC 結束後再依據資料工程師當時的直覺判斷成敗,如此可保有彈性並避免被預設指標僵化綁住決策",
+          "is_correct": false,
+          "trap_type": "事後憑直覺判斷會產生 confirmation bias,且無法反駁"
+        },
+        {
+          "text": "只要模型在離線資料集上的 accuracy 高於 90% 就直接判定成功,不必再設定其他指標或時長預算限制",
+          "is_correct": false,
+          "trap_type": "離線單一 accuracy 無法保證上線後的真實表現"
+        },
+        {
+          "text": "POC 期間如果團隊覺得方向不對,可以隨時更換主題與成功指標,以追求最大彈性並達成快速試錯目標",
+          "is_correct": false,
+          "trap_type": "邊跑邊改 scope 等同沒有 scope,結論無法解讀"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "POC(Proof of Concept)的標準作法是「啟動前定義可量測的成功門檻」:量化 KPI(評分一致率、人工差異上限)、樣本範圍、時長、預算、Go/No-Go 規則。結束時對照門檻逐項評估,避免主觀偏誤與事後合理化。",
+        "wrong": {
+          "POC 結束後再依據資料工程師當時的直覺判斷成敗,如此可保有彈性並避免被預設指標僵化綁住決策": "事後判斷會被沉沒成本與情緒影響,易產生 confirmation bias",
+          "只要模型在離線資料集上的 accuracy 高於 90% 就直接判定成功,不必再設定其他指標或時長預算限制": "離線 accuracy 不一定能對應上線情境,且單一指標容易誤導決策",
+          "POC 期間如果團隊覺得方向不對,可以隨時更換主題與成功指標,以追求最大彈性並達成快速試錯目標": "scope 一改再改使 POC 無法產出可比較的結論,屬於常見失敗 anti-pattern"
+        },
+        "hook": "POC 門檻四件套:量化 KPI、樣本範圍、時長、Go/No-Go 規則,皆事前定義"
+      },
+      "misconceptions": [
+        "事後憑直覺決定 POC 成敗",
+        "只用單一 accuracy 當門檻",
+        "POC 中途任意改 scope"
+      ],
+      "related_node_ids": [
+        "n_L21202_002"
+      ],
+      "tags": [
+        "POC",
+        "成功門檻",
+        "教育",
+        "Go-NoGo"
+      ],
+      "boss_topics": [
+        "education"
+      ]
+    },
+    {
+      "id": "q_n36_009",
+      "knowledge_code": "L21202",
+      "node_id": "n_L21202_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某 PCB 板廠的瑕疵偵測 POC 已通過,主管問下一步「從 POC 走到 Pilot 再到 Production」應如何把關。下列敘述何者最正確地描述各階段 milestone gate?",
+      "options": [
+        {
+          "text": "POC 證可行 → Pilot 在單一產線驗價值 → Production 全廠擴張並完成 MLOps / SLA / 教育訓練",
+          "is_correct": true
+        },
+        {
+          "text": "POC 成功後即可直接全廠上線,Pilot 階段只是團隊內部展示活動,不需要量化指標也沒有放行門檻",
+          "is_correct": false,
+          "trap_type": "跳過 Pilot 等同把整廠當試驗場,風險不可控"
+        },
+        {
+          "text": "POC 與 Pilot 是同一件事只是名稱不同,團隊可任選其中一個跑完即視為已驗證並直接進入正式 Production",
+          "is_correct": false,
+          "trap_type": "把兩階段混為一談會丟掉「技術可行」與「業務價值」的雙重驗證"
+        },
+        {
+          "text": "POC → Pilot → Production 三階段門檻應在最後上線後一次性彙總評估,前兩階段不需要另設個別放行指標",
+          "is_correct": false,
+          "trap_type": "事後一次評估違背階段門檻設計的本意"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "AI 導入的三層 milestone gate 是:POC(技術可行性,小資料 / 小範圍)→ Pilot(在實際單一場域驗證業務價值、穩定度、人機協作流程)→ Production(全面上線並完整 MLOps、SLA、變更管理、教育訓練)。每一階段都應有量化指標與 Go/No-Go 規則,逐關放行。",
+        "wrong": {
+          "POC 成功後即可直接全廠上線,Pilot 階段只是團隊內部展示活動,不需要量化指標也沒有放行門檻": "跳過 Pilot 等於用整廠驗證新模型,風險與成本都失控",
+          "POC 與 Pilot 是同一件事只是名稱不同,團隊可任選其中一個跑完即視為已驗證並直接進入正式 Production": "POC 驗證「能不能做」、Pilot 驗證「在真實場域是否帶來價值」,兩者目的不同",
+          "POC → Pilot → Production 三階段門檻應在最後上線後一次性彙總評估,前兩階段不需要另設個別放行指標": "事後一次評估失去階段守門功能,本質上等於沒有 gate"
+        },
+        "hook": "三層 gate:POC 證可行 → Pilot 證價值 → Production 證可營運"
+      },
+      "misconceptions": [
+        "POC 後直接全量上線",
+        "把 POC 與 Pilot 混為一談",
+        "把 gate 延後到最終一次評估"
+      ],
+      "related_node_ids": [
+        "n_L21202_002"
+      ],
+      "tags": [
+        "POC",
+        "Pilot",
+        "milestone",
+        "製造"
+      ],
+      "boss_topics": [
+        "manufacturing"
+      ]
+    },
+    {
+      "id": "q_n36_010",
+      "knowledge_code": "L21202",
+      "node_id": "n_L21202_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某區域醫院想用 AI 做電子病歷自動摘要 POC,顧問建議「先界定明確 scope」。下列何項對「POC scope 範圍界定」描述最完整?",
+      "options": [
+        {
+          "text": "明定病別範圍、資料量上限、POC 時程、評估指標、預算上限,並明列不在本次 POC 範圍內的功能",
+          "is_correct": true
+        },
+        {
+          "text": "為避免遺漏任何潛在應用機會,把全院所有病別、住院門診、急診全部納入 POC,讓模型一次學完所有情境",
+          "is_correct": false,
+          "trap_type": "POC 撒網過大會耗盡資源且無法清楚解讀結果"
+        },
+        {
+          "text": "POC 不需要事前界定 scope,讓資料工程師依照可取得資料的方便性自行決定模型涵蓋的病別與時間範圍",
+          "is_correct": false,
+          "trap_type": "Scope 由資料便利性決定會與業務需求脫節"
+        },
+        {
+          "text": "Scope 只需列入要做什麼即可,不必額外明列「不做什麼」的 out-of-scope 條目,以避免文件變得過於繁瑣冗長",
+          "is_correct": false,
+          "trap_type": "未列出 out-of-scope 是 POC 失控的常見根因"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "POC scope 的標準寫法應包含五件:資料範圍(哪些病別 / 哪段期間)、資料量上限、時程、評估指標、預算,且必須同時寫明「不在範圍內」的功能。明列 out-of-scope 是防止 scope creep 的關鍵手段。",
+        "wrong": {
+          "為避免遺漏任何潛在應用機會,把全院所有病別、住院門診、急診全部納入 POC,讓模型一次學完所有情境": "POC 應聚焦於最具代表性、價值最高的單一場景,撒網過大會稀釋資源",
+          "POC 不需要事前界定 scope,讓資料工程師依照可取得資料的方便性自行決定模型涵蓋的病別與時間範圍": "由便利性反推 scope 會偏離業務目標,POC 結論將不具參考價值",
+          "Scope 只需列入要做什麼即可,不必額外明列「不做什麼」的 out-of-scope 條目,以避免文件變得過於繁瑣冗長": "明列 out-of-scope 是控制範圍蔓延的關鍵防線,不可省"
+        },
+        "hook": "POC scope 五件套:資料範圍 / 量 / 時程 / 指標 / 預算,並列 out-of-scope"
+      },
+      "misconceptions": [
+        "POC 撒網求大",
+        "scope 由資料便利性決定",
+        "省略 out-of-scope 條列"
+      ],
+      "related_node_ids": [
+        "n_L21202_002"
+      ],
+      "tags": [
+        "POC",
+        "scope",
+        "醫療",
+        "範圍界定"
+      ],
+      "boss_topics": [
+        "medical"
+      ]
+    },
+    {
+      "id": "q_n36_011",
+      "knowledge_code": "L21202",
+      "node_id": "n_L21202_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某銀行的「房貸違約預測」POC 在離線資料上 AUC 達 0.92,但上線後實際表現大幅下滑。下列何項最能解釋這種「實驗室成功、production 失敗」現象?",
+      "options": [
+        {
+          "text": "POC 資料是清理過的歷史精選版,缺乏 production 流量的即時 drift、資料品質落差與業務情境分布代表性",
+          "is_correct": true
+        },
+        {
+          "text": "POC 階段 AUC 0.92 已經足夠高,實際下滑必然是 production 工程實作端的 bug,與資料分布或代表性完全無關",
+          "is_correct": false,
+          "trap_type": "把所有下滑歸因於工程 bug 屬於誤判常見根因"
+        },
+        {
+          "text": "Production 環境一定比 POC 環境效能差,因 production 硬體較舊,只要升級 GPU 即可恢復離線水準的表現",
+          "is_correct": false,
+          "trap_type": "把模型表現等同硬體效能,是混淆推論時間與預測品質"
+        },
+        {
+          "text": "POC 的 AUC 高代表模型過度自信,只要把判定 threshold 從 0.5 下調到 0.3 即可恢復離線水準,不必檢視資料",
+          "is_correct": false,
+          "trap_type": "調 threshold 不能解決資料分布不匹配的根因"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "「實驗室成功、production 失敗」的最常見根因是 POC 資料代表性不足:歷史精選資料常已清理過缺值、剔除離群、固定特徵 schema,而 production 流量會出現即時 drift、新欄位、設備落差、業務情境變動。POC 設計時必須明確驗證資料代表性,並用 OOT(out-of-time)或 shadow 部署試跑。",
+        "wrong": {
+          "POC 階段 AUC 0.92 已經足夠高,實際下滑必然是 production 工程實作端的 bug,與資料分布或代表性完全無關": "盲目歸因工程 bug 會錯過真正根因,資料分布不匹配才是常見元兇",
+          "Production 環境一定比 POC 環境效能差,因 production 硬體較舊,只要升級 GPU 即可恢復離線水準的表現": "硬體影響 latency 而非 AUC,把預測品質歸因於硬體屬於混淆指標",
+          "POC 的 AUC 高代表模型過度自信,只要把判定 threshold 從 0.5 下調到 0.3 即可恢復離線水準,不必檢視資料": "Threshold 只調整截斷點,無法修正資料分布差異造成的整體 AUC 下滑"
+        },
+        "hook": "POC↔Production gap:資料代表性、drift、業務情境匹配三大檢查點"
+      },
+      "misconceptions": [
+        "POC 下滑全歸工程 bug",
+        "把硬體當預測品質瓶頸",
+        "靠調 threshold 救分布不匹配"
+      ],
+      "related_node_ids": [
+        "n_L21202_002"
+      ],
+      "tags": [
+        "POC",
+        "資料代表性",
+        "金融",
+        "drift"
+      ],
+      "boss_topics": [
+        "finance"
+      ]
+    },
+    {
+      "id": "q_n36_012",
+      "knowledge_code": "L21202",
+      "node_id": "n_L21202_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某連鎖零售商要做「商品需求預測」POC,資料科學家僅用旗艦門市 1 個月銷售紀錄當訓練資料。下列何項最能說明此設計在「資料代表性」上的風險?",
+      "options": [
+        {
+          "text": "單一旗艦門市的客流與商品組合無法代表全國門市,1 個月也無法涵蓋季節 / 促銷週期,結論不可外推",
+          "is_correct": true
+        },
+        {
+          "text": "資料量越少越容易訓練快速,只要旗艦門市的表現好,其他門市理當也能達到相同的準確率與商業效益",
+          "is_correct": false,
+          "trap_type": "把單點成功直接外推屬於 representativeness fallacy"
+        },
+        {
+          "text": "1 個月資料已足以涵蓋週末高低峰差異,因此 POC 評估已具備統計代表性,可以放心擴展至全國門市",
+          "is_correct": false,
+          "trap_type": "週度週期不等於季節 / 節慶 / 促銷的代表性"
+        },
+        {
+          "text": "資料只要來自 production 系統就具備代表性,門市數量與時間範圍對 POC 結論的可外推性沒有任何影響",
+          "is_correct": false,
+          "trap_type": "Production 來源與代表性是兩件事"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "POC 資料代表性需同時涵蓋空間維度(門市類型 / 地段 / 客群)與時間維度(週、月、季節、促銷)。旗艦門市 1 個月資料同時違反兩個維度,POC 結論對其他門市與其他時段都不可外推。",
+        "wrong": {
+          "資料量越少越容易訓練快速,只要旗艦門市的表現好,其他門市理當也能達到相同的準確率與商業效益": "從單一旗艦門市直接外推到全國門市忽略了門市異質性",
+          "1 個月資料已足以涵蓋週末高低峰差異,因此 POC 評估已具備統計代表性,可以放心擴展至全國門市": "週度週期不能代表季節、節慶、檔期促銷等更長週期",
+          "資料只要來自 production 系統就具備代表性,門市數量與時間範圍對 POC 結論的可外推性沒有任何影響": "Production 來源只解決「不是手工合成」這層,代表性還需要空間與時間覆蓋"
+        },
+        "hook": "代表性兩維度:空間(門市/地段)+ 時間(季節/促銷)"
+      },
+      "misconceptions": [
+        "單一場域成功就外推全網",
+        "用週度週期當季節代表性",
+        "把 production 來源等同代表性"
+      ],
+      "related_node_ids": [
+        "n_L21202_002"
+      ],
+      "tags": [
+        "POC",
+        "資料代表性",
+        "零售",
+        "需求預測"
+      ],
+      "boss_topics": [
+        "retail"
+      ]
+    },
+    {
+      "id": "q_n36_013",
+      "knowledge_code": "L21202",
+      "node_id": "n_L21202_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L2",
+      "stem": "某物流公司主管要求「設計 POC → Pilot → Production 的 milestone gate 規則」,並質問每階段「該誰簽核 / 看什麼指標」。下列何項描述最完整?",
+      "options": [
+        {
+          "text": "POC 由 DS 把關技術 KPI、Pilot 由 Biz + IT 把關業務 KPI、Production 由 CIO + 風控 + 法遵共同把關",
+          "is_correct": true
+        },
+        {
+          "text": "三個階段都只需要由資料科學團隊單獨簽核所有技術指標即可,業務與法遵單位不需參與任何 milestone gate 的把關決策",
+          "is_correct": false,
+          "trap_type": "把治理職責全壓在 DS 團隊上,忽略跨職能把關"
+        },
+        {
+          "text": "Milestone gate 不需要明確定義各階段負責人,由專案經理逐關彙報後再交由 CEO 一次裁決即可有效加速整體決策流程",
+          "is_correct": false,
+          "trap_type": "Single point of authority 不符多層次治理的本意"
+        },
+        {
+          "text": "Production gate 的主要焦點是看模型 accuracy 是否高於 95%,SLA / 變更管理 / 法遵都不應在這層 gate 的考量範圍",
+          "is_correct": false,
+          "trap_type": "Production gate 漏掉 SLA 與法遵屬於關鍵盲點"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "三層 milestone gate 的簽核責任應分層:POC 由資料 / 演算法團隊主導技術可行性;Pilot 由業務與 IT 共同確認業務價值、穩定度、人機協作流程;Production 由資訊長、風控、法遵共同把關 SLA、變更管理、模型治理(GDPR / 公平性 / 監管申報)。漏掉任一層都會導致系統性風險。",
+        "wrong": {
+          "三個階段都只需要由資料科學團隊單獨簽核所有技術指標即可,業務與法遵單位不需參與任何 milestone gate 的把關決策": "把治理全壓 DS 違反跨職能 governance 原則,法遵風險將積累至上線後爆發",
+          "Milestone gate 不需要明確定義各階段負責人,由專案經理逐關彙報後再交由 CEO 一次裁決即可有效加速整體決策流程": "沒有 RACI 的單點裁決會失去專業把關,CEO 也難以判斷技術細節",
+          "Production gate 的主要焦點是看模型 accuracy 是否高於 95%,SLA / 變更管理 / 法遵都不應在這層 gate 的考量範圍": "Production 必須通過 SLA、可觀測性、變更管理、法遵審核才能正式上線"
+        },
+        "hook": "Gate 簽核三層:POC(DS)/ Pilot(Biz+IT)/ Production(CIO+風控+法遵)"
+      },
+      "misconceptions": [
+        "把所有 gate 押在 DS 團隊",
+        "讓 CEO 單點裁決取代多層治理",
+        "Production gate 只看 accuracy"
+      ],
+      "related_node_ids": [
+        "n_L21202_002"
+      ],
+      "tags": [
+        "POC",
+        "Pilot",
+        "治理",
+        "物流"
+      ],
+      "boss_topics": [
+        "logistics"
+      ]
+    },
+    {
+      "id": "q_n36_014",
+      "knowledge_code": "L21202",
+      "node_id": "n_L21202_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某 SaaS 公司 POC 結束後爭論「該宣告成功還是失敗」,有人認為「離預設門檻只差一點點,應該算成功」。下列何項對「POC 失敗判定」最為正確?",
+      "options": [
+        {
+          "text": "對照事前 Go / No-Go 量化指標逐項評估,核心指標未達門檻即誠實宣告 No-Go 並分析根因",
+          "is_correct": true
+        },
+        {
+          "text": "為避免團隊士氣低落,只要差距小於 10% 都應對外宣告為成功,讓專案順利進入下一階段以延續團隊投入",
+          "is_correct": false,
+          "trap_type": "美化結果會誤導後續投資與治理決策"
+        },
+        {
+          "text": "POC 不應該有失敗結論,只要持續加碼資料與運算資源,所有 POC 最終都能達到任何預設指標門檻並順利結案",
+          "is_correct": false,
+          "trap_type": "否認失敗等於放棄停損機制"
+        },
+        {
+          "text": "POC 是否成功應由執行的 DS 團隊自行判斷,不必對外揭露任何指標細節或評分依據,以保有實驗的最大自由度",
+          "is_correct": false,
+          "trap_type": "黑箱化 POC 結論違反治理透明原則"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "POC 失敗判定的標準作法是「對照事前定義的 Go / No-Go 規則逐項評估」,核心指標未達門檻即誠實宣告 No-Go,並進一步分析失敗根因(資料不足 / 模型架構 / 業務 ROI / 整合難度),由此決定是調整 POC 重跑、降階重新試點、或撤案改方向。POC 的價值之一就是「夠快宣告失敗以節省後續投資」。",
+        "wrong": {
+          "為避免團隊士氣低落,只要差距小於 10% 都應對外宣告為成功,讓專案順利進入下一階段以延續團隊投入": "美化結果使後續投資失去依據,屬於常見治理失敗模式",
+          "POC 不應該有失敗結論,只要持續加碼資料與運算資源,所有 POC 最終都能達到任何預設指標門檻並順利結案": "拒絕宣告失敗等於拒絕停損,違背 POC 的快速試錯本意",
+          "POC 是否成功應由執行的 DS 團隊自行判斷,不必對外揭露任何指標細節或評分依據,以保有實驗的最大自由度": "黑箱化 POC 結論違反跨職能治理透明性,且使後續無法究責"
+        },
+        "hook": "POC No-Go 三步:對照量化門檻 → 誠實宣告 → 分析根因決定下一步"
+      },
+      "misconceptions": [
+        "把差距小於 10% 自動算成功",
+        "拒絕宣告 POC 失敗",
+        "POC 結論黑箱化"
+      ],
+      "related_node_ids": [
+        "n_L21202_002"
+      ],
+      "tags": [
+        "POC",
+        "Go-NoGo",
+        "SaaS",
+        "治理"
+      ],
+      "boss_topics": [
+        "saas"
+      ]
+    }
+  ]
+}

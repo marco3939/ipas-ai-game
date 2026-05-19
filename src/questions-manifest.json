@@ -1,10 +1,10 @@
 {
   "version": "1.0",
-  "generated_at": "2026-05-19T05:14:27.231Z",
-  "total_files": 46,
-  "total_questions": 905,
+  "generated_at": "2026-05-19T15:48:56.421Z",
+  "total_files": 50,
+  "total_questions": 962,
   "subject_totals": {
-    "1": 199,
+    "1": 256,
     "2": 340,
     "3": 366
   },
@@ -38,6 +38,10 @@
     "questions-batch-n32-L23-tierB.json",
     "questions-batch-n33-L23-DL-advanced.json",
     "questions-batch-n34-L23-RL-advanced.json",
+    "questions-batch-n35-L21201-fill.json",
+    "questions-batch-n36-L21202-fill.json",
+    "questions-batch-n37-L21301-fill.json",
+    "questions-batch-n38-L21104-fill.json",
     "questions-batch-n4-planning.json",
     "questions-batch-n5-deploy.json",
     "questions-batch-n6-ml-core.json",
@@ -158,10 +162,10 @@
     },
     {
       "file": "questions-batch-n19-L22402.json",
-      "count": 20,
+      "count": 27,
       "subjects": {
         "1": 0,
-        "2": 20,
+        "2": 27,
         "3": 0
       }
     },
@@ -248,10 +252,10 @@
     },
     {
       "file": "questions-batch-n28-L23-RL-biz.json",
-      "count": 15,
+      "count": 8,
       "subjects": {
         "1": 0,
-        "2": 7,
+        "2": 0,
         "3": 8
       }
     },
@@ -316,6 +320,42 @@
         "1": 0,
         "2": 0,
         "3": 9
+      }
+    },
+    {
+      "file": "questions-batch-n35-L21201-fill.json",
+      "count": 16,
+      "subjects": {
+        "1": 16,
+        "2": 0,
+        "3": 0
+      }
+    },
+    {
+      "file": "questions-batch-n36-L21202-fill.json",
+      "count": 14,
+      "subjects": {
+        "1": 14,
+        "2": 0,
+        "3": 0
+      }
+    },
+    {
+      "file": "questions-batch-n37-L21301-fill.json",
+      "count": 14,
+      "subjects": {
+        "1": 14,
+        "2": 0,
+        "3": 0
+      }
+    },
+    {
+      "file": "questions-batch-n38-L21104-fill.json",
+      "count": 13,
+      "subjects": {
+        "1": 13,
+        "2": 0,
+        "3": 0
       }
     },
     {

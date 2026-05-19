@@ -1110,7 +1110,7 @@
     },
     {
       "id": "q_n7_dl_018",
-      "knowledge_code": "L23301",
+      "knowledge_code": "L23102",
       "node_id": "n_L23102_001",
       "subject": 3,
       "format": "single_choice",
@@ -1169,7 +1169,7 @@
     },
     {
       "id": "q_n7_dl_019",
-      "knowledge_code": "L23301",
+      "knowledge_code": "L23102",
       "node_id": "n_L23102_001",
       "subject": 3,
       "format": "calculation",

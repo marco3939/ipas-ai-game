@@ -174,6 +174,28 @@ LoRA / RLHF / DPO / GPTQ / SentencePiece / DAPT / RandAugment / Mixup / CutMix /
   4. **PR 描述「驗證點」不是驗證**:寫了 checklist 卻沒實際跑,等於沒驗證。
   5. **連續 3+ PR 動同一檔**:每 3 個 PR 派一次 regression review subagent。
 
+### 案例 11:Sandbox 預設值 vs production 行為不對齊,導致 N 個 pre-existing test 卡死(audit-driven discovery)
+- 症狀(2026-05-19 PR #49 跑全 audit 沙箱掃出):主上 main 既有 4 個 pre-existing failure:
+  - `srs-drill-review/01-sm2-algorithm.test.js` — TypeError reading 'ef' on null
+  - `srs-drill-review/02-sm2-due-queue.test.js` — TypeError reading 'qid' on undefined
+  - `srs-drill-review/03-sm2-render-xss.test.js` — 2 fallback display assertions
+  - `srs-drill-review/10-gamefx-shake-damage-confetti.test.js` — `levelUp(5)` style null
+- 根因:所有失敗都是「§8 H5 fix 增加新 production filter / 過濾邏輯,但 sandbox 預設值沒同步更新」:
+  - §8 H5 在 `SM2.recordAnswer` / `SM2.getDueQueue` 加 `_isLiveQid` filter(qid 不在 QUESTIONS 內就過濾)
+  - `scripts/audit-tests/srs-drill-review/_helpers.js` 預設 `QUESTIONS: opts.QUESTIONS || []`
+  - 結果:sandbox 內 QUESTIONS 是空 array → 每個 qid 都被當「已刪」→ recordAnswer 返 null → 測試讀 null.ef crash
+  - 真實情境:`typeof QUESTIONS === 'undefined'` 才是「題庫未載入」的安全 fallback,空 array 是「題庫存在但空」(完全不同的語意)
+- 為什麼沉默這麼久:這些 test 不在 CI(repo 沒設 GitHub Actions),只在 user / claude 主動跑全 audit 時才會被執行。每次有人改 §8 H5 相關 code 後,沒人想到要跑這些 srs 測試。
+- 修補:
+  1. `_helpers.js`:`QUESTIONS: opts.QUESTIONS`(讓未注入時保持 undefined,觸發安全 fallback)
+  2. `03-sm2-render-xss.test.js` case 5:更新測試契約(舊「ghost 渲染 fallback」改成「ghost 在 read-end 被濾」)
+  3. `index.html` `GameFX.levelUp`:加 `if (card)` null guard(querySelector 在沙箱返 null 時不 crash)
+- 教訓:
+  1. **新增 production filter / guard / 過濾邏輯時,跨檔 grep sandbox helper 是否也要同步**(本案:H5 加 `_isLiveQid` 後,_helpers.js 的 QUESTIONS 預設值就「過時」了)。
+  2. **「empty array 等於 undefined」是常見 anti-pattern**,語意不同 — empty 是「存在但無內容」,undefined 是「不存在」。Production 安全 fallback 寫 `typeof X === 'undefined'` 時,sandbox 預設 `[]` 會悄悄繞過 fallback。
+  3. **CI 自動化的價值在這個案例顯化**:沒 CI 時 pre-existing failure 可以躲 13 個 PR 沒人抓(同案例 10 的「靜默計分錯誤」型 bug)。本 session 後設了 GitHub Actions(PR #50)。
+  4. **audit-driven engineering:跑全套 sandbox 是「順手」抓 bug 的 zero-cost 動作**,而且通常會抓到 1+ 預期外的 bug 鏈。
+
 ---
 
 ## 8. 共用層 / user-facing 改動 必派 code-review subagent(2026-05-16 案例 10 後新增)

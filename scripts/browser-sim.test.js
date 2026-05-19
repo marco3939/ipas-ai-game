@@ -148,7 +148,10 @@ async function main() {
   console.log('\n[15] questions-manifest.json 真實');
   const manifest = JSON.parse(fs.readFileSync(path.join(SRC, 'questions-manifest.json'), 'utf8'));
   log(Array.isArray(manifest.files), 'manifest.files 是陣列');
-  log(manifest.files.length === 46, `46 題庫檔 (got ${manifest.files.length})`);
+  log(manifest.files.length >= 40, `題庫檔數量合理(got ${manifest.files.length},應 ≥ 40)`);
+  // 驗證 manifest 列的每個檔案都真的存在(防漂移)
+  const allExist = manifest.files.every(f => fs.existsSync(path.join(SRC, f)));
+  log(allExist, `manifest ≡ 實體檔案(${manifest.files.length} 檔全部存在)`);
 
   console.log('\n=================================');
   console.log(`Browser-sim SUMMARY: ${pass}/${pass+fail} PASS`);
