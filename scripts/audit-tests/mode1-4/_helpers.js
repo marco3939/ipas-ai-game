@@ -431,13 +431,28 @@ function loadSharedLayer(sandbox, indexSrc) {
   `, sandbox);
 
   // 14) PlayEngine stub(極簡 — 只需 _stopTimer / _startTimer / show / answer)
+  // 2026-05-19 R7:Mode 1/2/5 改用 PlayEngine.commitAnswer 共用層 helper,
+  // stub 必須 mirror index.html PlayEngine.commitAnswer 5 步邏輯(opts 支援 skipMastery / wrongbookNodeId)。
   vm.runInContext(`
     var PlayEngine = {
       current: null,
       _stopTimerCalls: 0,
       _startTimerCalls: 0,
       _stopTimer() { this._stopTimerCalls++; },
-      _startTimer() { this._startTimerCalls++; }
+      _startTimer() { this._startTimerCalls++; },
+      commitAnswer(q, userKey, isCorrect, userText, correctText, opts) {
+        opts = opts || {};
+        if (!q) return;
+        if (!opts.skipMastery && q.node_id && typeof Mastery !== 'undefined') Mastery.update(q.node_id, isCorrect);
+        if (q.id && typeof SM2 !== 'undefined') SM2.recordAnswer(q.id, isCorrect, false);
+        if (typeof Progress !== 'undefined') Progress.addAnswer(isCorrect);
+        if (isCorrect && q.id && typeof SeenCorrect !== 'undefined') SeenCorrect.mark(q.id);
+        if (!isCorrect && q.id && typeof Wrongbook !== 'undefined') {
+          var correctOpt = (q.options || []).find(function(o){ return o.is_correct; });
+          var nodeId = opts.wrongbookNodeId != null ? opts.wrongbookNodeId : q.node_id;
+          Wrongbook.add(q.id, nodeId, userKey, correctOpt ? correctOpt.key : '', userText || '', correctText || '');
+        }
+      }
     };
     window.PlayEngine = PlayEngine;
   `, sandbox);

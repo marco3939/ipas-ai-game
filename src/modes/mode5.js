@@ -129,17 +129,7 @@
     return icons[idx % icons.length];
   }
 
-  // === highlight code(內建,避免依賴 mode1 的)===
-  function highlightCode(code) {
-    if (!code) return '';
-    let s = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    s = s.replace(/(#[^\n]*)/g, '<span class="com">$1</span>');
-    s = s.replace(/(["'])((?:(?!\1).)*)\1/g, '<span class="str">$1$2$1</span>');
-    // 2026-05-11 bug fix(同 index.html:highlightCodeSimple):移除 'class' 避免咬到 <span class="str"> 屬性產生 <span <span...> 巢狀破爛 HTML
-    s = s.replace(/\b(import|from|def|return|if|else|elif|for|while|in|as|with|try|except|None|True|False|lambda|pass|self|print|len|range|np|pd|sklearn|torch|nn|tf)\b/g, '<span class="kw">$1</span>');
-    s = s.replace(/\b(\d+\.?\d*)\b/g, '<span class="num">$1</span>');
-    return s;
-  }
+  // 2026-05-19 R2 simplify:刪本地 highlightCode,改用 window.highlightCodeSimple(對齊 mode2/8)
 
   // ============================================================
   // 主物件
@@ -490,7 +480,7 @@
       const q = renderQuestion(s.questions[s.idx]);
       s.currentQ = q;
 
-      const codeBlock = q.code_block ? `<pre class="code-syntax">${highlightCode(q.code_block)}</pre>` : '';
+      const codeBlock = q.code_block ? `<pre class="code-syntax">${highlightCodeSimple(q.code_block)}</pre>` : '';
       // 引用共用 renderVisualData(若可用)
       const visualData = (typeof renderVisualData === 'function') ? renderVisualData(q) : '';
 
@@ -536,25 +526,20 @@
         else if (k === key && !isCorrect) b.classList.add('wrong');
       });
 
-      // 共用層:更新答題進度
-      Progress.addAnswer(isCorrect);
-      // 案例 10 LOW-1:答對時 mark SeenCorrect(跨關卡排除)
-      if (isCorrect && q.id && typeof SeenCorrect !== 'undefined') SeenCorrect.mark(q.id);
-      // 案例 10 audit SM-1:Mode 5 也要 recordAnswer 到 SM-2(原本完全沒寫,弱點獵人對 SM2 EF/interval 無貢獻)
-      if (typeof SM2 !== 'undefined' && q.id) SM2.recordAnswer(q.id, isCorrect, false);
+      // R7 (simplify-review-2026-05-19):共用層 commit 抽到 PlayEngine.commitAnswer
+      // Mode 5 mode-specific:skipMastery=true(用 adjustMasteryScore 自管,避免重複計數);
+      // wrongbookNodeId 用 q.node_id || s.boss.nodeId fallback
+      const correctOpt = q.options.find(o => o.is_correct);
+      const userOpt = q.options.find(o => o.key === key);
+      PlayEngine.commitAnswer(q, key, isCorrect,
+        (userOpt && userOpt.text) || '',
+        (correctOpt && correctOpt.text) || '',
+        { skipMastery: true, wrongbookNodeId: q.node_id || s.boss.nodeId }
+      );
 
       if (isCorrect) {
         this.attack();
       } else {
-        // 寫入 Wrongbook(案例 10 補:加 userText/correctText 對照)
-        const correctOpt = q.options.find(o => o.is_correct);
-        const userOpt = q.options.find(o => o.key === key);
-        Wrongbook.add(
-          q.id, q.node_id || s.boss.nodeId,
-          key, correctOpt ? correctOpt.key : null,
-          (userOpt && userOpt.text) || '',
-          (correctOpt && correctOpt.text) || ''
-        );
         this.takeDamage();
       }
 
