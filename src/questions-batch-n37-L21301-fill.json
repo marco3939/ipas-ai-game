@@ -1,0 +1,844 @@
+{
+  "version": "1.0",
+  "schema_version": "iron-rule-1+2+6",
+  "generated_at": "2026-05-19",
+  "batch": "N37 — 科一 L21301 數據準備與模型選擇:JSON 半結構化時序特徵抽取 + 連續/類別混合特徵工程",
+  "exam_target": {
+    "name": "IPAS AI 應用規劃師中級",
+    "date": "2026-05-23"
+  },
+  "iron_rule_compliance": {
+    "rule_1_drill_explanation": "每題皆有 explanation.correct/wrong/hook + misconceptions ≥ 1 + related_node_ids",
+    "rule_2_shuffle_and_cases": "shuffle_options:true;概念辨析題以靜態情境呈現(本批次概念題為主、無需 case 變數)",
+    "rule_3_original": "100% 原創跨產業情境(物流、保險、零售、餐飲、銀行、能源、訂閱媒體);未照抄 114-2 原題",
+    "rule_4_option_length": "4 選項長度差異控制在 ±20%,正解非永遠最長",
+    "rule_5_source_fidelity": "knowledge_code = L21301;node_id ∈ {n_L21301_001, n_L21301_002};related_node_ids 全部對應 kb 真實節點",
+    "rule_6_isolation": "新檔獨立批次;不改其他既有題目檔或共享層"
+  },
+  "subject": 1,
+  "knowledge_codes": [
+    "L21301"
+  ],
+  "batch_num": 37,
+  "distribution": {
+    "L21301_count": 14,
+    "by_node": {
+      "n_L21301_001": 7,
+      "n_L21301_002": 7
+    },
+    "by_format": {
+      "single_choice": 14
+    },
+    "by_difficulty": {
+      "easy": 2,
+      "medium": 9,
+      "hard": 3
+    }
+  },
+  "source_pdf": [
+    "kb/nodes-subject-1.json n_L21301_001 + n_L21301_002",
+    "衝刺主檔 1.1 v2"
+  ],
+  "questions": [
+    {
+      "id": "q_n37_001",
+      "knowledge_code": "L21301",
+      "node_id": "n_L21301_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某跨境物流公司的派車系統將每筆運單記錄成多層 JSON,外層為訂單,內層為節點(取件 → 海關 → 配送),節點下再有事件時間戳清單。資料科學家想為「延誤風險預測模型」抽取特徵,下列做法何者最符合半結構化時序特徵工程的標準流程?",
+      "options": [
+        {
+          "text": "先以遞迴展開將節點與事件時間戳攤平為列式表,再以滑動時間窗口計算各節點停留時間統計量",
+          "is_correct": true
+        },
+        {
+          "text": "保留原始 JSON 字串作為文字特徵,讓 Transformer 自動學習巢狀關係,不需額外抽取與聚合",
+          "is_correct": false,
+          "trap_type": "Transformer 雖能處理序列但不能直接吃巢狀 JSON 字串,需先結構化"
+        },
+        {
+          "text": "只擷取每張運單最外層的「建立時間」與「狀態」兩個欄位,丟棄所有節點細節避免維度過高",
+          "is_correct": false,
+          "trap_type": "丟棄節點細節等於丟棄延誤訊號,模型只能學到全域平均"
+        },
+        {
+          "text": "把所有節點欄位逐筆編成 One-hot 二元特徵,讓模型透過特徵交互學會時序模式與停留時長",
+          "is_correct": false,
+          "trap_type": "One-hot 不能表達時序連續性,且維度爆炸"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "巢狀 JSON 時序資料的標準特徵工程是「遞迴展開 + 時間窗聚合」:先把 nested fields 攤平為結構化表格,再以滑動窗口(如各節點停留時間的平均、最大、標準差)取得時序統計量。這樣同時保留階層資訊與時序動態。",
+        "wrong": {
+          "保留原始 JSON 字串作為文字特徵,讓 Transformer 自動學習巢狀關係,不需額外抽取與聚合": "Transformer 接收 token 序列,不能直接「看懂」JSON 結構;若硬餵字串會浪費容量在解析語法上,實務一定先做結構化",
+          "只擷取每張運單最外層的「建立時間」與「狀態」兩個欄位,丟棄所有節點細節避免維度過高": "節點停留時間正是延誤預測的主要訊號來源,丟棄等於丟掉預測力,模型只能輸出全域平均",
+          "把所有節點欄位逐筆編成 One-hot 二元特徵,讓模型透過特徵交互學會時序模式與停留時長": "One-hot 把連續停留時間離散化會丟掉量級資訊,且每多一個節點維度倍增,易過擬合"
+        },
+        "hook": "JSON 時序口訣:遞迴展開 → 時間窗聚合 → 統計量向量"
+      },
+      "misconceptions": [
+        "以為 Transformer 能直接吃 JSON 字串",
+        "把節點細節視為雜訊而丟棄",
+        "用 One-hot 取代時序聚合"
+      ],
+      "related_node_ids": [
+        "n_L21301_001"
+      ],
+      "tags": [
+        "特徵工程",
+        "JSON",
+        "時序",
+        "物流"
+      ],
+      "boss_topics": [
+        "logistics"
+      ]
+    },
+    {
+      "id": "q_n37_002",
+      "knowledge_code": "L21301",
+      "node_id": "n_L21301_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某連鎖咖啡品牌的每分鐘銷售流水以時序資料表儲存,資料科學家要為「下一小時來客數預測」設計滑動窗口聚合特徵。下列哪一組窗口統計量的設計最能兼顧「水平」與「波動」兩種訊號?",
+      "options": [
+        {
+          "text": "近 60 分鐘的銷售平均值,加上同窗口的標準差以及最大值減最小值的範圍",
+          "is_correct": true
+        },
+        {
+          "text": "近 60 分鐘的銷售平均值,以及自開店以來的累計總銷售與年同期成長率",
+          "is_correct": false,
+          "trap_type": "累計值與年成長率屬慢變特徵,無法刻畫小時內波動"
+        },
+        {
+          "text": "近 60 分鐘的銷售眾數,以及最新一筆交易金額與前次交易金額之差",
+          "is_correct": false,
+          "trap_type": "單筆差分對短期雜訊敏感,眾數對連續量無意義"
+        },
+        {
+          "text": "近 60 分鐘的中位數與第 99 百分位數,以及前 24 小時內所有極端值的計數",
+          "is_correct": false,
+          "trap_type": "極端值計數已含結果資訊,且未涵蓋波動量"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "滑動窗口聚合的核心是用統計量同時捕捉「水平(level)」與「波動(volatility)」。平均值刻畫水平,標準差或極差刻畫波動,二者組合即為時序預測模型最常見的特徵組。",
+        "wrong": {
+          "近 60 分鐘的銷售平均值,以及自開店以來的累計總銷售與年同期成長率": "累計值與年成長屬於慢變宏觀特徵,對小時級別波動無解析力,模型會被長期趨勢主導",
+          "近 60 分鐘的銷售眾數,以及最新一筆交易金額與前次交易金額之差": "眾數對連續銷售幾乎不變(常為 0),單筆差分對雜訊極敏感,缺乏穩定統計量",
+          "近 60 分鐘的中位數與第 99 百分位數,以及前 24 小時內所有極端值的計數": "中位數與 P99 雖穩定但缺波動量,極端值計數已暗示結果接近答案,屬於不當特徵"
+        },
+        "hook": "窗口聚合口訣:水平(平均)+ 波動(標準差/極差)= 最小可行組"
+      },
+      "misconceptions": [
+        "認為累計值就足以代表時序狀態",
+        "以為單筆差分能刻畫波動",
+        "把眾數套到連續量"
+      ],
+      "related_node_ids": [
+        "n_L21301_001"
+      ],
+      "tags": [
+        "滑動窗口",
+        "聚合",
+        "時序",
+        "零售"
+      ],
+      "boss_topics": [
+        "retail"
+      ]
+    },
+    {
+      "id": "q_n37_003",
+      "knowledge_code": "L21301",
+      "node_id": "n_L21301_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某網路券商要為「客戶下一筆下單金額」預測模型加入 lag 特徵。若資料以日為單位,客戶 A 在第 t 日要預測當日下單金額,下列哪一項是 lag features 的正確設計?",
+      "options": [
+        {
+          "text": "取第 t-1、t-7、t-30 日的下單金額作為三個 lag 特徵供模型使用",
+          "is_correct": true
+        },
+        {
+          "text": "取第 t、t+1、t+7 日的下單金額作為三個 lag 特徵供模型使用",
+          "is_correct": false,
+          "trap_type": "未來日資料為 lookahead bias,線上推論時根本拿不到"
+        },
+        {
+          "text": "取整段歷史內最高一筆下單金額與最低一筆作為兩個 lag 特徵直接餵入模型",
+          "is_correct": false,
+          "trap_type": "全域極值不是 lag,且可能跨越預測點造成洩漏"
+        },
+        {
+          "text": "取與第 t 日同月份內任一日的下單平均作為 lag,跨年比較以強化季節訊號",
+          "is_correct": false,
+          "trap_type": "同月份任一日可能包含未來日,且不是 lag 而是同期均值"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "lag features 必須是「預測時間點 t 之前」的歷史值,常見為 t-1(短期慣性)、t-7(週期)、t-30(月度趨勢)。線上推論時這些值都已固定,不會洩漏未來資訊。",
+        "wrong": {
+          "取第 t、t+1、t+7 日的下單金額作為三個 lag 特徵供模型使用": "t+1、t+7 是未來資料,屬典型 lookahead bias;訓練時準確度爆高,上線立刻失效",
+          "取整段歷史內最高一筆下單金額與最低一筆作為兩個 lag 特徵直接餵入模型": "全段極值若統計範圍跨越 t 之後即為洩漏;且極值不是 lag,應改為截止 t 之前的累積極值",
+          "取與第 t 日同月份內任一日的下單平均作為 lag,跨年比較以強化季節訊號": "同月任一日可能含 t 之後資料,屬於資料洩漏;季節訊號應用週期 lag 或 cyclical encoding"
+        },
+        "hook": "lag 特徵口訣:只能取 t 之前 + 命名固定 t-k 不能混淆"
+      },
+      "misconceptions": [
+        "把未來日加入 lag 特徵",
+        "用全域極值取代 lag",
+        "把同期均值與 lag 混為一談"
+      ],
+      "related_node_ids": [
+        "n_L21301_001"
+      ],
+      "tags": [
+        "lag",
+        "時序",
+        "金融"
+      ],
+      "boss_topics": [
+        "finance"
+      ]
+    },
+    {
+      "id": "q_n37_004",
+      "knowledge_code": "L21301",
+      "node_id": "n_L21301_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某能源公司用時序模型預測下一小時用電負載。實習工程師訓練後在驗證集上 MAPE 僅 0.8%,但部署上線後實際 MAPE 飆到 9%。資深工程師檢視後判定問題出在「lookahead bias」。下列哪一項最可能是肇因?",
+      "options": [
+        {
+          "text": "滑動窗口統計量在計算時把預測點本身的當期值也納入了平均",
+          "is_correct": true
+        },
+        {
+          "text": "訓練集 / 驗證集切分採時間順序切而非隨機切,導致驗證資料偏舊",
+          "is_correct": false,
+          "trap_type": "時間順序切分是正確做法,並非 lookahead bias 來源"
+        },
+        {
+          "text": "特徵縮放使用了訓練集統計量,而非每筆驗證資料各自重新標準化",
+          "is_correct": false,
+          "trap_type": "用訓練集統計量縮放是正確做法,跟 lookahead 無關"
+        },
+        {
+          "text": "模型超參數調整時觀察了驗證集損失曲線並提前停止訓練",
+          "is_correct": false,
+          "trap_type": "early stopping 不是 lookahead bias,屬於正則化手段"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "lookahead bias 指特徵計算時不小心吃到「預測時點之後」的資訊。最常見就是滑動窗口把當期值含進來:訓練時看起來特徵幾乎就是答案,驗證 MAPE 極低;但線上時當期值還沒到手,模型立刻失準。",
+        "wrong": {
+          "訓練集 / 驗證集切分採時間順序切而非隨機切,導致驗證資料偏舊": "時序資料就應該按時間切分,否則隨機切才會造成洩漏;這選項剛好相反",
+          "特徵縮放使用了訓練集統計量,而非每筆驗證資料各自重新標準化": "用訓練集 fit 的縮放器套到驗證 / 測試是標準流程,反之才會洩漏",
+          "模型超參數調整時觀察了驗證集損失曲線並提前停止訓練": "early stopping 是基於驗證集表現的正則化,屬於模型選擇範疇,不是特徵層的 lookahead bias"
+        },
+        "hook": "lookahead bias 口訣:特徵窗口端點要嚴格 < 預測點 t"
+      },
+      "misconceptions": [
+        "誤以為時間切分等於 lookahead",
+        "認為 early stopping 是 lookahead",
+        "窗口把當期值含進去而不自知"
+      ],
+      "related_node_ids": [
+        "n_L21301_001"
+      ],
+      "tags": [
+        "lookahead",
+        "時序",
+        "能源"
+      ],
+      "boss_topics": [
+        "energy"
+      ]
+    },
+    {
+      "id": "q_n37_005",
+      "knowledge_code": "L21301",
+      "node_id": "n_L21301_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某產險公司要訓練「客戶未來 90 日內提出理賠」的預測模型。資料工程師為加快訓練,把「該客戶最後一次理賠日期」直接當成數值特徵餵入。下列哪一項最準確描述此做法的問題?",
+      "options": [
+        {
+          "text": "屬於 target leakage,該欄位含未來事件資訊,離線高分線上失準",
+          "is_correct": true
+        },
+        {
+          "text": "屬於資料不平衡問題,應改用 SMOTE 或類別權重重新訓練即可改善",
+          "is_correct": false,
+          "trap_type": "問題本質是洩漏不是不平衡,SMOTE 不能解決"
+        },
+        {
+          "text": "屬於連續特徵的尺度問題,應先標準化為 z-score 再餵入模型訓練",
+          "is_correct": false,
+          "trap_type": "尺度不是核心問題,標準化解不了 leakage"
+        },
+        {
+          "text": "屬於日期類別不夠細,應將日期欄位細分為年 / 月 / 日三個特徵",
+          "is_correct": false,
+          "trap_type": "拆分日期欄位無法消除其本身就是答案的事實"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "「最後一次理賠日期」若位於預測窗口內或之後,本身就直接包含「是否在未來 90 日內理賠」的答案,屬於 target leakage(標籤洩漏)。訓練 AUC 會接近 1,上線後立刻失準。正確做法是只用截至預測點 t 之前的歷史理賠紀錄。",
+        "wrong": {
+          "屬於資料不平衡問題,應改用 SMOTE 或類別權重重新訓練即可改善": "問題不在於正負樣本比例,而在於特徵已含答案;SMOTE 處理不平衡,解不了洩漏",
+          "屬於連續特徵的尺度問題,應先標準化為 z-score 再餵入模型訓練": "標準化只調尺度,完全不會消除欄位內含的目標資訊",
+          "屬於日期類別不夠細,應將日期欄位細分為年 / 月 / 日三個特徵": "拆完之後每個子欄位仍然指向未來事件,洩漏本質不變"
+        },
+        "hook": "target leakage 口訣:欄位生成時間 vs 預測時間點 — 顛倒即洩漏"
+      },
+      "misconceptions": [
+        "把標籤洩漏誤判為類別不平衡",
+        "以為標準化能消除洩漏",
+        "拆日期欄位以為能解決"
+      ],
+      "related_node_ids": [
+        "n_L21301_001"
+      ],
+      "tags": [
+        "leakage",
+        "時序",
+        "保險"
+      ],
+      "boss_topics": [
+        "insurance"
+      ]
+    },
+    {
+      "id": "q_n37_006",
+      "knowledge_code": "L21301",
+      "node_id": "n_L21301_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某外送平台要為「下一小時訂單量預測」加入時段特徵(小時 0~23)。資料工程師考慮使用 cyclical encoding(週期編碼)。下列哪一項最準確說明為何要採用 sin / cos 雙欄位而非直接用小時整數?",
+      "options": [
+        {
+          "text": "因為 23 與 0 在時間上相鄰,雙欄位 sin / cos 才能保留循環性與相鄰距離",
+          "is_correct": true
+        },
+        {
+          "text": "因為 sin / cos 能讓模型自動把週末與平日的差異也一併編碼進去",
+          "is_correct": false,
+          "trap_type": "週末平日要另一組特徵,cyclical 只解決週期問題"
+        },
+        {
+          "text": "因為小時整數放入會讓模型訓練時間倍增,sin / cos 數值範圍較小可加速收斂",
+          "is_correct": false,
+          "trap_type": "訓練時間與 sin / cos 無直接關係,純屬誤解"
+        },
+        {
+          "text": "因為小時整數會被 GBDT 自動視為類別,sin / cos 才能避免被 One-hot 展開",
+          "is_correct": false,
+          "trap_type": "GBDT 不會自動 One-hot 整數,且這不是 cyclical 的理由"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "直接用整數 0~23,模型會認為 23 點與 0 點相距 23 個單位,但實際上只差 1 小時。改用 sin(2π·h/24) 與 cos(2π·h/24) 雙欄位,使 23 點與 0 點在二維空間中相鄰,模型才能正確學到「跨午夜」的連續性。月份、星期同理。",
+        "wrong": {
+          "因為 sin / cos 能讓模型自動把週末與平日的差異也一併編碼進去": "週末 vs 平日要用獨立 boolean / category 欄位,cyclical encoding 只解決週期距離問題,不能取代",
+          "因為小時整數放入會讓模型訓練時間倍增,sin / cos 數值範圍較小可加速收斂": "整數欄位也只有單一維度,訓練時間差異不顯著;這非 cyclical 的目的",
+          "因為小時整數會被 GBDT 自動視為類別,sin / cos 才能避免被 One-hot 展開": "GBDT(XGBoost/LightGBM)會把整數當連續值切點處理,不會自動 One-hot"
+        },
+        "hook": "cyclical encoding 口訣:首尾相鄰用 sin/cos;週期長度當分母"
+      },
+      "misconceptions": [
+        "誤以為 cyclical 解決週末平日問題",
+        "把 cyclical 與訓練速度混淆",
+        "誤判 GBDT 對整數的處理方式"
+      ],
+      "related_node_ids": [
+        "n_L21301_001"
+      ],
+      "tags": [
+        "cyclical",
+        "時序",
+        "外送"
+      ],
+      "boss_topics": [
+        "logistics"
+      ]
+    },
+    {
+      "id": "q_n37_007",
+      "knowledge_code": "L21301",
+      "node_id": "n_L21301_001",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某百貨集團導入「每日來店人次預測」,訓練資料涵蓋連續 3 年。資料科學家發現節假日的人流明顯不同於平日。下列哪一項是處理節假日訊號最直接而正確的特徵設計?",
+      "options": [
+        {
+          "text": "新增 is_holiday 旗標欄位,並依需求另加「假日類型」分類特徵",
+          "is_correct": true
+        },
+        {
+          "text": "把所有節假日資料從訓練集中移除,只以平日資料訓練保持分佈一致性",
+          "is_correct": false,
+          "trap_type": "移除假日會讓模型遇到假日完全失準"
+        },
+        {
+          "text": "在所有日期相關特徵上乘以一個固定常數倍率,以提高假日的權重影響",
+          "is_correct": false,
+          "trap_type": "「乘倍率」不是有效編碼,只是任意縮放"
+        },
+        {
+          "text": "把每個假日當成獨立的目標變數,改成多任務學習一次預測各節日來客",
+          "is_correct": false,
+          "trap_type": "多任務不是節假日的標準處理,過度複雜"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "節假日的標準做法是「節假日旗標(is_holiday)」加上必要的細分(假日類型:國定 / 連假 / 民俗節慶)。讓模型直接學到「平日 vs 假日」與不同假日類型的人流差異,簡單且可解釋。",
+        "wrong": {
+          "把所有節假日資料從訓練集中移除,只以平日資料訓練保持分佈一致性": "移除等於告訴模型假日不存在;遇到假日只能套用平日均值,實務上必失準",
+          "在所有日期相關特徵上乘以一個固定常數倍率,以提高假日的權重影響": "乘倍率只是任意縮放,不會傳遞「這是假日」的訊息;且不同假日影響不一",
+          "把每個假日當成獨立的目標變數,改成多任務學習一次預測各節日來客": "多任務學習用在多個獨立 label;節假日只是輸入特徵,不是 label,設計過度"
+        },
+        "hook": "節假日口訣:is_holiday 旗標 + 假日類型 + 連假天數計數"
+      },
+      "misconceptions": [
+        "誤以為移除假日資料能改善模型",
+        "把節假日當成 target 而非 feature",
+        "用權重乘法替代旗標"
+      ],
+      "related_node_ids": [
+        "n_L21301_001"
+      ],
+      "tags": [
+        "節假日",
+        "時序",
+        "零售"
+      ],
+      "boss_topics": [
+        "retail"
+      ]
+    },
+    {
+      "id": "q_n37_008",
+      "knowledge_code": "L21301",
+      "node_id": "n_L21301_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某銀行要訓練信用評分模型,特徵包含「月收入(數十至數百萬元)」與「年齡(20~80 歲)」。資料科學家計畫使用邏輯迴歸(L2 正則化)。下列何者是處理這兩個連續特徵尺度的最佳做法?",
+      "options": [
+        {
+          "text": "對兩特徵做 z-score 標準化(減均值除以標準差),統一尺度避免大範圍特徵主導正則化",
+          "is_correct": true
+        },
+        {
+          "text": "把兩特徵都做 min-max 縮放到 [0, 100] 區間,讓兩者數值範圍與年齡保持一致",
+          "is_correct": false,
+          "trap_type": "縮放到 [0,100] 仍跟年齡尺度衝突,不解決問題"
+        },
+        {
+          "text": "保留兩特徵原始尺度,讓正則化會自動依係數調整,不需縮放也能訓練成功",
+          "is_correct": false,
+          "trap_type": "L2 正則對未縮放特徵會偏置處罰大尺度欄位"
+        },
+        {
+          "text": "把收入直接離散成 5 個分位區間並做 One-hot,年齡保留為原始連續整數值",
+          "is_correct": false,
+          "trap_type": "離散化丟資訊,且未一併處理年齡尺度"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "邏輯迴歸 + L2 正則化對特徵尺度敏感:大尺度欄位(月收入)的係數會被過度懲罰,造成模型偏向忽略收入。標準做法是 z-score 標準化,讓所有特徵均值 0、標準差 1,正則化才公平。",
+        "wrong": {
+          "把兩特徵都做 min-max 縮放到 [0, 100] 區間,讓兩者數值範圍與年齡保持一致": "min-max 雖統一範圍,但對離群值敏感(極大收入會壓縮其他樣本),z-score 通常較穩",
+          "保留兩特徵原始尺度,讓正則化會自動依係數調整,不需縮放也能訓練成功": "L2 等視所有係數,不會「自動依尺度調整」;大尺度欄位係數小但 ||β||² 仍會偏置處罰",
+          "把收入直接離散成 5 個分位區間並做 One-hot,年齡保留為原始連續整數值": "離散化雖可,但丟連續資訊;且年齡未一併處理仍有尺度不一致問題"
+        },
+        "hook": "尺度口訣:L1/L2 正則 + 距離模型 → 必標準化"
+      },
+      "misconceptions": [
+        "認為正則化會自動處理尺度",
+        "以為 min-max 永遠優於 z-score",
+        "只處理一個特徵忽略另一個"
+      ],
+      "related_node_ids": [
+        "n_L21301_002"
+      ],
+      "tags": [
+        "標準化",
+        "尺度",
+        "銀行"
+      ],
+      "boss_topics": [
+        "finance"
+      ]
+    },
+    {
+      "id": "q_n37_009",
+      "knowledge_code": "L21301",
+      "node_id": "n_L21301_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某訂閱媒體要預測使用者「下個月觀看時數」。觀看時數的分佈嚴重右偏:大多數人觀看 0~3 小時,少數人觀看數十至數百小時。下列何者是處理此偏態連續變數最常見的特徵工程做法?",
+      "options": [
+        {
+          "text": "對觀看時數做 log(x+1) 轉換,壓縮長尾並讓分佈更接近常態",
+          "is_correct": true
+        },
+        {
+          "text": "將觀看時數超過 P95 的樣本一律刪除,認為這些屬於離群值雜訊",
+          "is_correct": false,
+          "trap_type": "重度使用者通常是高價值客群,不可隨意刪除"
+        },
+        {
+          "text": "對觀看時數做平方轉換以放大重度使用者與輕度使用者的差距讓模型更易學",
+          "is_correct": false,
+          "trap_type": "平方反而放大長尾,讓偏態更嚴重"
+        },
+        {
+          "text": "保留原始觀看時數並乘以 1/100 縮放,讓數值更小以便模型訓練收斂",
+          "is_correct": false,
+          "trap_type": "等比例縮放不改變分佈形狀,偏態依然存在"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "右偏連續變數的標準處理是 log 轉換(對含 0 用 log(x+1)、log1p),壓縮長尾,讓分佈接近常態;後續模型(線性、神經網路)的尺度假設較容易成立。Box-Cox / Yeo-Johnson 也常用於更彈性的轉換。",
+        "wrong": {
+          "將觀看時數超過 P95 的樣本一律刪除,認為這些屬於離群值雜訊": "重度使用者是業務重點客群,屬於合理樣本而非雜訊;若一定要處理應用 winsorize 不該直接刪",
+          "對觀看時數做平方轉換以放大重度使用者與輕度使用者的差距讓模型更易學": "平方會把長尾拉得更長,讓偏態更嚴重;這跟 log 方向相反",
+          "保留原始觀看時數並乘以 1/100 縮放,讓數值更小以便模型訓練收斂": "等比例縮放只移動單位,不改分佈形狀;尾部問題依舊存在"
+        },
+        "hook": "偏態口訣:右偏用 log / 左偏可考慮 sqrt 或冪轉換"
+      },
+      "misconceptions": [
+        "把重度使用者誤判為雜訊",
+        "用平方反向處理偏態",
+        "以為等比例縮放能改分佈"
+      ],
+      "related_node_ids": [
+        "n_L21301_002"
+      ],
+      "tags": [
+        "log轉換",
+        "偏態",
+        "訂閱"
+      ],
+      "boss_topics": [
+        "media"
+      ]
+    },
+    {
+      "id": "q_n37_010",
+      "knowledge_code": "L21301",
+      "node_id": "n_L21301_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某連鎖餐飲集團的會員資料含兩個類別欄位:「會員等級(銅 / 銀 / 金 / 鑽石)」與「偏好菜系(港式 / 日式 / 義式 / 韓式 / 美式)」。資料工程師為邏輯迴歸模型編碼時,下列哪一組做法最合適?",
+      "options": [
+        {
+          "text": "會員等級用 ordinal 整數編碼(銅=1,鑽石=4),偏好菜系用 One-hot 編碼",
+          "is_correct": true
+        },
+        {
+          "text": "兩個欄位都用 One-hot 編碼以避免引入任何數值順序假設",
+          "is_correct": false,
+          "trap_type": "等級具有序性,One-hot 浪費資訊"
+        },
+        {
+          "text": "兩個欄位都用 ordinal 整數編碼,讓邏輯迴歸學習各類別之間的線性遞增關係",
+          "is_correct": false,
+          "trap_type": "菜系並無順序,強加整數會引入錯誤假設"
+        },
+        {
+          "text": "會員等級用 One-hot 編碼,偏好菜系用 target encoding 以平均下單金額為值",
+          "is_correct": false,
+          "trap_type": "等級該用 ordinal;菜系基數只有 5 用 target encoding 不划算且易洩漏"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "編碼選擇看「有序 / 無序」與「基數」:會員等級銅→鑽石是有序類別,用 ordinal 整數可保留順序;偏好菜系五種無內在順序且基數小,用 One-hot 不會造成維度爆炸又能讓模型自由學各菜系係數。",
+        "wrong": {
+          "兩個欄位都用 One-hot 編碼以避免引入任何數值順序假設": "等級的順序資訊有業務意義(消費力遞增),One-hot 反而丟掉,讓模型無法直接學遞增關係",
+          "兩個欄位都用 ordinal 整數編碼,讓邏輯迴歸學習各類別之間的線性遞增關係": "菜系沒有順序,強加整數編碼會讓模型誤學「義式 > 港式」這類無意義的大小關係",
+          "會員等級用 One-hot 編碼,偏好菜系用 target encoding 以平均下單金額為值": "等級該用 ordinal;基數只有 5 的菜系用 One-hot 即可,target encoding 適用於高基數且要嚴防洩漏"
+        },
+        "hook": "編碼口訣:有序用 ordinal、無序低基數 One-hot、無序高基數 target/hashing"
+      },
+      "misconceptions": [
+        "把所有類別欄位一律 One-hot",
+        "對無序類別強加 ordinal 順序",
+        "低基數欄位濫用 target encoding"
+      ],
+      "related_node_ids": [
+        "n_L21301_002"
+      ],
+      "tags": [
+        "編碼",
+        "類別特徵",
+        "餐飲"
+      ],
+      "boss_topics": [
+        "retail"
+      ]
+    },
+    {
+      "id": "q_n37_011",
+      "knowledge_code": "L21301",
+      "node_id": "n_L21301_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某電商要對「商品 ID」這個高基數類別特徵(約 8 萬個 unique 值)做 target encoding(以該商品歷史轉換率為編碼值)。資料科學家發現直接用全資料平均編碼後,離線 AUC 飆到 0.95 但線上實際只有 0.78。下列何者是最關鍵的修正?",
+      "options": [
+        {
+          "text": "改用 K-fold out-of-fold 計算編碼值,避免樣本自身 label 進入編碼",
+          "is_correct": true
+        },
+        {
+          "text": "把 target encoding 換成 One-hot,讓每個商品 ID 變成獨立欄位",
+          "is_correct": false,
+          "trap_type": "8 萬基數 One-hot 立刻維度爆炸無法訓練"
+        },
+        {
+          "text": "保留原全資料平均編碼,但對每筆編碼值加上 ±10% 隨機雜訊以模擬不確定",
+          "is_correct": false,
+          "trap_type": "隨機雜訊不能消除 leakage,自身 label 仍在編碼裡"
+        },
+        {
+          "text": "改成把商品 ID 字串直接轉成 hash 整數後餵入,省去 target encoding 計算",
+          "is_correct": false,
+          "trap_type": "hash 整數有隨機順序,等於無資訊"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "target encoding 容易產生「樣本自身 label 進入編碼值」的洩漏。標準解法是 K-fold out-of-fold:把資料分 K 折,計算第 i 折的 encoding 時只用其餘 K-1 折的 label,避免訓練樣本看到自己。實務上還會加 smoothing 收縮稀少類別。",
+        "wrong": {
+          "把 target encoding 換成 One-hot,讓每個商品 ID 變成獨立欄位": "8 萬基數 One-hot 即 8 萬個欄位,訓練資料矩陣立刻爆量,模型也無法泛化",
+          "保留原全資料平均編碼,但對每筆編碼值加上 ±10% 隨機雜訊以模擬不確定": "雜訊不會把自身 label 從編碼值裡拿掉,洩漏依然存在,只是降一點離線 AUC",
+          "改成把商品 ID 字串直接轉成 hash 整數後餵入,省去 target encoding 計算": "hash 整數本身沒有單調意義,線性模型完全學不到;只在 hashing trick 配 One-hot 才有用"
+        },
+        "hook": "target encoding 口訣:out-of-fold 計算 + smoothing + 嚴防自身 label"
+      },
+      "misconceptions": [
+        "對高基數欄位濫用 One-hot",
+        "以為加雜訊能消除洩漏",
+        "把 hash 整數當成有序特徵"
+      ],
+      "related_node_ids": [
+        "n_L21301_002"
+      ],
+      "tags": [
+        "target encoding",
+        "高基數",
+        "電商"
+      ],
+      "boss_topics": [
+        "retail"
+      ]
+    },
+    {
+      "id": "q_n37_012",
+      "knowledge_code": "L21301",
+      "node_id": "n_L21301_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某廣告平台要為「廣告主 ID」(約 50 萬 unique)與「投放國家」(約 200 unique)做特徵編碼,但目標是訓練一個極簡的線性模型且記憶體預算很緊。下列哪一項組合最合適?",
+      "options": [
+        {
+          "text": "廣告主 ID 用 hashing trick 壓到固定維度,投放國家用 One-hot",
+          "is_correct": true
+        },
+        {
+          "text": "廣告主 ID 與投放國家都用完整 One-hot,加 L1 正則化讓模型自動稀疏化",
+          "is_correct": false,
+          "trap_type": "50 萬 One-hot 直接超出記憶體預算"
+        },
+        {
+          "text": "廣告主 ID 與投放國家都用 label encoding,讓模型學整數大小關係",
+          "is_correct": false,
+          "trap_type": "兩者無順序,label encoding 引入錯誤假設"
+        },
+        {
+          "text": "廣告主 ID 改用 ordinal 整數,投放國家改用 target encoding 以平均點擊率為值",
+          "is_correct": false,
+          "trap_type": "ordinal 對無序高基數無意義;200 國家可直接 One-hot 不必 target"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "高基數無序欄位(50 萬廣告主)用 hashing trick 把 ID 映射到固定維度 d(例如 2^18),即便有碰撞線性模型也仍能學;低基數欄位(200 國家)用 One-hot 不會爆量。這是線性模型在記憶體受限時的標準組合。",
+        "wrong": {
+          "廣告主 ID 與投放國家都用完整 One-hot,加 L1 正則化讓模型自動稀疏化": "50 萬欄位光記憶體就難以承受;L1 雖能稀疏係數但不會壓縮特徵矩陣本身",
+          "廣告主 ID 與投放國家都用 label encoding,讓模型學整數大小關係": "兩個欄位都無自然順序,整數編碼會讓線性模型誤學單調關係,失去區辨能力",
+          "廣告主 ID 改用 ordinal 整數,投放國家改用 target encoding 以平均點擊率為值": "ordinal 套無序高基數無意義;200 國家用 One-hot 即可,target encoding 反而招致洩漏風險"
+        },
+        "hook": "高基數口訣:線性 + 受限 → hashing trick;樹模型 → target encoding 配 OOF"
+      },
+      "misconceptions": [
+        "在記憶體受限時硬用 One-hot",
+        "對無序欄位用 label encoding",
+        "對低基數欄位濫用 target encoding"
+      ],
+      "related_node_ids": [
+        "n_L21301_002"
+      ],
+      "tags": [
+        "hashing trick",
+        "高基數",
+        "廣告"
+      ],
+      "boss_topics": [
+        "media"
+      ]
+    },
+    {
+      "id": "q_n37_013",
+      "knowledge_code": "L21301",
+      "node_id": "n_L21301_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某汽車保險公司的資料表含「年收入(連續、約 8% 缺失)」與「職業類別(類別、約 5% 缺失)」。資料工程師要做缺值處理。下列哪一組做法最符合一般實務?",
+      "options": [
+        {
+          "text": "年收入以中位數填補;職業類別新增「__MISSING__」獨立類別",
+          "is_correct": true
+        },
+        {
+          "text": "年收入用全表平均填補;職業類別則以全表平均所對應的數字代號填入",
+          "is_correct": false,
+          "trap_type": "類別欄位填數字代號毫無語意,只會造成混亂"
+        },
+        {
+          "text": "兩個欄位都把缺失列直接刪除,讓訓練集只剩完全沒有缺值的純淨樣本",
+          "is_correct": false,
+          "trap_type": "8% 與 5% 是大量資料,刪除導致樣本失衡"
+        },
+        {
+          "text": "兩個欄位都填入 0 代表缺失,讓模型自行從 0 值樣本中學會缺失特徵",
+          "is_correct": false,
+          "trap_type": "年收入 0 是有效值,與缺失語意混淆"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "連續特徵常以中位數填補(對離群值較穩定);類別特徵實務上常新增「__MISSING__」獨立類別,讓模型直接學「缺值」這個訊號(缺值本身可能跟風險相關)。連續特徵也可加 is_missing 旗標保留缺失訊號。",
+        "wrong": {
+          "年收入用全表平均填補;職業類別則以全表平均所對應的數字代號填入": "類別欄位填數字代號失去語意,且若用平均的整數,可能與既有類別碼衝突",
+          "兩個欄位都把缺失列直接刪除,讓訓練集只剩完全沒有缺值的純淨樣本": "刪除 8% + 5% 樣本損失大,且若缺失非隨機(MAR/MNAR)會引入選擇偏差",
+          "兩個欄位都填入 0 代表缺失,讓模型自行從 0 值樣本中學會缺失特徵": "年收入 0 是合法值(失業者),與「缺失」混淆;應加 is_missing 旗標分開"
+        },
+        "hook": "缺值口訣:連續→中位數+旗標、類別→__MISSING__ 新類"
+      },
+      "misconceptions": [
+        "把類別欄位用平均填補",
+        "認為缺失列一律刪除即可",
+        "用 0 統一代表缺失"
+      ],
+      "related_node_ids": [
+        "n_L21301_002"
+      ],
+      "tags": [
+        "缺值",
+        "類別",
+        "保險"
+      ],
+      "boss_topics": [
+        "insurance"
+      ]
+    },
+    {
+      "id": "q_n37_014",
+      "knowledge_code": "L21301",
+      "node_id": "n_L21301_002",
+      "subject": 1,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某金融科技團隊要訓練分類模型,評估用 XGBoost 或邏輯迴歸。其中一個連續特徵「客戶最近一次登入距今天數」有 15% 缺失。資深工程師建議:若選 XGBoost 可省略缺值填補步驟。下列哪一項最準確說明此建議的依據?",
+      "options": [
+        {
+          "text": "XGBoost 內建處理 NaN 的分支邏輯,訓練時會學出缺值樣本的最佳分支方向",
+          "is_correct": true
+        },
+        {
+          "text": "XGBoost 會自動把缺值樣本當成新的類別並做 One-hot 編碼後再訓練",
+          "is_correct": false,
+          "trap_type": "XGBoost 不會把連續 NaN 當類別 One-hot"
+        },
+        {
+          "text": "XGBoost 訓練時會自動刪除帶 NaN 的列,降低樣本數但維持訓練穩定",
+          "is_correct": false,
+          "trap_type": "XGBoost 不會丟棄列,而是處理 NaN"
+        },
+        {
+          "text": "XGBoost 會把所有 NaN 樣本以該欄位的均值填補後再進行 boosting 迭代",
+          "is_correct": false,
+          "trap_type": "XGBoost 沒有自動均值填補機制"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "XGBoost / LightGBM 在每個分裂點會額外學一個「預設方向」:若樣本的該特徵為 NaN,則送往該方向。這是內建的稀疏感知分裂(sparsity-aware split finding),不需事先填補。但邏輯迴歸 / 線性模型不具此機制,必須自行填補。",
+        "wrong": {
+          "XGBoost 會自動把缺值樣本當成新的類別並做 One-hot 編碼後再訓練": "XGBoost 沒有自動把連續 NaN 變類別的機制;這描述跟它的處理方式不符",
+          "XGBoost 訓練時會自動刪除帶 NaN 的列,降低樣本數但維持訓練穩定": "XGBoost 不會丟棄含 NaN 的列;反而是利用 NaN 學一個預設分裂方向",
+          "XGBoost 會把所有 NaN 樣本以該欄位的均值填補後再進行 boosting 迭代": "均值填補需使用者顯式做;XGBoost 不會自動執行,且若依靠均值填補就失去稀疏感知優勢"
+        },
+        "hook": "XGBoost 口訣:NaN 學最佳分支方向 / 線性模型必須填補"
+      },
+      "misconceptions": [
+        "誤以為 XGBoost 自動均值填補",
+        "把 NaN 當成 XGBoost 會自動 One-hot",
+        "認為 XGBoost 會丟掉 NaN 列"
+      ],
+      "related_node_ids": [
+        "n_L21301_002"
+      ],
+      "tags": [
+        "缺值",
+        "XGBoost",
+        "金融"
+      ],
+      "boss_topics": [
+        "finance"
+      ]
+    }
+  ]
+}
