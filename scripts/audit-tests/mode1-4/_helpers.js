@@ -446,6 +446,9 @@ function loadSharedLayer(sandbox, indexSrc) {
       _startTimerCalls: 0,
       _stopTimer() { this._stopTimerCalls++; },
       _startTimer() { this._startTimerCalls++; },
+      // 2026-05-19 R3:Mode 1/2/5 改用 PlayEngine.lockOptions 鎖選項 helper
+      // stub 純 DOM 操作,sandbox 內 querySelectorAll noop 即可(audit-test 不驗 DOM 視覺)
+      lockOptions(selector, options, userKey) { /* noop in sandbox */ },
       commitAnswer(q, userKey, isCorrect, userText, correctText, opts) {
         opts = opts || {};
         if (!q) return;

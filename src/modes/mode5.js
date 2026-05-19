@@ -517,14 +517,8 @@
       const opt = q.options.find(o => o.key === key);
       const isCorrect = opt.is_correct;
 
-      // 鎖定按鈕、標示對錯
-      document.querySelectorAll('#m5-options .option-btn').forEach(b => {
-        b.disabled = true;
-        const k = b.dataset.key;
-        const od = q.options.find(o => o.key === k);
-        if (od && od.is_correct) b.classList.add('correct');
-        else if (k === key && !isCorrect) b.classList.add('wrong');
-      });
+      // 2026-05-19 R3 simplify:用 PlayEngine.lockOptions
+      PlayEngine.lockOptions('#m5-options', q.options, key);
 
       // R7 (simplify-review-2026-05-19):共用層 commit 抽到 PlayEngine.commitAnswer
       // Mode 5 mode-specific:skipMastery=true(用 adjustMasteryScore 自管,避免重複計數);

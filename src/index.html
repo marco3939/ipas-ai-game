@@ -402,6 +402,15 @@
   .option-btn.timeout-locked {
     opacity: 0.6;
   }
+
+  /* 2026-05-19 S2 simplify:考試保護按鈕視覺(取代 _setExamMode 內 inline style)
+     class 一個 toggle 就完成 styling,JS 邏輯只負責 add/remove class */
+  #global-home-btn.is-exam-active {
+    background: #7f1d1d;
+    color: #fef2f2;
+    border: 1px solid #dc2626;
+    font-weight: 700;
+  }
 </style>
 <!-- 鐵律延伸:SM-2 間隔重複(qid 鍵,Mastery 用 nodeId 鍵,兩者並存) -->
 <script src="sm2.js"></script>
@@ -1541,22 +1550,11 @@ window._examLabel = '';
 function _setExamMode(active, label) {
   window._examInProgress = !!active;
   window._examLabel = active ? (label || '考試') : '';
-  // 切換右上按鈕視覺
+  // 2026-05-19 S2 simplify:用 CSS class 切換視覺(取代 5 個 inline style 賦值)
   const btn = document.getElementById('global-home-btn');
   if (btn) {
-    if (active) {
-      btn.textContent = '⚠️ 退出考試';
-      btn.style.background = '#7f1d1d';
-      btn.style.color = '#fef2f2';
-      btn.style.border = '1px solid #dc2626';
-      btn.style.fontWeight = '700';
-    } else {
-      btn.textContent = '🏠 首頁';
-      btn.style.background = '';
-      btn.style.color = '';
-      btn.style.border = '';
-      btn.style.fontWeight = '';
-    }
+    btn.textContent = active ? '⚠️ 退出考試' : '🏠 首頁';
+    btn.classList.toggle('is-exam-active', !!active);
   }
 }
 window._setExamMode = _setExamMode;
@@ -1824,14 +1822,8 @@ const PlayEngine = {
       return;
     }
     const isCorrect = opt.is_correct;
-    // 鎖定按鈕
-    document.querySelectorAll('#play-options .option-btn').forEach(b => {
-      b.disabled = true;
-      const k = b.dataset.key;
-      const optionData = this.current.options.find(o => o.key === k);
-      if (optionData.is_correct) b.classList.add('correct');
-      else if (k === key && !isCorrect) b.classList.add('wrong');
-    });
+    // 2026-05-19 R3 simplify:用 this.lockOptions(PlayEngine 內部呼叫)
+    this.lockOptions('#play-options', this.current.options, key);
     // 更新熟練度 + 錯題本
     if (this.current.node_id) Mastery.update(this.current.node_id, isCorrect);
     if (typeof SM2 !== 'undefined' && this.current.id) SM2.recordAnswer(this.current.id, isCorrect, false);
@@ -1867,6 +1859,24 @@ const PlayEngine = {
       const nodeId = opts.wrongbookNodeId != null ? opts.wrongbookNodeId : q.node_id;
       Wrongbook.add(q.id, nodeId, userKey, correctOpt ? correctOpt.key : '', userText || '', correctText || '');
     }
+  },
+
+  // 2026-05-19 R3 simplify:鎖選項 + 標 correct/wrong class 集中(取代 mode1/2/5 + DrillSession 內 4 處重複)
+  // 使用:PlayEngine.lockOptions('#m1-options', q.options, userKey)
+  //   - 鎖所有 .option-btn 為 disabled
+  //   - 正解 button 加 .correct class
+  //   - 玩家選的錯解 button 加 .wrong class
+  lockOptions(containerSelector, options, userKey) {
+    if (!options) return;
+    const userOpt = options.find(o => o.key === userKey);
+    const userIsCorrect = !!(userOpt && userOpt.is_correct);
+    document.querySelectorAll(containerSelector + ' .option-btn').forEach(b => {
+      b.disabled = true;
+      const k = b.dataset.key;
+      const od = options.find(o => o.key === k);
+      if (od && od.is_correct) b.classList.add('correct');
+      else if (k === userKey && !userIsCorrect) b.classList.add('wrong');
+    });
   },
 
   showExplanation(opt, isCorrect) {
@@ -2262,47 +2272,26 @@ function renderStats() {
 }
 
 function resetAll() {
-  // 2026-05-16 M2 fix: 列出所有已知 storage key,避免「清除進度」實際只清部分 → 使用者誤以為已歸零
-  // 鍵位來源:
-  //   - Storage.K_* (index.html line 521-528):progress / mastery / wrongbook / errorReports / settings / session
-  //   - Player(index.html:1773-1793): ipas_player_v1
-  //   - SM-2(sm2.js:12): ipas_sm2_v1
-  //   - Mode 1 industries(mode1.js:155): ipas_mode1_industries_v1
-  //   - Mode 2 bosses(mode2.js:125): ipas_mode2_bosses_v2
-  //   - Mode 3 pipeline(mode3.js:10): ipas_mode3_progress_v2
-  //   - Mode 5(mode5.js:158): ipas_mode5_v3_progress
-  //   - Mode 6 codex(mode6.js:25): ipas_mode6_codex_v1
-  //   - Mode 7 theater(mode7.js:20): ipas_mode7_theater_v1
-  //   - Mode 8 dojo(mode8.js:8): ipas_mode8_dojo_v1
-  const keys = [
-    Storage.K_PROGRESS, Storage.K_MASTERY, Storage.K_WRONGBOOK,
-    Storage.K_ERROR_REPORTS, Storage.K_SETTINGS, Storage.K_SESSION,
-    Storage.K_SEEN_CORRECT, Storage.K_USER_NICKNAME,   // 案例 10 review 補:原本漏清
-    'ipas_player_v1', 'ipas_sm2_v1',
-    'ipas_mode1_industries_v1', 'ipas_mode2_bosses_v2',
-    'ipas_mode3_progress_v2', 'ipas_mode5_v3_progress',
-    'ipas_mode6_codex_v1', 'ipas_mode7_theater_v1', 'ipas_mode7_font_v1', 'ipas_mode8_dojo_v1',
-  ];
-  // 也清所有動態 sm2_* key(目前 SM-2 用單 key 但保險防未來改 per-qid)
+  // 2026-05-19 S3 simplify:用 ProgressIO.ALLOWED_KEYS_EXACT + ALLOWED_KEY_PREFIXES_DYNAMIC SSOT
+  // 原本 resetAll 內手寫 17+ key list 跟 ProgressIO 另一份 list 必須手動同步,違反鐵律 #7。
+  // 改用 ProgressIO 的單一真相 → 加新 storage key 只需改一處,reset/export 自動同步涵蓋。
+  const exactKeys = [...ProgressIO.ALLOWED_KEYS_EXACT];
+  const dynamicPrefixes = ProgressIO.ALLOWED_KEY_PREFIXES_DYNAMIC || [];
+  // 動態 prefix 掃 localStorage 收所有 match key
   try {
-    const dynamicKeys = [];
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
-      if (k && k.startsWith('ipas_sm2_')) dynamicKeys.push(k);
+      if (k && dynamicPrefixes.some(p => k.startsWith(p) && k.length > p.length)) {
+        Storage.del(k);
+      }
     }
-    for (const k of dynamicKeys) Storage.del(k);
   } catch (_) {}
-  for (const k of keys) Storage.del(k);
+  for (const k of exactKeys) Storage.del(k);
   showToast('已清除所有進度');
   setTimeout(() => location.reload(), 500);
 }
 
-// === 模式佔位符(由 sub agent 各自實作)===
-// 案 1 RPG 顧問:由 sub agent 1 實作 → modes/mode1.js
-// 案 2 程式判讀:由 sub agent 2 實作 → modes/mode2.js
-// 案 3 Pipeline:由 sub agent 3 實作 → modes/mode3.js
-// 案 4 配對戰:本檔內含基礎版(下方)
-// 案 5 弱點獵人:由 sub agent 5 實作 → modes/mode5.js
+// === Mode 1/2/3/5/6/7/8 由 src/modes/*.js 動態載入 ===
 
 // === 案 4 配對戰 placeholder ===
 // 2026-05-19 D1 simplify:placeholder 完整實作 28 行收成 1 行

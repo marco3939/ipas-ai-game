@@ -442,13 +442,8 @@
       this.state.answering = true;
       const isCorrect = !!opt.is_correct;
 
-      document.querySelectorAll('#m1-options .option-btn').forEach(b => {
-        b.disabled = true;
-        const k = b.dataset.key;
-        const od = q.options.find(o => o.key === k);
-        if (od && od.is_correct) b.classList.add('correct');
-        else if (k === key && !isCorrect) b.classList.add('wrong');
-      });
+      // 2026-05-19 R3 simplify:用 PlayEngine.lockOptions(取代 6 行重複)
+      PlayEngine.lockOptions('#m1-options', q.options, key);
 
       // R7 (simplify-review-2026-05-19):共用層 5 步 commit 抽到 PlayEngine.commitAnswer
       const c = q.options.find(o => o.is_correct);

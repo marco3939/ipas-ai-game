@@ -443,6 +443,8 @@ function buildSandbox(opts = {}) {
       // Tests must explicitly invoke onNext() to simulate user clicking Next.
     },
     showExplanation() {},
+    // 2026-05-19 R3:鎖選項 helper(sandbox 內 DOM noop)
+    lockOptions(selector, options, userKey) { /* noop */ },
     // 2026-05-19 R7:Mode 1/2/5 共用層 commit helper — mirror index.html PlayEngine.commitAnswer
     commitAnswer(q, userKey, isCorrect, userText, correctText, opts) {
       opts = opts || {};
