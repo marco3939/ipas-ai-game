@@ -1,0 +1,475 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-05-19T05:14:27.231Z",
+  "total_files": 46,
+  "total_questions": 905,
+  "subject_totals": {
+    "1": 199,
+    "2": 340,
+    "3": 366
+  },
+  "files": [
+    "questions-batch-boss-fill.json",
+    "questions-batch-n1-nlp.json",
+    "questions-batch-n10-L22102.json",
+    "questions-batch-n11-L22103.json",
+    "questions-batch-n12-L22201.json",
+    "questions-batch-n13-L22202.json",
+    "questions-batch-n14-L22203.json",
+    "questions-batch-n15-L22301.json",
+    "questions-batch-n16-L22302.json",
+    "questions-batch-n17-L22303.json",
+    "questions-batch-n18-L22401.json",
+    "questions-batch-n19-L22402.json",
+    "questions-batch-n2-cv.json",
+    "questions-batch-n20-L22403.json",
+    "questions-batch-n21-L22404.json",
+    "questions-batch-n22-L22-code-data.json",
+    "questions-batch-n23-L22-code-ml.json",
+    "questions-batch-n24-L22-code-gen.json",
+    "questions-batch-n25-L23-ml-core.json",
+    "questions-batch-n26-L23-classical.json",
+    "questions-batch-n27-L23-clustering-reg.json",
+    "questions-batch-n28-L23-RL-biz.json",
+    "questions-batch-n29-L23-DL.json",
+    "questions-batch-n3-genai.json",
+    "questions-batch-n30-L23-LLM.json",
+    "questions-batch-n31-L23-generative.json",
+    "questions-batch-n32-L23-tierB.json",
+    "questions-batch-n33-L23-DL-advanced.json",
+    "questions-batch-n34-L23-RL-advanced.json",
+    "questions-batch-n4-planning.json",
+    "questions-batch-n5-deploy.json",
+    "questions-batch-n6-ml-core.json",
+    "questions-batch-n7-dl.json",
+    "questions-batch-n8-eval-gov.json",
+    "questions-batch-n9-subject2.json",
+    "questions-confusion-matrix.json",
+    "questions-mode8-trace.json",
+    "questions-pa-code.json",
+    "questions-pb-visual.json",
+    "questions-pc-modes.json",
+    "questions-pd-scenario.json",
+    "questions-pe-advanced-s1.json",
+    "questions-pf-advanced-s3.json",
+    "questions-pg-eval.json",
+    "questions-ph-mlops.json",
+    "questions.json"
+  ],
+  "details": [
+    {
+      "file": "questions-batch-boss-fill.json",
+      "count": 44,
+      "subjects": {
+        "1": 24,
+        "2": 8,
+        "3": 12
+      }
+    },
+    {
+      "file": "questions-batch-n1-nlp.json",
+      "count": 25,
+      "subjects": {
+        "1": 25,
+        "2": 0,
+        "3": 0
+      }
+    },
+    {
+      "file": "questions-batch-n10-L22102.json",
+      "count": 20,
+      "subjects": {
+        "1": 0,
+        "2": 20,
+        "3": 0
+      }
+    },
+    {
+      "file": "questions-batch-n11-L22103.json",
+      "count": 20,
+      "subjects": {
+        "1": 0,
+        "2": 20,
+        "3": 0
+      }
+    },
+    {
+      "file": "questions-batch-n12-L22201.json",
+      "count": 20,
+      "subjects": {
+        "1": 0,
+        "2": 20,
+        "3": 0
+      }
+    },
+    {
+      "file": "questions-batch-n13-L22202.json",
+      "count": 20,
+      "subjects": {
+        "1": 0,
+        "2": 20,
+        "3": 0
+      }
+    },
+    {
+      "file": "questions-batch-n14-L22203.json",
+      "count": 20,
+      "subjects": {
+        "1": 0,
+        "2": 20,
+        "3": 0
+      }
+    },
+    {
+      "file": "questions-batch-n15-L22301.json",
+      "count": 20,
+      "subjects": {
+        "1": 0,
+        "2": 20,
+        "3": 0
+      }
+    },
+    {
+      "file": "questions-batch-n16-L22302.json",
+      "count": 20,
+      "subjects": {
+        "1": 0,
+        "2": 20,
+        "3": 0
+      }
+    },
+    {
+      "file": "questions-batch-n17-L22303.json",
+      "count": 20,
+      "subjects": {
+        "1": 0,
+        "2": 20,
+        "3": 0
+      }
+    },
+    {
+      "file": "questions-batch-n18-L22401.json",
+      "count": 20,
+      "subjects": {
+        "1": 0,
+        "2": 20,
+        "3": 0
+      }
+    },
+    {
+      "file": "questions-batch-n19-L22402.json",
+      "count": 20,
+      "subjects": {
+        "1": 0,
+        "2": 20,
+        "3": 0
+      }
+    },
+    {
+      "file": "questions-batch-n2-cv.json",
+      "count": 25,
+      "subjects": {
+        "1": 25,
+        "2": 0,
+        "3": 0
+      }
+    },
+    {
+      "file": "questions-batch-n20-L22403.json",
+      "count": 20,
+      "subjects": {
+        "1": 0,
+        "2": 20,
+        "3": 0
+      }
+    },
+    {
+      "file": "questions-batch-n21-L22404.json",
+      "count": 20,
+      "subjects": {
+        "1": 0,
+        "2": 20,
+        "3": 0
+      }
+    },
+    {
+      "file": "questions-batch-n22-L22-code-data.json",
+      "count": 15,
+      "subjects": {
+        "1": 0,
+        "2": 15,
+        "3": 0
+      }
+    },
+    {
+      "file": "questions-batch-n23-L22-code-ml.json",
+      "count": 10,
+      "subjects": {
+        "1": 0,
+        "2": 10,
+        "3": 0
+      }
+    },
+    {
+      "file": "questions-batch-n24-L22-code-gen.json",
+      "count": 10,
+      "subjects": {
+        "1": 0,
+        "2": 10,
+        "3": 0
+      }
+    },
+    {
+      "file": "questions-batch-n25-L23-ml-core.json",
+      "count": 32,
+      "subjects": {
+        "1": 0,
+        "2": 0,
+        "3": 32
+      }
+    },
+    {
+      "file": "questions-batch-n26-L23-classical.json",
+      "count": 12,
+      "subjects": {
+        "1": 0,
+        "2": 0,
+        "3": 12
+      }
+    },
+    {
+      "file": "questions-batch-n27-L23-clustering-reg.json",
+      "count": 12,
+      "subjects": {
+        "1": 0,
+        "2": 0,
+        "3": 12
+      }
+    },
+    {
+      "file": "questions-batch-n28-L23-RL-biz.json",
+      "count": 15,
+      "subjects": {
+        "1": 0,
+        "2": 7,
+        "3": 8
+      }
+    },
+    {
+      "file": "questions-batch-n29-L23-DL.json",
+      "count": 10,
+      "subjects": {
+        "1": 0,
+        "2": 0,
+        "3": 10
+      }
+    },
+    {
+      "file": "questions-batch-n3-genai.json",
+      "count": 25,
+      "subjects": {
+        "1": 25,
+        "2": 0,
+        "3": 0
+      }
+    },
+    {
+      "file": "questions-batch-n30-L23-LLM.json",
+      "count": 10,
+      "subjects": {
+        "1": 0,
+        "2": 0,
+        "3": 10
+      }
+    },
+    {
+      "file": "questions-batch-n31-L23-generative.json",
+      "count": 10,
+      "subjects": {
+        "1": 0,
+        "2": 0,
+        "3": 10
+      }
+    },
+    {
+      "file": "questions-batch-n32-L23-tierB.json",
+      "count": 15,
+      "subjects": {
+        "1": 0,
+        "2": 0,
+        "3": 15
+      }
+    },
+    {
+      "file": "questions-batch-n33-L23-DL-advanced.json",
+      "count": 12,
+      "subjects": {
+        "1": 0,
+        "2": 0,
+        "3": 12
+      }
+    },
+    {
+      "file": "questions-batch-n34-L23-RL-advanced.json",
+      "count": 9,
+      "subjects": {
+        "1": 0,
+        "2": 0,
+        "3": 9
+      }
+    },
+    {
+      "file": "questions-batch-n4-planning.json",
+      "count": 25,
+      "subjects": {
+        "1": 25,
+        "2": 0,
+        "3": 0
+      }
+    },
+    {
+      "file": "questions-batch-n5-deploy.json",
+      "count": 25,
+      "subjects": {
+        "1": 25,
+        "2": 0,
+        "3": 0
+      }
+    },
+    {
+      "file": "questions-batch-n6-ml-core.json",
+      "count": 22,
+      "subjects": {
+        "1": 0,
+        "2": 0,
+        "3": 22
+      }
+    },
+    {
+      "file": "questions-batch-n7-dl.json",
+      "count": 25,
+      "subjects": {
+        "1": 0,
+        "2": 0,
+        "3": 25
+      }
+    },
+    {
+      "file": "questions-batch-n8-eval-gov.json",
+      "count": 25,
+      "subjects": {
+        "1": 0,
+        "2": 0,
+        "3": 25
+      }
+    },
+    {
+      "file": "questions-batch-n9-subject2.json",
+      "count": 20,
+      "subjects": {
+        "1": 0,
+        "2": 20,
+        "3": 0
+      }
+    },
+    {
+      "file": "questions-confusion-matrix.json",
+      "count": 5,
+      "subjects": {
+        "1": 0,
+        "2": 0,
+        "3": 5
+      }
+    },
+    {
+      "file": "questions-mode8-trace.json",
+      "count": 57,
+      "subjects": {
+        "1": 0,
+        "2": 21,
+        "3": 36
+      }
+    },
+    {
+      "file": "questions-pa-code.json",
+      "count": 46,
+      "subjects": {
+        "1": 2,
+        "2": 6,
+        "3": 38
+      }
+    },
+    {
+      "file": "questions-pb-visual.json",
+      "count": 18,
+      "subjects": {
+        "1": 8,
+        "2": 1,
+        "3": 9
+      }
+    },
+    {
+      "file": "questions-pc-modes.json",
+      "count": 15,
+      "subjects": {
+        "1": 6,
+        "2": 2,
+        "3": 7
+      }
+    },
+    {
+      "file": "questions-pd-scenario.json",
+      "count": 15,
+      "subjects": {
+        "1": 7,
+        "2": 0,
+        "3": 8
+      }
+    },
+    {
+      "file": "questions-pe-advanced-s1.json",
+      "count": 5,
+      "subjects": {
+        "1": 5,
+        "2": 0,
+        "3": 0
+      }
+    },
+    {
+      "file": "questions-pf-advanced-s3.json",
+      "count": 6,
+      "subjects": {
+        "1": 0,
+        "2": 0,
+        "3": 6
+      }
+    },
+    {
+      "file": "questions-pg-eval.json",
+      "count": 9,
+      "subjects": {
+        "1": 0,
+        "2": 0,
+        "3": 9
+      }
+    },
+    {
+      "file": "questions-ph-mlops.json",
+      "count": 6,
+      "subjects": {
+        "1": 5,
+        "2": 0,
+        "3": 1
+      }
+    },
+    {
+      "file": "questions.json",
+      "count": 50,
+      "subjects": {
+        "1": 17,
+        "2": 0,
+        "3": 33
+      }
+    }
+  ]
+}

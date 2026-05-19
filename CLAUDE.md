@@ -7,7 +7,7 @@
 
 ---
 
-## 1. 專案六大鐵律(IPAS 題庫設計專屬,完整定義見 `ipas-ai-game-prompt.md` §1)
+## 1. 專案七大鐵律(IPAS 題庫設計專屬,完整定義見 `ipas-ai-game-prompt.md` §1)
 
 | # | 鐵律 | 一句話 |
 |:-:|:--|:--|
@@ -17,18 +17,56 @@
 | 4 | **選項長度均衡** | 正解/平均錯解 ∈ [0.85, 1.20];「最長=正解」≤ 35%;錯解寫得跟正解同等專業 |
 | 5 | **來源忠實性** | `knowledge_code` 必在 `kb/scope.json` `include=true`;`node_id` 必在 `scripts/kb-allowed-nodes.json` |
 | 6 | **科目隔離性** | 新增 X 科資料**不得**修改其他科目既有 `questions*.json` / `kb/nodes-subject-*.json`;新題庫放獨立檔;共用層(audit / index.html / mode6)只允許 additive(加分支、加檔名) |
+| 7 | **題庫單一真相來源** | `src/questions-manifest.json` 是唯一 file list 真相;`index.html` + 5 個 audit script 都讀 manifest;新增題庫檔**必跑** `node scripts/update-manifest.js` 更新 manifest;**必跑** `node scripts/audit-qbank-integrity.js` 驗證(漏載 / 漂移 / subject 對齊) |
 
 **稽核腳本**(全域 §10 ground truth 在本專案的具體命令):
-```powershell
-cd C:\Users\marco\.ipas-ai-game
+```bash
+cd /home/user/ipas-ai-game
+node scripts/audit-qbank-integrity.js   # 鐵律 #7(動 questions*.json 必跑)
 node scripts/audit-option-length.js     # 鐵律 #4
 node scripts/audit-source-fidelity.js   # 鐵律 #5
 node scripts/audit-render.js            # 渲染輸出(案例 8 教訓)
 node scripts/audit-calculation.js       # calculation 題 schema
 node scripts/verify-calc-numeric.js     # 數值正確性獨立驗算
-node scripts/audit-mode-flow.js         # mode 流程跑驗 isCorrect/correctKey 非空(案例 10,待寫)
-node scripts/audit-wrongbook-callers.js # Wrongbook.add 跨檔簽名一致性(案例 10,待寫)
+node scripts/audit-mode-flow.js         # mode 流程跑驗 isCorrect/correctKey 非空(案例 10)
+node scripts/update-manifest.js         # 重生 questions-manifest.json(鐵律 #7)
 ```
+
+### 鐵律 #7 機制詳細(2026-05-18 治本)
+
+歷史上每次新加題庫檔(`src/questions*.json`)需要手動同步 **7 個地方**:
+- `src/index.html` loadQuestions
+- 5 個 `scripts/audit-*.js` 的 `Q_FILES` / `FILES`
+- 各種 audit-tests fixture
+
+漏改任一個 = 玩家看不到題 / audit 漏抓。重複發生 ≥ 4 次後(PR #41 治本),改為:
+
+1. **single source of truth**:`src/questions-manifest.json` 自動掃 `src/questions*.json` 產生
+2. **動態化載入**:`index.html` + 5 audit script 都讀 manifest,**零 hardcoded list**
+3. **更新工具**:`node scripts/update-manifest.js`(掃 → 更新 manifest)
+4. **驗證工具**:`node scripts/audit-qbank-integrity.js`(3 check:A 動態化 / B manifest≡實體 / C subject 對齊)
+5. **CLAUDE.md §9 Workflow** 規範:動 `questions*.json` 必跑 1+2+4
+
+---
+
+## 9. 動到核心檔案的 Workflow Checklist(2026-05-18 §4 治本)
+
+> **問題**:歷史上每次改完 mode / 題庫 / 共用層,常漏掉「同步點」(audit fixture / index.html load list / manifest / 鐵律 #6 隔離驗證)。
+> **治本**:依異動類型自動觸發對應 checklist。
+
+| 異動類型 | 必跑 audit / 動作 | 不可省 |
+|:--|:--|:--|
+| 動 `src/questions*.json`(新增 / 修改題目)| 1. `node scripts/update-manifest.js`(更新 manifest)<br>2. `node scripts/audit-qbank-integrity.js`(漏載 / 漂移 / subject)<br>3. `node scripts/audit-source-fidelity.js`(鐵律 #5)<br>4. `node scripts/audit-render.js`(placeholder 殘留)<br>5. `node scripts/audit-option-length.js`(鐵律 #4) | 鐵律 #6 隔離(若改既有檔) |
+| 動 `src/modes/mode*.js` user-facing 計分 / 答題 / 結算 | 1. 該 mode 的 `audit-tests/`(全綠)<br>2. `audit-mode-flow.js`(0 violations)<br>3. CLAUDE.md §8 強制派 **code-review subagent**(dataflow trace + cross-file caller + 邊界 case + 同根因 grep) | 案例 10 復現 |
+| 動 `src/index.html`(共用層)| 1. 全套 audit<br>2. `audit-tests/mode5-8/mode7/` 全套(13 個 test files)<br>3. §8 強制 code-review subagent | 案例 1 / 8 / 10 復現 |
+| 動 Storage key shape / schema | 1. 加 migration 邏輯<br>2. `audit-tests/.../13-saveHistory-fullLog-snapshot` 等 | 案例 9 stale data |
+| 動 BOSS keywords / boss_topics / 題目 metadata | 1. `audit-qbank-integrity.js` check C(subject)<br>2. 跑 Mode 1/2/6/7/8 對應 audit-tests | PR #38 治本後不可漂移 |
+
+### Workflow checklist 觸發規則
+
+我每次工作前先讀本表,**動到哪類就跑哪行**。漏跑 = 我的責任。
+
+若有新類型的「漏改」事故發生(本表未覆蓋),**事後立即加進本表**,確保每類問題只痛一次。
 
 ---
 

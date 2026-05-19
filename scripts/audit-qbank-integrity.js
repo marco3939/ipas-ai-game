@@ -17,55 +17,56 @@ function expectedSubject(kc) {
   return null;
 }
 
-// 抓出 src 內所有 questions*.json
+// 抓出 src 內所有 questions*.json(排除 manifest 自身)
 function allQuestionFiles() {
-  return fs.readdirSync(SRC).filter(f => f.startsWith('questions') && f.endsWith('.json'));
+  return fs.readdirSync(SRC).filter(f =>
+    f.startsWith('questions') && f.endsWith('.json') && f !== 'questions-manifest.json'
+  );
 }
 
 const violations = [];
 
-// ============================================================
-// 檢查 A:index.html loadQuestions 是否載了所有 questions*.json
-// ============================================================
-console.log('=== A: index.html loadQuestions 完整性 ===');
-const html = fs.readFileSync(path.join(SRC, 'index.html'), 'utf8');
 const files = allQuestionFiles();
-const missingInHtml = files.filter(f => !html.includes(f));
-if (missingInHtml.length > 0) {
-  console.log('✗ index.html 漏載 ' + missingInHtml.length + ' 個檔:');
-  missingInHtml.forEach(f => {
-    const j = JSON.parse(fs.readFileSync(path.join(SRC, f), 'utf8'));
-    const n = Array.isArray(j.questions) ? j.questions.length : 0;
-    console.log('    ' + f + ' (' + n + ' 題)');
-    violations.push({ check: 'A', file: f, issue: 'missing in index.html loadQuestions', count: n });
-  });
+
+// ============================================================
+// 檢查 A:index.html 是否動態 fetch manifest(取代寫死 list)
+// ============================================================
+console.log('=== A: index.html 動態化載入 ===');
+const html = fs.readFileSync(path.join(SRC, 'index.html'), 'utf8');
+const usesManifest = html.includes("fetch('questions-manifest.json')") || html.includes('fetch("questions-manifest.json")');
+if (!usesManifest) {
+  console.log('✗ index.html loadQuestions 沒用 manifest 動態載入(可能還有寫死的 file list 沒同步)');
+  violations.push({ check: 'A', issue: 'index.html 仍寫死 file list 而非 fetch manifest' });
 } else {
-  console.log('✓ index.html 載入了全部 ' + files.length + ' 個題庫檔');
+  console.log('✓ index.html loadQuestions 走 manifest 動態載入');
 }
 
 // ============================================================
-// 檢查 B:audit script Q_FILES 是否與實體檔同步
+// 檢查 B:manifest 是否與實體檔一致(single source of truth 防漂移)
 // ============================================================
-console.log('\n=== B: audit script Q_FILES 完整性 ===');
-const AUDIT_FILES = [
-  'audit-source-fidelity.js',
-  'audit-render.js',
-  'audit-option-length.js',
-  'audit-case-answer-distinctness.js',
-  'audit-stem-explanation-consistency.js'
-];
-AUDIT_FILES.forEach(af => {
-  const fp = path.join(ROOT, 'scripts', af);
-  if (!fs.existsSync(fp)) { console.log('? ' + af + ' 不存在'); return; }
-  const src = fs.readFileSync(fp, 'utf8');
-  const missing = files.filter(f => !src.includes(f));
-  if (missing.length > 0) {
-    console.log('✗ ' + af + ' 漏列 ' + missing.length + ' 個檔:' + missing.slice(0, 3).join(', ') + (missing.length > 3 ? ' ...' : ''));
-    missing.forEach(f => violations.push({ check: 'B', script: af, file: f }));
-  } else {
-    console.log('✓ ' + af + ' 完整');
+console.log('\n=== B: manifest 與實體檔一致性 ===');
+const manifestPath = path.join(SRC, 'questions-manifest.json');
+if (!fs.existsSync(manifestPath)) {
+  console.log('✗ questions-manifest.json 不存在 — 請跑 `node scripts/update-manifest.js`');
+  violations.push({ check: 'B', issue: 'manifest 不存在' });
+} else {
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  const manifestFiles = (manifest.files || []).slice().sort();
+  const actualFiles = files.slice().sort();
+  const inActualNotManifest = actualFiles.filter(f => !manifestFiles.includes(f));
+  const inManifestNotActual = manifestFiles.filter(f => !actualFiles.includes(f));
+  if (inActualNotManifest.length > 0) {
+    console.log('✗ 實體存在但 manifest 漏:' + inActualNotManifest.join(', '));
+    inActualNotManifest.forEach(f => violations.push({ check: 'B', file: f, issue: 'in src but not in manifest — 請跑 update-manifest.js' }));
   }
-});
+  if (inManifestNotActual.length > 0) {
+    console.log('✗ manifest 列但實體不存在:' + inManifestNotActual.join(', '));
+    inManifestNotActual.forEach(f => violations.push({ check: 'B', file: f, issue: 'in manifest but not in src — 請跑 update-manifest.js' }));
+  }
+  if (inActualNotManifest.length === 0 && inManifestNotActual.length === 0) {
+    console.log('✓ manifest 與實體檔完全一致(' + manifestFiles.length + ' 個檔)');
+  }
+}
 
 // ============================================================
 // 檢查 C:題目 subject vs KB code prefix 對齊
