@@ -84,18 +84,24 @@ console.log('\n[4] quote / ampersand escape');
   A.ok(!view.innerHTML.match(/[^&]<>/), 'no raw <> from injected qid');
 }
 
-// ----- 5. 題目已刪除 (q===null) -----
-console.log('\n[5] 題庫已刪除 fallback');
+// ----- 5. 題目已刪除 (q===null) — §8 H5 後新契約:filter 在 read-end -----
+console.log('\n[5] 題庫已刪除 由 H5 filter 過濾(不再渲染 fallback)');
 {
-  const sb = makeSandbox({ QUESTIONS: [] }); // 空題庫
+  // §8 H5(2026-05-19)後,SM2.getDueQueue / countDueToday 等讀取端都會跑 _isLiveQid
+  // 過濾。ghost_qid 會直接被排除,不會進 queue,renderReviewList 不會渲染。
+  // 這比舊「渲染 fallback」更乾淨:首頁「X 題到期」也不會虛報。
+  const sb = makeSandbox({ QUESTIONS: [{ id: 'real_q', stem: 'real' }] }); // 只有 real_q live
   loadStorage(sb);
   const SM2 = loadSM2(sb);
   const view = injectView(sb);
   seedState(SM2, 'ghost_qid', { nextDue: Date.now() - 1000 });
+  seedState(SM2, 'real_q',    { nextDue: Date.now() - 1000 });
   SM2.queue = SM2.getDueQueue(true);
+  A.eq(SM2.queue.length, 1, 'H5 過濾:ghost_qid 不進 queue,只剩 real_q');
+  A.eq(SM2.queue[0].qid, 'real_q', 'queue 內只有 live qid');
   SM2.renderReviewList();
-  A.ok(view.innerHTML.includes('題庫已移除'), 'displays fallback for deleted q');
-  A.ok(view.innerHTML.includes('ghost_qid'), 'qid still shown');
+  A.ok(!view.innerHTML.includes('ghost_qid'), 'ghost qid 不顯示(read-end 已濾掉)');
+  A.ok(view.innerHTML.includes('real_q'), 'real qid 正常顯示');
 }
 
 // ----- 6. stem 含 placeholder -----

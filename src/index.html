@@ -35,6 +35,11 @@
     --grad-primary: linear-gradient(135deg, #1e3a8a 0%, #0f766e 100%);   /* Mode 6 challenge bar / 主 CTA */
     --grad-info:    linear-gradient(135deg, #60a5fa 0%, #fbbf24 100%);   /* Mode 6 卡牌模擬考 */
     --grad-fire:    linear-gradient(135deg, #f87171 0%, #fbbf24 100%);   /* 批次挑戰 / 警示 CTA */
+    /* HP / 時間 / 進度 bar(跨 mode 共用,Mode 4 / Mode 7 ternary + index.html .hp-fill 系列) */
+    --grad-hp-good:     linear-gradient(90deg, #4ade80, #22c55e);
+    --grad-hp-low:      linear-gradient(90deg, #facc15, #f59e0b);
+    --grad-hp-critical: linear-gradient(90deg, #ef4444, #b91c1c);
+    --grad-time-bar:    linear-gradient(90deg, #38bdf8, #a855f7);
     /* Accent 色(用於 emoji 旁色標、進度條 fill) */
     --accent-gold:  #fbbf24;
     --accent-blue:  #60a5fa;
@@ -255,9 +260,9 @@
     border-radius: 4px; font-size: 0.75rem; margin-right: 6px; }
   .hp-track { height: 14px; background: rgba(0,0,0,0.5); border-radius: 7px; overflow: hidden;
     border: 1px solid rgba(255,255,255,0.1); }
-  .hp-fill { height: 100%; background: linear-gradient(90deg, #4ade80, #22c55e); transition: width 0.6s cubic-bezier(.4,0,.2,1); }
-  .hp-fill.low { background: linear-gradient(90deg, #facc15, #f59e0b); }
-  .hp-fill.critical { background: linear-gradient(90deg, #ef4444, #b91c1c); animation: pulseHP 1s infinite; }
+  .hp-fill { height: 100%; background: var(--grad-hp-good); transition: width 0.6s cubic-bezier(.4,0,.2,1); }
+  .hp-fill.low { background: var(--grad-hp-low); }
+  .hp-fill.critical { background: var(--grad-hp-critical); animation: pulseHP 1s infinite; }
   @keyframes pulseHP { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
   .hp-text { font-size: 0.8rem; color: var(--fg-dim); margin-top: 2px; }
 
@@ -2413,8 +2418,8 @@ const GameFX = {
     </div>`;
     document.body.appendChild(overlay);
     const card = overlay.querySelector('.level-up-card');
-    if (window.gsap) gsap.to(card, { scale: 1, duration: 0.6, ease: 'back.out(1.7)' });
-    else card.style.transform = 'scale(1)';
+    if (window.gsap && card) gsap.to(card, { scale: 1, duration: 0.6, ease: 'back.out(1.7)' });
+    else if (card) card.style.transform = 'scale(1)';
     this.bigConfetti();
   }
 };
@@ -2530,6 +2535,7 @@ const ProgressIO = {
   // 2026-05-16 案例 10 補(H6 修):改成精確 key list + 1 個動態 prefix
   // 原本 'ipas_player_v' prefix 允許 'ipas_player_vEVIL' 等任意尾綴 → 過寬
   // 現在精確 key 一個 _ 都不能差;動態的只有 SM-2 卡片(每張一個 qid 後綴)
+  // 注意:'ipas_theme_v1' 刻意不收(主題是 UI 偏好類似 dark mode,resetAll 清進度時應保留)
   ALLOWED_KEYS_EXACT: new Set([
     'ipas_progress_v1', 'ipas_mastery_v1', 'ipas_wrongbook_v1',
     'ipas_error_reports_v1', 'ipas_settings_v1', 'ipas_session_state_v1',

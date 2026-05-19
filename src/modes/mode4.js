@@ -160,7 +160,7 @@
             <div class="avatar boss" style="font-size:2rem">⚡</div>
             <div class="bar-info">
               <div class="bar-name">易混淆配對戰 BOSS</div>
-              <div class="hp-track"><div class="hp-fill" id="m4-time-bar" style="width:100%;background:linear-gradient(90deg,#38bdf8,#a855f7)"></div></div>
+              <div class="hp-track"><div class="hp-fill" id="m4-time-bar" style="width:100%;background:var(--grad-time-bar)"></div></div>
               <div class="hp-text" id="m4-time-text">⏱️ ${this.state.time}s · 配對 0/${this.state.pairCount} · COMBO 0</div>
             </div>
           </div>
@@ -635,10 +635,10 @@
       const pct = (this.state.time / ROUND_SECONDS) * 100;
       barEl.style.width = pct + '%';
       barEl.style.background = pct < 30
-        ? 'linear-gradient(90deg,#ef4444,#dc2626)'
+        ? 'var(--grad-hp-critical)'
         : pct < 60
-          ? 'linear-gradient(90deg,#facc15,#f59e0b)'
-          : 'linear-gradient(90deg,#38bdf8,#a855f7)';
+          ? 'var(--grad-hp-low)'
+          : 'var(--grad-time-bar)';
 
       const frozenLabel = this.state.frozen > 0 ? ` ❄️${this.state.frozen}s` : '';
       timeEl.textContent = `⏱️ ${this.state.time}s${frozenLabel} · 配對 ${this.state.matched}/${this.state.pairCount} · COMBO ${this.state.combo} · 分數 ${this.state.score}`;
