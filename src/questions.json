@@ -2554,17 +2554,17 @@
       "stem": "某客戶相似度比對系統需逐一比對每位客戶與其他所有客戶的資料組合,此演算法的時間複雜度為何?",
       "options": [
         {
-          "text": "O(n²) — 雙重迴圈,n² 級成長",
+          "text": "O(n²) — 兩兩比對 n² 成長",
           "is_correct": true,
           "trap_type": null
         },
         {
-          "text": "O(n) — 單迴圈線性比對",
+          "text": "O(n) — 隨資料量線性成長",
           "is_correct": false,
           "trap_type": "低估雙層巢狀的成本"
         },
         {
-          "text": "O(1) — 不隨資料量變化",
+          "text": "O(1) — 與資料量無關的常數",
           "is_correct": false,
           "trap_type": "忽略需要兩兩比對"
         },

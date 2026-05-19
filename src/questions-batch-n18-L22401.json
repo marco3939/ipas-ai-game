@@ -379,7 +379,7 @@
       "stem": "某團隊訓練一個 200MB 參數的影像分類網路,單卡可放下整個模型,但訓練資料量龐大想加速;手邊有 8 張 GPU。下列何種分散式訓練策略最為直接適用?",
       "options": [
         {
-          "text": "資料平行(Data Parallel),每張 GPU 複製一份模型、各自處理不同 mini-batch 後梯度聚合",
+          "text": "資料平行(Data Parallel),各 GPU 複製模型分別處理 mini-batch 後梯度聚合",
           "is_correct": true
         },
         {
@@ -388,7 +388,7 @@
           "trap_type": "200MB 不需切模型"
         },
         {
-          "text": "單卡訓練,因 8 張 GPU 之間通訊成本必然遠高於並行帶來的訓練速度收益",
+          "text": "單卡訓練,因 8 張 GPU 之間通訊成本必然遠高於並行帶來的訓練速度收益增量",
           "is_correct": false,
           "trap_type": "8 卡資料平行通常正收益"
         },
