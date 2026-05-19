@@ -431,6 +431,8 @@
 <script src="sm2.js"></script>
 <!-- 互動混淆矩陣題型(spec: docs/spec-confusion-matrix.md) -->
 <script src="components/confusion-matrix.js"></script>
+<!-- 2026-05-19 P3 視覺統一:theme-factory 11 主題 UI 切換器(預設電玩 Slate / localStorage 持久化) -->
+<script src="themes.js"></script>
 <!-- 案例 10 LOW-4:JS frame-busting(GitHub Pages 無 HTTP header 可控,
      meta 上 frame-ancestors 規範被瀏覽器忽略 → 此為實質防 clickjacking 手段)。
      被任何站 iframe 嵌入時跳回頂層,讓 attacker 失去 UI redress 機會。 -->
@@ -457,7 +459,8 @@
       <span class="badge">錯題 <span id="stat-wrong">0</span></span>
       <span class="badge">場次 <span id="stat-sessions">0</span></span>
     </div>
-    <button class="btn btn-ghost" id="global-home-btn" onclick="goHome()" style="margin-left:auto">🏠 首頁</button>
+    <button class="btn btn-ghost" id="global-theme-btn" onclick="window.ThemeManager && ThemeManager.openPicker()" title="切換主題色系" style="margin-left:auto">🎨 主題</button>
+    <button class="btn btn-ghost" id="global-home-btn" onclick="goHome()">🏠 首頁</button>
   </div>
 </header>
 
