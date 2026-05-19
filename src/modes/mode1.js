@@ -148,13 +148,17 @@
       showToast('「' + (boss.name||'本 BOSS') + '」題庫過小(' + pool.length + ' 題),建議練習其他 BOSS', 4000);
       return [];
     }
-    // MED-3:minNeeded 改 Math.min(MIN_POOL_TO_BATTLE, pool.length)
+    // MED-3 / L1 修補(2026-05-19):minNeeded 改比例式門檻
+    // 原 `Math.min(5, pool.length)` 對小池 BOSS(autonomous 8 題)會反覆出已答對題
+    // 改 `Math.max(1, Math.ceil(pool.length / 4))`:池 8 題 → minNeeded=2,讓 SeenCorrect 過濾
+    // 後若 < 25% 才 fallback,小池 BOSS 也能持續出新題
     // 避免「答對少數題就 fallback 重複出舊題」— minNeeded 是「過濾後至少要有 N 題新題才不 fallback」,
     // 不是「期望題數」。傳 n 會讓玩家答對 1 題就跳回去重複出題
     // MED-2:統一 pool = fr.pool(API 已保證返回正確 pool,不分支)
     let finalPool = pool;
     if (typeof SeenCorrect !== 'undefined') {
-      const fr = SeenCorrect.filterForBattle(pool, Math.min(MIN_POOL_TO_BATTLE, pool.length));
+      const minNeeded = Math.max(1, Math.ceil(pool.length / 4));
+      const fr = SeenCorrect.filterForBattle(pool, minNeeded);
       if (fr.fallback) showToast('本 BOSS 可用新題不足,允許重複出已答對的舊題');
       finalPool = fr.pool;
     }
@@ -390,6 +394,9 @@
       const pt = document.getElementById('player-hp-text');
       if (bt) bt.textContent = `${this.state.bossHp} / ${this.state.bossHpMax}`;
       if (pt) pt.textContent = `HP ${p.hp}/${p.hpMax} · MP ${p.mp}/${p.mpMax}`;
+      // 2026-05-19 新增:BOSS HP < 30% 開啟怒火光環、HP=0 或回血移除
+      const bossAv = document.getElementById('boss-avatar');
+      if (bossAv) GameFX.bossEnrage(bossAv, bossPct > 0 && bossPct < 30);
     },
 
     updateSkillTray() {
@@ -498,6 +505,8 @@
       this._scheduleTimeout(() => {
         if (!this.state) return;
         GameFX.shake(bossAv); GameFX.damageNumber(bossAv, dmg, { kind: 'player', crit: isCrit });
+        // 2026-05-19 新增:BOSS 命中時往後彈飛(被擊飛感)
+        GameFX.bossKnockback(bossAv);
       }, 200);
       if (this.state.combo >= 2) GameFX.combo(this.state.combo);
       if (this.state.combo === 5) { GameFX.confetti({ count: 100, colors: ['#fbbf24','#f59e0b','#ef4444'] }); showToast('🔥 5 連擊!氣勢正盛!'); }
@@ -511,11 +520,11 @@
       p.hp = Math.min(p.hpMax, p.hp + hpHeal);
       p.mp = Math.min(p.mpMax, p.mp + mpHeal);
       Player.save(p);
-      // 顯示綠色治療數字
+      // 顯示綠色治療數字 + 綠光暈(2026-05-19:GameFX.heal 合併兩者)
       if (p.hp > beforeHp) {
         this._scheduleTimeout(() => {
           if (!this.state) return;
-          GameFX.damageNumber(playerAv, '+' + (p.hp - beforeHp), { kind: 'player' });
+          GameFX.heal(playerAv, p.hp - beforeHp);
         }, 400);
       }
       this.updateBars(); this.updateSkillTray();

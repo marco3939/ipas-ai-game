@@ -186,7 +186,7 @@
     },
 
     async start() {
-      RNG.set(Date.now()); // 鐵律 #2:每場新 seed
+      RNG.set(Date.now() + Math.floor(Math.random() * 1e5)); // 鐵律 #2:每場新 seed(M1 修補對齊 Mode 1)
       // 還原可能殘留的 PlayEngine hook(若上次 challenge 中途離開)
       if (this._origAnswer) { PlayEngine.answer = this._origAnswer; this._origAnswer = null; }
       if (this._origOnNext !== undefined && this._origOnNext !== null) { PlayEngine.onNext = this._origOnNext; this._origOnNext = null; }
@@ -686,8 +686,8 @@
       if (player.mp < MP_COST_CHALLENGE) {
         showToast(`MP 不足(需 ${MP_COST_CHALLENGE},目前 ${player.mp})`); return;
       }
-      // 鐵律 #2:每次挑戰隨機抽題(RNG.set + RNG.pickN)
-      RNG.set(Date.now());
+      // 鐵律 #2:每次挑戰隨機抽題(RNG.set + RNG.pickN)(M1 修補對齊 Mode 1)
+      RNG.set(Date.now() + Math.floor(Math.random() * 1e5));
       const pool = QUESTIONS.filter(q => q.node_id === nodeId);
       if (pool.length === 0) { showToast('此節點無題目'); return; }
       const picked = RNG.pickN(pool, 1)[0];

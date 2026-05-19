@@ -208,7 +208,7 @@
       // 清掉殘留 state(避免從戰鬥中按「退避」回地圖後,先前 takeDamage 排好的
       // 1.5s gameOver setTimeout 仍會用 state.gameOverPending 觸發,把地圖蓋掉)
       this.state = null;
-      RNG.set(Date.now());
+      RNG.set(Date.now() + Math.floor(Math.random() * 1e5));
       this.renderMap();
     },
 
@@ -308,6 +308,8 @@
 
       const boss = BOSSES.find(b => b.key === key);
       if (!boss) return;
+      // M1 修補(2026-05-19):連挑同 BOSS 兩場 reseed,避免抽到一樣的題序
+      RNG.set(Date.now() + Math.floor(Math.random() * 1e5));
       const questions = pickQuestionsForBoss(boss);
       if (questions.length === 0) {
         showToast('⚠️ 此 BOSS 對應題目已下架,題庫補強中');
@@ -437,6 +439,9 @@
       const pt = document.getElementById('m2-player-hp-text');
       if (bt) bt.textContent = `${this.state.bossHp} / ${this.state.bossHpMax}`;
       if (pt) pt.textContent = `HP ${p.hp}/${p.hpMax} · MP ${p.mp}/${p.mpMax}`;
+      // 2026-05-19 新增:BOSS HP < 30% 開啟怒火光環、HP=0 或回血移除
+      const bossAv = document.getElementById('m2-boss-avatar');
+      if (bossAv) GameFX.bossEnrage(bossAv, bossPct > 0 && bossPct < 30);
     },
 
     updateSkillTray() {
@@ -543,7 +548,8 @@
       const p = Player.load();
       // 程式判讀 BOSS 的攻擊主要靠技術 + 分析屬性
       const baseDmg = 20 + p.level * 2 + Math.floor((p.stats.technical + p.stats.analysis) / 2);
-      const isCrit = this.state.combo >= 3 && Math.random() < 0.4;
+      // L5 修補(2026-05-19):改用 RNG.next() 讓 seed 控制下可重現(原 Math.random 不可重現)
+      const isCrit = this.state.combo >= 3 && RNG.next() < 0.4;
       let dmg = isCrit ? Math.floor(baseDmg * 2) : baseDmg;
       this.state.bossHp = Math.max(0, this.state.bossHp - dmg);
       this.state.totalDamage += dmg;
@@ -555,6 +561,8 @@
       this._scheduleTimeout(() => {
         GameFX.shake(bossAv);
         GameFX.damageNumber(bossAv, dmg, { kind: 'player', crit: isCrit });
+        // 2026-05-19 新增:BOSS 命中時往後彈飛
+        GameFX.bossKnockback(bossAv);
       }, 200);
 
       if (this.state.combo >= 2) GameFX.combo(this.state.combo);
@@ -572,7 +580,8 @@
       p.mp = Math.min(p.mpMax, p.mp + mpHeal);
       Player.save(p);
       if (p.hp > beforeHp) {
-        this._scheduleTimeout(() => GameFX.damageNumber(playerAv, '+' + (p.hp - beforeHp), { kind: 'player' }), 400);
+        // 2026-05-19 強化:GameFX.heal 合併綠光暈 + 浮動數字
+        this._scheduleTimeout(() => GameFX.heal(playerAv, p.hp - beforeHp), 400);
       }
 
       this.updateBars();

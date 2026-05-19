@@ -54,8 +54,18 @@ const SM2 = {
 
   // === 記錄一次答題(由各 mode 與 PlayEngine.answer hook 呼叫)===
   // grade mapping:答對(主場)=5,答對(下鑽)=4,答錯=2
+  // 2026-05-19 §8 H5 修補:幫所有 SM2 公開查詢加 stale qid 過濾器
+  // 題庫一旦移除某 qid(歷史 q_pa_011/q_pa_012 被刪),SM2 仍存舊卡片 → 首頁顯示假到期數
+  // 此 helper 統一在「讀」端過濾,避免每處重複寫
+  _isLiveQid(qid) {
+    if (typeof QUESTIONS === 'undefined' || !Array.isArray(QUESTIONS)) return true; // 安全 fallback:沒題庫時不過濾
+    return QUESTIONS.some(function (q) { return q && q.id === qid; });
+  },
+
   recordAnswer(qid, isCorrect, viaDrill) {
     if (!qid) return null;
+    // §8 H5 修補:對已從題庫刪除的 qid 不再寫入新狀態
+    if (!this._isLiveQid(qid)) return null;
     const grade = isCorrect ? (viaDrill ? 4 : 5) : 2;
     const all = this.load();
     const cur = all[qid] || { ef: this.INITIAL_EF, interval: 0, repetition: 0, lastReview: 0, nextDue: 0 };
@@ -67,13 +77,15 @@ const SM2 = {
   // === 今日 due 佇列 ===
   // overdueOnly=true:只取 nextDue <= now
   // overdueOnly=false:取 nextDue <= now + 1 day(包含今日內到期)
+  // 2026-05-19 §8 H5:加 _isLiveQid 過濾 stale,避免 review session 跑空隙
   getDueQueue(overdueOnly) {
     if (overdueOnly === undefined) overdueOnly = true;
     const all = this.load();
     const now = Date.now();
     const cutoff = overdueOnly ? now : now + this.MS_PER_DAY;
+    const self = this;
     return Object.entries(all)
-      .filter(function (e) { return e[1].nextDue > 0 && e[1].nextDue <= cutoff; })
+      .filter(function (e) { return e[1].nextDue > 0 && e[1].nextDue <= cutoff && self._isLiveQid(e[0]); })
       .sort(function (a, b) { return a[1].nextDue - b[1].nextDue; })
       .map(function (e) { return { qid: e[0], state: e[1] }; });
   },
@@ -83,8 +95,10 @@ const SM2 = {
   countOverdue() {
     const all = this.load();
     const now = Date.now();
-    return Object.values(all).filter(function (s) {
-      return s.nextDue > 0 && s.nextDue < now - SM2.MS_PER_DAY;
+    const self = this;
+    // §8 H5 修補:統計同樣過濾 stale qid,首頁不再顯示假到期數
+    return Object.entries(all).filter(function (e) {
+      return e[1].nextDue > 0 && e[1].nextDue < now - SM2.MS_PER_DAY && self._isLiveQid(e[0]);
     }).length;
   },
   totalTracked() { return Object.keys(this.load()).length; },

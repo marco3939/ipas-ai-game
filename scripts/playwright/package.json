@@ -1,0 +1,15 @@
+{
+  "name": "ipas-ai-game-e2e",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Playwright E2E baseline for IPAS AI game SPA (src/index.html).",
+  "scripts": {
+    "serve": "cd ../../src && python3 -m http.server 8000",
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "install-browsers": "playwright install chromium"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.45.0"
+  }
+}

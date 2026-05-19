@@ -151,7 +151,29 @@
   .pair-card.selected { border-color: var(--warn); background: rgba(250,204,21,0.1); }
   .pair-card.matched { border-color: var(--success); background: rgba(74,222,128,0.15); cursor: default; }
   .pair-card.mismatched { border-color: var(--danger); animation: shake 0.4s; }
-  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+  /* 2026-05-19 強化:6px → 10px,加 y 軸抖動;時間 0.4s → 0.5s */
+  @keyframes shake { 0%,100% { transform: translate(0,0) rotate(0); }
+    15% { transform: translate(-10px, 2px) rotate(-2deg); }
+    30% { transform: translate(10px, -2px) rotate(2deg); }
+    45% { transform: translate(-9px, 1px) rotate(-1.5deg); }
+    60% { transform: translate(9px, -1px) rotate(1.5deg); }
+    75% { transform: translate(-6px, 1px) rotate(-1deg); }
+    90% { transform: translate(6px, 0) rotate(1deg); } }
+  /* 2026-05-19 新增:BOSS 被擊中後彈飛(被擊飛感) */
+  @keyframes bossKnockback { 0% { transform: translateX(0) rotate(0); }
+    30% { transform: translateX(28px) rotate(8deg) scale(1.06); filter: brightness(1.5); }
+    60% { transform: translateX(20px) rotate(4deg) scale(1.02); filter: brightness(1.2); }
+    100% { transform: translateX(0) rotate(0) scale(1); filter: brightness(1); } }
+  .avatar.boss-knockback { animation: bossKnockback 0.55s cubic-bezier(.34,1.56,.64,1); }
+  /* 2026-05-19 新增:玩家補血綠光暈 */
+  @keyframes healPulse { 0% { box-shadow: 0 0 0 0 rgba(74,222,128,0.9), 0 0 0 0 rgba(74,222,128,0.6); }
+    50% { box-shadow: 0 0 30px 12px rgba(74,222,128,0.7), 0 0 60px 24px rgba(74,222,128,0.4); }
+    100% { box-shadow: 0 0 0 0 rgba(74,222,128,0), 0 0 0 0 rgba(74,222,128,0); } }
+  .avatar.healing { animation: healPulse 0.9s ease-out; }
+  /* 2026-05-19 新增:BOSS 低血量怒火脈衝 */
+  @keyframes bossEnrage { 0%,100% { box-shadow: 0 0 20px rgba(239,68,68,0.5), 0 0 40px rgba(239,68,68,0.3); filter: brightness(1) saturate(1); }
+    50% { box-shadow: 0 0 50px rgba(239,68,68,1), 0 0 90px rgba(220,38,38,0.85), inset 0 0 20px rgba(239,68,68,0.6); filter: brightness(1.3) saturate(1.5); } }
+  .avatar.boss-enrage { animation: bossEnrage 0.9s ease-in-out infinite; }
 
   /* RPG 對話框(案 1) */
   .rpg-scene { background: linear-gradient(135deg, #1e3a5f, #2d4a7a); border-radius: var(--radius);
@@ -209,9 +231,9 @@
     display: flex; align-items: center; justify-content: center; font-size: 2rem; flex-shrink: 0;
     box-shadow: 0 0 20px rgba(56,189,248,0.4); }
   .avatar.boss { background: linear-gradient(135deg, #7f1d1d, #991b1b); box-shadow: 0 0 20px rgba(239,68,68,0.4); }
-  .avatar.taking-damage { animation: shake 0.4s; }
+  .avatar.taking-damage { animation: shake 0.5s; }
   .avatar.attacking { animation: attack 0.5s; }
-  @keyframes attack { 0%,100% { transform: translateX(0); } 50% { transform: translateX(20px) scale(1.1); } }
+  @keyframes attack { 0%,100% { transform: translateX(0); } 50% { transform: translateX(24px) scale(1.15); filter: brightness(1.3); } }
   .bar-info { flex: 1; }
   .bar-name { font-weight: 700; font-size: 0.95rem; }
   .bar-name .level { background: var(--primary); color: var(--primary-fg); padding: 1px 6px;
@@ -224,12 +246,14 @@
   @keyframes pulseHP { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
   .hp-text { font-size: 0.8rem; color: var(--fg-dim); margin-top: 2px; }
 
-  /* 傷害數字飛出 */
-  .damage-num { position: absolute; font-size: 2rem; font-weight: 900; pointer-events: none;
-    text-shadow: 0 0 12px currentColor; z-index: 100; }
-  .damage-num.player { color: #fbbf24; }
+  /* 傷害數字飛出 — 2026-05-19 強化:字體變大、加描邊更醒目 */
+  .damage-num { position: absolute; font-size: 2.5rem; font-weight: 900; pointer-events: none;
+    text-shadow: 0 0 18px currentColor, 0 2px 4px rgba(0,0,0,0.6); z-index: 100;
+    -webkit-text-stroke: 1px rgba(0,0,0,0.4); letter-spacing: -0.02em; }
+  .damage-num.player { color: #4ade80; text-shadow: 0 0 18px #4ade80, 0 2px 4px rgba(0,0,0,0.6); }
   .damage-num.enemy { color: #f87171; }
-  .damage-num.crit { font-size: 3rem; color: #fb923c; }
+  .damage-num.crit { font-size: 4rem; color: #fb923c;
+    text-shadow: 0 0 24px #fb923c, 0 0 48px #fbbf24, 0 2px 6px rgba(0,0,0,0.7); }
 
   /* Combo 連擊 */
   .combo-display { position: fixed; top: 80px; right: 16px; padding: 8px 16px;
@@ -295,11 +319,11 @@
   .visual-data { margin: 12px 0; }
   .visual-data-title { font-size: 0.85rem; color: var(--fg-dim); margin-bottom: 6px; }
 
-  /* 答對 / 答錯 全螢幕閃光 */
+  /* 答對 / 答錯 全螢幕閃光 — 2026-05-19 強化:顏色更鮮豔、延長時間 */
   .flash-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 5000;
-    opacity: 0; transition: opacity 0.3s; }
-  .flash-overlay.correct { background: radial-gradient(ellipse at center, rgba(74,222,128,0.4), transparent 70%); }
-  .flash-overlay.wrong { background: radial-gradient(ellipse at center, rgba(248,113,113,0.4), transparent 70%); }
+    opacity: 0; transition: opacity 0.45s; }
+  .flash-overlay.correct { background: radial-gradient(ellipse at center, rgba(34,197,94,0.65), rgba(74,222,128,0.25) 40%, transparent 75%); }
+  .flash-overlay.wrong { background: radial-gradient(ellipse at center, rgba(239,68,68,0.7), rgba(248,113,113,0.3) 40%, transparent 75%); }
   .flash-overlay.show { opacity: 1; }
 
   /* === 錯誤回報(草案 1:Inline form 非 modal)=== */
@@ -795,7 +819,17 @@ const Storage = {
   K_USER_NICKNAME: 'ipas_user_nickname_v1', // 使用者暱稱(P1 進度匯出匯入)
   get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
   set(k, v) {
-    try { localStorage.setItem(k, JSON.stringify(v)); }
+    try {
+      localStorage.setItem(k, JSON.stringify(v));
+      // 2026-05-19 §8 M3 修補:成功寫入時清 _writeFailed 旗標
+      // 原邏輯設了沒清,使用者清過 SM2/Wrongbook 後 quota 恢復,UI 永遠認為仍 fail
+      if (Storage._writeFailed) {
+        Storage._writeFailed = false;
+        // 同時移除常駐 banner(若還在)
+        const banner = document.getElementById('storage-quota-banner');
+        if (banner) banner.remove();
+      }
+    }
     catch(e) {
       console.warn('storage full:', e);
       // 案例 10 audit HIGH-5D:silent data-loss 高風險 — 改 persistent banner 取代 throttled toast,
@@ -1010,9 +1044,15 @@ const Mastery = {
     const m = this.load();
     const qPerNode = {};
     for (const q of QUESTIONS) if (q.node_id) qPerNode[q.node_id] = (qPerNode[q.node_id] || 0) + 1;
+    // 2026-05-19 §8 H4 修補:雙路徑判定「已熟練」
+    // - 路徑 A:correct >= min(3, qPerNode)(原行為 — 實答對足夠次數)
+    // - 路徑 B:score >= 80(新加 — skillReinforce / drillBonus 等只動 score 的路徑也被認可)
+    // 任一達標即視為熟練。避免案例 4 殘留(Mode 5 強化 5 次 score=100 但 correct=0 被當沒練過)
     return Object.entries(m).filter(([nodeId, n]) => {
       const required = Math.min(3, qPerNode[nodeId] || 3);
-      return (n.correct || 0) >= required;
+      if ((n.correct || 0) >= required) return true;
+      if ((n.score || 0) >= 80) return true;
+      return false;
     }).length;
   }
 };
@@ -1091,8 +1131,9 @@ const Wrongbook = {
       // 若舊紀錄沒 text 而本次傳了,補上(向後相容遷移)
       if (!existing.userText && userText) existing.userText = userText;
       if (!existing.correctText && correctText) existing.correctText = correctText;
-      // 也更新最後一次選的(若有變)
-      if (userChoice) existing.userChoice = userChoice;
+      // L3 修補(2026-05-19):userChoice 對齊 userText pattern,只在無紀錄時補
+      // 錯題本應顯示「玩家首次答錯時選什麼」,不該被後續其他 mode 答案蓋掉
+      if (!existing.userChoice && userChoice) existing.userChoice = userChoice;
     } else {
       w.push({
         qid, nodeId, userChoice, correctChoice,
@@ -1388,10 +1429,16 @@ async function loadQuestions() {
 // 為何在 generateVariation 過濾而非在 DrillSession 處理:
 //      所有呼叫者(Mode 1/2/3/4/5/6/7/8 + PlayEngine.drill)都假設變化型可走 A/B/C/D 流程。
 //      在源頭排除最簡單,且 CM 題庫本來就主要透過 Mode 7 直接出題,不靠下鑽。
-function generateVariation(originalQ, count = 3) {
+function generateVariation(originalQ, count = 3, excludeIds = null) {
+  // L4 + M4 — excludeIds:額外要排除的題目 id 集合(deep drill 用,避免父層 originalQ / 父層已 queue 題目被重抽)
+  // 接受 Array / Set / null;null = 無額外排除
+  const excludeSet = excludeIds
+    ? (excludeIds instanceof Set ? excludeIds : new Set(excludeIds))
+    : null;
   const candidates = QUESTIONS.filter(q =>
     q.id !== originalQ.id &&
-    q.interaction_type !== 'confusion-matrix' // 排除互動拖曳題型(下鑽流程不相容)
+    q.interaction_type !== 'confusion-matrix' && // 排除互動拖曳題型(下鑽流程不相容)
+    !(excludeSet && excludeSet.has(q.id))         // M4:排除父層 originalQ + 已 queue 題目(deep drill)
   );
   const sameNode = candidates.filter(q => q.node_id === originalQ.node_id);
   const relatedIds = originalQ.related_node_ids || [];
@@ -1405,9 +1452,13 @@ function generateVariation(originalQ, count = 3) {
   (originalQ.misconceptions || []).forEach(addKw);
 
   // sameCode 僅取「關鍵詞至少 2 個重疊」的題目(避免跨度過大)
+  // L4:upperKeywords.size === 0 時(題目無 hook/tags/misconceptions)降級為「同 knowledge_code 即可」,
+  //     不再要求 hits >= 2(否則永遠不成立 → 跳過 → 變化型品質下降)
+  const noKeywords = upperKeywords.size === 0;
   const sameCodeFiltered = candidates.filter(q => {
     if (q.knowledge_code !== originalQ.knowledge_code) return false;
     if (sameNode.includes(q) || relatedNode.includes(q)) return false;
+    if (noKeywords) return true; // L4 fallback:無關鍵詞時直接用同 knowledge_code
     let hits = 0;
     const text = ((q.explanation?.hook || '') + ' ' + (q.tags || []).join(' ') + ' ' + (q.misconceptions || []).join(' '));
     upperKeywords.forEach(kw => { if (text.includes(kw)) hits++; });
@@ -1516,6 +1567,18 @@ function goHome() {
   if (typeof PlayEngine !== 'undefined') {
     PlayEngine.current = null;
   }
+  // 2026-05-19 §8 M6 修補:goHome 順帶清 DrillSession 全域狀態,避免「批次 / Mode 7 drillWrong
+  // 中途點首頁退出後,DrillSession.queue / onComplete 殘留,下次進別 mode 被舊 callback 干擾」
+  if (typeof DrillSession !== 'undefined') {
+    DrillSession.queue = [];
+    DrillSession.total = 0;
+    DrillSession.correct = 0;
+    DrillSession.onComplete = null;
+    DrillSession.targetNode = null;
+    DrillSession.originalQ = null;
+    DrillSession.depth = 0;
+    DrillSession._parentStack = [];
+  }
   // Mode 8 同樣有獨立 timer 與 _timers 佇列,需同步清理
   // (state=null 後 _handleTimeout 會經由 line 86 的 guard 自行 no-op)
   if (typeof Mode8 !== 'undefined') {
@@ -1533,7 +1596,11 @@ function goHome() {
   if (typeof Mode2 !== 'undefined' && Mode2._clearAllTimers) Mode2._clearAllTimers();
   // 案例 10 audit C-1:goHome 漏 cleanup Mode 3/4/5/6 → 中途離場 timer 殘留會洗 home view
   if (typeof Mode3 !== 'undefined' && Mode3.stopTimer) Mode3.stopTimer();
-  if (typeof Mode4 !== 'undefined' && Mode4.stopTimer) Mode4.stopTimer();
+  // 2026-05-19 §8 M2 修補:優先呼叫 Mode4.cleanup(清 PlayEngine.onNext + state),fallback 到 stopTimer
+  if (typeof Mode4 !== 'undefined') {
+    if (Mode4.cleanup) Mode4.cleanup();
+    else if (Mode4.stopTimer) Mode4.stopTimer();
+  }
   if (typeof Mode5 !== 'undefined' && Mode5.cleanup) Mode5.cleanup();
   if (typeof Mode6 !== 'undefined' && Mode6.cleanup) Mode6.cleanup();
   refreshHome();
@@ -2023,8 +2090,10 @@ const DrillSession = {
         if (isCorrect) DrillSession.correct++;
         origAnswer(key);
       } finally {
-        // case 11:用 try/finally 確保即使 origAnswer throw 也會還原,避免 wrap 永留累積污染
-        PlayEngine.answer = origAnswer;
+        // case 11 + 2026-05-19 §8 H3 修補:還原永遠走 __nativeAnswer(絕對原生)
+        // 原 `PlayEngine.answer = origAnswer` 在 wrap 鏈中段被覆蓋時會還原成「中間版本」
+        // 而非真原生 → 多層 wrap / 殘存 hook 可能污染。改用 __nativeAnswer 確保 ground truth。
+        PlayEngine.answer = PlayEngine.__nativeAnswer || origAnswer;
       }
     };
   },
@@ -2036,9 +2105,18 @@ const DrillSession = {
     if (!wrongQ) { this.next(); return; }
     if (this.depth >= 1) { this.next(); return; }  // safety:已是 deep,不再 nested
     // 找 1 題 nested drill question(generateVariation 取最多 3 題,我們只用第 1 題)
+    // M4 — 排除父層 originalQ + 父層 queue 已 queue 過的題目 + parent stack chain 中所有 originalQ/queue
+    //       避免 deep drill 抽到玩家在父層已看過(或即將看到)的題目
+    const excludeIds = new Set();
+    if (this.originalQ && this.originalQ.id) excludeIds.add(this.originalQ.id);
+    (this.queue || []).forEach(q => { if (q && q.id) excludeIds.add(q.id); });
+    (this._parentStack || []).forEach(p => {
+      if (p && p.originalQ && p.originalQ.id) excludeIds.add(p.originalQ.id);
+      ((p && p.queue) || []).forEach(q => { if (q && q.id) excludeIds.add(q.id); });
+    });
     let nested = [];
     try {
-      const variations = generateVariation(wrongQ, 3);
+      const variations = generateVariation(wrongQ, 3, excludeIds);
       nested = variations.slice(0, 1);
     } catch (_) { nested = []; }
     if (nested.length === 0) { this.next(); return; }
@@ -2238,13 +2316,15 @@ const Mode4 = {
 
 // === 遊戲化共用引擎(Phase C)===
 const GameFX = {
+  // 2026-05-19 強化:閃光時間 300ms → 450ms,配合 CSS transition 0.45s,殘留時間延長更突顯
   flash(kind = 'correct') {
     const el = document.createElement('div');
     el.className = `flash-overlay ${kind}`;
     document.body.appendChild(el);
     requestAnimationFrame(() => el.classList.add('show'));
-    setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 300); }, 300);
+    setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 450); }, 450);
   },
+  // 2026-05-19 強化:飛行距離 -80 → -110、scale crit 2→2.5 / normal 1.4→1.7、duration 1.2 → 1.4
   damageNumber(targetEl, amount, opts = {}) {
     if (!targetEl) return;
     const r = targetEl.getBoundingClientRect();
@@ -2255,13 +2335,44 @@ const GameFX = {
     num.style.top = (r.top + 20) + 'px';
     document.body.appendChild(num);
     if (window.gsap) {
-      gsap.fromTo(num, { y: 0, opacity: 1, scale: 0.5 },
-        { y: -80, opacity: 0, scale: opts.crit ? 2 : 1.4, duration: 1.2, ease: 'power2.out',
+      gsap.fromTo(num, { y: 0, opacity: 1, scale: 0.4, rotation: opts.crit ? -8 : 0 },
+        { y: -110, opacity: 0, scale: opts.crit ? 2.5 : 1.7, rotation: opts.crit ? 6 : 0,
+          duration: 1.4, ease: 'power2.out',
           onComplete: () => num.remove() });
-    } else { setTimeout(() => num.remove(), 1200); }
+    } else { setTimeout(() => num.remove(), 1400); }
   },
-  shake(el) { if (!el) return; el.classList.add('taking-damage'); setTimeout(() => el.classList.remove('taking-damage'), 400); },
+  // 2026-05-19 強化:幅度 6px → 10px(於 CSS @keyframes shake),時長 0.4s → 0.5s
+  shake(el) { if (!el) return; el.classList.add('taking-damage'); setTimeout(() => el.classList.remove('taking-damage'), 500); },
   attackAnim(el) { if (!el) return; el.classList.add('attacking'); setTimeout(() => el.classList.remove('attacking'), 500); },
+  // 2026-05-19 新增:BOSS 被擊中往後彈(0.55s,被擊飛感)
+  bossKnockback(el) {
+    if (!el) return;
+    el.classList.remove('boss-knockback'); // 重設使連發可重播
+    // 強制 reflow 確保 animation 重新觸發
+    // eslint-disable-next-line no-unused-expressions
+    el.offsetWidth;
+    el.classList.add('boss-knockback');
+    setTimeout(() => el.classList.remove('boss-knockback'), 600);
+  },
+  // 2026-05-19 新增:玩家補血綠光暈(0.9s)+ 浮動 +amount 數字
+  heal(el, amount) {
+    if (!el) return;
+    el.classList.remove('healing');
+    // eslint-disable-next-line no-unused-expressions
+    el.offsetWidth;
+    el.classList.add('healing');
+    setTimeout(() => el.classList.remove('healing'), 950);
+    if (amount != null && Number.isFinite(+amount) && +amount > 0) {
+      this.damageNumber(el, '+' + amount, { kind: 'player' });
+    }
+  },
+  // 2026-05-19 新增:BOSS 低血量時的怒火光環(紅色脈衝,持續直到取消)
+  // 用法:bossEnrage(el, true) 開啟、bossEnrage(el, false) 關閉
+  bossEnrage(el, on = true) {
+    if (!el) return;
+    if (on) el.classList.add('boss-enrage');
+    else el.classList.remove('boss-enrage');
+  },
   confetti(opts = {}) {
     if (!window.confetti) return;
     confetti({ particleCount: opts.count || 60, spread: 70, origin: { y: 0.6 }, ...opts });
@@ -2819,8 +2930,13 @@ const ProgressIO = {
         for (const k of Object.keys(cleanPayload)) {
           try { localStorage.removeItem(k); } catch (_) {}
         }
+        // L6 修補(2026-05-19):偵測 rollback setItem 失敗(remove 完但 set 失敗 → 空狀態)
+        let rollbackFailed = false;
         for (const [k, v] of Object.entries(rollback)) {
-          try { localStorage.setItem(k, v); } catch (_) {}
+          try { localStorage.setItem(k, v); } catch (_) { rollbackFailed = true; }
+        }
+        if (rollbackFailed) {
+          try { showToast('⚠️ rollback 部分失敗,建議重新整理頁面並從備份還原', 5000); } catch (_) {}
         }
         throw new Error('寫入失敗(可能 quota 已滿),已還原舊資料');
       }
