@@ -61,6 +61,7 @@ node scripts/update-manifest.js         # 重生 questions-manifest.json(鐵律 
 | 動 `src/index.html`(共用層)| 1. 全套 audit<br>2. `audit-tests/mode5-8/mode7/` 全套(13 個 test files)<br>3. §8 強制 code-review subagent | 案例 1 / 8 / 10 復現 |
 | 動 Storage key shape / schema | 1. 加 migration 邏輯<br>2. `audit-tests/.../13-saveHistory-fullLog-snapshot` 等 | 案例 9 stale data |
 | 動 BOSS keywords / boss_topics / 題目 metadata | 1. `audit-qbank-integrity.js` check C(subject)<br>2. 跑 Mode 1/2/6/7/8 對應 audit-tests | PR #38 治本後不可漂移 |
+| 動 user-facing 退出 / view 切換流程 | 1. `sandbox-exam-exit-protection.js`(全 mode set/clear 旗標)<br>2. `21-exam-exit-confirm.test.js`(Mode 7 confirm 攔截實測)<br>3. 確認**所有離場路徑**(cleanup / gameOver / victory / timer / _finalize)都 set false | 案例 12:Mode 7 標記題目誤觸右上首頁直跳出(2026-05-19) |
 
 ### Workflow checklist 觸發規則
 
