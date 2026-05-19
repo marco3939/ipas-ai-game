@@ -114,6 +114,8 @@
         playerSnap: Player.load()  // 起點 HP/MP 快照(用於結算對比)
       };
 
+      if (typeof _setExamMode === 'function') _setExamMode(true, 'Mode 4 易混淆配對戰');
+
       this.render();
       this.startTimer();
     },
@@ -132,7 +134,10 @@
       }, 1000);
     },
 
-    stopTimer() { clearInterval(this.timer); this.timer = null; },
+    stopTimer() {
+      clearInterval(this.timer); this.timer = null;
+      if (typeof _setExamMode === 'function') _setExamMode(false);
+    },
 
     render() {
       const p = Player.load();

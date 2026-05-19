@@ -171,6 +171,7 @@
     // 入口:start()
     // 案例 10 audit C-1:加 cleanup,goHome 呼叫時還原 PlayEngine hook(避免 hook 殘留污染其他 mode)
     cleanup() {
+      if (typeof _setExamMode === 'function') _setExamMode(false);
       if (this._origAnswer && typeof PlayEngine !== 'undefined') {
         PlayEngine.answer = this._origAnswer;
         this._origAnswer = null;
@@ -698,6 +699,7 @@
       // 渲染題目並接管 PlayEngine
       this.state = this.state || { filters: { subject: 'all', code: 'all', tier: 'all', q: '' } };
       this.state.currentNodeId = nodeId;
+      if (typeof _setExamMode === 'function') _setExamMode(true, 'Mode 6 卡牌挑戰');
 
       const ctx = `<div class="boss-bar" style="background:linear-gradient(90deg,#1e3a8a,#0f766e)">
         <div class="boss-name">⚔️ 挑戰封印 — ${esc(card.knowledge_code)} · ${esc(card.title)}</div>
@@ -854,12 +856,14 @@
       this.state.batchQueue = queue;
       this.state.batchSelected = new Set();
       this.state.batchMode = false;
+      if (typeof _setExamMode === 'function') _setExamMode(true, 'Mode 6 批次挑戰');
       showToast(`🔥 批次挑戰開始(共 ${queue.length} 張)`, 2500);
       this._runNextBatch();
     },
 
     _runNextBatch() {
       if (!this.state || !this.state.batchQueue || this.state.batchQueue.length === 0) {
+        if (typeof _setExamMode === 'function') _setExamMode(false);
         showToast('✓ 批次挑戰完成', 3500);
         if (this.state) this.state.batchQueue = [];
         this.renderGrid();

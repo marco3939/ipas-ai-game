@@ -232,6 +232,8 @@
       this._installPlayEngineHook();
       this._showCurrentQuestion();
       this._startTimer();
+      // 2026-05-19 考試保護:進入戰鬥即標記,goHome 跳 confirm
+      if (typeof _setExamMode === 'function') _setExamMode(true, 'Mode 7 模擬劇場');
     },
 
     // ===== Step 1:設定畫面 =====
@@ -691,6 +693,8 @@
       this._installPlayEngineHook();
       this._showCurrentQuestion();
       this._startTimer();
+      // 2026-05-19 考試保護:進入戰鬥即標記,goHome 跳 confirm
+      if (typeof _setExamMode === 'function') _setExamMode(true, 'Mode 7 模擬劇場');
     },
 
     // ===== 字級調整(UX feature #1)=====
@@ -1597,6 +1601,8 @@
       if (!this.state || this.state.outcomeRendered) return;
       this.state.finished = true;
       this.state.outcomeRendered = true;
+      // 2026-05-19:結算後不再算「考試中」(寬鬆 — 結算頁可自由跳首頁)
+      if (typeof _setExamMode === 'function') _setExamMode(false);
       this._stopTimer();
       // 還原 PlayEngine
       this._restorePlayEngine();
@@ -2384,6 +2390,8 @@
 
     // ===== 清理(離場/重啟前都呼叫)=====
     cleanup() {
+      // 2026-05-19:離場必清考試旗標(避免 goHome 又跳 confirm)
+      if (typeof _setExamMode === 'function') _setExamMode(false);
       this._stopTimer();
       this._restorePlayEngine();
       // 清掉 UX modal(若殘留)

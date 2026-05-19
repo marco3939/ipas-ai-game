@@ -308,6 +308,8 @@
         finished: false
       };
 
+      if (typeof _setExamMode === 'function') _setExamMode(true, 'Mode 3 Pipeline 拼圖');
+
       this.renderStage();
       this.startTimer();
       // R5b:同時啟動 PlayEngine 90s timer(視覺一致),Mode 3 自有 m3-timer 平行運作。
@@ -344,7 +346,10 @@
       }, 1000);
     },
 
-    stopTimer() { if (this.timer) { clearInterval(this.timer); this.timer = null; } },
+    stopTimer() {
+      if (this.timer) { clearInterval(this.timer); this.timer = null; }
+      if (typeof _setExamMode === 'function') _setExamMode(false);
+    },
 
     renderStage() {
       const view = document.getElementById('view-play');

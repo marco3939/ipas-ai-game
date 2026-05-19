@@ -409,7 +409,7 @@
       <span class="badge">錯題 <span id="stat-wrong">0</span></span>
       <span class="badge">場次 <span id="stat-sessions">0</span></span>
     </div>
-    <button class="btn btn-ghost" onclick="goHome()" style="margin-left:auto">🏠 首頁</button>
+    <button class="btn btn-ghost" id="global-home-btn" onclick="goHome()" style="margin-left:auto">🏠 首頁</button>
   </div>
 </header>
 
@@ -1465,7 +1465,45 @@ function show(viewId) {
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
+// === 2026-05-19 考試保護機制(全 mode 共用 + DrillSession + SM2)===
+// 設計:
+//   - mode 進入戰鬥 / DrillSession 啟動 → _setExamMode(true, label)
+//   - 結算 / cleanup / 退出 → _setExamMode(false)
+//   - goHome 偵測 _examInProgress=true 時跳 confirm,拒絕則 return
+//   - 右上「🏠 首頁」按鈕視覺切換為「⚠️ 退出考試」紅色背景
+// 防呆設計:玩家誤觸右上 nav / mode 內 goHome 按鈕都會跳 confirm,進度不再無故消失
+window._examInProgress = false;
+window._examLabel = '';
+function _setExamMode(active, label) {
+  window._examInProgress = !!active;
+  window._examLabel = active ? (label || '考試') : '';
+  // 切換右上按鈕視覺
+  const btn = document.getElementById('global-home-btn');
+  if (btn) {
+    if (active) {
+      btn.textContent = '⚠️ 退出考試';
+      btn.style.background = '#7f1d1d';
+      btn.style.color = '#fef2f2';
+      btn.style.border = '1px solid #dc2626';
+      btn.style.fontWeight = '700';
+    } else {
+      btn.textContent = '🏠 首頁';
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.style.border = '';
+      btn.style.fontWeight = '';
+    }
+  }
+}
+window._setExamMode = _setExamMode;
+
 function goHome() {
+  // 2026-05-19 考試保護:進行中拒絕直接 goHome,需 confirm
+  if (window._examInProgress) {
+    const label = window._examLabel || '考試';
+    if (!confirm('⚠️ ' + label + '進行中,確定退出嗎?\n\n本場成績將不計入結算,進度遺失。')) return;
+    _setExamMode(false);
+  }
   // case 11 (2026-05-17 P1):90s timer 已完整移除;此處只清 PlayEngine.current 防殘留。
   if (typeof PlayEngine !== 'undefined') {
     PlayEngine.current = null;
@@ -1870,6 +1908,8 @@ const DrillSession = {
     }
     this.queue = questions; this.targetNode = nodeId; this.originalQ = originalQ;
     this.correct = 0; this.total = questions.length;
+    // 2026-05-19 考試保護:下鑽進行中,goHome 跳 confirm
+    if (typeof _setExamMode === 'function' && this.depth === 0) _setExamMode(true, '🎯 結構化下鑽');
     if (this.depth === 0) {
       showToast(`🎯 結構化下鑽啟動:${questions.length} 題(${questions.map(q => q._drillStrategy).join(' → ')})`, 3500);
     } else {
@@ -1900,6 +1940,8 @@ const DrillSession = {
       showToast(`${allCorrect ? '🎉' : '✓'} 下鑽完成${lvLabel}!正答 ${this.correct}/${this.total} (${ratioPct}%) · 熟練度 +${bonus}`, 3500);
       if (window.confetti && allCorrect && this.total > 0 && this.depth === 0) GameFX.bigConfetti();
       // 完成後:若有 onComplete 就呼叫(回到原戰鬥),否則才回首頁
+      // 2026-05-19:在 callback 前清考試旗標(下鑽結束 → 原 mode 自己決定要不要重新標)
+      if (typeof _setExamMode === 'function' && this.depth === 0) _setExamMode(false);
       setTimeout(() => {
         if (this.onComplete) {
           const cb = this.onComplete;
