@@ -515,6 +515,7 @@
       const s = this.state;
       const q = s.currentQ;
       const opt = q.options.find(o => o.key === key);
+      if (!opt) return; // 與 mode1/mode2 對齊:防 _onTimeout race / 不存在 key
       const isCorrect = opt.is_correct;
 
       // 2026-05-19 R3 simplify:用 PlayEngine.lockOptions

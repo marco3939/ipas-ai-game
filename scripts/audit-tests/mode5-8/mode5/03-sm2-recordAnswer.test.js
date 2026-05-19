@@ -42,18 +42,18 @@ function setup(opts = {}) {
   A.eq(calls[0].isCorrect, false, 'SM2 isCorrect=false');
 }
 
-// --- 3: SM2 NOT called when SM2 is undefined (typeof guard) ---
-//   Tests defensive `typeof SM2 !== 'undefined'` guard.  We can't easily
-//   undefine SM2 in our sandbox without rebuilding; just verify the guard
-//   path is present in source code as a textual contract.
+// --- 3: SM2 commit 走共用層 PlayEngine.commitAnswer(PR #46 後新契約) ---
+//   PR #46 把 SM2.recordAnswer / Mastery.update / Wrongbook.add / Progress / SeenCorrect
+//   5 步 commit 抽到 PlayEngine.commitAnswer SSOT;mode5 不再自己呼叫 SM2,改透過 commitAnswer。
+//   驗證:mode5.js source 必含 PlayEngine.commitAnswer 呼叫,且不再有自寫 SM2.recordAnswer。
 {
   const fs = require('fs');
   const path = require('path');
   const src = fs.readFileSync(path.join(__dirname, '..', '..', '..', '..', 'src', 'modes', 'mode5.js'), 'utf8');
-  A.ok(/typeof SM2 !== 'undefined' && q\.id\) SM2\.recordAnswer/.test(src),
-    "mode5.js has 'typeof SM2 !== undefined' guard before SM2.recordAnswer");
-  A.ok(src.includes('q.id, isCorrect, false'),
-    'SM2.recordAnswer called with q.id, isCorrect, false signature');
+  A.ok(src.includes('PlayEngine.commitAnswer('),
+    'mode5.js 走 PlayEngine.commitAnswer SSOT(PR #46 後)');
+  A.ok(!/SM2\.recordAnswer\s*\(/.test(src),
+    'mode5.js 不再自寫 SM2.recordAnswer(已由 commitAnswer SSOT 接管)');
 }
 
 // --- 4: SM2 not called when q.id is missing (defensive) ---

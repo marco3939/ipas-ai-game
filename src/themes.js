@@ -12,6 +12,9 @@
 (function () {
   'use strict';
 
+  // 設計決定 (PR §8 review 2026-05-19):此 key 刻意不收進 ProgressIO.ALLOWED_KEYS_EXACT。
+  // 邏輯:resetAll 是「清遊戲進度」(mastery / sm2 / history / wrongbook),
+  // 主題是 UI 偏好(類似 dark mode),不該因為清進度而被重置。
   const STORAGE_KEY = 'ipas_theme_v1';
 
   const THEMES = [

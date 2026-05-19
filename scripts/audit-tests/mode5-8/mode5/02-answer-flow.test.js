@@ -84,14 +84,15 @@ function setup({ questions, wrongbook, mastery } = {}) {
 
 // --- 4: answer() handles missing optionkey gracefully ---
 {
-  const { Mode } = setup();
-  // Currently `Mode5.answer` does opt.is_correct without null guard.
-  // Verify behaviour with an invalid key — should throw (documenting current
-  // contract: caller must pass valid key). We don't claim this as a bug
-  // since UI controls the keys.
+  const { Mode, stats } = setup();
+  // 新契約(2026-05-19 §8 review fix):跟 mode1/mode2 對齊,silent return on invalid key
+  // 防 _onTimeout race(timer cascade 進來時 key 可能不存在)+ 防呆
+  // 之前的契約是 throw(假設 UI 永遠傳合法 key),現在改為 silent return(defense in depth)
+  const wbBefore = stats.wrongbookCalls.length;
   let threw = false;
   try { Mode.answer('NOPE'); } catch { threw = true; }
-  A.ok(threw, 'answer(invalid key) throws (current contract — UI prevents invalid)');
+  A.ok(!threw, 'answer(invalid key) silent return — 不 throw(與 mode1/mode2 對齊)');
+  A.eq(stats.wrongbookCalls.length, wbBefore, 'answer(invalid key) 不 commit 到 Wrongbook');
 }
 
 process.exit(A.summary('Mode5 answer flow'));

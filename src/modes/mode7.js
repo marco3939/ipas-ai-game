@@ -841,10 +841,10 @@
         const pct = (sec / this.state.totalSeconds) * 100;
         bar.style.width = pct + '%';
         bar.style.background = sec < 300
-          ? 'linear-gradient(90deg,#ef4444,#dc2626)'
+          ? 'var(--grad-hp-critical)'
           : sec < 600
-            ? 'linear-gradient(90deg,#facc15,#f59e0b)'
-            : 'linear-gradient(90deg,#38bdf8,#a855f7)';
+            ? 'var(--grad-hp-low)'
+            : 'var(--grad-time-bar)';
       }
 
       // 每題建議用時
@@ -966,14 +966,14 @@
               <div class="m7-progress-text">第 ${this.state.idx + 1} / ${this.state.total} 題 · 已答對 ${this.state.correct}</div>
               <div class="hp-track" style="height:8px;background:rgba(0,0,0,0.4);border-radius:4px;overflow:hidden;margin-top:4px">
                 <div class="hp-fill" id="m7-progress-bar" style="width:${progPct}%;
-                  background:linear-gradient(90deg,#38bdf8,#a855f7);height:100%;transition:width 0.4s"></div>
+                  background:var(--grad-time-bar);height:100%;transition:width 0.4s"></div>
               </div>
             </div>
             <div class="m7-timer-block">
               <div id="m7-timer" style="color:#facc15;font-weight:900;font-size:1.6rem">⏰ --:--</div>
               <div id="m7-sug-time" style="font-size:0.75rem;color:var(--fg-dim)"></div>
               <div class="hp-track" style="height:6px;background:rgba(0,0,0,0.4);border-radius:3px;overflow:hidden;margin-top:4px">
-                <div id="m7-time-bar" style="width:100%;height:100%;background:linear-gradient(90deg,#38bdf8,#a855f7);transition:width 0.4s"></div>
+                <div id="m7-time-bar" style="width:100%;height:100%;background:var(--grad-time-bar);transition:width 0.4s"></div>
               </div>
             </div>
           </div>
@@ -2116,7 +2116,7 @@
       const view = document.getElementById('view-play');
       view.innerHTML = `
         <div class="m7-mock-view">
-          <div class="card" style="position:sticky;top:0;z-index:10;background:var(--bg-2);border-bottom:2px solid var(--accent)">
+          <div class="card" style="position:sticky;top:0;z-index:10;background:var(--bg-2);border-bottom:2px solid var(--primary)">
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
               <div>
                 <strong style="font-size:1.1rem">${modeLabel} — 第 ${idx + 1} / ${total} 題</strong>
@@ -2149,7 +2149,7 @@
             ${wrongAnalysis ? `<h4 style="margin-top:14px;color:#cbd5e1;font-size:0.95rem">其他選項陷阱分析</h4>${wrongAnalysis}` : ''}
           </div>
 
-          <div class="card" style="position:sticky;bottom:0;z-index:10;background:var(--bg-2);border-top:2px solid var(--accent)">
+          <div class="card" style="position:sticky;bottom:0;z-index:10;background:var(--bg-2);border-top:2px solid var(--primary)">
             <div class="actions" style="justify-content:space-between;flex-wrap:wrap;gap:6px">
               <button class="btn btn-ghost" onclick="Mode7.reviewPrev()" ${idx === 0 ? 'disabled' : ''}>⬅️ 上一題</button>
               ${wbBtn}
