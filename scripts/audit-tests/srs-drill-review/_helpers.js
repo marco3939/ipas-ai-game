@@ -137,7 +137,13 @@ function makeSandbox(opts = {}) {
     console,
     Date, JSON, Math, Number, String, Boolean, Array, Object, Set, Map, Symbol, Error, RegExp,
     // ErrorReports stub for _drillEsc (避免 ReferenceError;真實 _esc 行為由 fallback 處理)
-    ErrorReports: { _esc: (s) => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') },
+    ErrorReports: { _esc: (s) => (s === null || s === undefined) ? '' : String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;') },
+    // 2026-05-19 R1 simplify:escHTML 集中 helper(對齊 src/index.html)— _drillEsc 直接使用
+    escHTML: (s) => {
+      if (s === null || s === undefined) return '';
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    },
     // SeenCorrect stub for DrillSession.next() 100% mark logic
     SeenCorrect: { mark: (qid) => { ctx && ctx.__seenMarks && ctx.__seenMarks.push(qid); } },
     __seenMarks: [],

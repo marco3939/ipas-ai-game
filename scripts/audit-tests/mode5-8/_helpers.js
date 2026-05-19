@@ -403,8 +403,16 @@ function buildSandbox(opts = {}) {
     },
   };
 
+  // 2026-05-19 R1 simplify:escHTML 集中 helper(對齊 src/index.html)
+  const escHTML = (s) => {
+    if (s === null || s === undefined) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  };
+
   const ErrorReports = {
     renderButton() { return ''; },
+    _esc: escHTML,
   };
 
   // PlayEngine: only the parts modes hook into
@@ -536,6 +544,7 @@ function buildSandbox(opts = {}) {
     RNG,
     Mastery, Wrongbook, Progress, SeenCorrect, SM2,
     Player, GameFX, DrillSession, ErrorReports,
+    escHTML,
     PlayEngine,
     QUESTIONS,
     generateVariation,

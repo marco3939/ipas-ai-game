@@ -351,7 +351,13 @@ function makeSandbox(opts = {}) {
       // 2026-05-19 新增 3 個 BOSS 戰動畫(noop in test sandbox)
       bossKnockback: () => {}, heal: () => {}, bossEnrage: () => {}
     },
-    ErrorReports: { renderButton: () => '' },
+    ErrorReports: { renderButton: () => '', _esc: (s) => (s === null || s === undefined) ? '' : String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;') },
+    // 2026-05-19 R1 simplify:escHTML 集中 helper(對齊 src/index.html)
+    escHTML: (s) => {
+      if (s === null || s === undefined) return '';
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    },
     ConfusionMatrix: undefined, // not used in mode 1-4
     URL: { createObjectURL: () => 'blob:fake', revokeObjectURL: () => {} },
     Blob: function () {},

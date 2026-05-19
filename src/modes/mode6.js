@@ -158,11 +158,8 @@
   }
 
   // === HTML escape ===
-  function esc(s) {
-    if (s == null) return '';
-    return (s + '').replace(/&/g, '&amp;').replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-  }
+  // 2026-05-19 R1 simplify:改用 window.escHTML(集中 helper)
+  const esc = escHTML;
 
   // === 主 Mode 物件 ===
   const Mode6 = {

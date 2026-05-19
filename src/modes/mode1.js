@@ -111,11 +111,8 @@
 
   // 案例 10 audit BUG-X1:HTML escape helper(defense-in-depth)
   // Mode 1 / Mode 2 大量 innerHTML 內插題庫內容,雖然目前題庫無 HTML 但 ProgressIO 匯入後不可信
-  function esc(s) {
-    if (s === null || s === undefined) return '';
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-  }
+  // 2026-05-19 R1 simplify:改用 window.escHTML(集中 helper,避免重複定義)
+  const esc = escHTML;
 
   // 2026-05-19 R2 simplify:刪本地 highlightCode,改用 window.highlightCodeSimple(對齊 mode2/8)
 

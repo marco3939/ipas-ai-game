@@ -138,11 +138,8 @@
 
   // === 取題:嚴格從 BOSS 的 qids 抓,缺題就少出(鐵律 #5)===
   // 案例 10 audit BUG-X1:HTML escape helper(defense-in-depth)
-  function esc(s) {
-    if (s === null || s === undefined) return '';
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-  }
+  // 2026-05-19 R1 simplify:改用 window.escHTML(集中 helper)
+  const esc = escHTML;
 
   // 2026-05-17:配合 L23 BOSS qids ×3 擴增,加「每場最多 5 題隨機」限制
   // 設計理由:擴增後 numpy/sklearn/pytorch/viz BOSS 各 12-15 題,一場全打太累贅;

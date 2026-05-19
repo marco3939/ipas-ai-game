@@ -807,6 +807,14 @@
 <script>
 /*=== 鐵律 #1+#2 核心引擎 ===*/
 
+// 2026-05-19 R1 simplify:HTML escape 集中 helper(取代散在 15+ 處的 5 字元 replace chain)
+// 函式宣告自動掛 window(合 CLAUDE.md §2 黃金規則 — let/const 才不能掛)
+function escHTML(s) {
+  if (s === null || s === undefined) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
 // === Storage 包裝 ===
 const Storage = {
   K_PROGRESS: 'ipas_progress_v1',
@@ -1193,11 +1201,8 @@ const ErrorReports = {
     other: '其他'
   },
   // case 8 教訓:任何使用者輸入拼到 HTML 一律 escape
-  _esc(s) {
-    if (s === null || s === undefined) return '';
-    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-  },
+  // 2026-05-19 R1:轉呼叫 window.escHTML(API 別名保留,避免 caller 改動)
+  _esc(s) { return escHTML(s); },
   load() { return Storage.get(Storage.K_ERROR_REPORTS, []); },
   save(arr) { Storage.set(Storage.K_ERROR_REPORTS, arr); },
 
@@ -2066,7 +2071,7 @@ const DrillSession = {
     };
     // 上層題核心摘要(讓使用者看到「下鑽是針對什麼概念」)
     // 案例 10 deep-audit Agent D D-2:全部 escape 防 stored XSS(若 ProgressIO 匯入污染 explanation.hook)
-    const _drillEsc = (s) => ErrorReports && ErrorReports._esc ? ErrorReports._esc(s) : String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const _drillEsc = escHTML;
     const upperHook = _drillEsc((this.originalQ && this.originalQ.explanation && this.originalQ.explanation.hook) || '');
     const upperMiscon = _drillEsc((this.originalQ && this.originalQ.misconceptions || []).slice(0, 1).join(' / '));
     const upperCode = _drillEsc((this.originalQ && this.originalQ.knowledge_code) || '');
@@ -2176,8 +2181,8 @@ const Review = {
       document.getElementById('view-review').innerHTML = '<div class="card"><div class="empty">🎉 沒有未復習的錯題,做題後再來</div><div style="text-align:center"><button class="btn btn-primary" onclick="goHome()">回首頁</button></div></div>';
       show('view-review'); return;
     }
-    // 用 ErrorReports._esc 做 HTML escape 防 XSS(stem/text 可能含 < > 等)
-    const esc = (s) => (typeof ErrorReports !== 'undefined' && ErrorReports._esc) ? ErrorReports._esc(s) : String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    // 2026-05-19 R1:用 window.escHTML 做 HTML escape 防 XSS(stem/text 可能含 < > 等)
+    const esc = escHTML;
     const html = `<div class="card"><h2>📝 錯題本(${w.length} 題待復習)</h2>
       <p style="color:var(--fg-dim);margin-bottom:12px">每題顯示你選的 vs 正解,可對照為何錯;點「進下鑽」進入訓練(鐵律 #1)</p>
       <div style="display:flex;flex-direction:column;gap:10px">${w.map(x => {
@@ -2544,11 +2549,8 @@ const ProgressIO = {
   },
 
   // === 字串安全(防 XSS layer 2 / display defense)===
-  escapeHTML(s) {
-    if (s === null || s === undefined) return '';
-    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-  },
+  // 2026-05-19 R1:轉呼叫 window.escHTML(API 別名保留)
+  escapeHTML(s) { return escHTML(s); },
   // 暱稱 layer 1:白名單字元集 + 長度 + 過濾控制 / 零寬 / RTL override
   sanitizeNickname(s) {
     if (typeof s !== 'string') return '';

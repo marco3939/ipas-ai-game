@@ -158,11 +158,8 @@
 
     // 案例 10 LOW-2:HTML escape helper(stem/code/text 經 user-controlled snapshot 進來)
     // defense in depth — 題庫信任 + 強型別仍可能因匯入 fullLog 受外部資料污染
-    _esc(s) {
-      if (s === null || s === undefined) return '';
-      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-        .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-    },
+    // 2026-05-19 R1 simplify:轉呼叫 window.escHTML(API 別名保留)
+    _esc(s) { return escHTML(s); },
 
     // ===== 入口 =====
     start() {
@@ -1507,8 +1504,8 @@
       const renderedQ = this._getRendered(item) || {};
       const correctOpt = (renderedQ.options || []).find(o => o.is_correct);
       const userOpt = (renderedQ.options || []).find(o => o.key === ans.userKey);
-      // escape for innerHTML
-      const esc = (s) => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      // 2026-05-19 R1 simplify:改用 window.escHTML(原 3-char 殘缺版本升為 5-char 完整 escape)
+      const esc = escHTML;
       const correctTxt = esc((correctOpt && correctOpt.text) || '');
       const userTxt = esc((userOpt && userOpt.text) || '');
       if (ans.isCorrect) {
@@ -2076,8 +2073,9 @@
       const progPct = total > 0 ? Math.round(reviewed / total * 100) : 0;
 
       // code_block(若有)
+      // 2026-05-19 R1 simplify:改用 window.escHTML(集中 helper)
       const codeBlock = q.code_block
-        ? `<pre style="background:#0f172a;color:#e2e8f0;padding:10px;border-radius:6px;font-size:0.85rem;overflow-x:auto;margin:8px 0"><code>${q.code_block.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</code></pre>`
+        ? `<pre style="background:#0f172a;color:#e2e8f0;padding:10px;border-radius:6px;font-size:0.85rem;overflow-x:auto;margin:8px 0"><code>${escHTML(q.code_block)}</code></pre>`
         : '';
 
       const isHistoryMode = !!(this.state && this.state._historyMode);

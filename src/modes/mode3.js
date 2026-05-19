@@ -21,11 +21,8 @@
       hint: '定義先行、搜索後行', desc: '中型企業導入 AutoML' }
   };
 
-  function esc(s) {
-    return String(s == null ? '' : s)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-  }
+  // 2026-05-19 R1 simplify:改用 window.escHTML(集中 helper)
+  const esc = escHTML;
 
   function loadProgress() {
     try { return Storage.get(STORAGE_KEY, { stages: {}, totalCleared: 0 }); }
