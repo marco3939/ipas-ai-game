@@ -25,6 +25,21 @@
     --success: #4ade80; --danger: #f87171; --warn: #facc15;
     --border: #334155; --shadow: 0 4px 20px rgba(0,0,0,0.4);
     --radius: 12px; --radius-sm: 6px;
+
+    /* 2026-05-19 P3 視覺統一:抽各 mode hardcoded 漸層到 SSOT(semantic gradient tokens) */
+    /* 等級結算 hero 漸層(Mode 7 結算頁 + 未來其他 mode 結算可共用) */
+    --grad-hero-success: radial-gradient(circle at 30% 0%, #064e3b 0%, #022c22 60%, #021711 100%);
+    --grad-hero-warning: radial-gradient(circle at 30% 0%, #78350f 0%, #451a03 60%, #1c0a01 100%);
+    --grad-hero-danger:  radial-gradient(circle at 30% 0%, #7f1d1d 0%, #450a0a 60%, #1a0404 100%);
+    /* 一般 CTA / 標題條漸層 */
+    --grad-primary: linear-gradient(135deg, #1e3a8a 0%, #0f766e 100%);   /* Mode 6 challenge bar / 主 CTA */
+    --grad-info:    linear-gradient(135deg, #60a5fa 0%, #fbbf24 100%);   /* Mode 6 卡牌模擬考 */
+    --grad-fire:    linear-gradient(135deg, #f87171 0%, #fbbf24 100%);   /* 批次挑戰 / 警示 CTA */
+    /* Accent 色(用於 emoji 旁色標、進度條 fill) */
+    --accent-gold:  #fbbf24;
+    --accent-blue:  #60a5fa;
+    --accent-green: #4ade80;
+    --accent-red:   #f87171;
   }
   @media (prefers-color-scheme: light) {
     :root { --bg: #f8fafc; --bg-2: #ffffff; --bg-3: #e2e8f0;
@@ -416,6 +431,8 @@
 <script src="sm2.js"></script>
 <!-- 互動混淆矩陣題型(spec: docs/spec-confusion-matrix.md) -->
 <script src="components/confusion-matrix.js"></script>
+<!-- 2026-05-19 P3 視覺統一:theme-factory 11 主題 UI 切換器(預設電玩 Slate / localStorage 持久化) -->
+<script src="themes.js"></script>
 <!-- 案例 10 LOW-4:JS frame-busting(GitHub Pages 無 HTTP header 可控,
      meta 上 frame-ancestors 規範被瀏覽器忽略 → 此為實質防 clickjacking 手段)。
      被任何站 iframe 嵌入時跳回頂層,讓 attacker 失去 UI redress 機會。 -->
@@ -442,7 +459,8 @@
       <span class="badge">錯題 <span id="stat-wrong">0</span></span>
       <span class="badge">場次 <span id="stat-sessions">0</span></span>
     </div>
-    <button class="btn btn-ghost" id="global-home-btn" onclick="goHome()" style="margin-left:auto">🏠 首頁</button>
+    <button class="btn btn-ghost" id="global-theme-btn" onclick="window.ThemeManager && ThemeManager.openPicker()" title="切換主題色系" style="margin-left:auto">🎨 主題</button>
+    <button class="btn btn-ghost" id="global-home-btn" onclick="goHome()">🏠 首頁</button>
   </div>
 </header>
 
