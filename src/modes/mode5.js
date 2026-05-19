@@ -165,6 +165,7 @@
       if (this._typeTimer) { clearInterval(this._typeTimer); this._typeTimer = null; }
     },
     cleanup() {
+      if (typeof _setExamMode === 'function') _setExamMode(false);
       this._clearAllTimers();
       // state 不清為 null(避免 timer 殘留 callback 內 this.state.xxx 噴錯;timer 已清)
       // 對齊 Mode 1 的設計
@@ -383,6 +384,7 @@
     },
 
     startBattle() {
+      if (typeof _setExamMode === 'function') _setExamMode(true, 'Mode 5 弱點獵人');
       this.renderBattle();
       this.showQuestion();
     },
@@ -803,6 +805,7 @@
     // 結局
     // ============================================================
     victory() {
+      if (typeof _setExamMode === 'function') _setExamMode(false);
       const s = this.state;
       // 移除 / 標記該 node 已克服:把 Wrongbook 中所有屬於該 nodeId 的題目標記 mastered
       const wb = Wrongbook.load();
@@ -884,6 +887,7 @@
     },
 
     gameOver() {
+      if (typeof _setExamMode === 'function') _setExamMode(false);
       // 2026-05-16: 動態 hpMax/2,對齊「恢復一半 HP」文案
       const _heal5 = Player.load(); Player.heal(Math.floor(_heal5.hpMax / 2));
       const s = this.state;

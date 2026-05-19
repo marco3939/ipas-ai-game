@@ -199,6 +199,7 @@
     _clearAllTimers() {
       this._pendingTimers.forEach(id => clearTimeout(id));
       this._pendingTimers = [];
+      if (typeof _setExamMode === 'function') _setExamMode(false);
     },
 
     start() {
@@ -331,6 +332,7 @@
         gameOverPending: false, // hp=0 後的 game-over 等待中
         eliminated: new Set(),  // 已被「執行模擬」消除的選項 key
       };
+      if (typeof _setExamMode === 'function') _setExamMode(true, 'Mode 2 程式判讀道場');
 
       const view = document.getElementById('view-play');
       view.innerHTML = `
@@ -784,6 +786,7 @@
     victory() {
       if (!this.state) return; // 防雙重呼叫
       this.stopTypeText();
+      if (typeof _setExamMode === 'function') _setExamMode(false);
       // EXP 公式與 Mode1 同調(60 base + 12/題 + 完美 40 + combo*5)
       const baseExp = 60 + this.state.correct * 12;
       const perfectBonus = this.state.wrong === 0 ? 40 : 0;
@@ -841,6 +844,7 @@
     gameOver() {
       if (!this.state) return; // 防雙重呼叫
       this.stopTypeText();
+      if (typeof _setExamMode === 'function') _setExamMode(false);
       const bossKeyForRetry = this.state.boss.key;
       const bossNameForRetry = this.state.boss.name;
       const lastAttack = RNG.pick(this.state.boss.attack);

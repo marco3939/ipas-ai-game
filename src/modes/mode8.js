@@ -106,6 +106,7 @@
       return id;
     },
     _clearAllTimers: function () {
+      if (typeof _setExamMode === 'function') _setExamMode(false);
       this._timers.forEach(function (id) { clearTimeout(id); });
       this._timers = [];
     },
@@ -264,6 +265,7 @@
       this.state.currentQ = null;
       this.state.stepResults = [];
       this.state.answering = false;
+      if (typeof _setExamMode === 'function') _setExamMode(true, 'Mode 8 Code Trace 道場');
       this.showQuestion();
     },
 
@@ -508,6 +510,7 @@
       if (!this.state) return;
       // R5 task 1:結算前停 timer(防殘留)
       this._stopTimer();
+      if (typeof _setExamMode === 'function') _setExamMode(false);
       const view = document.getElementById('view-play');
       if (!view) return;
       var doneCount = this.state.questions.length;

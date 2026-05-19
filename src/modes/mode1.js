@@ -183,6 +183,7 @@
       this._timers.forEach(id => clearTimeout(id));
       this._timers = [];
       if (this._intro) { clearInterval(this._intro); this._intro = null; }
+      if (typeof _setExamMode === 'function') _setExamMode(false);
     },
 
     start() {
@@ -300,6 +301,7 @@
         doubleNext: false, currentQ: null,
         answering: false, // QA 修補 A1:防止快速雙擊重入
         bossKnockedOutShown: false }; // 2026-05-10:BOSS 倒下後仍跑滿 20 題,只顯示一次衝刺加分提示
+      if (typeof _setExamMode === 'function') _setExamMode(true, 'Mode 1 AI 顧問救援');
 
       const view = document.getElementById('view-play');
       view.innerHTML = `
@@ -691,6 +693,7 @@
       // 案例 10 audit C-1:entry guard 防雙呼叫雙發 EXP / 雙寫 Storage
       if (!this.state || this.state.victorySettled) return;
       this.state.victorySettled = true;
+      if (typeof _setExamMode === 'function') _setExamMode(false);
       const baseExp = 60 + this.state.correct * 12;
       const perfectBonus = this.state.wrong === 0 ? 40 : 0;
       const comboBonus = this.state.maxCombo * 5;
@@ -744,6 +747,7 @@
       // 案例 10 audit C-2:entry guard 防雙呼叫
       if (!this.state || this.state.gameOverSettled) return;
       this.state.gameOverSettled = true;
+      if (typeof _setExamMode === 'function') _setExamMode(false);
       // QA Round2:文案說「恢復一半 HP」,Player.heal(50) 在 Lv1 hpMax=100 時剛好 50%,
       // 但升級後 hpMax 增加(每級 +20),50 點就低於一半。改為 Math.floor(hpMax/2) 一致化。
       const before = Player.load();

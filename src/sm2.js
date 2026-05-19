@@ -104,6 +104,7 @@ const SM2 = {
     }
     this.idx = 0;
     this.correct = 0;
+    if (typeof _setExamMode === 'function') _setExamMode(true, '📅 SM-2 間隔重複複習');
     this.renderReviewList();
     if (typeof show === 'function') show('view-sm2-review');
   },
@@ -178,6 +179,7 @@ const SM2 = {
   },
 
   finishReview() {
+    if (typeof _setExamMode === 'function') _setExamMode(false);
     const view = document.getElementById('view-result') || document.getElementById('view-sm2-review');
     if (view) {
       view.innerHTML =

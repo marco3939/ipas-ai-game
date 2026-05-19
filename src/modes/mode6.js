@@ -171,6 +171,7 @@
     // 入口:start()
     // 案例 10 audit C-1:加 cleanup,goHome 呼叫時還原 PlayEngine hook(避免 hook 殘留污染其他 mode)
     cleanup() {
+      if (typeof _setExamMode === 'function') _setExamMode(false);
       if (this._origAnswer && typeof PlayEngine !== 'undefined') {
         PlayEngine.answer = this._origAnswer;
         this._origAnswer = null;
@@ -558,6 +559,13 @@
       const card = (_allowList || []).find(c => c.id === nodeId);
       if (!card) { showToast('找不到此節點'); return; }
       this.state.currentNodeId = nodeId;
+      // 2026-05-19 §8 H2 修補:卡片詳情頁(預習)不算考試中,清旗標
+      // 例外:批次挑戰中(_runNextBatch 接力時短暫經過此函式)— 但 _runNextBatch 直接走 challenge 不經 openCard,所以此處清不影響批次
+      if (this.state && Array.isArray(this.state.batchQueue) && this.state.batchQueue.length > 0) {
+        // 批次接力中,保留旗標
+      } else if (typeof _setExamMode === 'function') {
+        _setExamMode(false);
+      }
 
       const tier = _computeTier(nodeId);
       const m = Mastery.get(nodeId);
@@ -698,6 +706,12 @@
       // 渲染題目並接管 PlayEngine
       this.state = this.state || { filters: { subject: 'all', code: 'all', tier: 'all', q: '' } };
       this.state.currentNodeId = nodeId;
+      // 2026-05-19 §8 H3 修補:批次中 challenge 不覆寫 label(保留「Mode 6 批次挑戰」)
+      if (typeof _setExamMode === 'function') {
+        const inBatch = this.state && Array.isArray(this.state.batchQueue) && this.state.batchQueue.length > 0;
+        if (!inBatch) _setExamMode(true, 'Mode 6 卡牌挑戰');
+        // 批次中:旗標已由 executeBatch 設好,不重設
+      }
 
       const ctx = `<div class="boss-bar" style="background:linear-gradient(90deg,#1e3a8a,#0f766e)">
         <div class="boss-name">⚔️ 挑戰封印 — ${esc(card.knowledge_code)} · ${esc(card.title)}</div>
@@ -854,12 +868,14 @@
       this.state.batchQueue = queue;
       this.state.batchSelected = new Set();
       this.state.batchMode = false;
+      if (typeof _setExamMode === 'function') _setExamMode(true, 'Mode 6 批次挑戰');
       showToast(`🔥 批次挑戰開始(共 ${queue.length} 張)`, 2500);
       this._runNextBatch();
     },
 
     _runNextBatch() {
       if (!this.state || !this.state.batchQueue || this.state.batchQueue.length === 0) {
+        if (typeof _setExamMode === 'function') _setExamMode(false);
         showToast('✓ 批次挑戰完成', 3500);
         if (this.state) this.state.batchQueue = [];
         this.renderGrid();
