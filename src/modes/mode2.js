@@ -138,11 +138,8 @@
 
   // === 取題:嚴格從 BOSS 的 qids 抓,缺題就少出(鐵律 #5)===
   // 案例 10 audit BUG-X1:HTML escape helper(defense-in-depth)
-  function esc(s) {
-    if (s === null || s === undefined) return '';
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-  }
+  // 2026-05-19 R1 simplify:改用 window.escHTML(集中 helper)
+  const esc = escHTML;
 
   // 2026-05-17:配合 L23 BOSS qids ×3 擴增,加「每場最多 5 題隨機」限制
   // 設計理由:擴增後 numpy/sklearn/pytorch/viz BOSS 各 12-15 題,一場全打太累贅;
@@ -512,27 +509,13 @@
       this.state.answered = true;
       const isCorrect = opt.is_correct;
 
-      // 鎖定按鈕並標記答對/答錯
-      document.querySelectorAll('#m2-options .option-btn').forEach(b => {
-        b.disabled = true;
-        const k = b.dataset.key;
-        const od = q.options.find(o => o.key === k);
-        if (od && od.is_correct) b.classList.add('correct');
-        else if (k === key && !isCorrect) b.classList.add('wrong');
-      });
+      // 2026-05-19 R3 simplify:用 PlayEngine.lockOptions
+      PlayEngine.lockOptions('#m2-options', q.options, key);
 
-      // 寫入熟練度與錯題本
-      if (q.node_id) Mastery.update(q.node_id, isCorrect);
-      if (typeof SM2 !== 'undefined' && q.id) SM2.recordAnswer(q.id, isCorrect, false);
-      Progress.addAnswer(isCorrect);
-      // 案例 10 LOW-1:答對時 mark SeenCorrect
-      if (isCorrect && q.id && typeof SeenCorrect !== 'undefined') SeenCorrect.mark(q.id);
-      if (!isCorrect) {
-        const c = q.options.find(o => o.is_correct);
-        const userOpt = q.options.find(o => o.key === key);
-        // 案例 10 補:傳 userText/correctText 讓 Review UI 顯示完整對照
-        if (c) Wrongbook.add(q.id, q.node_id, key, c.key, (userOpt && userOpt.text) || '', c.text || '');
-      }
+      // R7 (simplify-review-2026-05-19):共用層 5 步 commit 抽到 PlayEngine.commitAnswer
+      const c = q.options.find(o => o.is_correct);
+      const userOpt = q.options.find(o => o.key === key);
+      PlayEngine.commitAnswer(q, key, isCorrect, (userOpt && userOpt.text) || '', (c && c.text) || '');
 
       if (isCorrect) this.attack();
       else this.takeDamage();

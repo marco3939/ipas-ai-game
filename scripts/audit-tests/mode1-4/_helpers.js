@@ -351,7 +351,13 @@ function makeSandbox(opts = {}) {
       // 2026-05-19 新增 3 個 BOSS 戰動畫(noop in test sandbox)
       bossKnockback: () => {}, heal: () => {}, bossEnrage: () => {}
     },
-    ErrorReports: { renderButton: () => '' },
+    ErrorReports: { renderButton: () => '', _esc: (s) => (s === null || s === undefined) ? '' : String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;') },
+    // 2026-05-19 R1 simplify:escHTML 集中 helper(對齊 src/index.html)
+    escHTML: (s) => {
+      if (s === null || s === undefined) return '';
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    },
     ConfusionMatrix: undefined, // not used in mode 1-4
     URL: { createObjectURL: () => 'blob:fake', revokeObjectURL: () => {} },
     Blob: function () {},
@@ -431,13 +437,31 @@ function loadSharedLayer(sandbox, indexSrc) {
   `, sandbox);
 
   // 14) PlayEngine stub(極簡 — 只需 _stopTimer / _startTimer / show / answer)
+  // 2026-05-19 R7:Mode 1/2/5 改用 PlayEngine.commitAnswer 共用層 helper,
+  // stub 必須 mirror index.html PlayEngine.commitAnswer 5 步邏輯(opts 支援 skipMastery / wrongbookNodeId)。
   vm.runInContext(`
     var PlayEngine = {
       current: null,
       _stopTimerCalls: 0,
       _startTimerCalls: 0,
       _stopTimer() { this._stopTimerCalls++; },
-      _startTimer() { this._startTimerCalls++; }
+      _startTimer() { this._startTimerCalls++; },
+      // 2026-05-19 R3:Mode 1/2/5 改用 PlayEngine.lockOptions 鎖選項 helper
+      // stub 純 DOM 操作,sandbox 內 querySelectorAll noop 即可(audit-test 不驗 DOM 視覺)
+      lockOptions(selector, options, userKey) { /* noop in sandbox */ },
+      commitAnswer(q, userKey, isCorrect, userText, correctText, opts) {
+        opts = opts || {};
+        if (!q) return;
+        if (!opts.skipMastery && q.node_id && typeof Mastery !== 'undefined') Mastery.update(q.node_id, isCorrect);
+        if (q.id && typeof SM2 !== 'undefined') SM2.recordAnswer(q.id, isCorrect, false);
+        if (typeof Progress !== 'undefined') Progress.addAnswer(isCorrect);
+        if (isCorrect && q.id && typeof SeenCorrect !== 'undefined') SeenCorrect.mark(q.id);
+        if (!isCorrect && q.id && typeof Wrongbook !== 'undefined') {
+          var correctOpt = (q.options || []).find(function(o){ return o.is_correct; });
+          var nodeId = opts.wrongbookNodeId != null ? opts.wrongbookNodeId : q.node_id;
+          Wrongbook.add(q.id, nodeId, userKey, correctOpt ? correctOpt.key : '', userText || '', correctText || '');
+        }
+      }
     };
     window.PlayEngine = PlayEngine;
   `, sandbox);

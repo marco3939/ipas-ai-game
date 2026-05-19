@@ -158,11 +158,8 @@
 
     // 案例 10 LOW-2:HTML escape helper(stem/code/text 經 user-controlled snapshot 進來)
     // defense in depth — 題庫信任 + 強型別仍可能因匯入 fullLog 受外部資料污染
-    _esc(s) {
-      if (s === null || s === undefined) return '';
-      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-        .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-    },
+    // 2026-05-19 R1 simplify:轉呼叫 window.escHTML(API 別名保留)
+    _esc(s) { return escHTML(s); },
 
     // ===== 入口 =====
     start() {
@@ -356,6 +353,18 @@
       }
     },
 
+    // 2026-05-19 R4 simplify:estLevel → meta 映射集中查表(取代 _renderHistory 與 _renderResult 重複三元)
+    // 設計選擇:helper 只回「跨兩處共用」的 5 欄(color/colorDark/emoji/label/hint);
+    // heroBg / 其他 deeper styling 留在 caller(只 _renderResult 用)
+    _levelMeta(estLevel) {
+      const high = { color: '#4ade80', colorDark: '#166534', emoji: '🥇', label: '高分通過候選', hint: '≥80% 真考有機會通過' };
+      const mid  = { color: '#facc15', colorDark: '#854d0e', emoji: '🥈', label: '及格邊緣',    hint: '60-79% 接近及格邊緣' };
+      const low  = { color: '#f87171', colorDark: '#7f1d1d', emoji: '🥉', label: '需加強練習',   hint: '<60% 需要加強練習' };
+      if (estLevel === '高') return high;
+      if (estLevel === '中') return mid;
+      return low;
+    },
+
     _renderHistory() {
       const data = Storage.get(STORAGE_KEY, null);
       if (!data || !data.history || data.history.length === 0) return '';
@@ -376,8 +385,10 @@
         const r = h.result || {};
         const c = h.config || {};
         const pct = r.total ? Math.round(r.correct / r.total * 100) : 0;
-        const lvlColor = r.estLevel === '高' ? '#4ade80' : r.estLevel === '中' ? '#facc15' : '#f87171';
-        const lvlEmoji = r.estLevel === '高' ? '🥇' : r.estLevel === '中' ? '🥈' : '🥉';
+        // 2026-05-19 R4 simplify:用 _levelMeta 集中查表
+        const lvm = this._levelMeta(r.estLevel);
+        const lvlColor = lvm.color;
+        const lvlEmoji = lvm.emoji;
         const tu = r.timeUsed || 0;
         const tuStr = `${Math.floor(tu/60)}m ${tu%60}s`;
         const avgPerQ = r.total > 0 ? Math.round(tu / r.total) : 0;
@@ -1507,8 +1518,8 @@
       const renderedQ = this._getRendered(item) || {};
       const correctOpt = (renderedQ.options || []).find(o => o.is_correct);
       const userOpt = (renderedQ.options || []).find(o => o.key === ans.userKey);
-      // escape for innerHTML
-      const esc = (s) => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      // 2026-05-19 R1 simplify:改用 window.escHTML(原 3-char 殘缺版本升為 5-char 完整 escape)
+      const esc = escHTML;
       const correctTxt = esc((correctOpt && correctOpt.text) || '');
       const userTxt = esc((userOpt && userOpt.text) || '');
       if (ans.isCorrect) {
@@ -1762,12 +1773,14 @@
       const wrongCount = result.total - result.correct - (result.unanswered || 0);
       const isHigh = result.estLevel === '高';
       const isMid = result.estLevel === '中';
-      // 等級配色:高=綠系 / 中=琥珀系 / 低=赤紅系(對比強烈)
-      const lvlColor = isHigh ? '#4ade80' : isMid ? '#facc15' : '#f87171';
-      const lvlColorDark = isHigh ? '#166534' : isMid ? '#854d0e' : '#7f1d1d';
-      const lvlEmoji = isHigh ? '🥇' : isMid ? '🥈' : '🥉';
-      const lvlLabel = isHigh ? '高分通過候選' : isMid ? '及格邊緣' : '需加強練習';
-      const lvlHintText = isHigh ? '≥80% 真考有機會通過' : isMid ? '60-79% 接近及格邊緣' : '<60% 需要加強練習';
+      // 2026-05-19 R4 simplify:配色/emoji/標籤/提示用 _levelMeta(跟 _renderHistory 共用)
+      // heroBg 因 caller 專屬保留在這裡
+      const lvm = this._levelMeta(result.estLevel);
+      const lvlColor = lvm.color;
+      const lvlColorDark = lvm.colorDark;
+      const lvlEmoji = lvm.emoji;
+      const lvlLabel = lvm.label;
+      const lvlHintText = lvm.hint;
       // Hero 漸層:依等級切換深底色(深紫紅 / 深琥珀 / 深綠暗黑)
       const heroBg = isHigh
         ? 'radial-gradient(circle at 30% 0%, #064e3b 0%, #022c22 60%, #021711 100%)'
@@ -2076,8 +2089,9 @@
       const progPct = total > 0 ? Math.round(reviewed / total * 100) : 0;
 
       // code_block(若有)
+      // 2026-05-19 R1 simplify:改用 window.escHTML(集中 helper)
       const codeBlock = q.code_block
-        ? `<pre style="background:#0f172a;color:#e2e8f0;padding:10px;border-radius:6px;font-size:0.85rem;overflow-x:auto;margin:8px 0"><code>${q.code_block.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</code></pre>`
+        ? `<pre style="background:#0f172a;color:#e2e8f0;padding:10px;border-radius:6px;font-size:0.85rem;overflow-x:auto;margin:8px 0"><code>${escHTML(q.code_block)}</code></pre>`
         : '';
 
       const isHistoryMode = !!(this.state && this.state._historyMode);

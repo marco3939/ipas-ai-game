@@ -111,22 +111,10 @@
 
   // 案例 10 audit BUG-X1:HTML escape helper(defense-in-depth)
   // Mode 1 / Mode 2 大量 innerHTML 內插題庫內容,雖然目前題庫無 HTML 但 ProgressIO 匯入後不可信
-  function esc(s) {
-    if (s === null || s === undefined) return '';
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-  }
+  // 2026-05-19 R1 simplify:改用 window.escHTML(集中 helper,避免重複定義)
+  const esc = escHTML;
 
-  function highlightCode(code) {
-    if (!code) return '';
-    let s = code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    s = s.replace(/(#[^\n]*)/g, '<span class="com">$1</span>');
-    s = s.replace(/(["'])((?:(?!\1).)*)\1/g, '<span class="str">$1$2$1</span>');
-    // 2026-05-11 bug fix(同 index.html:highlightCodeSimple):移除 'class' 避免咬到 <span class="str"> 屬性產生 <span <span...> 巢狀破爛 HTML
-    s = s.replace(/\b(import|from|def|return|if|else|elif|for|while|in|as|with|try|except|None|True|False|lambda|pass|self|print|len|range|np|pd|sklearn|torch|nn|tf)\b/g, '<span class="kw">$1</span>');
-    s = s.replace(/\b(\d+\.?\d*)\b/g, '<span class="num">$1</span>');
-    return s;
-  }
+  // 2026-05-19 R2 simplify:刪本地 highlightCode,改用 window.highlightCodeSimple(對齊 mode2/8)
 
   // 取題:精準 boss_topics 篩選(2026-05-18 治本方案 C — 取代舊的 keyword 模糊匹配)
   // 每題在 questions-*.json 內標記 boss_topics: ['ecommerce', 'manufacturing', ...] 或 []。
@@ -417,7 +405,7 @@
       this.state.answering = false; // QA 修補 A1:新題開始解鎖(避免上一題殘留)
       const q = renderQuestion(this.state.questions[this.state.idx]);
       this.state.currentQ = q;
-      const codeBlock = q.code_block ? `<pre class="code-syntax">${highlightCode(q.code_block)}</pre>` : '';
+      const codeBlock = q.code_block ? `<pre class="code-syntax">${highlightCodeSimple(q.code_block)}</pre>` : '';
       const visualData = renderVisualData(q);
       document.getElementById('battle-question').innerHTML = `
         <div class="question-card">
@@ -454,25 +442,13 @@
       this.state.answering = true;
       const isCorrect = !!opt.is_correct;
 
-      document.querySelectorAll('#m1-options .option-btn').forEach(b => {
-        b.disabled = true;
-        const k = b.dataset.key;
-        const od = q.options.find(o => o.key === k);
-        if (od && od.is_correct) b.classList.add('correct');
-        else if (k === key && !isCorrect) b.classList.add('wrong');
-      });
+      // 2026-05-19 R3 simplify:用 PlayEngine.lockOptions(取代 6 行重複)
+      PlayEngine.lockOptions('#m1-options', q.options, key);
 
-      if (q.node_id) Mastery.update(q.node_id, isCorrect);
-      if (typeof SM2 !== 'undefined' && q.id) SM2.recordAnswer(q.id, isCorrect, false);
-      Progress.addAnswer(isCorrect);
-      // 案例 10 LOW-1:答對時 mark SeenCorrect,讓跨關卡 filterForBattle 真生效
-      if (isCorrect && q.id && typeof SeenCorrect !== 'undefined') SeenCorrect.mark(q.id);
-      if (!isCorrect) {
-        const c = q.options.find(o => o.is_correct);
-        const userOpt = q.options.find(o => o.key === key);
-        // 案例 10 補:傳 userText/correctText 讓 Review UI 顯示完整對照
-        if (c) Wrongbook.add(q.id, q.node_id, key, c.key, (userOpt && userOpt.text) || '', c.text || '');
-      }
+      // R7 (simplify-review-2026-05-19):共用層 5 步 commit 抽到 PlayEngine.commitAnswer
+      const c = q.options.find(o => o.is_correct);
+      const userOpt = q.options.find(o => o.key === key);
+      PlayEngine.commitAnswer(q, key, isCorrect, (userOpt && userOpt.text) || '', (c && c.text) || '');
 
       if (isCorrect) this.attack();
       else this.takeDamage();

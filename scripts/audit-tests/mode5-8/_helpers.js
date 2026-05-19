@@ -403,8 +403,16 @@ function buildSandbox(opts = {}) {
     },
   };
 
+  // 2026-05-19 R1 simplify:escHTML 集中 helper(對齊 src/index.html)
+  const escHTML = (s) => {
+    if (s === null || s === undefined) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  };
+
   const ErrorReports = {
     renderButton() { return ''; },
+    _esc: escHTML,
   };
 
   // PlayEngine: only the parts modes hook into
@@ -435,6 +443,22 @@ function buildSandbox(opts = {}) {
       // Tests must explicitly invoke onNext() to simulate user clicking Next.
     },
     showExplanation() {},
+    // 2026-05-19 R3:鎖選項 helper(sandbox 內 DOM noop)
+    lockOptions(selector, options, userKey) { /* noop */ },
+    // 2026-05-19 R7:Mode 1/2/5 共用層 commit helper — mirror index.html PlayEngine.commitAnswer
+    commitAnswer(q, userKey, isCorrect, userText, correctText, opts) {
+      opts = opts || {};
+      if (!q) return;
+      if (!opts.skipMastery && q.node_id && typeof Mastery !== 'undefined') Mastery.update(q.node_id, isCorrect);
+      if (q.id && typeof SM2 !== 'undefined') SM2.recordAnswer(q.id, isCorrect, false);
+      if (typeof Progress !== 'undefined') Progress.addAnswer(isCorrect);
+      if (isCorrect && q.id && typeof SeenCorrect !== 'undefined') SeenCorrect.mark(q.id);
+      if (!isCorrect && q.id && typeof Wrongbook !== 'undefined') {
+        const correctOpt = (q.options || []).find(o => o.is_correct);
+        const nodeId = opts.wrongbookNodeId != null ? opts.wrongbookNodeId : q.node_id;
+        Wrongbook.add(q.id, nodeId, userKey, correctOpt ? correctOpt.key : '', userText || '', correctText || '');
+      }
+    },
     show(question, opts2 = {}) {
       this.current = renderQuestion(question);
       // populate play-options for tests that read it
@@ -522,6 +546,7 @@ function buildSandbox(opts = {}) {
     RNG,
     Mastery, Wrongbook, Progress, SeenCorrect, SM2,
     Player, GameFX, DrillSession, ErrorReports,
+    escHTML,
     PlayEngine,
     QUESTIONS,
     generateVariation,

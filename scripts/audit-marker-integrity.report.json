@@ -1,0 +1,37 @@
+{
+  "generated_at": "2026-05-19T14:14:35.958Z",
+  "summary": {
+    "sourceFileCount": 10,
+    "helperFileCount": 5,
+    "totalMarkers": 29,
+    "missingCount": 0
+  },
+  "perHelper": [
+    {
+      "helper": "scripts/audit-tests/cross-mode/_helpers.js",
+      "markersFound": 0,
+      "missingCount": 0
+    },
+    {
+      "helper": "scripts/audit-tests/mode1-4/_helpers.js",
+      "markersFound": 14,
+      "missingCount": 0
+    },
+    {
+      "helper": "scripts/audit-tests/mode5-8/_helpers.js",
+      "markersFound": 0,
+      "missingCount": 0
+    },
+    {
+      "helper": "scripts/audit-tests/shared-layer/_helpers.js",
+      "markersFound": 0,
+      "missingCount": 0
+    },
+    {
+      "helper": "scripts/audit-tests/srs-drill-review/_helpers.js",
+      "markersFound": 15,
+      "missingCount": 0
+    }
+  ],
+  "violations": []
+}

@@ -402,6 +402,15 @@
   .option-btn.timeout-locked {
     opacity: 0.6;
   }
+
+  /* 2026-05-19 S2 simplify:考試保護按鈕視覺(取代 _setExamMode 內 inline style)
+     class 一個 toggle 就完成 styling,JS 邏輯只負責 add/remove class */
+  #global-home-btn.is-exam-active {
+    background: #7f1d1d;
+    color: #fef2f2;
+    border: 1px solid #dc2626;
+    font-weight: 700;
+  }
 </style>
 <!-- 鐵律延伸:SM-2 間隔重複(qid 鍵,Mastery 用 nodeId 鍵,兩者並存) -->
 <script src="sm2.js"></script>
@@ -807,6 +816,14 @@
 <script>
 /*=== 鐵律 #1+#2 核心引擎 ===*/
 
+// 2026-05-19 R1 simplify:HTML escape 集中 helper(取代散在 15+ 處的 5 字元 replace chain)
+// 函式宣告自動掛 window(合 CLAUDE.md §2 黃金規則 — let/const 才不能掛)
+function escHTML(s) {
+  if (s === null || s === undefined) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
 // === Storage 包裝 ===
 const Storage = {
   K_PROGRESS: 'ipas_progress_v1',
@@ -1193,11 +1210,8 @@ const ErrorReports = {
     other: '其他'
   },
   // case 8 教訓:任何使用者輸入拼到 HTML 一律 escape
-  _esc(s) {
-    if (s === null || s === undefined) return '';
-    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-  },
+  // 2026-05-19 R1:轉呼叫 window.escHTML(API 別名保留,避免 caller 改動)
+  _esc(s) { return escHTML(s); },
   load() { return Storage.get(Storage.K_ERROR_REPORTS, []); },
   save(arr) { Storage.set(Storage.K_ERROR_REPORTS, arr); },
 
@@ -1536,22 +1550,11 @@ window._examLabel = '';
 function _setExamMode(active, label) {
   window._examInProgress = !!active;
   window._examLabel = active ? (label || '考試') : '';
-  // 切換右上按鈕視覺
+  // 2026-05-19 S2 simplify:用 CSS class 切換視覺(取代 5 個 inline style 賦值)
   const btn = document.getElementById('global-home-btn');
   if (btn) {
-    if (active) {
-      btn.textContent = '⚠️ 退出考試';
-      btn.style.background = '#7f1d1d';
-      btn.style.color = '#fef2f2';
-      btn.style.border = '1px solid #dc2626';
-      btn.style.fontWeight = '700';
-    } else {
-      btn.textContent = '🏠 首頁';
-      btn.style.background = '';
-      btn.style.color = '';
-      btn.style.border = '';
-      btn.style.fontWeight = '';
-    }
+    btn.textContent = active ? '⚠️ 退出考試' : '🏠 首頁';
+    btn.classList.toggle('is-exam-active', !!active);
   }
 }
 window._setExamMode = _setExamMode;
@@ -1819,14 +1822,8 @@ const PlayEngine = {
       return;
     }
     const isCorrect = opt.is_correct;
-    // 鎖定按鈕
-    document.querySelectorAll('#play-options .option-btn').forEach(b => {
-      b.disabled = true;
-      const k = b.dataset.key;
-      const optionData = this.current.options.find(o => o.key === k);
-      if (optionData.is_correct) b.classList.add('correct');
-      else if (k === key && !isCorrect) b.classList.add('wrong');
-    });
+    // 2026-05-19 R3 simplify:用 this.lockOptions(PlayEngine 內部呼叫)
+    this.lockOptions('#play-options', this.current.options, key);
     // 更新熟練度 + 錯題本
     if (this.current.node_id) Mastery.update(this.current.node_id, isCorrect);
     if (typeof SM2 !== 'undefined' && this.current.id) SM2.recordAnswer(this.current.id, isCorrect, false);
@@ -1843,6 +1840,43 @@ const PlayEngine = {
     }
     // 顯示解釋
     this.showExplanation(opt, isCorrect);
+  },
+
+  // === R7 (simplify-review-2026-05-19):共用層 commit helper ===
+  // Mode 1/2/5 重複「Mastery.update → SM2.recordAnswer → Progress.addAnswer →
+  // SeenCorrect.mark → Wrongbook.add」5 步;抽 helper 避免案例 10 漏抄根因。
+  // opts:
+  //   - skipMastery: true → 跳過 Mastery.update(Mode 5 用 adjustMasteryScore 自管,避免重複計數)
+  //   - wrongbookNodeId: 覆寫 Wrongbook 的 nodeId(Mode 5 用 q.node_id || boss.nodeId fallback)
+  commitAnswer(q, userKey, isCorrect, userText, correctText, opts = {}) {
+    if (!q) return;
+    if (!opts.skipMastery && q.node_id && typeof Mastery !== 'undefined') Mastery.update(q.node_id, isCorrect);
+    if (q.id && typeof SM2 !== 'undefined') SM2.recordAnswer(q.id, isCorrect, false);
+    if (typeof Progress !== 'undefined') Progress.addAnswer(isCorrect);
+    if (isCorrect && q.id && typeof SeenCorrect !== 'undefined') SeenCorrect.mark(q.id);
+    if (!isCorrect && q.id && typeof Wrongbook !== 'undefined') {
+      const correctOpt = (q.options || []).find(o => o.is_correct);
+      const nodeId = opts.wrongbookNodeId != null ? opts.wrongbookNodeId : q.node_id;
+      Wrongbook.add(q.id, nodeId, userKey, correctOpt ? correctOpt.key : '', userText || '', correctText || '');
+    }
+  },
+
+  // 2026-05-19 R3 simplify:鎖選項 + 標 correct/wrong class 集中(取代 mode1/2/5 + DrillSession 內 4 處重複)
+  // 使用:PlayEngine.lockOptions('#m1-options', q.options, userKey)
+  //   - 鎖所有 .option-btn 為 disabled
+  //   - 正解 button 加 .correct class
+  //   - 玩家選的錯解 button 加 .wrong class
+  lockOptions(containerSelector, options, userKey) {
+    if (!options) return;
+    const userOpt = options.find(o => o.key === userKey);
+    const userIsCorrect = !!(userOpt && userOpt.is_correct);
+    document.querySelectorAll(containerSelector + ' .option-btn').forEach(b => {
+      b.disabled = true;
+      const k = b.dataset.key;
+      const od = options.find(o => o.key === k);
+      if (od && od.is_correct) b.classList.add('correct');
+      else if (k === userKey && !userIsCorrect) b.classList.add('wrong');
+    });
   },
 
   showExplanation(opt, isCorrect) {
@@ -2047,7 +2081,7 @@ const DrillSession = {
     };
     // 上層題核心摘要(讓使用者看到「下鑽是針對什麼概念」)
     // 案例 10 deep-audit Agent D D-2:全部 escape 防 stored XSS(若 ProgressIO 匯入污染 explanation.hook)
-    const _drillEsc = (s) => ErrorReports && ErrorReports._esc ? ErrorReports._esc(s) : String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const _drillEsc = escHTML;
     const upperHook = _drillEsc((this.originalQ && this.originalQ.explanation && this.originalQ.explanation.hook) || '');
     const upperMiscon = _drillEsc((this.originalQ && this.originalQ.misconceptions || []).slice(0, 1).join(' / '));
     const upperCode = _drillEsc((this.originalQ && this.originalQ.knowledge_code) || '');
@@ -2157,8 +2191,8 @@ const Review = {
       document.getElementById('view-review').innerHTML = '<div class="card"><div class="empty">🎉 沒有未復習的錯題,做題後再來</div><div style="text-align:center"><button class="btn btn-primary" onclick="goHome()">回首頁</button></div></div>';
       show('view-review'); return;
     }
-    // 用 ErrorReports._esc 做 HTML escape 防 XSS(stem/text 可能含 < > 等)
-    const esc = (s) => (typeof ErrorReports !== 'undefined' && ErrorReports._esc) ? ErrorReports._esc(s) : String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    // 2026-05-19 R1:用 window.escHTML 做 HTML escape 防 XSS(stem/text 可能含 < > 等)
+    const esc = escHTML;
     const html = `<div class="card"><h2>📝 錯題本(${w.length} 題待復習)</h2>
       <p style="color:var(--fg-dim);margin-bottom:12px">每題顯示你選的 vs 正解,可對照為何錯;點「進下鑽」進入訓練(鐵律 #1)</p>
       <div style="display:flex;flex-direction:column;gap:10px">${w.map(x => {
@@ -2238,78 +2272,33 @@ function renderStats() {
 }
 
 function resetAll() {
-  // 2026-05-16 M2 fix: 列出所有已知 storage key,避免「清除進度」實際只清部分 → 使用者誤以為已歸零
-  // 鍵位來源:
-  //   - Storage.K_* (index.html line 521-528):progress / mastery / wrongbook / errorReports / settings / session
-  //   - Player(index.html:1773-1793): ipas_player_v1
-  //   - SM-2(sm2.js:12): ipas_sm2_v1
-  //   - Mode 1 industries(mode1.js:155): ipas_mode1_industries_v1
-  //   - Mode 2 bosses(mode2.js:125): ipas_mode2_bosses_v2
-  //   - Mode 3 pipeline(mode3.js:10): ipas_mode3_progress_v2
-  //   - Mode 5(mode5.js:158): ipas_mode5_v3_progress
-  //   - Mode 6 codex(mode6.js:25): ipas_mode6_codex_v1
-  //   - Mode 7 theater(mode7.js:20): ipas_mode7_theater_v1
-  //   - Mode 8 dojo(mode8.js:8): ipas_mode8_dojo_v1
-  const keys = [
-    Storage.K_PROGRESS, Storage.K_MASTERY, Storage.K_WRONGBOOK,
-    Storage.K_ERROR_REPORTS, Storage.K_SETTINGS, Storage.K_SESSION,
-    Storage.K_SEEN_CORRECT, Storage.K_USER_NICKNAME,   // 案例 10 review 補:原本漏清
-    'ipas_player_v1', 'ipas_sm2_v1',
-    'ipas_mode1_industries_v1', 'ipas_mode2_bosses_v2',
-    'ipas_mode3_progress_v2', 'ipas_mode5_v3_progress',
-    'ipas_mode6_codex_v1', 'ipas_mode7_theater_v1', 'ipas_mode7_font_v1', 'ipas_mode8_dojo_v1',
-  ];
-  // 也清所有動態 sm2_* key(目前 SM-2 用單 key 但保險防未來改 per-qid)
+  // 2026-05-19 S3 simplify:用 ProgressIO.ALLOWED_KEYS_EXACT + ALLOWED_KEY_PREFIXES_DYNAMIC SSOT
+  // 原本 resetAll 內手寫 17+ key list 跟 ProgressIO 另一份 list 必須手動同步,違反鐵律 #7。
+  // 改用 ProgressIO 的單一真相 → 加新 storage key 只需改一處,reset/export 自動同步涵蓋。
+  const exactKeys = [...ProgressIO.ALLOWED_KEYS_EXACT];
+  const dynamicPrefixes = ProgressIO.ALLOWED_KEY_PREFIXES_DYNAMIC || [];
+  // 動態 prefix 掃 localStorage 收所有 match key
   try {
-    const dynamicKeys = [];
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
-      if (k && k.startsWith('ipas_sm2_')) dynamicKeys.push(k);
+      if (k && dynamicPrefixes.some(p => k.startsWith(p) && k.length > p.length)) {
+        Storage.del(k);
+      }
     }
-    for (const k of dynamicKeys) Storage.del(k);
   } catch (_) {}
-  for (const k of keys) Storage.del(k);
+  for (const k of exactKeys) Storage.del(k);
   showToast('已清除所有進度');
   setTimeout(() => location.reload(), 500);
 }
 
-// === 模式佔位符(由 sub agent 各自實作)===
-// 案 1 RPG 顧問:由 sub agent 1 實作 → modes/mode1.js
-// 案 2 程式判讀:由 sub agent 2 實作 → modes/mode2.js
-// 案 3 Pipeline:由 sub agent 3 實作 → modes/mode3.js
-// 案 4 配對戰:本檔內含基礎版(下方)
-// 案 5 弱點獵人:由 sub agent 5 實作 → modes/mode5.js
+// === Mode 1/2/3/5/6/7/8 由 src/modes/*.js 動態載入 ===
 
-// === 案 4 配對戰(reference 實作)===
-const Mode4 = {
-  start() {
-    // 抽 6 題 matching format
-    const pool = QUESTIONS.filter(q => q.format === 'matching');
-    if (pool.length < 4) {
-      showToast('配對題數不足,請先確保 questions-extra.json 已載入');
-      goHome(); return;
-    }
-    this.queue = RNG.pickN(pool, Math.min(8, pool.length));
-    this.idx = 0; this.correct = 0;
-    this.nextOne();
-  },
-  nextOne() {
-    if (this.idx >= this.queue.length) { this.finish(); return; }
-    const q = this.queue[this.idx++];
-    PlayEngine.show(q, { contextHTML: `<div class="card"><h2>⚡ 易混淆配對戰(${this.idx}/${this.queue.length})</h2></div>` });
-    PlayEngine.onNext = () => this.nextOne();
-  },
-  finish() {
-    document.getElementById('view-result').innerHTML = `<div class="card">
-      <h2>🎉 配對戰結束</h2>
-      <p>本場 ${this.queue.length} 題</p>
-      <div class="actions">
-        <button class="btn btn-primary" onclick="Mode4.start()">再來一場</button>
-        <button class="btn btn-ghost" onclick="goHome()">回首頁</button>
-      </div></div>`;
-    show('view-result');
-  }
-};
+// === 案 4 配對戰 placeholder ===
+// 2026-05-19 D1 simplify:placeholder 完整實作 28 行收成 1 行
+//   原因:mode4.js 載入時跑 `Object.keys(Mode4).forEach(delete) + Object.assign(Mode4, Mode4Impl)`,
+//   原 placeholder 的 start/nextOne/finish 全被替換 → dead code(案例 3)
+//   保留 `const Mode4 = {};` 是因 mode4.js Object.assign 需要 const 綁定目標存在
+const Mode4 = {};
 
 // 注意:Mode1/2/3/5 由 modes/*.js 動態載入後寫入 window.ModeN
 // enterMode() 動態查找 window.ModeN,避免 const 綁定 placeholder 的時序問題
@@ -2549,11 +2538,8 @@ const ProgressIO = {
   },
 
   // === 字串安全(防 XSS layer 2 / display defense)===
-  escapeHTML(s) {
-    if (s === null || s === undefined) return '';
-    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-  },
+  // 2026-05-19 R1:轉呼叫 window.escHTML(API 別名保留)
+  escapeHTML(s) { return escHTML(s); },
   // 暱稱 layer 1:白名單字元集 + 長度 + 過濾控制 / 零寬 / RTL override
   sanitizeNickname(s) {
     if (typeof s !== 'string') return '';

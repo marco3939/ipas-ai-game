@@ -284,8 +284,9 @@
         const cls = ['m4-card', c.kind];
         if (c.matched) cls.push('matched');
         if (this.state.revealed.has(c.pairId) && !c.matched) cls.push('revealed');
-        const safe = (c.text || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-        const full = c.full ? `title="${c.full.replace(/"/g,'&quot;')}"` : '';
+        // 2026-05-19 R1 simplify:改用 window.escHTML(原 3-char 殘缺版本升為 5-char 完整 escape)
+        const safe = escHTML(c.text || '');
+        const full = c.full ? `title="${escHTML(c.full)}"` : '';
         return `<div class="${cls.join(' ')}" data-id="${c.id}" data-pair="${c.pairId}" data-kind="${c.kind}" ${full}>${safe}</div>`;
       }).join('');
       this.bindDrag();
@@ -570,9 +571,8 @@
         font-size: 0.85rem; line-height: 1.5;
       `;
       // HTML escape:避免 concept 內若含特殊符號(< > & " ')注入或破壞 markup
-      const esc = (s) => String(s == null ? '?' : s)
-        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-        .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+      // 2026-05-19 R1 simplify:改用 window.escHTML(null/undefined 走 '' 而非 '?',概念名應 always 存在)
+      const esc = (s) => escHTML(s == null ? '?' : s);
       const conceptA = esc(pairA && pairA.concept);
       const conceptB = esc(pairB && pairB.concept);
       // pairId 透過 addEventListener 傳遞,避免將任何字元嵌進 inline onclick(消除 HTML 屬性 → JS 字串雙重解碼風險)

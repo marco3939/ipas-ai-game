@@ -535,15 +535,8 @@
   };
 
   // 簡易 HTML escape(避免題目內容若含特殊字元被當 HTML 解析)
-  function escapeHTML(s) {
-    if (s === null || s === undefined) return '';
-    return String(s)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
-  }
+  // 2026-05-19 R1 simplify:改用 window.escHTML(集中 helper)
+  const escapeHTML = window.escHTML;
 
   window.Mode8 = Mode8;
 })();
