@@ -388,7 +388,7 @@
       "stem": "Lambda 架構的『Speed Layer』與『Batch Layer』分別扮演何種角色?",
       "options": [
         {
-          "text": "Speed Layer 提供低延遲粗估;Batch Layer 提供高準確度的完整重算,兩者結果於 Serving Layer 整合",
+          "text": "Speed Layer 提供低延遲粗估;Batch Layer 提供高準確度完整重算,於 Serving Layer 整合",
           "is_correct": true
         },
         {
