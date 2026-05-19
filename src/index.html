@@ -756,7 +756,8 @@
       <ul style="line-height:1.9;margin-left:20px">
         <li><strong>清資料 = 重置整個角色</strong>:DevTools → Application → localStorage → 清除,所有進度 / SM-2 / 錯題本一起歸零</li>
         <li><strong>跨瀏覽器無同步</strong>:Chrome 與 Edge 各自獨立進度,刻意換瀏覽器 = 從 0 開始</li>
-        <li><strong>離開戰鬥</strong>:點 🏠 首頁會中止當前戰鬥,該局 EXP 不結算;Mode 7 模考中途離場會清掉模考狀態</li>
+        <li><strong>🛡️ 考試保護機制(2026-05-19)</strong>:全 Mode + DrillSession + SM-2 進行中,右上「🏠 首頁」會**自動切換為「⚠️ 退出考試」紅色按鈕**。點下跳 confirm 對話框,**必須明確確認才能退出**,防止誤觸丟失進度。Mode 7 結算頁後可自由退出(寬鬆設計)。</li>
+        <li><strong>離開戰鬥</strong>:中途點「⚠️ 退出考試」並確認後,該局 EXP 不結算;Mode 7 模考中途離場會清掉模考狀態。下鑽(DrillSession)中途退出也受同樣保護。</li>
         <li><strong>計時器</strong>:目前已關閉(2026-05-11 因切題時誤觸 false-timeout,escape hatch 暫停),不會被超時逼答</li>
         <li><strong>每日節奏建議</strong>:① 先清 📅 今日複習(5 分鐘)→ ② 案 5 弱點獵人(20 分鐘)→ ③ 案 7 一局模考(週末)</li>
         <li><strong>真考前一週</strong>:每天一局案 7(對標 90 分鐘)+ 錯題本回顧,不要再吃新題</li>
