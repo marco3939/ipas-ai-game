@@ -169,7 +169,9 @@ function makeSandbox(opts = {}) {
     refreshHome: () => {},
     goHome: () => { ctx.__wentHome = true; },
     show: (id) => { ctx.__shown = id; },
-    QUESTIONS: opts.QUESTIONS || [],
+    // 2026-05-19:預設 undefined(opts 未注入時),讓 sm2.js 的 _isLiveQid 走「QUESTIONS 未載入 → 不過濾」安全 fallback。
+    // 若 test 顯式傳 opts.QUESTIONS(例:test 03 XSS),則注入該值,啟動 H5 過濾。
+    QUESTIONS: opts.QUESTIONS,
     __toasts: toasts,
     __wentHome: false,
     __shown: '',

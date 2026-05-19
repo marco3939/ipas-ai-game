@@ -2418,8 +2418,8 @@ const GameFX = {
     </div>`;
     document.body.appendChild(overlay);
     const card = overlay.querySelector('.level-up-card');
-    if (window.gsap) gsap.to(card, { scale: 1, duration: 0.6, ease: 'back.out(1.7)' });
-    else card.style.transform = 'scale(1)';
+    if (window.gsap && card) gsap.to(card, { scale: 1, duration: 0.6, ease: 'back.out(1.7)' });
+    else if (card) card.style.transform = 'scale(1)';
     this.bigConfetti();
   }
 };
