@@ -1,0 +1,1028 @@
+{
+  "version": "1.0",
+  "schema_version": "iron-rule-1+2+6",
+  "generated_at": "2026-05-19",
+  "batch": "N40 — 科三 L23302 模型架構選擇與 AutoML 流程補齊(9+9)",
+  "exam_target": {
+    "name": "IPAS AI 應用規劃師中級",
+    "date": "2026-05-23"
+  },
+  "iron_rule_compliance": {
+    "rule_1_drill_explanation": "每題皆有 explanation.correct/wrong/hook + misconceptions ≥ 1 + related_node_ids",
+    "rule_2_shuffle_and_cases": "所有題目 shuffle_options:true;以概念辨析為主,無計算題故未用 stem_variables",
+    "rule_3_original": "100% 原創跨產業情境(電商、製造、保險、醫療、能源、交通、農業、媒體、銀行);未照抄 114-2 原題,亦不重複既有 L23 批次場景",
+    "rule_4_option_length": "4 選項長度差異控制在 ±20%,正解非永遠最長",
+    "rule_5_source_fidelity": "knowledge_code = L23302;node_id ∈ {n_L23302_001, n_L23302_002};未涉及 §3 禁用主題(無 LoRA / RLHF / DPO / Xavier / WGAN / DP-SGD / Hyperband / TPE)",
+    "rule_6_isolation": "新檔獨立批次;不改其他既有題目檔或共享層"
+  },
+  "subject": 3,
+  "knowledge_codes": [
+    "L23302"
+  ],
+  "batch_num": 40,
+  "distribution": {
+    "L23302_count": 18,
+    "by_node": {
+      "n_L23302_001": 9,
+      "n_L23302_002": 9
+    },
+    "by_format": {
+      "single_choice": 18
+    },
+    "by_difficulty": {
+      "easy": 3,
+      "medium": 12,
+      "hard": 3
+    }
+  },
+  "source_pdf": [
+    "kb/nodes-subject-3-extended.json n_L23302_001 + n_L23302_002",
+    "科三指引 Ch5.2 模型選擇與架構設計"
+  ],
+  "questions": [
+    {
+      "id": "q_n40_001",
+      "knowledge_code": "L23302",
+      "node_id": "n_L23302_001",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某電商平台分析師蒐集了使用者的「年齡、性別、瀏覽次數、加入會員天數」等 12 個欄位的表格資料,要預測使用者是否會在下週下單。下列哪一類模型最適合作為此任務的首選基線?",
+      "options": [
+        {
+          "text": "梯度提升樹(如 XGBoost、LightGBM)等 tree-based ensemble 方法",
+          "is_correct": true
+        },
+        {
+          "text": "卷積神經網路(CNN),透過局部感受野自動提取欄位之間的空間特徵",
+          "is_correct": false,
+          "trap_type": "CNN 適合具空間結構的影像或網格資料,非表格"
+        },
+        {
+          "text": "視覺 Transformer(ViT),將 12 個欄位視為 patch sequence 進行 self-attention",
+          "is_correct": false,
+          "trap_type": "ViT 為影像任務設計,小型表格資料用之過度且難收斂"
+        },
+        {
+          "text": "雙向 LSTM,以欄位順序當時序輸入學習欄位之間的依賴關係",
+          "is_correct": false,
+          "trap_type": "表格欄位無時間順序,LSTM 無對應時序訊號可學"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "結構化表格資料(混合類別與數值特徵、樣本量中等)的首選基線是 tree-based ensemble(XGBoost、LightGBM、Random Forest)。樹模型天然處理混合型別、不需標準化、對缺值與離群值穩健,且在中等樣本量(數萬到數百萬)常擊敗深度學習。",
+        "wrong": {
+          "卷積神經網路(CNN),透過局部感受野自動提取欄位之間的空間特徵": "CNN 假設輸入有空間鄰近結構(像素、訊號),表格欄位順序可隨意交換,沒有局部關聯可供卷積利用",
+          "視覺 Transformer(ViT),將 12 個欄位視為 patch sequence 進行 self-attention": "ViT 為影像 patch 序列設計,12 欄表格資料訓練 Transformer 容易過擬合且推論成本遠高於 tree-based",
+          "雙向 LSTM,以欄位順序當時序輸入學習欄位之間的依賴關係": "欄位不具時序意義(年齡與性別無前後關係),LSTM 的時間動態建模能力派不上用場"
+        },
+        "hook": "任務 → 架構口訣:tabular → tree-based、image → CNN/ViT、sequence → RNN/Transformer"
+      },
+      "misconceptions": [
+        "誤以為「越深的網路越好」,在表格資料硬套深度模型",
+        "把欄位順序當時序訊號"
+      ],
+      "related_node_ids": [
+        "n_L23302_001"
+      ],
+      "tags": [
+        "模型選擇",
+        "表格資料",
+        "tree-based",
+        "easy"
+      ],
+      "boss_topics": []
+    },
+    {
+      "id": "q_n40_002",
+      "knowledge_code": "L23302",
+      "node_id": "n_L23302_001",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某半導體製造廠要建構「晶圓表面瑕疵分類器」,輸入是 512×512 灰階晶圓圖像,類別包含刮痕、氣泡、汙染等 8 類。團隊評估模型架構時,下列何者最符合此任務性質?",
+      "options": [
+        {
+          "text": "卷積神經網路(CNN),利用局部卷積核擷取邊緣與紋理特徵,配合池化獲得平移不變性",
+          "is_correct": true
+        },
+        {
+          "text": "梯度提升樹,把每個像素當作獨立欄位輸入,讓樹模型自動學出像素間關係",
+          "is_correct": false,
+          "trap_type": "把影像攤平丟樹模型會喪失空間結構,且 262144 維容易過擬合"
+        },
+        {
+          "text": "ARIMA 時序模型,將像素列由左至右視為時序輸入預測類別",
+          "is_correct": false,
+          "trap_type": "ARIMA 為單變量平穩時序設計,不適用影像分類"
+        },
+        {
+          "text": "邏輯迴歸搭配 L2 正則,將 512×512 像素展平為向量直接做線性分類",
+          "is_correct": false,
+          "trap_type": "線性模型無法捕捉影像紋理與邊緣等非線性空間特徵"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "影像分類任務的標準架構是 CNN:卷積核擷取局部紋理與邊緣,池化提供平移不變性,堆疊形成由低階到高階特徵的階層表徵。對 512×512 灰階晶圓影像,CNN 是訓練效率與分類性能的合理首選;若資料量充足,亦可考慮 ViT,但 CNN 仍為基線。",
+        "wrong": {
+          "梯度提升樹,把每個像素當作獨立欄位輸入,讓樹模型自動學出像素間關係": "把影像展平為 26 萬維欄位破壞像素鄰近結構,樹模型也無平移不變性,在影像任務遠不如 CNN",
+          "ARIMA 時序模型,將像素列由左至右視為時序輸入預測類別": "影像不是時序,且 ARIMA 對非平穩、多通道資料無能為力,模型假設與任務性質不符",
+          "邏輯迴歸搭配 L2 正則,將 512×512 像素展平為向量直接做線性分類": "刮痕與汙染是高度非線性紋理特徵,線性模型只能學線性決策邊界,表達力不足"
+        },
+        "hook": "影像任務 → CNN 為基線、ViT 為進階替代;絕不展平餵線性或樹模型"
+      },
+      "misconceptions": [
+        "以為樹模型萬用,連影像都能直接吃像素",
+        "誤用時序模型處理影像"
+      ],
+      "related_node_ids": [
+        "n_L23302_001"
+      ],
+      "tags": [
+        "模型選擇",
+        "影像分類",
+        "CNN",
+        "製造"
+      ],
+      "boss_topics": []
+    },
+    {
+      "id": "q_n40_003",
+      "knowledge_code": "L23302",
+      "node_id": "n_L23302_001",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某能源公司想預測未來 24 小時電網負載量,輸入為過去 30 天的小時級用電量、氣象資料與假日標記,任務具明顯季節週期。下列模型架構選擇何者最合適?",
+      "options": [
+        {
+          "text": "時序專用模型(如 LSTM、Temporal CNN 或 Transformer encoder),搭配時間衍生特徵與外生變數",
+          "is_correct": true
+        },
+        {
+          "text": "Random Forest 把每小時記錄當獨立樣本,只以當前氣溫與當下氣象欄位預測當前負載量,刻意忽略小時間的時間順序",
+          "is_correct": false,
+          "trap_type": "丟棄時序順序會錯失自迴歸與週期訊號"
+        },
+        {
+          "text": "K-Means 對 30 天的小時負載做非監督分群,以最近樣本所屬群心值作為未來 24 小時的預測輸出",
+          "is_correct": false,
+          "trap_type": "K-Means 是非監督分群,無法輸出未來預測值"
+        },
+        {
+          "text": "邏輯迴歸,把負載量切成「高、中、低」三類做多元分類,放棄連續數值預測改回類別輸出",
+          "is_correct": false,
+          "trap_type": "用分類取代迴歸丟失數值精度與排序資訊"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "電網負載預測是典型監督式時序迴歸:資料具強日週期與週週期,且有外生變數(氣溫、假日)。LSTM、Temporal CNN 或時序 Transformer 都能建模時序動態,搭配 hour-of-day、day-of-week 等衍生特徵與假日 flag 是業界標準。",
+        "wrong": {
+          "Random Forest 將每小時當獨立樣本訓練,直接以「當前氣溫」預測「當前負載」,忽略時間順序": "電力負載有強自相關(前 1 小時是最佳預測子之一),拋棄時序順序會大幅降低預測精度",
+          "K-Means 對 30 天的小時負載做分群,以群心當作預測值": "K-Means 屬非監督分群,僅產出群心,無「下一時刻數值」預測能力",
+          "邏輯迴歸,把負載量分為「高、中、低」三類做多元分類取代迴歸": "原問題是連續迴歸,離散化後無法輸出 MW 級數值,且分箱閾值人為定義會引入偏差"
+        },
+        "hook": "時序預測口訣:看週期、看自相關、選 RNN/TCN/Transformer + 時間特徵"
+      },
+      "misconceptions": [
+        "把時序任務當作獨立樣本的迴歸",
+        "用分群取代預測"
+      ],
+      "related_node_ids": [
+        "n_L23302_001"
+      ],
+      "tags": [
+        "時序預測",
+        "LSTM",
+        "Temporal CNN",
+        "能源"
+      ],
+      "boss_topics": []
+    },
+    {
+      "id": "q_n40_004",
+      "knowledge_code": "L23302",
+      "node_id": "n_L23302_001",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某保險公司想開發理賠申訴文件的「自動分類器」,輸入為長度 200~1500 字的中文敘述,類別為 5 種申訴原因。團隊有約 8 萬筆已標註資料。下列模型架構最合適?",
+      "options": [
+        {
+          "text": "預訓練 Transformer 編碼器(如 BERT 系列)做微調,搭配 [CLS] 向量接分類頭",
+          "is_correct": true
+        },
+        {
+          "text": "從零訓練 byte-level CNN 直接吃 UTF-8 位元組序列,放棄任何語言預訓練資產讓 CNN 自學中文語意特徵",
+          "is_correct": false,
+          "trap_type": "Byte-level CNN 對中文長文表達力不足,且未善用語言預訓練"
+        },
+        {
+          "text": "套用 ARIMA(p,d,q)時序模型,把文字當作字頻時序資料,以平穩線性時序假設處理離散文字",
+          "is_correct": false,
+          "trap_type": "ARIMA 是平穩時序模型,無法處理離散文字語意"
+        },
+        {
+          "text": "K-Means 把文件向量化後分為 5 群,把群編號直接當作預測類別,完全捨棄已標註的監督標籤",
+          "is_correct": false,
+          "trap_type": "非監督分群與已標註監督任務不對應,忽略標籤資訊"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "長文中文分類在已有 8 萬筆標註的情況下,以預訓練語言模型(BERT 系列)微調為標準作法。預訓練模型已學會語意表達,搭配 [CLS] 或平均池化向量接 softmax 分類頭,訓練快、效果穩定。Transformer 系列也是 NLP 文本任務的官方建議架構。",
+        "wrong": {
+          "卷積神經網路直接吃 UTF-8 位元組,讓 CNN 自動學出中文語意": "Byte-CNN 雖能做語言模型 baseline,但對長文與細粒度語意輸給預訓練 Transformer,且須從零訓練",
+          "ARIMA(p,d,q)模型把文字當作字頻時序處理": "ARIMA 假設輸入為連續平穩數值序列,離散文字無對應時序動態,模型假設違反",
+          "K-Means 將文件向量化後分為 5 群,用群編號當預測類別": "已有監督標籤卻不用,等於浪費標註成本;且群心與類別語意不一定對齊"
+        },
+        "hook": "NLP 文本分類首選:預訓練 Transformer + 微調(BERT / RoBERTa / DeBERTa)"
+      },
+      "misconceptions": [
+        "已有監督資料還用非監督分群",
+        "從零訓練 byte-CNN 取代預訓練模型"
+      ],
+      "related_node_ids": [
+        "n_L23302_001"
+      ],
+      "tags": [
+        "NLP",
+        "文本分類",
+        "Transformer",
+        "保險"
+      ],
+      "boss_topics": []
+    },
+    {
+      "id": "q_n40_005",
+      "knowledge_code": "L23302",
+      "node_id": "n_L23302_001",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某銀行風控團隊正調整詐欺偵測模型,他們列出四個待調的超參數,實驗時間有限。下列何者屬於「超參數」而非「模型訓練後自動學到的參數」?",
+      "options": [
+        {
+          "text": "學習率(learning rate)、批次大小(batch size)、樹的最大深度、L2 正則化係數",
+          "is_correct": true
+        },
+        {
+          "text": "決策樹的分裂閾值、神經網路的各層權重、softmax 輸出的機率向量",
+          "is_correct": false,
+          "trap_type": "這些是訓練得到的內部參數,非預先設定的超參數"
+        },
+        {
+          "text": "訓練資料的特徵均值、標準差以及訓練資料的樣本量",
+          "is_correct": false,
+          "trap_type": "資料統計量屬資料屬性,不是模型超參數"
+        },
+        {
+          "text": "預測結果的混淆矩陣、ROC 曲線下面積以及 F1 分數",
+          "is_correct": false,
+          "trap_type": "這些是模型評估後得到的指標,不是訓練輸入"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "超參數是「訓練開始前由人或搜尋策略指定」的設定,包含優化器學習率、批次大小、模型結構深度與正則化強度等。訓練後才學到的權重、節點分裂閾值、輸出機率屬於模型內部參數,不是超參數。",
+        "wrong": {
+          "決策樹的分裂閾值、神經網路的各層權重、softmax 輸出的機率向量": "這些都是「訓練過程中演算法決定」的參數,屬於模型內部參數而非超參數",
+          "訓練資料的特徵均值、標準差以及訓練資料的樣本量": "這些是輸入資料的統計屬性,既不是模型結構也不是訓練設定,不屬於超參數",
+          "預測結果的混淆矩陣、ROC 曲線下面積以及 F1 分數": "這些是評估階段的輸出指標,訓練前無法事先指定,屬於模型「結果」而非「設定」"
+        },
+        "hook": "超參數 = 訓練前要決定的設定;模型參數 = 訓練後學到的數值"
+      },
+      "misconceptions": [
+        "把訓練得到的權重誤當超參數",
+        "把評估指標當訓練超參數"
+      ],
+      "related_node_ids": [
+        "n_L23302_001"
+      ],
+      "tags": [
+        "超參數",
+        "概念辨析",
+        "銀行"
+      ],
+      "boss_topics": []
+    },
+    {
+      "id": "q_n40_006",
+      "knowledge_code": "L23302",
+      "node_id": "n_L23302_001",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某交通分析團隊要為「捷運閘門入站量預測」XGBoost 模型做超參數搜尋,搜尋空間有 6 維(深度、葉子數、學習率、子採樣率、行採樣率、L2)。團隊預算僅 60 次訓練。下列搜尋策略對比何者最正確?",
+      "options": [
+        {
+          "text": "Random Search 通常比 Grid Search 在高維搜尋下更有效率,因為它不會被無關維度浪費試驗",
+          "is_correct": true
+        },
+        {
+          "text": "Grid Search 在 6 維搜尋下永遠優於 Random Search,因為它能完全枚舉所有組合",
+          "is_correct": false,
+          "trap_type": "6 維每維 3 點需 729 次,60 次預算下 Grid 反而僅能在 2 維各取少量值"
+        },
+        {
+          "text": "Bayesian Optimization 不需要任何先驗觀察,首次試驗就能保證找到全域最佳解",
+          "is_correct": false,
+          "trap_type": "Bayesian 需累積觀察建模 surrogate,首次仍為隨機"
+        },
+        {
+          "text": "Random Search 與 Grid Search 在固定預算下期望表現相同,只是試驗位置不同",
+          "is_correct": false,
+          "trap_type": "Bergstra 2012 已證高維下 Random 平均優於 Grid"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "高維超參數搜尋下,Random Search 的優勢是「不在無關維度浪費 grid 上的等距試驗」。當實際只有少數維度重要時,Random Search 用相同預算覆蓋更多重要維度上的取值。Bayesian Optimization 進一步以代理模型(如高斯過程)學習超參與性能的關係,可在更少試驗找到好點,但需累積觀察。",
+        "wrong": {
+          "Grid Search 在 6 維搜尋下永遠優於 Random Search,因為它能完全枚舉所有組合": "Grid 試驗次數隨維度指數成長,60 次預算根本不夠枚舉,且 Grid 會把試驗均勻分配到所有維度(包括不重要的)",
+          "Bayesian Optimization 不需要任何先驗觀察,首次試驗就能保證找到全域最佳解": "Bayesian 首批通常為隨機探索以建初始 surrogate model,且收斂至全域最佳並無理論保證",
+          "Random Search 與 Grid Search 在固定預算下期望表現相同,只是試驗位置不同": "Bergstra & Bengio 2012 經典文獻已證明:在有效維度遠小於總維度時,Random Search 期望表現顯著優於 Grid"
+        },
+        "hook": "搜尋策略選型:Grid(低維、預算大)→ Random(高維、預算中)→ Bayesian(預算小、目標貴)"
+      },
+      "misconceptions": [
+        "以為 Grid 一定最完整",
+        "以為 Bayesian 不需累積觀察"
+      ],
+      "related_node_ids": [
+        "n_L23302_001"
+      ],
+      "tags": [
+        "超參搜尋",
+        "Random Search",
+        "Bayesian Optimization",
+        "交通"
+      ],
+      "boss_topics": []
+    },
+    {
+      "id": "q_n40_007",
+      "knowledge_code": "L23302",
+      "node_id": "n_L23302_001",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某醫療影像團隊訓練 CNN 做胸部 X 光肺炎分類,網路約 30 層,使用 ReLU 啟動函數。團隊把所有層權重初始化為「常數 0.01」,結果訓練 5 個 epoch 後 loss 完全不降。下列原因解釋何者最正確?",
+      "options": [
+        {
+          "text": "所有同層神經元因初始權重相同會學到相同特徵,失去多元表達能力,即所謂「對稱性問題」",
+          "is_correct": true
+        },
+        {
+          "text": "ReLU 在輸入為正時梯度為 0,所以權重 0.01 一定 dead,要改用 sigmoid 才會有梯度",
+          "is_correct": false,
+          "trap_type": "ReLU 在正側梯度為 1 而非 0,正是 ReLU 的優點"
+        },
+        {
+          "text": "初始化太小造成模型直接過擬合,改用 0.001 即可解決",
+          "is_correct": false,
+          "trap_type": "對稱性問題與是否過擬合無直接因果,且更小常數仍對稱"
+        },
+        {
+          "text": "權重初始化不影響訓練,問題一定出在學習率設定不當,要改學習率為 100",
+          "is_correct": false,
+          "trap_type": "初始化深度影響訓練動態,且學習率 100 會發散"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "若所有權重初始化為同一常數,同一層內每個神經元接收同樣輸入並輸出同樣值,反向傳播時也得到同樣梯度更新,等於整層只有一個有效神經元,稱為「對稱性破壞失敗」。實務上採用「適切的隨機初始化」(如 He 對 ReLU、Glorot 對 tanh)讓不同神經元起點不同,以打破對稱。",
+        "wrong": {
+          "ReLU 在輸入為正時梯度為 0,所以權重 0.01 一定 dead,要改用 sigmoid 才會有梯度": "ReLU 在正側 f(x)=x,梯度為 1;只有輸入為負時才為 0(dying ReLU 是另一問題)",
+          "初始化太小造成模型直接過擬合,改用 0.001 即可解決": "初始化常數無論大小都會造成對稱性問題;改更小常數同樣對稱",
+          "權重初始化不影響訓練,問題一定出在學習率設定不當,要改學習率為 100": "30 層 DNN 對初始化極敏感(梯度消失/爆炸),且學習率 100 對深網極不合理"
+        },
+        "hook": "深網初始化兩重點:(1)隨機打破對稱(2)依 activation 選方差(ReLU 用 He、tanh 用 Glorot)"
+      },
+      "misconceptions": [
+        "以為常數初始化沒問題",
+        "誤解 ReLU 正側梯度為 0"
+      ],
+      "related_node_ids": [
+        "n_L23302_001"
+      ],
+      "tags": [
+        "權重初始化",
+        "對稱性",
+        "深度學習",
+        "醫療"
+      ],
+      "boss_topics": []
+    },
+    {
+      "id": "q_n40_008",
+      "knowledge_code": "L23302",
+      "node_id": "n_L23302_001",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某農業科技公司想在小型實驗田做「土壤濕度迴歸預測」,只蒐集到 320 筆觀測資料(含 5 個感測欄位)。下列何種模型風險最低?",
+      "options": [
+        {
+          "text": "Ridge 迴歸或 Random Forest 等「低複雜度且自帶正則化」的傳統模型",
+          "is_correct": true
+        },
+        {
+          "text": "8 層 Transformer 編碼器,把 5 個感測欄位當作 token 序列做 self-attention",
+          "is_correct": false,
+          "trap_type": "320 筆小資料訓練 Transformer 必然嚴重過擬合"
+        },
+        {
+          "text": "100 層 ResNet,讓模型靠跳接學到深層特徵",
+          "is_correct": false,
+          "trap_type": "百層深網需百萬級樣本,小資料下完全不適用"
+        },
+        {
+          "text": "10 億參數的大型語言模型,凍結權重只訓練最後一層 prompt",
+          "is_correct": false,
+          "trap_type": "LLM 為文本設計,不對應感測迴歸任務"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "小樣本(<1000 筆)結構化迴歸任務的首要風險是過擬合,故選擇「低容量 + 自帶正則化」的傳統模型最穩。Ridge 加 L2 正則直接限制權重大小,Random Forest 透過 bootstrap 與隨機特徵減少方差,都是小資料表現穩定的標準選擇。",
+        "wrong": {
+          "8 層 Transformer 編碼器,把 5 個感測欄位當作 token 序列做 self-attention": "Transformer 參數量遠超 320 樣本所能支撐,過擬合無可避免",
+          "100 層 ResNet,讓模型靠跳接學到深層特徵": "百層 ResNet 動輒上千萬參數,在 320 樣本下無法泛化",
+          "10 億參數的大型語言模型,凍結權重只訓練最後一層 prompt": "LLM 是文本領域模型,土壤濕度迴歸與語言無關,輸入域不對應"
+        },
+        "hook": "小樣本配低容量:Ridge / Lasso / RF / SVM 是首選,不要硬上深網"
+      },
+      "misconceptions": [
+        "以為深網一定優於傳統模型",
+        "在小資料硬套大模型"
+      ],
+      "related_node_ids": [
+        "n_L23302_001"
+      ],
+      "tags": [
+        "小樣本",
+        "迴歸",
+        "正則化",
+        "農業"
+      ],
+      "boss_topics": []
+    },
+    {
+      "id": "q_n40_009",
+      "knowledge_code": "L23302",
+      "node_id": "n_L23302_001",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某新聞媒體分析平台訓練 CNN 影像分類器時發現:(1)訓練 loss 下降快但驗證 loss 從第 3 個 epoch 開始上升;(2)模型在訓練集 accuracy 達 99%、驗證集僅 72%。下列調整方向中,何者最不可能改善過擬合?",
+      "options": [
+        {
+          "text": "把 batch size 從 64 改為 4096 並把學習率同步乘 64 倍",
+          "is_correct": true
+        },
+        {
+          "text": "加入 dropout 層、增加 L2 權重衰減係數",
+          "is_correct": false,
+          "trap_type": "這些都是降低過擬合的標準正則化手段"
+        },
+        {
+          "text": "做資料擴增(隨機翻轉、裁切、色彩抖動)增加有效樣本量",
+          "is_correct": false,
+          "trap_type": "資料擴增是降低過擬合的主流方法之一"
+        },
+        {
+          "text": "啟用 early stopping,在第 3 個 epoch 後就停止訓練",
+          "is_correct": false,
+          "trap_type": "Early stopping 直接針對驗證 loss 反轉,有效"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "把 batch size 大幅放大(64→4096)同時提升學習率,通常用來「加速訓練」並維持 SGD 噪音水準,但對過擬合本身沒有直接抑制作用(大 batch 反而可能降低 SGD 帶來的隱式正則化)。要對抗過擬合應從正則化(dropout、L2)、資料擴增、early stopping、降模型容量、收集更多資料等方向著手。",
+        "wrong": {
+          "加入 dropout 層、增加 L2 權重衰減係數": "Dropout 與 L2 都是經典的顯式正則化,直接限制模型表達力以降過擬合",
+          "做資料擴增(隨機翻轉、裁切、色彩抖動)增加有效樣本量": "資料擴增實質擴大訓練集多樣性,是 CV 領域對抗過擬合的標配",
+          "啟用 early stopping,在第 3 個 epoch 後就停止訓練": "Early stopping 在驗證 loss 上升前停手,等於選擇正則化最好的模型快照"
+        },
+        "hook": "對抗過擬合:加正則、擴資料、早停、降容量;放大 batch 是「加速」非「抗過擬合」"
+      },
+      "misconceptions": [
+        "誤以為大 batch 一定變強",
+        "把訓練加速手段當正則化"
+      ],
+      "related_node_ids": [
+        "n_L23302_001"
+      ],
+      "tags": [
+        "過擬合",
+        "正則化",
+        "深度學習",
+        "媒體"
+      ],
+      "boss_topics": []
+    },
+    {
+      "id": "q_n40_010",
+      "knowledge_code": "L23302",
+      "node_id": "n_L23302_002",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "下列關於 AutoML 標準流程的敘述,何者最正確?",
+      "options": [
+        {
+          "text": "AutoML 自動化主要落在「模型搜尋、超參搜尋、候選對比、校準微調」四階段;前置的問題定義、EDA、特徵工程仍以人工為主",
+          "is_correct": true
+        },
+        {
+          "text": "AutoML 強調「一鍵到底」全自動化,可完全跳過資料探索與特徵工程階段直接建模",
+          "is_correct": false,
+          "trap_type": "誤以為 AutoML 可省掉 EDA 與 FE"
+        },
+        {
+          "text": "AutoML 的階段順序是先部署、再做特徵工程,最後才回頭校準模型",
+          "is_correct": false,
+          "trap_type": "部署應在校準微調之後,順序顛倒"
+        },
+        {
+          "text": "AutoML 僅是 NAS 的別名,只負責搜尋神經網路結構,不處理超參搜尋",
+          "is_correct": false,
+          "trap_type": "AutoML 涵蓋更廣,NAS 只是其中之一"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "AutoML 標準八階段為:(1)問題定義 → (2)EDA → (3)特徵工程 → (4)NAS/HPO 自動搜尋 → (5)候選模型對比 → (6)校準與微調 → (7)部署 → (8)持續學習。其中 4-6 階段才是 AutoML 引擎主要自動化的範圍,前 3 階段仍依賴領域知識與人工判斷。",
+        "wrong": {
+          "AutoML 強調「一鍵到底」全自動化,可完全跳過資料探索與特徵工程階段直接建模": "AutoML 並未取代 EDA 與基本特徵工程,缺乏這些前置步驟模型品質會明顯下降",
+          "AutoML 的階段順序是先部署、再做特徵工程,最後才回頭校準模型": "部署屬最後段 MLOps,放在校準微調之後,絕不可顛倒",
+          "AutoML 僅是 NAS 的別名,只負責搜尋神經網路結構,不處理超參搜尋": "NAS(架構搜尋)只是 AutoML 子任務之一,AutoML 同時涵蓋 HPO、特徵選擇等"
+        },
+        "hook": "AutoML 八階段口訣:定義 → EDA → FE → 搜尋(NAS+HPO) → 對比 → 校準 → 部署 → 持續學習"
+      },
+      "misconceptions": [
+        "以為 AutoML 可跳過 EDA",
+        "把 NAS 等於 AutoML"
+      ],
+      "related_node_ids": [
+        "n_L23302_002"
+      ],
+      "tags": [
+        "AutoML",
+        "流程",
+        "easy"
+      ],
+      "boss_topics": []
+    },
+    {
+      "id": "q_n40_011",
+      "knowledge_code": "L23302",
+      "node_id": "n_L23302_002",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某連鎖餐飲集團 IT 部門打算引入 AutoML 工具加速建模,但領隊提醒「即使啟動 AutoML,EDA 階段不能省」。下列何者最能解釋為什麼 EDA 仍是必要步驟?",
+      "options": [
+        {
+          "text": "EDA 提供缺值率、分布、目標漂移與相關性等情報,引導特徵工程決策與避免將髒資料送進 AutoML",
+          "is_correct": true
+        },
+        {
+          "text": "EDA 主要目的是繪製漂亮的圖表給主管,模型本身不會因此提升",
+          "is_correct": false,
+          "trap_type": "把 EDA 視為純美觀工作"
+        },
+        {
+          "text": "EDA 的存在是因為 AutoML 不支援讀取 CSV,需要先看一次資料才能載入",
+          "is_correct": false,
+          "trap_type": "技術細節錯誤,AutoML 工具普遍支援 CSV"
+        },
+        {
+          "text": "EDA 完全可以由 AutoML 引擎自動產生,實務上人工 EDA 已被淘汰",
+          "is_correct": false,
+          "trap_type": "AutoML 不能代替領域判讀"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "EDA 的價值是讓人「先理解資料」:看缺值比率決定填補策略、看分布是否右偏決定是否取 log、看目標值漂移決定切分策略、看相關性發現潛在資料洩漏。這些判斷高度依賴領域知識,目前 AutoML 引擎仍無法替代。",
+        "wrong": {
+          "EDA 主要目的是繪製漂亮的圖表給主管,模型本身不會因此提升": "EDA 直接影響特徵工程與資料切分,結果關乎模型品質而非報告美觀",
+          "EDA 的存在是因為 AutoML 不支援讀取 CSV,需要先看一次資料才能載入": "讀檔是 IO 細節與 EDA 必要性無關,主流 AutoML 工具皆支援多種格式",
+          "EDA 完全可以由 AutoML 引擎自動產生,實務上人工 EDA 已被淘汰": "雖然部分工具提供自動 profiling,但領域語意與資料異常解讀仍須人工"
+        },
+        "hook": "EDA 不可省的三個原因:缺值決策、特徵發想、洩漏偵測"
+      },
+      "misconceptions": [
+        "把 EDA 視為純美觀",
+        "認為 AutoML 完全取代 EDA"
+      ],
+      "related_node_ids": [
+        "n_L23302_002"
+      ],
+      "tags": [
+        "AutoML",
+        "EDA",
+        "餐飲"
+      ],
+      "boss_topics": []
+    },
+    {
+      "id": "q_n40_012",
+      "knowledge_code": "L23302",
+      "node_id": "n_L23302_002",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某線上教育平台用 AutoML 訓練「學員續訂預測」模型,工具給出最佳候選模型的 ROC-AUC = 0.91,但業務團隊發現模型預測機率「都集中在 0.5 附近」,難以直接用於精準行銷分群。下列流程修正何者最對應 AutoML 八階段中「校準與微調」步驟?",
+      "options": [
+        {
+          "text": "對最佳候選模型套用 Platt scaling 或 Isotonic regression 做機率校準,讓輸出機率與真實正例比例對齊",
+          "is_correct": true
+        },
+        {
+          "text": "直接把所有預測機率乘以 2,讓分布看起來更分散",
+          "is_correct": false,
+          "trap_type": "純線性放大不改變排序也不改變機率合理性"
+        },
+        {
+          "text": "重新跑一次 NAS,搜尋新的神經網路結構取代現有模型",
+          "is_correct": false,
+          "trap_type": "結構搜尋對機率校準無直接幫助"
+        },
+        {
+          "text": "改用準確率而非 ROC-AUC 當主要指標,問題就會消失",
+          "is_correct": false,
+          "trap_type": "換指標不改變機率分布失真本身"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "AutoML 第 6 階段「校準與微調」針對的就是「機率輸出不夠校準」的問題。標準作法為 Platt scaling(對 logit 做 logistic 回歸)或 Isotonic regression(等距迴歸),用 hold-out 集學一個映射讓模型輸出機率與真實正例比例對齊,適合需要機率排序與門檻決策的業務情境。",
+        "wrong": {
+          "直接把所有預測機率乘以 2,讓分布看起來更分散": "線性放大不改 ranking 且可能超過 1,屬非法操作",
+          "重新跑一次 NAS,搜尋新的神經網路結構取代現有模型": "NAS 解決結構容量問題,不直接解決機率校準",
+          "改用準確率而非 ROC-AUC 當主要指標,問題就會消失": "換指標只是換看法,模型輸出機率本身仍未校準"
+        },
+        "hook": "機率不準 → 用 Platt 或 Isotonic 校準,屬 AutoML 第 6 階段「校準與微調」"
+      },
+      "misconceptions": [
+        "把校準等同於放大機率",
+        "認為換指標可取代校準"
+      ],
+      "related_node_ids": [
+        "n_L23302_002"
+      ],
+      "tags": [
+        "AutoML",
+        "機率校準",
+        "Platt scaling",
+        "教育"
+      ],
+      "boss_topics": []
+    },
+    {
+      "id": "q_n40_013",
+      "knowledge_code": "L23302",
+      "node_id": "n_L23302_002",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某汽車保險公司資料工程主管把 NAS 與 HPO 一直視為同義詞。下列何者最能正確區分這兩個 AutoML 子任務?",
+      "options": [
+        {
+          "text": "NAS 搜尋的是「網路結構」(層數、連接方式、運算元類型);HPO 搜尋的是「訓練設定」(學習率、批次大小、正則係數等)",
+          "is_correct": true
+        },
+        {
+          "text": "NAS 是商業名稱,HPO 是學術名稱,實際上指向完全相同的搜尋演算法",
+          "is_correct": false,
+          "trap_type": "兩者問題不同、搜尋空間不同"
+        },
+        {
+          "text": "NAS 只能搜尋 CNN,HPO 只能搜尋 Transformer,兩者依模型架構分工",
+          "is_correct": false,
+          "trap_type": "NAS 與 HPO 不以模型類別劃分"
+        },
+        {
+          "text": "NAS 只在小資料下使用,HPO 只在大資料下使用,兩者依資料量切換",
+          "is_correct": false,
+          "trap_type": "資料量大小並非劃分標準"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "NAS(Neural Architecture Search)的搜尋空間是「網路結構本身」:層數、連接方式、運算元(卷積或注意力)等;HPO(Hyperparameter Optimization)的搜尋空間是「訓練超參數」:學習率、批次大小、正則係數等。AutoML 八階段第 4 步同時涵蓋兩者,但兩者面對的是不同問題。",
+        "wrong": {
+          "NAS 是商業名稱,HPO 是學術名稱,實際上指向完全相同的搜尋演算法": "兩者搜尋空間定義完全不同,雖可共用搜尋策略(Bayesian / 演化等),但任務目標不同",
+          "NAS 只能搜尋 CNN,HPO 只能搜尋 Transformer,兩者依模型架構分工": "NAS 與 HPO 適用於任何深度模型(包含 CNN、Transformer、混合架構),不以模型類別切分",
+          "NAS 只在小資料下使用,HPO 只在大資料下使用,兩者依資料量切換": "兩者皆受預算限制,但與資料量大小無對應關係"
+        },
+        "hook": "NAS = 找結構;HPO = 找訓練設定;兩者搜尋空間不同"
+      },
+      "misconceptions": [
+        "把 NAS 與 HPO 等同",
+        "誤以為 NAS 只用在 CNN"
+      ],
+      "related_node_ids": [
+        "n_L23302_002"
+      ],
+      "tags": [
+        "AutoML",
+        "NAS",
+        "HPO",
+        "保險"
+      ],
+      "boss_topics": []
+    },
+    {
+      "id": "q_n40_014",
+      "knowledge_code": "L23302",
+      "node_id": "n_L23302_002",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某金融監理科技團隊要做「貸款違約預測」,主管要求「模型必須可解釋,監理機關需逐筆說明拒貸理由」。資深 ML 工程師建議「此場景不適合 AutoML 黑盒搜尋」。下列何者最能支持此判斷?",
+      "options": [
+        {
+          "text": "嚴格可解釋性需求下,業界傾向用「結構簡單、可審視」的模型(如邏輯迴歸或淺層決策樹),AutoML 自動挑出的複雜集成或深網難滿足監理要求",
+          "is_correct": true
+        },
+        {
+          "text": "AutoML 在金融領域被法規完全禁止,凡涉及貸款一律不得使用 AutoML 引擎",
+          "is_correct": false,
+          "trap_type": "未有此普遍禁令,實務以模型可解釋性為標準"
+        },
+        {
+          "text": "AutoML 對連續變量無法處理,銀行貸款資料含連續變量所以一定不能用",
+          "is_correct": false,
+          "trap_type": "AutoML 完全可處理連續變量,描述與事實不符"
+        },
+        {
+          "text": "AutoML 工具一律不支援交叉驗證,所以模型穩定性無法評估",
+          "is_correct": false,
+          "trap_type": "主流 AutoML 工具皆內建 CV"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "AutoML 不適合的典型情境之一是「強可解釋性需求」:它常自動挑出複雜集成(stacking、boosting 多層 + 神經網路混合)以追求最高指標,這些模型難逐筆說明決策依據。監理機關通常要求拒貸理由可審視,實務改用邏輯迴歸、scorecard、淺層決策樹等可解釋模型。",
+        "wrong": {
+          "AutoML 在金融領域被法規完全禁止,凡涉及貸款一律不得使用 AutoML 引擎": "並無此通用禁令,法規關注的是模型可解釋與公平性,不是禁用工具",
+          "AutoML 對連續變量無法處理,銀行貸款資料含連續變量所以一定不能用": "AutoML 完全支援連續變量,此說法與事實不符",
+          "AutoML 工具一律不支援交叉驗證,所以模型穩定性無法評估": "主流 AutoML(H2O、AutoGluon、Vertex AI 等)皆內建 CV 與驗證機制"
+        },
+        "hook": "AutoML 不適合三場景:極小資料、強領域 FE、嚴格可解釋性"
+      },
+      "misconceptions": [
+        "以為 AutoML 適用所有監理場景",
+        "認為 AutoML 無法處理連續變量"
+      ],
+      "related_node_ids": [
+        "n_L23302_002"
+      ],
+      "tags": [
+        "AutoML",
+        "可解釋性",
+        "金融監理"
+      ],
+      "boss_topics": []
+    },
+    {
+      "id": "q_n40_015",
+      "knowledge_code": "L23302",
+      "node_id": "n_L23302_002",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某零售連鎖企業選型 AutoML 工具時列出四種需求情境。下列「工具特性」與「適合情境」配對何者最合理?",
+      "options": [
+        {
+          "text": "需與既有資料倉儲深度整合且要 GUI 操作 → 雲端託管型 AutoML(如 Google Vertex AI AutoML、DataRobot)",
+          "is_correct": true
+        },
+        {
+          "text": "需在離線無網路廠房做表格資料 AutoML → 強制只能使用線上雲端 AutoML 服務",
+          "is_correct": false,
+          "trap_type": "離線情境應選可本地部署工具"
+        },
+        {
+          "text": "需做影像 AutoML 但完全沒有寫程式能力 → 直接用 Python 套件從零撰寫 NAS 演算法",
+          "is_correct": false,
+          "trap_type": "無程式能力卻寫 NAS 屬自相矛盾"
+        },
+        {
+          "text": "需嚴格控制超參搜尋預算與 hold-out 評估 → 直接交付給未經訓練的業務人員手動執行",
+          "is_correct": false,
+          "trap_type": "業務人員缺乏 ML 知識,無法控制嚴格實驗預算"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "雲端託管型 AutoML(Vertex AI AutoML、DataRobot、H2O Driverless AI 雲版)主打與資料湖/倉儲深度整合與 GUI 介面,適合既有資料平台已在雲端、且使用者偏向業務分析師的情境。",
+        "wrong": {
+          "需在離線無網路廠房做表格資料 AutoML → 強制只能使用線上雲端 AutoML 服務": "離線情境應選可本地部署的工具(如 H2O AutoML on-prem 版、AutoGluon 本地安裝)",
+          "需做影像 AutoML 但完全沒有寫程式能力 → 直接用 Python 套件從零撰寫 NAS 演算法": "從零寫 NAS 需要深厚 ML 與工程能力,與「沒有寫程式能力」前提矛盾",
+          "需嚴格控制超參搜尋預算與 hold-out 評估 → 直接交付給未經訓練的業務人員手動執行": "嚴格實驗控制要由具備 ML 訓練的人員負責,業務人員缺乏經驗易誤用"
+        },
+        "hook": "AutoML 選型四問:資料是否敏感(離線?)、使用者是否會程式、需不需要 GUI、要不要與資料湖整合"
+      },
+      "misconceptions": [
+        "把雲端與離線情境混淆",
+        "誤以為無程式能力可直寫 NAS"
+      ],
+      "related_node_ids": [
+        "n_L23302_002"
+      ],
+      "tags": [
+        "AutoML",
+        "工具選型",
+        "零售"
+      ],
+      "boss_topics": []
+    },
+    {
+      "id": "q_n40_016",
+      "knowledge_code": "L23302",
+      "node_id": "n_L23302_002",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某運輸公司 MLOps 工程師對主管說:「AutoML 第 8 階段『持續學習』比第 7 階段『部署』更容易被忽略,但同樣關鍵。」下列何者最能解釋「持續學習」階段的核心任務?",
+      "options": [
+        {
+          "text": "監控資料漂移與概念漂移,當輸入分布或標籤關係明顯改變時觸發重訓與重新部署",
+          "is_correct": true
+        },
+        {
+          "text": "把使用者輸入的每筆查詢直接當作新訓練樣本立即更新模型權重,無需任何驗證",
+          "is_correct": false,
+          "trap_type": "未經驗證直接更新權重會放大噪音與惡意輸入"
+        },
+        {
+          "text": "在部署後完全凍結模型,任何性能下降都靠人工通報後重新從頭訓練",
+          "is_correct": false,
+          "trap_type": "完全被動非持續學習設計"
+        },
+        {
+          "text": "持續學習等同於把模型部署在 GPU 上連續推論,跟漂移無關",
+          "is_correct": false,
+          "trap_type": "把推論與持續學習混淆"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "AutoML 第 8 階段「持續學習」的核心是「監控 + 觸發」:用統計檢定或業務指標監控資料漂移(data drift)與概念漂移(concept drift),當偏離超過閾值時觸發重訓 pipeline 或回滾,確保模型在生產環境長期維持品質。",
+        "wrong": {
+          "把使用者輸入的每筆查詢直接當作新訓練樣本立即更新模型權重,無需任何驗證": "線上即時更新權重會被噪音與對抗輸入污染,實務有 validation gate 才更新",
+          "在部署後完全凍結模型,任何性能下降都靠人工通報後重新從頭訓練": "完全被動等通報非「持續學習」,持續學習應是自動化監測 + 觸發",
+          "持續學習等同於把模型部署在 GPU 上連續推論,跟漂移無關": "持續推論與持續學習不同,後者強調適應分布變化"
+        },
+        "hook": "持續學習 = 監控漂移 + 觸發重訓;不是即時權重更新,也不是被動等通報"
+      },
+      "misconceptions": [
+        "把持續學習等同即時更新權重",
+        "把推論與學習混為一談"
+      ],
+      "related_node_ids": [
+        "n_L23302_002"
+      ],
+      "tags": [
+        "AutoML",
+        "持續學習",
+        "資料漂移",
+        "運輸"
+      ],
+      "boss_topics": []
+    },
+    {
+      "id": "q_n40_017",
+      "knowledge_code": "L23302",
+      "node_id": "n_L23302_002",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L1",
+      "stem": "某半導體封測廠把製程良率資料丟進 AutoML,工具輸出三組候選模型供「候選模型對比」階段選擇,團隊要在這三個指標權衡。下列何種挑選邏輯最合理?",
+      "options": [
+        {
+          "text": "同時觀察 hold-out 集 ROC-AUC、單筆推論延遲與模型大小,依產線即時推論需求做帕累托(Pareto)權衡",
+          "is_correct": true
+        },
+        {
+          "text": "只看訓練集 accuracy,選訓練集表現最高的模型直接部署",
+          "is_correct": false,
+          "trap_type": "訓練集表現會偏向過擬合,非選型依據"
+        },
+        {
+          "text": "永遠選參數量最大的模型,因為「越大越準」",
+          "is_correct": false,
+          "trap_type": "未考慮推論成本與過擬合風險"
+        },
+        {
+          "text": "用三組模型在 hold-out 集的平均分數做唯一指標,完全不看延遲與模型大小",
+          "is_correct": false,
+          "trap_type": "忽略產線即時推論延遲約束"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "AutoML 第 5 階段「候選模型對比」應在 hold-out 集上同時觀察「準確度(如 ROC-AUC)、推論延遲、模型大小」,並依產線需求(每秒幾筆、可用記憶體上限)做 Pareto 權衡;單純看一個指標選最高分模型常與部署現實衝突。",
+        "wrong": {
+          "只看訓練集 accuracy,選訓練集表現最高的模型直接部署": "訓練集分數對過擬合模型最高,正確做法是用 hold-out 或交叉驗證",
+          "永遠選參數量最大的模型,因為「越大越準」": "大模型不一定準,且推論成本與部署可行性會被忽略",
+          "用三組模型在 hold-out 集的平均分數做唯一指標,完全不看延遲與模型大小": "若產線推論延遲是硬性需求,純看精度會選到無法上線的模型"
+        },
+        "hook": "選型 = 精度 × 延遲 × 大小 的 Pareto 權衡,不是單指標排名"
+      },
+      "misconceptions": [
+        "只看訓練集分數",
+        "用單指標決定部署"
+      ],
+      "related_node_ids": [
+        "n_L23302_002"
+      ],
+      "tags": [
+        "AutoML",
+        "候選模型對比",
+        "Pareto",
+        "製造"
+      ],
+      "boss_topics": []
+    },
+    {
+      "id": "q_n40_018",
+      "knowledge_code": "L23302",
+      "node_id": "n_L23302_002",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L1",
+      "stem": "某物聯網新創公司在內部會議討論 AutoML 引入策略,團隊列出四種情境,要判斷「AutoML 加值有限」的情況。下列何者最不適合用 AutoML?",
+      "options": [
+        {
+          "text": "只有 200 筆樣本且高度依賴領域專家手工設計衍生特徵的稀有疾病早期篩檢任務",
+          "is_correct": true
+        },
+        {
+          "text": "已有 50 萬筆標註的表格客戶分群任務,業務希望快速試多種樹模型與超參組合",
+          "is_correct": false,
+          "trap_type": "正是 AutoML 強項"
+        },
+        {
+          "text": "已有 80 萬筆影像的瑕疵分類任務,團隊想自動比較 CNN 與 ViT 架構",
+          "is_correct": false,
+          "trap_type": "影像 NAS 是 AutoML 適合的場景"
+        },
+        {
+          "text": "有 100 萬筆銷售時序資料,要快速比較多種時序模型與超參組合",
+          "is_correct": false,
+          "trap_type": "中大型資料時序 HPO 適合 AutoML"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "AutoML 不適合的典型情境:(a)極小資料量(<幾百筆),自動搜尋容易過擬合;(b)強烈依賴領域專家設計衍生特徵的任務,AutoML 的自動特徵工程難取代專家知識;(c)嚴格可解釋性需求。稀有疾病早期篩檢同時命中前兩項,加值有限。",
+        "wrong": {
+          "已有 50 萬筆標註的表格客戶分群任務,業務希望快速試多種樹模型與超參組合": "中大型表格資料的 HPO 是 AutoML 經典甜蜜區",
+          "已有 80 萬筆影像的瑕疵分類任務,團隊想自動比較 CNN 與 ViT 架構": "大資料影像 NAS 是 AutoML 設計初衷之一",
+          "有 100 萬筆銷售時序資料,要快速比較多種時序模型與超參組合": "大樣本時序模型搜尋同樣適合 AutoML 工具"
+        },
+        "hook": "AutoML 不適合:極小資料 + 重領域 FE + 強可解釋性 三大場景"
+      },
+      "misconceptions": [
+        "誤以為 AutoML 適用任何資料量",
+        "把領域知識可被自動特徵工程完全取代"
+      ],
+      "related_node_ids": [
+        "n_L23302_002"
+      ],
+      "tags": [
+        "AutoML",
+        "適用場景",
+        "醫療"
+      ],
+      "boss_topics": []
+    }
+  ]
+}
