@@ -3,7 +3,10 @@
   "schema_version": "iron-rule-1+2+6",
   "generated_at": "2026-05-18",
   "batch": "N26 — 科三 L23202 古典 ML:Naive Bayes + GMM + Polynomial Regression 合併批次",
-  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "exam_target": {
+    "name": "IPAS AI 應用規劃師中級",
+    "date": "2026-05-23"
+  },
   "iron_rule_compliance": {
     "rule_1_drill_explanation": "每題皆有 explanation.correct/wrong/hook + misconceptions ≥ 1 + related_node_ids",
     "rule_2_shuffle_and_cases": "shuffle_options:true;每題 stem_variables 三 case(case_a/b/c)換情境/領域/數字",
@@ -13,14 +16,27 @@
     "rule_6_isolation": "本檔合併 NB + GMM + Polynomial 三節點內容;不改其他既有題目檔或共享層"
   },
   "subject": 3,
-  "knowledge_codes": ["L23202"],
+  "knowledge_codes": [
+    "L23202"
+  ],
   "distribution": {
     "L23202_count": 12,
-    "by_node": {"n_L23202_014": 4, "n_L23202_015": 4, "n_L23202_018": 4},
-    "by_format": {"single_choice": 12},
-    "by_difficulty": {"medium": 8, "hard": 4}
+    "by_node": {
+      "n_L23202_014": 4,
+      "n_L23202_015": 4,
+      "n_L23202_018": 4
+    },
+    "by_format": {
+      "single_choice": 12
+    },
+    "by_difficulty": {
+      "medium": 8,
+      "hard": 4
+    }
   },
-  "source_pdf": ["機器學習模型圖卡(全).pdf — page 16 Naive Bayes、page 29 GMM、page 6 Polynomial Regression"],
+  "source_pdf": [
+    "機器學習模型圖卡(全).pdf — page 16 Naive Bayes、page 29 GMM、page 6 Polynomial Regression"
+  ],
   "questions": [
     {
       "id": "q_n26_001",
@@ -32,29 +48,67 @@
       "source_level": "L2",
       "stem": "{scenario}的工程師用 Naive Bayes 分類器處理 {feature_type} 特徵,主管詢問「Naive Bayes 的 naive 一詞究竟在指什麼?」下列描述何者最為精確?",
       "stem_variables": {
-        "case_a": {"scenario": "金融科技公司的反詐騙團隊", "feature_type": "交易摘要文字"},
-        "case_b": {"scenario": "媒體串流平台的內容審核組", "feature_type": "使用者評論詞彙"},
-        "case_c": {"scenario": "醫療資訊中心的病歷分類", "feature_type": "病歷描述關鍵字"}
+        "case_a": {
+          "scenario": "金融科技公司的反詐騙團隊",
+          "feature_type": "交易摘要文字"
+        },
+        "case_b": {
+          "scenario": "媒體串流平台的內容審核組",
+          "feature_type": "使用者評論詞彙"
+        },
+        "case_c": {
+          "scenario": "醫療資訊中心的病歷分類",
+          "feature_type": "病歷描述關鍵字"
+        }
       },
       "options": [
-        {"key": "A", "text": "naive 指『給定類別下,所有特徵條件獨立』之強假設,非演算法陽春之意", "is_correct": true, "trap_type": "正解:naive = 屬性獨立假設"},
-        {"key": "B", "text": "naive 指演算法本身相對簡陋落後;故 NB 僅可用於課堂示範而不能投入商業應用", "is_correct": false, "trap_type": "誤判 naive = 演算法陽春"},
-        {"key": "C", "text": "naive 指需大量訓練資料才能正常運作;若樣本不足 NB 將無法收斂並給可靠後驗", "is_correct": false, "trap_type": "誤判 naive = 樣本要求高"},
-        {"key": "D", "text": "naive 指預測精度天生較低,屬實驗性質演算法;真實場景應一律以決策樹替代", "is_correct": false, "trap_type": "誤判 naive = 精度低"}
+        {
+          "key": "A",
+          "text": "naive 指『給定類別下,所有特徵條件獨立』之強假設,非演算法陽春之意",
+          "is_correct": true,
+          "trap_type": "正解:naive = 屬性獨立假設"
+        },
+        {
+          "key": "B",
+          "text": "naive 指演算法本身相對簡陋落後;故 NB 僅可用於課堂示範而不能投入商業應用",
+          "is_correct": false,
+          "trap_type": "誤判 naive = 演算法陽春"
+        },
+        {
+          "key": "C",
+          "text": "naive 指需大量訓練資料才能正常運作;若樣本不足 NB 將無法收斂並給可靠後驗",
+          "is_correct": false,
+          "trap_type": "誤判 naive = 樣本要求高"
+        },
+        {
+          "key": "D",
+          "text": "naive 指預測精度天生較低,屬實驗性質演算法;真實場景應一律以決策樹替代",
+          "is_correct": false,
+          "trap_type": "誤判 naive = 精度低"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "Naive Bayes 中的 naive 不是貶意,而是指其『天真假設』— 給定類別下所有特徵條件獨立。此假設讓聯合機率可拆成各特徵條件機率的乘積,大幅簡化計算。實務上即使違反此假設,NB 在文本分類(垃圾郵件、情感分析)仍表現良好,廣泛應用於商業情境。",
         "wrong": {
-          "naive 指演算法本身相對簡陋落後;故 NB 僅可用於課堂示範而不能投入任何商業應用": "NB 廣泛用於垃圾郵件過濾、情感分析、新聞分類等正式商業情境;將 naive 視為『陽春』是中文字面誤解。",
-          "naive 指需要大量訓練資料才能正常運作;若樣本不足 NB 將無法收斂並給出可靠後驗": "NB 反而是『小樣本表現相對穩定』的方法(機率模型不需大量資料估邊界),naive 與樣本量無關。",
-          "naive 指預測精度天生較低,屬實驗性質演算法;真實場景應一律以決策樹或 SVM 替代": "NB 在高維稀疏文本上甚至優於 SVM(訓練快、推論即時);精度高低取決於任務,非 naive 一詞所指。"
+          "naive 指演算法本身相對簡陋落後;故 NB 僅可用於課堂示範而不能投入商業應用": "NB 廣泛用於垃圾郵件過濾、情感分析、新聞分類等正式商業情境;將 naive 視為『陽春』是中文字面誤解。",
+          "naive 指需大量訓練資料才能正常運作;若樣本不足 NB 將無法收斂並給可靠後驗": "NB 反而是『小樣本表現相對穩定』的方法(機率模型不需大量資料估邊界),naive 與樣本量無關。",
+          "naive 指預測精度天生較低,屬實驗性質演算法;真實場景應一律以決策樹替代": "NB 在高維稀疏文本上甚至優於 SVM(訓練快、推論即時);精度高低取決於任務,非 naive 一詞所指。"
         },
         "hook": "口訣:NB 的『天真』指假設特徵彼此獨立,聯合機率 = 條件機率乘積,簡化計算"
       },
-      "misconceptions": ["把 Naive Bayes 的 naive 誤解為『方法簡陋』,實為『假設特徵獨立』的稱呼"],
-      "related_node_ids": ["n_L23202_014", "n_L23101_001"],
-      "tags": ["naive-bayes", "conditional-independence", "concept"],
+      "misconceptions": [
+        "把 Naive Bayes 的 naive 誤解為『方法簡陋』,實為『假設特徵獨立』的稱呼"
+      ],
+      "related_node_ids": [
+        "n_L23202_014",
+        "n_L23101_001"
+      ],
+      "tags": [
+        "naive-bayes",
+        "conditional-independence",
+        "concept"
+      ],
       "errata_critical": false
     },
     {
@@ -67,15 +121,44 @@
       "source_level": "L2",
       "stem": "{scenario}的資料科學家欲在 {data_type} 與決策樹之間選擇模型。下列關於 Naive Bayes 與決策樹『適用情境』的比較何者最為精確?",
       "stem_variables": {
-        "case_a": {"scenario": "電子商務的客訴分類系統", "data_type": "客訴文字內容"},
-        "case_b": {"scenario": "新聞媒體的主題自動歸類", "data_type": "新聞報導文章"},
-        "case_c": {"scenario": "社群論壇的留言情感分析", "data_type": "使用者留言文字"}
+        "case_a": {
+          "scenario": "電子商務的客訴分類系統",
+          "data_type": "客訴文字內容"
+        },
+        "case_b": {
+          "scenario": "新聞媒體的主題自動歸類",
+          "data_type": "新聞報導文章"
+        },
+        "case_c": {
+          "scenario": "社群論壇的留言情感分析",
+          "data_type": "使用者留言文字"
+        }
       },
       "options": [
-        {"key": "A", "text": "NB 適合『類別 + 文本特徵』(高維稀疏);DT 適合表格資料(欄位的可解釋規則)", "is_correct": true, "trap_type": "正解:NB 文本 / DT 表格"},
-        {"key": "B", "text": "NB 適合表格資料的決策規則學習;DT 適合大量稀疏文本特徵的快速分類與即時推論", "is_correct": false, "trap_type": "兩者適用情境完全顛倒"},
-        {"key": "C", "text": "NB 與 DT 兩者完全等價;選用哪一個只是個人習慣偏好的差異不會造成準確率不同", "is_correct": false, "trap_type": "誤判兩者等價"},
-        {"key": "D", "text": "NB 僅適用二元分類問題;DT 才能處理多類別場景,故文本主題分類一定要用決策樹", "is_correct": false, "trap_type": "誤判 NB 只能二元"}
+        {
+          "key": "A",
+          "text": "NB 適合『類別 + 文本特徵』(高維稀疏);DT 適合表格資料(欄位的可解釋規則)",
+          "is_correct": true,
+          "trap_type": "正解:NB 文本 / DT 表格"
+        },
+        {
+          "key": "B",
+          "text": "NB 適合表格資料的決策規則學習;DT 適合大量稀疏文本特徵的快速分類與即時推論",
+          "is_correct": false,
+          "trap_type": "兩者適用情境完全顛倒"
+        },
+        {
+          "key": "C",
+          "text": "NB 與 DT 兩者完全等價;選用哪一個只是個人習慣偏好的差異不會造成準確率不同",
+          "is_correct": false,
+          "trap_type": "誤判兩者等價"
+        },
+        {
+          "key": "D",
+          "text": "NB 僅適用二元分類問題;DT 才能處理多類別場景,故文本主題分類一定要用決策樹",
+          "is_correct": false,
+          "trap_type": "誤判 NB 只能二元"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -87,9 +170,18 @@
         },
         "hook": "口訣:NB『機率快+文本稀疏』、DT『規則可解釋+表格欄位』— 互補非替代"
       },
-      "misconceptions": ["把 NB 與 DT 適用情境弄反"],
-      "related_node_ids": ["n_L23202_014", "n_L23202_005"],
-      "tags": ["naive-bayes", "decision-tree", "comparison"],
+      "misconceptions": [
+        "把 NB 與 DT 適用情境弄反"
+      ],
+      "related_node_ids": [
+        "n_L23202_014",
+        "n_L23202_005"
+      ],
+      "tags": [
+        "naive-bayes",
+        "decision-tree",
+        "comparison"
+      ],
       "errata_critical": false
     },
     {
@@ -102,15 +194,47 @@
       "source_level": "L2",
       "stem": "{scenario}的演算法工程師發現:某個特徵詞在訓練集的『{class_name}』類別中『從未出現』。若直接計算後,後驗機率為何會變成 0?應採取何種技術解決?(資料規模約 {N} 筆)",
       "stem_variables": {
-        "case_a": {"scenario": "垃圾郵件過濾系統", "class_name": "正常郵件", "N": "50000"},
-        "case_b": {"scenario": "電影評論情感分類", "class_name": "負面評論", "N": "20000"},
-        "case_c": {"scenario": "醫療文本疾病標註", "class_name": "罕見疾病", "N": "8000"}
+        "case_a": {
+          "scenario": "垃圾郵件過濾系統",
+          "class_name": "正常郵件",
+          "N": "50000"
+        },
+        "case_b": {
+          "scenario": "電影評論情感分類",
+          "class_name": "負面評論",
+          "N": "20000"
+        },
+        "case_c": {
+          "scenario": "醫療文本疾病標註",
+          "class_name": "罕見疾病",
+          "N": "8000"
+        }
       },
       "options": [
-        {"key": "A", "text": "因 NB 連乘各特徵條件機率,只要其一為 0 整體歸零;以 Laplace 平滑加微小常數可避免", "is_correct": true, "trap_type": "正解:連乘歸零 + Laplace 平滑"},
-        {"key": "B", "text": "因為 NB 採用相加運算機制故不可能歸零;此現象屬資料前處理錯誤需要重新檢視原始檔案", "is_correct": false, "trap_type": "誤判 NB 為加法"},
-        {"key": "C", "text": "因為訓練資料規模太小造成的計算錯誤;只要再增加十倍訓練樣本後此歸零問題就會自動消失", "is_correct": false, "trap_type": "誤把零機率當樣本問題"},
-        {"key": "D", "text": "因為特徵彼此不夠獨立造成的衝突;應先以主成分分析投影到正交特徵後再執行 NB 分類訓練", "is_correct": false, "trap_type": "錯把零機率歸因到獨立性"}
+        {
+          "key": "A",
+          "text": "因 NB 連乘各特徵條件機率,只要其一為 0 整體歸零;以 Laplace 平滑加微小常數可避免",
+          "is_correct": true,
+          "trap_type": "正解:連乘歸零 + Laplace 平滑"
+        },
+        {
+          "key": "B",
+          "text": "因為 NB 採用相加運算機制故不可能歸零;此現象屬資料前處理錯誤需要重新檢視原始檔案",
+          "is_correct": false,
+          "trap_type": "誤判 NB 為加法"
+        },
+        {
+          "key": "C",
+          "text": "因為訓練資料規模太小造成的計算錯誤;只要再增加十倍訓練樣本後此歸零問題就會自動消失",
+          "is_correct": false,
+          "trap_type": "誤把零機率當樣本問題"
+        },
+        {
+          "key": "D",
+          "text": "因為特徵彼此不夠獨立造成的衝突;應先以主成分分析投影到正交特徵後再執行 NB 分類訓練",
+          "is_correct": false,
+          "trap_type": "錯把零機率歸因到獨立性"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -122,9 +246,19 @@
         },
         "hook": "口訣:NB 連乘歸零問題 → Laplace 平滑(分子 +α、分母 +α|V|)是標準解"
       },
-      "misconceptions": ["誤以為 NB 是相加運算", "把零機率問題歸因到資料量"],
-      "related_node_ids": ["n_L23202_014", "n_L23101_001"],
-      "tags": ["naive-bayes", "laplace-smoothing", "zero-probability"],
+      "misconceptions": [
+        "誤以為 NB 是相加運算",
+        "把零機率問題歸因到資料量"
+      ],
+      "related_node_ids": [
+        "n_L23202_014",
+        "n_L23101_001"
+      ],
+      "tags": [
+        "naive-bayes",
+        "laplace-smoothing",
+        "zero-probability"
+      ],
       "errata_critical": false
     },
     {
@@ -137,29 +271,69 @@
       "source_level": "L2",
       "stem": "{scenario}的團隊在三種 Naive Bayes 變種之間選擇:Gaussian NB、Multinomial NB、Bernoulli NB。若資料主要為『{feature_form}』形式,下列選擇何者最為合適?",
       "stem_variables": {
-        "case_a": {"scenario": "感測器異常偵測系統", "feature_form": "連續實數量測值(溫度、震動)"},
-        "case_b": {"scenario": "新聞分類系統", "feature_form": "文章中各詞彙的出現次數"},
-        "case_c": {"scenario": "電子郵件過濾", "feature_form": "某詞是否出現的二元指示"}
+        "case_a": {
+          "scenario": "感測器異常偵測系統",
+          "feature_form": "連續實數量測值(溫度、震動)"
+        },
+        "case_b": {
+          "scenario": "新聞分類系統",
+          "feature_form": "文章中各詞彙的出現次數"
+        },
+        "case_c": {
+          "scenario": "電子郵件過濾",
+          "feature_form": "某詞是否出現的二元指示"
+        }
       },
       "options": [
-        {"key": "A", "text": "連續值用 Gaussian NB、計數特徵用 Multinomial NB、二元用 Bernoulli NB,變種不可互換", "is_correct": true, "trap_type": "正解:三變種對應特徵型態"},
-        {"key": "B", "text": "三種變種其實沒有實質差別;任何 NB 套件均可不論特徵型態為何皆套用 Gaussian NB 即可解決", "is_correct": false, "trap_type": "誤判三種等價"},
-        {"key": "C", "text": "三種變種僅速度差異;Bernoulli NB 永遠最快故任何資料型態都應優先以 Bernoulli NB 處理", "is_correct": false, "trap_type": "誤判差異僅在速度"},
-        {"key": "D", "text": "Gaussian NB 適用任何分類問題;Multinomial 與 Bernoulli 只是學術上的命名變體不必特別區分", "is_correct": false, "trap_type": "誤把 Gaussian 當萬用"}
+        {
+          "key": "A",
+          "text": "連續值用 Gaussian NB、計數特徵用 Multinomial NB、二元用 Bernoulli NB,變種不可互換",
+          "is_correct": true,
+          "trap_type": "正解:三變種對應特徵型態"
+        },
+        {
+          "key": "B",
+          "text": "三種變種其實沒有實質差別;任何 NB 套件均可不論特徵型態為何皆套用 Gaussian NB 即可解決",
+          "is_correct": false,
+          "trap_type": "誤判三種等價"
+        },
+        {
+          "key": "C",
+          "text": "三種變種僅速度差異;Bernoulli NB 永遠最快故任何資料型態都應優先以 Bernoulli NB 處理",
+          "is_correct": false,
+          "trap_type": "誤判差異僅在速度"
+        },
+        {
+          "key": "D",
+          "text": "Gaussian NB 適用任何分類問題;Multinomial 與 Bernoulli 只是學術上的命名變體不必特別區分",
+          "is_correct": false,
+          "trap_type": "誤把 Gaussian 當萬用"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "NB 三大變種對應不同特徵分佈假設:(1) Gaussian NB 假設各類別下特徵服從常態分佈,適合連續數值;(2) Multinomial NB 適合計數特徵(詞頻、出現次數);(3) Bernoulli NB 適合二元特徵(出現/未出現)。將連續特徵硬套 Multinomial 或將計數特徵套 Gaussian 都會嚴重影響準確率。",
         "wrong": {
-          "三種變種沒有實質差別;任何 NB 套件均可不論特徵型態為何皆套用 Gaussian NB 即可": "三變種的條件機率分佈假設不同(高斯/多項式/伯努利),硬套錯變種會違反建模假設,準確率大幅下降。",
-          "三種變種僅速度差異;Bernoulli NB 永遠最快故任何資料型態都優先以 Bernoulli NB 處理": "Bernoulli 適合二元,把詞頻或連續值二元化會嚴重損失資訊,速度快但準確率崩潰。",
-          "Gaussian NB 適用任何分類問題;Multinomial 與 Bernoulli 只是學術上的命名變體不必特別區分": "Gaussian 假設特徵連續常態,對詞頻(離散非負整數)或二元向量都不合理;sklearn 文件明確區分三變種適用情境。"
+          "Gaussian NB 適用任何分類問題;Multinomial 與 Bernoulli 只是學術上的命名變體不必特別區分": "Gaussian 假設特徵連續常態,對詞頻(離散非負整數)或二元向量都不合理;sklearn 文件明確區分三變種適用情境。",
+          "三種變種其實沒有實質差別;任何 NB 套件均可不論特徵型態為何皆套用 Gaussian NB 即可解決": "三變種的條件機率分佈假設不同(高斯/多項式/伯努利),硬套錯變種會違反建模假設,準確率大幅下降。",
+          "三種變種僅速度差異;Bernoulli NB 永遠最快故任何資料型態都應優先以 Bernoulli NB 處理": "Bernoulli 適合二元,把詞頻或連續值二元化會嚴重損失資訊,速度快但準確率崩潰。"
         },
         "hook": "口訣:Gaussian 連續、Multinomial 計數、Bernoulli 二元 — 三變種看特徵型態選"
       },
-      "misconceptions": ["以為三變種等價可互換", "硬把 Gaussian NB 套到計數或二元特徵"],
-      "related_node_ids": ["n_L23202_014"],
-      "tags": ["naive-bayes", "variants", "gaussian", "multinomial", "bernoulli"],
+      "misconceptions": [
+        "以為三變種等價可互換",
+        "硬把 Gaussian NB 套到計數或二元特徵"
+      ],
+      "related_node_ids": [
+        "n_L23202_014"
+      ],
+      "tags": [
+        "naive-bayes",
+        "variants",
+        "gaussian",
+        "multinomial",
+        "bernoulli"
+      ],
       "errata_critical": false
     },
     {
@@ -172,15 +346,41 @@
       "source_level": "L2",
       "stem": "{scenario}的資料科學家比較 GMM 與 K-means 兩個分群演算法。下列關於兩者『輸出形式』最關鍵差異的描述何者最為精確?",
       "stem_variables": {
-        "case_a": {"scenario": "電商平台的顧客分群分析"},
-        "case_b": {"scenario": "音樂串流的聽眾偏好分群"},
-        "case_c": {"scenario": "智慧城市的交通流量分群"}
+        "case_a": {
+          "scenario": "電商平台的顧客分群分析"
+        },
+        "case_b": {
+          "scenario": "音樂串流的聽眾偏好分群"
+        },
+        "case_c": {
+          "scenario": "智慧城市的交通流量分群"
+        }
       },
       "options": [
-        {"key": "A", "text": "GMM 給『屬於每群的機率向量』(軟分群);K-means 給單一群編號(硬分群),兩者輸出形式不同", "is_correct": true, "trap_type": "正解:軟分群 vs 硬分群"},
-        {"key": "B", "text": "GMM 屬於監督式學習方法;K-means 是非監督方法,兩者學習典範與資料標籤要求不一樣", "is_correct": false, "trap_type": "誤判 GMM 為監督式"},
-        {"key": "C", "text": "GMM 不需事先指定 K;K-means 必須先指定 K,兩者在分群結構超參的設定方式不一樣", "is_correct": false, "trap_type": "誤判 GMM 不需 K"},
-        {"key": "D", "text": "GMM 速度永遠快於 K-means;K-means 因需迭代距離計算速度永遠慢,實務上一律改用 GMM", "is_correct": false, "trap_type": "誤判速度比較"}
+        {
+          "key": "A",
+          "text": "GMM 給『屬於每群的機率向量』(軟分群);K-means 給單一群編號(硬分群),兩者輸出形式不同",
+          "is_correct": true,
+          "trap_type": "正解:軟分群 vs 硬分群"
+        },
+        {
+          "key": "B",
+          "text": "GMM 屬於監督式學習方法;K-means 是非監督方法,兩者學習典範與資料標籤要求不一樣",
+          "is_correct": false,
+          "trap_type": "誤判 GMM 為監督式"
+        },
+        {
+          "key": "C",
+          "text": "GMM 不需事先指定 K;K-means 必須先指定 K,兩者在分群結構超參的設定方式不一樣",
+          "is_correct": false,
+          "trap_type": "誤判 GMM 不需 K"
+        },
+        {
+          "key": "D",
+          "text": "GMM 速度永遠快於 K-means;K-means 因需迭代距離計算速度永遠慢,實務上一律改用 GMM",
+          "is_correct": false,
+          "trap_type": "誤判速度比較"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -192,9 +392,20 @@
         },
         "hook": "口訣:GMM『軟分群給機率』、K-means『硬分群給編號』— 名似實異"
       },
-      "misconceptions": ["以為 GMM 也是硬性分群", "把 GMM 與 K-means 視為同類差異不大"],
-      "related_node_ids": ["n_L23202_015", "n_L23202_012"],
-      "tags": ["gmm", "k-means", "soft-clustering", "hard-clustering"],
+      "misconceptions": [
+        "以為 GMM 也是硬性分群",
+        "把 GMM 與 K-means 視為同類差異不大"
+      ],
+      "related_node_ids": [
+        "n_L23202_015",
+        "n_L23202_012"
+      ],
+      "tags": [
+        "gmm",
+        "k-means",
+        "soft-clustering",
+        "hard-clustering"
+      ],
       "errata_critical": false
     },
     {
@@ -207,29 +418,70 @@
       "source_level": "L2",
       "stem": "{scenario}的工程師欲理解 GMM 的訓練過程,主管問「EM 演算法的兩步驟是哪兩步,順序又是如何?」資料規模 N={N},分群數 K={K}。下列描述何者最為精確?",
       "stem_variables": {
-        "case_a": {"scenario": "保險精算的客戶風險分群", "N": "10000", "K": "5"},
-        "case_b": {"scenario": "影像處理的像素聚類分群", "N": "50000", "K": "8"},
-        "case_c": {"scenario": "心理測驗的人格類型探索", "N": "3000", "K": "4"}
+        "case_a": {
+          "scenario": "保險精算的客戶風險分群",
+          "N": "10000",
+          "K": "5"
+        },
+        "case_b": {
+          "scenario": "影像處理的像素聚類分群",
+          "N": "50000",
+          "K": "8"
+        },
+        "case_c": {
+          "scenario": "心理測驗的人格類型探索",
+          "N": "3000",
+          "K": "4"
+        }
       },
       "options": [
-        {"key": "A", "text": "E-step 算每點屬各群後驗機率(soft assignment);M-step 以加權更新 μ、Σ、w 參數", "is_correct": true, "trap_type": "正解:E 算機率 / M 更新參數"},
-        {"key": "B", "text": "E-step 更新各群高斯分佈的所有參數;M-step 算每筆資料屬每群後驗機率,順序剛好顛倒對調無誤", "is_correct": false, "trap_type": "E / M 完全顛倒"},
-        {"key": "C", "text": "E-step 是初始化群心隨機位置;M-step 是迭代驗收收斂條件,EM 演算法執行一輪後即可收斂結束", "is_correct": false, "trap_type": "誤把初始化當 E-step"},
-        {"key": "D", "text": "EM 演算法是 GMM 演算法的專屬流程;其他任何模型訓練都絕對不能使用 EM 兩步迭代之機制無一例外", "is_correct": false, "trap_type": "誤判 EM 為 GMM 專屬"}
+        {
+          "key": "A",
+          "text": "E-step 算每點屬各群後驗機率(soft assignment);M-step 以加權更新 μ、Σ、w 參數",
+          "is_correct": true,
+          "trap_type": "正解:E 算機率 / M 更新參數"
+        },
+        {
+          "key": "B",
+          "text": "E-step 更新各群高斯分佈的所有參數;M-step 算每筆資料屬每群後驗機率,順序剛好顛倒對調無誤",
+          "is_correct": false,
+          "trap_type": "E / M 完全顛倒"
+        },
+        {
+          "key": "C",
+          "text": "E-step 是初始化群心隨機位置;M-step 是迭代驗收收斂條件,EM 演算法執行一輪後即可收斂結束",
+          "is_correct": false,
+          "trap_type": "誤把初始化當 E-step"
+        },
+        {
+          "key": "D",
+          "text": "EM 演算法是 GMM 演算法的專屬流程;其他任何模型訓練都絕對不能使用 EM 兩步迭代之機制無一例外",
+          "is_correct": false,
+          "trap_type": "誤判 EM 為 GMM 專屬"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "EM(Expectation-Maximization)在 GMM 中的兩步驟:(1) E-step(Expectation):固定當前 μ、Σ、w 參數,計算每筆資料屬於每群的後驗機率 γ(soft assignment);(2) M-step(Maximization):固定 γ,以加權方式重新估計各高斯的 μ、Σ、w(最大化期望似然)。兩步交替迭代直到參數收斂。EM 不限 GMM,是通用最大概似估計框架。",
         "wrong": {
-          "E-step 更新各群高斯分佈的參數;M-step 算每筆資料屬每群後驗機率,順序剛好顛倒對調": "方向完全相反 — E-step 是『期望』(算後驗機率),M-step 是『最大化』(更新參數);名稱與順序均顛倒。",
-          "E-step 是初始化群心位置;M-step 是迭代驗收收斂條件,EM 演算法執行一輪後即可": "初始化是 EM 前的準備步驟,不是 E-step;EM 需多輪迭代直到收斂,非一輪結束。",
-          "EM 演算法是 GMM 演算法的專屬流程;其他任何模型訓練都絕對不能使用 EM 兩步迭代": "EM 是通用的隱變數最大似然估計框架,也用於 HMM、LDA、缺失值處理等多場景,非 GMM 專屬。"
+          "E-step 更新各群高斯分佈的所有參數;M-step 算每筆資料屬每群後驗機率,順序剛好顛倒對調無誤": "方向完全相反 — E-step 是『期望』(算後驗機率),M-step 是『最大化』(更新參數);名稱與順序均顛倒。",
+          "E-step 是初始化群心隨機位置;M-step 是迭代驗收收斂條件,EM 演算法執行一輪後即可收斂結束": "初始化是 EM 前的準備步驟,不是 E-step;EM 需多輪迭代直到收斂,非一輪結束。",
+          "EM 演算法是 GMM 演算法的專屬流程;其他任何模型訓練都絕對不能使用 EM 兩步迭代之機制無一例外": "EM 是通用的隱變數最大似然估計框架,也用於 HMM、LDA、缺失值處理等多場景,非 GMM 專屬。"
         },
         "hook": "口訣:EM 兩步『E 算機率 → M 更新參』循環,直到參數收斂"
       },
-      "misconceptions": ["把 EM 兩步順序弄反", "把 EM 當作 GMM 專屬"],
-      "related_node_ids": ["n_L23202_015"],
-      "tags": ["gmm", "em-algorithm", "expectation-maximization"],
+      "misconceptions": [
+        "把 EM 兩步順序弄反",
+        "把 EM 當作 GMM 專屬"
+      ],
+      "related_node_ids": [
+        "n_L23202_015"
+      ],
+      "tags": [
+        "gmm",
+        "em-algorithm",
+        "expectation-maximization"
+      ],
       "errata_critical": false
     },
     {
@@ -242,29 +494,68 @@
       "source_level": "L2",
       "stem": "{scenario}的資料分析師發現群的形狀並非球狀,而呈現{shape}的橢圓分佈。下列關於 GMM 處理此情境相較於 K-means 的優勢何者最為精確?",
       "stem_variables": {
-        "case_a": {"scenario": "天文觀測的星團分群", "shape": "長條狀"},
-        "case_b": {"scenario": "工廠瑕疵類型分群", "shape": "斜向橢圓"},
-        "case_c": {"scenario": "生物樣本的細胞型態分群", "shape": "拉伸橢圓"}
+        "case_a": {
+          "scenario": "天文觀測的星團分群",
+          "shape": "長條狀"
+        },
+        "case_b": {
+          "scenario": "工廠瑕疵類型分群",
+          "shape": "斜向橢圓"
+        },
+        "case_c": {
+          "scenario": "生物樣本的細胞型態分群",
+          "shape": "拉伸橢圓"
+        }
       },
       "options": [
-        {"key": "A", "text": "GMM 每群有獨立 Σ 協方差矩陣可塑任意橢圓形狀;K-means 隱含球狀假設,對橢圓型群會誤切", "is_correct": true, "trap_type": "正解:GMM 協方差靈活"},
-        {"key": "B", "text": "GMM 與 K-means 對橢圓型群的處理能力其實完全相同;兩者選擇沒有形狀型態的實質區別差異", "is_correct": false, "trap_type": "誤判兩者等價"},
-        {"key": "C", "text": "GMM 只能處理球狀分佈的群;遇到橢圓型分佈應改用 K-means 才能精確刻劃群形狀邊界範圍", "is_correct": false, "trap_type": "誤判 GMM 僅球狀"},
-        {"key": "D", "text": "K-means 透過動態調整距離度量可自動處理任何形狀;GMM 反而只能處理嚴格的球形邊界形狀", "is_correct": false, "trap_type": "誤判 K-means 自動處理"}
+        {
+          "key": "A",
+          "text": "GMM 每群有獨立 Σ 協方差矩陣可塑任意橢圓形狀;K-means 隱含球狀假設,對橢圓型群會誤切",
+          "is_correct": true,
+          "trap_type": "正解:GMM 協方差靈活"
+        },
+        {
+          "key": "B",
+          "text": "GMM 與 K-means 對橢圓型群的處理能力其實完全相同;兩者選擇沒有形狀型態的實質區別差異",
+          "is_correct": false,
+          "trap_type": "誤判兩者等價"
+        },
+        {
+          "key": "C",
+          "text": "GMM 只能處理球狀分佈的群;遇到橢圓型分佈應改用 K-means 才能精確刻劃群形狀邊界範圍",
+          "is_correct": false,
+          "trap_type": "誤判 GMM 僅球狀"
+        },
+        {
+          "key": "D",
+          "text": "K-means 透過動態調整距離度量可自動處理任何形狀;GMM 反而只能處理嚴格的球形邊界形狀",
+          "is_correct": false,
+          "trap_type": "誤判 K-means 自動處理"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "GMM 每個高斯成分有獨立的協方差矩陣 Σₖ,可表達任意方向、任意拉伸比例的橢圓形群,因此對非球狀分佈靈活。K-means 隱含假設群為球狀(等價於 GMM 各群 Σ 為單位矩陣 × 相同變異),遇到斜向橢圓或拉伸長條時會把群誤切。實務上若群形狀已知不為球狀,GMM 較合適。",
         "wrong": {
-          "GMM 與 K-means 對橢圓群的處理能力其實完全相同;兩者選擇上沒有形狀型態的實質區別": "K-means 用歐氏距離分配,在斜向橢圓上會把長軸方向的點誤分到鄰群;GMM 的協方差表達能力是關鍵差別。",
-          "GMM 只能處理球狀分佈群;遇到橢圓型分佈應改用 K-means 才能精確刻劃群形狀邊界": "方向完全相反 — GMM 的協方差矩陣正是為橢圓形群設計;K-means 反而才是球狀假設。",
-          "K-means 透過動態調整距離度量可自動處理任何形狀;GMM 反而只能處理嚴格的球形邊界": "標準 K-means 用固定歐氏距離,不會自動調整;改用 Mahalanobis 距離才有橢圓能力,但已非標準 K-means。"
+          "GMM 與 K-means 對橢圓型群的處理能力其實完全相同;兩者選擇沒有形狀型態的實質區別差異": "K-means 用歐氏距離分配,在斜向橢圓上會把長軸方向的點誤分到鄰群;GMM 的協方差表達能力是關鍵差別。",
+          "GMM 只能處理球狀分佈的群;遇到橢圓型分佈應改用 K-means 才能精確刻劃群形狀邊界範圍": "方向完全相反 — GMM 的協方差矩陣正是為橢圓形群設計;K-means 反而才是球狀假設。",
+          "K-means 透過動態調整距離度量可自動處理任何形狀;GMM 反而只能處理嚴格的球形邊界形狀": "標準 K-means 用固定歐氏距離,不會自動調整;改用 Mahalanobis 距離才有橢圓能力,但已非標準 K-means。"
         },
         "hook": "口訣:GMM 各群獨立 Σ 可塑橢圓、K-means 隱含球狀假設 — 群形狀知識決定選哪個"
       },
-      "misconceptions": ["以為 GMM 也只能處理球狀群"],
-      "related_node_ids": ["n_L23202_015", "n_L23202_012"],
-      "tags": ["gmm", "covariance", "ellipsoidal", "k-means-comparison"],
+      "misconceptions": [
+        "以為 GMM 也只能處理球狀群"
+      ],
+      "related_node_ids": [
+        "n_L23202_015",
+        "n_L23202_012"
+      ],
+      "tags": [
+        "gmm",
+        "covariance",
+        "ellipsoidal",
+        "k-means-comparison"
+      ],
       "errata_critical": false
     },
     {
@@ -277,29 +568,65 @@
       "source_level": "L2",
       "stem": "{scenario}的資料科學家欲選擇 GMM 的 K 值(高斯成分數)。下列關於 GMM 與 K-means 在『K 值選擇方法』上最關鍵差異的描述何者最為精確?",
       "stem_variables": {
-        "case_a": {"scenario": "零售業的客戶生命週期分群"},
-        "case_b": {"scenario": "智慧電表的用電行為分群"},
-        "case_c": {"scenario": "教育平台的學習風格分群"}
+        "case_a": {
+          "scenario": "零售業的客戶生命週期分群"
+        },
+        "case_b": {
+          "scenario": "智慧電表的用電行為分群"
+        },
+        "case_c": {
+          "scenario": "教育平台的學習風格分群"
+        }
       },
       "options": [
-        {"key": "A", "text": "GMM 用 AIC / BIC 資訊準則(平衡擬合度與複雜度);K-means 常用手肘法(WCSS 對 K 折點偵測)", "is_correct": true, "trap_type": "正解:AIC/BIC vs 手肘法"},
-        {"key": "B", "text": "GMM 與 K-means 兩者都只能憑業務人員主觀指定 K 值;沒有任何數值化的客觀依據可參考使用", "is_correct": false, "trap_type": "誤判兩者皆靠主觀"},
-        {"key": "C", "text": "GMM 與 K-means 兩者使用完全相同的 K 選擇方法;在選 K 流程上沒有任何技術性的實質差異", "is_correct": false, "trap_type": "誤判兩者同方法"},
-        {"key": "D", "text": "GMM 可由演算法自動選 K 不需任何資訊準則;K-means 才需要手肘法因為演算法本身不能自選 K", "is_correct": false, "trap_type": "誤判 GMM 自動選 K"}
+        {
+          "key": "A",
+          "text": "GMM 用 AIC / BIC 資訊準則(平衡擬合度與複雜度);K-means 常用手肘法(WCSS 對 K 折點偵測)",
+          "is_correct": true,
+          "trap_type": "正解:AIC/BIC vs 手肘法"
+        },
+        {
+          "key": "B",
+          "text": "GMM 與 K-means 兩者都只能憑業務人員主觀指定 K 值;沒有任何數值化的客觀依據可參考使用",
+          "is_correct": false,
+          "trap_type": "誤判兩者皆靠主觀"
+        },
+        {
+          "key": "C",
+          "text": "GMM 與 K-means 兩者使用完全相同的 K 選擇方法;在選 K 流程上沒有任何技術性的實質差異",
+          "is_correct": false,
+          "trap_type": "誤判兩者同方法"
+        },
+        {
+          "key": "D",
+          "text": "GMM 可由演算法自動選 K 不需任何資訊準則;K-means 才需要手肘法因為演算法本身不能自選 K",
+          "is_correct": false,
+          "trap_type": "誤判 GMM 自動選 K"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "GMM 的 K 選擇通常用 AIC(Akaike)或 BIC(Bayesian)資訊準則:這兩個指標同時考慮『模型擬合度(對數似然)』與『參數複雜度懲罰』,選最小值對應的 K。K-means 因為沒有概率似然,常用手肘法(WCSS / inertia 隨 K 增加的折點)或 Silhouette 係數選 K。兩者選 K 方法不同源於有無機率框架。",
         "wrong": {
-          "GMM 與 K-means 兩者都只能憑業務人員主觀指定 K 值;沒有任何數值化的客觀依據可循": "兩者都有客觀數值化方法(AIC/BIC、手肘法、Silhouette);業務判斷僅是輔助。",
-          "GMM 與 K-means 兩者使用完全相同的 K 選擇方法;在選 K 流程上沒有任何技術性的差異": "GMM 因有概率模型可用資訊準則(AIC/BIC);K-means 無似然只能用 WCSS 啟發式;方法本質不同。",
-          "GMM 可由演算法自動選 K 不需任何資訊準則;K-means 才需要手肘法因為演算法不能自選 K": "標準 GMM 需指定 K,只是用 AIC/BIC 比較不同 K 值的模型;真正自動選 K 需 Bayesian 非參數方法(如 DPGMM)。"
+          "GMM 與 K-means 兩者都只能憑業務人員主觀指定 K 值;沒有任何數值化的客觀依據可參考使用": "兩者都有客觀數值化方法(AIC/BIC、手肘法、Silhouette);業務判斷僅是輔助。",
+          "GMM 與 K-means 兩者使用完全相同的 K 選擇方法;在選 K 流程上沒有任何技術性的實質差異": "GMM 因有概率模型可用資訊準則(AIC/BIC);K-means 無似然只能用 WCSS 啟發式;方法本質不同。",
+          "GMM 可由演算法自動選 K 不需任何資訊準則;K-means 才需要手肘法因為演算法本身不能自選 K": "標準 GMM 需指定 K,只是用 AIC/BIC 比較不同 K 值的模型;真正自動選 K 需 Bayesian 非參數方法(如 DPGMM)。"
         },
         "hook": "口訣:GMM AIC/BIC(有似然)、K-means 手肘法(無似然) — 概率框架決定選 K 方式"
       },
-      "misconceptions": ["把 GMM 的 K 與 K-means 的 K 視為完全相同"],
-      "related_node_ids": ["n_L23202_015", "n_L23202_012"],
-      "tags": ["gmm", "k-selection", "aic-bic", "elbow-method"],
+      "misconceptions": [
+        "把 GMM 的 K 與 K-means 的 K 視為完全相同"
+      ],
+      "related_node_ids": [
+        "n_L23202_015",
+        "n_L23202_012"
+      ],
+      "tags": [
+        "gmm",
+        "k-selection",
+        "aic-bic",
+        "elbow-method"
+      ],
       "errata_critical": false
     },
     {
@@ -312,29 +639,68 @@
       "source_level": "L2",
       "stem": "{scenario}的工程師欲用多項式迴歸擬合『{phenomenon}』資料。下列關於多項式迴歸『本質模型類別』的描述何者最為精確?",
       "stem_variables": {
-        "case_a": {"scenario": "化工廠的物質溶解度", "phenomenon": "溶解度隨溫度變化"},
-        "case_b": {"scenario": "汽車工程的剎車距離", "phenomenon": "剎車距離隨車速變化"},
-        "case_c": {"scenario": "農業科技的作物產量", "phenomenon": "產量隨施肥量變化"}
+        "case_a": {
+          "scenario": "化工廠的物質溶解度",
+          "phenomenon": "溶解度隨溫度變化"
+        },
+        "case_b": {
+          "scenario": "汽車工程的剎車距離",
+          "phenomenon": "剎車距離隨車速變化"
+        },
+        "case_c": {
+          "scenario": "農業科技的作物產量",
+          "phenomenon": "產量隨施肥量變化"
+        }
       },
       "options": [
-        {"key": "A", "text": "多項式迴歸對係數 β 仍為線性(對 x 做 N 次轉換後再線性擬合),本質仍屬廣義線性模型", "is_correct": true, "trap_type": "正解:對 β 線性 / 對 x 非線性"},
-        {"key": "B", "text": "多項式迴歸是完全的非線性模型;其學習機制與深度神經網路完全同類別無須區分兩者差異", "is_correct": false, "trap_type": "誤判完全非線性"},
-        {"key": "C", "text": "多項式迴歸對自變數 x 也是線性的;故與一般單變數線性迴歸完全等價沒有本質的差別意義", "is_correct": false, "trap_type": "誤判對 x 線性"},
-        {"key": "D", "text": "多項式迴歸不屬任何標準模型類別;它是介於迴歸與分類之間獨立特殊型態的演算法類別", "is_correct": false, "trap_type": "誤判分類不明"}
+        {
+          "key": "A",
+          "text": "多項式迴歸對係數 β 仍為線性(對 x 做 N 次轉換後再線性擬合),本質仍屬廣義線性模型",
+          "is_correct": true,
+          "trap_type": "正解:對 β 線性 / 對 x 非線性"
+        },
+        {
+          "key": "B",
+          "text": "多項式迴歸是完全的非線性模型;其學習機制與深度神經網路完全同類別無須區分兩者差異",
+          "is_correct": false,
+          "trap_type": "誤判完全非線性"
+        },
+        {
+          "key": "C",
+          "text": "多項式迴歸對自變數 x 也是線性的;故與一般單變數線性迴歸完全等價沒有本質的差別意義",
+          "is_correct": false,
+          "trap_type": "誤判對 x 線性"
+        },
+        {
+          "key": "D",
+          "text": "多項式迴歸不屬任何標準模型類別;它是介於迴歸與分類之間獨立特殊型態的演算法類別",
+          "is_correct": false,
+          "trap_type": "誤判分類不明"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "多項式迴歸 ŷ = β₀ + β₁x + β₂x² + ... + βₙxⁿ 雖對自變數 x 是 N 次非線性,但對係數 β 仍是線性組合,本質仍屬『廣義線性模型』。實作上是先把 x 做特徵轉換(x、x²、x³、...),再以普通最小平方法解 β(與線性迴歸同方法)。這也是多項式迴歸與真正非線性迴歸(如 y = e^(βx))的根本差別。",
         "wrong": {
-          "多項式迴歸是完全的非線性模型;其學習機制與深度神經網路同類無須區分兩者類別": "多項式迴歸對 β 線性,解析解可由正規方程一次得到,與神經網路的非凸優化迭代訓練完全不同類。",
-          "多項式迴歸對自變數 x 線性;故與一般單變數線性迴歸完全等價沒有本質區別": "多項式迴歸對 x 是 N 次方非線性,可擬合曲線;線性迴歸只能擬合直線,兩者表達能力差別顯著。",
-          "多項式迴歸不屬任何標準模型類別;它是介於迴歸與分類的中間獨立特殊型態演算法": "多項式迴歸明確屬迴歸類(連續值輸出),屬廣義線性模型家族,有清楚的數學分類。"
+          "多項式迴歸是完全的非線性模型;其學習機制與深度神經網路完全同類別無須區分兩者差異": "多項式迴歸對 β 線性,解析解可由正規方程一次得到,與神經網路的非凸優化迭代訓練完全不同類。",
+          "多項式迴歸對自變數 x 也是線性的;故與一般單變數線性迴歸完全等價沒有本質的差別意義": "多項式迴歸對 x 是 N 次方非線性,可擬合曲線;線性迴歸只能擬合直線,兩者表達能力差別顯著。",
+          "多項式迴歸不屬任何標準模型類別;它是介於迴歸與分類之間獨立特殊型態的演算法類別": "多項式迴歸明確屬迴歸類(連續值輸出),屬廣義線性模型家族,有清楚的數學分類。"
         },
         "hook": "口訣:多項式迴歸『對 β 線性、對 x 非線性』— x²、x³ 是『特徵轉換』,本質仍線性"
       },
-      "misconceptions": ["誤以為多項式迴歸不是線性模型", "把多項式迴歸與非線性迴歸完全混淆"],
-      "related_node_ids": ["n_L23202_018", "n_L23202_013"],
-      "tags": ["polynomial-regression", "linear-model", "feature-transformation"],
+      "misconceptions": [
+        "誤以為多項式迴歸不是線性模型",
+        "把多項式迴歸與非線性迴歸完全混淆"
+      ],
+      "related_node_ids": [
+        "n_L23202_018",
+        "n_L23202_013"
+      ],
+      "tags": [
+        "polynomial-regression",
+        "linear-model",
+        "feature-transformation"
+      ],
       "errata_critical": false
     },
     {
@@ -347,29 +713,68 @@
       "source_level": "L2",
       "stem": "{scenario}的資料工程師將多項式迴歸的次數 N 從 2 一路調到 {N_high}。觀察到訓練誤差幾乎為 0,但測試集誤差大幅惡化。下列現象描述何者最為精確?",
       "stem_variables": {
-        "case_a": {"scenario": "電商商品銷量預測", "N_high": "15"},
-        "case_b": {"scenario": "氣象站氣溫預測", "N_high": "20"},
-        "case_c": {"scenario": "金融資產風險預測", "N_high": "12"}
+        "case_a": {
+          "scenario": "電商商品銷量預測",
+          "N_high": "15"
+        },
+        "case_b": {
+          "scenario": "氣象站氣溫預測",
+          "N_high": "20"
+        },
+        "case_c": {
+          "scenario": "金融資產風險預測",
+          "N_high": "12"
+        }
       },
       "options": [
-        {"key": "A", "text": "屬過擬合(Overfit):曲線穿過每訓練點失去泛化能力;應降低 N 或加正則化平衡擬合", "is_correct": true, "trap_type": "正解:N 高 = 過擬合"},
-        {"key": "B", "text": "屬欠擬合(Underfit):次數 N 太高反而失去資料中潛在規律;再加倍 N 即可解決問題狀況", "is_correct": false, "trap_type": "誤判方向"},
-        {"key": "C", "text": "屬正常現象完全不需處理;訓練誤差為零代表模型成功,測試誤差差異屬資料雜訊不影響應用", "is_correct": false, "trap_type": "誤判為正常"},
-        {"key": "D", "text": "屬資料前處理錯誤;與多項式次數本身無關,任何模型都會在資料前處理錯時呈現此類現象", "is_correct": false, "trap_type": "誤把現象歸到前處理"}
+        {
+          "key": "A",
+          "text": "屬過擬合(Overfit):曲線穿過每訓練點失去泛化能力;應降低 N 或加正則化平衡擬合",
+          "is_correct": true,
+          "trap_type": "正解:N 高 = 過擬合"
+        },
+        {
+          "key": "B",
+          "text": "屬欠擬合(Underfit):次數 N 太高反而失去資料中潛在規律;再加倍 N 即可解決問題狀況",
+          "is_correct": false,
+          "trap_type": "誤判方向"
+        },
+        {
+          "key": "C",
+          "text": "屬正常現象完全不需處理;訓練誤差為零代表模型成功,測試誤差差異屬資料雜訊不影響應用",
+          "is_correct": false,
+          "trap_type": "誤判為正常"
+        },
+        {
+          "key": "D",
+          "text": "屬資料前處理錯誤;與多項式次數本身無關,任何模型都會在資料前處理錯時呈現此類現象",
+          "is_correct": false,
+          "trap_type": "誤把現象歸到前處理"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "這是典型『過擬合(Overfit)』:多項式次數 N 過高時,曲線可逐點穿過每個訓練樣本(訓練誤差 → 0),但對未見過的測試資料完全失去泛化能力(測試誤差爆增)。解法包括降低 N、加 L2(Ridge)/L1(Lasso)正則化、增加訓練資料、用交叉驗證選 N。主檔強調『考 N 次數的合理解釋』正是此重點。",
         "wrong": {
-          "屬欠擬合(Underfit):次數 N 太高反而失去資料中潛在規律;只要再加倍 N 即可解決": "方向完全相反 — N 高造成過擬合(吸收噪音),N 低才是欠擬合(無法捕捉規律);加倍 N 只會惡化。",
-          "屬正常現象不需處理;訓練誤差為零代表模型成功,測試誤差差異屬資料雜訊不影響應用": "訓練誤差為零幾乎可確認過擬合,模型實際對新資料無用;這是 ML 最經典的失敗模式,絕非可忽略。",
-          "屬資料前處理錯誤;與多項式次數無關,任何模型都會在資料前處理錯時呈現此種現象": "本現象明確與 N 高度相關(降低 N 即可緩解),屬模型複雜度問題而非前處理問題。"
+          "屬欠擬合(Underfit):次數 N 太高反而失去資料中潛在規律;再加倍 N 即可解決問題狀況": "方向完全相反 — N 高造成過擬合(吸收噪音),N 低才是欠擬合(無法捕捉規律);加倍 N 只會惡化。",
+          "屬正常現象完全不需處理;訓練誤差為零代表模型成功,測試誤差差異屬資料雜訊不影響應用": "訓練誤差為零幾乎可確認過擬合,模型實際對新資料無用;這是 ML 最經典的失敗模式,絕非可忽略。",
+          "屬資料前處理錯誤;與多項式次數本身無關,任何模型都會在資料前處理錯時呈現此類現象": "本現象明確與 N 高度相關(降低 N 即可緩解),屬模型複雜度問題而非前處理問題。"
         },
         "hook": "口訣:N 低欠擬合(直線描曲線)、N 高過擬合(穿每點失泛化)— 交叉驗證找平衡"
       },
-      "misconceptions": ["以為次數 N 越高越好", "把訓練誤差零視為模型成功"],
-      "related_node_ids": ["n_L23202_018", "n_L23304_002"],
-      "tags": ["polynomial-regression", "overfitting", "degree-selection"],
+      "misconceptions": [
+        "以為次數 N 越高越好",
+        "把訓練誤差零視為模型成功"
+      ],
+      "related_node_ids": [
+        "n_L23202_018",
+        "n_L23304_002"
+      ],
+      "tags": [
+        "polynomial-regression",
+        "overfitting",
+        "degree-selection"
+      ],
       "errata_critical": false
     },
     {
@@ -382,15 +787,44 @@
       "source_level": "L2",
       "stem": "{scenario}的團隊發現線性迴歸對 {data_pattern} 資料擬合不佳。資深資料科學家建議改用多項式迴歸。下列關於『何時應改用多項式迴歸』的判斷何者最為精確?",
       "stem_variables": {
-        "case_a": {"scenario": "建材公司的混凝土強度", "data_pattern": "強度隨齡期呈拋物線型增長"},
-        "case_b": {"scenario": "太空產業的彈道計算", "data_pattern": "高度隨時間呈拋物線型變化"},
-        "case_c": {"scenario": "醫藥研發的劑量反應", "data_pattern": "效果隨劑量呈倒 U 字曲線"}
+        "case_a": {
+          "scenario": "建材公司的混凝土強度",
+          "data_pattern": "強度隨齡期呈拋物線型增長"
+        },
+        "case_b": {
+          "scenario": "太空產業的彈道計算",
+          "data_pattern": "高度隨時間呈拋物線型變化"
+        },
+        "case_c": {
+          "scenario": "醫藥研發的劑量反應",
+          "data_pattern": "效果隨劑量呈倒 U 字曲線"
+        }
       },
       "options": [
-        {"key": "A", "text": "當資料呈現明顯非線性曲線(拋物線、倒 U)時改用;線性迴歸只能描述直線無法擬合曲線", "is_correct": true, "trap_type": "正解:曲線型用多項式"},
-        {"key": "B", "text": "任何資料都應該優先使用多項式迴歸;線性迴歸是過時模型不應再用於任何商業應用", "is_correct": false, "trap_type": "過度推廣多項式"},
-        {"key": "C", "text": "多項式迴歸只適合分類問題;迴歸任務應一律使用線性迴歸即可不需考慮資料形狀", "is_correct": false, "trap_type": "誤判用途分類"},
-        {"key": "D", "text": "多項式迴歸僅供學術理論示範;真實場景的曲線資料應改用神經網路完全取代多項式", "is_correct": false, "trap_type": "誤判為僅學術用"}
+        {
+          "key": "A",
+          "text": "當資料呈現明顯非線性曲線(拋物線、倒 U)時改用;線性迴歸只能描述直線無法擬合曲線",
+          "is_correct": true,
+          "trap_type": "正解:曲線型用多項式"
+        },
+        {
+          "key": "B",
+          "text": "任何資料都應該優先使用多項式迴歸;線性迴歸是過時模型不應再用於任何商業應用",
+          "is_correct": false,
+          "trap_type": "過度推廣多項式"
+        },
+        {
+          "key": "C",
+          "text": "多項式迴歸只適合分類問題;迴歸任務應一律使用線性迴歸即可不需考慮資料形狀",
+          "is_correct": false,
+          "trap_type": "誤判用途分類"
+        },
+        {
+          "key": "D",
+          "text": "多項式迴歸僅供學術理論示範;真實場景的曲線資料應改用神經網路完全取代多項式",
+          "is_correct": false,
+          "trap_type": "誤判為僅學術用"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -402,9 +836,19 @@
         },
         "hook": "口訣:資料散佈是曲線 → 多項式迴歸;資料散佈是直線 → 線性迴歸 — 先看圖再選模型"
       },
-      "misconceptions": ["過度推廣多項式迴歸到所有情境", "把多項式迴歸誤當分類方法"],
-      "related_node_ids": ["n_L23202_018", "n_L23202_013"],
-      "tags": ["polynomial-regression", "linear-regression", "use-case"],
+      "misconceptions": [
+        "過度推廣多項式迴歸到所有情境",
+        "把多項式迴歸誤當分類方法"
+      ],
+      "related_node_ids": [
+        "n_L23202_018",
+        "n_L23202_013"
+      ],
+      "tags": [
+        "polynomial-regression",
+        "linear-regression",
+        "use-case"
+      ],
       "errata_critical": false
     },
     {
@@ -417,29 +861,64 @@
       "source_level": "L2",
       "stem": "{scenario}的考生準備 IPAS 考試,看到多項式迴歸題目時應重點掌握什麼?教科書內容包含『公式展開』『N 次數合理解釋』『β 係數矩陣推導』『梯度下降公式』。下列考試重點判斷何者最為精確?",
       "stem_variables": {
-        "case_a": {"scenario": "資管科系應屆畢業生"},
-        "case_b": {"scenario": "AI 領域轉職工程師"},
-        "case_c": {"scenario": "在職資料分析師進修"}
+        "case_a": {
+          "scenario": "資管科系應屆畢業生"
+        },
+        "case_b": {
+          "scenario": "AI 領域轉職工程師"
+        },
+        "case_c": {
+          "scenario": "在職資料分析師進修"
+        }
       },
       "options": [
-        {"key": "A", "text": "考試重點為『N 次數的合理解釋』(為何選 N=3 不選 N=10);非公式展開與梯度推導", "is_correct": true, "trap_type": "正解:重點是 N 的解釋"},
-        {"key": "B", "text": "考試重點為『N 次方展開公式記憶』;只要能完整背出 x、x²、x³、xⁿ 展開即可順利拿分", "is_correct": false, "trap_type": "誤把公式背誦當重點"},
-        {"key": "C", "text": "考試重點為『β 係數的正規方程矩陣推導』;考生應徹底熟練矩陣代數的解析解推導步驟", "is_correct": false, "trap_type": "誤把矩陣推導當重點"},
-        {"key": "D", "text": "考試重點為『梯度下降公式的細節』;考生應熟練偏微分與學習率設定的詳細計算過程要點", "is_correct": false, "trap_type": "誤把梯度當重點"}
+        {
+          "key": "A",
+          "text": "考試重點為『N 次數的合理解釋』(為何選 N=3 不選 N=10);非公式展開與梯度推導",
+          "is_correct": true,
+          "trap_type": "正解:重點是 N 的解釋"
+        },
+        {
+          "key": "B",
+          "text": "考試重點為『N 次方展開公式記憶』;只要能完整背出 x、x²、x³、xⁿ 展開即可順利拿分",
+          "is_correct": false,
+          "trap_type": "誤把公式背誦當重點"
+        },
+        {
+          "key": "C",
+          "text": "考試重點為『β 係數的正規方程矩陣推導』;考生應徹底熟練矩陣代數的解析解推導步驟",
+          "is_correct": false,
+          "trap_type": "誤把矩陣推導當重點"
+        },
+        {
+          "key": "D",
+          "text": "考試重點為『梯度下降公式的細節』;考生應熟練偏微分與學習率設定的詳細計算過程要點",
+          "is_correct": false,
+          "trap_type": "誤把梯度當重點"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "依衝刺主檔明確強調『不考公式記憶,考 N 次數的合理解釋』。IPAS 為應用規劃師考試,評估的是『模型選擇判斷力』而非數學推導能力。多項式迴歸的考試核心是:理解 N 太低欠擬合、N 太高過擬合,並能說明為何在具體情境下選 N=2 或 N=3 而非 N=10(避免過擬合 + 避免不合理高次)。公式展開、矩陣推導、梯度下降皆非考點。",
         "wrong": {
-          "考試重點為『N 次方展開公式記憶』;只要能完整背出 x、x²、x³、xⁿ 展開即可拿分": "主檔明確標示『不考公式記憶』;IPAS 評估應用判斷力,死背公式偏離考試方向。",
           "考試重點為『β 係數的正規方程矩陣推導』;考生應徹底熟練矩陣代數的解析解推導步驟": "正規方程矩陣推導屬資料科學進階數學,IPAS 應用規劃師中級不涉及,屬非考點。",
-          "考試重點為『梯度下降公式的細節』;考生應熟練偏微分與學習率設定的詳細計算過程": "梯度下降細節在 IPAS 應用規劃師層次不考;考的是『模型選擇與業務判斷』,不是數值優化內幕。"
+          "考試重點為『N 次方展開公式記憶』;只要能完整背出 x、x²、x³、xⁿ 展開即可順利拿分": "主檔明確標示『不考公式記憶』;IPAS 評估應用判斷力,死背公式偏離考試方向。",
+          "考試重點為『梯度下降公式的細節』;考生應熟練偏微分與學習率設定的詳細計算過程要點": "梯度下降細節在 IPAS 應用規劃師層次不考;考的是『模型選擇與業務判斷』,不是數值優化內幕。"
         },
         "hook": "口訣:IPAS 多項式迴歸考點 = N 次數合理解釋(為何不過高不過低),非公式 / 矩陣 / 梯度"
       },
-      "misconceptions": ["把多項式迴歸的考試重點誤判為公式記憶", "把 IPAS 應用考試誤當作數學推導考試"],
-      "related_node_ids": ["n_L23202_018"],
-      "tags": ["polynomial-regression", "exam-focus", "ipas-strategy"],
+      "misconceptions": [
+        "把多項式迴歸的考試重點誤判為公式記憶",
+        "把 IPAS 應用考試誤當作數學推導考試"
+      ],
+      "related_node_ids": [
+        "n_L23202_018"
+      ],
+      "tags": [
+        "polynomial-regression",
+        "exam-focus",
+        "ipas-strategy"
+      ],
       "errata_critical": false
     }
   ]
