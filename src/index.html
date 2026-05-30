@@ -162,7 +162,6 @@
   @media (max-width: 600px) {
     main { padding: 12px; padding-bottom: 80px; }
     .modes-grid { grid-template-columns: 1fr; }
-    .m8-grid { grid-template-columns: 1fr; }  /* B 線 a11y:Mode 8 程式追蹤窄屏單欄(原 1.2fr/1fr 擠壓) */
     .question-stem { font-size: 1rem; }
     nav.bottom-nav { display: flex; }
     .header-stats { display: none; }
@@ -378,6 +377,8 @@
 
   /* === Mode 8 Code Trace 道場(spec: docs/spec-code-trace.md §5)=== */
   .m8-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; margin: 12px 0; }
+  /* B 線 a11y(Codex P2 fix):窄屏單欄覆寫必須在 base rule 之後才能贏 cascade(同 specificity 後者勝)*/
+  @media (max-width: 600px) { .m8-grid { grid-template-columns: 1fr; } }
   .m8-code { background: #0a0e1a; color: #cdd6f4; padding: 12px 8px; border-radius: var(--radius-sm);
     font-family: 'Cascadia Code', 'JetBrains Mono', Consolas, monospace; font-size: 0.85rem;
     line-height: 1.6; border-left: 4px solid var(--primary); overflow-x: auto; min-height: 200px; }
