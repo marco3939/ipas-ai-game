@@ -108,9 +108,10 @@ async function main() {
   log(allowedSection && !allowedSection[1].includes('ipas_theme_v1'),
     'ipas_theme_v1 NOT 在 ALLOWED_KEYS_EXACT 內');
 
-  console.log('\n[10] GameFX.levelUp null guard(D 修)');
-  log(html.includes('if (window.gsap && card)') && html.includes('else if (card)'),
-    'GameFX.levelUp 對 card 加 null 守衛');
+  console.log('\n[10] GameFX.levelUp null guard(D 修)+ B2 a11y reduced-motion 整合');
+  // B2:gsap 條件加上 !this._reduceMotion(reduced-motion 跳 gsap 跳彈),仍須含 card null 守衛 + 後備 scale(1)
+  log(html.includes('window.gsap && card && !this._reduceMotion') && html.includes('else if (card)'),
+    'GameFX.levelUp 對 card 加 null 守衛 + reduced-motion 整合');
 
   console.log('\n[11] index.html .hp-fill 已抽到 var()');
   log(html.includes('.hp-fill { height: 100%; background: var(--grad-hp-good);'),
