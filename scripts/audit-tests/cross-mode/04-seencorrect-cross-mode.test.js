@@ -12,33 +12,48 @@ console.log('=== 04 SeenCorrect cross-mode ===\n');
 const A = makeAssert();
 
 // ----- [1] 各 mode 是否呼叫 SeenCorrect.mark(正解時) -----
-console.log('\n[1] mode 呼叫 SeenCorrect.mark 覆蓋率');
+// 2026-05-30 更新契約(對齊 PR #46 SSOT 重構 + CLAUDE.md 案例 11):
+//   PR #46 把 mode1/2/5 的「SeenCorrect.mark + SM2.recordAnswer + Progress.addAnswer
+//   + Mastery.update + Wrongbook.add」5 步抽到共用層 PlayEngine.commitAnswer(...) SSOT。
+//   所以 mode1/2/5 內裸 `SeenCorrect.mark(` 字串不存在 ≠ 漏 mark,而是改走 SSOT。
+//   驗證新契約:
+//     - mode1/2/5:走 PlayEngine.commitAnswer(SSOT 內 grep 已驗 SeenCorrect.mark)
+//     - mode3/4/7/8:仍裸呼叫(尚未抽 SSOT)
+//     - index.html PlayEngine.answer + commitAnswer 兩條路徑都含 SeenCorrect.mark
+console.log('\n[1] mode 呼叫 SeenCorrect.mark 覆蓋率(SSOT 對齊 PR #46)');
 {
-  const expected = {
-    'mode1.js': true,   // 戰鬥 mode
-    'mode2.js': true,   // 戰鬥 mode
-    'mode3.js': true,   // 連連看
-    'mode4.js': true,   // 配對戰
-    'mode5.js': true,   // 弱點獵人 — PR #27 設計:write but no filter
-    'mode7.js': true,   // PR #27 C-4 critical:覆寫 PlayEngine.answer 必須也 mark
-    'mode8.js': true,   // code trace 道場
-  };
-  for (const [f, must] of Object.entries(expected)) {
+  // 1a:走 PlayEngine.commitAnswer SSOT 的 mode(裸字串可不出現)
+  const ssotModes = ['mode1.js', 'mode2.js', 'mode5.js'];
+  for (const f of ssotModes) {
     const src = fs.readFileSync(path.join(ROOT, 'src/modes', f), 'utf8');
-    const has = /SeenCorrect\.mark\s*\(/.test(src);
-    A.ok(has === must, `${f}: SeenCorrect.mark 呼叫 (預期=${must})`);
+    const directMark = /SeenCorrect\.mark\s*\(/.test(src);
+    const viaSSOT = /PlayEngine\.commitAnswer\s*\(/.test(src);
+    A.ok(directMark || viaSSOT, `${f}: 含 SeenCorrect.mark 或走 PlayEngine.commitAnswer SSOT`);
   }
-  // CM(ConfusionMatrix)位於 index.html 或 src/components — 找 ConfusionMatrix 路徑
+  // 1b:仍裸呼叫的 mode
+  const directModes = ['mode3.js', 'mode4.js', 'mode7.js', 'mode8.js'];
+  for (const f of directModes) {
+    const src = fs.readFileSync(path.join(ROOT, 'src/modes', f), 'utf8');
+    A.ok(/SeenCorrect\.mark\s*\(/.test(src), `${f}: SeenCorrect.mark 裸呼叫`);
+  }
+  // 1c:共用層 PlayEngine.answer + commitAnswer 都含 SeenCorrect.mark
   const idxSrc = fs.readFileSync(path.join(ROOT, 'src/index.html'), 'utf8');
-  // PlayEngine.answer 有 SeenCorrect.mark
-  A.ok(/SeenCorrect\.mark\s*\(/.test(idxSrc), 'index.html PlayEngine.answer 含 SeenCorrect.mark');
+  A.ok(/SeenCorrect\.mark\s*\(/.test(idxSrc), 'index.html PlayEngine.answer / commitAnswer 含 SeenCorrect.mark');
+  // 1d:確認 commitAnswer 內含 SeenCorrect.mark(SSOT 內部契約)
+  const commitMatch = idxSrc.match(/commitAnswer\s*\([^)]*\)\s*\{[\s\S]*?\n\s{2}\},/);
+  A.ok(commitMatch && /SeenCorrect\.mark\s*\(/.test(commitMatch[0]),
+    'PlayEngine.commitAnswer 內含 SeenCorrect.mark(SSOT 契約)');
 }
 
 // ----- [2] Mode 5 不 read filterForBattle 但 write mark(PR #27 設計) -----
-console.log('\n[2] Mode 5 設計:write mark 但 *不 read* filterForBattle');
+// 2026-05-30 更新:mode5 改走 PlayEngine.commitAnswer SSOT(PR #46),SSOT 內含 SeenCorrect.mark
+// (本檔 [1d] 已驗),所以裸字串不出現是正常設計。保留「不 read filterForBattle」校驗。
+console.log('\n[2] Mode 5 設計:write mark(走 SSOT)但 *不 read* filterForBattle');
 {
   const m5 = fs.readFileSync(path.join(ROOT, 'src/modes/mode5.js'), 'utf8');
-  A.ok(/SeenCorrect\.mark\s*\(/.test(m5), 'Mode 5 寫 SeenCorrect.mark');
+  // 走 SSOT 即等價於「寫 SeenCorrect.mark」
+  A.ok(/PlayEngine\.commitAnswer\s*\(/.test(m5),
+    'Mode 5 走 PlayEngine.commitAnswer SSOT(SSOT 內含 SeenCorrect.mark)');
   // Mode 5 弱點獵人本意要重複出弱題,不能濾掉已答對
   // 預期:不出現 SeenCorrect.filterForBattle / SeenCorrect.has
   A.ok(!/SeenCorrect\.filterForBattle\s*\(/.test(m5),

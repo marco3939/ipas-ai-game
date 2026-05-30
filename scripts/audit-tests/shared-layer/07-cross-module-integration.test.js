@@ -87,22 +87,30 @@ console.log('\n[3] Storage key uniqueness');
   }
 }
 
-// ----- [4] 案例 4 重現:繞過 Mastery.update 不算進 attempts -----
-console.log('\n[4] BUG case 4 reproduction: 自寫 score 不 bump attempts');
+// ----- [4] 案例 4 reproduction → §8 H4 修補後雙路徑契約 -----
+// 2026-05-30 更新契約(對齊 index.html ~1117-1126 §8 H4 雙路徑修補):
+//   countMastered() 現在用 Path A(correct >= min(3, qPerNode))OR Path B(score >= 80)。
+//   §8 H4 為了讓 Mode 5 skillReinforce / drillBonus 等只動 score 的路徑被認可,
+//   加了 Path B。所以 score=100 + correct=0 現在「算進 mastered」(不是 bug)。
+//
+//   ⚠️ 副作用:案例 4 原始 bug(adjustMasteryScore 不 bump attempts)現在不再被
+//   countMastered 罰,但仍是設計味道差(observability 受損,attempts=0 看不出練習次數)。
+//   本 case 改驗 §8 H4 雙路徑契約,案例 4 的訓示保留在 CLAUDE.md §5。
+console.log('\n[4] case 4 → §8 H4 雙路徑契約:score>=80 OR correct>=min(3,qcount)');
 {
   const qs = [{id:'q1', node_id:'N1'}];
   const sb = setupAll(qs);
-  // 模擬「直接寫 score 而不走 update」(案例 4 bug)
+  // 模擬「直接寫 score 而不走 update」(案例 4 原 bug 場景)
   const m = sb.Mastery.load();
   m['N1'] = { score: 100, attempts: 0, correct: 0, streak: 10, lastSeen: Date.now() };
   sb.Mastery.save(m);
-  // countMastered 看 correct >= min(3,qcount) — correct=0,不算
-  A.eq(sb.Mastery.countMastered(), 0, '⚠️ 案例 4 重現:score=100 但 correct=0 → countMastered=0');
-  // 正常 flow:走 Mastery.update 3 次 → 應該 mastered
+  // §8 H4 修補後:Path B(score>=80)觸發 → mastered=1
+  A.eq(sb.Mastery.countMastered(), 1, '§8 H4 路徑 B:score=100 → countMastered=1(即便 correct=0)');
+  // Path A 驗證:走 Mastery.update 3 次 → correct 累加 → 仍 mastered
   sb.Mastery.update('N1', true);
   sb.Mastery.update('N1', true);
   sb.Mastery.update('N1', true);
-  A.eq(sb.Mastery.countMastered(), 1, 'after 3 update calls → mastered');
+  A.eq(sb.Mastery.countMastered(), 1, '3 次 update 後仍 mastered(Path A or B 任一達標即可)');
 }
 
 // ----- [5] 案例 10 重現:Wrongbook 收到空 correctChoice → suspect -----
