@@ -32,12 +32,23 @@ const CROSS_SUBJECT_ALLOWLIST = new Set([
 ]);
 
 // 優先讀 manifest(鐵律 #7),fallback 到 readdirSync
+// (Codex PR #62 P2 fix:壞 manifest fallback `[]` 會讓 audit 假 PASS。
+//  index.html loadQuestions 對空 manifest 也 throw。本 audit 必同樣 reject。)
 let files;
 if (fs.existsSync(MANIFEST_FILE)) {
   const manifest = JSON.parse(fs.readFileSync(MANIFEST_FILE, 'utf8'));
-  files = manifest.files || [];
+  if (!Array.isArray(manifest.files) || manifest.files.length === 0) {
+    console.error(`[01-stats] ❌ questions-manifest.json 損壞:files 缺失/空陣列`);
+    console.error(`  index.html loadQuestions 對此狀態 throw(鐵律 #7 SSOT 破損)`);
+    process.exit(1);
+  }
+  files = manifest.files;
 } else {
   files = fs.readdirSync(SRC_DIR).filter(f => f.startsWith('questions') && f.endsWith('.json'));
+  if (files.length === 0) {
+    console.error(`[01-stats] ❌ src/ 內找不到 questions*.json,題庫消失`);
+    process.exit(1);
+  }
 }
 const whitelist = JSON.parse(fs.readFileSync(WL_FILE, 'utf8'));
 const scope = JSON.parse(fs.readFileSync(path.join(KB_DIR, 'scope.json'), 'utf8'));
