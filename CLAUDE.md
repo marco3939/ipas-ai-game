@@ -213,6 +213,19 @@ LoRA / RLHF / DPO / GPTQ / SentencePiece / DAPT / RandAugment / Mixup / CutMix /
   2. **「中途分支也算離場」**:Mode 7 標記、Mode 4 暫停、DrillSession 中斷等中途狀態也是「考試結束/暫停」,需 clear 旗標
   3. **§9 workflow table 加新分類**:「動 user-facing 退出 / view 切換流程」必跑 sandbox-exam-exit-protection + 21-exam-exit-confirm.test.js
 
+### 案例 13:Post-merge state drift — 同 JSON value 內互蓋導致 audit 預期之外(2026-05-30 PR #53/#55 後)
+- 症狀:PR #55(D 線 desync hygiene)修補 285 個 `explanation.wrong` key 跟 `option.text` 失同步問題。merge 後在 main 上重跑 audit,desync 居然從預期的 0 變回 77。
+- 根因:**C 線 PR #53 跟 D 線 PR #55 在同一個題目的同一個 JSON value**(`{ option text: explanation }`)裡各自有改動 — C 線改 option text、D 線同步 key 名。git 的 line-based merge 認為「兩個 PR 同行衝突」時,後 merge 者勝,結果 D 線的 key 同步被 C 線的 option text 編輯**默默回退**(無 conflict marker,因為兩邊都是「修改同一行」,git 視為同一個改動的兩個版本)。
+- 為什麼 PR 內 audit 是綠的:PR audit 只跑「該 PR 的 diff 套用到 base 之後」的狀態,不會驗「跟另一個未 merge PR rebase 後的最終結果」。每個 PR 單獨 OK,合在一起破。
+- 修補:
+  1. 開 PR #56 D 線 followup,重跑 auto-fix script,把被 C 線 rebase 蓋掉的 58 題重同步
+  2. 全題庫 desync:285 → 77(C 蓋掉 D)→ 13(D-followup 修補後,剩 7 case2 漏寫 explanation 屬另案)
+- 教訓:
+  1. **「PR 內 audit 綠」≠「main 整體狀態綠」**。同一個 JSON value 同時被兩個 PR 改 = 後 merge 者隱性覆蓋,git 不會喊衝突。Post-merge 必在 main 重跑一次 audit 才是 ground truth(同案例 9「stale cache as ground truth illusion」的延伸)。
+  2. **修補策略應避免「文字 key 跟內容綁定」**:`explanation.wrong[option.text]` 用整段 text 當 key 是脆弱設計 — option text 一改就 key 失效。長期該重構成 `[{key:'B', exp:'...'}]` 陣列消除 key 脆弱性。
+  3. **CI 應加 desync 偵測 audit**(像 audit-option-length),讓未來 PR 自動防退化。本案抓到 13 殘 desync(7 個是「漏寫 explanation」結構問題,需新內容)。
+  4. **多 PR 並行時,如果不同 PR 動同一檔的同一資料結構**,要在 PR 內互相 reference,merge 時主動 rebase 後再驗一次,避免相互覆蓋。
+
 ---
 
 ## 8. 共用層 / user-facing 改動 必派 code-review subagent(2026-05-16 案例 10 後新增)
