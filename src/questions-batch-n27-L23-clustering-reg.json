@@ -3,7 +3,10 @@
   "schema_version": "iron-rule-1+2+6",
   "generated_at": "2026-05-18",
   "batch": "N27 — 科三 L23202/L23304 進階聚類 + 正則化迴歸:Hierarchical / Spectral / ElasticNet 三節點",
-  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "exam_target": {
+    "name": "IPAS AI 應用規劃師中級",
+    "date": "2026-05-23"
+  },
   "iron_rule_compliance": {
     "rule_1_drill_explanation": "每題皆有 explanation.correct/wrong/hook + misconceptions ≥ 1 + related_node_ids",
     "rule_2_shuffle_and_cases": "shuffle_options:true;本批次以靜態情境呈現概念 / 公式 / 計算辨析,無需 case 變數",
@@ -14,15 +17,30 @@
   },
   "batch_id": 27,
   "subject": 3,
-  "knowledge_codes": ["L23202", "L23304"],
+  "knowledge_codes": [
+    "L23202",
+    "L23304"
+  ],
   "distribution": {
     "L23202_count": 8,
     "L23304_count": 4,
-    "by_node": {"n_L23202_016": 4, "n_L23202_017": 4, "n_L23304_006": 4},
-    "by_format": {"single_choice": 12},
-    "by_difficulty": {"easy": 2, "medium": 7, "hard": 3}
+    "by_node": {
+      "n_L23202_016": 4,
+      "n_L23202_017": 4,
+      "n_L23304_006": 4
+    },
+    "by_format": {
+      "single_choice": 12
+    },
+    "by_difficulty": {
+      "easy": 2,
+      "medium": 7,
+      "hard": 3
+    }
   },
-  "source_pdf": ["機器學習模型圖卡(全).pdf (page 30 Hierarchical, page 32 Spectral, page 9 ElasticNet)"],
+  "source_pdf": [
+    "機器學習模型圖卡(全).pdf (page 30 Hierarchical, page 32 Spectral, page 9 ElasticNet)"
+  ],
   "questions": [
     {
       "id": "q_n27_001",
@@ -34,24 +52,55 @@
       "source_level": "L2",
       "stem": "某零售業資料分析師欲對 800 筆顧客資料做分群,並希望以視覺化方式檢視不同群數下的階層結構,事先並不確定該分幾群。下列哪一個聚類方法最直接符合此需求?",
       "options": [
-        {"key": "A", "text": "分層聚類(Hierarchical Clustering);可繪 Dendrogram,於水平切割線決定群數不需預設 K", "is_correct": true, "trap_type": "正解:Dendrogram + 不需預設 K"},
-        {"key": "B", "text": "K-means;先以肘部法估 K 後一次跑出最終分群,無需 Dendrogram 也能視覺呈現分群層級結構", "is_correct": false, "trap_type": "K-means 無階層結構"},
-        {"key": "C", "text": "DBSCAN;以密度自動形成群、不需預設 K 並能輸出階層 Dendrogram 供切割線判讀最終群數", "is_correct": false, "trap_type": "把 DBSCAN 誤掛 Dendrogram"},
-        {"key": "D", "text": "光譜聚類;以圖嵌入轉換後即得 Dendrogram,直接於 Dendrogram 高度切割線挑選最終群數即可", "is_correct": false, "trap_type": "把光譜聚類誤掛 Dendrogram"}
+        {
+          "key": "A",
+          "text": "分層聚類(Hierarchical Clustering);可繪 Dendrogram,於水平切割線決定群數不需預設 K",
+          "is_correct": true,
+          "trap_type": "正解:Dendrogram + 不需預設 K"
+        },
+        {
+          "key": "B",
+          "text": "K-means;先以肘部法估 K 後一次跑出最終分群,無需 Dendrogram 也能視覺呈現分群層級結構",
+          "is_correct": false,
+          "trap_type": "K-means 無階層結構"
+        },
+        {
+          "key": "C",
+          "text": "DBSCAN;以密度自動形成群、不需預設 K 並能輸出階層 Dendrogram 供切割線判讀最終群數",
+          "is_correct": false,
+          "trap_type": "把 DBSCAN 誤掛 Dendrogram"
+        },
+        {
+          "key": "D",
+          "text": "光譜聚類;以圖嵌入轉換後即得 Dendrogram,直接於 Dendrogram 高度切割線挑選最終群數即可",
+          "is_correct": false,
+          "trap_type": "把光譜聚類誤掛 Dendrogram"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "分層聚類的核心特性正是『不需預設 K』+『繪 Dendrogram 樹狀圖』,使用者在 Dendrogram 高度上畫水平切割線即可決定最終群數,適合事先不知群數又想看階層的場景;800 筆屬小資料集,落在 O(n²) 可接受範圍內。",
         "wrong": {
-          "K-means;先以肘部法估 K 後即可一次跑出最終分群,無需 Dendrogram 即能視覺呈現層級": "K-means 須先設定 K,且輸出僅為扁平分群,沒有階層樹狀圖供視覺判讀。",
-          "DBSCAN;以密度自動形成群、不需預設 K 並能輸出階層 Dendrogram 供切割線判讀": "DBSCAN 雖不需 K,但靠 ε / minPts 控制密度,輸出扁平分群,並無 Dendrogram。",
-          "光譜聚類;以圖嵌入轉換後即得 Dendrogram,直接於高度切割線挑選最終群數即可": "光譜聚類流程為『建圖 → 拉普拉斯特徵向量 → K-means』,最後一步仍需指定 K,且輸出非 Dendrogram。"
+          "K-means;先以肘部法估 K 後一次跑出最終分群,無需 Dendrogram 也能視覺呈現分群層級結構": "K-means 須先設定 K,且輸出僅為扁平分群,沒有階層樹狀圖供視覺判讀。",
+          "DBSCAN;以密度自動形成群、不需預設 K 並能輸出階層 Dendrogram 供切割線判讀最終群數": "DBSCAN 雖不需 K,但靠 ε / minPts 控制密度,輸出扁平分群,並無 Dendrogram。",
+          "光譜聚類;以圖嵌入轉換後即得 Dendrogram,直接於 Dendrogram 高度切割線挑選最終群數即可": "光譜聚類流程為『建圖 → 拉普拉斯特徵向量 → K-means』,最後一步仍需指定 K,且輸出非 Dendrogram。"
         },
         "hook": "口訣:『畫樹再切線,群數自己看』— Dendrogram 是分層聚類的招牌,K-means/DBSCAN/Spectral 都沒有"
       },
-      "misconceptions": ["以為所有聚類都需預設 K", "把 Dendrogram 與其他聚類混為一談"],
-      "related_node_ids": ["n_L23202_016", "n_L23202_012", "n_L23202_017"],
-      "tags": ["hierarchical-clustering", "dendrogram", "no-k-needed"],
+      "misconceptions": [
+        "以為所有聚類都需預設 K",
+        "把 Dendrogram 與其他聚類混為一談"
+      ],
+      "related_node_ids": [
+        "n_L23202_016",
+        "n_L23202_012",
+        "n_L23202_017"
+      ],
+      "tags": [
+        "hierarchical-clustering",
+        "dendrogram",
+        "no-k-needed"
+      ],
       "errata_critical": false
     },
     {
@@ -64,24 +113,53 @@
       "source_level": "L2",
       "stem": "某資料工程師討論分層聚類的兩種模式『合併式 Agglomerative』與『分裂式 Divisive』。下列敘述何者最為正確?",
       "options": [
-        {"key": "A", "text": "合併式由下而上,每點先各自為一群再逐步合併兩兩;分裂式由上而下,全體先為一群再逐步分裂", "is_correct": true, "trap_type": "正解:bottom-up vs top-down"},
-        {"key": "B", "text": "合併式由上而下,先把全資料視為一群再逐步切分;分裂式由下而上,從各點開始逐步合併兩兩群", "is_correct": false, "trap_type": "方向完全顛倒"},
-        {"key": "C", "text": "合併式與分裂式產生的 Dendrogram 樹狀圖完全相同;兩者只是計算過程不同但最終結果必完全一致", "is_correct": false, "trap_type": "誤判結果必同"},
-        {"key": "D", "text": "合併式僅可用 Euclidean 距離度量;分裂式則僅可用 Manhattan,二者完全互斥不得互換", "is_correct": false, "trap_type": "虛構距離限制"}
+        {
+          "key": "A",
+          "text": "合併式由下而上,每點先各自為一群再逐步合併兩兩;分裂式由上而下,全體先為一群再逐步分裂",
+          "is_correct": true,
+          "trap_type": "正解:bottom-up vs top-down"
+        },
+        {
+          "key": "B",
+          "text": "合併式由上而下,先把全資料視為一群再逐步切分;分裂式由下而上,從各點開始逐步合併兩兩群",
+          "is_correct": false,
+          "trap_type": "方向完全顛倒"
+        },
+        {
+          "key": "C",
+          "text": "合併式與分裂式產生的 Dendrogram 樹狀圖完全相同;兩者只是計算過程不同但最終結果必完全一致",
+          "is_correct": false,
+          "trap_type": "誤判結果必同"
+        },
+        {
+          "key": "D",
+          "text": "合併式僅可用 Euclidean 距離度量;分裂式則僅可用 Manhattan,二者完全互斥不得互換",
+          "is_correct": false,
+          "trap_type": "虛構距離限制"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "Agglomerative(合併式)由下而上(bottom-up):每筆資料先各自為一群,每一輪合併最近的兩群,直到全部併為一群;Divisive(分裂式)由上而下(top-down):全資料先為一大群,每輪挑一群切分,直到每點各自一群。兩種模式都可產生 Dendrogram,但因合併/分裂策略不同,結果通常不一致。",
         "wrong": {
-          "合併式由上而下,先把全資料視為一群再逐步切分;分裂式由下而上,從各點開始逐步合併群": "方向完全相反,合併=merge=由下而上、分裂=split=由上而下,從字面意義即可判別。",
-          "合併式與分裂式產生的 Dendrogram 樹狀圖完全相同;兩者只是計算過程不同但結果必一致": "兩者最佳化目標與合併/分裂順序不同,Dendrogram 結構通常不一致,只是視覺上都呈樹狀。",
-          "合併式僅能用 Euclidean 距離;分裂式則僅支援 Manhattan 距離,二者距離度量上完全互斥": "兩種模式皆可搭配 Euclidean、Manhattan、cosine 等距離度量,並無互斥限制。"
+          "合併式由上而下,先把全資料視為一群再逐步切分;分裂式由下而上,從各點開始逐步合併兩兩群": "方向完全相反,合併=merge=由下而上、分裂=split=由上而下,從字面意義即可判別。",
+          "合併式與分裂式產生的 Dendrogram 樹狀圖完全相同;兩者只是計算過程不同但最終結果必完全一致": "兩者最佳化目標與合併/分裂順序不同,Dendrogram 結構通常不一致,只是視覺上都呈樹狀。",
+          "合併式僅可用 Euclidean 距離度量;分裂式則僅可用 Manhattan,二者完全互斥不得互換": "兩種模式皆可搭配 Euclidean、Manhattan、cosine 等距離度量,並無互斥限制。"
         },
         "hook": "口訣:Agglomerative = 由下而上『聚少成多』、Divisive = 由上而下『分一變多』"
       },
-      "misconceptions": ["把 Agglomerative / Divisive 方向顛倒", "誤以為兩種模式結果必相同"],
-      "related_node_ids": ["n_L23202_016"],
-      "tags": ["hierarchical-clustering", "agglomerative", "divisive"],
+      "misconceptions": [
+        "把 Agglomerative / Divisive 方向顛倒",
+        "誤以為兩種模式結果必相同"
+      ],
+      "related_node_ids": [
+        "n_L23202_016"
+      ],
+      "tags": [
+        "hierarchical-clustering",
+        "agglomerative",
+        "divisive"
+      ],
       "errata_critical": false
     },
     {
@@ -94,10 +172,30 @@
       "source_level": "L2",
       "stem": "某電信業資料科學家手上有 100 萬筆用戶通話特徵資料,主管要求使用分層聚類做客戶分群以便繪 Dendrogram 視覺呈現。資深架構師立刻喊停。下列敘述何者最能說明資深架構師的理由?",
       "options": [
-        {"key": "A", "text": "分層聚類計算複雜度約 O(n²);100 萬筆會導致記憶體 / 時間爆炸,僅適合小資料集", "is_correct": true, "trap_type": "正解:O(n²) 限制"},
-        {"key": "B", "text": "分層聚類僅支援數值特徵不接受類別特徵;通話資料含通話對象類別欄位故無法直接使用此演算法", "is_correct": false, "trap_type": "與題意無關的特徵限制"},
-        {"key": "C", "text": "分層聚類的 Dendrogram 在資料量超過 1000 筆時即會顯示亂碼,使視覺判讀完全失效故不適用", "is_correct": false, "trap_type": "捏造視覺化限制"},
-        {"key": "D", "text": "分層聚類僅能輸出 2 群結果;100 萬用戶分為兩群業務上無意義,故主管要求需改用其他聚類方法", "is_correct": false, "trap_type": "虛構群數限制"}
+        {
+          "key": "A",
+          "text": "分層聚類計算複雜度約 O(n²);100 萬筆會導致記憶體 / 時間爆炸,僅適合小資料集",
+          "is_correct": true,
+          "trap_type": "正解:O(n²) 限制"
+        },
+        {
+          "key": "B",
+          "text": "分層聚類僅支援數值特徵不接受類別特徵;通話資料含通話對象類別欄位故無法直接使用此演算法",
+          "is_correct": false,
+          "trap_type": "與題意無關的特徵限制"
+        },
+        {
+          "key": "C",
+          "text": "分層聚類的 Dendrogram 在資料量超過 1000 筆時即會顯示亂碼,使視覺判讀完全失效故不適用",
+          "is_correct": false,
+          "trap_type": "捏造視覺化限制"
+        },
+        {
+          "key": "D",
+          "text": "分層聚類僅能輸出 2 群結果;100 萬用戶分為兩群業務上無意義,故主管要求需改用其他聚類方法",
+          "is_correct": false,
+          "trap_type": "虛構群數限制"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -109,9 +207,19 @@
         },
         "hook": "口訣:分層聚類 = O(n²) 級,小資料才用;大資料請改 K-means / BIRCH"
       },
-      "misconceptions": ["把分層聚類用在百萬級資料", "誤以為 Dendrogram 無資料量上限"],
-      "related_node_ids": ["n_L23202_016", "n_L23202_012"],
-      "tags": ["hierarchical-clustering", "complexity", "scalability"],
+      "misconceptions": [
+        "把分層聚類用在百萬級資料",
+        "誤以為 Dendrogram 無資料量上限"
+      ],
+      "related_node_ids": [
+        "n_L23202_016",
+        "n_L23202_012"
+      ],
+      "tags": [
+        "hierarchical-clustering",
+        "complexity",
+        "scalability"
+      ],
       "errata_critical": false
     },
     {
@@ -124,24 +232,53 @@
       "source_level": "L2",
       "stem": "某金融業客戶分群報告中附了一張 Dendrogram,縱軸為合併距離 0~100。分析師說:『我在縱軸高度 60 畫一條水平線,線下方共看到 5 條垂直線。』下列推論何者最為正確?",
       "options": [
-        {"key": "A", "text": "切割線位置決定最終群數;在高度 60 切到 5 條垂直線即代表將資料分為 5 群,可彈性調整高度", "is_correct": true, "trap_type": "正解:切割線即群數判讀方式"},
-        {"key": "B", "text": "切割線位置與群數無關;Dendrogram 只是視覺呈現,實際群數需另由肘部法或 Silhouette 重新計算", "is_correct": false, "trap_type": "誤判切割線無關"},
-        {"key": "C", "text": "切到 5 條垂直線代表共有 5 個離群點;真正的群數需扣除這些離群點後另以 K-means 重新分群得出", "is_correct": false, "trap_type": "把垂直線誤判為離群點"},
-        {"key": "D", "text": "切割線高度 60 表示 60% 解釋度;群數需依距離矩陣特徵值分解後再選 95% 解釋度時所對應之群數", "is_correct": false, "trap_type": "把切割線高度誤掛 PCA 解釋度"}
+        {
+          "key": "A",
+          "text": "切割線位置決定最終群數;在高度 60 切到 5 條垂直線即代表將資料分為 5 群,可彈性調整高度",
+          "is_correct": true,
+          "trap_type": "正解:切割線即群數判讀方式"
+        },
+        {
+          "key": "B",
+          "text": "切割線位置與群數無關;Dendrogram 只是視覺呈現,實際群數需另由肘部法或 Silhouette 重新計算",
+          "is_correct": false,
+          "trap_type": "誤判切割線無關"
+        },
+        {
+          "key": "C",
+          "text": "切到 5 條垂直線代表共有 5 個離群點;真正的群數需扣除這些離群點後另以 K-means 重新分群得出",
+          "is_correct": false,
+          "trap_type": "把垂直線誤判為離群點"
+        },
+        {
+          "key": "D",
+          "text": "切割線高度 60 表示 60% 解釋度;群數需依距離矩陣特徵值分解後再選 95% 解釋度時所對應之群數",
+          "is_correct": false,
+          "trap_type": "把切割線高度誤掛 PCA 解釋度"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "Dendrogram 的判讀方式:在縱軸(合併距離)上畫一條水平切割線,線下方被切到的垂直線數量即為最終群數。高度 60 切到 5 條 → 5 群;若把切割線降到 40 可能切到更多垂直線(更多群)、升到 80 可能只剩 2~3 條(更少群)。這正是分層聚類『不需預設 K、事後決定 K』的核心優勢。",
         "wrong": {
           "切割線位置與群數無關;Dendrogram 只是視覺呈現,實際群數需另由肘部法或 Silhouette 重新計算": "切割線正是分層聚類決定群數的標準方法;肘部法 / Silhouette 是輔助評估指標,但 Dendrogram 切線本身即可決定。",
-          "切到 5 條垂直線代表共有 5 個離群點,真正的群數需扣除離群點後另以 K-means 重新分群得出": "垂直線是『群分支』而非『離群點』;離群點在 Dendrogram 上會以極長未合併的孤立線呈現,不是切割線交點。",
-          "切割線高度 60 表示 60% 解釋度;群數需依距離矩陣特徵值分解後選 95% 解釋度時的群數": "縱軸是『合併距離』而非『解釋度』;95% 解釋度是 PCA 的概念,與 Dendrogram 無關。"
+          "切到 5 條垂直線代表共有 5 個離群點;真正的群數需扣除這些離群點後另以 K-means 重新分群得出": "垂直線是『群分支』而非『離群點』;離群點在 Dendrogram 上會以極長未合併的孤立線呈現,不是切割線交點。",
+          "切割線高度 60 表示 60% 解釋度;群數需依距離矩陣特徵值分解後再選 95% 解釋度時所對應之群數": "縱軸是『合併距離』而非『解釋度』;95% 解釋度是 PCA 的概念,與 Dendrogram 無關。"
         },
         "hook": "口訣:Dendrogram 切線『線下垂直線幾條 = 幾群』,高度越高群數越少、越低群數越多"
       },
-      "misconceptions": ["不知道切割線即決定群數", "把垂直線分支誤為離群點"],
-      "related_node_ids": ["n_L23202_016"],
-      "tags": ["hierarchical-clustering", "dendrogram-cut", "cluster-count"],
+      "misconceptions": [
+        "不知道切割線即決定群數",
+        "把垂直線分支誤為離群點"
+      ],
+      "related_node_ids": [
+        "n_L23202_016"
+      ],
+      "tags": [
+        "hierarchical-clustering",
+        "dendrogram-cut",
+        "cluster-count"
+      ],
       "errata_critical": false
     },
     {
@@ -154,10 +291,30 @@
       "source_level": "L2",
       "stem": "某影像處理工程師在 2D 散佈圖上看到資料呈現兩個交錯的『月牙形』,試過 K-means 結果分群效果極差。下列哪一個方法最適合處理此類非球形分群問題?",
       "options": [
-        {"key": "A", "text": "光譜聚類(Spectral Clustering);先建相似度圖、算拉普拉斯特徵向量再聚類,擅長月牙環形等非球形群", "is_correct": true, "trap_type": "正解:Spectral 對非球形群"},
-        {"key": "B", "text": "提高 K-means 迭代上限至 10000 輪;月牙形只是迭代不足造成的暫時現象,迭代夠多即能正確分群完成", "is_correct": false, "trap_type": "誤判為迭代問題"},
-        {"key": "C", "text": "用 K-means 但改用 Manhattan 距離取代歐氏距離;月牙形問題僅是距離度量選擇錯誤所造成的暫時現象", "is_correct": false, "trap_type": "把距離度量當解方"},
-        {"key": "D", "text": "把資料先做 PCA 降至 1 維後再跑 K-means;月牙形展平後即可用線性分群方法達到完美分群結果", "is_correct": false, "trap_type": "誤用 PCA 解非球形"}
+        {
+          "key": "A",
+          "text": "光譜聚類(Spectral Clustering);先建相似度圖、算拉普拉斯特徵向量再聚類,擅長月牙環形等非球形群",
+          "is_correct": true,
+          "trap_type": "正解:Spectral 對非球形群"
+        },
+        {
+          "key": "B",
+          "text": "提高 K-means 迭代上限至 10000 輪;月牙形只是迭代不足造成的暫時現象,迭代夠多即能正確分群完成",
+          "is_correct": false,
+          "trap_type": "誤判為迭代問題"
+        },
+        {
+          "key": "C",
+          "text": "用 K-means 但改用 Manhattan 距離取代歐氏距離;月牙形問題僅是距離度量選擇錯誤所造成的暫時現象",
+          "is_correct": false,
+          "trap_type": "把距離度量當解方"
+        },
+        {
+          "key": "D",
+          "text": "把資料先做 PCA 降至 1 維後再跑 K-means;月牙形展平後即可用線性分群方法達到完美分群結果",
+          "is_correct": false,
+          "trap_type": "誤用 PCA 解非球形"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -169,9 +326,19 @@
         },
         "hook": "口訣:月牙環形螺旋 → Spectral;球狀 → K-means"
       },
-      "misconceptions": ["以為 K-means 適用所有形狀", "把 PCA 當作非線性結構解方"],
-      "related_node_ids": ["n_L23202_017", "n_L23202_012"],
-      "tags": ["spectral-clustering", "non-convex", "moon-shape"],
+      "misconceptions": [
+        "以為 K-means 適用所有形狀",
+        "把 PCA 當作非線性結構解方"
+      ],
+      "related_node_ids": [
+        "n_L23202_017",
+        "n_L23202_012"
+      ],
+      "tags": [
+        "spectral-clustering",
+        "non-convex",
+        "moon-shape"
+      ],
       "errata_critical": false
     },
     {
@@ -184,10 +351,30 @@
       "source_level": "L2",
       "stem": "某資料科學助理問:『光譜聚類的拉普拉斯矩陣 L 是怎麼算的?』下列何者最為正確?",
       "options": [
-        {"key": "A", "text": "L = D − W;其中 D 為度數對角矩陣、W 為相似度(鄰接)權重矩陣,光譜聚類用其特徵向量做圖嵌入", "is_correct": true, "trap_type": "正解:L = D − W 標準定義"},
-        {"key": "B", "text": "L = W − D;先用鄰接權重減去度數矩陣,光譜聚類取最大特徵值對應的特徵向量直接作為群標籤", "is_correct": false, "trap_type": "正負號顛倒"},
-        {"key": "C", "text": "L 為各特徵的共變異數矩陣;光譜聚類即在共變異數矩陣上做 PCA 降維後跑 K-means 即可完成", "is_correct": false, "trap_type": "把拉普拉斯誤為共變異"},
-        {"key": "D", "text": "L 為各特徵的相關係數矩陣;光譜聚類取相關係數矩陣特徵值前 K 大者對應特徵向量即為群標籤", "is_correct": false, "trap_type": "把拉普拉斯誤為相關係數"}
+        {
+          "key": "A",
+          "text": "L = D − W;其中 D 為度數對角矩陣、W 為相似度(鄰接)權重矩陣,光譜聚類用其特徵向量做圖嵌入",
+          "is_correct": true,
+          "trap_type": "正解:L = D − W 標準定義"
+        },
+        {
+          "key": "B",
+          "text": "L = W − D;先用鄰接權重減去度數矩陣,光譜聚類取最大特徵值對應的特徵向量直接作為群標籤",
+          "is_correct": false,
+          "trap_type": "正負號顛倒"
+        },
+        {
+          "key": "C",
+          "text": "L 為各特徵的共變異數矩陣;光譜聚類即在共變異數矩陣上做 PCA 降維後跑 K-means 即可完成",
+          "is_correct": false,
+          "trap_type": "把拉普拉斯誤為共變異"
+        },
+        {
+          "key": "D",
+          "text": "L 為各特徵的相關係數矩陣;光譜聚類取相關係數矩陣特徵值前 K 大者對應特徵向量即為群標籤",
+          "is_correct": false,
+          "trap_type": "把拉普拉斯誤為相關係數"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -199,9 +386,18 @@
         },
         "hook": "口訣:Laplacian L = D − W;『度數』減『權重』,小特徵值挑前 K 個"
       },
-      "misconceptions": ["把光譜聚類與 PCA 混淆", "把拉普拉斯與共變異數矩陣混淆"],
-      "related_node_ids": ["n_L23202_017"],
-      "tags": ["spectral-clustering", "laplacian", "graph-embedding"],
+      "misconceptions": [
+        "把光譜聚類與 PCA 混淆",
+        "把拉普拉斯與共變異數矩陣混淆"
+      ],
+      "related_node_ids": [
+        "n_L23202_017"
+      ],
+      "tags": [
+        "spectral-clustering",
+        "laplacian",
+        "graph-embedding"
+      ],
       "errata_critical": false
     },
     {
@@ -214,10 +410,30 @@
       "source_level": "L2",
       "stem": "某機器學習工程師簡報光譜聚類流程。下列哪一個選項最符合光譜聚類『三步驟』的正確順序?",
       "options": [
-        {"key": "A", "text": "建立相似度圖 → 計算拉普拉斯矩陣特徵向量 → 在新特徵空間用 K-means 完成分群", "is_correct": true, "trap_type": "正解:三步順序"},
-        {"key": "B", "text": "先用 K-means 預分群 → 對結果建相似度圖 → 計算拉普拉斯特徵向量並輸出最終分群結果", "is_correct": false, "trap_type": "K-means 放最前"},
-        {"key": "C", "text": "對原始資料先做 PCA 線性降維 → 用降維後資料建相似度圖 → 直接以 Dendrogram 切割線分群", "is_correct": false, "trap_type": "誤掛 PCA + Dendrogram"},
-        {"key": "D", "text": "計算特徵間相關係數矩陣 → 對其做特徵分解取最大特徵向量 → 以特徵向量內積閾值分群完成", "is_correct": false, "trap_type": "用相關係數矩陣"}
+        {
+          "key": "A",
+          "text": "建立相似度圖 → 計算拉普拉斯矩陣特徵向量 → 在新特徵空間用 K-means 完成分群",
+          "is_correct": true,
+          "trap_type": "正解:三步順序"
+        },
+        {
+          "key": "B",
+          "text": "先用 K-means 預分群 → 對結果建相似度圖 → 計算拉普拉斯特徵向量並輸出最終分群結果",
+          "is_correct": false,
+          "trap_type": "K-means 放最前"
+        },
+        {
+          "key": "C",
+          "text": "對原始資料先做 PCA 線性降維 → 用降維後資料建相似度圖 → 直接以 Dendrogram 切割線分群",
+          "is_correct": false,
+          "trap_type": "誤掛 PCA + Dendrogram"
+        },
+        {
+          "key": "D",
+          "text": "計算特徵間相關係數矩陣 → 對其做特徵分解取最大特徵向量 → 以特徵向量內積閾值分群完成",
+          "is_correct": false,
+          "trap_type": "用相關係數矩陣"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -229,9 +445,19 @@
         },
         "hook": "口訣:『畫圖、算特徵、再聚類』三步,K-means 是最後一步"
       },
-      "misconceptions": ["把光譜聚類三步順序顛倒", "把 K-means 放在三步最前"],
-      "related_node_ids": ["n_L23202_017", "n_L23202_012"],
-      "tags": ["spectral-clustering", "pipeline", "three-steps"],
+      "misconceptions": [
+        "把光譜聚類三步順序顛倒",
+        "把 K-means 放在三步最前"
+      ],
+      "related_node_ids": [
+        "n_L23202_017",
+        "n_L23202_012"
+      ],
+      "tags": [
+        "spectral-clustering",
+        "pipeline",
+        "three-steps"
+      ],
       "errata_critical": false
     },
     {
@@ -244,24 +470,54 @@
       "source_level": "L2",
       "stem": "某 3 萬筆球狀分佈的客戶資料,需快速完成分群。同事 A 主張用 K-means、同事 B 主張用光譜聚類。下列哪個建議最為合理?",
       "options": [
-        {"key": "A", "text": "球狀資料優先用 K-means;光譜聚類計算成本高屬殺雞用牛刀,僅在非球形群下才有顯著效益優勢", "is_correct": true, "trap_type": "正解:球狀首選 K-means"},
-        {"key": "B", "text": "光譜聚類在任何資料形狀下都優於 K-means;K-means 已被淘汰僅作教學示範用故應一律改用 Spectral", "is_correct": false, "trap_type": "誤判 Spectral 全面優勢"},
-        {"key": "C", "text": "兩者皆不適用;3 萬筆資料需改用分層聚類繪 Dendrogram 切割線,以視覺判讀方式來決定最佳群數值", "is_correct": false, "trap_type": "誤推到 Hierarchical"},
-        {"key": "D", "text": "需先做 PCA 降至 2 維後用 DBSCAN;3 萬筆球狀資料下 DBSCAN 在 ε 任意值都能得到正確分群結果", "is_correct": false, "trap_type": "拼貼錯誤方法"}
+        {
+          "key": "A",
+          "text": "球狀資料優先用 K-means;光譜聚類計算成本高屬殺雞用牛刀,僅在非球形群下才有顯著效益優勢",
+          "is_correct": true,
+          "trap_type": "正解:球狀首選 K-means"
+        },
+        {
+          "key": "B",
+          "text": "光譜聚類在任何資料形狀下都優於 K-means;K-means 已被淘汰僅作教學示範用故應一律改用 Spectral",
+          "is_correct": false,
+          "trap_type": "誤判 Spectral 全面優勢"
+        },
+        {
+          "key": "C",
+          "text": "兩者皆不適用;3 萬筆資料需改用分層聚類繪 Dendrogram 切割線,以視覺判讀方式來決定最佳群數值",
+          "is_correct": false,
+          "trap_type": "誤推到 Hierarchical"
+        },
+        {
+          "key": "D",
+          "text": "需先做 PCA 降至 2 維後用 DBSCAN;3 萬筆球狀資料下 DBSCAN 在 ε 任意值都能得到正確分群結果",
+          "is_correct": false,
+          "trap_type": "拼貼錯誤方法"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "K-means 在球狀分佈下是最佳選擇:演算法 O(nKi) 線性可擴展、收斂快、實作簡單;光譜聚類需建 n×n 相似度圖 + 求特徵向量,計算成本約 O(n³),3 萬筆已偏吃力,且球狀資料根本不需要『圖嵌入解非球形』的能力,屬殺雞用牛刀。決策心法:資料看起來球狀就用 K-means,非球形(月牙、環形、螺旋)才換光譜聚類。",
         "wrong": {
           "光譜聚類在任何資料形狀下都優於 K-means;K-means 已被淘汰僅作教學示範用故應一律改用 Spectral": "K-means 仍是工業界最常用聚類,大資料 + 球狀分佈表現極佳;Spectral 只在特定非凸形狀有優勢。",
-          "兩者皆不適用;3 萬筆需改用分層聚類繪 Dendrogram 切割線,以視覺判讀方式決定最佳群數": "分層聚類為 O(n²),3 萬筆 → 9 億距離對,記憶體與時間皆吃緊,並非合適選擇。",
-          "需先做 PCA 降至 2 維後用 DBSCAN;3 萬筆球狀資料 DBSCAN 必能在 ε 任意值下都得正確結果": "DBSCAN 對 ε 與 minPts 極敏感,『任意值都正確』為虛假宣稱;球狀資料 K-means 已足夠且效率更高。"
+          "兩者皆不適用;3 萬筆資料需改用分層聚類繪 Dendrogram 切割線,以視覺判讀方式來決定最佳群數值": "分層聚類為 O(n²),3 萬筆 → 9 億距離對,記憶體與時間皆吃緊,並非合適選擇。",
+          "需先做 PCA 降至 2 維後用 DBSCAN;3 萬筆球狀資料下 DBSCAN 在 ε 任意值都能得到正確分群結果": "DBSCAN 對 ε 與 minPts 極敏感,『任意值都正確』為虛假宣稱;球狀資料 K-means 已足夠且效率更高。"
         },
         "hook": "口訣:球狀 → K-means;非球形(月牙/環形)→ Spectral;Spectral 雖強但成本高"
       },
-      "misconceptions": ["以為 Spectral 全面優於 K-means", "忽略 Spectral 的 O(n³) 計算成本"],
-      "related_node_ids": ["n_L23202_017", "n_L23202_012"],
-      "tags": ["spectral-clustering", "k-means-comparison", "model-selection"],
+      "misconceptions": [
+        "以為 Spectral 全面優於 K-means",
+        "忽略 Spectral 的 O(n³) 計算成本"
+      ],
+      "related_node_ids": [
+        "n_L23202_017",
+        "n_L23202_012"
+      ],
+      "tags": [
+        "spectral-clustering",
+        "k-means-comparison",
+        "model-selection"
+      ],
       "errata_critical": false
     },
     {
@@ -274,10 +530,30 @@
       "source_level": "L2",
       "stem": "某計量金融工程師欲使用 ElasticNet 進行多因子迴歸。下列關於 ElasticNet 損失函數的描述,何者最為正確?",
       "options": [
-        {"key": "A", "text": "Loss = MSE + λ₁|w| + λ₂w²;同時施加 L1 與 L2 懲罰,兩超參數可分別調節", "is_correct": true, "trap_type": "正解:L1 + L2 線性組合"},
-        {"key": "B", "text": "Loss = MSE + λ|w|;ElasticNet 為 LASSO 的別名,本質僅有單一 L1 正則化項與一個超參數", "is_correct": false, "trap_type": "誤判=LASSO"},
-        {"key": "C", "text": "Loss = MSE + λw²;ElasticNet 為 Ridge 的別名,本質僅有單一 L2 正則化項與一個超參數", "is_correct": false, "trap_type": "誤判=Ridge"},
-        {"key": "D", "text": "Loss = MSE × λ₁|w| × λ₂w²;L1 與 L2 透過乘積互動,只需單一 λ 即能完整控制兩懲罰項強度", "is_correct": false, "trap_type": "用乘積非加總"}
+        {
+          "key": "A",
+          "text": "Loss = MSE + λ₁|w| + λ₂w²;同時施加 L1 與 L2 懲罰,兩超參數可分別調節",
+          "is_correct": true,
+          "trap_type": "正解:L1 + L2 線性組合"
+        },
+        {
+          "key": "B",
+          "text": "Loss = MSE + λ|w|;ElasticNet 為 LASSO 的別名,本質僅有單一 L1 正則化項與一個超參數",
+          "is_correct": false,
+          "trap_type": "誤判=LASSO"
+        },
+        {
+          "key": "C",
+          "text": "Loss = MSE + λw²;ElasticNet 為 Ridge 的別名,本質僅有單一 L2 正則化項與一個超參數",
+          "is_correct": false,
+          "trap_type": "誤判=Ridge"
+        },
+        {
+          "key": "D",
+          "text": "Loss = MSE × λ₁|w| × λ₂w²;L1 與 L2 透過乘積互動,只需單一 λ 即能完整控制兩懲罰項強度",
+          "is_correct": false,
+          "trap_type": "用乘積非加總"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -289,9 +565,19 @@
         },
         "hook": "口訣:『L1 選特徵 + L2 穩權重 = 雙保險』ElasticNet = LASSO + Ridge(加法)"
       },
-      "misconceptions": ["把 ElasticNet 誤為單一懲罰項", "用乘法組合 L1 / L2"],
-      "related_node_ids": ["n_L23304_006", "n_L23304_002"],
-      "tags": ["elasticnet", "loss-function", "regularization"],
+      "misconceptions": [
+        "把 ElasticNet 誤為單一懲罰項",
+        "用乘法組合 L1 / L2"
+      ],
+      "related_node_ids": [
+        "n_L23304_006",
+        "n_L23304_002"
+      ],
+      "tags": [
+        "elasticnet",
+        "loss-function",
+        "regularization"
+      ],
       "errata_critical": false
     },
     {
@@ -304,10 +590,30 @@
       "source_level": "L2",
       "stem": "某基因醫學研究員的資料中有 30 個彼此高度相關的基因表達特徵(屬同一條代謝路徑),想要『一起留下』而非『只挑一個』。下列關於 ElasticNet 與 LASSO 在此情境的差異描述,何者最為正確?",
       "options": [
-        {"key": "A", "text": "ElasticNet 具 Grouping Effect 高相關特徵組能一起被選;LASSO 通常只挑一個高相關特徵其餘係數壓為 0", "is_correct": true, "trap_type": "正解:Grouping Effect 差異"},
-        {"key": "B", "text": "LASSO 具 Grouping Effect 高相關特徵組一起被選;ElasticNet 反而傾向只挑單一代表特徵壓掉其餘係數", "is_correct": false, "trap_type": "Grouping Effect 對象顛倒"},
-        {"key": "C", "text": "兩者皆無 Grouping Effect;對高相關特徵都會把整組係數一律設為 0,僅 Ridge 才能保留係數但不做特徵選擇", "is_correct": false, "trap_type": "誤判兩者皆無 Grouping"},
-        {"key": "D", "text": "兩者皆有 Grouping Effect;在任何特徵相關度下兩者結果完全相同,故任選一個即可不影響特徵選擇結果", "is_correct": false, "trap_type": "誤判兩者結果相同"}
+        {
+          "key": "A",
+          "text": "ElasticNet 具 Grouping Effect 高相關特徵組能一起被選;LASSO 通常只挑一個高相關特徵其餘係數壓為 0",
+          "is_correct": true,
+          "trap_type": "正解:Grouping Effect 差異"
+        },
+        {
+          "key": "B",
+          "text": "LASSO 具 Grouping Effect 高相關特徵組一起被選;ElasticNet 反而傾向只挑單一代表特徵壓掉其餘係數",
+          "is_correct": false,
+          "trap_type": "Grouping Effect 對象顛倒"
+        },
+        {
+          "key": "C",
+          "text": "兩者皆無 Grouping Effect;對高相關特徵都會把整組係數一律設為 0,僅 Ridge 才能保留係數但不做特徵選擇",
+          "is_correct": false,
+          "trap_type": "誤判兩者皆無 Grouping"
+        },
+        {
+          "key": "D",
+          "text": "兩者皆有 Grouping Effect;在任何特徵相關度下兩者結果完全相同,故任選一個即可不影響特徵選擇結果",
+          "is_correct": false,
+          "trap_type": "誤判兩者結果相同"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -319,9 +625,19 @@
         },
         "hook": "口訣:LASSO 單挑、ElasticNet 整組保留(Grouping Effect)— 高相關基因 / 多因子情境必選 ElasticNet"
       },
-      "misconceptions": ["把 LASSO 與 ElasticNet 的 Grouping Effect 對象顛倒", "以為兩者結果永遠相同"],
-      "related_node_ids": ["n_L23304_006", "n_L23304_002"],
-      "tags": ["elasticnet", "grouping-effect", "lasso-comparison"],
+      "misconceptions": [
+        "把 LASSO 與 ElasticNet 的 Grouping Effect 對象顛倒",
+        "以為兩者結果永遠相同"
+      ],
+      "related_node_ids": [
+        "n_L23304_006",
+        "n_L23304_002"
+      ],
+      "tags": [
+        "elasticnet",
+        "grouping-effect",
+        "lasso-comparison"
+      ],
       "errata_critical": false
     },
     {
@@ -334,10 +650,30 @@
       "source_level": "L2",
       "stem": "某資料工程師在 sklearn 中設定 ElasticNet 兩個正則化超參數:λ₁ 控制 L1 強度、λ₂ 控制 L2 強度。下列關於『退化條件』的描述何者最為正確?",
       "options": [
-        {"key": "A", "text": "λ₁ = 0 → 退化為 Ridge(僅剩 L2);λ₂ = 0 → 退化為 LASSO(僅剩 L1)", "is_correct": true, "trap_type": "正解:退化條件"},
-        {"key": "B", "text": "λ₁ = 0 → 退化為 LASSO;λ₂ = 0 → 退化為 Ridge,兩個退化方向皆與懲罰項對應顛倒", "is_correct": false, "trap_type": "退化方向顛倒"},
-        {"key": "C", "text": "λ₁ = λ₂ → 退化為一般最小平方法 OLS;只要兩超參數設為相等即可消去所有正則化懲罰項", "is_correct": false, "trap_type": "誤判退化為 OLS"},
-        {"key": "D", "text": "λ₁ + λ₂ = 1 → 退化為 OLS;兩者總和等於 1 即代表正則化完全平衡剛好被抵銷掉故無懲罰", "is_correct": false, "trap_type": "用總和條件誤推 OLS"}
+        {
+          "key": "A",
+          "text": "λ₁ = 0 → 退化為 Ridge(僅剩 L2);λ₂ = 0 → 退化為 LASSO(僅剩 L1)",
+          "is_correct": true,
+          "trap_type": "正解:退化條件"
+        },
+        {
+          "key": "B",
+          "text": "λ₁ = 0 → 退化為 LASSO;λ₂ = 0 → 退化為 Ridge,兩個退化方向皆與懲罰項對應顛倒",
+          "is_correct": false,
+          "trap_type": "退化方向顛倒"
+        },
+        {
+          "key": "C",
+          "text": "λ₁ = λ₂ → 退化為一般最小平方法 OLS;只要兩超參數設為相等即可消去所有正則化懲罰項",
+          "is_correct": false,
+          "trap_type": "誤判退化為 OLS"
+        },
+        {
+          "key": "D",
+          "text": "λ₁ + λ₂ = 1 → 退化為 OLS;兩者總和等於 1 即代表正則化完全平衡剛好被抵銷掉故無懲罰",
+          "is_correct": false,
+          "trap_type": "用總和條件誤推 OLS"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -349,9 +685,19 @@
         },
         "hook": "口訣:λ₁=0 → Ridge(留 L2)、λ₂=0 → LASSO(留 L1);關掉哪個剩下哪個"
       },
-      "misconceptions": ["把退化方向 λ₁/λ₂ 顛倒", "誤以為 λ₁ = λ₂ 即 OLS"],
-      "related_node_ids": ["n_L23304_006", "n_L23304_002"],
-      "tags": ["elasticnet", "degenerate-case", "hyperparameter"],
+      "misconceptions": [
+        "把退化方向 λ₁/λ₂ 顛倒",
+        "誤以為 λ₁ = λ₂ 即 OLS"
+      ],
+      "related_node_ids": [
+        "n_L23304_006",
+        "n_L23304_002"
+      ],
+      "tags": [
+        "elasticnet",
+        "degenerate-case",
+        "hyperparameter"
+      ],
       "errata_critical": false
     },
     {
@@ -364,24 +710,55 @@
       "source_level": "L2",
       "stem": "某企業計量分析師討論 ElasticNet 與單純 LASSO 的選擇情境。下列哪一個情境最適合使用 ElasticNet 而非單純 LASSO?",
       "options": [
-        {"key": "A", "text": "特徵數遠多於樣本數(p ≫ n)且特徵間高度相關時;LASSO 易單挑,ElasticNet 可整組保留高相關特徵", "is_correct": true, "trap_type": "正解:p>>n + 高相關"},
-        {"key": "B", "text": "樣本數遠多於特徵數(n ≫ p)且特徵彼此完全獨立;LASSO 已能完美處理選 ElasticNet 反而徒增調校", "is_correct": false, "trap_type": "情境反向"},
-        {"key": "C", "text": "特徵全為類別變數需做 One-Hot Encoding;LASSO 完全無法處理類別資料,ElasticNet 才能處理類別", "is_correct": false, "trap_type": "虛構類別限制"},
-        {"key": "D", "text": "資料含時序自相關;LASSO 完全無時序能力,ElasticNet 因內建 ARIMA 機制能自動處理時序自相關結構", "is_correct": false, "trap_type": "虛構 ARIMA 內建"}
+        {
+          "key": "A",
+          "text": "特徵數遠多於樣本數(p ≫ n)且特徵間高度相關時;LASSO 易單挑,ElasticNet 可整組保留高相關特徵",
+          "is_correct": true,
+          "trap_type": "正解:p>>n + 高相關"
+        },
+        {
+          "key": "B",
+          "text": "樣本數遠多於特徵數(n ≫ p)且特徵彼此完全獨立;LASSO 已能完美處理選 ElasticNet 反而徒增調校",
+          "is_correct": false,
+          "trap_type": "情境反向"
+        },
+        {
+          "key": "C",
+          "text": "特徵全為類別變數需做 One-Hot Encoding;LASSO 完全無法處理類別資料,ElasticNet 才能處理類別",
+          "is_correct": false,
+          "trap_type": "虛構類別限制"
+        },
+        {
+          "key": "D",
+          "text": "資料含時序自相關;LASSO 完全無時序能力,ElasticNet 因內建 ARIMA 機制能自動處理時序自相關結構",
+          "is_correct": false,
+          "trap_type": "虛構 ARIMA 內建"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "ElasticNet 最強項情境:(1) 特徵數遠多於樣本數(p ≫ n),例如基因表現量(p=20000, n=200)或多因子選股 (2) 特徵間高度相關。此時 LASSO 因 L1 在高相關特徵中只能挑一個,結果不穩定;ElasticNet 加入 L2 後,Grouping Effect 能讓整組相關特徵一起留下並穩定權重。這也是 KB 對映表中『財務管理 / 財務預測 → LSTM、GRU、ElasticNet』中 ElasticNet 出場的關鍵原因(多因子高相關)。",
         "wrong": {
-          "樣本數遠多於特徵數(n ≫ p)且特徵彼此完全獨立;LASSO 已能完美處理選 ElasticNet 反而徒增超參數調校": "n ≫ p 且獨立的情境正則化幫助有限,任一 L1 / L2 / OLS 都可行,確實沒必要刻意挑 ElasticNet。",
-          "特徵全為類別變數需做 One-Hot Encoding;LASSO 無法處理類別資料,ElasticNet 為唯一可處理類別的迴歸方法": "LASSO 與 ElasticNet 對類別特徵的處理沒有本質差異,皆透過 One-Hot 後當數值處理。",
-          "資料含時序自相關;LASSO 無時序能力,ElasticNet 內建 ARIMA 機制可自動處理時序自相關結構": "ElasticNet 沒有內建 ARIMA;時序自相關需用 ARIMA、LSTM、GRU 等專門模型,非 ElasticNet 強項。"
+          "樣本數遠多於特徵數(n ≫ p)且特徵彼此完全獨立;LASSO 已能完美處理選 ElasticNet 反而徒增調校": "n ≫ p 且獨立的情境正則化幫助有限,任一 L1 / L2 / OLS 都可行,確實沒必要刻意挑 ElasticNet。",
+          "特徵全為類別變數需做 One-Hot Encoding;LASSO 完全無法處理類別資料,ElasticNet 才能處理類別": "LASSO 與 ElasticNet 對類別特徵的處理沒有本質差異,皆透過 One-Hot 後當數值處理。",
+          "資料含時序自相關;LASSO 完全無時序能力,ElasticNet 因內建 ARIMA 機制能自動處理時序自相關結構": "ElasticNet 沒有內建 ARIMA;時序自相關需用 ARIMA、LSTM、GRU 等專門模型,非 ElasticNet 強項。"
         },
         "hook": "口訣:特徵多(p≫n)+ 互相高相關 → ElasticNet;n≫p 且獨立 → LASSO 即可"
       },
-      "misconceptions": ["以為 ElasticNet 對任何情境都優於 LASSO", "把時序模型能力誤掛 ElasticNet"],
-      "related_node_ids": ["n_L23304_006", "n_L23304_002", "n_L22402_007"],
-      "tags": ["elasticnet", "use-case", "lasso-comparison"],
+      "misconceptions": [
+        "以為 ElasticNet 對任何情境都優於 LASSO",
+        "把時序模型能力誤掛 ElasticNet"
+      ],
+      "related_node_ids": [
+        "n_L23304_006",
+        "n_L23304_002",
+        "n_L22402_007"
+      ],
+      "tags": [
+        "elasticnet",
+        "use-case",
+        "lasso-comparison"
+      ],
       "errata_critical": false
     }
   ]
