@@ -234,6 +234,20 @@
 
       backdrop.appendChild(modal);
       document.body.appendChild(backdrop);
+
+      // B 線 a11y:dialog 語意 + Esc 關閉 + 進場 focus(本 el 用 setAttribute 不走 [k]=v 的 alias)
+      backdrop.setAttribute('role', 'dialog');
+      backdrop.setAttribute('aria-modal', 'true');
+      backdrop.setAttribute('aria-label', '主題切換');
+      closeBtn.setAttribute('aria-label', '關閉主題切換');
+      const onEsc = (ev) => {
+        if (ev.key === 'Escape') {
+          backdrop.remove();
+          document.removeEventListener('keydown', onEsc);
+        }
+      };
+      document.addEventListener('keydown', onEsc);
+      try { closeBtn.focus(); } catch (_) {}
     }
   };
 
