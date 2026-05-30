@@ -4,6 +4,13 @@
  * 與 Mastery 並存(Mastery 用 nodeId,SM-2 用 qid)— 不取代,不合併
  * 全域:`SM2`(裸名讀,不掛 window — 與 Mastery / PlayEngine 慣例一致)
  */
+// 2026-05-30 A 線安全:別名 index.html 全域 escHTML(sm2.js 在 index.html 之後載入,可裸名讀)。
+// 註:renderReviewList 目前對 qid / stem 已用就地 5 字元 replace 自管 escape(safeQid/safeStem),
+//     startReviewSession / finishReview 的 innerHTML 全為數字 / 迴圈索引 / 常數,無未跳脫自由文字。
+//     此別名為預防性 import,供未來新增自由文字插入點時直接用 esc()(避免再散寫 replace chain)。
+const esc = (typeof escHTML === 'function')
+  ? escHTML
+  : (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const SM2 = {
   // === 常數 ===
   MIN_EF: 1.3,

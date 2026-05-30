@@ -7,6 +7,10 @@
      此 meta 僅作標記用(未來搬到可控 HTTP header 環境時提示要設此 directive)。
      實際 frame-busting 由 head 末尾 script 的 top !== self 比對處理。 -->
 <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'none'">
+<!-- 2026-05-30 A 線安全:CSP Report-Only 先觀測(不攔截)。確認 console 零 violation 後,
+     未來改成強制 Content-Security-Policy(移除 -Report-Only 後綴)。
+     'unsafe-inline' 不可免:app 全靠 inline <style> + onclick handler + inline mode script。 -->
+<meta http-equiv="Content-Security-Policy-Report-Only" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0f172a">
 <title>IPAS AI 中級 — 互動學習遊戲</title>
@@ -2978,6 +2982,9 @@ const ProgressIO = {
   // 動態載入 mode 模組
   for (const name of ['mode1', 'mode2', 'mode3', 'mode4', 'mode5', 'mode6', 'mode7', 'mode8']) {
     await new Promise((res) => {
+      // 2026-05-30 A 線安全:mode 檔名白名單(防 path traversal / 任意 script 注入)
+      const ALLOWED_MODES = ['mode1','mode2','mode3','mode4','mode5','mode6','mode7','mode8'];
+      if (!ALLOWED_MODES.includes(name)) { console.error('[loader] 非法 mode 名:', name); return; }
       const s = document.createElement('script');
       s.src = `modes/${name}.js`;
       s.onload = res; s.onerror = () => { console.warn(`${name}.js 載入失敗`); res(); };

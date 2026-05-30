@@ -6,6 +6,12 @@
 // ============================================================
 (function () {
 
+  // 2026-05-30 A 線安全:對齊 mode1/2/3/6/7 慣例,別名 index.html 全域 escHTML。
+  // mode5 渲染題目自由文字(stem / option text / misconception / 錯解析 / 正解文字)時先前未 escape,
+  // 此 const 供下方各 innerHTML template 包覆題目文字。資料源 renderQuestion 只做 placeholder
+  // 替換不做 HTML escape,故此處包 esc() 無 double-escape 風險。
+  const esc = escHTML;
+
   // === 工具:Mastery score 0-100 ↔ 任務語意的 0-1 ===
   // 任務描述用 0-1 (e.g. <0.4, ≥0.8, +0.15);共用層 score 採 0-100。換算如下:
   //   Mastery.get(nodeId).score / 100 = 「百分比進度」
@@ -118,6 +124,10 @@
     const sample = QUESTIONS.find(q => q.node_id === nodeId);
     if (sample) {
       // 取 knowledge_code 與 stem 前 12 字
+      // 2026-05-30 A 線安全:此函式回傳「原始」顯示字串(不在此 escape)。
+      //   理由:它同時被 textContent(typeText 打字機,本身 XSS-safe)與 innerHTML 兩種路徑使用;
+      //   若在此 escape,textContent 路徑會把 &amp; 等實體字面顯示出來(渲染瑕疵)。
+      //   故 escape 一律放在各 innerHTML 插入點(見下方 esc(nodeDisplayName(...)))。
       const stem = (sample.stem || '').replace(/\{[^}]*\}/g, '').slice(0, 16);
       return `${sample.knowledge_code} · ${stem || nodeId}`;
     }
@@ -208,7 +218,7 @@
                 <span style="font-size:2rem">${bossAvatar(idx)}</span>
                 <div style="flex:1;text-align:left">
                   <div class="mode-num" style="color:${defeated ? 'var(--success)' : 'var(--danger)'}">${defeated ? '✅ 已克服弱點' : `弱點等級 ${b.weak}`}</div>
-                  <div class="mode-title" style="font-size:0.95rem">${nodeDisplayName(b.nodeId)}</div>
+                  <div class="mode-title" style="font-size:0.95rem">${esc(nodeDisplayName(b.nodeId))}</div>
                 </div>
               </div>
               <div class="mode-desc" style="font-size:0.82rem;text-align:left">${sourceLabel}</div>
@@ -336,7 +346,7 @@
           <div class="enemy-bar">
             <div class="avatar boss" style="font-size:2.5rem">${s.avatarIcon}</div>
             <div class="bar-info">
-              <div class="bar-name">弱點 BOSS:${nodeDisplayName(s.boss.nodeId)}</div>
+              <div class="bar-name">弱點 BOSS:${esc(nodeDisplayName(s.boss.nodeId))}</div>
               <div class="hp-text">當前熟練度 ${score}% · 目標 ≥ ${MASTERY_DEFEAT_THRESHOLD}%</div>
             </div>
           </div>
@@ -390,7 +400,7 @@
           <div class="enemy-bar">
             <div class="avatar boss" id="m5-boss-avatar" style="font-size:2.5rem">${this.state.avatarIcon}</div>
             <div class="bar-info">
-              <div class="bar-name">弱點 BOSS:${nodeDisplayName(this.state.boss.nodeId)}</div>
+              <div class="bar-name">弱點 BOSS:${esc(nodeDisplayName(this.state.boss.nodeId))}</div>
               <div class="hp-track"><div class="hp-fill" id="m5-boss-hp-fill"></div></div>
               <div class="hp-text" id="m5-boss-hp-text"></div>
             </div>
@@ -493,12 +503,12 @@
             <span class="badge">${q.format}</span>
             ${q.errata_critical ? '<span class="badge" style="background:var(--danger);color:white">⚠️ 必出</span>' : ''}
           </div>
-          <div class="question-stem">${q.stem}</div>
+          <div class="question-stem">${esc(q.stem)}</div>
           ${codeBlock}
           ${visualData}
           <div class="options" id="m5-options">
             ${q.options.map(o => `<button class="option-btn" data-key="${o.key}" onclick="Mode5.answer('${o.key}')">
-              <span class="option-key">${o.key}.</span>${o.text}</button>`).join('')}
+              <span class="option-key">${o.key}.</span>${esc(o.text)}</button>`).join('')}
           </div>
           <div id="m5-explanation"></div>
         </div>
@@ -642,8 +652,8 @@
       const otherWrongOptions = q.options.filter(o => !o.is_correct && (!opt || o.key !== opt.key));
       const otherAnalysis = otherWrongOptions.map(o => `
         <div style="padding:8px 10px;margin:6px 0;background:rgba(255,255,255,0.04);border-radius:4px;border-left:3px solid #94a3b8">
-          <div style="color:#cbd5e1;font-weight:600;margin-bottom:2px">${o.key}. ${o.text}</div>
-          <div style="color:var(--fg-dim);font-size:0.875rem;line-height:1.6">└ ${findWrongExp(o)}</div>
+          <div style="color:#cbd5e1;font-weight:600;margin-bottom:2px">${o.key}. ${esc(o.text)}</div>
+          <div style="color:var(--fg-dim);font-size:0.875rem;line-height:1.6">└ ${esc(findWrongExp(o))}</div>
         </div>
       `).join('');
 
@@ -655,13 +665,13 @@
 
           <div style="background:rgba(74,222,128,0.12);border-left:4px solid #4ade80;padding:12px;border-radius:6px;margin:10px 0">
             <div style="color:#4ade80;font-weight:700;font-size:0.95rem;margin-bottom:4px">📚 正確答案</div>
-            <div style="font-size:1rem;margin-bottom:6px"><strong>${correctOpt ? correctOpt.key + '. ' + correctOpt.text : '(無)'}</strong></div>
-            <div style="color:var(--fg);line-height:1.7">${e.correct || '(此題未提供詳細解釋)'}</div>
+            <div style="font-size:1rem;margin-bottom:6px"><strong>${correctOpt ? correctOpt.key + '. ' + esc(correctOpt.text) : '(無)'}</strong></div>
+            <div style="color:var(--fg);line-height:1.7">${esc(e.correct || '(此題未提供詳細解釋)')}</div>
           </div>
 
           ${!isCorrect ? `<div style="background:rgba(248,113,113,0.12);border-left:4px solid #f87171;padding:12px;border-radius:6px;margin:10px 0">
-            <div style="color:#f87171;font-weight:700;font-size:0.95rem;margin-bottom:4px">❌ 你選了 ${opt.key}. ${opt.text}</div>
-            <div style="color:var(--fg);line-height:1.7">${userWrongExp}</div>
+            <div style="color:#f87171;font-weight:700;font-size:0.95rem;margin-bottom:4px">❌ 你選了 ${opt.key}. ${esc(opt.text)}</div>
+            <div style="color:var(--fg);line-height:1.7">${esc(userWrongExp)}</div>
           </div>` : ''}
 
           ${otherAnalysis ? `<div style="background:rgba(148,163,184,0.08);border-left:4px solid #94a3b8;padding:12px;border-radius:6px;margin:10px 0">
@@ -671,12 +681,12 @@
 
           ${e.hook ? `<div style="background:rgba(250,204,21,0.12);border-left:4px solid #facc15;padding:10px 12px;border-radius:6px;margin:10px 0">
             <div style="color:#facc15;font-weight:700;font-size:0.85rem">💡 記憶口訣</div>
-            <div style="color:var(--fg);font-style:italic;margin-top:2px">${e.hook}</div>
+            <div style="color:var(--fg);font-style:italic;margin-top:2px">${esc(e.hook)}</div>
           </div>` : ''}
 
           ${q.misconceptions && q.misconceptions.length > 0 ? `<div style="background:rgba(168,85,247,0.10);border-left:4px solid #a855f7;padding:10px 12px;border-radius:6px;margin:10px 0">
             <div style="color:#c084fc;font-weight:700;font-size:0.85rem">⚠️ 常見誤解</div>
-            <div style="color:var(--fg);margin-top:2px">${q.misconceptions.map(m => '• ' + m).join('<br>')}</div>
+            <div style="color:var(--fg);margin-top:2px">${q.misconceptions.map(m => '• ' + esc(m)).join('<br>')}</div>
           </div>` : ''}
 
           <div class="actions" style="margin-top:14px">
@@ -818,7 +828,7 @@
           <div style="font-size:4rem;margin:16px 0">${s.avatarIcon} ➜ ✨</div>
           <div class="dialogue-box">
             <div class="dialogue-name">🎯 弱點獵人系統</div>
-            <div class="dialogue-text">「節點『${nodeDisplayName(s.boss.nodeId)}』已從你的弱點清單移除。下一個目標!」</div>
+            <div class="dialogue-text">「節點『${esc(nodeDisplayName(s.boss.nodeId))}』已從你的弱點清單移除。下一個目標!」</div>
           </div>
 
           <div style="background:rgba(0,0,0,0.5);padding:16px;border-radius:var(--radius);margin:16px 0;text-align:left">
