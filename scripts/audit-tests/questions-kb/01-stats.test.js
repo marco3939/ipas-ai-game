@@ -1,17 +1,48 @@
 #!/usr/bin/env node
 // Agent G - 01: 題庫健康度統計 (鐵律 #1/#4/#5/#6)
+// 2026-05-30 對齊 scripts/audit-subject-isolation.js 契約:
+//   - node_id 校驗改為「以 n_<knowledge_code>_ 開頭」(允許題目擴充 kb 既有 code 下的節點數)
+//     舊行為「id 必須在 whitelist 內」太嚴 — kb-allowed-nodes.json 是初版節點骨架,
+//     題庫可以在既有 knowledge_code 下擴充 _007、_008 等新節點 id,只要 code 本身合法即可。
+//   - 跨 subject 檔案使用 audit-subject-isolation 同一份 CROSS_SUBJECT_ALLOWLIST
+//   - 載入清單從 questions-manifest.json 讀取(鐵律 #7 single source of truth)
 const fs = require('fs');
 const path = require('path');
 
 const SRC_DIR = path.join(__dirname, '..', '..', '..', 'src');
 const KB_DIR = path.join(__dirname, '..', '..', '..', 'kb');
 const WL_FILE = path.join(__dirname, '..', '..', '..', 'scripts', 'kb-allowed-nodes.json');
+const MANIFEST_FILE = path.join(SRC_DIR, 'questions-manifest.json');
 
-const files = fs.readdirSync(SRC_DIR).filter(f => f.startsWith('questions') && f.endsWith('.json'));
+// 對齊 scripts/audit-subject-isolation.js 的 CROSS_SUBJECT_ALLOWLIST
+// 這些檔案合法地包含多個 subject(BOSS 補位 / mode 共用 / 全考綱通用)
+const CROSS_SUBJECT_ALLOWLIST = new Set([
+  'questions.json',
+  'questions-batch-boss-fill.json',
+  'questions-mode8-trace.json',
+  'questions-confusion-matrix.json',
+  'questions-pa-code.json',
+  'questions-pb-visual.json',
+  'questions-pc-modes.json',
+  'questions-pd-scenario.json',
+  'questions-pe-advanced-s1.json',
+  'questions-pf-advanced-s3.json',
+  'questions-pg-eval.json',
+  'questions-ph-mlops.json',
+]);
+
+// 優先讀 manifest(鐵律 #7),fallback 到 readdirSync
+let files;
+if (fs.existsSync(MANIFEST_FILE)) {
+  const manifest = JSON.parse(fs.readFileSync(MANIFEST_FILE, 'utf8'));
+  files = manifest.files || [];
+} else {
+  files = fs.readdirSync(SRC_DIR).filter(f => f.startsWith('questions') && f.endsWith('.json'));
+}
 const whitelist = JSON.parse(fs.readFileSync(WL_FILE, 'utf8'));
 const scope = JSON.parse(fs.readFileSync(path.join(KB_DIR, 'scope.json'), 'utf8'));
 
-// build node->code map from whitelist
+// build node->code map from whitelist(僅作統計參考,不再用於 nodeIdOutsideWhitelist 校驗)
 const nodeIdSet = new Set();
 const codeNodeMap = {};
 for (const code of Object.keys(whitelist)) {
@@ -93,8 +124,17 @@ for (const f of files) {
     if (q.knowledge_code && !allowedCodes.has(q.knowledge_code)) {
       stats.codeOutsideWhitelist.push({ id: q.id, file: f, code: q.knowledge_code });
     }
-    if (q.node_id && !nodeIdSet.has(q.node_id)) {
-      stats.nodeIdOutsideWhitelist.push({ id: q.id, file: f, node_id: q.node_id, code: q.knowledge_code });
+    // 2026-05-30 對齊 audit-subject-isolation.js check C 契約:
+    //   node_id 只需「以 n_<knowledge_code>_ 開頭」(允許題目擴充節點數),
+    //   不再要求 node_id 必須在 kb-allowed-nodes.json 的具體 id 清單內。
+    if (q.node_id && q.knowledge_code) {
+      const expectedPrefix = 'n_' + q.knowledge_code + '_';
+      if (!q.node_id.startsWith(expectedPrefix)) {
+        stats.nodeIdOutsideWhitelist.push({
+          id: q.id, file: f, node_id: q.node_id, code: q.knowledge_code,
+          issue: 'node_id 不以 n_<knowledge_code>_ 開頭',
+        });
+      }
     }
     // subject isolation: L21 / L22 / L23
     if (q.knowledge_code) {
@@ -141,7 +181,9 @@ stats.subjectIsolation = {
   L23_files: [...stats.subjectIsolation.L23].sort(),
 };
 
-// detect cross-subject pollution: files containing > 1 subject prefix
+// 2026-05-30 對齊 audit-subject-isolation.js check B:CROSS_SUBJECT_ALLOWLIST 內檔案
+// 合法地包含多個 subject(BOSS 補位 / mode 共用 / 全考綱通用),不算 cross-subject pollution。
+// detect cross-subject pollution: files containing > 1 subject prefix(allowlist 除外)
 const fileToPrefixes = {};
 for (const { q, file } of allQs) {
   if (!q.knowledge_code) continue;
@@ -150,7 +192,11 @@ for (const { q, file } of allQs) {
   fileToPrefixes[file].add(p);
 }
 stats.crossSubjectFiles = Object.entries(fileToPrefixes)
-  .filter(([, s]) => s.size > 1)
+  .filter(([f, s]) => s.size > 1 && !CROSS_SUBJECT_ALLOWLIST.has(f))
+  .map(([f, s]) => ({ file: f, prefixes: [...s] }));
+// 同時記錄 allowlist 內的多 subject 檔案(僅供統計參考,不算 violation)
+stats.crossSubjectAllowlistedFiles = Object.entries(fileToPrefixes)
+  .filter(([f, s]) => s.size > 1 && CROSS_SUBJECT_ALLOWLIST.has(f))
   .map(([f, s]) => ({ file: f, prefixes: [...s] }));
 
 // summary

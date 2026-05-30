@@ -72,19 +72,29 @@ console.log('\n[3] simulate storage event 觸發 _crossTabAbort');
   }
 }
 
-// ----- [4] FINDING:Mastery / Wrongbook 等共用層沒有 storage event 同步 -----
-console.log('\n[4] FINDING:共用層無 cross-tab 同步機制');
+// ----- [4] FINDING:Mastery / Wrongbook 無 storage event 同步(SeenCorrect 已加) -----
+// 2026-05-30 更新契約:SeenCorrect 已在「案例 10 deep-audit Agent A H-4」加 _bindCrossTab
+// (index.html ~1148-1158):window.addEventListener('storage', e => { if (e.key === K_SEEN_CORRECT)
+//   this._cache = null; })。所以本 case 不再 assert「SeenCorrect 無 listener」。
+//
+// contract 文檔化:
+//   - 單 tab 使用 = happy path,完整支援
+//   - 跨 tab Mastery/Wrongbook 走「last-write-wins」(documented limitation,不影響玩法,僅統計失準)
+//   - SeenCorrect 因影響「下次戰鬥要不要再出此題」(filterForBattle),優先加 listener
+console.log('\n[4] cross-tab 同步機制掃描(SeenCorrect 已加 listener;Mastery/Wrongbook 為 documented limitation)');
 {
   const idx = fs.readFileSync(path.join(ROOT, 'src/index.html'), 'utf8');
-  // 抓 Mastery / Wrongbook / SeenCorrect 模組是否有 storage event listener
   const masterySection = idx.match(/const Mastery = \{[\s\S]+?\n\};/);
   const wbSection = idx.match(/const Wrongbook = \{[\s\S]+?\n\};/);
   const scSection = idx.match(/const SeenCorrect = \{[\s\S]+?\n\};/);
   const hasStorageEvent = (s) => s && /addEventListener\(['"]storage['"]/.test(s[0]);
-  A.ok(!hasStorageEvent(masterySection), 'FINDING: Mastery 無 storage event listener(lost-update 風險)');
-  A.ok(!hasStorageEvent(wbSection), 'FINDING: Wrongbook 無 storage event listener(lost-update 風險)');
-  A.ok(!hasStorageEvent(scSection), 'FINDING: SeenCorrect 無 storage event listener(lost-update 風險)');
-  console.log('  FINDING: cross-tab 兩 tab 同時做題會 lost-update。建議:長期解決方案是 BroadcastChannel 或 storage event listener,短期由使用者「單 tab」避免');
+  A.ok(!hasStorageEvent(masterySection), 'FINDING: Mastery 無 storage event listener(documented limitation)');
+  A.ok(!hasStorageEvent(wbSection), 'FINDING: Wrongbook 無 storage event listener(documented limitation)');
+  // SeenCorrect 已加:驗證新契約已實現(此 case 從 FINDING 升級為 CONTRACT)
+  A.ok(hasStorageEvent(scSection), 'CONTRACT(案例 10 H-4): SeenCorrect 含 storage event listener(_bindCrossTab)');
+  console.log('  CONTRACT: 單 tab = happy path;跨 tab Mastery/Wrongbook last-write-wins(documented limitation)');
+  console.log('  RATIONALE: SeenCorrect 因影響 filterForBattle 出題優先加 listener;');
+  console.log('             Mastery/Wrongbook 多 tab「最後寫入勝」屬可接受(僅統計失準,不影響玩法)');
 }
 
 // ----- [5] BroadcastChannel / storage event 整體覆蓋掃 -----

@@ -109,7 +109,11 @@ function makeSandbox(opts = {}) {
     Blob: function Blob() {},
     GameFX: { levelUp: () => {}, flash: () => {}, bigConfetti: () => {} },
     refreshHome: () => {},
-    QUESTIONS: opts.QUESTIONS || [],
+    // 2026-05-30 對齊 CLAUDE.md 案例 11:預設 undefined(讓 production 安全 fallback 觸發)
+    // 而非 []。空 array 會讓 SM2._isLiveQid 把每個 qid 都判 stale → recordAnswer 返 null。
+    // undefined 才會觸發「typeof QUESTIONS === 'undefined' → return true(不過濾)」的安全分支。
+    // 需注入題庫的測試請顯式傳 opts.QUESTIONS,例如 makeSandbox({ QUESTIONS: [...] })。
+    QUESTIONS: opts.QUESTIONS,
     __storageMap: storage,
     __storageEvents: storageEvents,
     __storageStats: () => ({ bytesUsed, count: storage.size }),

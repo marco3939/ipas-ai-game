@@ -10,28 +10,44 @@ console.log('=== 05 SM2 cross-mode ===\n');
 const A = makeAssert();
 
 // ----- [1] 各 mode 呼叫 SM2.recordAnswer 覆蓋 -----
-console.log('\n[1] mode SM2.recordAnswer 覆蓋率(PR #27 SM-1)');
+// 2026-05-30 更新契約(對齊 PR #46 SSOT 重構):
+//   mode1/2/5 改走 PlayEngine.commitAnswer SSOT(SSOT 內含 SM2.recordAnswer 呼叫),
+//   mode3/4/7/8 仍裸呼叫。驗證新契約如下。
+console.log('\n[1] mode SM2.recordAnswer 覆蓋率(SSOT 對齊 PR #46)');
 {
-  const expected = ['mode1.js','mode2.js','mode3.js','mode4.js','mode5.js','mode7.js','mode8.js'];
-  for (const f of expected) {
+  // 1a:走 SSOT 的 mode(裸字串可不存在)
+  const ssotModes = ['mode1.js','mode2.js','mode5.js'];
+  for (const f of ssotModes) {
     const src = fs.readFileSync(path.join(ROOT, 'src/modes', f), 'utf8');
-    A.ok(/SM2\.recordAnswer\s*\(/.test(src),
-      `${f}: 呼叫 SM2.recordAnswer(PR #27 SM-1 補)`);
+    const directRec = /SM2\.recordAnswer\s*\(/.test(src);
+    const viaSSOT = /PlayEngine\.commitAnswer\s*\(/.test(src);
+    A.ok(directRec || viaSSOT, `${f}: 含 SM2.recordAnswer 或走 PlayEngine.commitAnswer SSOT`);
   }
-  // index.html PlayEngine.answer 也應有
+  // 1b:仍裸呼叫的 mode
+  const directModes = ['mode3.js','mode4.js','mode7.js','mode8.js'];
+  for (const f of directModes) {
+    const src = fs.readFileSync(path.join(ROOT, 'src/modes', f), 'utf8');
+    A.ok(/SM2\.recordAnswer\s*\(/.test(src), `${f}: SM2.recordAnswer 裸呼叫`);
+  }
+  // 1c:index.html PlayEngine.answer / commitAnswer 含 SM2.recordAnswer
   const idx = fs.readFileSync(path.join(ROOT, 'src/index.html'), 'utf8');
-  A.ok(/SM2\.recordAnswer\s*\(/.test(idx), 'PlayEngine.answer 含 SM2.recordAnswer');
+  A.ok(/SM2\.recordAnswer\s*\(/.test(idx), 'PlayEngine.answer / commitAnswer 含 SM2.recordAnswer');
+  // 1d:確認 commitAnswer 內含 SM2.recordAnswer(SSOT 契約)
+  const commitMatch = idx.match(/commitAnswer\s*\([^)]*\)\s*\{[\s\S]*?\n\s{2}\},/);
+  A.ok(commitMatch && /SM2\.recordAnswer\s*\(/.test(commitMatch[0]),
+    'PlayEngine.commitAnswer 內含 SM2.recordAnswer(SSOT 契約)');
 }
 
 // ----- [2] PR #27 SM-1 critical:Mode 5 也 record(原本可能漏) -----
-console.log('\n[2] PR #27 SM-1:Mode 5 也 record');
+// 2026-05-30 更新:Mode 5 改走 PlayEngine.commitAnswer SSOT,SSOT 內 SM2.recordAnswer 已驗(本檔 [1d])
+console.log('\n[2] PR #46 SSOT:Mode 5 走 commitAnswer(SSOT 內含 SM2.recordAnswer)');
 {
   const m5 = fs.readFileSync(path.join(ROOT, 'src/modes/mode5.js'), 'utf8');
-  A.ok(/SM2\.recordAnswer\s*\(/.test(m5), 'Mode 5 SM2.recordAnswer 已補(PR #27 SM-1)');
-  // 確認在答對 / 答錯都 record(不是只在答對)
+  A.ok(/PlayEngine\.commitAnswer\s*\(/.test(m5),
+    'Mode 5 走 PlayEngine.commitAnswer SSOT(SSOT 內含 SM2.recordAnswer)');
   const m5Lines = m5.split('\n');
-  const recordLines = m5Lines.map((l, i) => ({l, i})).filter(x => /SM2\.recordAnswer/.test(x.l));
-  A.ok(recordLines.length >= 1, `Mode 5 SM2.recordAnswer 至少 1 處(${recordLines.length})`);
+  const commitLines = m5Lines.map((l, i) => ({l, i})).filter(x => /PlayEngine\.commitAnswer/.test(x.l));
+  A.ok(commitLines.length >= 1, `Mode 5 PlayEngine.commitAnswer 至少 1 處(${commitLines.length})`);
 }
 
 // ----- [3] SM2 行為:recordAnswer 寫 storage + countDueToday 即時更新 -----

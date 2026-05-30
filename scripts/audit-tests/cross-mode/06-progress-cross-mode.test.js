@@ -9,16 +9,32 @@ console.log('=== 06 Progress cross-mode ===\n');
 const A = makeAssert();
 
 // ----- [1] 各 mode 與 index.html 都呼叫 Progress.addAnswer -----
-console.log('\n[1] Progress.addAnswer 覆蓋率');
+// 2026-05-30 更新契約(對齊 PR #46 SSOT 重構):
+//   mode1/2/5 改走 PlayEngine.commitAnswer SSOT(SSOT 內含 Progress.addAnswer 呼叫),
+//   mode3/4/7/8 仍裸呼叫。驗證新契約如下。
+console.log('\n[1] Progress.addAnswer 覆蓋率(SSOT 對齊 PR #46)');
 {
-  const expected = ['mode1.js','mode2.js','mode3.js','mode4.js','mode5.js','mode7.js','mode8.js'];
-  for (const f of expected) {
+  // 1a:走 SSOT 的 mode(裸字串可不存在)
+  const ssotModes = ['mode1.js','mode2.js','mode5.js'];
+  for (const f of ssotModes) {
     const src = fs.readFileSync(path.join(ROOT, 'src/modes', f), 'utf8');
-    A.ok(/Progress\.addAnswer\s*\(/.test(src),
-      `${f}: 呼叫 Progress.addAnswer`);
+    const directAdd = /Progress\.addAnswer\s*\(/.test(src);
+    const viaSSOT = /PlayEngine\.commitAnswer\s*\(/.test(src);
+    A.ok(directAdd || viaSSOT, `${f}: 含 Progress.addAnswer 或走 PlayEngine.commitAnswer SSOT`);
   }
+  // 1b:仍裸呼叫的 mode
+  const directModes = ['mode3.js','mode4.js','mode7.js','mode8.js'];
+  for (const f of directModes) {
+    const src = fs.readFileSync(path.join(ROOT, 'src/modes', f), 'utf8');
+    A.ok(/Progress\.addAnswer\s*\(/.test(src), `${f}: Progress.addAnswer 裸呼叫`);
+  }
+  // 1c:index.html PlayEngine.answer / commitAnswer 含 Progress.addAnswer
   const idx = fs.readFileSync(path.join(ROOT, 'src/index.html'), 'utf8');
-  A.ok(/Progress\.addAnswer\s*\(/.test(idx), 'PlayEngine.answer 含 Progress.addAnswer');
+  A.ok(/Progress\.addAnswer\s*\(/.test(idx), 'PlayEngine.answer / commitAnswer 含 Progress.addAnswer');
+  // 1d:確認 commitAnswer 內含 Progress.addAnswer(SSOT 契約)
+  const commitMatch = idx.match(/commitAnswer\s*\([^)]*\)\s*\{[\s\S]*?\n\s{2}\},/);
+  A.ok(commitMatch && /Progress\.addAnswer\s*\(/.test(commitMatch[0]),
+    'PlayEngine.commitAnswer 內含 Progress.addAnswer(SSOT 契約)');
 }
 
 // ----- [2] Progress.init 初始化(只在 progress 不存在時) -----
