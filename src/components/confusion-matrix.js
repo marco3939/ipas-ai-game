@@ -6,6 +6,14 @@
  * 整合點:PlayEngine.show() 偵測 question.interaction_type === 'confusion-matrix' 後分流到本元件
  * 答題完成後:bypass PlayEngine.answer,直接複製 Mastery/Wrongbook/SM2 邏輯(spec §4.3)
  */
+// 2026-05-30 A 線安全:別名 index.html 全域 escHTML(本元件在 index.html 之後載入,可裸名讀)。
+// stem / matrix labels / extra_classes.name 屬題庫自由文字,插入 innerHTML 前需 escape 防 XSS。
+// 數值(tp/fp/fn/tn 已經 Number() 強制轉、f1 為數字)與表頭常數不需 escape。
+// guard fallback:沙箱載入若未定義 escHTML 仍可運作(對齊案例 11「sandbox 預設值對齊」教訓)。
+const esc = (typeof escHTML === 'function')
+  ? escHTML
+  : (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
 const ConfusionMatrix = {
   state: null,
   // state schema:
@@ -60,7 +68,7 @@ const ConfusionMatrix = {
       const num = this.state.matrix[numKey];
       const txt = labels[key] || key;
       return `<div class="cm-source" draggable="true" data-label-key="${key}">
-        <strong>${txt}</strong>
+        <strong>${esc(txt)}</strong>
         <span style="margin-left:8px;color:var(--fg-dim)">(${num} 例)</span>
       </div>`;
     }).join('');
@@ -72,7 +80,7 @@ const ConfusionMatrix = {
     // 對 Q5 macro_f1:在輸入區下方顯示 class B / C 的 F1(從 question.extra_classes 讀)
     const extraInfo = (question.extra_classes && question.extra_classes.length > 0) ?
       `<div style="margin-top:8px;font-size:0.875rem;color:var(--fg-dim)">補充:${
-        question.extra_classes.map(c => `${c.name} F1 = ${c.f1}`).join(', ')
+        question.extra_classes.map(c => `${esc(c.name)} F1 = ${esc(c.f1)}`).join(', ')
       }</div>` : '';
 
     container.innerHTML = `
@@ -82,7 +90,7 @@ const ConfusionMatrix = {
           <span class="badge">${question.difficulty || ''}</span>
           <span class="badge">互動矩陣 · ${metricLabel}</span>
         </div>
-        <div class="question-stem">${question.stem}</div>
+        <div class="question-stem">${esc(question.stem)}</div>
 
         <div style="margin:12px 0;color:var(--fg-dim);font-size:0.875rem">
           ${this.state.isTouch ? '📱 點擊模式:先點下方樣本 → 再點對應格子' : '🖱️ 拖曳模式:把樣本拖到對應格子'}
@@ -355,8 +363,8 @@ const ConfusionMatrix = {
       '✅ 4 格樣本放置全部正確' :
       '❌ 樣本放置有誤';
     const valueMsg = valueCorrect ?
-      `✅ 數值 ${userInput} 正確` :
-      `❌ 數值 ${userInput}(正解 ${this.state.expectedAnswer})`;
+      `✅ 數值 ${esc(userInput)} 正確` :
+      `❌ 數值 ${esc(userInput)}(正解 ${esc(this.state.expectedAnswer)})`;
 
     const errorBtnHTML = (typeof ErrorReports !== 'undefined') ? ErrorReports.renderButton(q.id) : '';
 
@@ -371,18 +379,18 @@ const ConfusionMatrix = {
 
         <div style="background:rgba(74,222,128,0.12);border-left:4px solid #4ade80;padding:12px;border-radius:6px;margin:10px 0">
           <div style="color:#4ade80;font-weight:700;font-size:0.95rem;margin-bottom:4px">📚 正確答案</div>
-          <div style="font-size:1rem;margin-bottom:6px"><strong>${correctOpt ? correctOpt.text : this.state.expectedAnswer}</strong></div>
-          <div style="color:var(--fg);line-height:1.7">${e.correct || '請參考正確選項數值'}</div>
+          <div style="font-size:1rem;margin-bottom:6px"><strong>${esc(correctOpt ? correctOpt.text : this.state.expectedAnswer)}</strong></div>
+          <div style="color:var(--fg);line-height:1.7">${esc(e.correct || '請參考正確選項數值')}</div>
         </div>
 
         ${e.hook ? `<div style="background:rgba(250,204,21,0.12);border-left:4px solid #facc15;padding:10px 12px;border-radius:6px;margin:10px 0">
           <div style="color:#facc15;font-weight:700;font-size:0.85rem">💡 記憶口訣</div>
-          <div style="color:var(--fg);font-style:italic;margin-top:2px">${e.hook}</div>
+          <div style="color:var(--fg);font-style:italic;margin-top:2px">${esc(e.hook)}</div>
         </div>` : ''}
 
         ${q.misconceptions && q.misconceptions.length > 0 ? `<div style="background:rgba(168,85,247,0.10);border-left:4px solid #a855f7;padding:10px 12px;border-radius:6px;margin:10px 0">
           <div style="color:#c084fc;font-weight:700;font-size:0.85rem">⚠️ 常見誤解</div>
-          <div style="color:var(--fg);margin-top:2px">${q.misconceptions.map(m => '• ' + m).join('<br>')}</div>
+          <div style="color:var(--fg);margin-top:2px">${q.misconceptions.map(m => '• ' + esc(m)).join('<br>')}</div>
         </div>` : ''}
 
         <div class="actions" style="margin-top:14px">
