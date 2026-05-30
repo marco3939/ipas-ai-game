@@ -52,7 +52,8 @@
   }
   @media (prefers-color-scheme: light) {
     :root { --bg: #f8fafc; --bg-2: #ffffff; --bg-3: #e2e8f0;
-      --fg: #0f172a; --fg-dim: #475569; --fg-mute: #94a3b8;
+      --fg: #0f172a; --fg-dim: #475569; --fg-mute: #64748b;
+      /* B 線 a11y:--fg-mute #94a3b8 on white = 2.56:1 不達 WCAG AA;改 #64748b = 5.x:1 */
       --primary: #0284c7; --primary-fg: #f0f9ff; --border: #cbd5e1;
       --shadow: 0 4px 20px rgba(0,0,0,0.08); }
   }
@@ -153,7 +154,8 @@
   nav.bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0;
     background: var(--bg-2); border-top: 1px solid var(--border); padding: 8px;
     justify-content: space-around; z-index: 100; }
-  nav.bottom-nav button { padding: 8px 12px; font-size: 0.75rem; color: var(--fg-dim); flex: 1; }
+  /* B 線 a11y:WCAG 2.5.5 觸控目標 ≥44×44px(原 padding 8/12 + 0.75rem ≈ 高 34px 偏小) */
+  nav.bottom-nav button { padding: 8px 12px; font-size: 0.75rem; color: var(--fg-dim); flex: 1; min-height: 44px; }
   nav.bottom-nav button.active { color: var(--primary); }
 
   /* 響應式 */
@@ -375,6 +377,8 @@
 
   /* === Mode 8 Code Trace 道場(spec: docs/spec-code-trace.md §5)=== */
   .m8-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; margin: 12px 0; }
+  /* B 線 a11y(Codex P2 fix):窄屏單欄覆寫必須在 base rule 之後才能贏 cascade(同 specificity 後者勝)*/
+  @media (max-width: 600px) { .m8-grid { grid-template-columns: 1fr; } }
   .m8-code { background: #0a0e1a; color: #cdd6f4; padding: 12px 8px; border-radius: var(--radius-sm);
     font-family: 'Cascadia Code', 'JetBrains Mono', Consolas, monospace; font-size: 0.85rem;
     line-height: 1.6; border-left: 4px solid var(--primary); overflow-x: auto; min-height: 200px; }
@@ -435,6 +439,28 @@
     border: 1px solid #dc2626;
     font-weight: 700;
   }
+
+  /* B 線 a11y:鍵盤焦點 ring(原 button{} 清掉 outline,鍵盤使用者看不到焦點)
+     :focus-visible 只對「鍵盤焦點」生效,滑鼠點擊不會顯示,UX 零干擾。 */
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  button:focus:not(:focus-visible) { outline: none; }
+
+  /* B 線 a11y:prefers-reduced-motion 動暈防護(全域 kill switch + flash 跳過 + pulse 停)
+     使用者作業系統勾選「減少動態效果」時自動生效,不需 app 內設定。 */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+    .flash-overlay { display: none !important; }
+    .avatar.boss-enrage, .hp-fill.critical, .countdown.urgent { animation: none !important; }
+  }
 </style>
 <!-- 鐵律延伸:SM-2 間隔重複(qid 鍵,Mastery 用 nodeId 鍵,兩者並存) -->
 <script src="sm2.js"></script>
@@ -468,8 +494,8 @@
       <span class="badge">錯題 <span id="stat-wrong">0</span></span>
       <span class="badge">場次 <span id="stat-sessions">0</span></span>
     </div>
-    <button class="btn btn-ghost" id="global-theme-btn" onclick="window.ThemeManager && ThemeManager.openPicker()" title="切換主題色系" style="margin-left:auto">🎨 主題</button>
-    <button class="btn btn-ghost" id="global-home-btn" onclick="goHome()">🏠 首頁</button>
+    <button class="btn btn-ghost" id="global-theme-btn" onclick="window.ThemeManager && ThemeManager.openPicker()" title="切換主題色系" aria-label="切換主題色系" style="margin-left:auto">🎨 主題</button>
+    <button class="btn btn-ghost" id="global-home-btn" onclick="goHome()" aria-label="回首頁">🏠 首頁</button>
   </div>
 </header>
 
@@ -832,10 +858,10 @@
   </section>
 </main>
 
-<nav class="bottom-nav">
-  <button onclick="goHome()">🏠 首頁</button>
-  <button onclick="enterMode('review')">📝 錯題</button>
-  <button onclick="goStats()">📊 統計</button>
+<nav class="bottom-nav" aria-label="主要導覽">
+  <button onclick="goHome()" aria-label="回首頁">🏠 首頁</button>
+  <button onclick="enterMode('review')" aria-label="開啟錯題本">📝 錯題</button>
+  <button onclick="goStats()" aria-label="開啟學習統計">📊 統計</button>
 </nav>
 
 <div id="toast-container"></div>
