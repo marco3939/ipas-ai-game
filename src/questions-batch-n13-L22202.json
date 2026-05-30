@@ -289,7 +289,7 @@
           "trap_type": "Graph 不適合單純 session 查找"
         },
         {
-          "text": "傳統關聯式資料庫,使用嚴格 schema 與 ACID 交易確保每筆 session 都絕對不會遺失",
+          "text": "傳統關聯式資料庫,以正規化資料表配合嚴格 schema 與 ACID 交易,並對 session_id 建立唯一索引,確保每筆 session 在多次讀寫下都絕對不會遺失",
           "is_correct": false,
           "trap_type": "RDBMS 處理 session 過重"
         },
@@ -304,7 +304,7 @@
         "correct": "Key-Value 型 NoSQL(KV)以 key 直接查 value、結構單純、延遲極低,正是 session / cache 經典場景",
         "wrong": {
           "圖資料庫(Graph DB),以節點與邊建模可有效率地表達使用者之間的多跳社交關係": "Graph 強項是多跳關係查詢,session 是純單鍵查值不需要 Graph",
-          "傳統關聯式資料庫,使用嚴格 schema 與 ACID 交易確保每筆 session 都絕對不會遺失": "session 短期、量大、無需強交易,用 RDBMS 反而過重",
+          "傳統關聯式資料庫,以正規化資料表配合嚴格 schema 與 ACID 交易,並對 session_id 建立唯一索引,確保每筆 session 在多次讀寫下都絕對不會遺失": "session 短期、量大、無需強交易,用 RDBMS 反而過重",
           "Column-family 寬欄資料庫,對時序資料具高吞吐優勢,可儲存大量歷史 session 軌跡": "Column-family 為寬欄高吞吐時序設計,單鍵 session 查詢用 KV 更直接"
         },
         "hook": "選型口訣:查鍵極快 → KV;靈活欄位 → Document;寬欄高吞吐 → Column;多跳關係 → Graph"
@@ -735,7 +735,7 @@
           "is_correct": true
         },
         {
-          "text": "Backup Available / Strong state / Exactly consistent,適合金融交易等需要強一致的關鍵任務系統",
+          "text": "Backup Available / Strong state / Exactly consistent,適合金融交易、庫存扣減等需要嚴格強一致與不可逆結果的關鍵任務系統",
           "is_correct": false,
           "trap_type": "字義錯誤且場景錯"
         },
@@ -754,7 +754,7 @@
       "explanation": {
         "correct": "BASE = Basically Available(基本可用)+ Soft state(軟狀態)+ Eventually consistent(最終一致);適合社群、推薦、IoT 等高吞吐、可短暫不一致的場景",
         "wrong": {
-          "Backup Available / Strong state / Exactly consistent,適合金融交易等需要強一致的關鍵任務系統": "字面意義錯誤,且這描述的反而是 ACID 強一致場景",
+          "Backup Available / Strong state / Exactly consistent,適合金融交易、庫存扣減等需要嚴格強一致與不可逆結果的關鍵任務系統": "字面意義錯誤,且這描述的反而是 ACID 強一致場景",
           "Balanced Atomic Stable Environment,描述一種介於 ACID 與分散式之間的中型企業內部架構": "BASE 並非這個展開,且 BASE 是設計哲學而非企業規模",
           "Batch Asynchronous State Engine,代表一種僅適用於離線批次處理而非線上服務的儲存模型": "BASE 廣泛用於線上高吞吐服務,並非離線批次專用"
         },
@@ -1134,7 +1134,7 @@
           "trap_type": "刪除違反保存需求"
         },
         {
-          "text": "把所有資料統一搬到 Archive 層,即使近期熱門影片也接受數小時取回時間以追求成本最低化",
+          "text": "把所有資料一律統一搬到 Archive 封存層,即使近期高點閱的熱門影片也一併接受數小時等級的取回延遲時間,以單純追求整體儲存成本最低化",
           "is_correct": false,
           "trap_type": "未分流會傷使用者體驗"
         },
@@ -1149,7 +1149,7 @@
         "correct": "Information Lifecycle Management(ILM)規則可依存取頻率自動把冷資料下沉到 Cold / Archive 層,降低長期儲存成本但保留可取回性",
         "wrong": {
           "立即刪除所有 3 年以上的影片,既能釋放儲存空間又能完全省下未來所有層級的儲存費用": "可能違反業務或法規保存需求,直接刪除過於激進",
-          "把所有資料統一搬到 Archive 層,即使近期熱門影片也接受數小時取回時間以追求成本最低化": "熱門影片放 Archive 會嚴重傷使用者體驗,取回慢且取回費用高",
+          "把所有資料一律統一搬到 Archive 封存層,即使近期高點閱的熱門影片也一併接受數小時等級的取回延遲時間,以單純追求整體儲存成本最低化": "熱門影片放 Archive 會嚴重傷使用者體驗,取回慢且取回費用高",
           "增加 Hot 層的儲存配額並調漲使用者訂閱費,以收入彌補日益膨脹的儲存成本支出": "並未解決儲存成本失衡的根因,只是把成本轉嫁出去"
         },
         "hook": "未設 ILM → 所有資料卡在 Hot 層 → 成本爆炸;設 ILM 自動下沉是標準解"
