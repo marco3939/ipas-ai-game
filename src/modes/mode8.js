@@ -327,7 +327,9 @@
       const remain = (this.state && typeof this.state._timerRemaining === 'number')
         ? Math.max(0, this.state._timerRemaining) : 90;
       const timerHTML =
-        '<div class="timer-bar" id="play-timer-bar">' +
+        // B1-4 a11y:倒數計時器 role=timer + aria-live=off(避免每秒朗讀干擾;
+        // 數值可由報讀器手動定位讀取,warn/critical 樣式為視覺/動畫提示)
+        '<div class="timer-bar" id="play-timer-bar" role="timer" aria-label="作答倒數" aria-live="off">' +
           '<span class="timer-icon">⏱</span>' +
           '<span>剩餘 <span id="play-timer-value">' + remain + '</span> 秒</span>' +
         '</div>';

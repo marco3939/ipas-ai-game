@@ -505,7 +505,7 @@
     <div class="card">
       <h1>📘 IPAS AI 中級 — 衝刺練習場</h1>
       <p style="color:var(--fg-dim)">考試日:2026-05-23 · 鐵律驅動的個人化學習</p>
-      <div class="progress-bar"><div class="progress-fill" id="overall-progress" style="width:0%"></div></div>
+      <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="整體學習進度" id="overall-progress-bar"><div class="progress-fill" id="overall-progress" style="width:0%"></div></div>
       <div class="actions" style="margin-top:10px">
         <button class="btn btn-primary" onclick="show('view-rules')">📖 遊戲規則 / 操作指南</button>
       </div>
@@ -1692,6 +1692,9 @@ function refreshHome() {
   // 進度條:用節點數做分母,與 stat-mastered/stat-total 語意一致
   const pct = totalNodes > 0 ? Math.round(masterCount / totalNodes * 100) : 0;
   document.getElementById('overall-progress').style.width = pct + '%';
+  // B1-4 a11y:同步 aria-valuenow(報讀器讀「進度 X 百分比」)
+  const progBar = document.getElementById('overall-progress-bar');
+  if (progBar) progBar.setAttribute('aria-valuenow', String(pct));
   // DevTools 自驗用 debug log(可在 console 看到每次 refresh 的數據)
   console.debug('[refreshHome]', { masterCount, totalNodes, pct, masteryKeys: Object.keys(Mastery.load()).length });
   // 弱點
@@ -1849,14 +1852,22 @@ const PlayEngine = {
         <div class="question-stem">${this.current.stem}</div>
         ${code}
         ${visualData}
-        <div class="options" id="play-options">
-          ${this.current.options.map(o => `
-            <button class="option-btn" data-key="${o.key}" onclick="PlayEngine.answer('${o.key}')">
+        <div class="options" id="play-options" role="group" aria-label="作答選項">
+          ${this.current.options.map(o => {
+            // B1-3 a11y:aria-label 報讀器朗讀「選項 A:正文」。escHTML 處理 quote 防 attribute
+            // 提早閉合,並把 < > 轉 &lt; &gt; 等同已 XSS-safe。
+            // (Codex PR #60 P2 fix:原 strip tag regex /<[^>]*>/g 會吃掉數學運算子
+            //  如 `x < Q1 ... > Q3`,讓報讀器跟視覺不一致。全題庫掃過 0 個真實 HTML tag,
+            //  strip 完全沒必要;只 escHTML 保留全部資訊且 XSS-safe。)
+            const ariaTxt = escHTML(String(o.text || ''));
+            return `
+            <button class="option-btn" data-key="${o.key}" aria-label="選項 ${o.key}:${ariaTxt}" onclick="PlayEngine.answer('${o.key}')">
               <span class="option-key">${o.key}.</span>${o.text}
             </button>
-          `).join('')}
+          `;
+          }).join('')}
         </div>
-        <div id="play-explanation"></div>
+        <div id="play-explanation" aria-live="polite" role="status"></div>
       </div>
     `;
     show('view-play');
@@ -2358,8 +2369,14 @@ const Mode4 = {};
 
 // === 遊戲化共用引擎(Phase C)===
 const GameFX = {
+  // B2 a11y:OS 級「減少動態效果」勾選時,跳過所有 flash / confetti / 跳字動畫(避免動暈)
+  // 邊界:matchMedia 在老 browser / 沙箱 / 部分 in-app webview 可能 undefined → 短路評估默認 false(動畫照常)
+  _reduceMotion: typeof window !== 'undefined' && window.matchMedia
+    && typeof window.matchMedia === 'function'
+    && (function () { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } })(),
   // 2026-05-19 強化:閃光時間 300ms → 450ms,配合 CSS transition 0.45s,殘留時間延長更突顯
   flash(kind = 'correct') {
+    if (this._reduceMotion) return; // B2 a11y:reduced-motion 完全跳過(CSS 已加 display:none 雙保險,JS 端再 short-circuit 省 DOM 操作)
     const el = document.createElement('div');
     el.className = `flash-overlay ${kind}`;
     document.body.appendChild(el);
@@ -2376,7 +2393,8 @@ const GameFX = {
     num.style.left = (r.left + r.width/2) + 'px';
     num.style.top = (r.top + 20) + 'px';
     document.body.appendChild(num);
-    if (window.gsap) {
+    // B2 a11y:reduced-motion 時不跑 gsap 飛行/縮放,改 0.8s 後 fade remove(保留資訊但無動暈)
+    if (window.gsap && !this._reduceMotion) {
       gsap.fromTo(num, { y: 0, opacity: 1, scale: 0.4, rotation: opts.crit ? -8 : 0 },
         { y: -110, opacity: 0, scale: opts.crit ? 2.5 : 1.7, rotation: opts.crit ? 6 : 0,
           duration: 1.4, ease: 'power2.out',
@@ -2416,11 +2434,11 @@ const GameFX = {
     else el.classList.remove('boss-enrage');
   },
   confetti(opts = {}) {
-    if (!window.confetti) return;
+    if (this._reduceMotion || !window.confetti) return; // B2 a11y
     confetti({ particleCount: opts.count || 60, spread: 70, origin: { y: 0.6 }, ...opts });
   },
   bigConfetti() {
-    if (!window.confetti) return;
+    if (this._reduceMotion || !window.confetti) return; // B2 a11y
     confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
     setTimeout(() => confetti({ particleCount: 100, angle: 60, spread: 55, origin: { x: 0 } }), 250);
     setTimeout(() => confetti({ particleCount: 100, angle: 120, spread: 55, origin: { x: 1 } }), 500);
@@ -2448,9 +2466,10 @@ const GameFX = {
     </div>`;
     document.body.appendChild(overlay);
     const card = overlay.querySelector('.level-up-card');
-    if (window.gsap && card) gsap.to(card, { scale: 1, duration: 0.6, ease: 'back.out(1.7)' });
+    // B2 a11y:reduced-motion 時跳過 gsap 跳彈,直接 scale(1) 顯示卡片(保留資訊)
+    if (window.gsap && card && !this._reduceMotion) gsap.to(card, { scale: 1, duration: 0.6, ease: 'back.out(1.7)' });
     else if (card) card.style.transform = 'scale(1)';
-    this.bigConfetti();
+    this.bigConfetti(); // 內部 _reduceMotion 已自 short-circuit
   }
 };
 

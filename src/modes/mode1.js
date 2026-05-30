@@ -205,7 +205,7 @@
             <div class="avatar">🧑‍💼</div>
             <div class="bar-info">
               <div class="bar-name"><span class="level">Lv.${player.level}</span> AI 顧問(你)</div>
-              <div class="hp-track"><div class="hp-fill ${playerHpPct < 30 ? 'critical' : playerHpPct < 60 ? 'low' : ''}" style="width:${playerHpPct}%"></div></div>
+              <div class="hp-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(playerHpPct)}" aria-label="玩家 HP"><div class="hp-fill ${playerHpPct < 30 ? 'critical' : playerHpPct < 60 ? 'low' : ''}" style="width:${playerHpPct}%"></div></div>
               <div class="hp-text">HP ${player.hp} / ${player.hpMax} · MP ${player.mp} / ${player.mpMax} · EXP ${player.exp}/${player.expMax}</div>
             </div>
           </div>
@@ -351,7 +351,7 @@
             <div class="avatar boss" id="boss-avatar" style="font-size:2.5rem">${this.state.boss.avatar}</div>
             <div class="bar-info">
               <div class="bar-name">${esc(this.state.boss.name)}</div>
-              <div class="hp-track"><div class="hp-fill" id="boss-hp-fill" style="width:100%"></div></div>
+              <div class="hp-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" aria-label="BOSS HP" id="boss-hp-track"><div class="hp-fill" id="boss-hp-fill" style="width:100%"></div></div>
               <div class="hp-text" id="boss-hp-text">${this.state.bossHp} / ${this.state.bossHpMax}</div>
             </div>
           </div>
@@ -359,7 +359,7 @@
             <div class="avatar" id="player-avatar">🧑‍💼</div>
             <div class="bar-info">
               <div class="bar-name"><span class="level">Lv.${p.level}</span> AI 顧問</div>
-              <div class="hp-track"><div class="hp-fill" id="player-hp-fill"></div></div>
+              <div class="hp-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" aria-label="玩家 HP" id="player-hp-track"><div class="hp-fill" id="player-hp-fill"></div></div>
               <div class="hp-text" id="player-hp-text"></div>
             </div>
           </div>
@@ -378,6 +378,11 @@
       const playerEl = document.getElementById('player-hp-fill');
       if (bossEl) { bossEl.style.width = bossPct + '%'; bossEl.className = 'hp-fill' + (bossPct < 30 ? ' critical' : bossPct < 60 ? ' low' : ''); }
       if (playerEl) { playerEl.style.width = playerPct + '%'; playerEl.className = 'hp-fill' + (playerPct < 30 ? ' critical' : playerPct < 60 ? ' low' : ''); }
+      // B1-4 a11y:同步 aria-valuenow(報讀器讀 HP %),由 .hp-track 元素持有
+      const bossTrack = document.getElementById('boss-hp-track');
+      const playerTrack = document.getElementById('player-hp-track');
+      if (bossTrack) bossTrack.setAttribute('aria-valuenow', String(Math.round(bossPct)));
+      if (playerTrack) playerTrack.setAttribute('aria-valuenow', String(Math.round(playerPct)));
       const bt = document.getElementById('boss-hp-text');
       const pt = document.getElementById('player-hp-text');
       if (bt) bt.textContent = `${this.state.bossHp} / ${this.state.bossHpMax}`;

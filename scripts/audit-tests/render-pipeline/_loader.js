@@ -122,6 +122,13 @@ function buildContext() {
     DrillSession: { start: () => {} },
     ConfusionMatrix: undefined,
     QUESTIONS: [],
+    // 2026-05-30 B 線 a11y 第二批:PlayEngine.show 內 aria-label 用 escHTML 轉義(對齊 src/index.html)
+    // sandbox 需注入此 helper,否則跑到 escHTML(...) 會 ReferenceError(對應案例 11 教訓 — sandbox 預設與 production 對齊)
+    escHTML: (s) => {
+      if (s === null || s === undefined) return '';
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    },
     // We need `this` binding for Wrongbook methods to work
   };
   // Re-bind Wrongbook.add to use this._calls correctly
