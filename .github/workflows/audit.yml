@@ -76,6 +76,14 @@ jobs:
           node scripts/audit-theme-tokens.js || { echo "::error::audit-theme-tokens FAILED (theme token drift)"; exit 1; }
           echo "::endgroup::"
 
+          echo "::group::audit-subject-isolation (鐵律 #6, PR #50)"
+          node scripts/audit-subject-isolation.js || { echo "::error::audit-subject-isolation FAILED (鐵律 #6: subject mismatch / cross-subject file)"; exit 1; }
+          echo "::endgroup::"
+
+          echo "::group::audit-explanation-desync (案例 13, PR #56/#59)"
+          node scripts/audit-explanation-desync.js || { echo "::error::audit-explanation-desync FAILED (案例 13: option.text 改了 explanation.wrong key 沒同步 — 玩家答錯看不到 explanation)"; exit 1; }
+          echo "::endgroup::"
+
           echo "Step 1 PASS - all primary audits green"
 
       # ---------------------------------------------------------------
