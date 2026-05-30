@@ -496,7 +496,7 @@
           "trap_type": "資料平行不會自動轉模型平行"
         },
         {
-          "text": "GPU 規格不同會導致 64 卡互相等待,只要把所有卡換成相同型號就能線性加速到 64 倍",
+          "text": "GPU 規格不同會導致 64 卡因效能落差互相等待,只要把所有卡換成相同型號並統一驅動版本就能線性加速到 64 倍",
           "is_correct": false,
           "trap_type": "同型號也有通訊瓶頸"
         },
@@ -722,7 +722,7 @@
           "trap_type": "Log Loss 仍會被多數類主導"
         },
         {
-          "text": "Mean Absolute Error 配合 R² 決定係數,以衡量機率輸出與真實標籤之數值距離",
+          "text": "Mean Absolute Error 配合 R² 決定係數,以迴歸觀點衡量模型機率輸出與真實標籤之間的平均數值距離",
           "is_correct": false,
           "trap_type": "MAE/R² 為迴歸指標"
         }

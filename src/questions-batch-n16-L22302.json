@@ -278,7 +278,7 @@
           "trap_type": "Support 是普及度而非提升"
         },
         {
-          "text": "Confidence,定義為 A 與 B 同時出現的交易數除以含 A 的交易數,等同條件機率",
+          "text": "Confidence,定義為 A 與 B 同時出現的交易數除以含 A 的交易數,等同於在前項 A 發生的條件下後項 B 出現的條件機率",
           "is_correct": false,
           "trap_type": "Confidence 未排除 B 自身基準"
         },
@@ -1177,7 +1177,7 @@
           "is_correct": true
         },
         {
-          "text": "Trend 與 Cycle 兩者皆為固定週期波動,差別僅在 Trend 週期較短、Cycle 週期較長,可互換使用",
+          "text": "Trend 與 Cycle 兩者皆為固定週期波動,差別僅在 Trend 週期較短、Cycle 週期較長,在實務建模時兩者可互換使用無須分開處理",
           "is_correct": false,
           "trap_type": "Trend 非週期"
         },
