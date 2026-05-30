@@ -293,8 +293,8 @@
         "correct": "Lift = Conf(A→B) / Support(B),把 B 本身的基準機率扣掉後才能看出『買 A』有沒有真的提高買 B 的機率;Lift > 1 為正相關,= 1 為獨立,< 1 為負相關",
         "wrong": {
           "Support,定義為 A 與 B 同時出現的交易數除以總交易數,反映規則的普及度": "Support 衡量規則出現的頻繁度,不涉及『提升程度』",
-          "Confidence,定義為 A 與 B 同時出現的交易數除以含 A 的交易數,等同條件機率": "Confidence 是 P(B|A);若 B 本身極常見會虛高,無法反映真正提升",
-          "Coverage,定義為含 A 的交易數除以總交易數,反映規則前項的覆蓋範圍": "Coverage 描述前項覆蓋率,與提升無關"
+          "Coverage,定義為含 A 的交易數除以總交易數,反映規則前項的覆蓋範圍": "Coverage 描述前項覆蓋率,與提升無關",
+          "Confidence,定義為 A 與 B 同時出現的交易數除以含 A 的交易數,等同於在前項 A 發生的條件下後項 B 出現的條件機率": "Confidence 是 P(B|A);若 B 本身極常見會虛高,無法反映真正提升"
         },
         "hook": "三大指標分工:Support 看普及、Confidence 看條件機率、Lift 看提升"
       },
@@ -1196,9 +1196,9 @@
       "explanation": {
         "correct": "Trend 代表長期方向(無固定週期),Seasonality 代表固定週期波動(日/週/年),Cycle 代表不固定週期的長波動(常與景氣相關);三者性質不同,分解時需分開處理",
         "wrong": {
-          "Trend 與 Cycle 兩者皆為固定週期波動,差別僅在 Trend 週期較短、Cycle 週期較長,可互換使用": "Trend 不是週期成分,Cycle 也不固定週期,兩者不可互換",
           "Trend 是隨機波動,Cycle 是趨勢的反向修正,兩者合起來等同於 Seasonality 的固定週期型態": "Trend 是長期方向非隨機,Cycle 不是趨勢反向修正",
-          "Trend 是短期波動,Cycle 是日週期波動,兩者皆屬於 Seasonality 子類別需用同一模型處理": "三者是分解的不同成分,不應歸為 Seasonality 子類別"
+          "Trend 是短期波動,Cycle 是日週期波動,兩者皆屬於 Seasonality 子類別需用同一模型處理": "三者是分解的不同成分,不應歸為 Seasonality 子類別",
+          "Trend 與 Cycle 兩者皆為固定週期波動,差別僅在 Trend 週期較短、Cycle 週期較長,在實務建模時兩者可互換使用無須分開處理": "Trend 不是週期成分,Cycle 也不固定週期,兩者不可互換"
         },
         "hook": "Trend 看方向、Seasonality 固定週期、Cycle 不固定週期"
       },

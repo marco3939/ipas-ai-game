@@ -288,9 +288,9 @@
       "explanation": {
         "correct": "LSTM(Long Short-Term Memory)由 Hochreiter & Schmidhuber 1997 提出,核心包含三個閘控機制:Input Gate(控制新資訊寫入)、Forget Gate(控制舊記憶遺忘)、Output Gate(控制隱藏狀態輸出),並維護一條獨立的 Cell State 線傳遞長期記憶。GRU(Gated Recurrent Unit)由 Cho 等人於 2014 提出,將 LSTM 簡化為兩個閘:Update Gate(融合 Input 與 Forget 功能)、Reset Gate(控制過往資訊遺忘程度),並合併 Cell State 與 Hidden State。GRU 因參數較少在小資料集或運算受限情境表現較優,LSTM 則在長序列複雜任務略勝一籌。",
         "wrong": {
-          "LSTM 有四個閘(Input/Forget/Output/Update),GRU 有三個閘(Update/Reset/Output),GRU 比 LSTM 多一個輸出層精準但參數較多": "LSTM 標準版本明確為三個閘(Input/Forget/Output),非四個;GRU 為兩個閘(Update/Reset),非三個。閘數計算錯誤是常見背誦錯誤點。並且 GRU 是簡化版,參數較少而非較多",
           "LSTM 與 GRU 結構完全相同,僅是命名差異實作上可隨意互換,差別僅在框架支援度,TensorFlow 用 LSTM、PyTorch 則用 GRU": "LSTM 與 GRU 在閘數、Cell State 設計、參數量上皆有實質差異,並非命名差異。TensorFlow 與 PyTorch 兩者都同時支援 LSTM 與 GRU,框架分配說法為誤導",
-          "LSTM 沒有任何閘只有 Cell State,GRU 才是『有閘』的架構,故 GRU 表達力遠強於 LSTM,在所有任務皆全面優於 LSTM 系列": "LSTM 三閘設計是它解決梯度消失的核心創新,『無閘』完全錯誤。GRU 雖較簡潔但表達力略低於 LSTM,並非處處更強"
+          "LSTM 沒有任何閘只有 Cell State,GRU 才是『有閘』的架構,故 GRU 表達力遠強於 LSTM,在所有任務皆全面優於 LSTM 系列": "LSTM 三閘設計是它解決梯度消失的核心創新,『無閘』完全錯誤。GRU 雖較簡潔但表達力略低於 LSTM,並非處處更強",
+          "LSTM 有四個閘(Input/Forget/Output/Update),GRU 有三個閘(Update/Reset/Output),GRU 比 LSTM 多一個輸出閘故較精準但參數量反而更多更耗運算資源": "LSTM 標準版本明確為三個閘(Input/Forget/Output),非四個;GRU 為兩個閘(Update/Reset),非三個。閘數計算錯誤是常見背誦錯誤點。並且 GRU 是簡化版,參數較少而非較多"
         },
         "hook": "LSTM 三閘:Input/Forget/Output + Cell State;GRU 兩閘:Update/Reset 合併 Cell;GRU 是 LSTM 的簡化版"
       },
@@ -765,8 +765,8 @@
         "correct": "三類深度學習架構的『適合任務速查』為:(1)RNN/LSTM/GRU 適合『序列建模』,如語音識別、時序預測,因其遞迴結構可保留時間順序;(2)CNN 適合『空間結構資料』,如影像分類、分割、物件偵測,因其權重共享與局部感受野對 2D 平移不變性最有效;(3)Transformer 適合『長距離全域依賴』,如機器翻譯、文章摘要、語言生成,Self-Attention 直接連結任意 token 不衰減。題目中 A 任務序列性質、B 任務空間性質、C 任務長距離依賴,正好對應這三大主流架構。",
         "wrong": {
           "A:CNN;B:LSTM;C:全連接神經網路 — 三任務皆改用最簡單模型可避免過擬合且訓練最快達最佳效能": "三任務的性質配對完全錯誤:語音為序列任務應用 LSTM/Transformer 而非 CNN;影像分割為 2D 空間任務應用 CNN 而非 LSTM;全連接無法處理長文章的可變長度與長距離依賴",
-          "A:全連接神經網路;B:Transformer;C:CNN — 其中 Transformer 適 2D 影像、CNN 適長文,為最先進選擇": "Transformer 主要設計於 NLP 文本領域,Vision Transformer(ViT)是後續延伸應用,中級教材多介紹 NLP Transformer。CNN 不擅長處理可變長度長文,因感受野有限",
-          "三任務皆使用同一個 LSTM 架構,因為 LSTM 是萬用模型可處理影像、語音、文本三領域,所有任務皆達最佳效能": "LSTM 雖通用但在影像 2D 空間結構上效能遠不如 CNN(因 LSTM 把影像展平喪失空間資訊);且超長文本上 LSTM 也不如 Transformer 的全局 attention"
+          "三任務皆使用同一個 LSTM 架構,因為 LSTM 是萬用模型可處理影像、語音、文本三領域,所有任務皆達最佳效能": "LSTM 雖通用但在影像 2D 空間結構上效能遠不如 CNN(因 LSTM 把影像展平喪失空間資訊);且超長文本上 LSTM 也不如 Transformer 的全局 attention",
+          "A:全連接神經網路;B:Transformer;C:CNN — 其中 Transformer 最適 2D 影像、CNN 最適長文摘要,此組合為當前最先進的萬用選擇": "Transformer 主要設計於 NLP 文本領域,Vision Transformer(ViT)是後續延伸應用,中級教材多介紹 NLP Transformer。CNN 不擅長處理可變長度長文,因感受野有限"
         },
         "hook": "三大架構速查:序列 → RNN/LSTM/GRU;影像 → CNN;長文/全域依賴 → Transformer"
       },
@@ -824,9 +824,9 @@
       "explanation": {
         "correct": "KNN(K-Nearest Neighbors)以歐氏距離(或其他距離度量)計算測試樣本與訓練樣本的相似度,並由最近 K 個鄰居投票分類。當特徵尺度差異大時(如年齡 20~80 vs 年收入 30~3000),距離計算被大尺度特徵主導,差異 1 萬元的影響遠大於差異 10 歲。解法是做特徵縮放:StandardScaler(Z-score:均值 0、標準差 1)或 MinMaxScaler(壓到 [0,1])使各特徵權重平等。距離型模型(KNN、SVM、K-means)與梯度型模型(線性迴歸、神經網路)皆需縮放,樹模型(決策樹、RF、XGBoost)則不需。",
         "wrong": {
-          "KNN 是基於樹的分裂演算法,對特徵尺度完全不敏感,實務上完全不需做特徵縮放即可達到最佳分類效果且運算效率亦最佳": "KNN 是基於距離的『懶惰學習(lazy learning)』演算法,並非樹模型。距離計算對特徵尺度極度敏感,大尺度直接主導,小尺度幾乎被忽略",
           "KNN 模型內建自動標準化機制,訓練時會自動偵測尺度差異並逐步調整,因此資料工程師不需手動進行任何縮放處理流程動作": "sklearn 的 KNeighborsClassifier 沒有內建自動標準化。需在 Pipeline 中明確加入 StandardScaler 或 MinMaxScaler 步驟才會做縮放",
-          "KNN 的距離計算對大尺度特徵反而更有利,因為大尺度可提供更多區分資訊,做縮放反而會破壞此優勢應該徹底避免縮放動作": "大尺度主導 ≠ 提供更多資訊。縮放後各特徵以同等基礎參與距離計算,反而能讓 KNN 平等考量各維度的真正辨別力,通常顯著提高分類準確率"
+          "KNN 的距離計算對大尺度特徵反而更有利,因為大尺度可提供更多區分資訊,做縮放反而會破壞此優勢應該徹底避免縮放動作": "大尺度主導 ≠ 提供更多資訊。縮放後各特徵以同等基礎參與距離計算,反而能讓 KNN 平等考量各維度的真正辨別力,通常顯著提高分類準確率",
+          "KNN 是一種基於樹狀結構的分裂演算法,對特徵的尺度大小完全不敏感,實務上完全不需要做任何特徵縮放就能達到最佳分類效果,而且整體運算效率也最佳": "KNN 是基於距離的『懶惰學習(lazy learning)』演算法,並非樹模型。距離計算對特徵尺度極度敏感,大尺度直接主導,小尺度幾乎被忽略"
         },
         "hook": "需要縮放:KNN/SVM/K-means/線性迴歸/神經網路(距離+梯度型);不需縮放:決策樹/RF/XGBoost(分裂型)"
       },
@@ -1470,9 +1470,9 @@
       "explanation": {
         "correct": "在機器學習中,『參數(Parameters)』與『超參數(Hyperparameters)』是兩個不同層級的概念。參數是模型內部的可學習權重,如線性迴歸的 β、神經網路各層的 W 與 b,在訓練過程中由梯度下降自動更新以最小化損失函數。超參數則是『訓練前必須由人(或自動工具如 GridSearch、Optuna)決定的設定』,如學習率 learning_rate、批次大小 batch_size、層數 layers、隱藏神經元數 hidden_units、Dropout 比例 p。超參數控制模型架構與訓練動態,參數控制模型最終的決策邊界。",
         "wrong": {
-          "超參數與參數皆由訓練過程自動學習取得,差異僅是更新頻率不同,超參數每 100 個 epoch 才更新一次,參數則是每個 step 皆更新一次": "超參數本質是『訓練不會自動更新』,需要人或外部優化(GridSearch、隨機搜尋、Bayesian 優化)決定。把超參數說成自動學習屬於概念錯誤,且更新頻率描述也不正確",
           "超參數是模型輸出值的最小單位,參數是模型輸入的特徵向量本身,兩者分別是模型 I/O 端的不同階段參數設定機制與整體配置元素": "兩者皆是模型內部的設定值,與輸入輸出無關。輸出最小單位通常是 logit/機率,輸入特徵向量是資料,皆與超參數/參數的概念不重疊",
-          "超參數只在強化學習中存在,監督式學習只有參數而沒有任何超參數設定,神經網路訓練時也沒有任何超參數需要被調整或人為設定值": "監督式學習與深度學習有大量超參數需要調整(learning_rate、batch_size、optimizer、layers、units、dropout、weight_decay 等),且超參調校是 ML 流程的重要步驟"
+          "超參數只在強化學習中存在,監督式學習只有參數而沒有任何超參數設定,神經網路訓練時也沒有任何超參數需要被調整或人為設定值": "監督式學習與深度學習有大量超參數需要調整(learning_rate、batch_size、optimizer、layers、units、dropout、weight_decay 等),且超參調校是 ML 流程的重要步驟",
+          "超參數與參數皆由訓練過程自動學習取得,差異僅在更新頻率不同,超參數每 100 個 epoch 才更新一次,參數則每個 step 都會更新一次而已,無例外情形": "超參數本質是『訓練不會自動更新』,需要人或外部優化(GridSearch、隨機搜尋、Bayesian 優化)決定。把超參數說成自動學習屬於概念錯誤,且更新頻率描述也不正確"
         },
         "hook": "兩個層次:超參數(訓練前人決定:lr、batch、layers)→ 參數(訓練中自動學:W、b)"
       },
