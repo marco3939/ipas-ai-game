@@ -44,19 +44,31 @@ function scan() {
     totalQ += qs.length;
 
     for (const q of qs) {
-      if (!q.options || !q.explanation || !q.explanation.wrong) continue;
-      totalChecked++;
-      const wrongKeys = Object.keys(q.explanation.wrong);
-      const wrongOpts = q.options.filter(o => !o.is_correct);
-      totalWrongOpts += wrongOpts.length;
+      if (!q.options) continue;
+      // 沒 explanation block 完全合法(可選),不算 desync。
+      // 但若有 q.explanation 卻**缺 .wrong** dict、又有 wrong options,所有 wrong
+      // option 都該被當 missing(Codex P2 fix:不可整題 skip 讓 audit 假 PASS)。
+      if (!q.explanation) continue;
+      // code_trace 題(Mode 8)用 placeholder 二選一 + step-by-step trace 在 q.code/expected_*
+      // 驗證,不適用 dict explanation.wrong 模型,白名單排除。
+      if (q.format === 'code_trace') continue;
 
-      const missing = wrongOpts.filter(o => !wrongKeys.includes(o.text));
-      const stale = wrongKeys.filter(k => !wrongOpts.find(o => o.text === k));
+      totalChecked++;
+      const wrongOptsAll = q.options.filter(o => !o.is_correct);
+      totalWrongOpts += wrongOptsAll.length;
+
+      const wrongDict = q.explanation.wrong; // 可能 undefined
+      const wrongKeys = wrongDict ? Object.keys(wrongDict) : [];
+      const missing = wrongDict
+        ? wrongOptsAll.filter(o => !wrongKeys.includes(o.text))
+        : wrongOptsAll; // 整個 dict 不存在 → 所有 wrong opts 都 missing
+      const stale = wrongKeys.filter(k => !wrongOptsAll.find(o => o.text === k));
 
       if (missing.length === 0 && stale.length === 0) continue;
 
       let type;
-      if (missing.length === stale.length && missing.length > 0) type = 'case1_equal';
+      if (!wrongDict) type = 'case4_missing_wrong_dict';
+      else if (missing.length === stale.length && missing.length > 0) type = 'case1_equal';
       else if (missing.length > stale.length) type = 'case2_missing_exp';
       else type = 'case3_stale_key';
 
@@ -79,7 +91,10 @@ function main() {
   const jsonMode = process.argv.includes('--json');
   const { violations, totalQ, totalChecked, totalWrongOpts } = scan();
 
-  const totalDesync = violations.reduce((s, v) => s + v.missingCount, 0);
+  // Codex P2 fix:case3 stale key 也算 desync(原 totalDesync 只計 missing 漏 stale)
+  const totalMissing = violations.reduce((s, v) => s + v.missingCount, 0);
+  const totalStale = violations.reduce((s, v) => s + v.staleCount, 0);
+  const totalDesync = totalMissing + totalStale;
 
   const report = {
     timestamp: new Date().toISOString(),
@@ -87,11 +102,14 @@ function main() {
     totalChecked,
     totalWrongOpts,
     totalDesync,
+    totalMissing,
+    totalStale,
     violations,
     summary: {
       case1_equal: violations.filter(v => v.type === 'case1_equal').length,
       case2_missing_exp: violations.filter(v => v.type === 'case2_missing_exp').length,
       case3_stale_key: violations.filter(v => v.type === 'case3_stale_key').length,
+      case4_missing_wrong_dict: violations.filter(v => v.type === 'case4_missing_wrong_dict').length,
     },
   };
 
@@ -109,10 +127,11 @@ function main() {
   console.log(`total questions:           ${totalQ}`);
   console.log(`questions with explanation: ${totalChecked}`);
   console.log(`total wrong options:       ${totalWrongOpts}`);
-  console.log(`desync count:              ${totalDesync}`);
+  console.log(`desync count:              ${totalDesync}  (missing: ${totalMissing} / stale: ${totalStale})`);
   console.log(`  - case1 (可配對 — 改 text 漏同步 key):  ${report.summary.case1_equal}`);
   console.log(`  - case2 (漏寫 explanation):             ${report.summary.case2_missing_exp}`);
   console.log(`  - case3 (stale key 殘留):              ${report.summary.case3_stale_key}`);
+  console.log(`  - case4 (整題缺 explanation.wrong dict): ${report.summary.case4_missing_wrong_dict}`);
   console.log('');
 
   if (totalDesync === 0) {
