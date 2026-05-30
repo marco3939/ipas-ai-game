@@ -1854,9 +1854,12 @@ const PlayEngine = {
         ${visualData}
         <div class="options" id="play-options" role="group" aria-label="作答選項">
           ${this.current.options.map(o => {
-            // B1-3 a11y:aria-label 報讀器朗讀「選項 A:正文」;o.text 可能含 <code>/<strong> HTML tag,
-            // strip tags 後再 escHTML(轉 quote → 防 attribute 提早閉合)。
-            const ariaTxt = escHTML(String(o.text || '').replace(/<[^>]*>/g, ''));
+            // B1-3 a11y:aria-label 報讀器朗讀「選項 A:正文」。escHTML 處理 quote 防 attribute
+            // 提早閉合,並把 < > 轉 &lt; &gt; 等同已 XSS-safe。
+            // (Codex PR #60 P2 fix:原 strip tag regex /<[^>]*>/g 會吃掉數學運算子
+            //  如 `x < Q1 ... > Q3`,讓報讀器跟視覺不一致。全題庫掃過 0 個真實 HTML tag,
+            //  strip 完全沒必要;只 escHTML 保留全部資訊且 XSS-safe。)
+            const ariaTxt = escHTML(String(o.text || ''));
             return `
             <button class="option-btn" data-key="${o.key}" aria-label="選項 ${o.key}:${ariaTxt}" onclick="PlayEngine.answer('${o.key}')">
               <span class="option-key">${o.key}.</span>${o.text}
