@@ -413,7 +413,7 @@
         "wrong": {
           "Speed Layer 處理小資料量、Batch Layer 處理大資料量,兩者依資料量大小自動切換不重疊": "兩層的劃分依據是延遲與準確度需求,非資料量",
           "Speed Layer 負責資料清理、Batch Layer 負責資料儲存,兩層工作職責互不相關獨立運作": "Lambda 兩層都做計算,且結果需在 Serving 層合併,並非互不相關",
-          "Speed Layer 處理結構化資料、Batch Layer 處理非結構化資料,依資料型態自動分流到對應層": "Lambda 兩層處理同一份事件,只是延遲/準確度取捨不同,非依資料型態分流"
+          "Speed Layer 處理結構化資料、Batch Layer 處理非結構化資料,依資料型態與資料規模自動分流至對應層級的處理": "Lambda 兩層處理同一份事件,只是延遲/準確度取捨不同,非依資料型態分流"
         },
         "hook": "Lambda 三層:Batch(準) + Speed(快) + Serving(合)"
       },
@@ -626,7 +626,7 @@
           "trap_type": "把 Shuffle 誤為 Reduce"
         },
         {
-          "text": "Combine 階段,負責在 Map 端先做本地預聚合以減少 Map 階段輸出體積大小",
+          "text": "Combine 階段,負責在 Map 端就先以相同 key 做本地預聚合,以減少 Map 階段輸出資料量與後續網路傳輸體積",
           "is_correct": false,
           "trap_type": "Combine 是預聚合非分發"
         }
@@ -637,7 +637,7 @@
         "wrong": {
           "Map 階段,負責對每筆原始資料做切片與獨立的 key-value 轉換工作": "Map 只做本地切片與轉換,不涉及跨節點分發",
           "Reduce 階段,負責對已分組好的 key-value 做最終聚合運算並輸出結果": "Reduce 是接收已分發好的資料做聚合,不是分發本身",
-          "Combine 階段,負責在 Map 端先做本地預聚合以減少 Map 階段輸出體積大小": "Combine 是 Map 端的本地預聚合(可選),不是跨節點分發"
+          "Combine 階段,負責在 Map 端就先以相同 key 做本地預聚合,以減少 Map 階段輸出資料量與後續網路傳輸體積": "Combine 是 Map 端的本地預聚合(可選),不是跨節點分發"
         },
         "hook": "Map(切+轉)→ Shuffle(依 key 分發)→ Reduce(聚)"
       },
@@ -1127,7 +1127,7 @@
           "trap_type": "誤把 Watermark 視為純監控指標"
         },
         {
-          "text": "遲到事件越多代表 Watermark 設得越保守,應減少 Watermark 與最新事件時戳間的時間落差以避免遲到",
+          "text": "遲到事件越多就代表 Watermark 設得越保守,因此應主動縮小 Watermark 與最新事件時戳之間的時間落差,讓窗口更快關閉以徹底避免任何遲到事件",
           "is_correct": false,
           "trap_type": "把因果顛倒"
         }
@@ -1138,7 +1138,7 @@
         "wrong": {
           "Watermark 一旦發出窗口便不可再接收任何事件,所有遲到事件一律捨棄以維持窗口輸出結果的單調性": "Watermark 是機率性估計而非絕對線;捨棄所有遲到事件會犧牲正確性",
           "Watermark 與遲到事件無關,只是用來指示資料延遲統計指標供工程師監控用,並不影響運算邏輯本身": "Watermark 直接影響『窗口何時關閉』,與運算邏輯密切相關",
-          "遲到事件越多代表 Watermark 設得越保守,應減少 Watermark 與最新事件時戳間的時間落差以避免遲到": "因果顛倒;遲到本是事件特性,Watermark 收得越緊反而會誤判更多事件為遲到"
+          "遲到事件越多就代表 Watermark 設得越保守,因此應主動縮小 Watermark 與最新事件時戳之間的時間落差,讓窗口更快關閉以徹底避免任何遲到事件": "因果顛倒;遲到本是事件特性,Watermark 收得越緊反而會誤判更多事件為遲到"
         },
         "hook": "Watermark = 估計;遲到處理 = 配套(allowed lateness + side output);兩者搭配才完整"
       },

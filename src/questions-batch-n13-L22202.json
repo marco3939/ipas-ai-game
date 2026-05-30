@@ -72,9 +72,9 @@
       "explanation": {
         "correct": "三種架構各有定位:Warehouse 以結構化資料與 BI 報表為主、Lake 接納多型態原始資料供探索與 ML、Lakehouse 在 Lake 底層上加 ACID/Schema/Index 等 Warehouse 等級治理",
         "wrong": {
-          "Warehouse 偏多型態原始資料、Lake 偏結構化 BI 報表、Lakehouse 為兩者輕量化合併的簡化版本架構": "Warehouse 與 Lake 的定位完全顛倒了,Warehouse 才是結構化、Lake 才是多型態",
-          "三者皆為強 schema 架構,差異僅在儲存規模大小,Lake 是中型、Lakehouse 是大型 Warehouse": "Lake 採 schema-on-read,並非強 schema 架構,差異不在規模而在治理哲學",
-          "Lakehouse 是把 Warehouse 與 Lake 兩套系統實體堆疊在同一機房,本質仍是兩份重複資料": "Lakehouse 核心訴求正是『不複製資料就能同時做 BI 與 ML』,並非堆疊重複"
+          "Lakehouse 是把 Warehouse 與 Lake 兩套系統實體堆疊在同一機房,本質仍是兩份重複資料": "Lakehouse 核心訴求正是『不複製資料就能同時做 BI 與 ML』,並非堆疊重複",
+          "Warehouse 偏多型態原始資料、Lake 偏結構化 BI 報表、Lakehouse 為兩者輕量化合併的簡化版本": "Warehouse 與 Lake 的定位完全顛倒了,Warehouse 才是結構化、Lake 才是多型態",
+          "三者皆為強 schema 架構,差異僅在儲存規模大小,Lake 屬於中型架構、Lakehouse 屬於大型 Warehouse 等級": "Lake 採 schema-on-read,並非強 schema 架構,差異不在規模而在治理哲學"
         },
         "hook": "Warehouse 像圖書館(分類上架);Lake 像倉庫(原箱堆放);Lakehouse 是『倉庫加上圖書館等級的索引』"
       },
@@ -190,7 +190,7 @@
         "wrong": {
           "屬於 Lakehouse 必經的中期陣痛,只要把所有資料再複製一份到 Warehouse,問題即會自然消失": "複製一份不會解決『不知資料代表什麼』的治理根因,只會多一份同樣沒治理的副本",
           "代表資料湖技術已過時,應立即全面遷移至傳統關聯式資料庫以恢復一致性與可信度": "Lake 並未過時,問題出在治理缺位而非架構選錯",
-          "這是 schema-on-read 架構的固有缺陷,只有 schema-on-write 才能避免任何資料品質問題": "schema-on-read 並非天生不能治理,Lakehouse 就是在 Lake 上補治理的設計"
+          "這是 schema-on-read 架構與生俱來的固有缺陷,只有 schema-on-write 架構才能避免任何資料品質問題": "schema-on-read 並非天生不能治理,Lakehouse 就是在 Lake 上補治理的設計"
         },
         "hook": "Lake 不治理就成 Swamp;治理三件套:catalog、lineage、owner"
       },
@@ -247,8 +247,8 @@
         "correct": "Lakehouse 的設計重點是『在 Lake 之上加 ACID / Schema / Index 等治理』,讓 BI 與 ML 可同時使用同一份資料而不需重複搬遷;但選型仍須評估治理成熟度與遷移成本",
         "wrong": {
           "Lakehouse 必能完全取代 Warehouse,實務上沒有任何使用情境會建議兩者並存或互補運行": "實務常見兩者並存,完全取代是過度承諾",
-          "Lakehouse 等同 Lake 與 Warehouse 簡單堆疊,因此 BI 與 ML 仍須各自維護獨立副本與權限機制": "Lakehouse 強調『不複製就能共用』,並非堆疊兩套",
-          "Lakehouse 僅適合純粹串流資料而不接受批次寫入,故對歷史 PDF 與向量地圖完全無法支援": "Lakehouse 同時支援批次與串流,並未限定串流"
+          "Lakehouse 僅適合純粹串流資料而不接受批次寫入,故對歷史 PDF 與向量地圖完全無法支援": "Lakehouse 同時支援批次與串流,並未限定串流",
+          "Lakehouse 等同 Lake 與 Warehouse 兩者的簡單堆疊組合,因此 BI 與 ML 仍須各自維護獨立副本與權限機制": "Lakehouse 強調『不複製就能共用』,並非堆疊兩套"
         },
         "hook": "Lakehouse 核心訴求:不複製資料就能做 BI + ML"
       },
@@ -289,7 +289,7 @@
           "trap_type": "Graph 不適合單純 session 查找"
         },
         {
-          "text": "傳統關聯式資料庫,使用嚴格 schema 與 ACID 交易確保每筆 session 都絕對不會遺失",
+          "text": "傳統關聯式資料庫,以正規化資料表配合嚴格 schema 與 ACID 交易,並對 session_id 建立唯一索引,確保每筆 session 在多次讀寫下都絕對不會遺失",
           "is_correct": false,
           "trap_type": "RDBMS 處理 session 過重"
         },
@@ -304,7 +304,7 @@
         "correct": "Key-Value 型 NoSQL(KV)以 key 直接查 value、結構單純、延遲極低,正是 session / cache 經典場景",
         "wrong": {
           "圖資料庫(Graph DB),以節點與邊建模可有效率地表達使用者之間的多跳社交關係": "Graph 強項是多跳關係查詢,session 是純單鍵查值不需要 Graph",
-          "傳統關聯式資料庫,使用嚴格 schema 與 ACID 交易確保每筆 session 都絕對不會遺失": "session 短期、量大、無需強交易,用 RDBMS 反而過重",
+          "傳統關聯式資料庫,以正規化資料表配合嚴格 schema 與 ACID 交易,並對 session_id 建立唯一索引,確保每筆 session 在多次讀寫下都絕對不會遺失": "session 短期、量大、無需強交易,用 RDBMS 反而過重",
           "Column-family 寬欄資料庫,對時序資料具高吞吐優勢,可儲存大量歷史 session 軌跡": "Column-family 為寬欄高吞吐時序設計,單鍵 session 查詢用 KV 更直接"
         },
         "hook": "選型口訣:查鍵極快 → KV;靈活欄位 → Document;寬欄高吞吐 → Column;多跳關係 → Graph"
@@ -532,8 +532,8 @@
         "correct": "對跨節點分散式系統而言,網路分區是無法避免的風險,P 幾乎必選;真正的取捨發生在分區當下:選 C(CP)或選 A(AP)",
         "wrong": {
           "現代雲端架構已克服 CAP 限制,可在分區發生時同時保證一致性、可用性、分區容忍三項": "CAP 是理論上的不可能三角,並未被『克服』",
-          "可用性(A)在分散式系統可完全捨棄,因為跨中心架構本來就接受長時間 timeout 回應": "可用性是業務需求,並非可隨意丟掉",
-          "CAP 是平時就會發生的取捨,即使網路完全暢通仍需三選二並隨時放棄其中一項保證": "CAP 是『分區發生時』的取捨,平時三者不必然衝突"
+          "CAP 是平時就會發生的取捨,即使網路完全暢通仍需三選二並隨時放棄其中一項保證": "CAP 是『分區發生時』的取捨,平時三者不必然衝突",
+          "可用性(A)在分散式系統當中可完全捨棄,因跨資料中心架構本來就接受長時間 timeout 的回應": "可用性是業務需求,並非可隨意丟掉"
         },
         "hook": "CAP 真相:P 幾乎必選,實際是 CP 或 AP 二選一"
       },
@@ -735,7 +735,7 @@
           "is_correct": true
         },
         {
-          "text": "Backup Available / Strong state / Exactly consistent,適合金融交易等需要強一致的關鍵任務系統",
+          "text": "Backup Available / Strong state / Exactly consistent,適合金融交易、庫存扣減等需要嚴格強一致與不可逆結果的關鍵任務系統",
           "is_correct": false,
           "trap_type": "字義錯誤且場景錯"
         },
@@ -754,7 +754,7 @@
       "explanation": {
         "correct": "BASE = Basically Available(基本可用)+ Soft state(軟狀態)+ Eventually consistent(最終一致);適合社群、推薦、IoT 等高吞吐、可短暫不一致的場景",
         "wrong": {
-          "Backup Available / Strong state / Exactly consistent,適合金融交易等需要強一致的關鍵任務系統": "字面意義錯誤,且這描述的反而是 ACID 強一致場景",
+          "Backup Available / Strong state / Exactly consistent,適合金融交易、庫存扣減等需要嚴格強一致與不可逆結果的關鍵任務系統": "字面意義錯誤,且這描述的反而是 ACID 強一致場景",
           "Balanced Atomic Stable Environment,描述一種介於 ACID 與分散式之間的中型企業內部架構": "BASE 並非這個展開,且 BASE 是設計哲學而非企業規模",
           "Batch Asynchronous State Engine,代表一種僅適用於離線批次處理而非線上服務的儲存模型": "BASE 廣泛用於線上高吞吐服務,並非離線批次專用"
         },
@@ -1134,7 +1134,7 @@
           "trap_type": "刪除違反保存需求"
         },
         {
-          "text": "把所有資料統一搬到 Archive 層,即使近期熱門影片也接受數小時取回時間以追求成本最低化",
+          "text": "把所有資料一律統一搬到 Archive 封存層,即使近期高點閱的熱門影片也一併接受數小時等級的取回延遲時間,以單純追求整體儲存成本最低化",
           "is_correct": false,
           "trap_type": "未分流會傷使用者體驗"
         },
@@ -1149,7 +1149,7 @@
         "correct": "Information Lifecycle Management(ILM)規則可依存取頻率自動把冷資料下沉到 Cold / Archive 層,降低長期儲存成本但保留可取回性",
         "wrong": {
           "立即刪除所有 3 年以上的影片,既能釋放儲存空間又能完全省下未來所有層級的儲存費用": "可能違反業務或法規保存需求,直接刪除過於激進",
-          "把所有資料統一搬到 Archive 層,即使近期熱門影片也接受數小時取回時間以追求成本最低化": "熱門影片放 Archive 會嚴重傷使用者體驗,取回慢且取回費用高",
+          "把所有資料一律統一搬到 Archive 封存層,即使近期高點閱的熱門影片也一併接受數小時等級的取回延遲時間,以單純追求整體儲存成本最低化": "熱門影片放 Archive 會嚴重傷使用者體驗,取回慢且取回費用高",
           "增加 Hot 層的儲存配額並調漲使用者訂閱費,以收入彌補日益膨脹的儲存成本支出": "並未解決儲存成本失衡的根因,只是把成本轉嫁出去"
         },
         "hook": "未設 ILM → 所有資料卡在 Hot 層 → 成本爆炸;設 ILM 自動下沉是標準解"

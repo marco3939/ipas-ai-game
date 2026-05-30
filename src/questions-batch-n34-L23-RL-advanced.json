@@ -4,7 +4,10 @@
   "generated_at": "2026-05-18",
   "batch": 34,
   "batch_title": "N34 — 科三 L23201 強化學習進階(DDPG + PPO + A3C)Tier C",
-  "exam_target": {"name": "IPAS AI 應用規劃師中級", "date": "2026-05-23"},
+  "exam_target": {
+    "name": "IPAS AI 應用規劃師中級",
+    "date": "2026-05-23"
+  },
   "iron_rule_compliance": {
     "rule_1_drill_explanation": "每題皆有 explanation.correct/wrong/hook + misconceptions ≥ 1 + related_node_ids",
     "rule_2_shuffle_and_cases": "shuffle_options:true;概念辨析題以靜態情境呈現(公式 / 屬性 / 命名差異);應用情境題以跨產業情境呈現",
@@ -14,14 +17,28 @@
     "rule_6_isolation": "本檔僅新增 L23201 三節點共 9 題;不改其他既有題目檔或共享層"
   },
   "subject": 3,
-  "knowledge_codes": ["L23201"],
+  "knowledge_codes": [
+    "L23201"
+  ],
   "distribution": {
     "L23201_count": 9,
-    "by_node": {"n_L23201_008": 3, "n_L23201_009": 3, "n_L23201_010": 3},
-    "by_format": {"single_choice": 9},
-    "by_difficulty": {"easy": 0, "medium": 6, "hard": 3}
+    "by_node": {
+      "n_L23201_008": 3,
+      "n_L23201_009": 3,
+      "n_L23201_010": 3
+    },
+    "by_format": {
+      "single_choice": 9
+    },
+    "by_difficulty": {
+      "easy": 0,
+      "medium": 6,
+      "hard": 3
+    }
   },
-  "source_pdf": ["機器學習模型圖卡(全).pdf (page 37 DDPG;page 38 PPO;page 39 A3C)"],
+  "source_pdf": [
+    "機器學習模型圖卡(全).pdf (page 37 DDPG;page 38 PPO;page 39 A3C)"
+  ],
   "questions": [
     {
       "id": "q_n34_001",
@@ -33,10 +50,30 @@
       "source_level": "L2",
       "stem": "某機械手臂導入強化學習做精細抓取任務,需要連續調整關節角度(例如 0.1°、0.15°、0.3°…)而非離散選擇固定動作。從動作空間特性出發,下列演算法選擇何者最為適合?",
       "options": [
-        {"key": "A", "text": "DDPG,Actor 直接輸出確定性連續動作向量,專為連續動作空間設計具 Actor-Critic 架構", "is_correct": true, "trap_type": "正解:連續動作對映 DDPG"},
-        {"key": "B", "text": "DQN,因其 Q 網路可直接對任意連續動作輸出 Q 值,並透過數值微分搜尋連續最佳動作", "is_correct": false, "trap_type": "誤判 DQN 可處理連續動作"},
-        {"key": "C", "text": "Q-Learning 表格式,將角度離散化到 1° 解析度後即可完全等同於連續控制效果", "is_correct": false, "trap_type": "誤把粗離散化當連續"},
-        {"key": "D", "text": "SARSA,因其 On-policy 特性可使連續動作下的探索更穩定且不需 Actor 網路", "is_correct": false, "trap_type": "On-policy 與連續動作混淆"}
+        {
+          "key": "A",
+          "text": "DDPG,Actor 直接輸出確定性連續動作向量,專為連續動作空間設計具 Actor-Critic 架構",
+          "is_correct": true,
+          "trap_type": "正解:連續動作對映 DDPG"
+        },
+        {
+          "key": "B",
+          "text": "DQN,因其 Q 網路可直接對任意連續動作輸出 Q 值,並透過數值微分搜尋連續最佳動作",
+          "is_correct": false,
+          "trap_type": "誤判 DQN 可處理連續動作"
+        },
+        {
+          "key": "C",
+          "text": "Q-Learning 表格式,將角度離散化到 1° 解析度後即可完全等同於連續控制效果",
+          "is_correct": false,
+          "trap_type": "誤把粗離散化當連續"
+        },
+        {
+          "key": "D",
+          "text": "SARSA,因其 On-policy 特性可使連續動作下的探索更穩定且不需 Actor 網路",
+          "is_correct": false,
+          "trap_type": "On-policy 與連續動作混淆"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -48,9 +85,21 @@
         },
         "hook": "口訣:「連續動作找 DDPG,Actor 演 Critic 評」;離散用 DQN / 連續用 DDPG"
       },
-      "misconceptions": ["把 DDPG 與 DQN 混(DQN 離散 / DDPG 連續)", "誤以為離散化可等同連續控制"],
-      "related_node_ids": ["n_L23201_008", "n_L23201_006", "n_L23201_004"],
-      "tags": ["ddpg", "continuous-action", "actor-critic", "robotics"],
+      "misconceptions": [
+        "把 DDPG 與 DQN 混(DQN 離散 / DDPG 連續)",
+        "誤以為離散化可等同連續控制"
+      ],
+      "related_node_ids": [
+        "n_L23201_008",
+        "n_L23201_006",
+        "n_L23201_004"
+      ],
+      "tags": [
+        "ddpg",
+        "continuous-action",
+        "actor-critic",
+        "robotics"
+      ],
       "errata_critical": false
     },
     {
@@ -63,24 +112,56 @@
       "source_level": "L2",
       "stem": "DDPG 採用 Actor-Critic 雙網路架構。下列關於兩個網路『角色分工』與『輸出內容』的描述何者最為精確?",
       "options": [
-        {"key": "A", "text": "Actor 輸出動作 μ(s);Critic 輸出 Q(s,a);Actor 求最大 Q,Critic 以 TD-error 學", "is_correct": true, "trap_type": "正解:Actor-Critic 分工"},
-        {"key": "B", "text": "Actor 輸出 Q 值之估計值;Critic 輸出動作之機率分布,兩者輸出互換但功能仍完全等價於 DDPG 標準的雙網路完整架構", "is_correct": false, "trap_type": "兩者角色顛倒"},
-        {"key": "C", "text": "DDPG 僅有 Critic 一個神經網路,Actor 為傳統 ε-greedy 規則並不需要任何網路結構", "is_correct": false, "trap_type": "誤判單網路"},
-        {"key": "D", "text": "Actor 與 Critic 共享同一網路的所有輸出層,僅以不同損失函數區分,兩者本質上實為同一神經網路", "is_correct": false, "trap_type": "誤把單網路雙頭當分開網路"}
+        {
+          "key": "A",
+          "text": "Actor 輸出動作 μ(s);Critic 輸出 Q(s,a);Actor 求最大 Q,Critic 以 TD-error 學",
+          "is_correct": true,
+          "trap_type": "正解:Actor-Critic 分工"
+        },
+        {
+          "key": "B",
+          "text": "Actor 輸出 Q 值之估計值;Critic 輸出動作之機率分布,兩者輸出互換但功能仍完全等價於 DDPG 標準的雙網路完整架構",
+          "is_correct": false,
+          "trap_type": "兩者角色顛倒"
+        },
+        {
+          "key": "C",
+          "text": "DDPG 僅有 Critic 一個神經網路,Actor 為傳統 ε-greedy 規則並不需要任何網路結構",
+          "is_correct": false,
+          "trap_type": "誤判單網路"
+        },
+        {
+          "key": "D",
+          "text": "Actor 與 Critic 共享同一網路的所有輸出層,僅以不同損失函數區分,兩者本質上實為同一神經網路",
+          "is_correct": false,
+          "trap_type": "誤把單網路雙頭當分開網路"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "DDPG Actor-Critic 分工:Actor 網路 μ(s) 輸出確定性動作向量(連續);Critic 網路 Q(s,a) 評估該狀態-動作對的 Q 值。訓練時 Actor 沿 ∇_a Q 方向更新以最大化 Q,Critic 用 TD-error r + γQ(s', μ(s')) − Q(s,a) 學 Q;兩者交替訓練。Actor 演動作 a = μ(s);Critic 評 Q(s,a)。",
         "wrong": {
-          "Actor 輸出 Q 值估計;Critic 輸出動作機率分布,兩者輸出互換但功能仍等價於 DDPG 標準架構": "Actor/Critic 名稱本身即指明:Actor『演員』演動作、Critic『評論家』評 Q 值;互換違反命名邏輯且功能不等價。",
           "DDPG 僅有 Critic 一個神經網路,Actor 為傳統 ε-greedy 規則並不需要任何網路結構": "DDPG 之 D 即 Deep,雙網路皆為深度神經網路;若 Actor 不是網路就無法處理高維連續動作空間。",
-          "Actor 與 Critic 共享同一網路的所有輸出層,僅以不同損失函數區分,兩者本質上實為同一神經網路": "Actor 與 Critic 為兩個獨立網路(實作可能共享部分前段特徵層,但輸出層與功能分開);共享輸出會混淆動作與 Q 值。"
+          "Actor 與 Critic 共享同一網路的所有輸出層,僅以不同損失函數區分,兩者本質上實為同一神經網路": "Actor 與 Critic 為兩個獨立網路(實作可能共享部分前段特徵層,但輸出層與功能分開);共享輸出會混淆動作與 Q 值。",
+          "Actor 輸出 Q 值之估計值;Critic 輸出動作之機率分布,兩者輸出互換但功能仍完全等價於 DDPG 標準的雙網路完整架構": "Actor/Critic 名稱本身即指明:Actor『演員』演動作、Critic『評論家』評 Q 值;互換違反命名邏輯且功能不等價。"
         },
         "hook": "Actor 演動作 a = μ(s);Critic 評 Q(s,a);Actor 求 max Q / Critic 求 min TD-error"
       },
-      "misconceptions": ["誤以為 Critic 是核心(實為 Actor-Critic 聯合)", "把 Actor 與 Critic 角色顛倒"],
-      "related_node_ids": ["n_L23201_008", "n_L23201_009", "n_L23201_010"],
-      "tags": ["ddpg", "actor-critic", "policy-gradient", "q-value"],
+      "misconceptions": [
+        "誤以為 Critic 是核心(實為 Actor-Critic 聯合)",
+        "把 Actor 與 Critic 角色顛倒"
+      ],
+      "related_node_ids": [
+        "n_L23201_008",
+        "n_L23201_009",
+        "n_L23201_010"
+      ],
+      "tags": [
+        "ddpg",
+        "actor-critic",
+        "policy-gradient",
+        "q-value"
+      ],
       "errata_critical": false
     },
     {
@@ -93,24 +174,55 @@
       "source_level": "L2",
       "stem": "DDPG 中 Actor 採『確定性策略』(deterministic policy),而 PPO / A3C 等多採『隨機策略』(stochastic policy)。下列關於 DDPG 確定性策略特性的描述何者最為精確?",
       "options": [
-        {"key": "A", "text": "Actor 直接輸出單一動作向量 μ(s) 而非機率分布,探索需另行加噪聲(如 OU 過程)", "is_correct": true, "trap_type": "正解:deterministic + 探索靠噪聲"},
-        {"key": "B", "text": "Actor 輸出機率分布 π(a|s) 並從中抽樣動作,探索自動由 softmax 完成不需額外機制", "is_correct": false, "trap_type": "誤判為 stochastic"},
-        {"key": "C", "text": "確定性與隨機性僅是實作差異,DDPG 也可以直接改用 categorical 分布輸出而不影響演算法分類", "is_correct": false, "trap_type": "混淆確定性與隨機性的本質"},
-        {"key": "D", "text": "DDPG 確定性是指『獎勵函數確定』,與 Actor 輸出形式無關,Actor 仍輸出 stochastic 分布", "is_correct": false, "trap_type": "扭曲 deterministic 詞義"}
+        {
+          "key": "A",
+          "text": "Actor 直接輸出單一動作向量 μ(s) 而非機率分布,探索需另行加噪聲(如 OU 過程)",
+          "is_correct": true,
+          "trap_type": "正解:deterministic + 探索靠噪聲"
+        },
+        {
+          "key": "B",
+          "text": "Actor 輸出機率分布 π(a|s) 並從中抽樣動作,探索自動由 softmax 完成不需額外機制",
+          "is_correct": false,
+          "trap_type": "誤判為 stochastic"
+        },
+        {
+          "key": "C",
+          "text": "確定性與隨機性僅是實作差異,DDPG 也可以直接改用 categorical 分布輸出而不影響演算法分類",
+          "is_correct": false,
+          "trap_type": "混淆確定性與隨機性的本質"
+        },
+        {
+          "key": "D",
+          "text": "DDPG 確定性是指『獎勵函數確定』,與 Actor 輸出形式無關,Actor 仍輸出 stochastic 分布",
+          "is_correct": false,
+          "trap_type": "扭曲 deterministic 詞義"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
         "correct": "DDPG 中 D = Deterministic,Actor 輸出函數 μ(s) → 單一動作向量,而非機率分布 π(a|s)。因為輸出固定,探索必須額外加噪聲(原論文用 Ornstein-Uhlenbeck 過程,後續改良也用高斯噪聲);這與 PPO / A3C 由 stochastic policy 抽樣自帶探索不同。",
-          "wrong": {
-            "Actor 輸出機率分布 π(a|s) 並從中抽樣動作,探索自動由 softmax 完成不需額外機制": "這是 stochastic policy(如 PPO、A3C)的特徵,不是 DDPG;DDPG 名稱中 Deterministic 即指輸出單一動作而非分布。",
-            "確定性與隨機性僅是實作差異,DDPG 也可以直接改用 categorical 分布輸出而不影響演算法分類": "Deterministic 是 DDPG 的核心定義之一,若改為分布輸出就成為 stochastic actor-critic(如 A2C / A3C),已是不同演算法。",
-            "DDPG 確定性是指『獎勵函數確定』,與 Actor 輸出形式無關,Actor 仍輸出 stochastic 分布": "DDPG 中 Deterministic 指『策略(policy)是確定函數』而非『獎勵確定』;獎勵函數的確定/隨機性與 policy 性質無關。"
-          },
+        "wrong": {
+          "Actor 輸出機率分布 π(a|s) 並從中抽樣動作,探索自動由 softmax 完成不需額外機制": "這是 stochastic policy(如 PPO、A3C)的特徵,不是 DDPG;DDPG 名稱中 Deterministic 即指輸出單一動作而非分布。",
+          "確定性與隨機性僅是實作差異,DDPG 也可以直接改用 categorical 分布輸出而不影響演算法分類": "Deterministic 是 DDPG 的核心定義之一,若改為分布輸出就成為 stochastic actor-critic(如 A2C / A3C),已是不同演算法。",
+          "DDPG 確定性是指『獎勵函數確定』,與 Actor 輸出形式無關,Actor 仍輸出 stochastic 分布": "DDPG 中 Deterministic 指『策略(policy)是確定函數』而非『獎勵確定』;獎勵函數的確定/隨機性與 policy 性質無關。"
+        },
         "hook": "DDPG = Deep + Deterministic + Policy Gradient;Deterministic 指 policy 輸出單一動作"
       },
-      "misconceptions": ["認為 DDPG 是 stochastic policy(實為 deterministic)", "誤以為 Actor 輸出 softmax 分布"],
-      "related_node_ids": ["n_L23201_008", "n_L23201_009"],
-      "tags": ["ddpg", "deterministic-policy", "exploration", "stochastic-policy"],
+      "misconceptions": [
+        "認為 DDPG 是 stochastic policy(實為 deterministic)",
+        "誤以為 Actor 輸出 softmax 分布"
+      ],
+      "related_node_ids": [
+        "n_L23201_008",
+        "n_L23201_009"
+      ],
+      "tags": [
+        "ddpg",
+        "deterministic-policy",
+        "exploration",
+        "stochastic-policy"
+      ],
       "errata_critical": false
     },
     {
@@ -123,10 +235,30 @@
       "source_level": "L2",
       "stem": "PPO(Proximal Policy Optimization)的關鍵設計是『Clipping 機制』。下列關於 Clipping 所要解決問題與其作用機制的描述何者最為精確?",
       "options": [
-        {"key": "A", "text": "Clipping 將策略比率 r_t(θ) 限制在 [1-ε, 1+ε] 範圍,防止單次更新過大導致策略發散", "is_correct": true, "trap_type": "正解:Clipping 防發散"},
-        {"key": "B", "text": "Clipping 用於剪掉過大的獎勵值(reward clipping),與策略更新幅度無關", "is_correct": false, "trap_type": "混淆 reward clipping 與 policy clipping"},
-        {"key": "C", "text": "Clipping 用於剪掉梯度(gradient clipping),屬於通用深度學習技巧並非 PPO 獨有設計", "is_correct": false, "trap_type": "混淆 gradient clipping"},
-        {"key": "D", "text": "Clipping 用於剪掉異常狀態 observation 值,使狀態空間更穩定但不限制策略更新", "is_correct": false, "trap_type": "扭曲為 observation clipping"}
+        {
+          "key": "A",
+          "text": "Clipping 將策略比率 r_t(θ) 限制在 [1-ε, 1+ε] 範圍,防止單次更新過大導致策略發散",
+          "is_correct": true,
+          "trap_type": "正解:Clipping 防發散"
+        },
+        {
+          "key": "B",
+          "text": "Clipping 用於剪掉過大的獎勵值(reward clipping),與策略更新幅度無關",
+          "is_correct": false,
+          "trap_type": "混淆 reward clipping 與 policy clipping"
+        },
+        {
+          "key": "C",
+          "text": "Clipping 用於剪掉梯度(gradient clipping),屬於通用深度學習技巧並非 PPO 獨有設計",
+          "is_correct": false,
+          "trap_type": "混淆 gradient clipping"
+        },
+        {
+          "key": "D",
+          "text": "Clipping 用於剪掉異常狀態 observation 值,使狀態空間更穩定但不限制策略更新",
+          "is_correct": false,
+          "trap_type": "扭曲為 observation clipping"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -138,9 +270,20 @@
         },
         "hook": "口訣:「PPO clip 限更新,穩定優於 TRPO」;clip 作用在策略比率 r_t(θ) 上"
       },
-      "misconceptions": ["把 PPO clipping 與 reward clipping 混淆", "把 PPO clipping 與 gradient clipping 混淆"],
-      "related_node_ids": ["n_L23201_009", "n_L23201_008"],
-      "tags": ["ppo", "clipping", "policy-update", "proximal"],
+      "misconceptions": [
+        "把 PPO clipping 與 reward clipping 混淆",
+        "把 PPO clipping 與 gradient clipping 混淆"
+      ],
+      "related_node_ids": [
+        "n_L23201_009",
+        "n_L23201_008"
+      ],
+      "tags": [
+        "ppo",
+        "clipping",
+        "policy-update",
+        "proximal"
+      ],
       "errata_critical": false
     },
     {
@@ -153,10 +296,30 @@
       "source_level": "L2",
       "stem": "PPO 為 TRPO(Trust Region Policy Optimization)的改良版本。下列關於 PPO vs TRPO 之核心差異的描述何者最為精確?",
       "options": [
-        {"key": "A", "text": "TRPO 用二階導數計算 KL 信賴域複雜;PPO 改用一階梯度 + clip 達相似效果但簡單高效", "is_correct": true, "trap_type": "正解:二階 vs 一階 + clip"},
-        {"key": "B", "text": "TRPO 用一階梯度直接更新;PPO 改用二階導數計算 KL 散度以更精準控制信賴域", "is_correct": false, "trap_type": "兩者顛倒"},
-        {"key": "C", "text": "TRPO 為 On-policy 而 PPO 為 Off-policy,兩者更新時的資料採樣方式完全不同", "is_correct": false, "trap_type": "On/Off-policy 混淆"},
-        {"key": "D", "text": "PPO 與 TRPO 在數學公式上完全等價,僅是命名差異而無實質演算法或實作層面差異", "is_correct": false, "trap_type": "誤判等價"}
+        {
+          "key": "A",
+          "text": "TRPO 用二階導數計算 KL 信賴域複雜;PPO 改用一階梯度 + clip 達相似效果但簡單高效",
+          "is_correct": true,
+          "trap_type": "正解:二階 vs 一階 + clip"
+        },
+        {
+          "key": "B",
+          "text": "TRPO 用一階梯度直接更新;PPO 改用二階導數計算 KL 散度以更精準控制信賴域",
+          "is_correct": false,
+          "trap_type": "兩者顛倒"
+        },
+        {
+          "key": "C",
+          "text": "TRPO 為 On-policy 而 PPO 為 Off-policy,兩者更新時的資料採樣方式完全不同",
+          "is_correct": false,
+          "trap_type": "On/Off-policy 混淆"
+        },
+        {
+          "key": "D",
+          "text": "PPO 與 TRPO 在數學公式上完全等價,僅是命名差異而無實質演算法或實作層面差異",
+          "is_correct": false,
+          "trap_type": "誤判等價"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -168,9 +331,20 @@
         },
         "hook": "TRPO 二階(KL)複雜 / PPO 一階 + clip 簡單高效;PPO 為 TRPO 的工程簡化版"
       },
-      "misconceptions": ["把 PPO 與 TRPO 等價看待", "誤判二階 vs 一階方向"],
-      "related_node_ids": ["n_L23201_009", "n_L23201_008"],
-      "tags": ["ppo", "trpo", "policy-gradient", "trust-region"],
+      "misconceptions": [
+        "把 PPO 與 TRPO 等價看待",
+        "誤判二階 vs 一階方向"
+      ],
+      "related_node_ids": [
+        "n_L23201_009",
+        "n_L23201_008"
+      ],
+      "tags": [
+        "ppo",
+        "trpo",
+        "policy-gradient",
+        "trust-region"
+      ],
       "errata_critical": false
     },
     {
@@ -183,10 +357,30 @@
       "source_level": "L2",
       "stem": "ChatGPT 的 RLHF(Reinforcement Learning from Human Feedback)流程中,語言模型策略優化階段採用某強化學習演算法。從強化學習教材所列的典型應用對映,該演算法最可能是下列何者?",
       "options": [
-        {"key": "A", "text": "PPO,因其穩定性 + 效率兼具且能在大型語言模型策略上穩定收斂", "is_correct": true, "trap_type": "正解:RLHF 用 PPO"},
-        {"key": "B", "text": "DQN,因其 Q-value 表格法可精確對應 token 級別的離散動作選擇", "is_correct": false, "trap_type": "誤判 DQN 適合 LLM"},
-        {"key": "C", "text": "Q-Learning 表格式,因其原理單純可避免大模型訓練的不穩定問題", "is_correct": false, "trap_type": "表格式無法處理 LLM"},
-        {"key": "D", "text": "DDPG,因 token 生成本質為連續動作空間需要確定性策略輸出", "is_correct": false, "trap_type": "誤判 token 生成為連續動作"}
+        {
+          "key": "A",
+          "text": "PPO,因其穩定性 + 效率兼具且能在大型語言模型策略上穩定收斂",
+          "is_correct": true,
+          "trap_type": "正解:RLHF 用 PPO"
+        },
+        {
+          "key": "B",
+          "text": "DQN,因其 Q-value 表格法可精確對應 token 級別的離散動作選擇",
+          "is_correct": false,
+          "trap_type": "誤判 DQN 適合 LLM"
+        },
+        {
+          "key": "C",
+          "text": "Q-Learning 表格式,因其原理單純可避免大模型訓練的不穩定問題",
+          "is_correct": false,
+          "trap_type": "表格式無法處理 LLM"
+        },
+        {
+          "key": "D",
+          "text": "DDPG,因 token 生成本質為連續動作空間需要確定性策略輸出",
+          "is_correct": false,
+          "trap_type": "誤判 token 生成為連續動作"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -198,9 +392,21 @@
         },
         "hook": "ChatGPT RLHF = SFT → Reward Model → PPO;PPO 是 LLM 對齊的標準工具"
       },
-      "misconceptions": ["誤以為 RLHF 用 DQN", "誤判 token 生成為連續動作空間"],
-      "related_node_ids": ["n_L23201_009", "n_L23201_008", "n_L23201_010"],
-      "tags": ["ppo", "rlhf", "chatgpt", "llm-alignment"],
+      "misconceptions": [
+        "誤以為 RLHF 用 DQN",
+        "誤判 token 生成為連續動作空間"
+      ],
+      "related_node_ids": [
+        "n_L23201_009",
+        "n_L23201_008",
+        "n_L23201_010"
+      ],
+      "tags": [
+        "ppo",
+        "rlhf",
+        "chatgpt",
+        "llm-alignment"
+      ],
       "errata_critical": false
     },
     {
@@ -213,10 +419,30 @@
       "source_level": "L2",
       "stem": "A3C(Asynchronous Advantage Actor-Critic)架構中,多個 Worker 同時在不同 Environment 跑並更新一個共享網路。下列關於 A3C 核心架構的描述何者最為精確?",
       "options": [
-        {"key": "A", "text": "多 Worker 平行在不同 Environment 跑,各 Worker 異步將梯度推送到共享 Global Network", "is_correct": true, "trap_type": "正解:多 Worker + 異步 + Global Network"},
-        {"key": "B", "text": "單一 Worker 順序執行多個 Environment,將梯度同步累積後再一次更新到 Global Network", "is_correct": false, "trap_type": "誤判單 Worker 順序"},
-        {"key": "C", "text": "多 Worker 各自完全獨立訓練,訓練結束後再以加權平均合成最終模型,過程中無共享 Global Network", "is_correct": false, "trap_type": "誤判無 Global Network"},
-        {"key": "D", "text": "多 Worker 必須等所有 Worker 完成同一 step 才一起更新 Global Network,完全同步進行", "is_correct": false, "trap_type": "這是 A2C 而非 A3C"}
+        {
+          "key": "A",
+          "text": "多 Worker 平行在不同 Environment 跑,各 Worker 異步將梯度推送到共享 Global Network",
+          "is_correct": true,
+          "trap_type": "正解:多 Worker + 異步 + Global Network"
+        },
+        {
+          "key": "B",
+          "text": "單一 Worker 順序執行多個 Environment,將梯度同步累積後再一次更新到 Global Network",
+          "is_correct": false,
+          "trap_type": "誤判單 Worker 順序"
+        },
+        {
+          "key": "C",
+          "text": "多 Worker 各自完全獨立訓練,訓練結束後再以加權平均合成最終模型,過程中無共享 Global Network",
+          "is_correct": false,
+          "trap_type": "誤判無 Global Network"
+        },
+        {
+          "key": "D",
+          "text": "多 Worker 必須等所有 Worker 完成同一 step 才一起更新 Global Network,完全同步進行",
+          "is_correct": false,
+          "trap_type": "這是 A2C 而非 A3C"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -228,9 +454,21 @@
         },
         "hook": "口訣:「A3C 異步多 Worker,共享 Global Network」;Worker 各跑各的,梯度推到中央"
       },
-      "misconceptions": ["把 A3C 與 A2C 混(A3C Asynchronous / A2C Synchronous)", "誤以為 A3C 是單 Worker"],
-      "related_node_ids": ["n_L23201_010", "n_L23201_008", "n_L23201_009"],
-      "tags": ["a3c", "asynchronous", "parallel-training", "global-network"],
+      "misconceptions": [
+        "把 A3C 與 A2C 混(A3C Asynchronous / A2C Synchronous)",
+        "誤以為 A3C 是單 Worker"
+      ],
+      "related_node_ids": [
+        "n_L23201_010",
+        "n_L23201_008",
+        "n_L23201_009"
+      ],
+      "tags": [
+        "a3c",
+        "asynchronous",
+        "parallel-training",
+        "global-network"
+      ],
       "errata_critical": false
     },
     {
@@ -243,10 +481,30 @@
       "source_level": "L2",
       "stem": "教材常提到 A3C 與 A2C(Synchronous Advantage Actor-Critic)為一對對照演算法。下列關於兩者『同步 vs 異步』差異的描述何者最為精確?",
       "options": [
-        {"key": "A", "text": "A3C 異步(各 Worker 獨立更新);A2C 同步(各 Worker 等齊後一起更新)", "is_correct": true, "trap_type": "正解:A3C 異步 / A2C 同步"},
-        {"key": "B", "text": "A3C 同步(各 Worker 等齊後一起更新);A2C 異步(各 Worker 獨立更新)", "is_correct": false, "trap_type": "兩者顛倒"},
-        {"key": "C", "text": "A3C 與 A2C 皆為同步,差別僅在使用 Advantage 函數的形式不同", "is_correct": false, "trap_type": "誤判皆同步"},
-        {"key": "D", "text": "A3C 與 A2C 皆為異步,差別僅在 Actor 與 Critic 是否共享網路前段", "is_correct": false, "trap_type": "誤判皆異步"}
+        {
+          "key": "A",
+          "text": "A3C 異步(各 Worker 獨立更新);A2C 同步(各 Worker 等齊後一起更新)",
+          "is_correct": true,
+          "trap_type": "正解:A3C 異步 / A2C 同步"
+        },
+        {
+          "key": "B",
+          "text": "A3C 同步(各 Worker 等齊後一起更新);A2C 異步(各 Worker 獨立更新)",
+          "is_correct": false,
+          "trap_type": "兩者顛倒"
+        },
+        {
+          "key": "C",
+          "text": "A3C 與 A2C 皆為同步,差別僅在使用 Advantage 函數的形式不同",
+          "is_correct": false,
+          "trap_type": "誤判皆同步"
+        },
+        {
+          "key": "D",
+          "text": "A3C 與 A2C 皆為異步,差別僅在 Actor 與 Critic 是否共享網路前段",
+          "is_correct": false,
+          "trap_type": "誤判皆異步"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -258,9 +516,20 @@
         },
         "hook": "記憶法:A3C 多一個 A = Asynchronous;A2C 少一個 A 即同步;Advantage 是兩者共通的"
       },
-      "misconceptions": ["把 A3C 與 A2C 同步/異步顛倒", "誤以為差別在 Advantage 函數形式"],
-      "related_node_ids": ["n_L23201_010", "n_L23201_009"],
-      "tags": ["a3c", "a2c", "asynchronous", "synchronous"],
+      "misconceptions": [
+        "把 A3C 與 A2C 同步/異步顛倒",
+        "誤以為差別在 Advantage 函數形式"
+      ],
+      "related_node_ids": [
+        "n_L23201_010",
+        "n_L23201_009"
+      ],
+      "tags": [
+        "a3c",
+        "a2c",
+        "asynchronous",
+        "synchronous"
+      ],
       "errata_critical": false
     },
     {
@@ -273,10 +542,30 @@
       "source_level": "L2",
       "stem": "教材指出 A3C 多 Worker 平行訓練的『核心優點』不只是加速,還有另一項對訓練穩定性更關鍵的好處。下列何者最能反映 A3C 多 Worker 設計的關鍵理由?",
       "options": [
-        {"key": "A", "text": "多 Worker 在不同 Environment 採樣 → 消除資料時序相關性 → 穩定訓練收斂", "is_correct": true, "trap_type": "正解:消除相關性是核心"},
-        {"key": "B", "text": "多 Worker 可允許使用更大 learning rate 加快收斂,訓練速度提升是唯一目的", "is_correct": false, "trap_type": "誤判加速為唯一目的"},
-        {"key": "C", "text": "多 Worker 可顯著降低記憶體用量,避免 Experience Replay Buffer 過大佔用", "is_correct": false, "trap_type": "與 A3C 設計理由無關"},
-        {"key": "D", "text": "多 Worker 強制使用不同隨機種子使訓練結果可完全重現,主要為了實驗復現需求而設計", "is_correct": false, "trap_type": "扭曲設計動機"}
+        {
+          "key": "A",
+          "text": "多 Worker 在不同 Environment 採樣 → 消除資料時序相關性 → 穩定訓練收斂",
+          "is_correct": true,
+          "trap_type": "正解:消除相關性是核心"
+        },
+        {
+          "key": "B",
+          "text": "多 Worker 可允許使用更大 learning rate 加快收斂,訓練速度提升是唯一目的",
+          "is_correct": false,
+          "trap_type": "誤判加速為唯一目的"
+        },
+        {
+          "key": "C",
+          "text": "多 Worker 可顯著降低記憶體用量,避免 Experience Replay Buffer 過大佔用",
+          "is_correct": false,
+          "trap_type": "與 A3C 設計理由無關"
+        },
+        {
+          "key": "D",
+          "text": "多 Worker 強制使用不同隨機種子使訓練結果可完全重現,主要為了實驗復現需求而設計",
+          "is_correct": false,
+          "trap_type": "扭曲設計動機"
+        }
       ],
       "shuffle_options": true,
       "explanation": {
@@ -288,9 +577,21 @@
         },
         "hook": "A3C 重點:不是加速,而是「多 Worker → 不同分布採樣 → 消除相關性 → 穩定訓練」"
       },
-      "misconceptions": ["誤以為 A3C 重點是加速(實為穩定性 + 消除相關性)", "把 A3C 多 Worker 當記憶體優化"],
-      "related_node_ids": ["n_L23201_010", "n_L23201_006", "n_L23201_009"],
-      "tags": ["a3c", "data-correlation", "parallel-sampling", "training-stability"],
+      "misconceptions": [
+        "誤以為 A3C 重點是加速(實為穩定性 + 消除相關性)",
+        "把 A3C 多 Worker 當記憶體優化"
+      ],
+      "related_node_ids": [
+        "n_L23201_010",
+        "n_L23201_006",
+        "n_L23201_009"
+      ],
+      "tags": [
+        "a3c",
+        "data-correlation",
+        "parallel-sampling",
+        "training-stability"
+      ],
       "errata_critical": false
     }
   ]
