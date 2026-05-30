@@ -29,6 +29,8 @@ node scripts/audit-render.js            # 渲染輸出(案例 8 教訓)
 node scripts/audit-calculation.js       # calculation 題 schema
 node scripts/verify-calc-numeric.js     # 數值正確性獨立驗算
 node scripts/audit-mode-flow.js         # mode 流程跑驗 isCorrect/correctKey 非空(案例 10)
+node scripts/audit-subject-isolation.js  # 鐵律 #6 科目隔離自動驗(PR #50)
+node scripts/audit-explanation-desync.js # explanation.wrong key 同步(案例 13,PR #61)
 node scripts/update-manifest.js         # 重生 questions-manifest.json(鐵律 #7)
 ```
 
@@ -56,7 +58,7 @@ node scripts/update-manifest.js         # 重生 questions-manifest.json(鐵律 
 
 | 異動類型 | 必跑 audit / 動作 | 不可省 |
 |:--|:--|:--|
-| 動 `src/questions*.json`(新增 / 修改題目)| 1. `node scripts/update-manifest.js`(更新 manifest)<br>2. `node scripts/audit-qbank-integrity.js`(漏載 / 漂移 / subject)<br>3. `node scripts/audit-source-fidelity.js`(鐵律 #5)<br>4. `node scripts/audit-render.js`(placeholder 殘留)<br>5. `node scripts/audit-option-length.js`(鐵律 #4) | 鐵律 #6 隔離(若改既有檔) |
+| 動 `src/questions*.json`(新增 / 修改題目)| 1. `node scripts/update-manifest.js`(更新 manifest)<br>2. `node scripts/audit-qbank-integrity.js`(漏載 / 漂移 / subject)<br>3. `node scripts/audit-source-fidelity.js`(鐵律 #5)<br>4. `node scripts/audit-render.js`(placeholder 殘留)<br>5. `node scripts/audit-option-length.js`(鐵律 #4)<br>6. `node scripts/audit-explanation-desync.js`(案例 13:改 option text 必同步 explanation.wrong key) | 鐵律 #6 隔離(若改既有檔) |
 | 動 `src/modes/mode*.js` user-facing 計分 / 答題 / 結算 | 1. 該 mode 的 `audit-tests/`(全綠)<br>2. `audit-mode-flow.js`(0 violations)<br>3. CLAUDE.md §8 強制派 **code-review subagent**(dataflow trace + cross-file caller + 邊界 case + 同根因 grep) | 案例 10 復現 |
 | 動 `src/index.html`(共用層)| 1. 全套 audit<br>2. `audit-tests/mode5-8/mode7/` 全套(13 個 test files)<br>3. §8 強制 code-review subagent | 案例 1 / 8 / 10 復現 |
 | 動 Storage key shape / schema | 1. 加 migration 邏輯<br>2. `audit-tests/.../13-saveHistory-fullLog-snapshot` 等 | 案例 9 stale data |

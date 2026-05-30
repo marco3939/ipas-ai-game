@@ -1,0 +1,13 @@
+{
+  "timestamp": "2026-05-30T17:37:32.819Z",
+  "totalQ": 1014,
+  "totalChecked": 1012,
+  "totalWrongOpts": 2926,
+  "totalDesync": 0,
+  "violations": [],
+  "summary": {
+    "case1_equal": 0,
+    "case2_missing_exp": 0,
+    "case3_stale_key": 0
+  }
+}
