@@ -269,7 +269,7 @@
           "is_correct": true
         },
         {
-          "text": "LSTM 有四個閘(Input/Forget/Output/Update),GRU 有三個閘(Update/Reset/Output),GRU 比 LSTM 多一個輸出層精準但參數較多",
+          "text": "LSTM 有四個閘(Input/Forget/Output/Update),GRU 有三個閘(Update/Reset/Output),GRU 比 LSTM 多一個輸出閘故較精準但參數量反而更多更耗運算資源",
           "is_correct": false,
           "trap_type": "LSTM 為 3 閘非 4 閘,GRU 為 2 閘非 3 閘;且 GRU 應為簡化版而非更複雜版"
         },
@@ -750,7 +750,7 @@
           "trap_type": "三任務性質互換錯誤,且全連接無法處理長文章"
         },
         {
-          "text": "A:全連接神經網路;B:Transformer;C:CNN — 其中 Transformer 適 2D 影像、CNN 適長文,為最先進選擇",
+          "text": "A:全連接神經網路;B:Transformer;C:CNN — 其中 Transformer 最適 2D 影像、CNN 最適長文摘要,此組合為當前最先進的萬用選擇",
           "is_correct": false,
           "trap_type": "Transformer 主要在 NLP,Vision Transformer 為後續應用;CNN 不適長文"
         },
@@ -805,7 +805,7 @@
           "is_correct": true
         },
         {
-          "text": "KNN 是基於樹的分裂演算法,對特徵尺度完全不敏感,實務上完全不需做特徵縮放即可達到最佳分類效果且運算效率亦最佳",
+          "text": "KNN 是一種基於樹狀結構的分裂演算法,對特徵的尺度大小完全不敏感,實務上完全不需要做任何特徵縮放就能達到最佳分類效果,而且整體運算效率也最佳",
           "is_correct": false,
           "trap_type": "KNN 不是樹模型,而是距離型模型;且距離型模型對尺度極度敏感"
         },
@@ -1451,7 +1451,7 @@
           "is_correct": true
         },
         {
-          "text": "超參數與參數皆由訓練過程自動學習取得,差異僅是更新頻率不同,超參數每 100 個 epoch 才更新一次,參數則是每個 step 皆更新一次",
+          "text": "超參數與參數皆由訓練過程自動學習取得,差異僅在更新頻率不同,超參數每 100 個 epoch 才更新一次,參數則每個 step 都會更新一次而已,無例外情形",
           "is_correct": false,
           "trap_type": "超參數不是自動學習,需人為設定或外部優化器決定"
         },

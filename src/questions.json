@@ -169,7 +169,7 @@
           "is_correct": true
         },
         {
-          "text": "矩陣的所有特徵值(eigenvalue)皆需非負,使矩陣為半正定",
+          "text": "矩陣的所有特徵值(eigenvalue)皆需非負,使該矩陣構成半正定矩陣",
           "is_correct": false,
           "trap_type": "與 PSD 混淆"
         },
@@ -543,7 +543,7 @@
           "is_correct": true
         },
         {
-          "text": "預先指定的群集數量 K 與群內點之間的最大距離閾值門檻",
+          "text": "預先指定的群集數量 K 與群內任兩點之間所允許的最大距離閾值門檻",
           "is_correct": false,
           "trap_type": "K-means 超參"
         },
@@ -619,7 +619,7 @@
           "trap_type": "通用對策非主流"
         },
         {
-          "text": "提高判別器(Discriminator)每輪訓練迭代的更新頻率與步數",
+          "text": "提高判別器(Discriminator)每輪訓練迭代的更新頻率與梯度更新步數",
           "is_correct": false,
           "trap_type": "可能加劇而非解決"
         }
@@ -1155,7 +1155,7 @@
           "is_correct": true
         },
         {
-          "text": "PCA 屬線性投影;LDA 採用核函數做非線性降維",
+          "text": "PCA 屬線性投影降維;LDA 則採用核函數技巧進行非線性降維",
           "is_correct": false,
           "trap_type": "兩者都是線性"
         },
@@ -1337,7 +1337,7 @@
           "trap_type": "標註並非主觀"
         },
         {
-          "text": "特徵偏差(Feature Bias)",
+          "text": "特徵偏差(Feature Bias):輸入特徵分布失真",
           "is_correct": false,
           "trap_type": "本題重點在訓練樣本族群"
         },
@@ -1721,7 +1721,7 @@
           "trap_type": "為非監督分群任務,適合 K-means / 階層式分群"
         },
         {
-          "text": "從上百種感測欄位中萃取代表性軸,讓報表能以二維散佈圖呈現",
+          "text": "從上百種感測欄位中萃取代表性主軸,讓報表能以二維散佈圖呈現,供決策者快速檢視",
           "is_correct": false,
           "trap_type": "為線性降維任務,適合 PCA / Autoencoder"
         }
@@ -2738,7 +2738,7 @@
           "trap_type": "與記憶體無關"
         },
         {
-          "text": "改以測試集(Test Set)資料進行部分訓練,以節省 GPU 資源",
+          "text": "改以測試集(Test Set)的資料進行部分模型訓練,以節省 GPU 記憶體資源",
           "is_correct": false,
           "trap_type": "嚴重錯誤"
         }
@@ -2964,7 +2964,7 @@
           "is_correct": true
         },
         {
-          "text": "改採 Early Stopping,在驗證集 RMSE 連續上升時提早結束本輪訓練",
+          "text": "改採 Early Stopping,在驗證集 RMSE 連續多輪上升時就提早結束本輪訓練流程",
           "is_correct": false,
           "trap_type": "Early Stopping 控制的是訓練回合,不會把任何特徵的權重設為 0"
         },

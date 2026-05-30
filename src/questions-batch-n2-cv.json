@@ -946,7 +946,7 @@
           "trap_type": "與 IoU 平均混淆"
         },
         {
-          "text": "等於 Recall 與 Precision 的算術平均,計算方式與 F1 分數類似",
+          "text": "等於 Recall 與 Precision 兩者的算術平均值,其計算方式與 F1 分數十分類似",
           "is_correct": false,
           "trap_type": "與 F1 混淆"
         }
@@ -1112,7 +1112,7 @@
           "trap_type": "後續架構混淆"
         },
         {
-          "text": "MobileNet:由 Google 團隊於 2017 年提出",
+          "text": "MobileNet:由 Google 研究團隊於 2017 年首度提出",
           "is_correct": false,
           "trap_type": "邊緣模型混淆"
         }
@@ -1209,7 +1209,7 @@
           "is_correct": true
         },
         {
-          "text": "輸入影像的旋轉與比例變化問題,使模型具備幾何不變性",
+          "text": "輸入影像的旋轉與比例尺度變化問題,使模型具備幾何不變性,無須額外資料增強",
           "is_correct": false,
           "trap_type": "與資料增強混淆"
         },
@@ -1317,7 +1317,7 @@
           "is_correct": true
         },
         {
-          "text": "參數量最大為 Conv 層,FLOPs 最大為 FC 層",
+          "text": "參數量最大為 Conv 卷積層,FLOPs 最大則為 FC 全連接層",
           "is_correct": false,
           "trap_type": "顛倒主從"
         },

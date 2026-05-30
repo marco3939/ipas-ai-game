@@ -267,7 +267,7 @@
           "is_correct": true
         },
         {
-          "text": "KS p<0.001 即代表災難級漂移應立即回滾並停服,p-value 為最權威指標,毋須再看 PSI/KL/Wasserstein 等次要統計量",
+          "text": "KS p<0.001 即代表災難級漂移應立即回滾並停服,因 p-value 為最權威的判定指標,毋須再參考 PSI/KL/Wasserstein 等次要統計量,無須再交叉比對其他指標",
           "is_correct": false,
           "trap_type": "p-value 顯著只代表『分布有差異』而非『差異很大』,大樣本下極小差異也會 p<0.001;需配合 effect size(PSI/KL/Wasserstein)綜合判讀"
         },
