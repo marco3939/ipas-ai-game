@@ -413,7 +413,7 @@
         "wrong": {
           "Speed Layer 處理小資料量、Batch Layer 處理大資料量,兩者依資料量大小自動切換不重疊": "兩層的劃分依據是延遲與準確度需求,非資料量",
           "Speed Layer 負責資料清理、Batch Layer 負責資料儲存,兩層工作職責互不相關獨立運作": "Lambda 兩層都做計算,且結果需在 Serving 層合併,並非互不相關",
-          "Speed Layer 處理結構化資料、Batch Layer 處理非結構化資料,依資料型態自動分流到對應層": "Lambda 兩層處理同一份事件,只是延遲/準確度取捨不同,非依資料型態分流"
+          "Speed Layer 處理結構化資料、Batch Layer 處理非結構化資料,依資料型態與資料規模自動分流至對應層級的處理": "Lambda 兩層處理同一份事件,只是延遲/準確度取捨不同,非依資料型態分流"
         },
         "hook": "Lambda 三層:Batch(準) + Speed(快) + Serving(合)"
       },

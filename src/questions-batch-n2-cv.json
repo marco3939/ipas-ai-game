@@ -376,9 +376,9 @@
       "explanation": {
         "correct": "歸納偏置是模型對資料結構的內建假設。CNN 透過卷積核局部運算,內建『空間局部性(locality)』與『平移等變性(translation equivariance)』兩種強偏置;FCNN 對空間結構不做假設,需更多資料才能學到類似結構。",
         "wrong": {
-          "CNN 與 FCNN 都假設特徵彼此條件獨立,因此學習效率相同": "條件獨立假設屬於 Naive Bayes 等模型;且 CNN 與 FCNN 學習效率明顯不同,前者需要的資料量遠少。",
           "FCNN 內建旋轉不變性偏置,CNN 則需額外資料增強才具備": "兩者皆不天生具備旋轉不變性,旋轉不變性需透過資料增強或專門設計達成。",
-          "CNN 假設輸入序列具備時間順序性,FCNN 假設輸入無序": "時間順序假設屬於 RNN/LSTM 等序列模型,非 CNN 的核心歸納偏置。"
+          "CNN 假設輸入序列具備時間順序性,FCNN 假設輸入無序": "時間順序假設屬於 RNN/LSTM 等序列模型,非 CNN 的核心歸納偏置。",
+          "CNN 與 FCNN 都假設特徵彼此完全條件獨立,因此兩者學習效率與表現相同": "條件獨立假設屬於 Naive Bayes 等模型;且 CNN 與 FCNN 學習效率明顯不同,前者需要的資料量遠少。"
         },
         "hook": "CNN 的兩個關鍵歸納偏置:Locality + Translation Equivariance"
       },

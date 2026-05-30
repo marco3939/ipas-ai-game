@@ -41,8 +41,8 @@
         "correct": "Recall = TP / (TP + FN),衡量『真正可疑物品中,被模型成功攔截的比例』。在安檢場景下,FN(漏檢)的代價遠大於 FP(誤攔),因為一件真實爆裂物漏檢可能造成災難。Precision = 0.95 代表預測為可疑的真的有 95% 是可疑(誤攔少),但若 Recall = 0.40,代表 60% 真實可疑物品被放過。督導長的職業敏感度正是擔心 Recall 未公布。",
         "wrong": {
           "Accuracy 0.97 還不夠,需要 fine-tune 到 0.99 以上才能上線": "在安檢這種極度不平衡場景(99% 物品正常),模型全部猜『正常』Accuracy 也會達 99%,但 Recall = 0,模型完全無用。提高 Accuracy 到 0.99 不解決 Recall 問題",
-          "F1 Score 沒有公布,需要先確認 F1 才能評斷": "F1 是綜合 Precision 與 Recall 的調和平均。若 Precision 高而 Recall 低,F1 自然會低。但督導長的擔心更精確指向 Recall 本身(漏檢風險),而非綜合指標",
-          "ROC-AUC 才是業界唯一首選指標,Precision 與 Accuracy 皆不可信": "ROC-AUC 在極度不平衡資料下也可能被多數類別主導而高估;PR-AUC 反而更聚焦少數類別。但題目核心問的是『最關鍵的擔憂』,直接指向 Recall 而非另選指標"
+          "ROC-AUC 才是業界唯一首選指標,Precision 與 Accuracy 皆不可信": "ROC-AUC 在極度不平衡資料下也可能被多數類別主導而高估;PR-AUC 反而更聚焦少數類別。但題目核心問的是『最關鍵的擔憂』,直接指向 Recall 而非另選指標",
+          "F1 Score 沒有公布,需要先確認 F1 數值才能整體評斷上線可行性": "F1 是綜合 Precision 與 Recall 的調和平均。若 Precision 高而 Recall 低,F1 自然會低。但督導長的擔心更精確指向 Recall 本身(漏檢風險),而非綜合指標"
         },
         "hook": "高風險不平衡場景判別公式:漏檢代價 > 誤判代價 → 看 Recall;誤判代價 > 漏檢代價 → 看 Precision;類別不平衡時 → 棄用 Accuracy"
       },
@@ -467,9 +467,9 @@
       "explanation": {
         "correct": "在 150 筆樣本、8% 陽性的極不平衡小資料集下,Stratified K-Fold(K=5 時每折約 30 筆,維持 8% = 約 2.4 筆陽性;K=10 時每折約 15 筆,約 1.2 筆陽性)是最穩健選擇,理由:(1) 每折保留陽性比例,避免某折零陽性的災難;(2) 多折平均減少變異;(3) 運算成本低於 LOOCV;(4) 可重複實驗。實務上 K=5 或 K=10 均可,K=5 更穩定但 K=10 偏差更小。",
         "wrong": {
-          "Leave-One-Out CV(LOOCV),每次留 1 筆驗證共 150 次,因樣本少故 LOOCV 一定最佳": "LOOCV 在極不平衡時:138 次留陰性 fold,陽性偵測能力無法評估;LOOCV 的高變異與運算成本(150 次訓練)在實務上反而不如 Stratified K-Fold",
           "Bootstrap 抽樣 1000 次取平均,因為 Bootstrap 解決小樣本問題": "Bootstrap 在不平衡資料下,某些 bootstrap 樣本可能完全無陽性,反而放大偏差;.632 偏差校正在極不平衡下計算複雜",
-          "隨機 70/30 train-test split 一次即可,不需 cross-validation": "12 筆陽性做 70/30 split,測試集陽性數可能在 0~5 筆,單次評估的變異極大,不可信"
+          "隨機 70/30 train-test split 一次即可,不需 cross-validation": "12 筆陽性做 70/30 split,測試集陽性數可能在 0~5 筆,單次評估的變異極大,不可信",
+          "Leave-One-Out CV(LOOCV),每次留 1 筆做驗證共執行 150 次,因樣本少故 LOOCV 一定為最佳選擇": "LOOCV 在極不平衡時:138 次留陰性 fold,陽性偵測能力無法評估;LOOCV 的高變異與運算成本(150 次訓練)在實務上反而不如 Stratified K-Fold"
         },
         "hook": "小樣本+極不平衡 → Stratified K-Fold 是黃金標準;LOOCV 變異高、Bootstrap 偏差大、單次 split 不穩"
       },
