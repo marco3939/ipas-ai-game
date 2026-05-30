@@ -286,9 +286,9 @@
       "explanation": {
         "correct": "Drift 嚴重度需多統計量綜合判讀:KS test p-value 偵測『是否有差異』(統計顯著性),受樣本數影響,大樣本下極小差異也顯著,故 p<0.001 不等於嚴重。PSI(Population Stability Index)業界經驗:<0.10 穩定、0.10-0.25 中度漂移需關注、>0.25 嚴重需處置,本案 0.18 屬中度。KL Divergence 0.42 顯示分布顯著偏離(>0 即有差異,通常 >0.1 需注意)。Wasserstein 12500 屬『絕對距離』,需相對 baseline mean(年收入百萬級則 1% 偏移)判讀。綜合『中度漂移、啟動再訓練評估而非緊急回滾』為合理判讀。",
         "wrong": {
-          "KS p<0.001 即代表災難級漂移應立即回滾並停服,p-value 為最權威指標,毋須再看 PSI/KL/Wasserstein 等次要統計量": "p-value 衡量『差異是否統計顯著』而非『差異大小』,大樣本下微小差異也顯著;立即回滾過度反應,且未利用 PSI/KL/Wasserstein 提供的 effect size 訊息",
           "PSI 0.18 仍 < 0.25 屬輕微範圍可忽略,只要 PSI 未達紅線即視為穩定;其他統計量並非業界標準可不參考": "業界 PSI 閾值 0.10-0.25 為『中度漂移需關注』而非『輕微可忽略』;且 KL=0.42 與 KS p<0.001 都指向需採取行動,不可單看 PSI",
-          "Wasserstein 12500 為四項中數值最大代表漂移最嚴重,p-value、PSI、KL 都可忽略,只看 Wasserstein 絕對值即可": "Wasserstein 為『搬土距離』有量綱(同資料單位),須相對 baseline mean 比例化解讀;12500 元相對百萬年收入屬小幅;單看絕對值會誤判"
+          "Wasserstein 12500 為四項中數值最大代表漂移最嚴重,p-value、PSI、KL 都可忽略,只看 Wasserstein 絕對值即可": "Wasserstein 為『搬土距離』有量綱(同資料單位),須相對 baseline mean 比例化解讀;12500 元相對百萬年收入屬小幅;單看絕對值會誤判",
+          "KS p<0.001 即代表災難級漂移應立即回滾並停服,因 p-value 為最權威的判定指標,毋須再參考 PSI/KL/Wasserstein 等次要統計量,無須再交叉比對其他指標": "p-value 衡量『差異是否統計顯著』而非『差異大小』,大樣本下微小差異也顯著;立即回滾過度反應,且未利用 PSI/KL/Wasserstein 提供的 effect size 訊息"
         },
         "hook": "Drift 統計量綜合判讀:p-value(顯著性)+PSI(經驗閾值)+KL/Wasserstein(effect size)合看;PSI 0.10-0.25=中度需評估"
       },
