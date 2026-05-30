@@ -611,7 +611,7 @@
         },
         {
           "key": "C",
-          "text": "Informer 用更深的 Transformer 層數;堆到 100+ 層提升精度;這是它在長時序場景的關鍵優勢",
+          "text": "Informer 透過大幅加深 Transformer 編碼器層數,從原本標準的 6 層堆疊到 100 層以上以大量提升 720 小時長時序預測之表現精度,這是它在電網長時序負載預測場景下相較標準 Transformer 的關鍵優勢",
           "is_correct": false,
           "trap_type": "誤以為靠加深"
         },
@@ -627,7 +627,7 @@
         "correct": "標準 Transformer 的 Self-Attention 計算複雜度是 O(L²)(L=序列長度),在 720 小時(L=720)場景下,attention matrix 是 720×720 = 51.8 萬元素,記憶體與算力都吃緊。Informer(AAAI 2021)提出 ProbSparse Attention:利用大多數 query 對 attention 貢獻稀疏的性質,只算最關鍵 query-key 對,複雜度降為 O(L log L),讓長時序預測在實務上可行。",
         "wrong": {
           "Informer 與標準 Transformer 完全等同;選 Informer 只因新潮;在 720 小時長度下實際差異很小": "兩者本質不同 — Informer 專為長時序設計;在 L=720 時記憶體與速度差距顯著(O(L²) vs O(L log L))。",
-          "Informer 用更深的 Transformer 層數;堆到 100+ 層提升精度;這是它在長時序場景的關鍵優勢": "Informer 並非靠加深;核心創新是 ProbSparse 注意力稀疏化 + Feature Distilling。",
+          "Informer 透過大幅加深 Transformer 編碼器層數,從原本標準的 6 層堆疊到 100 層以上以大量提升 720 小時長時序預測之表現精度,這是它在電網長時序負載預測場景下相較標準 Transformer 的關鍵優勢": "Informer 並非靠加深;核心創新是 ProbSparse 注意力稀疏化 + Feature Distilling。",
           "Informer 用更大的 batch size 訓練;長時序預測需要大量資料同時處理才有效;這是核心差異": "batch size 與長時序處理是兩個獨立議題;Informer 核心是減少單個序列內 attention 計算量。"
         },
         "hook": "口訣:Informer = ProbSparse Attention,O(L²) → O(L log L);長時序專用"

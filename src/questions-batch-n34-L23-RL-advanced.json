@@ -70,7 +70,7 @@
         },
         {
           "key": "D",
-          "text": "SARSA,因其 On-policy 特性可使連續動作下的探索更穩定且不需 Actor 網路",
+          "text": "SARSA(State-Action-Reward-State-Action),因其 On-policy 更新特性可在機械手臂連續動作空間下提供更穩定的探索行為,且無需額外建立 Actor 網路即可直接收斂於最佳關節角度策略",
           "is_correct": false,
           "trap_type": "On-policy 與連續動作混淆"
         }
@@ -81,7 +81,7 @@
         "wrong": {
           "DQN,因其 Q 網路可直接對任意連續動作輸出 Q 值,並透過數值微分搜尋連續最佳動作": "DQN 設計為離散動作:輸出層為每個離散動作的 Q 值,選 argmax;若動作連續則 argmax 無法直接列舉,這正是 DDPG 被提出的動機。",
           "Q-Learning 表格式,將角度離散化到 1° 解析度後即可完全等同於連續控制效果": "離散化會損失精度且狀態-動作組合爆炸;1° 離散化後 360 個動作仍非真正連續,且表格式無法泛化到未見狀態。",
-          "SARSA,因其 On-policy 特性可使連續動作下的探索更穩定且不需 Actor 網路": "On-policy/Off-policy 是更新策略的分類,與動作空間離散/連續無關;SARSA 同樣為離散動作設計,不解決連續動作問題。"
+          "SARSA(State-Action-Reward-State-Action),因其 On-policy 更新特性可在機械手臂連續動作空間下提供更穩定的探索行為,且無需額外建立 Actor 網路即可直接收斂於最佳關節角度策略": "On-policy/Off-policy 是更新策略的分類,與動作空間離散/連續無關;SARSA 同樣為離散動作設計,不解決連續動作問題。"
         },
         "hook": "口訣:「連續動作找 DDPG,Actor 演 Critic 評」;離散用 DQN / 連續用 DDPG"
       },
