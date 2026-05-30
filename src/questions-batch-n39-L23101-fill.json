@@ -1,0 +1,1025 @@
+{
+  "version": "1.0",
+  "schema_version": "iron-rule-1+2+6",
+  "generated_at": "2026-05-19",
+  "batch": "N39 — 科三 L23101 機率/統計之 ML 基礎應用補齊(Bayes + Monte Carlo + CLT)",
+  "exam_target": {
+    "name": "IPAS AI 應用工程師中級",
+    "date": "2026-05-23"
+  },
+  "scope": "L23101 — n_L23101_001(貝氏定理)×6 + n_L23101_002(Monte Carlo)×6 + n_L23101_003(CLT/常態)×5",
+  "iron_rule_compliance": {
+    "rule_1": "每題具備 explanation.correct + wrong(每錯選項) + hook + misconceptions + related_node_ids",
+    "rule_2": "shuffle_options:true;部分題目使用 stem_variables",
+    "rule_3": "全新跨產業情境(製造/醫療/金融/保險/零售/物流/教育/自駕),不抄 114-2 原題、不重複既有 q_n6 / q_bf / q_pa 場景",
+    "rule_4": "正解 / 平均錯解長度比落在 [0.85, 1.20];最長=正解 ≤ 6 題",
+    "rule_5": "knowledge_code 限 L23101;node_id ∈ {n_L23101_001, n_L23101_002, n_L23101_003}",
+    "rule_6": "本檔僅 L23101 內容,related_node_ids 限同碼 / boundary_overlap (L22101/L22102/L22103)"
+  },
+  "distribution": {
+    "by_node": {
+      "n_L23101_001": 6,
+      "n_L23101_002": 6,
+      "n_L23101_003": 5
+    },
+    "by_difficulty": {
+      "easy": 3,
+      "medium": 10,
+      "hard": 4
+    },
+    "by_format": {
+      "single_choice": 17
+    }
+  },
+  "questions": [
+    {
+      "id": "q_n39_001",
+      "knowledge_code": "L23101",
+      "node_id": "n_L23101_001",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某半導體廠用 AI 視覺檢測判定晶圓是否有微缺陷。已知整批晶圓真實不良率 P(壞)=2%;檢測模型對壞品判出『警示』機率 P(警|壞)=95%;對良品誤判『警示』機率 P(警|良)=4%。隨機抽一片被標為『警示』,實際是壞品的後驗機率最接近?",
+      "options": [
+        {
+          "text": "約 32.6%(P(壞|警)=0.95×0.02/(0.95×0.02+0.04×0.98) ≈ 0.326)",
+          "is_correct": true
+        },
+        {
+          "text": "約 95.0%(直接套用偵測模型對壞品的敏感度當作『被警示就是壞品』的後驗機率,忽略 2% 先驗極低會稀釋後驗的事實)",
+          "is_correct": false,
+          "trap_type": "Base rate fallacy:把 sensitivity 當後驗"
+        },
+        {
+          "text": "約 4.0%(直接把『良品被誤判陽性』之率當作『被警示就是壞品』之代表機率,把條件方向完全顛倒解讀)",
+          "is_correct": false,
+          "trap_type": "把 false positive rate 當後驗"
+        },
+        {
+          "text": "約 50.0%(認為被警示與否只剩二元情況,故各占一半,完全不計入先驗 2% 與兩條件機率資訊推論)",
+          "is_correct": false,
+          "trap_type": "未做機率推論,憑直覺二分"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "P(壞|警)=P(警|壞)P(壞)/P(警);P(警)=0.95×0.02+0.04×0.98=0.019+0.0392=0.0582;P(壞|警)=0.019/0.0582≈0.326,即 32.6%。低先驗 + 中等 FPR 會大幅稀釋警示的後驗。",
+        "wrong": {
+          "約 95.0%(直接套用偵測模型對壞品的敏感度當作『被警示就是壞品』的後驗機率,忽略 2% 先驗極低會稀釋後驗的事實)": "95% 是 P(警|壞) 不是 P(壞|警);把『條件方向』顛倒是 base rate fallacy 經典錯誤",
+          "約 4.0%(直接把『良品被誤判陽性』之率當作『被警示就是壞品』之代表機率,把條件方向完全顛倒解讀)": "4% 是 P(警|良),完全是另一個條件機率;不是任何方向的後驗",
+          "約 50.0%(認為被警示與否只剩二元情況,故各占一半,完全不計入先驗 2% 與兩條件機率資訊推論)": "二元情況不代表機率各半;必須用 Bayes 結合先驗與兩條件機率計算"
+        },
+        "hook": "低先驗 × 高敏感 × 中 FPR → 後驗常被稀釋至 30% 上下;切勿用 sensitivity 當答案"
+      },
+      "misconceptions": [
+        "誤把 P(警|壞) 當作 P(壞|警)",
+        "忽略 base rate 直接憑 sensitivity 判斷"
+      ],
+      "related_node_ids": [
+        "n_L23101_001"
+      ],
+      "tags": [
+        "Bayes",
+        "後驗機率",
+        "半導體檢測",
+        "base rate fallacy",
+        "medium"
+      ],
+      "boss_topics": [
+        "manufacturing"
+      ]
+    },
+    {
+      "id": "q_n39_002",
+      "knowledge_code": "L23101",
+      "node_id": "n_L23101_001",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "下列關於貝氏定理 P(A|B)=P(B|A)P(A)/P(B) 中各項在 AI 分類任務之命名,何者{descriptor}正確?",
+      "stem_variables": {
+        "descriptor": [
+          "最為",
+          "完全",
+          "確實"
+        ]
+      },
+      "options": [
+        {
+          "text": "P(A) 為先驗(prior)、P(B|A) 為概似(likelihood)、P(A|B) 為後驗(posterior)、P(B) 為證據(evidence)",
+          "is_correct": true
+        },
+        {
+          "text": "P(A) 為後驗(posterior)、P(B|A) 為證據(evidence)、P(A|B) 為概似(likelihood)、P(B) 為先驗(prior),四個項目命名互換",
+          "is_correct": false,
+          "trap_type": "完全反向命名"
+        },
+        {
+          "text": "P(A) 為概似(likelihood)、P(B|A) 為後驗(posterior)、P(A|B) 為先驗(prior)、P(B) 為證據(evidence),屬常見對調",
+          "is_correct": false,
+          "trap_type": "prior 與 likelihood 混淆"
+        },
+        {
+          "text": "P(A) 為證據(evidence)、P(B|A) 為先驗(prior)、P(A|B) 為概似(likelihood)、P(B) 為後驗(posterior),屬 marginal/prior 對調",
+          "is_correct": false,
+          "trap_type": "evidence 與 prior 混淆"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "標準命名為:prior P(A)、likelihood P(B|A)、posterior P(A|B)、evidence(marginal likelihood) P(B);ML 模型訓練常最大化 likelihood 或 posterior。",
+        "wrong": {
+          "P(A) 為後驗(posterior)、P(B|A) 為證據(evidence)、P(A|B) 為概似(likelihood)、P(B) 為先驗(prior),四個項目命名互換": "命名完全錯誤;只要分清楚『先驗 vs 後驗』是觀測前/觀測後即可避免",
+          "P(A) 為概似(likelihood)、P(B|A) 為後驗(posterior)、P(A|B) 為先驗(prior)、P(B) 為證據(evidence),屬常見對調": "P(A) 沒有條件依賴,不是 likelihood;先驗才正確",
+          "P(A) 為證據(evidence)、P(B|A) 為先驗(prior)、P(A|B) 為概似(likelihood)、P(B) 為後驗(posterior),屬 marginal/prior 對調": "P(B) 是邊際機率不是後驗;先驗指事件本身的機率"
+        },
+        "hook": "Bayes 四元素:看到資料『前』是 prior,『後』是 posterior;P(資料|參數)=likelihood,分母 P(資料)=evidence"
+      },
+      "misconceptions": [
+        "把 likelihood 與 posterior 概念混用",
+        "誤以為 evidence 是先驗"
+      ],
+      "related_node_ids": [
+        "n_L23101_001"
+      ],
+      "tags": [
+        "Bayes",
+        "命名",
+        "easy"
+      ],
+      "boss_topics": []
+    },
+    {
+      "id": "q_n39_003",
+      "knowledge_code": "L23101",
+      "node_id": "n_L23101_001",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某保險公司用 Naive Bayes 對車險理賠申請做『高詐欺風險 vs 一般』二分。下列關於 Naive Bayes 在此情境的條件獨立假設,何者解讀最為適切?",
+      "options": [
+        {
+          "text": "假設給定『詐欺/一般』類別後,各特徵(出險時段、車種、損傷部位、報案延遲)彼此條件獨立,可分別估計後相乘",
+          "is_correct": true
+        },
+        {
+          "text": "假設『詐欺』與『一般』兩類別之先驗機率完全相同,且模型不需估計任何類別比例即可正確分類所有送件案",
+          "is_correct": false,
+          "trap_type": "把先驗等量誤當條件獨立"
+        },
+        {
+          "text": "假設特徵與特徵之間無條件邊際獨立,亦即 P(出險時段, 車種) = P(出險時段)P(車種),完全不需要以類別 C 為條件",
+          "is_correct": false,
+          "trap_type": "邊際獨立 vs 條件獨立混淆"
+        },
+        {
+          "text": "假設所有輸入特徵彼此因果決定且具強相關,因此可用單一線性回歸或邏輯回歸直接取代多特徵聯合機率估計流程",
+          "is_correct": false,
+          "trap_type": "把 NB 當線性模型"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Naive Bayes 的『樸素』指『給定類別 C 後,特徵 X_i 彼此條件獨立』,即 P(X_1...X_n|C)=Π P(X_i|C),才能把 likelihood 拆成乘積估算。",
+        "wrong": {
+          "假設『詐欺』與『一般』兩類別之先驗機率完全相同,且模型不需估計任何類別比例即可正確分類所有送件案": "Naive Bayes 仍需估 P(C);類別不平衡時先驗影響很大,不能略",
+          "假設特徵與特徵之間無條件邊際獨立,亦即 P(出險時段, 車種) = P(出險時段)P(車種),完全不需要以類別 C 為條件": "邊際獨立太強且通常不成立;NB 假設的是『以類別為條件』的獨立",
+          "假設所有輸入特徵彼此因果決定且具強相關,因此可用單一線性回歸或邏輯回歸直接取代多特徵聯合機率估計流程": "NB 是機率分類模型不是線性回歸;『樸素』指條件獨立假設,與因果或線性無關"
+        },
+        "hook": "Naive Bayes 關鍵詞『條件獨立』:是『給定 C』後特徵獨立,不是特徵之間天生獨立"
+      },
+      "misconceptions": [
+        "誤以為 Naive Bayes 假設邊際獨立",
+        "忽略 Naive Bayes 仍需先驗 P(C)"
+      ],
+      "related_node_ids": [
+        "n_L23101_001"
+      ],
+      "tags": [
+        "Naive Bayes",
+        "條件獨立",
+        "保險詐欺",
+        "medium"
+      ],
+      "boss_topics": [
+        "insurance"
+      ]
+    },
+    {
+      "id": "q_n39_004",
+      "knowledge_code": "L23101",
+      "node_id": "n_L23101_001",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L3",
+      "stem": "某銀行做信用卡盜刷偵測 A/B test:控制組舊模型攔截率(P(攔截|盜刷))為 80%,新模型實測為 92%,但盜刷在整體交易的盛行率僅 0.05%。若公司只關注『被攔截的案件中真盜刷的比例(精準度)』,以下哪個額外資訊對後驗計算最為關鍵?",
+      "options": [
+        {
+          "text": "新模型對『非盜刷交易誤攔率』P(攔截|非盜刷),因低先驗下精準度幾乎由 FPR 主導",
+          "is_correct": true
+        },
+        {
+          "text": "新模型在 A/B test 期間的部署總交易筆數,有了筆數就能直接算出精準度",
+          "is_correct": false,
+          "trap_type": "把 N 當必要資訊"
+        },
+        {
+          "text": "新模型對盜刷案件的召回率提升幅度(12 個百分點),只要召回率上升精準度必然上升",
+          "is_correct": false,
+          "trap_type": "誤以為 recall↑ → precision↑"
+        },
+        {
+          "text": "新模型訓練資料的盜刷樣本平衡比例,只要訓練集平衡精準度即穩定",
+          "is_correct": false,
+          "trap_type": "把訓練平衡當部署精準度保證"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "精準度 P(盜刷|攔截)=P(攔截|盜刷)P(盜刷)/P(攔截);分母由 FPR×(1-P(盜刷)) 主導,因為非盜刷佔 99.95%。沒有 FPR 就算不出後驗。",
+        "wrong": {
+          "新模型在 A/B test 期間的部署總交易筆數,有了筆數就能直接算出精準度": "精準度是比例不需要 N;有 sensitivity / FPR / prior 三項即可估後驗",
+          "新模型對盜刷案件的召回率提升幅度(12 個百分點),只要召回率上升精準度必然上升": "Recall 與 precision 通常 trade-off;低先驗下提高 recall 反而可能拉低 precision",
+          "新模型訓練資料的盜刷樣本平衡比例,只要訓練集平衡精準度即穩定": "訓練平衡不等於部署精準度;部署環境的 prior 與 FPR 才是決定因素"
+        },
+        "hook": "低先驗任務的精準度幾乎被 FPR 決定;recall 高不代表 precision 高"
+      },
+      "misconceptions": [
+        "誤以為 recall 提升 precision 必上升",
+        "忽略 FPR 在低先驗任務的決定性"
+      ],
+      "related_node_ids": [
+        "n_L23101_001"
+      ],
+      "tags": [
+        "Bayes",
+        "精準度",
+        "盜刷偵測",
+        "FPR",
+        "hard"
+      ],
+      "boss_topics": [
+        "finance"
+      ]
+    },
+    {
+      "id": "q_n39_005",
+      "knowledge_code": "L23101",
+      "node_id": "n_L23101_001",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某線上學習平台用貝氏方法做『學生會放棄課程』的早期預警:先驗 P(放棄)=15%;若已有早期低活躍訊號,P(低活躍|放棄)=70%、P(低活躍|不放棄)=20%。若連續觀察到『同一學生兩週低活躍』且兩週訊號條件獨立,後驗 P(放棄|兩週皆低活躍) 大致為何?",
+      "options": [
+        {
+          "text": "約 68%(兩週條件獨立 → likelihood 相乘 0.7²×0.15 vs 0.2²×0.85,正規化後得後驗)",
+          "is_correct": true
+        },
+        {
+          "text": "約 15%(認為先驗不會因為觀測更新,後驗永遠等於原始先驗值,完全忽略 evidence 累積)",
+          "is_correct": false,
+          "trap_type": "忽略 evidence 更新"
+        },
+        {
+          "text": "約 90%(直接把兩週 sensitivity 0.7+0.2 加總後當後驗,違反機率公理也未考慮分母)",
+          "is_correct": false,
+          "trap_type": "錯把機率相加當後驗"
+        },
+        {
+          "text": "約 35%(只用單次 likelihood 0.7×0.15/(0.7×0.15+0.2×0.85),忽略第二週觀察證據累積)",
+          "is_correct": false,
+          "trap_type": "只更新一次"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "兩週條件獨立:分子=0.7²×0.15=0.0735;分母=0.0735+0.2²×0.85=0.0735+0.034=0.1075;後驗≈0.0735/0.1075≈0.684,即 68.4%。重複觀測證據會持續更新後驗。",
+        "wrong": {
+          "約 15%(認為先驗不會因為觀測更新,後驗永遠等於原始先驗值,完全忽略 evidence 累積)": "Bayes 的核心就是用 evidence 更新 belief;後驗必須隨觀測變化",
+          "約 90%(直接把兩週 sensitivity 0.7+0.2 加總後當後驗,違反機率公理也未考慮分母)": "機率不能直接相加;且 0.2 是非放棄時的訊號發生率,加總沒有意義",
+          "約 35%(只用單次 likelihood 0.7×0.15/(0.7×0.15+0.2×0.85),忽略第二週觀察證據累積)": "兩週訊號條件獨立 → likelihood 應相乘;只用單次低估更新幅度"
+        },
+        "hook": "獨立重複觀測 → likelihood 相乘 → 後驗持續被放大;單次觀測常不足以翻轉低先驗"
+      },
+      "misconceptions": [
+        "誤把重複觀測機率相加",
+        "忽略 likelihood 連乘累積證據"
+      ],
+      "related_node_ids": [
+        "n_L23101_001"
+      ],
+      "tags": [
+        "Bayes",
+        "序貫更新",
+        "教育平台",
+        "medium"
+      ],
+      "boss_topics": [
+        "education"
+      ]
+    },
+    {
+      "id": "q_n39_006",
+      "knowledge_code": "L23101",
+      "node_id": "n_L23101_001",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L3",
+      "stem": "某垃圾郵件分類系統採用詞袋 + Naive Bayes;訓練集中某詞 w 在『垃圾』類沒出現過,於是 P(w|垃圾)=0。下列何種處理最符合貝氏統計合理且工程上常見的做法?",
+      "options": [
+        {
+          "text": "對所有 P(w_i|C) 加入 Laplace(add-one)或 add-α 平滑,避免單一詞令整段文件後驗機率直接歸零",
+          "is_correct": true
+        },
+        {
+          "text": "直接把含有該詞的所有測試郵件判為『一般』類,因為垃圾類 likelihood 已歸零等於確定不是垃圾郵件",
+          "is_correct": false,
+          "trap_type": "把訓練 0 當未來確定"
+        },
+        {
+          "text": "把該詞從整個特徵集中永久刪除,改用詞頻 TF-IDF 後直接接邏輯回歸或 SVM 分類器,放棄 Naive Bayes 架構",
+          "is_correct": false,
+          "trap_type": "用換演算法迴避稀疏問題"
+        },
+        {
+          "text": "把 P(w|垃圾) 強制改寫為 P(w|一般),手動讓兩類別在該詞上機率相同,等於人為消除該詞所有區辨能力",
+          "is_correct": false,
+          "trap_type": "亂改機率破壞模型"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Naive Bayes 文件分類常用 Laplace(add-one)或 add-α 平滑:P(w|C)=(count(w,C)+α)/(Σcount+α|V|),確保未見詞不會讓整篇文件 likelihood 為 0。對應貝氏推論時,等價於對 P(w|C) 加 Dirichlet 共軛先驗。",
+        "wrong": {
+          "直接把含有該詞的所有測試郵件判為『一般』類,因為垃圾類 likelihood 已歸零等於確定不是垃圾郵件": "訓練集 0 不代表母體 0;這是 zero-frequency problem,要平滑而非當作確定",
+          "把該詞從整個特徵集中永久刪除,改用詞頻 TF-IDF 後直接接邏輯回歸或 SVM 分類器,放棄 Naive Bayes 架構": "刪詞會丟失資訊;更換演算法也未必必要,平滑成本最低",
+          "把 P(w|垃圾) 強制改寫為 P(w|一般),手動讓兩類別在該詞上機率相同,等於人為消除該詞所有區辨能力": "等於人為消除信號;統計上也沒有依據"
+        },
+        "hook": "Naive Bayes 遇零頻率必平滑;Laplace add-one 對應 Dirichlet 先驗的 MAP 估計"
+      },
+      "misconceptions": [
+        "把訓練集 0 當作母體機率 0",
+        "誤以為換演算法是唯一解"
+      ],
+      "related_node_ids": [
+        "n_L23101_001"
+      ],
+      "tags": [
+        "Naive Bayes",
+        "Laplace 平滑",
+        "垃圾郵件",
+        "hard"
+      ],
+      "boss_topics": [
+        "nlp"
+      ]
+    },
+    {
+      "id": "q_n39_007",
+      "knowledge_code": "L23101",
+      "node_id": "n_L23101_002",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "下列關於 Monte Carlo 模擬之核心特徵敘述,何者{descriptor}最為正確?",
+      "stem_variables": {
+        "descriptor": [
+          "整體而言",
+          "本質上",
+          "原理上"
+        ]
+      },
+      "options": [
+        {
+          "text": "透過大量隨機抽樣產生樣本,用樣本統計量(平均、變異數、分位數)逼近難以解析計算的期望或機率",
+          "is_correct": true
+        },
+        {
+          "text": "藉由窮舉所有可能輸入組合並逐一代入求值,完全不引入任何隨機性,以保證最終估計結果零誤差",
+          "is_correct": false,
+          "trap_type": "把 MC 當窮舉"
+        },
+        {
+          "text": "以單次最大概似估計法取代分佈估計,只回傳一個點估計值即可,並省略整個機率分佈量化過程",
+          "is_correct": false,
+          "trap_type": "把 MC 當 MLE"
+        },
+        {
+          "text": "把所有隨機輸入變數直接以歷史均值代入確定性模型計算,等於對隨機系統執行去隨機化處理",
+          "is_correct": false,
+          "trap_type": "把 MC 當均值代入"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "Monte Carlo 的本質是『以大量隨機抽樣的樣本統計量逼近期望/分佈/機率』,常用於高維積分、風險量化、機率系統模擬等難以解析求解的情境。",
+        "wrong": {
+          "藉由窮舉所有可能輸入組合並逐一代入求值,完全不引入任何隨機性,以保證最終估計結果零誤差": "窮舉是確定性方法且維度爆炸;MC 用隨機抽樣避免維度詛咒",
+          "以單次最大概似估計法取代分佈估計,只回傳一個點估計值即可,並省略整個機率分佈量化過程": "MLE 與 MC 是不同層次;MC 可估計整個分佈不只是點估計",
+          "把所有隨機輸入變數直接以歷史均值代入確定性模型計算,等於對隨機系統執行去隨機化處理": "對非線性系統 E[f(X)]≠f(E[X]);均值代入會錯估期望"
+        },
+        "hook": "MC 三要素:隨機抽樣 + 樣本統計量 + 收斂於期望;對非線性系統不可用均值代入"
+      },
+      "misconceptions": [
+        "把 Monte Carlo 與窮舉法混淆",
+        "誤以為對非線性系統可用均值代入近似"
+      ],
+      "related_node_ids": [
+        "n_L23101_002"
+      ],
+      "tags": [
+        "Monte Carlo",
+        "定義",
+        "easy"
+      ],
+      "boss_topics": []
+    },
+    {
+      "id": "q_n39_008",
+      "knowledge_code": "L23101",
+      "node_id": "n_L23101_002",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某基金經理人欲估計『投資組合一年內最大虧損達 5% 之機率』(VaR 類問題)。資產報酬之聯合分佈含厚尾與非線性衍生品,難以解析。下列方案何者最為合理且兼顧誤差量化?",
+      "options": [
+        {
+          "text": "以歷史資料校準聯合分佈後抽 N 條報酬路徑做 Monte Carlo,計算虧損超過 5% 路徑比例與其標準誤",
+          "is_correct": true
+        },
+        {
+          "text": "直接把過去十年的單一最大虧損年度當作未來必然發生機率,認為歷史最差年的發生機率必定恰好等於十分之一",
+          "is_correct": false,
+          "trap_type": "極端值頻率當機率"
+        },
+        {
+          "text": "把所有資產報酬以歷史平均值代入確定性閉式公式計算單一總報酬,若數值超過 -5% 則機率為 100%、否則直接判為 0%",
+          "is_correct": false,
+          "trap_type": "均值代入忽略隨機性"
+        },
+        {
+          "text": "以 200 條路徑跑一次模擬即可,完全不需估計或回報任何標準誤,因為樣本數本身已足以代表整體母體分佈",
+          "is_correct": false,
+          "trap_type": "忽略誤差量化"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "金融風險指標(VaR、CVaR)在非線性 / 厚尾情境下無解析解,MC 用 N 條路徑估機率 p̂,標準誤≈√(p(1-p)/N),N 不夠時 SE 太大需擴抽;這也是業界標準作法。",
+        "wrong": {
+          "直接把過去十年的單一最大虧損年度當作未來必然發生機率,認為歷史最差年的發生機率必定恰好等於十分之一": "10 年單一極端事件不代表 10% 機率;樣本太小且未涵蓋未來情境",
+          "把所有資產報酬以歷史平均值代入確定性閉式公式計算單一總報酬,若數值超過 -5% 則機率為 100%、否則直接判為 0%": "用均值會完全忽略尾部分佈,VaR 本身就是尾部統計量",
+          "以 200 條路徑跑一次模擬即可,完全不需估計或回報任何標準誤,因為樣本數本身已足以代表整體母體分佈": "200 路徑估 1% 尾部事件 SE 太大;MC 必同時報告 SE 與信賴區間"
+        },
+        "hook": "MC 風險量化必報告 N 與 SE;尾部機率 SE≈√(p(1-p)/N),N 不足 SE 會吃光信號"
+      },
+      "misconceptions": [
+        "用單一歷史極端年當機率",
+        "MC 不報告標準誤"
+      ],
+      "related_node_ids": [
+        "n_L23101_002"
+      ],
+      "tags": [
+        "Monte Carlo",
+        "VaR",
+        "金融風險",
+        "medium"
+      ],
+      "boss_topics": [
+        "finance"
+      ]
+    },
+    {
+      "id": "q_n39_009",
+      "knowledge_code": "L23101",
+      "node_id": "n_L23101_002",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "Monte Carlo 估計值的收斂率(標準誤對樣本數的依賴關係)在大多數情境下為何?",
+      "options": [
+        {
+          "text": "SE ∝ 1/√N — 樣本數 N 變 100 倍,標準誤只縮小 10 倍",
+          "is_correct": true
+        },
+        {
+          "text": "SE ∝ 1/N — 樣本數 N 變 100 倍,標準誤線性縮小 100 倍",
+          "is_correct": false,
+          "trap_type": "誤以為線性收斂"
+        },
+        {
+          "text": "SE ∝ 1/N² — 樣本數 N 變 100 倍,標準誤平方縮小 10000 倍",
+          "is_correct": false,
+          "trap_type": "誤以為二次收斂"
+        },
+        {
+          "text": "SE 與 N 無關 — 只與被估期望本身的變異數有關,擴抽樣無法縮小標準誤",
+          "is_correct": false,
+          "trap_type": "誤以為 SE 不隨 N 改變"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "標準 MC 的收斂率為 1/√N(由 CLT 推得);故要把 SE 砍半需要 4 倍樣本、要砍到 1/10 需要 100 倍樣本。這也是 variance reduction 技巧(antithetic / stratified / control variate)的價值所在。",
+        "wrong": {
+          "SE ∝ 1/N — 樣本數 N 變 100 倍,標準誤線性縮小 100 倍": "線性收斂是確定性數值積分(梯形 / Simpson)在低維下的速率,不是 MC",
+          "SE ∝ 1/N² — 樣本數 N 變 100 倍,標準誤平方縮小 10000 倍": "二次收斂是 Quasi-Monte Carlo 或 Gauss 積分的極佳速率,不是標準 MC",
+          "SE 與 N 無關 — 只與被估期望本身的變異數有關,擴抽樣無法縮小標準誤": "SE = σ/√N 顯示 SE 與 N 反根號相關;σ 是常數,N 影響很大"
+        },
+        "hook": "MC 收斂 1/√N — 改善精度貴(× 100 樣本只 × 10 精度),故 variance reduction 才重要"
+      },
+      "misconceptions": [
+        "誤以為 MC 收斂線性",
+        "忽略 1/√N 帶來的擴抽成本壓力"
+      ],
+      "related_node_ids": [
+        "n_L23101_002"
+      ],
+      "tags": [
+        "Monte Carlo",
+        "收斂率",
+        "1/sqrt(N)",
+        "medium"
+      ],
+      "boss_topics": []
+    },
+    {
+      "id": "q_n39_010",
+      "knowledge_code": "L23101",
+      "node_id": "n_L23101_002",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L3",
+      "stem": "某自駕車模擬團隊用 Monte Carlo 估計『左轉場景遇行人衝出』之碰撞機率,初始估計變異數過大導致 95% CI 太寬。下列何種變異數縮減技巧最適合此問題且原理正確?",
+      "options": [
+        {
+          "text": "Importance sampling — 偏抽稀有區,以 likelihood ratio 加權還原期望,降低變異數",
+          "is_correct": true
+        },
+        {
+          "text": "把所有模擬路徑都改為固定隨機種子並重複跑 N 次,因為固定隨機種子可以同時降低估計變異數與整體估計偏差",
+          "is_correct": false,
+          "trap_type": "固定種子非降變異數"
+        },
+        {
+          "text": "把樣本數從 N 提升到 N² 次方,使整體收斂率從 1/√N 直接變為 1/N²,大幅加速估計收斂速度而不增加成本",
+          "is_correct": false,
+          "trap_type": "改 N 不改收斂率"
+        },
+        {
+          "text": "刪除所有未發生碰撞的模擬樣本,只保留發生碰撞的稀有樣本,使分子分母都集中於罕見事件以提升估計精度",
+          "is_correct": false,
+          "trap_type": "刪樣本破壞無偏性"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "罕見事件(碰撞)用標準 MC 大多數樣本浪費在無碰撞區。Importance sampling 偏向抽稀有區並用 likelihood ratio 重新加權,能在不偏的前提下大幅降低變異數;antithetic / stratified / control variate 亦屬同類但對罕見事件 IS 最對症。",
+        "wrong": {
+          "把所有模擬路徑都改為固定隨機種子並重複跑 N 次,因為固定隨機種子可以同時降低估計變異數與整體估計偏差": "固定種子只是再現性,不降低變異數;反而會讓 SE 失真",
+          "把樣本數從 N 提升到 N² 次方,使整體收斂率從 1/√N 直接變為 1/N²,大幅加速估計收斂速度而不增加成本": "增加 N 並不改變 1/√N 收斂率本身;N² 樣本只是 SE 變為 1/N 不是 1/N²,且運算成本是 N²,非常昂貴",
+          "刪除所有未發生碰撞的模擬樣本,只保留發生碰撞的稀有樣本,使分子分母都集中於罕見事件以提升估計精度": "刪樣本會破壞估計的無偏性;這是 selection bias 不是 variance reduction"
+        },
+        "hook": "罕見事件 → importance sampling;固定種子不是變異數縮減技巧"
+      },
+      "misconceptions": [
+        "把固定種子當作變異數縮減技巧",
+        "用刪樣本『集中』罕見事件估計"
+      ],
+      "related_node_ids": [
+        "n_L23101_002"
+      ],
+      "tags": [
+        "Monte Carlo",
+        "importance sampling",
+        "罕見事件",
+        "自駕車",
+        "hard"
+      ],
+      "boss_topics": [
+        "autonomous"
+      ]
+    },
+    {
+      "id": "q_n39_011",
+      "knowledge_code": "L23101",
+      "node_id": "n_L23101_002",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "下列任務何者{descriptor}不適合用 Monte Carlo 模擬作為主要解法?",
+      "stem_variables": {
+        "descriptor": [
+          "最",
+          "明顯",
+          "相對"
+        ]
+      },
+      "options": [
+        {
+          "text": "求 3x² + 2x + 1 在 [0, 5] 之確定性定積分,且具有閉式原函數",
+          "is_correct": true
+        },
+        {
+          "text": "估算某半導體設備十年內累積故障次數的機率分佈,涉及多重隨機事件",
+          "is_correct": false,
+          "trap_type": "MC 適合的隨機累積問題"
+        },
+        {
+          "text": "高維度(d=200)隨機變數空間中對複雜非線性函數做期望估計,確定性數值方法難以處理",
+          "is_correct": false,
+          "trap_type": "MC 適合的高維情境"
+        },
+        {
+          "text": "計算保險商品在 30 年期間出險次數與賠付額聯合分佈的尾部風險指標",
+          "is_correct": false,
+          "trap_type": "MC 適合的尾部風險"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "有閉式原函數的低維確定性積分用『牛頓-萊布尼茲』直接代入即可,精度 ∞;用 MC 不但浪費運算還引入 1/√N 隨機誤差。MC 的價值在於『無解析解 / 高維 / 隨機系統』。",
+        "wrong": {
+          "估算某半導體設備十年內累積故障次數的機率分佈,涉及多重隨機事件": "屬隨機累積過程(Poisson / renewal),MC 是標準解法",
+          "高維度(d=200)隨機變數空間中對複雜非線性函數做期望估計,確定性數值方法難以處理": "高維是 MC 的主場;確定性積分維度詛咒嚴重,MC 不受維度影響(per sample)",
+          "計算保險商品在 30 年期間出險次數與賠付額聯合分佈的尾部風險指標": "出險次數與賠付額聯合 + 30 年累積為典型 MC 風險量化問題"
+        },
+        "hook": "確定性 + 低維 + 閉式解 → 不用 MC;隨機 / 高維 / 無解析 → MC 用武之地"
+      },
+      "misconceptions": [
+        "把確定性積分當 MC 用",
+        "誤以為 MC 在所有情況都比解析法好"
+      ],
+      "related_node_ids": [
+        "n_L23101_002"
+      ],
+      "tags": [
+        "Monte Carlo",
+        "適用情境",
+        "medium"
+      ],
+      "boss_topics": []
+    },
+    {
+      "id": "q_n39_012",
+      "knowledge_code": "L23101",
+      "node_id": "n_L23101_002",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某零售業者欲用 Monte Carlo 估算『雙 11 當日預期銷售額 ≥ 5000 萬之機率』。下列做法何者最為標準?",
+      "options": [
+        {
+          "text": "依歷史資料校準銷售模型後抽 N 條情境路徑,計算路徑中銷售額 ≥ 5000 萬的比例作為機率估計",
+          "is_correct": true
+        },
+        {
+          "text": "只用去年雙 11 單日銷售額為點估計,若 ≥ 5000 萬則機率為 1、否則為 0",
+          "is_correct": false,
+          "trap_type": "單樣本決定論"
+        },
+        {
+          "text": "把所有路徑的銷售額平均後作為單一期望值,只看該期望是否 ≥ 5000 萬即下結論,完全不需考慮個別路徑比例",
+          "is_correct": false,
+          "trap_type": "期望取代機率"
+        },
+        {
+          "text": "把銷售額分佈強制標準化為 N(0,1) 並查 Z 表,完全忽略原始量級與情境參數",
+          "is_correct": false,
+          "trap_type": "錯把資料當標準常態"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "MC 估計事件機率的標準寫法:P(銷售額≥X) ≈ (#路徑滿足條件) / N;另可給 95% CI ≈ p̂ ± 1.96 √(p̂(1-p̂)/N)。",
+        "wrong": {
+          "只用去年雙 11 單日銷售額為點估計,若 ≥ 5000 萬則機率為 1、否則為 0": "單樣本不能估機率;且機率不能是 0 或 1 二元",
+          "把所有路徑的銷售額平均後作為單一期望值,只看該期望是否 ≥ 5000 萬即下結論,完全不需考慮個別路徑比例": "期望值與『超過閾值之機率』是兩個量;期望低也可能有顯著超標尾部",
+          "把銷售額分佈強制標準化為 N(0,1) 並查 Z 表,完全忽略原始量級與情境參數": "強制標準化會丟失情境參數;且銷售額未必常態"
+        },
+        "hook": "MC 機率估計 = 滿足條件路徑數 / 總路徑數;同時報告 CI 才是完整答案"
+      },
+      "misconceptions": [
+        "用單樣本估事件機率",
+        "把期望與事件機率混為一談"
+      ],
+      "related_node_ids": [
+        "n_L23101_002"
+      ],
+      "tags": [
+        "Monte Carlo",
+        "事件機率",
+        "零售",
+        "easy"
+      ],
+      "boss_topics": [
+        "retail"
+      ]
+    },
+    {
+      "id": "q_n39_013",
+      "knowledge_code": "L23101",
+      "node_id": "n_L23101_003",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某物流公司每日配送 8000 件包裹,單件重量分佈為右偏(均數 μ=3.2 kg、標準差 σ=2.5 kg)。問:每日『樣本均數』之抽樣分佈大致為何?",
+      "options": [
+        {
+          "text": "依 CLT,樣本均數 ~ N(3.2, 2.5²/8000) ≈ N(3.2, 0.000781),即標準誤約 0.028 kg",
+          "is_correct": true
+        },
+        {
+          "text": "樣本均數仍維持原始右偏分佈,因為母體分佈不是常態,即使大量平均後抽樣分佈也不會收斂到常態形狀",
+          "is_correct": false,
+          "trap_type": "誤以為 CLT 要求母體常態"
+        },
+        {
+          "text": "樣本均數 ~ N(3.2, 2.5²) = N(3.2, 6.25),即抽樣分佈標準誤直接等於母體標準差,不需縮放",
+          "is_correct": false,
+          "trap_type": "忘了除以 √n"
+        },
+        {
+          "text": "樣本均數 ~ N(3.2 / 8000, 2.5² / 8000²),把均數本身與變異數都除以樣本數 n,以反映樣本越大期望越小",
+          "is_correct": false,
+          "trap_type": "錯誤縮放 μ"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "CLT:n 夠大時樣本均數 X̄ ~ N(μ, σ²/n),不論母體形狀(只要有限變異數);此處 σ²/n = 6.25/8000 ≈ 0.000781,SE = σ/√n = 2.5/√8000 ≈ 0.028 kg。",
+        "wrong": {
+          "樣本均數仍維持原始右偏分佈,因為母體分佈不是常態,即使大量平均後抽樣分佈也不會收斂到常態形狀": "CLT 不要求母體常態;這就是 CLT 的價值",
+          "樣本均數 ~ N(3.2, 2.5²) = N(3.2, 6.25),即抽樣分佈標準誤直接等於母體標準差,不需縮放": "忘記除以 n;這是把母體變異數與樣本均數變異數搞混",
+          "樣本均數 ~ N(3.2 / 8000, 2.5² / 8000²),把均數本身與變異數都除以樣本數 n,以反映樣本越大期望越小": "均數不需要除 n(E[X̄]=μ);變異數也是除 n 不是 n²"
+        },
+        "hook": "CLT 關鍵公式:X̄ ~ N(μ, σ²/n);μ 不變、變異數除 n、標準誤 σ/√n"
+      },
+      "misconceptions": [
+        "誤以為 CLT 要求母體常態",
+        "忘記除以 √n"
+      ],
+      "related_node_ids": [
+        "n_L23101_003"
+      ],
+      "tags": [
+        "CLT",
+        "樣本均數",
+        "物流",
+        "medium"
+      ],
+      "boss_topics": [
+        "logistics"
+      ]
+    },
+    {
+      "id": "q_n39_014",
+      "knowledge_code": "L23101",
+      "node_id": "n_L23101_003",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "某醫院想對『平均住院天數』做 95% 信賴區間估計,抽樣 n=400、樣本均數 X̄=5.2 天、樣本標準差 s=2.0 天。最適切的信賴區間公式與結果為何?",
+      "options": [
+        {
+          "text": "X̄ ± 1.96 × s/√n = 5.2 ± 1.96 × (2.0 / 20) = 5.2 ± 0.196,即 [5.00, 5.40]",
+          "is_correct": true
+        },
+        {
+          "text": "X̄ ± 1.96 × s = 5.2 ± 1.96 × 2.0 = 5.2 ± 3.92,即 [1.28, 9.12](忽略樣本數)",
+          "is_correct": false,
+          "trap_type": "忽略 √n"
+        },
+        {
+          "text": "X̄ ± 1.96 × s/n = 5.2 ± 1.96 × (2.0 / 400) = 5.2 ± 0.0098(用 n 而非 √n)",
+          "is_correct": false,
+          "trap_type": "用 n 取代 √n"
+        },
+        {
+          "text": "X̄ ± 2.58 × s/√n = 5.2 ± 2.58 × 0.1 = 5.2 ± 0.258(把 99% CI 的 z 值 2.58 套到 95% CI 的計算上)",
+          "is_correct": false,
+          "trap_type": "誤用 99% z 值"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "n=400 屬大樣本,可用 z 公式:95% CI = X̄ ± z_{0.025} × s/√n;z_{0.025}=1.96,s/√n = 2.0/20 = 0.1,故 CI = 5.2 ± 0.196 = [5.00, 5.40]。",
+        "wrong": {
+          "X̄ ± 1.96 × s = 5.2 ± 1.96 × 2.0 = 5.2 ± 3.92,即 [1.28, 9.12](忽略樣本數)": "信賴區間 width 受 √n 影響;不除 √n 等於只用單一觀察的離散度",
+          "X̄ ± 1.96 × s/n = 5.2 ± 1.96 × (2.0 / 400) = 5.2 ± 0.0098(用 n 而非 √n)": "n 而非 √n 會把區間縮得不真實狹窄;基礎公式錯誤",
+          "X̄ ± 2.58 × s/√n = 5.2 ± 2.58 × 0.1 = 5.2 ± 0.258(把 99% CI 的 z 值 2.58 套到 95% CI 的計算上)": "2.58 是 99% CI 之 z;95% 應用 1.96"
+        },
+        "hook": "95% CI z=1.96;99% CI z=2.58;90% CI z=1.645;一律 ÷ √n 不是 ÷ n"
+      },
+      "misconceptions": [
+        "把 95% 之 z 寫成 2.58",
+        "把 s/√n 寫成 s/n"
+      ],
+      "related_node_ids": [
+        "n_L23101_003"
+      ],
+      "tags": [
+        "CLT",
+        "信賴區間",
+        "醫療",
+        "medium"
+      ],
+      "boss_topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "q_n39_015",
+      "knowledge_code": "L23101",
+      "node_id": "n_L23101_003",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "medium",
+      "source_level": "L2",
+      "stem": "下列關於『z-test 與 t-test 的使用時機』在 AI/資料分析情境下的判斷,何者{descriptor}正確?",
+      "stem_variables": {
+        "descriptor": [
+          "最為",
+          "整體而言",
+          "確實"
+        ]
+      },
+      "options": [
+        {
+          "text": "母體標準差 σ 已知或樣本數 n 很大時用 z-test;σ 未知且 n 小時改用 t-test(以 s 估 σ,並查 t 分佈)",
+          "is_correct": true
+        },
+        {
+          "text": "只要樣本均數高於假設值就一律用 z-test,只要低於假設值就改用 t-test,完全以差值正負決定",
+          "is_correct": false,
+          "trap_type": "用差值方向決定 test"
+        },
+        {
+          "text": "樣本數 n ≥ 30 時一律改用 t-test 因 z 分佈逐漸偏離常態;n < 30 時改用 z-test 因小樣本 z 更穩定",
+          "is_correct": false,
+          "trap_type": "z/t 大小樣本完全顛倒"
+        },
+        {
+          "text": "z-test 與 t-test 兩者結果在所有情境下完全等價,因此挑哪個都不影響統計結論,只是命名差異",
+          "is_correct": false,
+          "trap_type": "兩者等價誤解"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "z-test 假設母體 σ 已知(或 n 大到 s ≈ σ 可忽略不確定性);t-test 用樣本標準差 s 估計 σ,使統計量服從 t 分佈,t 分佈尾部較厚以反映 s 的不確定性;n 大時 t 收斂到 z。",
+        "wrong": {
+          "只要樣本均數高於假設值就一律用 z-test,只要低於假設值就改用 t-test,完全以差值正負決定": "test 選擇與差值正負無關;與『σ 是否已知 / n 大小』有關",
+          "樣本數 n ≥ 30 時一律改用 t-test 因 z 分佈逐漸偏離常態;n < 30 時改用 z-test 因小樣本 z 更穩定": "完全顛倒;大樣本 t 收斂 z,小樣本反而是 t 比較保守",
+          "z-test 與 t-test 兩者結果在所有情境下完全等價,因此挑哪個都不影響統計結論,只是命名差異": "小樣本下 t 拒絕門檻較嚴(尾部厚);若誤用 z 會高估顯著性"
+        },
+        "hook": "z vs t:σ 已知或 n 大 → z;σ 未知且 n 小 → t(尾厚保守);n→∞ 時 t→z"
+      },
+      "misconceptions": [
+        "把 z-test 與 t-test 完全等價",
+        "用差值方向決定 test 類型"
+      ],
+      "related_node_ids": [
+        "n_L23101_003",
+        "n_L23101_002"
+      ],
+      "tags": [
+        "CLT",
+        "z-test",
+        "t-test",
+        "假設檢定",
+        "medium"
+      ],
+      "boss_topics": []
+    },
+    {
+      "id": "q_n39_016",
+      "knowledge_code": "L23101",
+      "node_id": "n_L23101_003",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "hard",
+      "source_level": "L3",
+      "stem": "下列情境何者最可能使中央極限定理(CLT)對樣本均數常態近似『失效或顯著偏離』,需要警惕並改用 bootstrap 等替代方法?",
+      "options": [
+        {
+          "text": "母體分佈為厚尾且變異數不存在(如 Cauchy 分佈),即使 n 很大樣本均數仍不會逼近常態",
+          "is_correct": true
+        },
+        {
+          "text": "母體為均勻分佈但 n=10000,樣本均數會穩定逼近常態,屬 CLT 經典適用",
+          "is_correct": false,
+          "trap_type": "CLT 適用情境"
+        },
+        {
+          "text": "母體為標準常態分佈,n=500 抽樣樣本均數依舊常態,屬 CLT 平凡情境",
+          "is_correct": false,
+          "trap_type": "CLT 平凡情境"
+        },
+        {
+          "text": "母體為輕度右偏 log-normal,n=1000 樣本均數會由 CLT 良好逼近常態",
+          "is_correct": false,
+          "trap_type": "CLT 適用情境"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "CLT 前提之一是『母體變異數 σ² 有限』;Cauchy 分佈尾巴極厚使 σ² 不存在,樣本均數本身仍服從 Cauchy 不收斂到常態。實務上對厚尾資料應改用 bootstrap、中位數推論或 robust statistics。",
+        "wrong": {
+          "母體為均勻分佈但 n=10000,樣本均數會穩定逼近常態,屬 CLT 經典適用": "均勻分佈有有限變異數,完全符合 CLT;n=10000 早已近常態",
+          "母體為標準常態分佈,n=500 抽樣樣本均數依舊常態,屬 CLT 平凡情境": "母體已是常態,樣本均數天生常態;這是平凡情境不是失效",
+          "母體為輕度右偏 log-normal,n=1000 樣本均數會由 CLT 良好逼近常態": "log-normal 有有限變異數,n=1000 之下 CLT 仍有效"
+        },
+        "hook": "CLT 失效關鍵:變異數無限(厚尾)/ 抽樣非獨立 / n 太小且偏度太大;Cauchy 是經典反例"
+      },
+      "misconceptions": [
+        "誤以為 CLT 永遠適用任何分佈",
+        "忽略 σ² 有限是 CLT 必要條件"
+      ],
+      "related_node_ids": [
+        "n_L23101_003"
+      ],
+      "tags": [
+        "CLT",
+        "失效情境",
+        "Cauchy",
+        "厚尾",
+        "hard"
+      ],
+      "boss_topics": []
+    },
+    {
+      "id": "q_n39_017",
+      "knowledge_code": "L23101",
+      "node_id": "n_L23101_003",
+      "subject": 3,
+      "format": "single_choice",
+      "difficulty": "easy",
+      "source_level": "L1",
+      "stem": "某電商 A/B test:對照組樣本均數轉換率 4.0%、實驗組 5.2%,皆 n=2500。若兩組獨立、變異數可由樣本估,以下哪個敘述最為符合 CLT 的應用?",
+      "options": [
+        {
+          "text": "兩組樣本均數抽樣分佈大致 ~ N(p, p(1-p)/n),可用 z 公式比較均數差是否顯著",
+          "is_correct": true
+        },
+        {
+          "text": "因樣本是二元 0/1 結果,樣本均數抽樣分佈完全不適用 CLT,只能改用次序統計量做檢定",
+          "is_correct": false,
+          "trap_type": "誤以為 0/1 不能用 CLT"
+        },
+        {
+          "text": "因兩組均數差為 1.2%,小於 5% 統計顯著閾值,故完全無需做 CLT 推論即可直接下無顯著差異之結論",
+          "is_correct": false,
+          "trap_type": "把效果量當顯著性"
+        },
+        {
+          "text": "因為轉換率介於 0~1 之間,樣本均數的抽樣分佈必為均勻分佈,完全無法以常態近似",
+          "is_correct": false,
+          "trap_type": "把均勻邊界當均勻分佈"
+        }
+      ],
+      "shuffle_options": true,
+      "explanation": {
+        "correct": "二元結果(Bernoulli)在 n 大時樣本均數(=樣本比例)由 CLT 近似 N(p, p(1-p)/n);兩組獨立可組合成 z 統計量檢定均數差;p(1-p) 在 p=0.04~0.05 時極小,n=2500 足以使近似良好。",
+        "wrong": {
+          "因樣本是二元 0/1 結果,樣本均數抽樣分佈完全不適用 CLT,只能改用次序統計量做檢定": "0/1 變數均數即比例,CLT 對 Bernoulli 仍適用(需 np 與 n(1-p) 都夠大,本題滿足)",
+          "因兩組均數差為 1.2%,小於 5% 統計顯著閾值,故完全無需做 CLT 推論即可直接下無顯著差異之結論": "5% 是顯著性 α 不是效果量門檻;差異大小要對應 SE 才能判定顯著",
+          "因為轉換率介於 0~1 之間,樣本均數的抽樣分佈必為均勻分佈,完全無法以常態近似": "界線在 [0,1] 不等於均勻;Bernoulli 之比例樣本分佈是常態近似不是均勻"
+        },
+        "hook": "Bernoulli 比例適用 CLT 條件:np ≥ 5 且 n(1-p) ≥ 5;A/B test 比例比較是 CLT 經典應用"
+      },
+      "misconceptions": [
+        "誤以為二元變數不能用 CLT",
+        "把效果量大小當顯著性結論"
+      ],
+      "related_node_ids": [
+        "n_L23101_003",
+        "n_L23101_001"
+      ],
+      "tags": [
+        "CLT",
+        "A/B test",
+        "比例檢定",
+        "easy"
+      ],
+      "boss_topics": [
+        "ecommerce"
+      ]
+    }
+  ]
+}

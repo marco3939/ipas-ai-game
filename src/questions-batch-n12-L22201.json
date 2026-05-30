@@ -1036,7 +1036,7 @@
       "stem": "某金融機構 schema 嚴格、需遵循法遵稽核且需強治理,主要分析以 BI 報表為主;某網路廣告新創資料型態多元、用途多變且儲存量極大。兩者最適合的設計取捨為?",
       "options": [
         {
-          "text": "金融偏 ETL + Warehouse;網路廣告偏 ELT + Lake / Lakehouse,以匹配各自治理與彈性需求",
+          "text": "金融偏 ETL + Warehouse;網路廣告偏 ELT + Lake / Lakehouse,匹配治理與彈性需求",
           "is_correct": true
         },
         {
@@ -1050,7 +1050,7 @@
           "trap_type": "彈性犧牲治理"
         },
         {
-          "text": "金融偏 ELT + Lake;網路廣告偏 ETL + Warehouse,因新興產業必須採用較傳統穩定架構",
+          "text": "金融偏 ELT + Lake;網路廣告偏 ETL + Warehouse,因新興產業多採用較傳統穩定的舊架構與配套工具",
           "is_correct": false,
           "trap_type": "選型完全顛倒"
         }

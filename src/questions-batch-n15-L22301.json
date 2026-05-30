@@ -338,7 +338,7 @@
           "is_correct": true
         },
         {
-          "text": "可確定該 URL 確實在已下架集合中,Bloom Filter 的設計特性僅產生偽陰性回報訊息",
+          "text": "可確定該 URL 確實在已下架集合之中,Bloom Filter 的設計特性僅會產生偽陰性的回報訊息卻不產生偽陽性",
           "is_correct": false,
           "trap_type": "顛倒偽陽偽陰"
         },
@@ -504,21 +504,21 @@
       "stem": "某分散式運算平台將資料分散於 3 個節點,各節點筆數為 100、200、500,各節點分別算出『局部平均值』為 10、20、30。資料工程師欲計算全體平均,下列做法何者正確?",
       "options": [
         {
-          "text": "各節點上報 partial sum 與 partial count,匯總後相除得到全體平均,而非把三平均直接平均",
+          "text": "各節點上報 partial sum 與 partial count,匯總後相除為全體平均",
           "is_correct": true
         },
         {
-          "text": "把各節點局部平均直接算術平均 (10+20+30)/3 = 20,因為每節點僅計算了一次平均運算",
+          "text": "把各節點局部平均直接算術平均 (10+20+30)/3 = 20,因每節點各算一次平均運算",
           "is_correct": false,
           "trap_type": "忽略各節點樣本數差異"
         },
         {
-          "text": "取最大節點(500 筆)的局部平均 30 為代表,因為最大節點具備最高之資料代表性意義",
+          "text": "取最大節點(500 筆)的局部平均 30 為代表,因最大節點具最高資料代表性",
           "is_correct": false,
           "trap_type": "丟棄其他節點資訊"
         },
         {
-          "text": "把各節點局部平均依節點筆數加權平均後再除以節點數 3,以平衡各節點樣本量之間差異",
+          "text": "把各節點局部平均依節點筆數加權平均後再除以節點數 3,以平衡樣本差異",
           "is_correct": false,
           "trap_type": "已加權卻多除一次"
         }
@@ -561,21 +561,21 @@
       "stem": "下列統計量在分散式運算中『無法』直接由各節點 partial 結果合併而得最為明顯者為下列何者?",
       "options": [
         {
-          "text": "中位數(Median)/ 任意分位數,因排序統計量不具可結合性,常以 t-digest / GK sketch 近似",
+          "text": "中位數(Median)/ 任意分位數,排序統計量不具結合性,常以 t-digest 近似",
           "is_correct": true
         },
         {
-          "text": "總和(Sum),各節點 partial sum 可直接相加為全體總和,具備明確之可結合性",
+          "text": "總和(Sum),各節點 partial sum 直接相加即為全體總和,具備明確結合性",
           "is_correct": false,
           "trap_type": "Sum 可直接相加"
         },
         {
-          "text": "計數(Count),各節點 partial count 可直接相加為全體計數,具備標準之可結合性",
+          "text": "計數(Count),各節點 partial count 直接相加即為全體計數,具備標準結合性",
           "is_correct": false,
           "trap_type": "Count 可直接相加"
         },
         {
-          "text": "最大值(Max),各節點 partial max 取最大即為全體最大,具備自然之可結合性",
+          "text": "最大值(Max),各節點 partial max 取最大即為全體最大,具備自然結合性",
           "is_correct": false,
           "trap_type": "Max 可直接合併"
         }

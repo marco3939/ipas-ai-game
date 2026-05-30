@@ -207,16 +207,16 @@
       "stem": "某電力公司資料科學團隊要建立『未來七天每小時電力需求預測』模型,輸入為過去 30 天每小時的氣溫、用電量與是否假日(168 步序列)。下列哪一個架構最匹配此任務的特性,且能合理處理長距離時序依賴?",
       "options": [
         {
-          "text": "LSTM,因其 Input/Forget/Output 三閘控與 Cell State 設計可保留長序列關鍵資訊,專為時序預測任務而生",
+          "text": "LSTM,因 Input/Forget/Output 三閘控與 Cell State 設計可保留長序列關鍵資訊",
           "is_correct": true
         },
         {
-          "text": "全連接神經網路 FCNN,把 168 步全部展平輸入即可,FC 層之間的密集連結會自動學會時序順序與週期模式",
+          "text": "全連接神經網路 FCNN,把 168 步全部展平輸入即可,FC 層密集連結會自動學會時序順序與週期",
           "is_correct": false,
           "trap_type": "FCNN 缺少時序歸納偏差,展平後失去時間順序語意,且參數量爆炸難以訓練"
         },
         {
-          "text": "卷積神經網路 CNN,用 1D 卷積掃過序列即可完美捕捉時序,且 CNN 權重共享比 LSTM 參數更少訓練最快",
+          "text": "卷積神經網路 CNN,用 1D 卷積掃過序列即可完美捕捉時序,且 CNN 權重共享比 LSTM 訓練速度更為快速",
           "is_correct": false,
           "trap_type": "1D CNN 雖可處理短時序,但長距離依賴不如 LSTM,且本題重點是『長距離時序』"
         },
@@ -1393,7 +1393,7 @@
           "is_correct": true
         },
         {
-          "text": "(A)K-means 處理迴歸;(B)Linear Regression 處理客戶分群;(C)DBSCAN 處理時序 — 三者通用模型可互換使用達最佳效果",
+          "text": "(A)K-means 處理迴歸;(B)Linear Regression 處理客戶分群;(C)DBSCAN 處理時序 — 此三者皆為通用模型可互相替換使用以達到最佳效果與表現",
           "is_correct": false,
           "trap_type": "三任務性質與模型完全不對應,且模型不可互換"
         },

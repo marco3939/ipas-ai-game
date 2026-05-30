@@ -1,12 +1,12 @@
 {
   "version": "1.0",
-  "generated_at": "2026-05-19T15:48:56.421Z",
-  "total_files": 50,
-  "total_questions": 962,
+  "generated_at": "2026-05-19T17:00:04.346Z",
+  "total_files": 53,
+  "total_questions": 1014,
   "subject_totals": {
     "1": 256,
     "2": 340,
-    "3": 366
+    "3": 418
   },
   "files": [
     "questions-batch-boss-fill.json",
@@ -42,7 +42,10 @@
     "questions-batch-n36-L21202-fill.json",
     "questions-batch-n37-L21301-fill.json",
     "questions-batch-n38-L21104-fill.json",
+    "questions-batch-n39-L23101-fill.json",
     "questions-batch-n4-planning.json",
+    "questions-batch-n40-L23302-fill.json",
+    "questions-batch-n41-L23401-fill.json",
     "questions-batch-n5-deploy.json",
     "questions-batch-n6-ml-core.json",
     "questions-batch-n7-dl.json",
@@ -359,12 +362,39 @@
       }
     },
     {
+      "file": "questions-batch-n39-L23101-fill.json",
+      "count": 17,
+      "subjects": {
+        "1": 0,
+        "2": 0,
+        "3": 17
+      }
+    },
+    {
       "file": "questions-batch-n4-planning.json",
       "count": 25,
       "subjects": {
         "1": 25,
         "2": 0,
         "3": 0
+      }
+    },
+    {
+      "file": "questions-batch-n40-L23302-fill.json",
+      "count": 18,
+      "subjects": {
+        "1": 0,
+        "2": 0,
+        "3": 18
+      }
+    },
+    {
+      "file": "questions-batch-n41-L23401-fill.json",
+      "count": 17,
+      "subjects": {
+        "1": 0,
+        "2": 0,
+        "3": 17
       }
     },
     {

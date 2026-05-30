@@ -17,7 +17,7 @@
       "stem": "某國際機場安檢部署 AI 影像辨識系統檢查可疑物品,試運期間統計顯示 Precision = 0.95、Accuracy = 0.97,主管興奮地向 CEO 簡報。但安檢督導長堅決反對僅憑這兩個數字就上線,要求重新評估。督導長最關鍵的擔憂是什麼?",
       "options": [
         {
-          "text": "Recall 可能很低,代表真正的可疑物品中被偵測出的比例不足,漏檢的安全風險遠超過誤檢的不便",
+          "text": "Recall 可能很低,真正可疑物品被偵測出的比例不足,漏檢風險遠超過誤檢的不便",
           "is_correct": true
         },
         {
@@ -26,7 +26,7 @@
           "trap_type": "在類別極度不平衡的安檢場景(99% 物品都正常),Accuracy 即使 99% 也可能 Recall = 0"
         },
         {
-          "text": "F1 Score 沒有公布,需要先確認 F1 才能評斷",
+          "text": "F1 Score 沒有公布,需要先確認 F1 數值才能整體評斷上線可行性",
           "is_correct": false,
           "trap_type": "F1 是 Precision 與 Recall 的調和平均,但題目重點是『漏檢風險』而非綜合指標"
         },
@@ -448,7 +448,7 @@
           "is_correct": true
         },
         {
-          "text": "Leave-One-Out CV(LOOCV),每次留 1 筆驗證共 150 次,因樣本少故 LOOCV 一定最佳",
+          "text": "Leave-One-Out CV(LOOCV),每次留 1 筆做驗證共執行 150 次,因樣本少故 LOOCV 一定為最佳選擇",
           "is_correct": false,
           "trap_type": "LOOCV 在極不平衡時,留出陰性樣本的 fold 完全無法評估陽性偵測能力,且運算成本高、估計變異大"
         },

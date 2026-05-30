@@ -14,7 +14,7 @@
 | 1 | **錯題驅動下鑽學習** | 每題必有完整 explanation;答錯走 `DrillSession.start(nodeId, generateVariation(q,3), q, callback)`;callback 必檢查 state 仍存在 |
 | 2 | **題庫動態化** | 每題 `shuffle_options:true`;計算題 `stem_variables` 多 case 池;每場 `RNG.set(Date.now())` |
 | 3 | **不複製 114-2 原題** | 全原創跨產業情境;改 ≥ 2 維度(情境 + 數字 / 選項措辭) |
-| 4 | **選項長度均衡** | 正解/平均錯解 ∈ [0.85, 1.20];「最長=正解」≤ 35%;錯解寫得跟正解同等專業 |
+| 4 | **選項長度均衡** | 設計目標:正解/平均錯解 ∈ [0.85, 1.20];audit 容忍 [0.8, 1.25]; 「最長=正解」≤ 35%;錯解寫得跟正解同等專業 |
 | 5 | **來源忠實性** | `knowledge_code` 必在 `kb/scope.json` `include=true`;`node_id` 必在 `scripts/kb-allowed-nodes.json` |
 | 6 | **科目隔離性** | 新增 X 科資料**不得**修改其他科目既有 `questions*.json` / `kb/nodes-subject-*.json`;新題庫放獨立檔;共用層(audit / index.html / mode6)只允許 additive(加分支、加檔名) |
 | 7 | **題庫單一真相來源** | `src/questions-manifest.json` 是唯一 file list 真相;`index.html` + 5 個 audit script 都讀 manifest;新增題庫檔**必跑** `node scripts/update-manifest.js` 更新 manifest;**必跑** `node scripts/audit-qbank-integrity.js` 驗證(漏載 / 漂移 / subject 對齊) |
@@ -196,6 +196,23 @@ LoRA / RLHF / DPO / GPTQ / SentencePiece / DAPT / RandAugment / Mixup / CutMix /
   3. **CI 自動化的價值在這個案例顯化**:沒 CI 時 pre-existing failure 可以躲 13 個 PR 沒人抓(同案例 10 的「靜默計分錯誤」型 bug)。本 session 後設了 GitHub Actions(PR #50)。
   4. **audit-driven engineering:跑全套 sandbox 是「順手」抓 bug 的 zero-cost 動作**,而且通常會抓到 1+ 預期外的 bug 鏈。
 
+### 案例 12:Mode 7 標記題目誤觸右上首頁直跳出(exam-exit-protection 漏設旗標)
+- 症狀(2026-05-19 使用者回報):Mode 7 模擬考進行中標記題目後,點右上「🏠 首頁」按鈕,直接跳出考試沒跳 confirm,進度丟失
+- 根因:`_examInProgress` 全域旗標需要在所有「進入考試 / 退出考試」路徑都正確 set / clear,但 Mode 7 進入「review 標記」分支時沒 set,導致 `goHome()` 看到旗標 false 直接走原路徑(無 confirm)
+- 影響範圍:Mode 1/2/3/5/6/7 + DrillSession + SM-2 review,任何「考試型」(計分 + 持久化 + 一次性)session
+- 修補:
+  1. 共用 `_setExamMode(active)` helper(index.html 集中管理旗標 + 同步右上按鈕色)
+  2. 所有 mode 進場 start() 第一行 `_setExamMode(true)`
+  3. 所有離場路徑(cleanup / gameOver / victory / timer / _finalize / Mode 7 標記分支)`_setExamMode(false)`
+  4. goHome() 進場第一行讀 `window._examInProgress`,true 跳 confirm
+- 加固:
+  - `scripts/sandbox-exam-exit-protection.js` 跑遍所有 mode 的 set/clear 路徑驗證(grep `_setExamMode\(true|false\)` 數量對等)
+  - `scripts/audit-tests/mode5-8/mode7/21-exam-exit-confirm.test.js` Mode 7 confirm 攔截實測(21 assertion)
+- 教訓:
+  1. **「進場 / 離場路徑」必對稱配對**:任何一個離場路徑漏 clear,旗標永遠卡 true(下次進別 mode 還會跳 confirm)或永遠 false(等於沒保護)
+  2. **「中途分支也算離場」**:Mode 7 標記、Mode 4 暫停、DrillSession 中斷等中途狀態也是「考試結束/暫停」,需 clear 旗標
+  3. **§9 workflow table 加新分類**:「動 user-facing 退出 / view 切換流程」必跑 sandbox-exam-exit-protection + 21-exam-exit-confirm.test.js
+
 ---
 
 ## 8. 共用層 / user-facing 改動 必派 code-review subagent(2026-05-16 案例 10 後新增)
@@ -233,18 +250,26 @@ LoRA / RLHF / DPO / GPTQ / SentencePiece / DAPT / RandAugment / Mixup / CutMix /
 ## 6. 專案結構(完整見 `ipas-ai-game-prompt.md` §2)
 
 ```
-C:\Users\marco\.ipas-ai-game\
+~/.ipas-ai-game/
 ├─ CLAUDE.md(本檔,專案層)
 ├─ ipas-ai-game-prompt.md      # 專案完整 spec(鐵律詳解 + 結構 + 開發階段 + 完整案例庫)
 ├─ claude-code-system-prompt.md # (歷史檔,內容已大半被全域 v3.1 取代;保留作專案 spec 補充)
+├─ .github/workflows/audit.yml  # GitHub Actions CI(每 PR 自動跑 9 audit + 49 sandbox + jsdom)
 ├─ src/
-│  ├─ index.html               # SPA 主檔(共用層 1219 行)
-│  ├─ modes/mode1~5.js         # 5 案 RPG
-│  └─ questions*.json          # 17 題庫檔 / 325 題
+│  ├─ index.html               # SPA 主檔(共用層 ~3000 行)
+│  ├─ themes.js                # P3 視覺統一:11 主題 UI switcher(localStorage 持久化)
+│  ├─ sm2.js                   # SM-2 間隔重複(qid 鍵)
+│  ├─ modes/mode1~8.js         # 8 個遊戲模式(1-5 RPG / 6 卡牌 / 7 模考 / 8 程式追蹤)
+│  ├─ components/              # 互動元件(confusion-matrix 等)
+│  └─ questions*.json          # 50+ 題庫檔 / 962+ 題(科一/科二/科三全覆蓋)
 ├─ kb/                         # 87+ 個 IPAS 真實節點(scope + nodes + exam-patterns)
 ├─ scripts/
-│  ├─ audit-*.js               # 5 支稽核腳本(必跑)
+│  ├─ audit-*.js               # 9 支稽核腳本(必跑;含 audit-theme-tokens / audit-subject-isolation)
+│  ├─ audit-tests/             # 49 個 sandbox test files(mode1-8 + srs-drill-review)
+│  ├─ browser-sim.test.js      # jsdom 端到端模擬測試(44 assertion)
+│  ├─ playwright/              # 本地 Playwright e2e(06-theme-switcher 等)
 │  ├─ verify-calc-numeric.js   # 數值正確性獨立驗算
+│  ├─ update-manifest.js       # 鐵律 #7:重生 questions-manifest.json
 │  ├─ kb-allowed-nodes.json    # sub agent 白名單
 │  └─ check-globals*.js        # 跨檔契約掃描
 ├─ docs/                       # progress / plan / design / 各 audit 報告

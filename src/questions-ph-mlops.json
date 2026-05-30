@@ -218,7 +218,7 @@
           "trap_type": "三者實際皆為通用 ML 監控工具,並非按資料型態嚴格分工;主力不同但範圍重疊"
         },
         {
-          "text": "embedding 為連續高維向量無離散分布概念,因此 drift 偵測在數學上不成立,(C) 毋須監控工具,只需聚焦 (A)(B) 表格資料的傳統指標即可",
+          "text": "embedding 為連續高維向量並無離散分布的概念,因此 drift 偵測於數學上完全不成立,(C) 毋須使用任何監控工具,只需聚焦於 (A)(B) 表格資料的傳統指標進行監測即可",
           "is_correct": false,
           "trap_type": "embedding 是高維連續向量,有分布概念;業界用 PCA 後 KS 檢定、cosine 距離分布、降維 cluster shift、MMD 等方法偵測 embedding drift"
         }

@@ -357,7 +357,7 @@
           "is_correct": true
         },
         {
-          "text": "CNN 與 FCNN 都假設特徵彼此條件獨立,因此學習效率相同",
+          "text": "CNN 與 FCNN 都假設特徵彼此完全條件獨立,因此兩者學習效率與表現相同",
           "is_correct": false,
           "trap_type": "與 Naive Bayes 混淆"
         },

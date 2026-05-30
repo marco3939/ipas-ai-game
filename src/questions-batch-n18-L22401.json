@@ -273,7 +273,7 @@
           "is_correct": true
         },
         {
-          "text": "Online Learning,逐筆吃進影像即時更新權重,讓模型能對每張新片立即調整參數",
+          "text": "Online Learning,逐筆吃進影像並即時更新權重,讓模型能對每張新進來的影像立即調整參數",
           "is_correct": false,
           "trap_type": "醫療場景不應逐筆即時更新"
         },
@@ -379,16 +379,16 @@
       "stem": "某團隊訓練一個 200MB 參數的影像分類網路,單卡可放下整個模型,但訓練資料量龐大想加速;手邊有 8 張 GPU。下列何種分散式訓練策略最為直接適用?",
       "options": [
         {
-          "text": "資料平行(Data Parallel),每張 GPU 複製一份模型、各自處理不同 mini-batch 後梯度聚合",
+          "text": "資料平行(Data Parallel),各 GPU 複製模型分別處理 mini-batch 後梯度聚合",
           "is_correct": true
         },
         {
-          "text": "模型平行(Model Parallel),把網路依照層數切成 8 段分配到不同 GPU 上依序執行",
+          "text": "模型平行(Model Parallel),將整個網路依照層數切成 8 個區段分配到不同 GPU 上依序執行",
           "is_correct": false,
           "trap_type": "200MB 不需切模型"
         },
         {
-          "text": "單卡訓練,因 8 張 GPU 之間通訊成本必然遠高於並行帶來的訓練速度收益",
+          "text": "單卡訓練,因 8 張 GPU 之間通訊成本必然遠高於並行帶來的訓練速度收益增量",
           "is_correct": false,
           "trap_type": "8 卡資料平行通常正收益"
         },
@@ -903,7 +903,7 @@
       "stem": "某醫療團隊處理 1:200 不平衡的罕見疾病標註資料,比較三種方案:(A) 純類別權重(loss 加權),(B) SMOTE 過取樣到 1:1,(C) 隨機欠取樣多數類到 1:1。下列敘述何者最為正確?",
       "options": [
         {
-          "text": "三方案皆有取捨:類別權重最穩;SMOTE 可能在重疊區生出不存在樣本;欠取樣可能丟失多數類資訊",
+          "text": "三方案皆有取捨:類別權重最穩;SMOTE 可能在重疊區生樣本;欠取樣可能丟資訊",
           "is_correct": true
         },
         {
