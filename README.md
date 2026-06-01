@@ -1,10 +1,11 @@
 # IPAS AI 應用規劃師中級 — 互動學習遊戲
 
-> 為 2026-05-23 IPAS AI 應用規劃師中級能力鑑定設計的 5 案互動式 RPG 學習遊戲。
-> 純前端 SPA,**325 題原創題庫** + **錯題驅動下鑽學習** + **動態題庫(防死記)**。
+> 為 2026-05-23 IPAS AI 應用規劃師中級能力鑑定設計的 **8 mode 互動學習遊戲**。
+> 純前端 SPA,**1014 題原創題庫(科一 256 / 科二 340 / 科三 418)** + **錯題驅動下鑽** + **動態題庫(防死記)** + **11 主題色系** + **無障礙(WCAG AA + 鍵盤 + 報讀器)**。
 
 [![License: MIT](https://img.shields.io/badge/Code-MIT-blue.svg)](LICENSE)
 [![Content: CC BY-NC-SA 4.0](https://img.shields.io/badge/Content-CC%20BY--NC--SA%204.0-orange.svg)](LICENSE-CONTENT.md)
+[![CI](https://github.com/marco3939/ipas-ai-game/actions/workflows/audit.yml/badge.svg)](https://github.com/marco3939/ipas-ai-game/actions/workflows/audit.yml)
 
 ---
 
@@ -19,21 +20,23 @@
 
 ---
 
-## 五大鐵律(設計原則,不可妥協)
+## 七大鐵律(設計原則,不可妥協)
 
 | # | 鐵律 | 為何重要 |
 |:-:|:--|:--|
 | 1 | **錯題驅動下鑽學習** | 每題必有完整 explanation,答錯可進入「換角度 → 易混淆對手 → 加深難度」三階變化型訓練,不是按下一題就過 |
 | 2 | **題庫動態化** | 每場 ABCD 順序不同,計算題用 `stem_variables` 多 case 池,每場 RNG seed 變動,**防止死記題目** |
 | 3 | **不複製 114-2 原題** | 全原創跨產業情境(醫療/金融/製造/零售/教育/自駕車...),可參考知識點但改情境 |
-| 4 | **選項長度均衡** | 正解 / 平均錯解長度 ∈ [0.85, 1.20],「最長 = 正解」≤ 35%,**防止「選最長就對」** |
-| 5 | **來源忠實性(零幻覺)** | 每題 knowledge_code / node_id 必須在官方 IPAS scope + kb 真實節點,**不考超綱工程細節** |
+| 4 | **選項長度均衡** | 正解 / 平均錯解 ∈ [0.85, 1.20],「最長 = 正解」≤ 35%(目前 **24.9%**),**防止「選最長就對」** |
+| 5 | **來源忠實性(零幻覺)** | 每題 `knowledge_code` / `node_id` 必須在官方 IPAS scope + kb 真實節點,**不考超綱工程細節** |
+| 6 | **科目隔離性** | 新增 X 科資料不得修改其他科目既有題庫;共用層只允許 additive 修改(由 `audit-subject-isolation.js` 自動驗) |
+| 7 | **題庫單一真相來源** | `src/questions-manifest.json` 是唯一 file list 真相,新增題庫檔必跑 `update-manifest.js`(由 `audit-qbank-integrity.js` 自動驗) |
 
 完整定義見 [`ipas-ai-game-prompt.md`](ipas-ai-game-prompt.md)。
 
 ---
 
-## 五案遊戲
+## 八個遊戲模式
 
 | 案 | 名稱 | 玩法 | 題型來源 |
 |:-:|:--|:--|:--|
@@ -42,30 +45,34 @@
 | 3 | **ML Pipeline 拼圖** | SVG 渲染管線 + HTML5 native drag-drop + Pointer Events 行動裝置 fallback,90s 倒數 | `format='sequence'` |
 | 4 | **易混淆配對戰(Match-3)** | 4×4/4×3/4×2 動態棋盤、Pointer Events 真拖拉、揭露/凍結/重排招式 | `format='matching'` |
 | 5 | **弱點獵人** | 從個人 Wrongbook + Mastery 動態決定 BOSS,自適應難度,擊敗條件 mastery ≥ 0.8 | 動態 |
+| 6 | **卡牌圖鑑** | 87+ KB 節點卡牌 + 主題挑戰(批次答題)+ 三科目過濾 | KB 節點 |
+| 7 | **模擬考(80 分鐘)** | 60 題模考 + 倒數 + 標記 + 結算回顧 + SM-2 間隔重複複習 | 全題庫 |
+| 8 | **程式追蹤道場** | step-by-step 程式碼追蹤(predict output / variable state)| `format='code_trace'`,57 題 |
+
+**P3 視覺統一(2026-05)**:右上 🎨 主題切換按鈕,11 主題色系(預設電玩 Slate + Ocean / Sunset / Forest / Minimalist / Golden / Arctic / Desert / Tech / Botanical / Galaxy),`localStorage` 持久化。
+
+**無障礙 a11y**:`prefers-reduced-motion` 全域自動跳動畫 / 鍵盤 `:focus-visible` ring / 報讀器 aria-label + live region / WCAG AA 對比 + 44×44px 觸控目標 / `role="progressbar"` HP / timer。
 
 ---
 
-## 題庫(325 題)
+## 題庫(1014 題 / 53 檔)
 
-| 類別 | 題數 | 檔案 |
-|:--|:-:|:--|
-| Baseline | 50 | `questions.json` |
-| 程式判讀 | 12 | `questions-pa-code.json` |
-| 表格判讀(VGG16/Transformer) | 10 | `questions-pb-visual.json` |
-| Matching/Sequence/Calc | 15 | `questions-pc-modes.json` |
-| 情境決策 | 15 | `questions-pd-scenario.json` |
-| 進階 NLP/CV/GenAI | 5 | `questions-pe-advanced-s1.json` |
-| 進階 ML 演算法 | 6 | `questions-pf-advanced-s3.json` |
-| 進階評估 | 9 | `questions-pg-eval.json` |
-| 進階 MLOps | 6 | `questions-ph-mlops.json` |
-| **新批次(8 個 sub agent 平行生成)** | **197** | `questions-batch-n1~n8.json` |
-| **合計** | **325** | |
+| 科目 | 題數 | 占比 | 涵蓋編碼 |
+|:--|:-:|:-:|:--|
+| 科一(L21)| **256** | 25% | L21101-L21302 全 9 編碼 |
+| 科二(L22)| **340** | 34% | L22101-L22404 全 13 編碼 |
+| 科三(L23)| **418** | 41% | L23101-L23401 全 12 編碼 |
+| **合計** | **1014** | | **34 個官方編碼全覆蓋** |
 
-新批次主題:NLP / CV / GenAI+多模態 / AI 規劃 / 部署 / ML 基礎 / DL+數據準備 / 評估治理。
+題目檔案位於 `src/questions*.json`,由 `src/questions-manifest.json`(鐵律 #7 SSOT)動態列載入。
 
-每批題目經:
-- **鐵律 #4 稽核**:`node scripts/audit-option-length.js`(均衡率 98.9%、avg ratio 1.06x、旗標 0)
-- **鐵律 #5 稽核**:`node scripts/audit-source-fidelity.js`(100% 合規)
+每題經 **11 個自動 audit**(`scripts/audit-*.js`)+ **CI gate**(GitHub Actions):
+- **鐵律 #4** `audit-option-length.js` — 均衡 98.1%、avg ratio 1.03x、「最長=正解」**24.9%**(達 ≤25% 目標)
+- **鐵律 #5** `audit-source-fidelity.js` — 100% 合規(零超綱)
+- **鐵律 #6** `audit-subject-isolation.js` — subject ↔ knowledge_code prefix 對齊 + 單檔同 subject
+- **鐵律 #7** `audit-qbank-integrity.js` — manifest ≡ 實體 / 漂移偵測
+- **案例 13** `audit-explanation-desync.js` — `explanation.wrong` key ↔ option.text 對齊(全題庫 **desync = 0**)
+- 還有 `audit-render` / `audit-calculation` / `verify-calc-numeric` / `audit-mode-flow` / `audit-marker-integrity` / `audit-theme-tokens`
 
 ---
 
