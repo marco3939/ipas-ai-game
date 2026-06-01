@@ -4,6 +4,57 @@
 
 ## [Unreleased]
 
+### 2026-05-30 — 指揮官三軸 + Codex review 收官(本 round 12 PR / +109 題)
+
+**A 線(安全)**
+- CSP Report-Only meta(觀測模式,零破功能風險)
+- `escHTML` 補強(mode5 / sm2 / confusion-matrix 三檔)
+- Mode loader 白名單(防 createElement script 走漏)
+
+**B 線(美觀 / 無障礙 — 兩批 12 個 a11y patch)**
+- `prefers-reduced-motion` 全域 kill switch + JS GameFX guard(confetti / gsap / flash 全跳)
+- `:focus-visible` 全域焦點 ring(鍵盤使用者看得到 Tab 位置)
+- `aria-label` 標 header / bottom-nav / option button(報讀器朗讀完整)
+- Modal `role="dialog"` + `aria-modal` + Esc 關閉 + 進場 focus(themes.js)
+- WCAG AA 對比(light theme `--fg-mute` 2.56→5.x:1)
+- WCAG 2.5.5 觸控目標 ≥ 44×44px
+- `#play-explanation` `aria-live="polite"` 答題回饋自動宣告
+- HP/timer/progress 加 `role="progressbar"` + `aria-valuenow` 同步
+- `.m8-grid` mobile 單欄(Codex P2 修 CSS cascade 失效)
+
+**C 線(考題)**
+- L23 子代碼補平衡:+52 題(L23101/L23302/L23401 從 ~8 拉到 ~25 題)
+- 鐵律 #4「最長=正解」 **40.1% → 24.9%**(達 ≤ 25% 目標,99 題 rebalance)
+- `explanation.wrong` key ↔ option.text 同步 **285 → 0**(Codex P2 抓到後集中修)
+- 修 3 個 subject-isolation 違規(n28 混 L22 + n7 knowledge_code 對不齊 node_id)
+
+**測試與 CI**
+- GitHub Actions 自動 audit gate(每 PR 跑 11 audit + 122 sandbox + jsdom browser-sim)
+- 新增 `audit-subject-isolation.js`(鐵律 #6)+ `audit-explanation-desync.js`(案例 13)
+- 新增 49 → 122 個 sandbox test(Mode 5+8 各 +3 / cross-mode + shared-layer + questions-kb 全清乾淨)
+- 子代理 worktree 並行框架:11 個 agent 同時跑,7-13× 加速
+- 新增 jsdom browser-sim test(44 assertion 真實 DOM 模擬)
+
+**P3 視覺**
+- `themes.js` + 11 主題色系(theme-factory) + 🎨 切換按鈕 + `localStorage` 持久化
+- `:root` 抽 SSOT gradient token(`--grad-hp-*` / `--grad-time-bar` / `--grad-hero-*` 等)
+
+**文件**
+- `CLAUDE.md` 案例 11(sandbox 預設值 vs production 不對齊)
+- `CLAUDE.md` 案例 12(exam-exit-protection 對稱配對)
+- `CLAUDE.md` 案例 13(post-merge state drift,git 同 JSON value 互蓋)
+
+**量化終局**
+- 題目:905 → **1014**(+109)
+- 三科占比:科一 22% → **25%**;科二 37% → 34%;科三 41% → 41%
+- 「最長=正解」40.1% → **24.9%**
+- 全題庫 desync 285 → **0**(+ CI gate 鎖死)
+- 全 sandbox 失敗 6 → **0**(122/122 PASS)
+- Codex P2 review 5 個全修(#53/#54/#60/#61×2/#62)
+
+**已知 follow-up(Issue #58)**
+- `explanation.wrong` schema 重構 `[{key, exp}]` 陣列(消除 key 脆弱性,10-14 小時專屬 session)
+
 ### Added — 2026-05-09(階段 0)
 - 專案骨架:`kb/`、`src/`、`docs/` 目錄
 - `.gitignore`(排除 materials 三個資料夾、所有 PDF/PPTX/DOCX、`.claude/`、敏感檔案類型)
